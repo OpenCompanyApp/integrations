@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-travis-ci",
+    "description": "Travis CI API V3 integration for Laravel AI agents - repositories, builds, jobs, logs, requests, settings, env vars, and raw helper calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\TravisCi\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\TravisCi\\TravisCiServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

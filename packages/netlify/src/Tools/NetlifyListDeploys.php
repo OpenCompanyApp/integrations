@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List deploys for a Netlify site.
+ */
 class NetlifyListDeploys implements Tool
 {
+    /**
+     * @param  NetlifyService  $service  The Netlify REST API client.
+     */
     public function __construct(
         private NetlifyService $service,
     ) {}
@@ -31,6 +37,11 @@ class NetlifyListDeploys implements Tool
         ];
     }
 
+    /**
+     * List and normalize deploys for a site.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (site_id, page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

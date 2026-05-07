@@ -93,7 +93,7 @@ class GoToWebinarToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'Host and manage webinars, sessions, and panelists',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:goto',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.goto.com/GoToWebinarV2',
         ];

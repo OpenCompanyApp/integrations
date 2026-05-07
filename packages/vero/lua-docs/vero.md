@@ -1,232 +1,146 @@
-# Vero — Lua API Reference
+# Vero Lua API Reference
 
-## identify_user
+Namespace: `app.integrations.vero`
 
-Identify (create or update) a user in Vero with email, name, and custom attributes.
+Vero tools wrap the Track REST API at `https://api.getvero.com/api/v2`. The integration adds `auth_token` automatically as a query parameter.
 
-### Parameters
+## Users
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Unique user identifier (e.g., database ID or UUID) |
-| `email` | string | yes | User email address |
-| `name` | string | no | Display name for the user |
-| `data` | object | no | Custom user attributes as key-value pairs |
+### identify_user
 
-### Example
+Creates or updates a user via `POST /users/track`.
 
 ```lua
 app.integrations.vero.identify_user({
   id = "usr_123",
-  email = "john@example.com",
-  name = "John Doe",
+  email = "person@example.test",
+  name = "Example User",
   data = {
     plan = "premium",
-    signup_date = "2025-01-15",
-    company = "Acme Inc"
+    signup_date = "2026-05-01"
   }
 })
 ```
 
----
+Optional `channels` may include Vero channel objects, for example push tokens with `type`, `address`, and `platform`.
 
-## track_event
+### update_user
 
-Track a behavioral event for a user. Events can trigger automated email campaigns in Vero.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `identity` | string | yes | User ID or email address identifying the user |
-| `event_name` | string | yes | Name of the event (e.g., "Logged in", "Purchased") |
-| `data` | object | no | Event-specific data as key-value pairs |
-
-### Example
-
-```lua
-app.integrations.vero.track_event({
-  identity = "usr_123",
-  event_name = "Purchased",
-  data = {
-    product = "Widget",
-    price = 29.99,
-    currency = "USD"
-  }
-})
-```
-
----
-
-## update_user
-
-Update a user's email address and/or custom attributes in Vero.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Unique user identifier to update |
-| `email` | string | no | New email address for the user |
-| `data` | object | no | Attributes to update as key-value pairs |
-
-### Example
+Compatibility helper for profile updates. It also uses `POST /users/track`.
 
 ```lua
 app.integrations.vero.update_user({
   id = "usr_123",
-  email = "john.doe@newdomain.com",
   data = {
-    plan = "enterprise",
-    company = "Big Corp"
+    plan = "enterprise"
   }
 })
 ```
 
----
+### alias_user
 
-## unsubscribe
-
-Unsubscribe a user from all Vero email campaigns.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Unique user identifier to unsubscribe |
-
-### Example
+Changes a user's identifier via `PUT /users/reidentify`. This merges identities, so use it only when that merge is intended.
 
 ```lua
-app.integrations.vero.unsubscribe({
+app.integrations.vero.alias_user({
+  id = "anonymous_123",
+  new_id = "usr_123"
+})
+```
+
+### unsubscribe / resubscribe
+
+```lua
+app.integrations.vero.unsubscribe({ id = "usr_123" })
+app.integrations.vero.resubscribe({ id = "usr_123" })
+```
+
+### delete_user
+
+Deletes the user profile and activity. Deleted users are not recoverable in Vero.
+
+```lua
+app.integrations.vero.delete_user({
   id = "usr_123"
 })
 ```
 
----
+## Tags
 
-## resubscribe
+### edit_tags
 
-Resubscribe a previously unsubscribed user to Vero email campaigns.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Unique user identifier to resubscribe |
-
-### Example
+Adds and removes tags in one call via `PUT /users/tags/edit`.
 
 ```lua
-app.integrations.vero.resubscribe({
-  id = "usr_123"
+app.integrations.vero.edit_tags({
+  id = "usr_123",
+  add = { "prospect", "trial" },
+  remove = { "inactive" }
 })
 ```
 
----
+## Events
 
-## get_current_user
+### track_event
 
-Get the profile of the currently authenticated Vero user. Useful for verifying API connectivity.
-
-### Parameters
-
-None.
-
-### Example
+Tracks an event via `POST /events/track`. Prefer an identity object with `id` and/or `email`.
 
 ```lua
-local user = app.integrations.vero.get_current_user({})
-print("Account: " .. (user.email or "unknown"))
-```
-
----
-
-## Common Workflows
-
-### Onboard a new user and trigger welcome email
-
-```lua
--- Step 1: Identify the user
-app.integrations.vero.identify_user({
-  id = "usr_456",
-  email = "jane@example.com",
-  name = "Jane Smith",
-  data = {
-    plan = "free",
-    signup_date = "2025-06-15"
-  }
-})
-
--- Step 2: Track the signup event (triggers welcome campaign)
 app.integrations.vero.track_event({
-  identity = "usr_456",
-  event_name = "Signed up",
+  identity = {
+    id = "usr_123",
+    email = "person@example.test"
+  },
+  event_name = "Viewed product",
   data = {
-    source = "landing_page",
-    plan = "free"
+    product_name = "Example product",
+    product_url = "https://example.test/products/1"
+  },
+  extras = {
+    source = "OpenCompany",
+    created_at = "2026-05-07T12:00:00+0000"
   }
 })
 ```
 
-### Upgrade a user's plan
+Vero deduplicates similar events over a short window. Include unique event data when every event occurrence must be recorded.
+
+## Generic API
+
+Use generic tools only for documented endpoints that do not yet have a first-class tool. Paths must be relative.
 
 ```lua
--- Update user attributes
-app.integrations.vero.update_user({
-  id = "usr_456",
-  data = {
-    plan = "premium",
-    upgraded_at = "2025-07-01"
-  }
+local campaigns = app.integrations.vero.api_get({
+  path = "/campaigns",
+  params = { page = 1 }
 })
 
--- Track the upgrade event
-app.integrations.vero.track_event({
-  identity = "usr_456",
-  event_name = "Upgraded plan",
-  data = {
-    from_plan = "free",
-    to_plan = "premium"
+app.integrations.vero.api_post({
+  path = "/users/track",
+  payload = {
+    id = "usr_456",
+    email = "new@example.test"
   }
 })
 ```
 
-### Handle a user leaving
+Absolute URLs are rejected.
+
+## Connection Status
+
+`get_current_user` returns local configuration status only. Vero Track API does not expose a current-user endpoint, so API access is verified when a write tool sends data.
 
 ```lua
--- Track churn event
-app.integrations.vero.track_event({
-  identity = "usr_456",
-  event_name = "Cancelled subscription",
-  data = {
-    reason = "too_expensive",
-    last_plan = "premium"
-  }
-})
-
--- Unsubscribe from emails
-app.integrations.vero.unsubscribe({
-  id = "usr_456"
-})
+local status = app.integrations.vero.get_current_user({})
 ```
-
----
 
 ## Multi-Account Usage
 
-If you have multiple Vero accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.vero.identify_user({id = "1", email = "a@b.com"})
-
--- Explicit default (portable across setups)
-app.integrations.vero.default.identify_user({id = "1", email = "a@b.com"})
-
--- Named accounts
-app.integrations.vero.marketing.identify_user({id = "1", email = "a@b.com"})
-app.integrations.vero.transactional.track_event({identity = "1", event_name = "Order shipped"})
+app.integrations.vero.identify_user({ id = "1", email = "a@example.test" })
+app.integrations.vero.default.identify_user({ id = "1", email = "a@example.test" })
+app.integrations.vero.marketing.track_event({
+  identity = { id = "1", email = "a@example.test" },
+  event_name = "Signed up"
+})
 ```
-
-All functions are identical across accounts — only the credentials differ.

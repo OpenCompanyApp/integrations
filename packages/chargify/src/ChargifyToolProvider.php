@@ -3,22 +3,26 @@
 namespace OpenCompany\Integrations\Chargify;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Chargify\Tools\ChargifyListSubscriptions;
+use OpenCompany\Integrations\Chargify\Tools\ChargifyGetCustomer;
+use OpenCompany\Integrations\Chargify\Tools\ChargifyGetCurrentUser;
+use OpenCompany\Integrations\Chargify\Tools\ChargifyGetInvoice;
 use OpenCompany\Integrations\Chargify\Tools\ChargifyGetSubscription;
 use OpenCompany\Integrations\Chargify\Tools\ChargifyListCustomers;
-use OpenCompany\Integrations\Chargify\Tools\ChargifyGetCustomer;
-use OpenCompany\Integrations\Chargify\Tools\ChargifyListProducts;
 use OpenCompany\Integrations\Chargify\Tools\ChargifyListInvoices;
-use OpenCompany\Integrations\Chargify\Tools\ChargifyGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\Chargify\Tools\ChargifyListProducts;
+use OpenCompany\Integrations\Chargify\Tools\ChargifyListSubscriptions;
 
 /**
+ * Registers the Chargify / Maxio Advanced Billing integration provider.
+ */
+class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -27,9 +31,9 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
           'auth' => [
-            'strategy' => 'api_key',
+            'strategy' => 'basic_auth_api_key',
             'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
+            'credential_mode' => 'stored_token',
             'setup_flows' =>
             [
               0 => 'manual_secret',
@@ -38,9 +42,11 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'refreshable' => false,
             'token_keys' =>
             [
+              0 => 'api_key',
             ],
             'notes' =>
             [
+              0 => 'Maxio Advanced Billing uses HTTP Basic Auth. The API key is the username; most legacy sites use x as the password.',
             ],
           ],
           'host_availability' => [
@@ -91,11 +97,13 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Recurring billing and subscription management platform',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargify',
-            'category' => 'payments',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://developers.chargify.com/docs/api-docs',
+            'docs_url' => 'https://developers.maxio.com/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -105,6 +113,15 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'placeholder' => 'Enter your Chargify API key',
                 'hint' => 'Find your API key in Chargify under Settings > API Keys',
                 'required' => true,
+            ],
+            [
+                'key' => 'api_password',
+                'type' => 'secret',
+                'label' => 'API Password',
+                'placeholder' => 'x',
+                'hint' => 'Optional Basic Auth password. Legacy Advanced Billing API keys usually use x.',
+                'required' => false,
+                'default' => 'x',
             ],
             [
                 'key' => 'subdomain',
@@ -128,6 +145,7 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
+        $apiPassword = $config['api_password'] ?? 'x';
         $subdomain = $config['subdomain'] ?? '';
         $baseUrl = isset($config['url']) && $config['url'] !== ''
             ? rtrim($config['url'], '/')
@@ -142,10 +160,10 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
         }
 
         try {
-            $response = Http::withHeaders([
-                'X-Auth-Token' => $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            $response = Http::acceptJson()
+                ->withBasicAuth($apiKey, $apiPassword !== '' ? $apiPassword : 'x')
+                ->timeout(10)
+                ->get($baseUrl . '/site.json');
 
             if ($response->status() === 401) {
                 return ['success' => false, 'error' => 'Invalid API key.'];
@@ -163,11 +181,11 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
             }
 
             $data = $response->json();
-            $userName = $data['user']['full_name'] ?? $data['user']['email'] ?? 'Unknown';
+            $siteName = $data['site']['name'] ?? $data['site']['subdomain'] ?? $subdomain ?: 'Unknown';
 
             return [
                 'success' => true,
-                'message' => "Connected to Chargify as {$userName}.",
+                'message' => "Connected to Chargify site {$siteName}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -178,6 +196,7 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'api_key' => 'nullable|string',
+            'api_password' => 'nullable|string',
             'subdomain' => 'nullable|string',
             'url' => 'nullable|url',
         ];
@@ -228,11 +247,18 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'List invoices with optional status filtering.',
                 'icon' => 'ph:invoice',
             ],
+            'chargify_get_invoice' => [
+                'class' => ChargifyGetInvoice::class,
+                'type' => 'read',
+                'name' => 'Get Invoice',
+                'description' => 'Get details for a single invoice.',
+                'icon' => 'ph:receipt',
+            ],
             'chargify_get_current_user' => [
                 'class' => ChargifyGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Chargify user.',
+                'name' => 'Get Site',
+                'description' => 'Read the current Advanced Billing site as a lightweight API check.',
                 'icon' => 'ph:user-circle',
             ],
         ];
@@ -241,10 +267,13 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/chargify.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'api_password', 'type' => 'secret', 'label' => 'API Password', 'required' => false, 'default' => 'x'],
             ['key' => 'subdomain', 'type' => 'string', 'label' => 'Subdomain', 'required' => false],
             ['key' => 'url', 'type' => 'url', 'label' => 'Base URL', 'required' => false, 'default' => ''],
         ];
@@ -260,12 +289,13 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new ChargifyService(
                 apiKey: $creds->get('chargify', 'api_key', '', $account),
                 subdomain: $creds->get('chargify', 'subdomain', '', $account),
                 baseUrl: $creds->get('chargify', 'url', '', $account),
+                apiPassword: $creds->get('chargify', 'api_password', 'x', $account),
             );
 
             return new $class($service);

@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MercadoPago\MercadoPagoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Search Mercado Pago customers.
+ *
+ * Supports email filtering plus limit and offset pagination.
+ */
 class MercadoPagoListCustomers implements Tool
 {
+    /**
+     * @param  MercadoPagoService  $service  The Mercado Pago API service.
+     */
     public function __construct(
         private MercadoPagoService $service,
     ) {}
@@ -31,6 +39,11 @@ class MercadoPagoListCustomers implements Tool
         ];
     }
 
+    /**
+     * Execute the customer search request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

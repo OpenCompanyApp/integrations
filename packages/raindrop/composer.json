@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-raindrop",
-    "description": "Raindrop.io bookmark manager integration for Laravel — manage bookmarks and collections.",
+    "description": "Raindrop.io REST API integration for Laravel covering bookmarks, collections, tags, highlights, import, export, and backups.",
     "license": "MIT",
     "authors": [
         {

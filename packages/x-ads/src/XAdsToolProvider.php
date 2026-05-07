@@ -18,7 +18,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
 {
     public function appName(): string
     {
-        return 'x_ads';
+        return 'x-ads';
     }
 
     public function appMeta(): array
@@ -38,7 +38,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Generated coverage of the X Ads API for ad accounts, campaigns, line items, creatives, targeting, audiences, analytics, and funding instruments.',
             'icon' => 'simple-icons:x',
             'logo' => 'simple-icons:x',
-            'category' => 'marketing',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.x.com/x-ads-api',
         ];
@@ -20497,15 +20497,22 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('x-ads', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('x_ads', $key, $default, $account);
+            };
 
             return new XAdsService(
-                apiKey: $creds->get('x_ads', 'api_key', '', $account),
-                apiSecret: $creds->get('x_ads', 'api_secret', '', $account),
-                accessToken: $creds->get('x_ads', 'access_token', '', $account),
-                accessTokenSecret: $creds->get('x_ads', 'access_token_secret', '', $account),
-                accountId: $creds->get('x_ads', 'account_id', '', $account),
-                apiVersion: $creds->get('x_ads', 'api_version', '12', $account),
-                baseUrl: $creds->get('x_ads', 'base_url', 'https://ads-api.x.com', $account),
+                apiKey: $get('api_key'),
+                apiSecret: $get('api_secret'),
+                accessToken: $get('access_token'),
+                accessTokenSecret: $get('access_token_secret'),
+                accountId: $get('account_id'),
+                apiVersion: $get('api_version', '12'),
+                baseUrl: $get('base_url', 'https://ads-api.x.com'),
             );
         }
 

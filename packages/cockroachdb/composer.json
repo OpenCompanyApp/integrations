@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-cockroachdb",
-    "description": "CockroachDB Cloud integration for Laravel — manage clusters, databases, and users.",
+    "description": "CockroachDB Cloud integration for Laravel agents with generated Cloud API coverage.",
     "license": "MIT",
     "authors": [
         {

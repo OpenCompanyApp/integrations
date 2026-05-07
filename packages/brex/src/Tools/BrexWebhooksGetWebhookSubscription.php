@@ -1,0 +1,36 @@
+<?php
+
+namespace OpenCompany\Integrations\Brex\Tools;
+
+/**
+ * Get Webhook.
+ *
+ * Maps to the official Brex endpoint get /v1/webhooks/{id}.
+ */
+class BrexWebhooksGetWebhookSubscription extends AbstractBrexTool
+{
+    protected const NAME = 'brex_webhooks_get_webhook_subscription';
+    protected const DESCRIPTION = 'Get Webhook
+
+Official Brex endpoint: GET /v1/webhooks/{id}
+
+Get details of a webhook';
+    protected const PARAMETERS = array (
+  'id' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `id` from the official Brex API operation.',
+  ),
+);
+    protected const METHOD = 'get';
+    protected const PATH = '/v1/webhooks/{id}';
+    protected const PATH_PARAMS = array (
+  'id' => 'id',
+);
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = false;
+}

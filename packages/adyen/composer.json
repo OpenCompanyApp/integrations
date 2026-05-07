@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-adyen",
-    "description": "Adyen payments integration for Laravel — transactions, payments, shoppers, stores, and merchant info.",
+    "description": "Adyen integration for Laravel with generated tools from the official Checkout v72 and Management v3 OpenAPI specifications.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "adyen", "payments", "finance", "opencompany"],
+    "keywords": ["tools", "adyen", "payments", "checkout", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Clerk user.
+ *
+ * Returns the Backend API user object for one user ID.
+ */
 class ClerkGetUser implements Tool
 {
     /**
      * Create a new ClerkGetUser tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -46,7 +53,7 @@ class ClerkGetUser implements Tool
     /**
      * Execute the get user tool.
      *
-     * @param  array  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

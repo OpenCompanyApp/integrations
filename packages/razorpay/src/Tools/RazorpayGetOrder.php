@@ -61,6 +61,10 @@ class RazorpayGetOrder implements Tool
                 return ToolResult::error('Razorpay integration is not configured.');
             }
 
+            if (empty($args['order_id'])) {
+                return ToolResult::error('Order ID is required.');
+            }
+
             $result = $this->service->getOrder($args['order_id']);
 
             return ToolResult::success($result);

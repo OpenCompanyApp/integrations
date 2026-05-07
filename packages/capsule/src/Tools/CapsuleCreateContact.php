@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * CapsuleCreateContact — create a new person or organisation in Capsule CRM.
+ * Create a new person or organisation in Capsule CRM.
  *
  * Accepts type ("person" or "organisation"), firstName, lastName,
  * and an array of email addresses. Returns the newly created contact.
  */
 class CapsuleCreateContact implements Tool
 {
+    /**
+     * @param  CapsuleService  $service  The Capsule CRM API client.
+     */
     public function __construct(
         private CapsuleService $service,
     ) {}
@@ -38,6 +41,11 @@ class CapsuleCreateContact implements Tool
         ];
     }
 
+    /**
+     * Create a Capsule CRM party.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

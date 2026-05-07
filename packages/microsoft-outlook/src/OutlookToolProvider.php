@@ -3,26 +3,27 @@
 namespace OpenCompany\Integrations\MicrosoftOutlook;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListMessages;
-use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookGetMessage;
-use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookSendMessage;
-use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListCalendars;
-use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListEvents;
 use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookCreateEvent;
 use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookGetMessage;
+use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListCalendars;
+use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListEvents;
+use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListMessages;
+use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookSendMessage;
 
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool provider for Microsoft Outlook through Microsoft Graph.
+ *
+ * Exposes mail, calendar, event, and user-profile tools with manual-token
+ * credential metadata for default and named account resolution.
  */
 class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -74,11 +75,7 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasI
           ],
         ];
     }
-
-
-
-
-/**
+    /**
      * Machine-name identifier for this integration.
      */
     public function appName(): string
@@ -86,21 +83,25 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return 'microsoft-outlook';
     }
 
-/**
+    /**
      * Short metadata shown in tool listings and UI.
+     *
+     * @return array<string, mixed>
      */
     public function appMeta(): array
     {
         return [
             'label'       => 'Microsoft Outlook',
-            'description' => 'Microsoft Outlook',
+            'description' => 'Mail, calendars, events, and user profiles through Microsoft Graph.',
             'icon'        => 'ph:envelope',
             'logo'        => 'simple-icons:microsoftoutlook',
         ];
     }
 
-/**
+    /**
      * Integration metadata for the Integrations UI.
+     *
+     * @return array<string, mixed>
      */
     public function integrationMeta(): array
     {
@@ -109,11 +110,13 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Read and send email, manage calendars and events via Microsoft Graph',
             'icon'        => 'ph:envelope',
             'logo'        => 'simple-icons:microsoftoutlook',
-            'category'    => 'email',
+            'category'    => 'productivity',
             'badge'       => 'verified',
             'docs_url'    => 'https://learn.microsoft.com/en-us/graph/api/overview',
         ];
-    }/**
+    }
+
+    /**
      * Configuration schema for the Integrations UI.
      *
      * @return array<int, array<string, mixed>>
@@ -282,7 +285,8 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasI
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {        return true;
+    {
+        return true;
     }
 
     /**

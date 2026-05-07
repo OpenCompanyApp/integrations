@@ -12,10 +12,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Returns full details for a specific event type including title, duration,
  * description, scheduling constraints, and assigned user/team.
  *
- * @see https://developer.cal.com/api/endpoints/event-types
+ * @see https://cal.com/docs/api-reference/v2/event-types/get-an-event-type
  */
 class CalGetEventType implements Tool
 {
+    /**
+     * @param  CalService  $service  Cal.com API client.
+     */
     public function __construct(
         private CalService $service,
     ) {}

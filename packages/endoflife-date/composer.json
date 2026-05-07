@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-endoflife-date",
+    "description": "endoflife.date integration for Laravel AI agents - product lifecycle, release, category, tag, and identifier data.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\EndOfLifeDate\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\EndOfLifeDate\\EndOfLifeDateServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "endoflife-date",
+        "eol",
+        "lifecycle",
+        "release-support",
+        "software-inventory",
+        "opencompany"
+    ]
+}

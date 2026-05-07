@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-vbout",
-    "description": "VBout integration for Laravel — manage contacts and email campaigns.",
+    "description": "VBOUT integration for Laravel agents with broad official API coverage.",
     "license": "MIT",
     "authors": [
         {

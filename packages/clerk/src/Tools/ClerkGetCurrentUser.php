@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify Clerk API connectivity.
+ *
+ * Fetches one user as a lightweight health check.
+ */
 class ClerkGetCurrentUser implements Tool
 {
     /**
      * Create a new ClerkGetCurrentUser tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -28,7 +35,7 @@ class ClerkGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Health check — verify Clerk API connectivity by fetching the first user. Returns a single user or empty result to confirm the API is reachable.';
+        return 'Health check - verify Clerk API connectivity by fetching the first user. Returns a single user or empty result to confirm the API is reachable.';
     }
 
     /**
@@ -44,7 +51,7 @@ class ClerkGetCurrentUser implements Tool
     /**
      * Execute the health check tool.
      *
-     * @param  array  $args  Tool arguments (unused).
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

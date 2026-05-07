@@ -2,54 +2,20 @@
 
 namespace OpenCompany\Integrations\Brandfetch\Tools;
 
-use OpenCompany\Integrations\Brandfetch\BrandfetchService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List brand colors for a specific brand.
- *
- * Returns the official color palette for the given brand, including
- * hex values, color types (primary, secondary, accent, background),
- * and usage context.
+ * Return colors from a brand profile.
  */
-class BrandfetchListColors implements Tool
+class BrandfetchListColors extends AbstractBrandfetchTool
 {
-    public function __construct(
-        private BrandfetchService $service,
-    ) {}
+    protected const TOOL_NAME = 'brandfetch_list_colors';
+    protected const TOOL_DESCRIPTION = 'Fetch a brand and return its color palette.';
+    protected const PARAMETERS = [
+        'identifier' => ['type' => 'string', 'required' => true, 'description' => 'Domain, Brand ID, ticker, ISIN, or crypto symbol.'],
+        'brand_id' => ['type' => 'string', 'description' => 'Legacy alias for identifier.'],
+    ];
 
-    public function name(): string
+    protected function run(array $args): array
     {
-        return 'brandfetch_list_colors';
-    }
-
-    public function description(): string
-    {
-        return 'List the official brand colors (hex values) for a brand. Returns color types such as primary, secondary, accent, dark, and light.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'brand_id' => ['type' => 'string', 'required' => true, 'description' => 'The brand identifier obtained from a brand search or lookup.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of colors to return.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brandfetch integration is not configured.');
-            }
-
-            $limit = isset($args['limit']) ? (int) $args['limit'] : null;
-            $result = $this->service->listColors($args['brand_id'], $limit);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->listColors((string) ($args['identifier'] ?? $this->required($args, 'brand_id')));
     }
 }

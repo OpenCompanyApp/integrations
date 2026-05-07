@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mindee",
-    "description": "Mindee document OCR integration for Laravel — parse invoices, receipts, passports, and custom documents.",
+    "description": "Mindee document OCR integration for Laravel agents with synchronous and asynchronous prediction tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "mindee", "ocr", "documents", "opencompany"],
+    "keywords": ["tools", "mindee", "ocr", "data-extraction", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

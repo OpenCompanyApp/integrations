@@ -1,0 +1,35 @@
+{
+    "name": "opencompanyapp/integration-microsoft-places",
+    "description": "Microsoft Places integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftPlaces\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftPlaces\\MicrosoftPlacesServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "places",
+        "rooms",
+        "room-lists",
+        "workspaces",
+        "buildings",
+        "graph",
+        "opencompany"
+    ]
+}

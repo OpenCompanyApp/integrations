@@ -3,18 +3,25 @@
 namespace OpenCompany\Integrations\WpEngine;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\WpEngine\Tools\WpEngineListSites;
+use OpenCompany\Integrations\WpEngine\Tools\WpEngineGetCurrentUser;
+use OpenCompany\Integrations\WpEngine\Tools\WpEngineListDomains;
+use OpenCompany\Integrations\WpEngine\Tools\WpEngineGetInstall;
 use OpenCompany\Integrations\WpEngine\Tools\WpEngineGetSite;
 use OpenCompany\Integrations\WpEngine\Tools\WpEngineListInstalls;
-use OpenCompany\Integrations\WpEngine\Tools\WpEngineGetInstall;
-use OpenCompany\Integrations\WpEngine\Tools\WpEngineListDomains;
+use OpenCompany\Integrations\WpEngine\Tools\WpEngineListSites;
 use OpenCompany\Integrations\WpEngine\Tools\WpEngineListUsers;
-use OpenCompany\Integrations\WpEngine\Tools\WpEngineGetCurrentUser;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Provides WP Engine hosting management tools.
+ *
+ * Exposes read-only account, site, install, domain, and user operations backed
+ * by the WP Engine API.
+ */
 class WpEngineToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -72,7 +79,7 @@ class WpEngineToolProvider implements ToolProvider, ConfigurableIntegration, Has
 
     public function appName(): string
     {
-        return 'wp_engine';
+        return 'wp-engine';
     }
 
     public function appMeta(): array
@@ -235,11 +242,18 @@ class WpEngineToolProvider implements ToolProvider, ConfigurableIntegration, Has
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('wp-engine', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('wp_engine', $key, $default, $account);
+            };
 
             $service = new WpEngineService(
-                accessToken: $creds->get('wp_engine', 'access_token', '', $account),
-                baseUrl: $creds->get('wp_engine', 'url', 'https://api.wpengineapi.com/v1', $account),
+                accessToken: $get('access_token'),
+                baseUrl: $get('url', 'https://api.wpengineapi.com/v1'),
             );
 
             return new $class($service);

@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Webex\Tools;
 
-use OpenCompany\Integrations\Webex\WebexService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class WebexListMessages implements Tool
+/**
+ * List messages from one Webex room.
+ */
+class WebexListMessages extends AbstractWebexTool implements Tool
 {
-    public function __construct(
-        private WebexService $service,
-    ) {}
-
     public function name(): string
     {
         return 'webex_list_messages';
@@ -26,17 +24,22 @@ class WebexListMessages implements Tool
     {
         return [
             'room_id' => ['type' => 'string', 'required' => true, 'description' => 'The room to list messages from.'],
-            'max' => ['type' => 'integer', 'description' => 'Maximum number of messages to return (1–1000, default: 50).'],
+            'max' => ['type' => 'integer', 'description' => 'Maximum number of messages to return (1-1000, default: 50).'],
             'before' => ['type' => 'string', 'description' => 'List messages posted before this ISO 8601 timestamp.'],
             'after' => ['type' => 'string', 'description' => 'List messages posted after this ISO 8601 timestamp.'],
         ];
     }
 
+    /**
+     * List room messages.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Webex integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
             $roomId = $args['room_id'] ?? '';

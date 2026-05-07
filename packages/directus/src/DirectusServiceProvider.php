@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Directus integration with Laravel's service container.
+ *
+ * Binds the Directus API client using host-provided credentials and registers
+ * the Directus tool provider with the shared registry when available.
+ */
 class DirectusServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,8 +20,8 @@ class DirectusServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new DirectusService(
-                accessToken: $creds->get('directus', 'access_token', ''),
-                baseUrl: $creds->get('directus', 'url', 'https://directus.example.com'),
+                accessToken: (string) $creds->get('directus', 'access_token', ''),
+                baseUrl: (string) $creds->get('directus', 'url', 'https://directus.example.com'),
             );
         });
     }
@@ -23,8 +29,7 @@ class DirectusServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new DirectusToolProvider());
+            $this->app->make(ToolProviderRegistry::class)->register(new DirectusToolProvider);
         }
     }
 }

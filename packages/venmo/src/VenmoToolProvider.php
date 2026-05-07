@@ -45,6 +45,7 @@ class VenmoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'notes' =>
             [
               0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+              1 => 'Venmo Developer and Payouts APIs are retired for new businesses; this package is only for existing grandfathered API access.',
             ],
           ],
           'host_availability' => [
@@ -82,7 +83,7 @@ class VenmoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'label' => 'Venmo',
-            'description' => 'Peer-to-peer payments',
+            'description' => 'Legacy peer-to-peer payments API',
             'icon' => 'ph:money',
             'logo' => 'simple-icons:venmo',
         ];
@@ -92,12 +93,12 @@ class VenmoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'name' => 'Venmo',
-            'description' => 'Peer-to-peer payments, transfers, and transaction management',
+            'description' => 'Legacy Venmo Developer API access for grandfathered apps; new businesses should use PayPal Payouts to Venmo or PayPal/Braintree Venmo checkout.',
             'icon' => 'ph:money',
             'logo' => 'simple-icons:venmo',
-            'category' => 'finance',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.venmo.com',
+            'category' => 'data',
+            'badge' => 'legacy',
+            'docs_url' => 'https://venmo.com/docs/webhooks',
         ];
     }
 
@@ -109,7 +110,7 @@ class VenmoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'type' => 'secret',
                 'label' => 'Access Token',
                 'placeholder' => 'your-venmo-access-token',
-                'hint' => 'Obtain via Venmo OAuth flow. See Venmo developer documentation for details.',
+                'hint' => 'Only existing businesses with grandfathered Venmo Developer API access can use this token. Venmo no longer grants new Developer or Payouts API access.',
                 'required' => true,
             ],
         ];

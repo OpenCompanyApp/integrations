@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class RetellAIListCalls implements Tool
 {
+    /**
+     * @param  RetellAIService  $service  The Retell AI API client.
+     */
     public function __construct(
         private RetellAIService $service,
     ) {}
@@ -35,6 +38,11 @@ class RetellAIListCalls implements Tool
         ];
     }
 
+    /**
+     * List calls.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -42,7 +50,7 @@ class RetellAIListCalls implements Tool
                 return ToolResult::error('Retell AI integration is not configured.');
             }
 
-            $filters = $args['filter'] ?? [];
+            $filters = is_array($args['filter'] ?? null) ? $args['filter'] : [];
 
             $result = $this->service->listCalls($filters);
 

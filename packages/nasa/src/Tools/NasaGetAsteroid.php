@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Nasa\NasaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve one NASA Near Earth Object by ID.
+ */
 class NasaGetAsteroid implements Tool
 {
     /**

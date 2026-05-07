@@ -1,0 +1,23 @@
+{
+    "name": "opencompanyapp/integration-airbyte",
+    "description": "Airbyte API integration for OpenCompany and KosmoKrator agents.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Airbyte\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Airbyte\\AirbyteServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

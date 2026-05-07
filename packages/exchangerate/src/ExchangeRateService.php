@@ -4,6 +4,11 @@ namespace OpenCompany\Integrations\ExchangeRate;
 
 use Illuminate\Support\Facades\Http;
 
+/**
+ * HTTP client for the Fawaz Ahmed exchange-api static currency datasets.
+ *
+ * Uses the documented jsDelivr endpoint first and the Cloudflare Pages mirror as fallback.
+ */
 class ExchangeRateService
 {
     private const PRIMARY_URL = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{date}/v1/currencies';
@@ -58,10 +63,30 @@ class ExchangeRateService
     /** Get a single exchange rate between two currencies. */
     public function getRate(string $from, string $to, string $date = 'latest'): ?float
     {
-        $result = $this->getRates($from, $date);
-        $to = strtolower($to);
+        $result = $this->getPairRate($from, $to, $date);
 
-        return $result['rates'][$to] ?? null;
+        return $result['rate'];
+    }
+
+    /**
+     * Get a direct exchange rate between two currencies.
+     *
+     * Uses the upstream pair endpoint instead of fetching the full base-currency matrix.
+     *
+     * @return array{from: string, to: string, rate: float|null, date: string}
+     */
+    public function getPairRate(string $from, string $to, string $date = 'latest'): array
+    {
+        $from = strtolower($from);
+        $to = strtolower($to);
+        $data = $this->get("/{$from}/{$to}", $date);
+
+        return [
+            'from' => $from,
+            'to' => $to,
+            'rate' => $data[$to] ?? null,
+            'date' => $data['date'] ?? $date,
+        ];
     }
 
     /**
@@ -71,10 +96,10 @@ class ExchangeRateService
      */
     public function convert(string $from, string $to, float $amount, string $date = 'latest'): array
     {
-        $result = $this->getRates($from, $date);
-        $to = strtolower($to);
+        $result = $this->getPairRate($from, $to, $date);
         $from = strtolower($from);
-        $rate = $result['rates'][$to] ?? null;
+        $to = strtolower($to);
+        $rate = $result['rate'];
 
         if ($rate === null) {
             throw new \RuntimeException("Exchange rate not found for {$from} -> {$to}");

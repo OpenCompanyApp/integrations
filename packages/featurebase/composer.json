@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-featurebase",
+    "description": "Featurebase integration for Laravel AI agents - feedback, changelogs, contacts, companies, help center, conversations, tickets, tags, teams, and webhooks.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Featurebase\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Featurebase\\FeaturebaseServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

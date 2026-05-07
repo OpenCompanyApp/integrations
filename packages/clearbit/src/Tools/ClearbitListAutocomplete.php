@@ -13,7 +13,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Ideal for type-ahead / autocomplete UI flows where users start typing
  * a company name and get suggestions back.
  *
- * Endpoint: GET /companies/find?name=…
+ * Endpoint: GET https://autocomplete.clearbit.com/v1/companies/suggest?query=…
  */
 class ClearbitListAutocomplete implements Tool
 {
@@ -61,10 +61,6 @@ class ClearbitListAutocomplete implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Clearbit integration is not configured.');
-            }
-
             $name = $args['name'] ?? '';
             if (empty($name)) {
                 return ToolResult::error('A company name is required.');

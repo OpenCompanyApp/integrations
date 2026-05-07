@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List forms for a Netlify site.
+ */
 class NetlifyListForms implements Tool
 {
+    /**
+     * @param  NetlifyService  $service  The Netlify REST API client.
+     */
     public function __construct(
         private NetlifyService $service,
     ) {}
@@ -29,6 +35,11 @@ class NetlifyListForms implements Tool
         ];
     }
 
+    /**
+     * List and normalize forms for a site.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (site_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

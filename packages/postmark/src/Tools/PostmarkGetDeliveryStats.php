@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Postmark\PostmarkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get outbound delivery statistics for the Postmark server.
+ *
+ * Returns sent, bounced, spam complaint, tracked, opened, and clicked counters.
+ */
 class PostmarkGetDeliveryStats implements Tool
 {
+    /**
+     * @param  PostmarkService  $service  The Postmark API client
+     */
     public function __construct(
         private PostmarkService $service,
     ) {}
@@ -27,10 +35,15 @@ class PostmarkGetDeliveryStats implements Tool
         return [];
     }
 
+    /**
+     * Get delivery statistics for the configured server.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (none)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Postmark integration is not configured.');
             }
 

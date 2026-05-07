@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve Groq file metadata by ID.
+ */
 class GroqGetFile implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -29,6 +35,11 @@ class GroqGetFile implements Tool
         ];
     }
 
+    /**
+     * Execute the file retrieval request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments with file_id.
+     */
     public function execute(array $args): ToolResult
     {
         try {

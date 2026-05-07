@@ -47,14 +47,15 @@ class FathomListSites implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of sites to return (default: 20).'],
-            'starting_after' => ['type' => 'integer', 'description' => 'Cursor for pagination — pass the ID of the last site from a previous response to get the next page.'],
+            'starting_after' => ['type' => 'string', 'description' => 'Cursor for pagination; pass the ID of the last site from a previous response.'],
+            'ending_before' => ['type' => 'string', 'description' => 'Cursor for pagination; pass the ID of the first site from a previous response.'],
         ];
     }
 
     /**
      * Execute the tool and return a list of Fathom sites.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, starting_after).
+     * @param  array<string, mixed>  $args  Tool arguments (limit, starting_after, ending_before).
      */
     public function execute(array $args): ToolResult
     {
@@ -64,9 +65,10 @@ class FathomListSites implements Tool
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-            $startingAfter = isset($args['starting_after']) ? (int) $args['starting_after'] : null;
+            $startingAfter = $args['starting_after'] ?? null;
+            $endingBefore = $args['ending_before'] ?? null;
 
-            $result = $this->service->listSites($limit, $startingAfter);
+            $result = $this->service->listSites($limit, $startingAfter, $endingBefore);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -1,159 +1,133 @@
-# Client for the Discord REST API (v10) covering channels, messages, guilds, and users — Lua API Reference
+# Discord
 
-## discord_list_channels
+Discord tools are exposed under `app.integrations.discord`. The integration targets Discord REST API v10 and supports both OAuth-style `Bearer` tokens and bot tokens through the `token_type` credential.
 
-List all channels in a Discord guild.
-Returns channel IDs, names, types, and topics.
+Use `token_type = "Bot"` for Discord bot tokens. Use `token_type = "Bearer"` for OAuth access tokens. Many guild moderation, role, webhook, and message-management endpoints require bot tokens with the corresponding guild permissions.
 
-### Parameters
+## Raw API Helpers
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `guild_id` | string | yes | The ID of the guild to list channels for. |
+Use the raw helpers for Discord REST endpoints that do not yet have a first-class tool:
 
-### Example
+- `discord_api_get`
+- `discord_api_post`
+- `discord_api_patch`
+- `discord_api_put`
+- `discord_api_delete`
+
+Paths are relative to `https://discord.com/api/v10`.
 
 ```lua
-local result = app.integrations.discord.discord_list_channels({
+local roles = app.integrations.discord.discord_api_get({
+  path = "/guilds/1234567890/roles"
+})
+```
+
+## Guild And Channel Discovery
+
+```lua
+local me = app.integrations.discord.discord_get_current_user({})
+
+local guilds = app.integrations.discord.discord_list_guilds({
+  limit = 50
+})
+
+local channels = app.integrations.discord.discord_list_channels({
   guild_id = "1234567890"
 })
 ```
 
-## discord_get_channel
+Channel lifecycle tools:
 
-Get information about a Discord channel by its ID.
-Returns the channel's ID, name, type, topic, and other properties.
+- `discord_create_guild_channel`
+- `discord_get_channel`
+- `discord_edit_channel`
+- `discord_delete_channel`
+- `discord_edit_channel_positions`
 
-### Parameters
+Most create/update tools accept first-class snake_case fields and a raw `body` object for Discord's exact request schema.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to retrieve. |
-
-### Example
+## Messages
 
 ```lua
-local result = app.integrations.discord.discord_get_channel({
-  channel_id = "1234567890"
+local sent = app.integrations.discord.discord_send_message({
+  channel_id = "2222222222",
+  content = "Deployment finished."
 })
-```
 
-## discord_send_message
-
-Send a message to a Discord channel. Supports text content and rich embeds.
-Returns the sent message ID and channel ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to send the message to. |
-| `content` | string | no | The text content of the message. |
-| `embeds` | string | no | JSON array of embed objects for rich formatting. |
-| `tts` | boolean | no | If true, the message will be read aloud via text-to-speech. |
-
-### Example
-
-```lua
-local result = app.integrations.discord.discord_send_message({
-  channel_id = "1234567890"
-  content = "Hello from the integration!"
-})
-```
-
-## discord_list_messages
-
-Get messages from a Discord channel. Supports pagination with before/after and limit.
-Returns message IDs, content, author info, and timestamps.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to get messages from. |
-| `limit` | integer | no | Number of messages to retrieve (1–100, default 50). |
-| `before` | string | no | Message ID to get messages before (for pagination). |
-| `after` | string | no | Message ID to get messages after (for pagination). |
-
-### Example
-
-```lua
-local result = app.integrations.discord.discord_list_messages({
-  channel_id = "1234567890"
+local messages = app.integrations.discord.discord_list_messages({
+  channel_id = "2222222222",
   limit = 25
 })
 ```
 
-## discord_list_guilds
+Message management tools include:
 
-List guilds the current Discord user is a member of.
-Returns guild IDs, names, icons, and owner status.
-Use limit, before, and after for pagination.
+- `discord_get_message`
+- `discord_edit_message`
+- `discord_delete_message`
+- `discord_bulk_delete_messages`
+- `discord_list_pinned_messages`
+- `discord_pin_message`
+- `discord_unpin_message`
+- `discord_create_reaction`
+- `discord_delete_own_reaction`
+- `discord_list_reaction_users`
 
-### Parameters
+Discord restricts message reads and content fields based on bot membership, channel permissions, and privileged intents. The REST API may return messages without full content when the token is not allowed to view it.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of guilds to retrieve (1–200, default 200). |
-| `before` | string | no | Guild ID to get guilds before (for pagination). |
-| `after` | string | no | Guild ID to get guilds after (for pagination). |
-
-### Example
+## Members, Roles, And Moderation
 
 ```lua
-local result = app.integrations.discord.discord_list_guilds({
-  limit = 50
+local members = app.integrations.discord.discord_list_guild_members({
+  guild_id = "1234567890",
+  limit = 100
+})
+
+app.integrations.discord.discord_add_guild_member_role({
+  guild_id = "1234567890",
+  user_id = "3333333333",
+  role_id = "4444444444"
 })
 ```
 
-## discord_get_guild
+Available tools:
 
-Get information about a Discord guild by its ID.
-Returns the guild's ID, name, icon, description, member count, and other properties.
+- `discord_list_guild_members`
+- `discord_get_guild_member`
+- `discord_edit_guild_member`
+- `discord_kick_guild_member`
+- `discord_add_guild_member_role`
+- `discord_remove_guild_member_role`
+- `discord_list_guild_roles`
+- `discord_create_guild_role`
+- `discord_edit_guild_role`
+- `discord_delete_guild_role`
+- `discord_list_guild_bans`
+- `discord_create_guild_ban`
+- `discord_remove_guild_ban`
 
-### Parameters
+Use caution with destructive moderation tools. Discord permission errors are returned directly from the API.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `guild_id` | string | yes | The ID of the guild to retrieve. |
+## Invites And Webhooks
 
-### Example
+Invite tools:
 
-```lua
-local result = app.integrations.discord.discord_get_guild({
-  guild_id = "1234567890"
-})
-```
+- `discord_list_guild_invites`
+- `discord_create_channel_invite`
+- `discord_get_invite`
+- `discord_delete_invite`
 
-## discord_get_current_user
+Webhook tools:
 
-Retrieve the currently authenticated Discord user.
-Returns the user's ID, username, discriminator, and avatar.
-Useful for identifying which account or token is in use.
+- `discord_list_channel_webhooks`
+- `discord_list_guild_webhooks`
+- `discord_create_webhook`
+- `discord_get_webhook`
+- `discord_edit_webhook`
+- `discord_delete_webhook`
 
-### Example
+Webhook execution with webhook token is intentionally left to raw API helpers because it uses token-in-path authentication and may be better handled by a dedicated unauthenticated webhook-send integration.
 
-```lua
-local result = app.integrations.discord.discord_get_current_user({
-})
-```
+## Output Shape
 
----
-
-## Multi-Account Usage
-
-If you have multiple discord accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.discord.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.discord.default.function_name({...})
-
--- Named accounts
-app.integrations.discord.work.function_name({...})
-app.integrations.discord.personal.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Existing compatibility tools such as `discord_list_messages`, `discord_list_channels`, and `discord_get_current_user` keep their normalized response shape. New endpoint-mapped tools return Discord's parsed JSON response directly, or an empty object for `204 No Content` responses.

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List public Vimeo channels.
+ */
 class VimeoListChannels implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -30,6 +36,11 @@ class VimeoListChannels implements Tool
         ];
     }
 
+    /**
+     * List channels.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

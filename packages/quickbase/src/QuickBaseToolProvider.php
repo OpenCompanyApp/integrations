@@ -14,6 +14,10 @@ use OpenCompany\Integrations\QuickBase\Tools\QuickBaseCreateRecord;
 use OpenCompany\Integrations\QuickBase\Tools\QuickBaseGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
+/**
+ * Registers the QuickBase integration provider and exposes REST API tools.
+ */
 class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -91,9 +95,9 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Low-code database platform for building business applications',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:quickbase',
-            'category' => 'database',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://developer.quickbase.com/',
+            'docs_url' => 'https://developer.quickbase.com/operation',
         ];
     }    public function configSchema(): array
     {
@@ -170,8 +174,8 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function validationRules(): array
     {
         return [
-            'access_token' => 'nullable|string',
-            'realm_hostname' => 'nullable|string',
+            'access_token' => 'required|string',
+            'realm_hostname' => 'required|string',
             'base_url' => 'nullable|url',
         ];
     }
@@ -179,6 +183,58 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function tools(): array
     {
         return [
+            'quickbase_list_apps' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseListApps',
+                'type' => 'read',
+                'name' => 'List Apps',
+                'description' => 'List Quickbase apps available to the authenticated user.',
+                'icon' => 'ph:app-window',
+                'parameters' => [
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as name, limit, and offset.'],
+                ],
+            ],
+            'quickbase_get_app' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseGetApp',
+                'type' => 'read',
+                'name' => 'Get App',
+                'description' => 'Get metadata for a Quickbase app.',
+                'icon' => 'ph:app-window',
+                'parameters' => [
+                    'appId' => ['type' => 'string', 'required' => true, 'description' => 'The application ID.'],
+                ],
+            ],
+            'quickbase_create_app' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseCreateApp',
+                'type' => 'write',
+                'name' => 'Create App',
+                'description' => 'Create a Quickbase app.',
+                'icon' => 'ph:plus-circle',
+                'parameters' => [
+                    'body' => ['type' => 'object', 'required' => true, 'description' => 'App creation payload.'],
+                ],
+            ],
+            'quickbase_copy_app' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseCopyApp',
+                'type' => 'write',
+                'name' => 'Copy App',
+                'description' => 'Copy an existing Quickbase app.',
+                'icon' => 'ph:copy',
+                'parameters' => [
+                    'appId' => ['type' => 'string', 'required' => true, 'description' => 'The source application ID.'],
+                    'body' => ['type' => 'object', 'description' => 'Optional copy settings.'],
+                ],
+            ],
+            'quickbase_delete_app' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseDeleteApp',
+                'type' => 'write',
+                'name' => 'Delete App',
+                'description' => 'Delete a Quickbase app by ID.',
+                'icon' => 'ph:trash',
+                'parameters' => [
+                    'appId' => ['type' => 'string', 'required' => true, 'description' => 'The application ID.'],
+                    'name' => ['type' => 'string', 'description' => 'Optional app name confirmation.'],
+                ],
+            ],
             'quickbase_list_tables' => [
                 'class' => QuickBaseListTables::class,
                 'type' => 'read',
@@ -192,6 +248,94 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'name' => 'Get Table',
                 'description' => 'Get details for a specific table.',
                 'icon' => 'ph:table',
+            ],
+            'quickbase_create_table' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseCreateTable',
+                'type' => 'write',
+                'name' => 'Create Table',
+                'description' => 'Create a table in a Quickbase app.',
+                'icon' => 'ph:table',
+                'parameters' => [
+                    'appId' => ['type' => 'string', 'required' => true, 'description' => 'The application ID.'],
+                    'body' => ['type' => 'object', 'required' => true, 'description' => 'Table creation payload.'],
+                ],
+            ],
+            'quickbase_update_table' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseUpdateTable',
+                'type' => 'write',
+                'name' => 'Update Table',
+                'description' => 'Update Quickbase table metadata.',
+                'icon' => 'ph:pencil-simple',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'body' => ['type' => 'object', 'required' => true, 'description' => 'Table attributes to update.'],
+                ],
+            ],
+            'quickbase_delete_table' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseDeleteTable',
+                'type' => 'write',
+                'name' => 'Delete Table',
+                'description' => 'Delete a Quickbase table.',
+                'icon' => 'ph:trash',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                ],
+            ],
+            'quickbase_list_fields' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseListFields',
+                'type' => 'read',
+                'name' => 'List Fields',
+                'description' => 'List field definitions in a Quickbase table.',
+                'icon' => 'ph:list-checks',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as includeFieldPerms.'],
+                ],
+            ],
+            'quickbase_get_field' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseGetField',
+                'type' => 'read',
+                'name' => 'Get Field',
+                'description' => 'Get a Quickbase field definition by field ID.',
+                'icon' => 'ph:textbox',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'fieldId' => ['type' => 'integer', 'required' => true, 'description' => 'The field ID.'],
+                ],
+            ],
+            'quickbase_create_field' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseCreateField',
+                'type' => 'write',
+                'name' => 'Create Field',
+                'description' => 'Create a field in a Quickbase table.',
+                'icon' => 'ph:textbox',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'body' => ['type' => 'object', 'required' => true, 'description' => 'Field creation payload.'],
+                ],
+            ],
+            'quickbase_update_field' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseUpdateField',
+                'type' => 'write',
+                'name' => 'Update Field',
+                'description' => 'Update field properties in a Quickbase table.',
+                'icon' => 'ph:pencil-simple',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'fieldId' => ['type' => 'integer', 'required' => true, 'description' => 'The field ID.'],
+                    'body' => ['type' => 'object', 'required' => true, 'description' => 'Field attributes to update.'],
+                ],
+            ],
+            'quickbase_delete_field' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseDeleteField',
+                'type' => 'write',
+                'name' => 'Delete Field',
+                'description' => 'Delete a field from a Quickbase table.',
+                'icon' => 'ph:trash',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'fieldId' => ['type' => 'integer', 'required' => true, 'description' => 'The field ID.'],
+                ],
             ],
             'quickbase_list_records' => [
                 'class' => QuickBaseListRecords::class,
@@ -214,12 +358,136 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'description' => 'Create a new record in a table.',
                 'icon' => 'ph:plus-circle',
             ],
+            'quickbase_upsert_records' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseUpsertRecords',
+                'type' => 'write',
+                'name' => 'Upsert Records',
+                'description' => 'Upsert one or more Quickbase records, optionally using a merge field.',
+                'icon' => 'ph:arrows-clockwise',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'data' => ['type' => 'array', 'required' => true, 'description' => 'Record data array using Quickbase field ID objects.'],
+                    'mergeFieldId' => ['type' => 'integer', 'description' => 'Optional merge field ID.'],
+                    'fieldsToReturn' => ['type' => 'array', 'description' => 'Optional field IDs to return.'],
+                ],
+            ],
+            'quickbase_delete_records' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseDeleteRecords',
+                'type' => 'write',
+                'name' => 'Delete Records',
+                'description' => 'Delete Quickbase records matching a where clause.',
+                'icon' => 'ph:trash',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'where' => ['type' => 'string', 'required' => true, 'description' => 'Quickbase query expression selecting records to delete.'],
+                ],
+            ],
+            'quickbase_list_reports' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseListReports',
+                'type' => 'read',
+                'name' => 'List Reports',
+                'description' => 'List reports for a Quickbase table.',
+                'icon' => 'ph:chart-bar',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                ],
+            ],
+            'quickbase_get_report' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseGetReport',
+                'type' => 'read',
+                'name' => 'Get Report',
+                'description' => 'Get metadata for a Quickbase report.',
+                'icon' => 'ph:chart-bar',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'reportId' => ['type' => 'string', 'required' => true, 'description' => 'The report ID.'],
+                ],
+            ],
+            'quickbase_run_report' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseRunReport',
+                'type' => 'read',
+                'name' => 'Run Report',
+                'description' => 'Run a Quickbase report and return its data.',
+                'icon' => 'ph:play-circle',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'reportId' => ['type' => 'string', 'required' => true, 'description' => 'The report ID.'],
+                    'body' => ['type' => 'object', 'description' => 'Optional report run options.'],
+                ],
+            ],
+            'quickbase_list_relationships' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseListRelationships',
+                'type' => 'read',
+                'name' => 'List Relationships',
+                'description' => 'List relationships for a Quickbase table.',
+                'icon' => 'ph:tree-structure',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                ],
+            ],
+            'quickbase_create_relationship' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseCreateRelationship',
+                'type' => 'write',
+                'name' => 'Create Relationship',
+                'description' => 'Create a relationship for a Quickbase table.',
+                'icon' => 'ph:tree-structure',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The parent table ID.'],
+                    'body' => ['type' => 'object', 'required' => true, 'description' => 'Relationship creation payload.'],
+                ],
+            ],
+            'quickbase_delete_relationship' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseDeleteRelationship',
+                'type' => 'write',
+                'name' => 'Delete Relationship',
+                'description' => 'Delete a Quickbase table relationship.',
+                'icon' => 'ph:trash',
+                'parameters' => [
+                    'tableId' => ['type' => 'string', 'required' => true, 'description' => 'The table ID.'],
+                    'relationshipId' => ['type' => 'integer', 'required' => true, 'description' => 'The relationship ID.'],
+                ],
+            ],
             'quickbase_get_current_user' => [
                 'class' => QuickBaseGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the currently authenticated QuickBase user.',
                 'icon' => 'ph:user',
+            ],
+            'quickbase_api_get' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseApiGet',
+                'type' => 'read',
+                'name' => 'QuickBase API GET',
+                'description' => 'Call a documented Quickbase REST API GET endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /apps or /fields.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters.'],
+                ],
+            ],
+            'quickbase_api_post' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseApiPost',
+                'type' => 'write',
+                'name' => 'QuickBase API POST',
+                'description' => 'Call a documented Quickbase REST API POST endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /records.'],
+                    'body' => ['type' => 'object', 'description' => 'JSON request body.'],
+                    'query' => ['type' => 'object', 'description' => 'Optional query parameters.'],
+                ],
+            ],
+            'quickbase_api_delete' => [
+                'class' => 'OpenCompany\\Integrations\\QuickBase\\Tools\\QuickBaseApiDelete',
+                'type' => 'write',
+                'name' => 'QuickBase API DELETE',
+                'description' => 'Call a documented Quickbase REST API DELETE endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /records.'],
+                    'body' => ['type' => 'object', 'description' => 'JSON request body.'],
+                    'query' => ['type' => 'object', 'description' => 'Optional query parameters.'],
+                ],
             ],
         ];
     }

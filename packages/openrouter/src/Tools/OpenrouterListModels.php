@@ -40,7 +40,7 @@ class OpenrouterListModels implements Tool
     }
 
     /**
-     * Parameter schema — no parameters required.
+     * Parameter schema; no parameters required.
      *
      * @return array<string, array{type: string, required?: bool, description: string}>
      */

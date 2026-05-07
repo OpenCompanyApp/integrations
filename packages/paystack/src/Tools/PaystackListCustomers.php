@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List customers for a Paystack integration.
+ *
+ * Supports Paystack pagination parameters.
+ */
 class PaystackListCustomers implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -30,6 +38,11 @@ class PaystackListCustomers implements Tool
         ];
     }
 
+    /**
+     * List customers using optional pagination arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

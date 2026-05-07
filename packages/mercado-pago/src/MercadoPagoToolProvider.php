@@ -3,22 +3,28 @@
 namespace OpenCompany\Integrations\MercadoPago;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoListPayments;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoGetPayment;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoCreatePayment;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoListCustomers;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoGetCustomer;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoListPreferences;
-use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoCreatePayment;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoGetCurrentUser;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoGetCustomer;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoGetPayment;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoListCustomers;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoListPayments;
+use OpenCompany\Integrations\MercadoPago\Tools\MercadoPagoListPreferences;
 
 /**
+ * Registers Mercado Pago tools and metadata for integration discovery.
+ *
+ * Exposes payments, customers, checkout preferences, and identity operations
+ * for the Mercado Pago REST API.
+ */
+class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +32,36 @@ class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Mercado Pago access tokens are sent as Authorization: Bearer <access_token>.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -92,11 +87,13 @@ class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'Latin American payment processing and financial services',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:mercadopago',
-            'category' => 'finance',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://www.mercadopago.com.br/developers/en/docs',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -207,7 +204,9 @@ class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/mercado-pago.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -224,7 +223,7 @@ class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, 
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new MercadoPagoService(
                 accessToken: $creds->get('mercado-pago', 'access_token', '', $account),

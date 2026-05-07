@@ -2,57 +2,36 @@
 
 namespace OpenCompany\Integrations\Braze\Tools;
 
-use OpenCompany\Integrations\Braze\BrazeService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get detailed information about a specific Braze canvas.
- *
- * Returns the full canvas configuration including steps, targeting,
- * messaging channels, and conversion tracking.
- *
- * @see https://www.braze.com/docs/api/endpoints/export/canvas/get_canvas_details/
+ * Get Braze Canvas details.
  */
-class BrazeGetCanvas implements Tool
+class BrazeGetCanvas extends AbstractBrazeTool
 {
-    public function __construct(
-        private BrazeService $service,
-    ) {}
+    protected array $parameters = array (
+  'canvas_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'Canvas ID.',
+    'required' => true,
+  ),
+);
 
-    public function name(): string
-    {
-        return 'braze_get_canvas';
-    }
+    protected array $required = array (
+  0 => 'canvas_id',
+);
 
-    public function description(): string
-    {
-        return 'Get detailed information about a specific Braze canvas, including steps, targeting rules, messaging channels, and analytics.';
-    }
+    protected array $queryParams = array (
+  0 => 'canvas_id',
+);
 
-    public function parameters(): array
-    {
-        return [
-            'canvas_id' => ['type' => 'string', 'required' => true, 'description' => 'The Braze canvas identifier.'],
-        ];
-    }
+    protected array $bodyParams = array (
+);
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Braze integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            if (empty($args['canvas_id'])) {
-                return ToolResult::error('canvas_id is required.');
-            }
+    protected string $path = '/canvas/details';
 
-            $result = $this->service->getCanvas($args['canvas_id']);
+    protected string $toolName = 'braze_get_canvas';
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'Get Braze Canvas details.';
 }

@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-readme",
+    "description": "ReadMe integration for Laravel AI agents - branches, categories, guides, API references, API definitions, search, project metadata, and API keys.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\ReadMe\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\ReadMe\\ReadMeServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "readme",
+        "readme-com",
+        "documentation",
+        "api-reference",
+        "opencompany",
+        "ai-agents"
+    ]
+}

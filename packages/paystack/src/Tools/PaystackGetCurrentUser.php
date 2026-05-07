@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify Paystack connectivity for the configured secret key.
+ *
+ * Calls a lightweight integration endpoint to check that the API is reachable.
+ */
 class PaystackGetCurrentUser implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -27,6 +35,11 @@ class PaystackGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Execute the Paystack connection check.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

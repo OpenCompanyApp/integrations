@@ -95,7 +95,7 @@ class SnowflakeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Cloud-based data warehouse for SQL analytics',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:snowflake',
-            'category' => 'database',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.snowflake.com/en/developer-guide/sql-api/index',
         ];

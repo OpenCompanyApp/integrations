@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Chroma\ChromaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve records from a Chroma collection.
+ */
 class ChromaGetDocument implements Tool
 {
+    /**
+     * @param  ChromaService  $service  Chroma API client.
+     */
     public function __construct(
         private ChromaService $service,
     ) {}
@@ -35,6 +41,11 @@ class ChromaGetDocument implements Tool
         ];
     }
 
+    /**
+     * Execute the record get request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

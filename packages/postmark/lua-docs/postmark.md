@@ -2,11 +2,13 @@
 
 ## Authentication
 
-The Postmark integration uses a Server API token. The token is sent via the `X-Postmark-Server-Token` header on every request.
+The Postmark integration uses a Server API token for server-level operations.
+The token is sent via the `X-Postmark-Server-Token` header.
 
 Find your Server API token: **Postmark Dashboard → Server → API Tokens**
 
-For account-level operations (listing servers), you may need an Account API token.
+For account-level operations, including `postmark_list_servers`, configure an
+Account API token. Those requests use the `X-Postmark-Account-Token` header.
 
 ## Base URL
 
@@ -58,7 +60,7 @@ List endpoints support `count` and `offset` parameters for pagination.
 
 ### Server management
 
-1. `postmark_list_servers` — List servers in the account. Filter by name.
+1. `postmark_list_servers` — List servers in the account. Requires an Account API token and supports filtering by name.
 2. `postmark_get_current_user` — Get current server info and settings. Useful as a health check.
 
 ## Message Statuses

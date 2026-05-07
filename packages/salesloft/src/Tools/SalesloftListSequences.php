@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Salesloft\SalesloftService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List legacy Salesloft call sequences.
+ */
 class SalesloftListSequences implements Tool
 {
     public function __construct(

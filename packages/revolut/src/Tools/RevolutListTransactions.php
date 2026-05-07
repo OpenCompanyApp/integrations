@@ -36,11 +36,11 @@ class RevolutListTransactions implements Tool
     public function parameters(): array
     {
         return [
-            'account_id' => ['type' => 'string', 'description' => 'Filter transactions by account ID.'],
+            'account_id' => ['type' => 'string', 'description' => 'Filter transactions by account ID. Sent to Revolut as account.'],
             'from' => ['type' => 'string', 'description' => 'Start date for transactions (ISO 8601, e.g., "2026-01-01T00:00:00Z").'],
             'to' => ['type' => 'string', 'description' => 'End date for transactions (ISO 8601, e.g., "2026-04-07T23:59:59Z").'],
             'count' => ['type' => 'integer', 'description' => 'Number of transactions to return (max 1000).'],
-            'type' => ['type' => 'string', 'description' => 'Filter by transaction type (e.g., "card_payment", "transfer", "fx").'],
+            'type' => ['type' => 'string', 'description' => 'Filter by transaction type (e.g., "card_payment", "transfer", "exchange").'],
         ];
     }
 
@@ -59,7 +59,7 @@ class RevolutListTransactions implements Tool
             $params = [];
 
             if (isset($args['account_id'])) {
-                $params['account_id'] = $args['account_id'];
+                $params['account'] = $args['account_id'];
             }
             if (isset($args['from'])) {
                 $params['from'] = $args['from'];

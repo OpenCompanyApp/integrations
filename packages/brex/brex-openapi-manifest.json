@@ -1,0 +1,894 @@
+{
+    "sources": [
+        "https://developer.brex.com/_bundle/openapi/accounting_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/budgets_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/expenses_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/fields_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/onboarding_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/payments_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/team_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/transactions_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/travel_api.json?download=",
+        "https://developer.brex.com/_bundle/openapi/webhooks_api.json?download="
+    ],
+    "openapi": "3.0.x",
+    "method_count": 108,
+    "apis": [
+        "accounting",
+        "budgets",
+        "expenses",
+        "fields",
+        "onboarding",
+        "payments",
+        "team",
+        "transactions",
+        "travel",
+        "webhooks"
+    ],
+    "operations": [
+        {
+            "api": "accounting",
+            "operation_id": "createIntegration",
+            "method": "POST",
+            "path": "/v3/accounting/integration",
+            "tool": "brex_accounting_create_integration",
+            "class": "BrexAccountingCreateIntegration"
+        },
+        {
+            "api": "accounting",
+            "operation_id": "disconnectIntegration",
+            "method": "POST",
+            "path": "/v3/accounting/integration/{integration_id}/disconnect",
+            "tool": "brex_accounting_disconnect_integration",
+            "class": "BrexAccountingDisconnectIntegration"
+        },
+        {
+            "api": "accounting",
+            "operation_id": "reactivateIntegration",
+            "method": "POST",
+            "path": "/v3/accounting/integration/{integration_id}/reactivate",
+            "tool": "brex_accounting_reactivate_integration",
+            "class": "BrexAccountingReactivateIntegration"
+        },
+        {
+            "api": "accounting",
+            "operation_id": "getAccountingRecord",
+            "method": "GET",
+            "path": "/v3/accounting/records/{record_id}",
+            "tool": "brex_accounting_get_accounting_record",
+            "class": "BrexAccountingGetAccountingRecord"
+        },
+        {
+            "api": "accounting",
+            "operation_id": "queryAccountingRecords",
+            "method": "GET",
+            "path": "/v3/accounting/records",
+            "tool": "brex_accounting_query_accounting_records",
+            "class": "BrexAccountingQueryAccountingRecords"
+        },
+        {
+            "api": "accounting",
+            "operation_id": "reportAccountingExportResults",
+            "method": "POST",
+            "path": "/v3/accounting/records/export-results",
+            "tool": "brex_accounting_report_accounting_export_results",
+            "class": "BrexAccountingReportAccountingExportResults"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "listBudgetPrograms",
+            "method": "GET",
+            "path": "/v1/budget_programs",
+            "tool": "brex_budgets_list_budget_programs",
+            "class": "BrexBudgetsListBudgetPrograms"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "getBudgetProgramById",
+            "method": "GET",
+            "path": "/v1/budget_programs/{id}",
+            "tool": "brex_budgets_get_budget_program_by_id",
+            "class": "BrexBudgetsGetBudgetProgramById"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "listBudgets",
+            "method": "GET",
+            "path": "/v1/budgets",
+            "tool": "brex_budgets_list_budgets",
+            "class": "BrexBudgetsListBudgets"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "createBudget",
+            "method": "POST",
+            "path": "/v1/budgets",
+            "tool": "brex_budgets_create_budget",
+            "class": "BrexBudgetsCreateBudget"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "getBudgetById",
+            "method": "GET",
+            "path": "/v1/budgets/{id}",
+            "tool": "brex_budgets_get_budget_by_id",
+            "class": "BrexBudgetsGetBudgetById"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "updateBudget",
+            "method": "PUT",
+            "path": "/v1/budgets/{id}",
+            "tool": "brex_budgets_update_budget",
+            "class": "BrexBudgetsUpdateBudget"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "archiveBudget",
+            "method": "POST",
+            "path": "/v1/budgets/{id}/archive",
+            "tool": "brex_budgets_archive_budget",
+            "class": "BrexBudgetsArchiveBudget"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "listSpendBudgets",
+            "method": "GET",
+            "path": "/v2/budgets",
+            "tool": "brex_budgets_list_spend_budgets",
+            "class": "BrexBudgetsListSpendBudgets"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "createSpendBudget",
+            "method": "POST",
+            "path": "/v2/budgets",
+            "tool": "brex_budgets_create_spend_budget",
+            "class": "BrexBudgetsCreateSpendBudget"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "getSpendBudgetById",
+            "method": "GET",
+            "path": "/v2/budgets/{id}",
+            "tool": "brex_budgets_get_spend_budget_by_id",
+            "class": "BrexBudgetsGetSpendBudgetById"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "updateSpendBudget",
+            "method": "PUT",
+            "path": "/v2/budgets/{id}",
+            "tool": "brex_budgets_update_spend_budget",
+            "class": "BrexBudgetsUpdateSpendBudget"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "archiveSpendBudget",
+            "method": "POST",
+            "path": "/v2/budgets/{id}/archive",
+            "tool": "brex_budgets_archive_spend_budget",
+            "class": "BrexBudgetsArchiveSpendBudget"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "listSpendLimits",
+            "method": "GET",
+            "path": "/v2/spend_limits",
+            "tool": "brex_budgets_list_spend_limits",
+            "class": "BrexBudgetsListSpendLimits"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "createSpendLimit",
+            "method": "POST",
+            "path": "/v2/spend_limits",
+            "tool": "brex_budgets_create_spend_limit",
+            "class": "BrexBudgetsCreateSpendLimit"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "getSpendLimitById",
+            "method": "GET",
+            "path": "/v2/spend_limits/{id}",
+            "tool": "brex_budgets_get_spend_limit_by_id",
+            "class": "BrexBudgetsGetSpendLimitById"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "updateSpendLimit",
+            "method": "PUT",
+            "path": "/v2/spend_limits/{id}",
+            "tool": "brex_budgets_update_spend_limit",
+            "class": "BrexBudgetsUpdateSpendLimit"
+        },
+        {
+            "api": "budgets",
+            "operation_id": "archiveSpendLimit",
+            "method": "POST",
+            "path": "/v2/spend_limits/{id}/archive",
+            "tool": "brex_budgets_archive_spend_limit",
+            "class": "BrexBudgetsArchiveSpendLimit"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "listExpenses",
+            "method": "GET",
+            "path": "/v1/expenses",
+            "tool": "brex_expenses_list_expenses",
+            "class": "BrexExpensesListExpenses"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "listExpenses_1",
+            "method": "GET",
+            "path": "/v1/expenses/card",
+            "tool": "brex_expenses_list_expenses_1",
+            "class": "BrexExpensesListExpenses1"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "receiptMatch",
+            "method": "POST",
+            "path": "/v1/expenses/card/receipt_match",
+            "tool": "brex_expenses_receipt_match",
+            "class": "BrexExpensesReceiptMatch"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "getCardExpense",
+            "method": "GET",
+            "path": "/v1/expenses/card/{expense_id}",
+            "tool": "brex_expenses_get_card_expense",
+            "class": "BrexExpensesGetCardExpense"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "updateExpense",
+            "method": "PUT",
+            "path": "/v1/expenses/card/{expense_id}",
+            "tool": "brex_expenses_update_expense",
+            "class": "BrexExpensesUpdateExpense"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "receiptUpload",
+            "method": "POST",
+            "path": "/v1/expenses/card/{expense_id}/receipt_upload",
+            "tool": "brex_expenses_receipt_upload",
+            "class": "BrexExpensesReceiptUpload"
+        },
+        {
+            "api": "expenses",
+            "operation_id": "getExpense",
+            "method": "GET",
+            "path": "/v1/expenses/{id}",
+            "tool": "brex_expenses_get_expense",
+            "class": "BrexExpensesGetExpense"
+        },
+        {
+            "api": "fields",
+            "operation_id": "listFields",
+            "method": "GET",
+            "path": "/v1/fields",
+            "tool": "brex_fields_list_fields",
+            "class": "BrexFieldsListFields"
+        },
+        {
+            "api": "fields",
+            "operation_id": "createField",
+            "method": "POST",
+            "path": "/v1/fields",
+            "tool": "brex_fields_create_field",
+            "class": "BrexFieldsCreateField"
+        },
+        {
+            "api": "fields",
+            "operation_id": "listFieldValues",
+            "method": "GET",
+            "path": "/v1/fields/{field_id}/values",
+            "tool": "brex_fields_list_field_values",
+            "class": "BrexFieldsListFieldValues"
+        },
+        {
+            "api": "fields",
+            "operation_id": "updateFieldValues",
+            "method": "PUT",
+            "path": "/v1/fields/{field_id}/values",
+            "tool": "brex_fields_update_field_values",
+            "class": "BrexFieldsUpdateFieldValues"
+        },
+        {
+            "api": "fields",
+            "operation_id": "createFieldValues",
+            "method": "POST",
+            "path": "/v1/fields/{field_id}/values",
+            "tool": "brex_fields_create_field_values",
+            "class": "BrexFieldsCreateFieldValues"
+        },
+        {
+            "api": "fields",
+            "operation_id": "deleteFieldValues",
+            "method": "DELETE",
+            "path": "/v1/fields/{field_id}/values",
+            "tool": "brex_fields_delete_field_values",
+            "class": "BrexFieldsDeleteFieldValues"
+        },
+        {
+            "api": "fields",
+            "operation_id": "getFieldValueById",
+            "method": "GET",
+            "path": "/v1/fields/{field_id}/values/{brex_id}",
+            "tool": "brex_fields_get_field_value_by_id",
+            "class": "BrexFieldsGetFieldValueById"
+        },
+        {
+            "api": "fields",
+            "operation_id": "getFieldById",
+            "method": "GET",
+            "path": "/v1/fields/{id}",
+            "tool": "brex_fields_get_field_by_id",
+            "class": "BrexFieldsGetFieldById"
+        },
+        {
+            "api": "fields",
+            "operation_id": "updateField",
+            "method": "PUT",
+            "path": "/v1/fields/{id}",
+            "tool": "brex_fields_update_field",
+            "class": "BrexFieldsUpdateField"
+        },
+        {
+            "api": "fields",
+            "operation_id": "deleteField",
+            "method": "DELETE",
+            "path": "/v1/fields/{id}",
+            "tool": "brex_fields_delete_field",
+            "class": "BrexFieldsDeleteField"
+        },
+        {
+            "api": "onboarding",
+            "operation_id": "listReferrals",
+            "method": "GET",
+            "path": "/v1/referrals",
+            "tool": "brex_onboarding_list_referrals",
+            "class": "BrexOnboardingListReferrals"
+        },
+        {
+            "api": "onboarding",
+            "operation_id": "createReferralRequest",
+            "method": "POST",
+            "path": "/v1/referrals",
+            "tool": "brex_onboarding_create_referral_request",
+            "class": "BrexOnboardingCreateReferralRequest"
+        },
+        {
+            "api": "onboarding",
+            "operation_id": "getReferral",
+            "method": "GET",
+            "path": "/v1/referrals/{id}",
+            "tool": "brex_onboarding_get_referral",
+            "class": "BrexOnboardingGetReferral"
+        },
+        {
+            "api": "onboarding",
+            "operation_id": "createDocument",
+            "method": "POST",
+            "path": "/v1/referrals/{id}/document_upload",
+            "tool": "brex_onboarding_create_document",
+            "class": "BrexOnboardingCreateDocument"
+        },
+        {
+            "api": "onboarding",
+            "operation_id": "processDelayedEINDocument",
+            "method": "POST",
+            "path": "/v1/referrals/{id}/process_ein_document",
+            "tool": "brex_onboarding_process_delayed_eindocument",
+            "class": "BrexOnboardingProcessDelayedEINDocument"
+        },
+        {
+            "api": "payments",
+            "operation_id": "createIncomingTransfer",
+            "method": "POST",
+            "path": "/v1/incoming_transfers",
+            "tool": "brex_payments_create_incoming_transfer",
+            "class": "BrexPaymentsCreateIncomingTransfer"
+        },
+        {
+            "api": "payments",
+            "operation_id": "listLinkedAccounts",
+            "method": "GET",
+            "path": "/v1/linked_accounts",
+            "tool": "brex_payments_list_linked_accounts",
+            "class": "BrexPaymentsListLinkedAccounts"
+        },
+        {
+            "api": "payments",
+            "operation_id": "listTransfers",
+            "method": "GET",
+            "path": "/v1/transfers",
+            "tool": "brex_payments_list_transfers",
+            "class": "BrexPaymentsListTransfers"
+        },
+        {
+            "api": "payments",
+            "operation_id": "createTransfer",
+            "method": "POST",
+            "path": "/v1/transfers",
+            "tool": "brex_payments_create_transfer",
+            "class": "BrexPaymentsCreateTransfer"
+        },
+        {
+            "api": "payments",
+            "operation_id": "getTransfersById",
+            "method": "GET",
+            "path": "/v1/transfers/{id}",
+            "tool": "brex_payments_get_transfers_by_id",
+            "class": "BrexPaymentsGetTransfersById"
+        },
+        {
+            "api": "payments",
+            "operation_id": "listVendors",
+            "method": "GET",
+            "path": "/v1/vendors",
+            "tool": "brex_payments_list_vendors",
+            "class": "BrexPaymentsListVendors"
+        },
+        {
+            "api": "payments",
+            "operation_id": "createVendor",
+            "method": "POST",
+            "path": "/v1/vendors",
+            "tool": "brex_payments_create_vendor",
+            "class": "BrexPaymentsCreateVendor"
+        },
+        {
+            "api": "payments",
+            "operation_id": "getVendorById",
+            "method": "GET",
+            "path": "/v1/vendors/{id}",
+            "tool": "brex_payments_get_vendor_by_id",
+            "class": "BrexPaymentsGetVendorById"
+        },
+        {
+            "api": "payments",
+            "operation_id": "updateVendor",
+            "method": "PUT",
+            "path": "/v1/vendors/{id}",
+            "tool": "brex_payments_update_vendor",
+            "class": "BrexPaymentsUpdateVendor"
+        },
+        {
+            "api": "payments",
+            "operation_id": "deleteVendor",
+            "method": "DELETE",
+            "path": "/v1/vendors/{id}",
+            "tool": "brex_payments_delete_vendor",
+            "class": "BrexPaymentsDeleteVendor"
+        },
+        {
+            "api": "team",
+            "operation_id": "listCardsByUserId",
+            "method": "GET",
+            "path": "/v2/cards",
+            "tool": "brex_team_list_cards_by_user_id",
+            "class": "BrexTeamListCardsByUserId"
+        },
+        {
+            "api": "team",
+            "operation_id": "createCard",
+            "method": "POST",
+            "path": "/v2/cards",
+            "tool": "brex_team_create_card",
+            "class": "BrexTeamCreateCard"
+        },
+        {
+            "api": "team",
+            "operation_id": "getCardById",
+            "method": "GET",
+            "path": "/v2/cards/{id}",
+            "tool": "brex_team_get_card_by_id",
+            "class": "BrexTeamGetCardById"
+        },
+        {
+            "api": "team",
+            "operation_id": "updateCard",
+            "method": "PUT",
+            "path": "/v2/cards/{id}",
+            "tool": "brex_team_update_card",
+            "class": "BrexTeamUpdateCard"
+        },
+        {
+            "api": "team",
+            "operation_id": "lockCard",
+            "method": "POST",
+            "path": "/v2/cards/{id}/lock",
+            "tool": "brex_team_lock_card",
+            "class": "BrexTeamLockCard"
+        },
+        {
+            "api": "team",
+            "operation_id": "getCardNumber",
+            "method": "GET",
+            "path": "/v2/cards/{id}/pan",
+            "tool": "brex_team_get_card_number",
+            "class": "BrexTeamGetCardNumber"
+        },
+        {
+            "api": "team",
+            "operation_id": "emailCardNumber",
+            "method": "POST",
+            "path": "/v2/cards/{id}/secure_email",
+            "tool": "brex_team_email_card_number",
+            "class": "BrexTeamEmailCardNumber"
+        },
+        {
+            "api": "team",
+            "operation_id": "terminateCard",
+            "method": "POST",
+            "path": "/v2/cards/{id}/terminate",
+            "tool": "brex_team_terminate_card",
+            "class": "BrexTeamTerminateCard"
+        },
+        {
+            "api": "team",
+            "operation_id": "unlockCard",
+            "method": "POST",
+            "path": "/v2/cards/{id}/unlock",
+            "tool": "brex_team_unlock_card",
+            "class": "BrexTeamUnlockCard"
+        },
+        {
+            "api": "team",
+            "operation_id": "getCompany",
+            "method": "GET",
+            "path": "/v2/company",
+            "tool": "brex_team_get_company",
+            "class": "BrexTeamGetCompany"
+        },
+        {
+            "api": "team",
+            "operation_id": "listDepartments",
+            "method": "GET",
+            "path": "/v2/departments",
+            "tool": "brex_team_list_departments",
+            "class": "BrexTeamListDepartments"
+        },
+        {
+            "api": "team",
+            "operation_id": "createDepartment",
+            "method": "POST",
+            "path": "/v2/departments",
+            "tool": "brex_team_create_department",
+            "class": "BrexTeamCreateDepartment"
+        },
+        {
+            "api": "team",
+            "operation_id": "getDepartmentById",
+            "method": "GET",
+            "path": "/v2/departments/{id}",
+            "tool": "brex_team_get_department_by_id",
+            "class": "BrexTeamGetDepartmentById"
+        },
+        {
+            "api": "team",
+            "operation_id": "listLegalEntities",
+            "method": "GET",
+            "path": "/v2/legal_entities",
+            "tool": "brex_team_list_legal_entities",
+            "class": "BrexTeamListLegalEntities"
+        },
+        {
+            "api": "team",
+            "operation_id": "getLegalEntity",
+            "method": "GET",
+            "path": "/v2/legal_entities/{id}",
+            "tool": "brex_team_get_legal_entity",
+            "class": "BrexTeamGetLegalEntity"
+        },
+        {
+            "api": "team",
+            "operation_id": "listLocations",
+            "method": "GET",
+            "path": "/v2/locations",
+            "tool": "brex_team_list_locations",
+            "class": "BrexTeamListLocations"
+        },
+        {
+            "api": "team",
+            "operation_id": "createLocation",
+            "method": "POST",
+            "path": "/v2/locations",
+            "tool": "brex_team_create_location",
+            "class": "BrexTeamCreateLocation"
+        },
+        {
+            "api": "team",
+            "operation_id": "getLocationById",
+            "method": "GET",
+            "path": "/v2/locations/{id}",
+            "tool": "brex_team_get_location_by_id",
+            "class": "BrexTeamGetLocationById"
+        },
+        {
+            "api": "team",
+            "operation_id": "listTitles",
+            "method": "GET",
+            "path": "/v2/titles",
+            "tool": "brex_team_list_titles",
+            "class": "BrexTeamListTitles"
+        },
+        {
+            "api": "team",
+            "operation_id": "createTitle",
+            "method": "POST",
+            "path": "/v2/titles",
+            "tool": "brex_team_create_title",
+            "class": "BrexTeamCreateTitle"
+        },
+        {
+            "api": "team",
+            "operation_id": "getTitleById",
+            "method": "GET",
+            "path": "/v2/titles/{id}",
+            "tool": "brex_team_get_title_by_id",
+            "class": "BrexTeamGetTitleById"
+        },
+        {
+            "api": "team",
+            "operation_id": "listUsers",
+            "method": "GET",
+            "path": "/v2/users",
+            "tool": "brex_team_list_users",
+            "class": "BrexTeamListUsers"
+        },
+        {
+            "api": "team",
+            "operation_id": "createUser",
+            "method": "POST",
+            "path": "/v2/users",
+            "tool": "brex_team_create_user",
+            "class": "BrexTeamCreateUser"
+        },
+        {
+            "api": "team",
+            "operation_id": "getMe",
+            "method": "GET",
+            "path": "/v2/users/me",
+            "tool": "brex_team_get_me",
+            "class": "BrexTeamGetMe"
+        },
+        {
+            "api": "team",
+            "operation_id": "getUserById",
+            "method": "GET",
+            "path": "/v2/users/{id}",
+            "tool": "brex_team_get_user_by_id",
+            "class": "BrexTeamGetUserById"
+        },
+        {
+            "api": "team",
+            "operation_id": "updateUser",
+            "method": "PUT",
+            "path": "/v2/users/{id}",
+            "tool": "brex_team_update_user",
+            "class": "BrexTeamUpdateUser"
+        },
+        {
+            "api": "team",
+            "operation_id": "getUserLimit",
+            "method": "GET",
+            "path": "/v2/users/{id}/limit",
+            "tool": "brex_team_get_user_limit",
+            "class": "BrexTeamGetUserLimit"
+        },
+        {
+            "api": "team",
+            "operation_id": "setUserLimit",
+            "method": "POST",
+            "path": "/v2/users/{id}/limit",
+            "tool": "brex_team_set_user_limit",
+            "class": "BrexTeamSetUserLimit"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "listCardAccounts",
+            "method": "GET",
+            "path": "/v2/accounts/card",
+            "tool": "brex_transactions_list_card_accounts",
+            "class": "BrexTransactionsListCardAccounts"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "listPrimaryCardStatements",
+            "method": "GET",
+            "path": "/v2/accounts/card/primary/statements",
+            "tool": "brex_transactions_list_primary_card_statements",
+            "class": "BrexTransactionsListPrimaryCardStatements"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "listAccounts",
+            "method": "GET",
+            "path": "/v2/accounts/cash",
+            "tool": "brex_transactions_list_accounts",
+            "class": "BrexTransactionsListAccounts"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "getPrimaryAccount",
+            "method": "GET",
+            "path": "/v2/accounts/cash/primary",
+            "tool": "brex_transactions_get_primary_account",
+            "class": "BrexTransactionsGetPrimaryAccount"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "getAccount",
+            "method": "GET",
+            "path": "/v2/accounts/cash/{id}",
+            "tool": "brex_transactions_get_account",
+            "class": "BrexTransactionsGetAccount"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "listCashStatements",
+            "method": "GET",
+            "path": "/v2/accounts/cash/{id}/statements",
+            "tool": "brex_transactions_list_cash_statements",
+            "class": "BrexTransactionsListCashStatements"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "listPrimaryCardTransactions",
+            "method": "GET",
+            "path": "/v2/transactions/card/primary",
+            "tool": "brex_transactions_list_primary_card_transactions",
+            "class": "BrexTransactionsListPrimaryCardTransactions"
+        },
+        {
+            "api": "transactions",
+            "operation_id": "listCashTransactions",
+            "method": "GET",
+            "path": "/v2/transactions/cash/{id}",
+            "tool": "brex_transactions_list_cash_transactions",
+            "class": "BrexTransactionsListCashTransactions"
+        },
+        {
+            "api": "travel",
+            "operation_id": "listTrips",
+            "method": "GET",
+            "path": "/v1/trips",
+            "tool": "brex_travel_list_trips",
+            "class": "BrexTravelListTrips"
+        },
+        {
+            "api": "travel",
+            "operation_id": "getTrip",
+            "method": "GET",
+            "path": "/v1/trips/{trip_id}",
+            "tool": "brex_travel_get_trip",
+            "class": "BrexTravelGetTrip"
+        },
+        {
+            "api": "travel",
+            "operation_id": "listTripBookings",
+            "method": "GET",
+            "path": "/v1/trips/{trip_id}/bookings",
+            "tool": "brex_travel_list_trip_bookings",
+            "class": "BrexTravelListTripBookings"
+        },
+        {
+            "api": "travel",
+            "operation_id": "getBooking",
+            "method": "GET",
+            "path": "/v1/trips/{trip_id}/bookings/{booking_id}",
+            "tool": "brex_travel_get_booking",
+            "class": "BrexTravelGetBooking"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "listWebhookSubscriptions",
+            "method": "GET",
+            "path": "/v1/webhooks",
+            "tool": "brex_webhooks_list_webhook_subscriptions",
+            "class": "BrexWebhooksListWebhookSubscriptions"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "createWebhookSubscription",
+            "method": "POST",
+            "path": "/v1/webhooks",
+            "tool": "brex_webhooks_create_webhook_subscription",
+            "class": "BrexWebhooksCreateWebhookSubscription"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "listWebhookGroups",
+            "method": "GET",
+            "path": "/v1/webhooks/groups",
+            "tool": "brex_webhooks_list_webhook_groups",
+            "class": "BrexWebhooksListWebhookGroups"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "createWebhookGroup",
+            "method": "POST",
+            "path": "/v1/webhooks/groups",
+            "tool": "brex_webhooks_create_webhook_group",
+            "class": "BrexWebhooksCreateWebhookGroup"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "getWebhookGroup",
+            "method": "GET",
+            "path": "/v1/webhooks/groups/{id}",
+            "tool": "brex_webhooks_get_webhook_group",
+            "class": "BrexWebhooksGetWebhookGroup"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "deleteWebhookGroup",
+            "method": "DELETE",
+            "path": "/v1/webhooks/groups/{id}",
+            "tool": "brex_webhooks_delete_webhook_group",
+            "class": "BrexWebhooksDeleteWebhookGroup"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "addWebhookGroupMembers",
+            "method": "POST",
+            "path": "/v1/webhooks/groups/{id}/add_members",
+            "tool": "brex_webhooks_add_webhook_group_members",
+            "class": "BrexWebhooksAddWebhookGroupMembers"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "listWebhookGroupMembers",
+            "method": "GET",
+            "path": "/v1/webhooks/groups/{id}/members",
+            "tool": "brex_webhooks_list_webhook_group_members",
+            "class": "BrexWebhooksListWebhookGroupMembers"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "removeWebhookGroupMembers",
+            "method": "POST",
+            "path": "/v1/webhooks/groups/{id}/remove_members",
+            "tool": "brex_webhooks_remove_webhook_group_members",
+            "class": "BrexWebhooksRemoveWebhookGroupMembers"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "listWebhookSecrets",
+            "method": "GET",
+            "path": "/v1/webhooks/secrets",
+            "tool": "brex_webhooks_list_webhook_secrets",
+            "class": "BrexWebhooksListWebhookSecrets"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "getWebhookSubscription",
+            "method": "GET",
+            "path": "/v1/webhooks/{id}",
+            "tool": "brex_webhooks_get_webhook_subscription",
+            "class": "BrexWebhooksGetWebhookSubscription"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "updateWebhookSubscription",
+            "method": "PUT",
+            "path": "/v1/webhooks/{id}",
+            "tool": "brex_webhooks_update_webhook_subscription",
+            "class": "BrexWebhooksUpdateWebhookSubscription"
+        },
+        {
+            "api": "webhooks",
+            "operation_id": "deleteWebhookSubscription",
+            "method": "DELETE",
+            "path": "/v1/webhooks/{id}",
+            "tool": "brex_webhooks_delete_webhook_subscription",
+            "class": "BrexWebhooksDeleteWebhookSubscription"
+        }
+    ]
+}

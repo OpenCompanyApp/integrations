@@ -61,6 +61,10 @@ class MindeeParseCustom implements Tool
                 'type' => 'string',
                 'description' => 'Optional filename for the document (used when providing base64 content).',
             ],
+            'options' => [
+                'type' => 'object',
+                'description' => 'Additional query parameters for the Mindee endpoint.',
+            ],
         ];
     }
 
@@ -80,6 +84,7 @@ class MindeeParseCustom implements Tool
             $endpointId = $args['endpoint_id'] ?? '';
             $document = $args['document'] ?? '';
             $fileName = $args['file_name'] ?? null;
+            $options = is_array($args['options'] ?? null) ? $args['options'] : [];
 
             if (empty($endpointId)) {
                 return ToolResult::error('The endpoint_id parameter is required. Provide your custom endpoint ID from the Mindee dashboard.');
@@ -89,7 +94,7 @@ class MindeeParseCustom implements Tool
                 return ToolResult::error('The document parameter is required. Provide a file path or base64-encoded content.');
             }
 
-            $result = $this->service->parseCustom($endpointId, $document, $fileName);
+            $result = $this->service->parseCustom($endpointId, $document, $fileName, $options);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

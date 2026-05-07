@@ -3,22 +3,39 @@
 namespace OpenCompany\Integrations\Braintree;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeListTransactions;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeGetTransaction;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeListCustomers;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeGetCustomer;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeListPlans;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeGetPlan;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for the official Braintree GraphQL API.
+ */
+class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    public function appName(): string { return 'braintree'; }
+
+    public function appMeta(): array
+    {
+        return ['label' => 'Braintree', 'description' => 'Payment processing', 'icon' => 'ph:credit-card', 'logo' => 'simple-icons:braintree'];
+    }
+
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Braintree',
+            'description' => 'Official Braintree GraphQL tools for payments, customers, disputes, payment methods, in-store readers, reports, and recurring billing.',
+            'icon' => 'ph:credit-card',
+            'logo' => 'simple-icons:braintree',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://developer.paypal.com/braintree/graphql/guides/making_api_calls/',
+            'source_url' => 'https://github.com/braintree/graphql-api/blob/master/schema.graphql',
+        ];
+    }
+
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,140 +43,49 @@ class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
-            ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
-            ],
-            'notes' =>
-            [
-            ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
+            'auth' => ['strategy' => 'basic_or_bearer_token', 'legacy_auth_type' => 'api_key', 'credential_mode' => 'secret', 'setup_flows' => ['manual_token'], 'requires_browser_for_setup' => false, 'refreshable' => false, 'token_keys' => ['public_key', 'private_key', 'access_token'], 'notes' => ['Public/private keys use Basic auth. OAuth access tokens use Bearer auth.']],
+            'host_availability' => ['web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'], 'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal']],
+            'runtime_requirements' => [],
+            'compatibility' => ['web_setup_supported' => true, 'web_runtime_supported' => true, 'cli_setup_supported' => true, 'cli_runtime_supported' => true],
         ];
     }
 
-    public function appName(): string
-    {
-        return 'braintree';
-    }
-
-    public function appMeta(): array
+    public function configSchema(): array
     {
         return [
-            'label' => 'Braintree',
-            'description' => 'Payment processing',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:braintree',
+            ['key' => 'public_key', 'type' => 'text', 'label' => 'Public Key', 'placeholder' => 'Braintree public key', 'required' => false],
+            ['key' => 'private_key', 'type' => 'secret', 'label' => 'Private Key', 'placeholder' => 'Braintree private key', 'required' => false],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'OAuth Access Token', 'placeholder' => 'Braintree OAuth access token', 'required' => false],
+            ['key' => 'merchant_id', 'type' => 'text', 'label' => 'Merchant ID', 'placeholder' => 'example_merchant', 'required' => false],
+            ['key' => 'url', 'type' => 'url', 'label' => 'GraphQL Endpoint', 'placeholder' => 'https://payments.sandbox.braintree-api.com/graphql', 'default' => 'https://payments.sandbox.braintree-api.com/graphql', 'required' => false],
+            ['key' => 'version', 'type' => 'text', 'label' => 'Braintree Version', 'placeholder' => '2019-01-01', 'default' => '2019-01-01', 'required' => false],
         ];
     }
 
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Braintree',
-            'description' => 'Payment processing by PayPal — accept cards, PayPal, Venmo, and more',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:braintree',
-            'category' => 'sales',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.paypal.com/braintree/docs',
-        ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Braintree access token',
-                'hint' => 'Generate a token in the Braintree Control Panel under <strong>Settings &rarr; API Keys</strong>. Use a token-scoped key for production.',
-                'required' => true,
-            ],
-            [
-                'key' => 'merchant_id',
-                'type' => 'text',
-                'label' => 'Merchant ID',
-                'placeholder' => 'e.g., abc123def456',
-                'hint' => 'Your Braintree Merchant ID, found in <strong>Settings &rarr; Business</strong> in the Control Panel.',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.braintreegateway.com',
-                'hint' => 'Use <code>https://api.braintreegateway.com</code> for production or <code>https://api.sandbox.braintreegateway.com</code> for sandbox.',
-                'default' => 'https://api.braintreegateway.com',
-            ],
-        ];
-    }
-
+    /**
+     * Test Braintree credentials with the official ping query.
+     *
+     * @param  array<string, mixed>  $config  Braintree credentials.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $merchantId = $config['merchant_id'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.braintreegateway.com', '/');
-
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $publicKey = (string) ($config['public_key'] ?? '');
+        $privateKey = (string) ($config['private_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://payments.sandbox.braintree-api.com/graphql'), '/');
+        $version = (string) ($config['version'] ?? '2019-01-01');
+        if ($accessToken === '' && ($publicKey === '' || $privateKey === '')) {
+            return ['success' => false, 'error' => 'Provide Braintree public/private keys or an OAuth access token.'];
         }
-
-        if (empty($merchantId)) {
-            return ['success' => false, 'error' => 'No merchant ID provided'];
-        }
-
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->timeout(10)->get($baseUrl . "/merchants/{$merchantId}");
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Braintree API at {$baseUrl}. Check the URL and credentials.",
-                ];
-            }
-
-            return [
-                'success' => true,
-                'message' => "Connected to Braintree API for merchant {$merchantId}.",
-            ];
+            $headers = ['Content-Type' => 'application/json', 'Accept' => 'application/json', 'Braintree-Version' => $version];
+            $headers['Authorization'] = $publicKey !== '' && $privateKey !== '' ? 'Basic '.base64_encode($publicKey.':'.$privateKey) : 'Bearer '.$accessToken;
+            $response = Http::withHeaders($headers)->timeout(10)->post($baseUrl, ['query' => 'query BraintreePing { ping }']);
+            if (!$response->successful()) return ['success' => false, 'error' => 'Braintree GraphQL API returned HTTP '.$response->status().'.'];
+            $json = $response->json() ?? [];
+            if (isset($json['errors'])) return ['success' => false, 'error' => 'Braintree GraphQL error: '.json_encode($json['errors'])];
+            return ['success' => true, 'message' => 'Connected to Braintree GraphQL API.'];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -167,101 +93,44 @@ class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
     public function validationRules(): array
     {
-        return [
-            'access_token' => 'nullable|string',
-            'merchant_id' => 'nullable|string',
-            'url' => 'nullable|url',
-        ];
+        return ['access_token' => 'nullable|string', 'public_key' => 'nullable|string|required_with:private_key', 'private_key' => 'nullable|string|required_with:public_key', 'merchant_id' => 'nullable|string', 'url' => 'nullable|url', 'version' => 'nullable|string'];
     }
 
     public function tools(): array
     {
-        return [
-            'braintree_list_transactions' => [
-                'class' => BraintreeListTransactions::class,
-                'type' => 'read',
-                'name' => 'List Transactions',
-                'description' => 'List payment transactions for the merchant.',
-                'icon' => 'ph:list',
-            ],
-            'braintree_get_transaction' => [
-                'class' => BraintreeGetTransaction::class,
-                'type' => 'read',
-                'name' => 'Get Transaction',
-                'description' => 'Retrieve a single transaction by ID.',
-                'icon' => 'ph:receipt',
-            ],
-            'braintree_list_customers' => [
-                'class' => BraintreeListCustomers::class,
-                'type' => 'read',
-                'name' => 'List Customers',
-                'description' => 'List customers stored in Braintree.',
-                'icon' => 'ph:users',
-            ],
-            'braintree_get_customer' => [
-                'class' => BraintreeGetCustomer::class,
-                'type' => 'read',
-                'name' => 'Get Customer',
-                'description' => 'Retrieve a single customer by ID.',
-                'icon' => 'ph:user',
-            ],
-            'braintree_list_plans' => [
-                'class' => BraintreeListPlans::class,
-                'type' => 'read',
-                'name' => 'List Plans',
-                'description' => 'List recurring billing plans.',
-                'icon' => 'ph:currency-dollar',
-            ],
-            'braintree_get_plan' => [
-                'class' => BraintreeGetPlan::class,
-                'type' => 'read',
-                'name' => 'Get Plan',
-                'description' => 'Retrieve a single recurring billing plan by ID.',
-                'icon' => 'ph:currency-dollar',
-            ],
-            'braintree_get_current_user' => [
-                'class' => BraintreeGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current Merchant',
-                'description' => 'Get the current merchant account info.',
-                'icon' => 'ph:building',
-            ],
-        ];
+        $tools = [];
+        foreach (BraintreeService::operations() as $operation) {
+            $tools[(string) $operation['slug']] = ['class' => __NAMESPACE__.'\\Tools\\'.$operation['class'], 'type' => $operation['type'], 'name' => $operation['name'], 'description' => $operation['description'], 'icon' => $operation['type'] === 'read' ? 'ph:eye' : 'ph:credit-card'];
+        }
+        return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/braintree.md'; }
+
+    public function credentialFields(): array
     {
-        return __DIR__ . '/../lua-docs/braintree.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'merchant_id', 'type' => 'text', 'label' => 'Merchant ID', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.braintreegateway.com'],
-        ];
+        return [['key' => 'public_key', 'type' => 'text', 'label' => 'Public Key', 'required' => false], ['key' => 'private_key', 'type' => 'secret', 'label' => 'Private Key', 'required' => false], ['key' => 'access_token', 'type' => 'secret', 'label' => 'OAuth Access Token', 'required' => false], ['key' => 'merchant_id', 'type' => 'text', 'label' => 'Merchant ID', 'required' => false]];
     }
 
-    public function isIntegration(): bool
-    {
-        return true;
-    }
+    public function isIntegration(): bool { return true; }
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the service for the default or named account context.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): BraintreeService
+    {
         $account = $context['account'] ?? null;
-
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
-
-            $service = new BraintreeService(
-                accessToken: $creds->get('braintree', 'access_token', '', $account),
-                merchantId: $creds->get('braintree', 'merchant_id', '', $account),
-                baseUrl: $creds->get('braintree', 'url', 'https://api.braintreegateway.com', $account),
-            );
-
-            return new $class($service);
+            $creds = app(CredentialResolver::class);
+            return new BraintreeService($creds->get('braintree', 'access_token', '', $account), $creds->get('braintree', 'merchant_id', '', $account), $creds->get('braintree', 'url', 'https://payments.sandbox.braintree-api.com/graphql', $account), $creds->get('braintree', 'public_key', '', $account), $creds->get('braintree', 'private_key', '', $account), $creds->get('braintree', 'version', '2019-01-01', $account));
         }
-
-        return new $class(app(BraintreeService::class));
+        return app(BraintreeService::class);
     }
 }

@@ -1,0 +1,25 @@
+{
+    "name": "opencompanyapp/integration-pinboard",
+    "description": "Pinboard integration for Laravel AI agents - bookmarks, tags, user secrets, API tokens, and notes.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Pinboard\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Pinboard\\PinboardServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

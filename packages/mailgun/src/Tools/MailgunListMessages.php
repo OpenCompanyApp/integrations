@@ -2,63 +2,75 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class MailgunListMessages implements Tool
+/**
+ * Compatibility alias for Mailgun domain events.
+ */
+class MailgunListMessages extends AbstractMailgunEndpointTool
 {
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_list_messages';
 
-    public function name(): string
-    {
-        return 'mailgun_list_messages';
-    }
+    protected string $toolDescription = 'Compatibility alias for Mailgun domain events.';
 
-    public function description(): string
-    {
-        return 'List message events in your Mailgun domain with optional filtering and pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of events to return (default: 300, max: 300).'],
-            'page' => ['type' => 'string', 'description' => 'Pagination cursor from a previous response.'],
-            'event' => ['type' => 'string', 'description' => 'Filter by event type (e.g., "stored", "delivered", "failed", "rejected").'],
-            'begin' => ['type' => 'string', 'description' => 'Start of time range in RFC 2822 or epoch format.'],
-            'end' => ['type' => 'string', 'description' => 'End of time range in RFC 2822 or epoch format.'],
-            'ascending' => ['type' => 'boolean', 'description' => 'Sort results in ascending order (default: no / descending).'],
-            'recipient' => ['type' => 'string', 'description' => 'Filter by recipient email address.'],
-            'subject' => ['type' => 'string', 'description' => 'Filter by email subject.'],
-        ];
-    }
+    protected string $path = '/{domain}/events';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'domain' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Mailgun domain. Defaults to the configured sending domain.',
+    ],
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum number of records to return.',
+    ],
+    'skip' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of records to skip.',
+    ],
+    'page' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Pagination cursor or page URL/token.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Mailgun query parameters to pass through.',
+    ],
+    'event' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Event type filter.',
+    ],
+    'begin' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Start time.',
+    ],
+    'end' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'End time.',
+    ],
+];
 
-            $params = array_filter([
-                'limit' => $args['limit'] ?? null,
-                'page' => $args['page'] ?? null,
-                'event' => $args['event'] ?? null,
-                'begin' => $args['begin'] ?? null,
-                'end' => $args['end'] ?? null,
-                'ascending' => $args['ascending'] ?? null,
-                'recipient' => $args['recipient'] ?? null,
-                'subject' => $args['subject'] ?? null,
-            ], fn($value) => $value !== null);
+    /** @var list<string> */
+    protected array $required = [];
 
-            $result = $this->service->listMessages($params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'page',
+    'event',
+    'begin',
+    'end',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

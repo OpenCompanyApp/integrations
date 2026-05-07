@@ -41,9 +41,9 @@ class WufooService
      *
      * @return array<string, mixed> The list of forms from the Wufoo API.
      */
-    public function listForms(): array
+    public function listForms(array $params = []): array
     {
-        return $this->request('GET', '/forms.json');
+        return $this->request('GET', '/forms.json', $params);
     }
 
     /**
@@ -55,6 +55,42 @@ class WufooService
     public function getForm(string $formId): array
     {
         return $this->request('GET', '/forms/' . urlencode($formId) . '.json');
+    }
+
+    /**
+     * List fields for a specific form.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as system or pretty.
+     * @return array<string, mixed> The field structure for the form.
+     */
+    public function listFields(string $formId, array $params = []): array
+    {
+        return $this->request('GET', '/forms/' . urlencode($formId) . '/fields.json', $params);
+    }
+
+    /**
+     * List comments for entries on a specific form.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as entryId, pageStart, or pageSize.
+     * @return array<string, mixed> The comments response.
+     */
+    public function listFormComments(string $formId, array $params = []): array
+    {
+        return $this->request('GET', '/forms/' . urlencode($formId) . '/comments.json', $params);
+    }
+
+    /**
+     * Count comments for entries on a specific form.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as pretty.
+     * @return array<string, mixed> The comment count response.
+     */
+    public function countFormComments(string $formId, array $params = []): array
+    {
+        return $this->request('GET', '/forms/' . urlencode($formId) . '/comments/count.json', $params);
     }
 
     // ── Entries ────────────────────────────────────────────
@@ -83,14 +119,44 @@ class WufooService
     }
 
     /**
-     * Get a single entry by its identifier.
+     * Count entries for a specific form.
      *
-     * @param  string  $entryId  The entry identifier.
-     * @return array<string, mixed> The entry data.
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  array<string, mixed>  $params  Filter and pretty-print query parameters.
+     * @return array<string, mixed> The entry count response.
      */
-    public function getEntry(string $entryId): array
+    public function countEntries(string $formId, array $params = []): array
     {
-        return $this->request('GET', '/entries/' . urlencode($entryId) . '.json');
+        return $this->request('GET', '/forms/' . urlencode($formId) . '/entries/count.json', $params);
+    }
+
+    /**
+     * Find a single entry within a form by entry identifier.
+     *
+     * Wufoo API v3 exposes entries under forms, so this uses the documented
+     * form entries endpoint with an EntryId filter and page size of one.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  string  $entryId  The entry identifier.
+     * @return array<string, mixed> The filtered entry response.
+     */
+    public function getEntry(string $formId, string $entryId): array
+    {
+        return $this->listEntries($formId, 0, 1, [
+            'Filter1' => "EntryId+Is_equal_to+{$entryId}",
+        ]);
+    }
+
+    /**
+     * Submit a new entry to a specific form.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  array<string, mixed>  $fields  Wufoo field values keyed by API field IDs.
+     * @return array<string, mixed> The submission response.
+     */
+    public function submitEntry(string $formId, array $fields): array
+    {
+        return $this->request('POST', '/forms/' . urlencode($formId) . '/entries.json', $fields, true);
     }
 
     // ── Reports ────────────────────────────────────────────
@@ -100,9 +166,68 @@ class WufooService
      *
      * @return array<string, mixed> The list of reports from the Wufoo API.
      */
-    public function listReports(): array
+    public function listReports(array $params = []): array
     {
-        return $this->request('GET', '/reports.json');
+        return $this->request('GET', '/reports.json', $params);
+    }
+
+    /**
+     * Get details for a specific report.
+     *
+     * @param  string  $reportId  The report hash or title identifier.
+     * @return array<string, mixed> The report details.
+     */
+    public function getReport(string $reportId): array
+    {
+        return $this->request('GET', '/reports/' . urlencode($reportId) . '.json');
+    }
+
+    /**
+     * List entries exposed by a specific report.
+     *
+     * @param  string  $reportId  The report hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as pageStart, pageSize, sort, or filters.
+     * @return array<string, mixed> The report entries response.
+     */
+    public function listReportEntries(string $reportId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/' . urlencode($reportId) . '/entries.json', $params);
+    }
+
+    /**
+     * Count entries exposed by a specific report.
+     *
+     * @param  string  $reportId  The report hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as pretty.
+     * @return array<string, mixed> The report entry count response.
+     */
+    public function countReportEntries(string $reportId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/' . urlencode($reportId) . '/entries/count.json', $params);
+    }
+
+    /**
+     * List fields for a specific report.
+     *
+     * @param  string  $reportId  The report hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as system or pretty.
+     * @return array<string, mixed> The report field response.
+     */
+    public function listReportFields(string $reportId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/' . urlencode($reportId) . '/fields.json', $params);
+    }
+
+    /**
+     * List widgets for a specific report.
+     *
+     * @param  string  $reportId  The report hash or title identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as pretty.
+     * @return array<string, mixed> The report widgets response.
+     */
+    public function listReportWidgets(string $reportId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/' . urlencode($reportId) . '/widgets.json', $params);
     }
 
     // ── Users ──────────────────────────────────────────────
@@ -117,6 +242,104 @@ class WufooService
         return $this->request('GET', '/users.json');
     }
 
+    /**
+     * List Wufoo users for the account.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as pretty.
+     * @return array<string, mixed> The users response.
+     */
+    public function listUsers(array $params = []): array
+    {
+        return $this->request('GET', '/users.json', $params);
+    }
+
+    // ── Webhooks ───────────────────────────────────────────
+
+    /**
+     * Add a webhook to a specific form.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  string  $url  The webhook target URL.
+     * @param  string|null  $handshakeKey  Optional secret sent with webhook payloads.
+     * @param  bool  $metadata  Whether Wufoo should include form and field metadata.
+     * @return array<string, mixed> The webhook creation response.
+     */
+    public function addWebhook(string $formId, string $url, ?string $handshakeKey = null, bool $metadata = false): array
+    {
+        $payload = [
+            'url' => $url,
+            'metadata' => $metadata ? 'true' : 'false',
+        ];
+
+        if ($handshakeKey !== null && $handshakeKey !== '') {
+            $payload['handshakeKey'] = $handshakeKey;
+        }
+
+        return $this->request('PUT', '/forms/' . urlencode($formId) . '/webhooks.json', $payload, true);
+    }
+
+    /**
+     * Delete a webhook from a specific form.
+     *
+     * @param  string  $formId  The form hash or title identifier.
+     * @param  string  $webhookId  The webhook hash identifier.
+     * @return array<string, mixed> The webhook deletion response.
+     */
+    public function deleteWebhook(string $formId, string $webhookId): array
+    {
+        return $this->request('DELETE', '/forms/' . urlencode($formId) . '/webhooks/' . urlencode($webhookId) . '.json');
+    }
+
+    // ── Generic API ────────────────────────────────────────
+
+    /**
+     * Call a documented Wufoo API v3 GET endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /api/v3.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed> The parsed JSON response.
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Call a documented Wufoo API v3 POST endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /api/v3.
+     * @param  array<string, mixed>  $body  Form-encoded request body.
+     * @return array<string, mixed> The parsed JSON response.
+     */
+    public function apiPost(string $path, array $body = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $body, true);
+    }
+
+    /**
+     * Call a documented Wufoo API v3 PUT endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /api/v3.
+     * @param  array<string, mixed>  $body  Form-encoded request body.
+     * @return array<string, mixed> The parsed JSON response.
+     */
+    public function apiPut(string $path, array $body = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $body, true);
+    }
+
+    /**
+     * Call a documented Wufoo API v3 DELETE endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /api/v3.
+     * @param  array<string, mixed>  $params  Request parameters.
+     * @return array<string, mixed> The parsed JSON response.
+     */
+    public function apiDelete(string $path, array $params = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $params);
+    }
+
     // ── HTTP ───────────────────────────────────────────────
 
     /**
@@ -129,9 +352,9 @@ class WufooService
      *
      * @throws \RuntimeException If the API key is not configured or the request fails.
      */
-    private function request(string $method, string $path, array $params = []): array
+    private function request(string $method, string $path, array $params = [], bool $asForm = false): array
     {
-        $response = $this->rawRequest($method, $path, $params);
+        $response = $this->rawRequest($method, $path, $params, $asForm);
         return $response->json() ?? [];
     }
 
@@ -143,12 +366,13 @@ class WufooService
      *
      * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path  The API path.
-     * @param  array<string, mixed>  $params  Query parameters for GET requests.
+     * @param  array<string, mixed>  $params  Query parameters or request body.
+     * @param  bool  $asForm  Whether to submit body parameters as form data.
      * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
      * @throws \RuntimeException If the API key is missing or the request fails.
      */
-    private function rawRequest(string $method, string $path, array $params = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $params = [], bool $asForm = false): \Illuminate\Http\Client\Response
     {
         if (!$this->apiKey) {
             throw new \RuntimeException('Wufoo API key is not configured.');
@@ -157,9 +381,11 @@ class WufooService
         $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiKey, 'footastic')->timeout(30);
+            $http = Http::withBasicAuth($this->apiKey, 'footastic')->timeout(30);
+
+            $http = $asForm
+                ? $http->asForm()
+                : $http->withHeaders(['Content-Type' => 'application/json']);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $params),
@@ -189,5 +415,21 @@ class WufooService
             ]);
             throw new \RuntimeException("Failed to connect to Wufoo API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a user-supplied endpoint path for generic helpers.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+        $path = preg_replace('#^https?://[^/]+/api/v3#', '', $path) ?? $path;
+        $path = '/' . ltrim($path, '/');
+
+        if ($path === '/') {
+            throw new \InvalidArgumentException('A Wufoo API path is required.');
+        }
+
+        return $path;
     }
 }

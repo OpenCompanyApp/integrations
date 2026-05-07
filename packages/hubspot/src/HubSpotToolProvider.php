@@ -17,9 +17,12 @@ use OpenCompany\Integrations\HubSpot\Tools\HubSpotCreateTicket;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotDeleteContact;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotGetCompany;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotGetContact;
+use OpenCompany\Integrations\HubSpot\Tools\HubSpotGetCurrentUser;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotGetDeal;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotGetTicket;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotListAssociations;
+use OpenCompany\Integrations\HubSpot\Tools\HubSpotListCompanies;
+use OpenCompany\Integrations\HubSpot\Tools\HubSpotListContacts;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotListDeals;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotListForms;
 use OpenCompany\Integrations\HubSpot\Tools\HubSpotListOwners;
@@ -129,12 +132,25 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'hint' => 'Create a private app in HubSpot Settings → Integrations → Private Apps with the required scopes.',
                 'required' => true,
             ],
+            [
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.hubapi.com',
+                'hint' => 'Use the default HubSpot API URL unless you have a compatible gateway.',
+                'default' => 'https://api.hubapi.com',
+            ],
         ];
     }
 
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim((string) ($config['base_url'] ?? 'https://api.hubapi.com'), '/');
+
+        if (str_ends_with($baseUrl, '/v1')) {
+            $baseUrl = substr($baseUrl, 0, -3);
+        }
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided. Create one at HubSpot Settings → Integrations → Private Apps.'];
@@ -144,7 +160,7 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.hubapi.com/crm/v3/owners', ['limit' => 1]);
+            ])->timeout(10)->get($baseUrl . '/crm/v3/owners', ['limit' => 1]);
 
             if ($response->successful()) {
                 $data = $response->json() ?? [];
@@ -173,6 +189,7 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'access_token' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
@@ -222,6 +239,13 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'Create or update a HubSpot contact by email.',
                 'icon' => 'ph:user-check',
             ],
+            'hubspot_list_contacts' => [
+                'class' => HubSpotListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List HubSpot contacts with pagination.',
+                'icon' => 'ph:users',
+            ],
             // Companies
             'hubspot_create_company' => [
                 'class' => HubSpotCreateCompany::class,
@@ -250,6 +274,13 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'name' => 'Search Companies',
                 'description' => 'Search HubSpot companies with filters.',
                 'icon' => 'ph:magnifying-glass',
+            ],
+            'hubspot_list_companies' => [
+                'class' => HubSpotListCompanies::class,
+                'type' => 'read',
+                'name' => 'List Companies',
+                'description' => 'List HubSpot companies with pagination.',
+                'icon' => 'ph:buildings',
             ],
             // Deals
             'hubspot_create_deal' => [
@@ -359,6 +390,13 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'List HubSpot marketing forms.',
                 'icon' => 'ph:notebook',
             ],
+            'hubspot_get_current_user' => [
+                'class' => HubSpotGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated HubSpot user and portal.',
+                'icon' => 'ph:user-circle',
+            ],
         ];
     }
 
@@ -369,6 +407,7 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Private App Access Token', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.hubapi.com'],
         ];
     }
 
@@ -394,9 +433,20 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $accessToken = (string) $creds->get('hubspot', 'access_token', '', $account);
+            $baseUrl = (string) $creds->get('hubspot', 'base_url', '', $account);
+
+            if ($accessToken === '') {
+                $accessToken = (string) $creds->get('hubspot3', 'access_token', '', $account);
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('hubspot3', 'base_url', 'https://api.hubapi.com', $account);
+            }
 
             return new HubSpotService(
-                accessToken: $creds->get('hubspot', 'access_token', '', $account),
+                accessToken: $accessToken,
+                baseUrl: $baseUrl,
             );
         }
 

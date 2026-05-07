@@ -94,7 +94,7 @@ class GetResponseToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'Email marketing and automation platform',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:getresponse',
-            'category' => 'email_marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://apidoc.getresponse.com/v3',
         ];

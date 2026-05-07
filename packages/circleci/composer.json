@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-circleci",
-    "description": "CircleCI integration for Laravel — manage pipelines, workflows, and projects.",
+    "description": "CircleCI integration for Laravel - manage pipelines, workflows, jobs, projects, contexts, schedules, webhooks, and insights.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "circleci", "ci-cd", "devtools", "opencompany"],
+    "keywords": [
+        "tools",
+        "circleci",
+        "ci-cd",
+        "devtools",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

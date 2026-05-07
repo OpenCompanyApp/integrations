@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Salesloft\SalesloftService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the authenticated Salesloft user.
+ */
 class SalesloftGetCurrentUser implements Tool
 {
     public function __construct(

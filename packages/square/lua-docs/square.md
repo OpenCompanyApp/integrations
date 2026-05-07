@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Square integration provides 7 tools for managing payments, customers, orders, and merchant information via the Square API v2.
+The Square integration provides 10 tools for managing payments, customers, orders, locations, and merchant information via the Square API v2.
 
 ### Tools
 
@@ -10,10 +10,13 @@ The Square integration provides 7 tools for managing payments, customers, orders
 |------|------|-------------|
 | `square_list_payments` | read | List payments with optional filtering |
 | `square_get_payment` | read | Retrieve a payment by ID |
+| `square_create_payment` | write | Create a payment |
 | `square_list_customers` | read | List customers with optional sorting |
 | `square_get_customer` | read | Retrieve a customer by ID |
+| `square_create_customer` | write | Create a customer |
 | `square_list_orders` | read | List orders for a location |
 | `square_get_order` | read | Retrieve an order by ID |
+| `square_list_locations` | read | List business locations |
 | `square_get_current_user` | read | Get the authenticated merchant |
 
 ### Money amounts
@@ -137,6 +140,8 @@ app.integrations.square_get_customer({
 ## Orders
 
 ### List Orders
+
+This tool maps to Square's `POST /v2/orders/search` endpoint.
 
 ```lua
 app.integrations.square_list_orders({

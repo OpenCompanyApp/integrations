@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Chroma integration with Laravel.
+ *
+ * Binds the v2 REST API client from stored credentials and registers the
+ * provider with the shared ToolProviderRegistry when available.
+ */
 class ChromaServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -15,7 +21,9 @@ class ChromaServiceProvider extends ServiceProvider
 
             return new ChromaService(
                 apiKey: $creds->get('chroma', 'api_key', ''),
-                baseUrl: $creds->get('chroma', 'url', 'http://localhost:8000/api/v1'),
+                baseUrl: $creds->get('chroma', 'url', 'http://localhost:8000'),
+                tenant: $creds->get('chroma', 'tenant', 'default_tenant'),
+                database: $creds->get('chroma', 'database', 'default_database'),
             );
         });
     }

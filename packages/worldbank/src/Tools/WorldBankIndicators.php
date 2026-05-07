@@ -6,8 +6,14 @@ use OpenCompany\Integrations\WorldBank\WorldBankService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Search World Bank indicators and show common indicator codes.
+ */
 class WorldBankIndicators implements Tool
 {
+    /**
+     * @param  WorldBankService  $service  The World Bank API client.
+     */
     public function __construct(
         private WorldBankService $service,
     ) {}
@@ -38,6 +44,11 @@ class WorldBankIndicators implements Tool
         ];
     }
 
+    /**
+     * Search indicator metadata or return common indicators.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (query).
+     */
     public function execute(array $args): ToolResult
     {
         try {

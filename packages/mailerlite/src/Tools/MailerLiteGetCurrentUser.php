@@ -13,6 +13,8 @@ class MailerLiteGetCurrentUser implements Tool
 {
     /**
      * Create a new get current user tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -31,7 +33,7 @@ class MailerLiteGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the currently authenticated MailerLite account information. Useful for verifying API credentials.';
+        return 'Verify MailerLite credentials with a lightweight subscriber summary request.';
     }
 
     /**

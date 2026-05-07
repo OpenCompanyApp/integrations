@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MessageBird\MessageBirdService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get current MessageBird account summary.
+ *
+ * Uses the Balance API as the account-level connection check.
+ */
 class MessageBirdGetCurrentUser implements Tool
 {
+    /**
+     * @param  MessageBirdService  $service  The MessageBird REST API client
+     */
     public function __construct(
         private MessageBirdService $service,
     ) {}
@@ -27,6 +35,11 @@ class MessageBirdGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get current account summary.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

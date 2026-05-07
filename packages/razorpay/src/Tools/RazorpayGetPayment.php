@@ -61,6 +61,10 @@ class RazorpayGetPayment implements Tool
                 return ToolResult::error('Razorpay integration is not configured.');
             }
 
+            if (empty($args['payment_id'])) {
+                return ToolResult::error('Payment ID is required.');
+            }
+
             $result = $this->service->getPayment($args['payment_id']);
 
             return ToolResult::success($result);

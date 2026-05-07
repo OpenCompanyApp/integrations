@@ -2,63 +2,61 @@
 
 namespace OpenCompany\Integrations\Brevo\Tools;
 
-use OpenCompany\Integrations\Brevo\BrevoService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BrevoCreateContact implements Tool
+/**
+ * Create a contact.
+ */
+class BrevoCreateContact extends AbstractBrevoTool
 {
-    public function __construct(
-        private BrevoService $service,
-    ) {}
+    protected string $toolName = 'brevo_create_contact';
 
-    public function name(): string
-    {
-        return 'brevo_create_contact';
-    }
+    protected string $toolDescription = 'Create a contact.';
 
-    public function description(): string
-    {
-        return 'Create a new contact in Brevo. You can set attributes like first name and last name, and add the contact to one or more lists.';
-    }
+    protected string $method = 'POST';
 
-    public function parameters(): array
-    {
-        return [
-            'email' => ['type' => 'string', 'required' => true, 'description' => 'The email address for the new contact.'],
-            'attributes' => ['type' => 'object', 'description' => 'Contact attributes such as {"FIRSTNAME": "John", "LASTNAME": "Doe"}. Keys must match attribute names in your Brevo account.'],
-            'listIds' => ['type' => 'array', 'description' => 'Array of list IDs (integers) to add the contact to, e.g. [2, 5].'],
-        ];
-    }
+    protected string $path = '/contacts';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brevo integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'email' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Contact email.',
+    ],
+    'attributes' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Contact attributes.',
+    ],
+    'list_ids' => [
+        'type' => 'array',
+        'required' => false,
+        'description' => 'List IDs to add the contact to.',
+    ],
+    'update_enabled' => [
+        'type' => 'boolean',
+        'required' => false,
+        'description' => 'Update existing contact if it exists.',
+    ],
+    'payload' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Brevo JSON body fields to pass through.',
+    ],
+];
 
-            $email = $args['email'] ?? '';
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            if (empty($email)) {
-                return ToolResult::error('Email address is required.');
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
 
-            $data = ['email' => $email];
-
-            if (isset($args['attributes']) && is_array($args['attributes'])) {
-                $data['attributes'] = $args['attributes'];
-            }
-
-            if (isset($args['listIds']) && is_array($args['listIds'])) {
-                $data['listIds'] = array_map('intval', $args['listIds']);
-            }
-
-            $result = $this->service->createContact($data);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+    'email',
+    'attributes',
+    'list_ids' => 'listIds',
+    'update_enabled' => 'updateEnabled',
+];
 }

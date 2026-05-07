@@ -6,8 +6,14 @@ use OpenCompany\Integrations\FreshworksCrm\FreshworksCrmService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Freshworks CRM contacts.
+ */
 class FreshworksCrmListContacts implements Tool
 {
+    /**
+     * @param  FreshworksCrmService  $service  The Freshworks CRM API client.
+     */
     public function __construct(
         private FreshworksCrmService $service,
     ) {}
@@ -30,6 +36,11 @@ class FreshworksCrmListContacts implements Tool
         ];
     }
 
+    /**
+     * List Freshworks CRM contacts.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

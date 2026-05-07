@@ -1,14 +1,14 @@
 # Integration: Missive
 
-> Missive email and team chat integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage conversations, comments, and tasks. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Missive REST API integration for the [Laravel AI SDK](https://github.com/laravel/ai) — conversations, drafts, tasks, contacts, teams, responses, analytics, and webhooks. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to Missive conversations and tasks. List and read email threads, add comments, manage tasks — all through the [Missive Public API](https://missiveapp.com/help/api/rest).
+Give your AI agents access to Missive conversations and tasks. List email threads and messages, create drafts and posts, manage tasks, read contacts and teams, generate analytics reports, and manage hooks through the [Missive Public API](https://missiveapp.com/docs/developers/rest-api/endpoints).
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Missive tool lets AI agents read and respond to email conversations, post internal comments, and manage tasks — giving agents communication awareness and the ability to act on team workflows.
+This Missive integration lets AI agents read and respond to email conversations, post internal comments, manage tasks, inspect contact books, and automate team workflow metadata.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -45,10 +45,27 @@ Generate a Personal Access Token in Missive at **Settings → API → Personal a
 |------|------|-------------|
 | `missive_list_conversations` | read | List conversations with filters (inbox, assignee, state) and pagination |
 | `missive_get_conversation` | read | Get a single conversation by ID with messages and metadata |
+| `missive_list_conversation_messages` | read | List messages in a conversation |
+| `missive_list_conversation_comments` | read | List comments in a conversation |
+| `missive_list_conversation_drafts` | read | List drafts in a conversation |
+| `missive_list_conversation_posts` | read | List posts in a conversation |
+| `missive_merge_conversation` | write | Merge one conversation into another |
 | `missive_create_comment` | write | Add a comment to a conversation |
+| `missive_create_draft` / `missive_delete_draft` | write | Create or delete drafts |
+| `missive_list_messages` | read | Find messages by documented message query parameters |
+| `missive_create_post` / `missive_delete_post` | write | Create or delete posts |
 | `missive_list_tasks` | read | List tasks with filters (state, assignee) and pagination |
+| `missive_get_task` / `missive_update_task` | read/write | Get or update a task |
 | `missive_create_task` | write | Create a new task (title, description, assignee, due_date) |
 | `missive_get_current_user` | read | Get the authenticated user's profile |
+| `missive_list_organizations`, `missive_list_users`, `missive_list_teams`, `missive_create_teams` | read/write | Organization user and team metadata |
+| `missive_list_contacts`, `missive_get_contact`, `missive_create_contacts`, `missive_update_contacts` | read/write | Contact management |
+| `missive_list_contact_books`, `missive_list_contact_groups` | read | Contact book metadata |
+| `missive_list_shared_labels` | read | Shared label metadata |
+| `missive_list_responses`, `missive_get_response`, `missive_create_responses`, `missive_update_responses`, `missive_delete_responses` | read/write | Canned responses |
+| `missive_create_analytics_report`, `missive_get_analytics_report` | read/write | Asynchronous analytics reports |
+| `missive_list_hooks`, `missive_create_hook`, `missive_delete_hook` | read/write | Webhook subscriptions |
+| `missive_api_get`, `missive_api_post`, `missive_api_patch`, `missive_api_delete` | read/write | Generic documented REST endpoint helpers |
 
 ## Quick Start
 
@@ -72,7 +89,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -108,6 +125,15 @@ $service->createComment([
 // List tasks
 $tasks = $service->listTasks(['state' => 'open']);
 
+// Create a draft
+$draft = $service->createDraft([
+    'subject' => 'Follow up',
+    'body' => 'Thanks for the details.',
+]);
+
+// List contacts
+$contacts = $service->listContacts(['search' => 'Example']);
+
 // Create a task
 $service->createTask([
     'title' => 'Follow up with client',
@@ -117,6 +143,14 @@ $service->createTask([
 
 // Get current user
 $user = $service->getCurrentUser();
+
+// Create an analytics report
+$report = $service->createAnalyticsReport([
+    'organization' => 'org-uuid',
+    'start' => '2026-05-01',
+    'end' => '2026-05-06',
+    'time_zone' => 'UTC',
+]);
 ```
 
 ## Dependencies

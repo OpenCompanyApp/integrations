@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Paddle products from the catalog.
+ *
+ * Supports status filtering and Paddle's cursor-based pagination
+ * for product discovery workflows.
+ */
 class PaddleListProducts implements Tool
 {
     /**
      * Create a new PaddleListProducts tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

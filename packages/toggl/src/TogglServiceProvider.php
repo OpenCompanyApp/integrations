@@ -18,9 +18,20 @@ class TogglServiceProvider extends ServiceProvider
     {
         $this->app->singleton(TogglService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $apiToken = (string) $creds->get('toggl', 'api_token', '');
+            $baseUrl = (string) $creds->get('toggl', 'url', '');
+
+            if ($apiToken === '') {
+                $apiToken = (string) $creds->get('toggl-track', 'api_token', '');
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('toggl-track', 'url', 'https://api.track.toggl.com');
+            }
 
             return new TogglService(
-                apiToken: $creds->get('toggl', 'api_token', ''),
+                apiToken: $apiToken,
+                baseUrl: $baseUrl,
             );
         });
     }

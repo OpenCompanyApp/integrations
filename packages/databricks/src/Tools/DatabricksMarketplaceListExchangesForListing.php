@@ -1,0 +1,39 @@
+<?php
+
+namespace OpenCompany\Integrations\Databricks\Tools;
+
+/**
+ * Marketplace List Exchanges For Listing.
+ *
+ * Maps to the official Databricks SDK endpoint get /api/2.0/marketplace-exchange/exchanges-for-listing.
+ */
+class DatabricksMarketplaceListExchangesForListing extends AbstractDatabricksTool
+{
+    protected const NAME = 'databricks_marketplace_list_exchanges_for_listing';
+    protected const DESCRIPTION = 'Marketplace List Exchanges For Listing
+
+Official Databricks SDK endpoint: GET /api/2.0/marketplace-exchange/exchanges-for-listing
+
+Generated from the official databricks-sdk-go surface, which is generated from Databricks OpenAPI specs.';
+    protected const PARAMETERS = array (
+  'query' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional query string parameters matching the Databricks REST API request fields.',
+  ),
+  'headers' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional additional request headers for advanced Databricks endpoints.',
+  ),
+  'body' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional JSON request body matching the Databricks REST API request fields.',
+  ),
+);
+    protected const METHOD = 'get';
+    protected const PATH = '/api/2.0/marketplace-exchange/exchanges-for-listing';
+    protected const PATH_PARAMS = array (
+);
+}

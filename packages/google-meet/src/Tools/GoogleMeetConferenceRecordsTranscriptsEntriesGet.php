@@ -1,0 +1,36 @@
+<?php
+
+namespace OpenCompany\Integrations\GoogleMeet\Tools;
+
+/**
+ * Conference Records Transcripts Entries Get.
+ *
+ * Maps to the official Google Meet endpoint GET /v2/{+name}.
+ */
+class GoogleMeetConferenceRecordsTranscriptsEntriesGet extends AbstractGoogleMeetTool
+{
+    protected const NAME = 'google_meet_conference_records_transcripts_entries_get';
+    protected const DESCRIPTION = 'Conference Records Transcripts Entries Get
+
+Official Google Meet endpoint: GET /v2/{+name}
+Gets a `TranscriptEntry` resource by entry ID.';
+    protected const PARAMETERS = array (
+  'name' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `name`. Use full Google Meet resource names such as `spaces/abc`, `conferenceRecords/record`, `conferenceRecords/record/participants/person`, or nested recording/transcript names.',
+  ),
+);
+    protected const METHOD = 'GET';
+    protected const PATH = '/v2/{+name}';
+    protected const PATH_PARAMS = array (
+  0 => 'name',
+);
+    protected const RESERVED_PATH_PARAMS = array (
+  0 => 'name',
+);
+    protected const QUERY_KEYS = array (
+);
+    protected const BODY_REQUIRED = false;
+}

@@ -1,0 +1,16 @@
+{
+    "name": "opencompanyapp/integration-google-cloud-functions",
+    "description": "Google Cloud Functions integration for Laravel AI agents - functions, upload/download URLs, runtimes, operations, locations, IAM, and function upgrade flows.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\GoogleCloudFunctions\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\GoogleCloudFunctions\\GoogleCloudFunctionsServiceProvider"]}},
+    "keywords": ["tools", "google", "cloud-functions", "serverless", "functions", "opencompany"]
+}

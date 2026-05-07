@@ -1,0 +1,1804 @@
+{
+  "source_url": "https://raw.githubusercontent.com/temporalio/api/master/openapi/openapiv3.yaml",
+  "docs_url": "https://docs.temporal.io/",
+  "openapi": "3.0.3",
+  "title": "Temporal HTTP API",
+  "version": "0.0.1",
+  "base_url": "Temporal HTTP API endpoint URL",
+  "auth": "bearer_token",
+  "method_count": 224,
+  "operations": [
+    {
+      "operation_id": "GetClusterInfo",
+      "class": "TemporalGetClusterInfo",
+      "slug": "temporal_get_cluster_info",
+      "method": "get",
+      "path": "/api/v1/cluster-info",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListNamespaces",
+      "class": "TemporalListNamespaces",
+      "slug": "temporal_list_namespaces",
+      "method": "get",
+      "path": "/api/v1/namespaces",
+      "type": "read"
+    },
+    {
+      "operation_id": "RegisterNamespace",
+      "class": "TemporalRegisterNamespace",
+      "slug": "temporal_register_namespace",
+      "method": "post",
+      "path": "/api/v1/namespaces",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeNamespace",
+      "class": "TemporalDescribeNamespace",
+      "slug": "temporal_describe_namespace",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListActivityExecutions",
+      "class": "TemporalListActivityExecutions",
+      "slug": "temporal_list_activity_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/activities",
+      "type": "read"
+    },
+    {
+      "operation_id": "PauseActivity",
+      "class": "TemporalPauseActivity",
+      "slug": "temporal_pause_activity",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities-deprecated/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetActivity",
+      "class": "TemporalResetActivity",
+      "slug": "temporal_reset_activity",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities-deprecated/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseActivity",
+      "class": "TemporalUnpauseActivity",
+      "slug": "temporal_unpause_activity",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities-deprecated/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateActivityOptions",
+      "class": "TemporalUpdateActivityOptions",
+      "slug": "temporal_update_activity_options",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities-deprecated/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeActivityExecution",
+      "class": "TemporalDescribeActivityExecution",
+      "slug": "temporal_describe_activity_execution",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "StartActivityExecution",
+      "class": "TemporalStartActivityExecution",
+      "slug": "temporal_start_activity_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "RequestCancelActivityExecution",
+      "class": "TemporalRequestCancelActivityExecution",
+      "slug": "temporal_request_cancel_activity_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/cancel",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCompletedById",
+      "class": "TemporalRespondActivityTaskCompletedById",
+      "slug": "temporal_respond_activity_task_completed_by_id",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/complete",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskFailedById",
+      "class": "TemporalRespondActivityTaskFailedById",
+      "slug": "temporal_respond_activity_task_failed_by_id",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/fail",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordActivityTaskHeartbeatById",
+      "class": "TemporalRecordActivityTaskHeartbeatById",
+      "slug": "temporal_record_activity_task_heartbeat_by_id",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "PollActivityExecution",
+      "class": "TemporalPollActivityExecution",
+      "slug": "temporal_poll_activity_execution",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/outcome",
+      "type": "read"
+    },
+    {
+      "operation_id": "PauseActivityExecution",
+      "class": "TemporalPauseActivityExecution",
+      "slug": "temporal_pause_activity_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetActivityExecution",
+      "class": "TemporalResetActivityExecution",
+      "slug": "temporal_reset_activity_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCanceledById",
+      "class": "TemporalRespondActivityTaskCanceledById",
+      "slug": "temporal_respond_activity_task_canceled_by_id",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/resolve-as-canceled",
+      "type": "write"
+    },
+    {
+      "operation_id": "TerminateActivityExecution",
+      "class": "TemporalTerminateActivityExecution",
+      "slug": "temporal_terminate_activity_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/terminate",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseActivityExecution",
+      "class": "TemporalUnpauseActivityExecution",
+      "slug": "temporal_unpause_activity_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateActivityExecutionOptions",
+      "class": "TemporalUpdateActivityExecutionOptions",
+      "slug": "temporal_update_activity_execution_options",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activities/{activityId}/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCompleted",
+      "class": "TemporalRespondActivityTaskCompleted",
+      "slug": "temporal_respond_activity_task_completed",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activity-complete",
+      "type": "write"
+    },
+    {
+      "operation_id": "CountActivityExecutions",
+      "class": "TemporalCountActivityExecutions",
+      "slug": "temporal_count_activity_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/activity-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "RespondActivityTaskFailed",
+      "class": "TemporalRespondActivityTaskFailed",
+      "slug": "temporal_respond_activity_task_failed",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activity-fail",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordActivityTaskHeartbeat",
+      "class": "TemporalRecordActivityTaskHeartbeat",
+      "slug": "temporal_record_activity_task_heartbeat",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activity-heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCanceled",
+      "class": "TemporalRespondActivityTaskCanceled",
+      "slug": "temporal_respond_activity_task_canceled",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/activity-resolve-as-canceled",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListArchivedWorkflowExecutions",
+      "class": "TemporalListArchivedWorkflowExecutions",
+      "slug": "temporal_list_archived_workflow_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/archived-workflows",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListBatchOperations",
+      "class": "TemporalListBatchOperations",
+      "slug": "temporal_list_batch_operations",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/batch-operations",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeBatchOperation",
+      "class": "TemporalDescribeBatchOperation",
+      "slug": "temporal_describe_batch_operation",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/batch-operations/{jobId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "StartBatchOperation",
+      "class": "TemporalStartBatchOperation",
+      "slug": "temporal_start_batch_operation",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/batch-operations/{jobId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "StopBatchOperation",
+      "class": "TemporalStopBatchOperation",
+      "slug": "temporal_stop_batch_operation",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/batch-operations/{jobId}/stop",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetCurrentDeployment",
+      "class": "TemporalSetCurrentDeployment",
+      "slug": "temporal_set_current_deployment",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/current-deployment/{deployment.series_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetCurrentDeployment",
+      "class": "TemporalGetCurrentDeployment",
+      "slug": "temporal_get_current_deployment",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/current-deployment/{seriesName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListDeployments",
+      "class": "TemporalListDeployments",
+      "slug": "temporal_list_deployments",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/deployments",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeDeployment",
+      "class": "TemporalDescribeDeployment",
+      "slug": "temporal_describe_deployment",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/deployments/{deployment.series_name}/{deployment.build_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetDeploymentReachability",
+      "class": "TemporalGetDeploymentReachability",
+      "slug": "temporal_get_deployment_reachability",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/deployments/{deployment.series_name}/{deployment.build_id}/reachability",
+      "type": "read"
+    },
+    {
+      "operation_id": "CountNexusOperationExecutions",
+      "class": "TemporalCountNexusOperationExecutions",
+      "slug": "temporal_count_nexus_operation_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operation-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListNexusOperationExecutions",
+      "class": "TemporalListNexusOperationExecutions",
+      "slug": "temporal_list_nexus_operation_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operations",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeNexusOperationExecution",
+      "class": "TemporalDescribeNexusOperationExecution",
+      "slug": "temporal_describe_nexus_operation_execution",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operations/{operationId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "StartNexusOperationExecution",
+      "class": "TemporalStartNexusOperationExecution",
+      "slug": "temporal_start_nexus_operation_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operations/{operationId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "RequestCancelNexusOperationExecution",
+      "class": "TemporalRequestCancelNexusOperationExecution",
+      "slug": "temporal_request_cancel_nexus_operation_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operations/{operationId}/cancel",
+      "type": "write"
+    },
+    {
+      "operation_id": "PollNexusOperationExecution",
+      "class": "TemporalPollNexusOperationExecution",
+      "slug": "temporal_poll_nexus_operation_execution",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operations/{operationId}/poll",
+      "type": "read"
+    },
+    {
+      "operation_id": "TerminateNexusOperationExecution",
+      "class": "TemporalTerminateNexusOperationExecution",
+      "slug": "temporal_terminate_nexus_operation_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/nexus-operations/{operationId}/terminate",
+      "type": "write"
+    },
+    {
+      "operation_id": "CountSchedules",
+      "class": "TemporalCountSchedules",
+      "slug": "temporal_count_schedules",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/schedule-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListSchedules",
+      "class": "TemporalListSchedules",
+      "slug": "temporal_list_schedules",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/schedules",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeSchedule",
+      "class": "TemporalDescribeSchedule",
+      "slug": "temporal_describe_schedule",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/schedules/{scheduleId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateSchedule",
+      "class": "TemporalCreateSchedule",
+      "slug": "temporal_create_schedule",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/schedules/{scheduleId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "DeleteSchedule",
+      "class": "TemporalDeleteSchedule",
+      "slug": "temporal_delete_schedule",
+      "method": "delete",
+      "path": "/api/v1/namespaces/{namespace}/schedules/{scheduleId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListScheduleMatchingTimes",
+      "class": "TemporalListScheduleMatchingTimes",
+      "slug": "temporal_list_schedule_matching_times",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/schedules/{scheduleId}/matching-times",
+      "type": "read"
+    },
+    {
+      "operation_id": "PatchSchedule",
+      "class": "TemporalPatchSchedule",
+      "slug": "temporal_patch_schedule",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/schedules/{scheduleId}/patch",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateSchedule",
+      "class": "TemporalUpdateSchedule",
+      "slug": "temporal_update_schedule",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/schedules/{scheduleId}/update",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListSearchAttributes",
+      "class": "TemporalListSearchAttributes",
+      "slug": "temporal_list_search_attributes",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/search-attributes",
+      "type": "read"
+    },
+    {
+      "operation_id": "UpdateTaskQueueConfig",
+      "class": "TemporalUpdateTaskQueueConfig",
+      "slug": "temporal_update_task_queue_config",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/task-queues/{taskQueue}/update-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetWorkerBuildIdCompatibility",
+      "class": "TemporalGetWorkerBuildIdCompatibility",
+      "slug": "temporal_get_worker_build_id_compatibility",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/task-queues/{taskQueue}/worker-build-id-compatibility",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetWorkerVersioningRules",
+      "class": "TemporalGetWorkerVersioningRules",
+      "slug": "temporal_get_worker_versioning_rules",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/task-queues/{taskQueue}/worker-versioning-rules",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeTaskQueue",
+      "class": "TemporalDescribeTaskQueue",
+      "slug": "temporal_describe_task_queue",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/task-queues/{task_queue.name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "UpdateNamespace",
+      "class": "TemporalUpdateNamespace",
+      "slug": "temporal_update_namespace",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/update",
+      "type": "write"
+    },
+    {
+      "operation_id": "CreateWorkerDeploymentVersion",
+      "class": "TemporalCreateWorkerDeploymentVersion",
+      "slug": "temporal_create_worker_deployment_version",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeWorkerDeploymentVersion",
+      "class": "TemporalDescribeWorkerDeploymentVersion",
+      "slug": "temporal_describe_worker_deployment_version",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "DeleteWorkerDeploymentVersion",
+      "class": "TemporalDeleteWorkerDeploymentVersion",
+      "slug": "temporal_delete_worker_deployment_version",
+      "method": "delete",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkerDeploymentVersionComputeConfig",
+      "class": "TemporalUpdateWorkerDeploymentVersionComputeConfig",
+      "slug": "temporal_update_worker_deployment_version_compute_config",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}/update-compute-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkerDeploymentVersionMetadata",
+      "class": "TemporalUpdateWorkerDeploymentVersionMetadata",
+      "slug": "temporal_update_worker_deployment_version_metadata",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}/update-metadata",
+      "type": "write"
+    },
+    {
+      "operation_id": "ValidateWorkerDeploymentVersionComputeConfig",
+      "class": "TemporalValidateWorkerDeploymentVersionComputeConfig",
+      "slug": "temporal_validate_worker_deployment_version_compute_config",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}/validate-compute-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListWorkerDeployments",
+      "class": "TemporalListWorkerDeployments",
+      "slug": "temporal_list_worker_deployments",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeWorkerDeployment",
+      "class": "TemporalDescribeWorkerDeployment",
+      "slug": "temporal_describe_worker_deployment",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments/{deploymentName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateWorkerDeployment",
+      "class": "TemporalCreateWorkerDeployment",
+      "slug": "temporal_create_worker_deployment",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments/{deploymentName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "DeleteWorkerDeployment",
+      "class": "TemporalDeleteWorkerDeployment",
+      "slug": "temporal_delete_worker_deployment",
+      "method": "delete",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments/{deploymentName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetWorkerDeploymentCurrentVersion",
+      "class": "TemporalSetWorkerDeploymentCurrentVersion",
+      "slug": "temporal_set_worker_deployment_current_version",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments/{deploymentName}/set-current-version",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetWorkerDeploymentManager",
+      "class": "TemporalSetWorkerDeploymentManager",
+      "slug": "temporal_set_worker_deployment_manager",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments/{deploymentName}/set-manager",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetWorkerDeploymentRampingVersion",
+      "class": "TemporalSetWorkerDeploymentRampingVersion",
+      "slug": "temporal_set_worker_deployment_ramping_version",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/worker-deployments/{deploymentName}/set-ramping-version",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetWorkerTaskReachability",
+      "class": "TemporalGetWorkerTaskReachability",
+      "slug": "temporal_get_worker_task_reachability",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/worker-task-reachability",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListWorkers",
+      "class": "TemporalListWorkers",
+      "slug": "temporal_list_workers",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workers",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeWorker",
+      "class": "TemporalDescribeWorker",
+      "slug": "temporal_describe_worker",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workers/describe/{workerInstanceKey}",
+      "type": "read"
+    },
+    {
+      "operation_id": "FetchWorkerConfig",
+      "class": "TemporalFetchWorkerConfig",
+      "slug": "temporal_fetch_worker_config",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workers/fetch-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordWorkerHeartbeat",
+      "class": "TemporalRecordWorkerHeartbeat",
+      "slug": "temporal_record_worker_heartbeat",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workers/heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkerConfig",
+      "class": "TemporalUpdateWorkerConfig",
+      "slug": "temporal_update_worker_config",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workers/update-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "CountWorkflowExecutions",
+      "class": "TemporalCountWorkflowExecutions",
+      "slug": "temporal_count_workflow_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflow-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListWorkflowRules",
+      "class": "TemporalListWorkflowRules",
+      "slug": "temporal_list_workflow_rules",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflow-rules",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateWorkflowRule",
+      "class": "TemporalCreateWorkflowRule",
+      "slug": "temporal_create_workflow_rule",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflow-rules",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeWorkflowRule",
+      "class": "TemporalDescribeWorkflowRule",
+      "slug": "temporal_describe_workflow_rule",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflow-rules/{ruleId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "DeleteWorkflowRule",
+      "class": "TemporalDeleteWorkflowRule",
+      "slug": "temporal_delete_workflow_rule",
+      "method": "delete",
+      "path": "/api/v1/namespaces/{namespace}/workflow-rules/{ruleId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListWorkflowExecutions",
+      "class": "TemporalListWorkflowExecutions",
+      "slug": "temporal_list_workflow_executions",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflows",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeWorkflowExecution",
+      "class": "TemporalDescribeWorkflowExecution",
+      "slug": "temporal_describe_workflow_execution",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{execution.workflow_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetWorkflowExecutionHistory",
+      "class": "TemporalGetWorkflowExecutionHistory",
+      "slug": "temporal_get_workflow_execution_history",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{execution.workflow_id}/history",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetWorkflowExecutionHistoryReverse",
+      "class": "TemporalGetWorkflowExecutionHistoryReverse",
+      "slug": "temporal_get_workflow_execution_history_reverse",
+      "method": "get",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{execution.workflow_id}/history-reverse",
+      "type": "read"
+    },
+    {
+      "operation_id": "QueryWorkflow",
+      "class": "TemporalQueryWorkflow",
+      "slug": "temporal_query_workflow",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{execution.workflow_id}/query/{query.query_type}",
+      "type": "write"
+    },
+    {
+      "operation_id": "TriggerWorkflowRule",
+      "class": "TemporalTriggerWorkflowRule",
+      "slug": "temporal_trigger_workflow_rule",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{execution.workflow_id}/trigger-rule",
+      "type": "write"
+    },
+    {
+      "operation_id": "StartWorkflowExecution",
+      "class": "TemporalStartWorkflowExecution",
+      "slug": "temporal_start_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCompletedById",
+      "class": "TemporalRespondActivityTaskCompletedById2",
+      "slug": "temporal_respond_activity_task_completed_by_id_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/complete",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskFailedById",
+      "class": "TemporalRespondActivityTaskFailedById2",
+      "slug": "temporal_respond_activity_task_failed_by_id_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/fail",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordActivityTaskHeartbeatById",
+      "class": "TemporalRecordActivityTaskHeartbeatById2",
+      "slug": "temporal_record_activity_task_heartbeat_by_id_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "PauseActivityExecution",
+      "class": "TemporalPauseActivityExecution2",
+      "slug": "temporal_pause_activity_execution_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetActivityExecution",
+      "class": "TemporalResetActivityExecution2",
+      "slug": "temporal_reset_activity_execution_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCanceledById",
+      "class": "TemporalRespondActivityTaskCanceledById2",
+      "slug": "temporal_respond_activity_task_canceled_by_id_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/resolve-as-canceled",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseActivityExecution",
+      "class": "TemporalUnpauseActivityExecution2",
+      "slug": "temporal_unpause_activity_execution_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateActivityExecutionOptions",
+      "class": "TemporalUpdateActivityExecutionOptions2",
+      "slug": "temporal_update_activity_execution_options_2",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "PauseWorkflowExecution",
+      "class": "TemporalPauseWorkflowExecution",
+      "slug": "temporal_pause_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "SignalWithStartWorkflowExecution",
+      "class": "TemporalSignalWithStartWorkflowExecution",
+      "slug": "temporal_signal_with_start_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/signal-with-start/{signalName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseWorkflowExecution",
+      "class": "TemporalUnpauseWorkflowExecution",
+      "slug": "temporal_unpause_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflowId}/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "RequestCancelWorkflowExecution",
+      "class": "TemporalRequestCancelWorkflowExecution",
+      "slug": "temporal_request_cancel_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/cancel",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetWorkflowExecution",
+      "class": "TemporalResetWorkflowExecution",
+      "slug": "temporal_reset_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "SignalWorkflowExecution",
+      "class": "TemporalSignalWorkflowExecution",
+      "slug": "temporal_signal_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/signal/{signalName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "TerminateWorkflowExecution",
+      "class": "TemporalTerminateWorkflowExecution",
+      "slug": "temporal_terminate_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/terminate",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkflowExecutionOptions",
+      "class": "TemporalUpdateWorkflowExecutionOptions",
+      "slug": "temporal_update_workflow_execution_options",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkflowExecution",
+      "class": "TemporalUpdateWorkflowExecution",
+      "slug": "temporal_update_workflow_execution",
+      "method": "post",
+      "path": "/api/v1/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/update/{request.input.name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListNexusEndpoints",
+      "class": "TemporalListNexusEndpoints",
+      "slug": "temporal_list_nexus_endpoints",
+      "method": "get",
+      "path": "/api/v1/nexus/endpoints",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateNexusEndpoint",
+      "class": "TemporalCreateNexusEndpoint",
+      "slug": "temporal_create_nexus_endpoint",
+      "method": "post",
+      "path": "/api/v1/nexus/endpoints",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetNexusEndpoint",
+      "class": "TemporalGetNexusEndpoint",
+      "slug": "temporal_get_nexus_endpoint",
+      "method": "get",
+      "path": "/api/v1/nexus/endpoints/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "DeleteNexusEndpoint",
+      "class": "TemporalDeleteNexusEndpoint",
+      "slug": "temporal_delete_nexus_endpoint",
+      "method": "delete",
+      "path": "/api/v1/nexus/endpoints/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateNexusEndpoint",
+      "class": "TemporalUpdateNexusEndpoint",
+      "slug": "temporal_update_nexus_endpoint",
+      "method": "post",
+      "path": "/api/v1/nexus/endpoints/{id}/update",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetSystemInfo",
+      "class": "TemporalGetSystemInfo",
+      "slug": "temporal_get_system_info",
+      "method": "get",
+      "path": "/api/v1/system-info",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetClusterInfo",
+      "class": "TemporalGetClusterInfo2",
+      "slug": "temporal_get_cluster_info_2",
+      "method": "get",
+      "path": "/cluster",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListNamespaces",
+      "class": "TemporalListNamespaces2",
+      "slug": "temporal_list_namespaces_2",
+      "method": "get",
+      "path": "/cluster/namespaces",
+      "type": "read"
+    },
+    {
+      "operation_id": "RegisterNamespace",
+      "class": "TemporalRegisterNamespace2",
+      "slug": "temporal_register_namespace_2",
+      "method": "post",
+      "path": "/cluster/namespaces",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeNamespace",
+      "class": "TemporalDescribeNamespace2",
+      "slug": "temporal_describe_namespace_2",
+      "method": "get",
+      "path": "/cluster/namespaces/{namespace}",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListSearchAttributes",
+      "class": "TemporalListSearchAttributes2",
+      "slug": "temporal_list_search_attributes_2",
+      "method": "get",
+      "path": "/cluster/namespaces/{namespace}/search-attributes",
+      "type": "read"
+    },
+    {
+      "operation_id": "UpdateNamespace",
+      "class": "TemporalUpdateNamespace2",
+      "slug": "temporal_update_namespace_2",
+      "method": "post",
+      "path": "/cluster/namespaces/{namespace}/update",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListNexusEndpoints",
+      "class": "TemporalListNexusEndpoints2",
+      "slug": "temporal_list_nexus_endpoints_2",
+      "method": "get",
+      "path": "/cluster/nexus/endpoints",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateNexusEndpoint",
+      "class": "TemporalCreateNexusEndpoint2",
+      "slug": "temporal_create_nexus_endpoint_2",
+      "method": "post",
+      "path": "/cluster/nexus/endpoints",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetNexusEndpoint",
+      "class": "TemporalGetNexusEndpoint2",
+      "slug": "temporal_get_nexus_endpoint_2",
+      "method": "get",
+      "path": "/cluster/nexus/endpoints/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "DeleteNexusEndpoint",
+      "class": "TemporalDeleteNexusEndpoint2",
+      "slug": "temporal_delete_nexus_endpoint_2",
+      "method": "delete",
+      "path": "/cluster/nexus/endpoints/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateNexusEndpoint",
+      "class": "TemporalUpdateNexusEndpoint2",
+      "slug": "temporal_update_nexus_endpoint_2",
+      "method": "post",
+      "path": "/cluster/nexus/endpoints/{id}/update",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListActivityExecutions",
+      "class": "TemporalListActivityExecutions2",
+      "slug": "temporal_list_activity_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/activities",
+      "type": "read"
+    },
+    {
+      "operation_id": "PauseActivity",
+      "class": "TemporalPauseActivity2",
+      "slug": "temporal_pause_activity_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities-deprecated/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetActivity",
+      "class": "TemporalResetActivity2",
+      "slug": "temporal_reset_activity_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities-deprecated/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseActivity",
+      "class": "TemporalUnpauseActivity2",
+      "slug": "temporal_unpause_activity_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities-deprecated/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateActivityOptions",
+      "class": "TemporalUpdateActivityOptions2",
+      "slug": "temporal_update_activity_options_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities-deprecated/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeActivityExecution",
+      "class": "TemporalDescribeActivityExecution2",
+      "slug": "temporal_describe_activity_execution_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/activities/{activityId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "StartActivityExecution",
+      "class": "TemporalStartActivityExecution2",
+      "slug": "temporal_start_activity_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "RequestCancelActivityExecution",
+      "class": "TemporalRequestCancelActivityExecution2",
+      "slug": "temporal_request_cancel_activity_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/cancel",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCompletedById",
+      "class": "TemporalRespondActivityTaskCompletedById3",
+      "slug": "temporal_respond_activity_task_completed_by_id_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/complete",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskFailedById",
+      "class": "TemporalRespondActivityTaskFailedById3",
+      "slug": "temporal_respond_activity_task_failed_by_id_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/fail",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordActivityTaskHeartbeatById",
+      "class": "TemporalRecordActivityTaskHeartbeatById3",
+      "slug": "temporal_record_activity_task_heartbeat_by_id_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "PollActivityExecution",
+      "class": "TemporalPollActivityExecution2",
+      "slug": "temporal_poll_activity_execution_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/activities/{activityId}/outcome",
+      "type": "read"
+    },
+    {
+      "operation_id": "PauseActivityExecution",
+      "class": "TemporalPauseActivityExecution3",
+      "slug": "temporal_pause_activity_execution_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetActivityExecution",
+      "class": "TemporalResetActivityExecution3",
+      "slug": "temporal_reset_activity_execution_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCanceledById",
+      "class": "TemporalRespondActivityTaskCanceledById3",
+      "slug": "temporal_respond_activity_task_canceled_by_id_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/resolve-as-canceled",
+      "type": "write"
+    },
+    {
+      "operation_id": "TerminateActivityExecution",
+      "class": "TemporalTerminateActivityExecution2",
+      "slug": "temporal_terminate_activity_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/terminate",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseActivityExecution",
+      "class": "TemporalUnpauseActivityExecution3",
+      "slug": "temporal_unpause_activity_execution_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateActivityExecutionOptions",
+      "class": "TemporalUpdateActivityExecutionOptions3",
+      "slug": "temporal_update_activity_execution_options_3",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activities/{activityId}/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCompleted",
+      "class": "TemporalRespondActivityTaskCompleted2",
+      "slug": "temporal_respond_activity_task_completed_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activity-complete",
+      "type": "write"
+    },
+    {
+      "operation_id": "CountActivityExecutions",
+      "class": "TemporalCountActivityExecutions2",
+      "slug": "temporal_count_activity_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/activity-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "RespondActivityTaskFailed",
+      "class": "TemporalRespondActivityTaskFailed2",
+      "slug": "temporal_respond_activity_task_failed_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activity-fail",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordActivityTaskHeartbeat",
+      "class": "TemporalRecordActivityTaskHeartbeat2",
+      "slug": "temporal_record_activity_task_heartbeat_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activity-heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCanceled",
+      "class": "TemporalRespondActivityTaskCanceled2",
+      "slug": "temporal_respond_activity_task_canceled_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/activity-resolve-as-canceled",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListArchivedWorkflowExecutions",
+      "class": "TemporalListArchivedWorkflowExecutions2",
+      "slug": "temporal_list_archived_workflow_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/archived-workflows",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListBatchOperations",
+      "class": "TemporalListBatchOperations2",
+      "slug": "temporal_list_batch_operations_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/batch-operations",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeBatchOperation",
+      "class": "TemporalDescribeBatchOperation2",
+      "slug": "temporal_describe_batch_operation_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/batch-operations/{jobId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "StartBatchOperation",
+      "class": "TemporalStartBatchOperation2",
+      "slug": "temporal_start_batch_operation_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/batch-operations/{jobId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "StopBatchOperation",
+      "class": "TemporalStopBatchOperation2",
+      "slug": "temporal_stop_batch_operation_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/batch-operations/{jobId}/stop",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetCurrentDeployment",
+      "class": "TemporalSetCurrentDeployment2",
+      "slug": "temporal_set_current_deployment_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/current-deployment/{deployment.series_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetCurrentDeployment",
+      "class": "TemporalGetCurrentDeployment2",
+      "slug": "temporal_get_current_deployment_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/current-deployment/{seriesName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListDeployments",
+      "class": "TemporalListDeployments2",
+      "slug": "temporal_list_deployments_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/deployments",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeDeployment",
+      "class": "TemporalDescribeDeployment2",
+      "slug": "temporal_describe_deployment_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/deployments/{deployment.series_name}/{deployment.build_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetDeploymentReachability",
+      "class": "TemporalGetDeploymentReachability2",
+      "slug": "temporal_get_deployment_reachability_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/deployments/{deployment.series_name}/{deployment.build_id}/reachability",
+      "type": "read"
+    },
+    {
+      "operation_id": "CountNexusOperationExecutions",
+      "class": "TemporalCountNexusOperationExecutions2",
+      "slug": "temporal_count_nexus_operation_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/nexus-operation-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListNexusOperationExecutions",
+      "class": "TemporalListNexusOperationExecutions2",
+      "slug": "temporal_list_nexus_operation_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/nexus-operations",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeNexusOperationExecution",
+      "class": "TemporalDescribeNexusOperationExecution2",
+      "slug": "temporal_describe_nexus_operation_execution_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/nexus-operations/{operationId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "StartNexusOperationExecution",
+      "class": "TemporalStartNexusOperationExecution2",
+      "slug": "temporal_start_nexus_operation_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/nexus-operations/{operationId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "RequestCancelNexusOperationExecution",
+      "class": "TemporalRequestCancelNexusOperationExecution2",
+      "slug": "temporal_request_cancel_nexus_operation_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/nexus-operations/{operationId}/cancel",
+      "type": "write"
+    },
+    {
+      "operation_id": "PollNexusOperationExecution",
+      "class": "TemporalPollNexusOperationExecution2",
+      "slug": "temporal_poll_nexus_operation_execution_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/nexus-operations/{operationId}/poll",
+      "type": "read"
+    },
+    {
+      "operation_id": "TerminateNexusOperationExecution",
+      "class": "TemporalTerminateNexusOperationExecution2",
+      "slug": "temporal_terminate_nexus_operation_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/nexus-operations/{operationId}/terminate",
+      "type": "write"
+    },
+    {
+      "operation_id": "CountSchedules",
+      "class": "TemporalCountSchedules2",
+      "slug": "temporal_count_schedules_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/schedule-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListSchedules",
+      "class": "TemporalListSchedules2",
+      "slug": "temporal_list_schedules_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/schedules",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeSchedule",
+      "class": "TemporalDescribeSchedule2",
+      "slug": "temporal_describe_schedule_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/schedules/{scheduleId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateSchedule",
+      "class": "TemporalCreateSchedule2",
+      "slug": "temporal_create_schedule_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/schedules/{scheduleId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "DeleteSchedule",
+      "class": "TemporalDeleteSchedule2",
+      "slug": "temporal_delete_schedule_2",
+      "method": "delete",
+      "path": "/namespaces/{namespace}/schedules/{scheduleId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListScheduleMatchingTimes",
+      "class": "TemporalListScheduleMatchingTimes2",
+      "slug": "temporal_list_schedule_matching_times_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/schedules/{scheduleId}/matching-times",
+      "type": "read"
+    },
+    {
+      "operation_id": "PatchSchedule",
+      "class": "TemporalPatchSchedule2",
+      "slug": "temporal_patch_schedule_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/schedules/{scheduleId}/patch",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateSchedule",
+      "class": "TemporalUpdateSchedule2",
+      "slug": "temporal_update_schedule_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/schedules/{scheduleId}/update",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateTaskQueueConfig",
+      "class": "TemporalUpdateTaskQueueConfig2",
+      "slug": "temporal_update_task_queue_config_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/task-queues/{taskQueue}/update-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetWorkerBuildIdCompatibility",
+      "class": "TemporalGetWorkerBuildIdCompatibility2",
+      "slug": "temporal_get_worker_build_id_compatibility_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/task-queues/{taskQueue}/worker-build-id-compatibility",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetWorkerVersioningRules",
+      "class": "TemporalGetWorkerVersioningRules2",
+      "slug": "temporal_get_worker_versioning_rules_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/task-queues/{taskQueue}/worker-versioning-rules",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeTaskQueue",
+      "class": "TemporalDescribeTaskQueue2",
+      "slug": "temporal_describe_task_queue_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/task-queues/{task_queue.name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateWorkerDeploymentVersion",
+      "class": "TemporalCreateWorkerDeploymentVersion2",
+      "slug": "temporal_create_worker_deployment_version_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeWorkerDeploymentVersion",
+      "class": "TemporalDescribeWorkerDeploymentVersion2",
+      "slug": "temporal_describe_worker_deployment_version_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "DeleteWorkerDeploymentVersion",
+      "class": "TemporalDeleteWorkerDeploymentVersion2",
+      "slug": "temporal_delete_worker_deployment_version_2",
+      "method": "delete",
+      "path": "/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkerDeploymentVersionComputeConfig",
+      "class": "TemporalUpdateWorkerDeploymentVersionComputeConfig2",
+      "slug": "temporal_update_worker_deployment_version_compute_config_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}/update-compute-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkerDeploymentVersionMetadata",
+      "class": "TemporalUpdateWorkerDeploymentVersionMetadata2",
+      "slug": "temporal_update_worker_deployment_version_metadata_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}/update-metadata",
+      "type": "write"
+    },
+    {
+      "operation_id": "ValidateWorkerDeploymentVersionComputeConfig",
+      "class": "TemporalValidateWorkerDeploymentVersionComputeConfig2",
+      "slug": "temporal_validate_worker_deployment_version_compute_config_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployment-versions/{deployment_version.deployment_name}/{deployment_version.build_id}/validate-compute-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListWorkerDeployments",
+      "class": "TemporalListWorkerDeployments2",
+      "slug": "temporal_list_worker_deployments_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/worker-deployments",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeWorkerDeployment",
+      "class": "TemporalDescribeWorkerDeployment2",
+      "slug": "temporal_describe_worker_deployment_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/worker-deployments/{deploymentName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateWorkerDeployment",
+      "class": "TemporalCreateWorkerDeployment2",
+      "slug": "temporal_create_worker_deployment_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployments/{deploymentName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "DeleteWorkerDeployment",
+      "class": "TemporalDeleteWorkerDeployment2",
+      "slug": "temporal_delete_worker_deployment_2",
+      "method": "delete",
+      "path": "/namespaces/{namespace}/worker-deployments/{deploymentName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetWorkerDeploymentCurrentVersion",
+      "class": "TemporalSetWorkerDeploymentCurrentVersion2",
+      "slug": "temporal_set_worker_deployment_current_version_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployments/{deploymentName}/set-current-version",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetWorkerDeploymentManager",
+      "class": "TemporalSetWorkerDeploymentManager2",
+      "slug": "temporal_set_worker_deployment_manager_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployments/{deploymentName}/set-manager",
+      "type": "write"
+    },
+    {
+      "operation_id": "SetWorkerDeploymentRampingVersion",
+      "class": "TemporalSetWorkerDeploymentRampingVersion2",
+      "slug": "temporal_set_worker_deployment_ramping_version_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/worker-deployments/{deploymentName}/set-ramping-version",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetWorkerTaskReachability",
+      "class": "TemporalGetWorkerTaskReachability2",
+      "slug": "temporal_get_worker_task_reachability_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/worker-task-reachability",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListWorkers",
+      "class": "TemporalListWorkers2",
+      "slug": "temporal_list_workers_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workers",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeWorker",
+      "class": "TemporalDescribeWorker2",
+      "slug": "temporal_describe_worker_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workers/describe/{workerInstanceKey}",
+      "type": "read"
+    },
+    {
+      "operation_id": "FetchWorkerConfig",
+      "class": "TemporalFetchWorkerConfig2",
+      "slug": "temporal_fetch_worker_config_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workers/fetch-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordWorkerHeartbeat",
+      "class": "TemporalRecordWorkerHeartbeat2",
+      "slug": "temporal_record_worker_heartbeat_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workers/heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkerConfig",
+      "class": "TemporalUpdateWorkerConfig2",
+      "slug": "temporal_update_worker_config_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workers/update-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "CountWorkflowExecutions",
+      "class": "TemporalCountWorkflowExecutions2",
+      "slug": "temporal_count_workflow_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflow-count",
+      "type": "read"
+    },
+    {
+      "operation_id": "ListWorkflowRules",
+      "class": "TemporalListWorkflowRules2",
+      "slug": "temporal_list_workflow_rules_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflow-rules",
+      "type": "read"
+    },
+    {
+      "operation_id": "CreateWorkflowRule",
+      "class": "TemporalCreateWorkflowRule2",
+      "slug": "temporal_create_workflow_rule_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflow-rules",
+      "type": "write"
+    },
+    {
+      "operation_id": "DescribeWorkflowRule",
+      "class": "TemporalDescribeWorkflowRule2",
+      "slug": "temporal_describe_workflow_rule_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflow-rules/{ruleId}",
+      "type": "read"
+    },
+    {
+      "operation_id": "DeleteWorkflowRule",
+      "class": "TemporalDeleteWorkflowRule2",
+      "slug": "temporal_delete_workflow_rule_2",
+      "method": "delete",
+      "path": "/namespaces/{namespace}/workflow-rules/{ruleId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "ListWorkflowExecutions",
+      "class": "TemporalListWorkflowExecutions2",
+      "slug": "temporal_list_workflow_executions_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflows",
+      "type": "read"
+    },
+    {
+      "operation_id": "DescribeWorkflowExecution",
+      "class": "TemporalDescribeWorkflowExecution2",
+      "slug": "temporal_describe_workflow_execution_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflows/{execution.workflow_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetWorkflowExecutionHistory",
+      "class": "TemporalGetWorkflowExecutionHistory2",
+      "slug": "temporal_get_workflow_execution_history_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflows/{execution.workflow_id}/history",
+      "type": "read"
+    },
+    {
+      "operation_id": "GetWorkflowExecutionHistoryReverse",
+      "class": "TemporalGetWorkflowExecutionHistoryReverse2",
+      "slug": "temporal_get_workflow_execution_history_reverse_2",
+      "method": "get",
+      "path": "/namespaces/{namespace}/workflows/{execution.workflow_id}/history-reverse",
+      "type": "read"
+    },
+    {
+      "operation_id": "QueryWorkflow",
+      "class": "TemporalQueryWorkflow2",
+      "slug": "temporal_query_workflow_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{execution.workflow_id}/query/{query.query_type}",
+      "type": "write"
+    },
+    {
+      "operation_id": "TriggerWorkflowRule",
+      "class": "TemporalTriggerWorkflowRule2",
+      "slug": "temporal_trigger_workflow_rule_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{execution.workflow_id}/trigger-rule",
+      "type": "write"
+    },
+    {
+      "operation_id": "StartWorkflowExecution",
+      "class": "TemporalStartWorkflowExecution2",
+      "slug": "temporal_start_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCompletedById",
+      "class": "TemporalRespondActivityTaskCompletedById4",
+      "slug": "temporal_respond_activity_task_completed_by_id_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/complete",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskFailedById",
+      "class": "TemporalRespondActivityTaskFailedById4",
+      "slug": "temporal_respond_activity_task_failed_by_id_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/fail",
+      "type": "write"
+    },
+    {
+      "operation_id": "RecordActivityTaskHeartbeatById",
+      "class": "TemporalRecordActivityTaskHeartbeatById4",
+      "slug": "temporal_record_activity_task_heartbeat_by_id_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/heartbeat",
+      "type": "write"
+    },
+    {
+      "operation_id": "PauseActivityExecution",
+      "class": "TemporalPauseActivityExecution4",
+      "slug": "temporal_pause_activity_execution_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetActivityExecution",
+      "class": "TemporalResetActivityExecution4",
+      "slug": "temporal_reset_activity_execution_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "RespondActivityTaskCanceledById",
+      "class": "TemporalRespondActivityTaskCanceledById4",
+      "slug": "temporal_respond_activity_task_canceled_by_id_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/resolve-as-canceled",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseActivityExecution",
+      "class": "TemporalUnpauseActivityExecution4",
+      "slug": "temporal_unpause_activity_execution_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateActivityExecutionOptions",
+      "class": "TemporalUpdateActivityExecutionOptions4",
+      "slug": "temporal_update_activity_execution_options_4",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/activities/{activityId}/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "PauseWorkflowExecution",
+      "class": "TemporalPauseWorkflowExecution2",
+      "slug": "temporal_pause_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "SignalWithStartWorkflowExecution",
+      "class": "TemporalSignalWithStartWorkflowExecution2",
+      "slug": "temporal_signal_with_start_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/signal-with-start/{signalName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "UnpauseWorkflowExecution",
+      "class": "TemporalUnpauseWorkflowExecution2",
+      "slug": "temporal_unpause_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflowId}/unpause",
+      "type": "write"
+    },
+    {
+      "operation_id": "RequestCancelWorkflowExecution",
+      "class": "TemporalRequestCancelWorkflowExecution2",
+      "slug": "temporal_request_cancel_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/cancel",
+      "type": "write"
+    },
+    {
+      "operation_id": "ResetWorkflowExecution",
+      "class": "TemporalResetWorkflowExecution2",
+      "slug": "temporal_reset_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "SignalWorkflowExecution",
+      "class": "TemporalSignalWorkflowExecution2",
+      "slug": "temporal_signal_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/signal/{signalName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "TerminateWorkflowExecution",
+      "class": "TemporalTerminateWorkflowExecution2",
+      "slug": "temporal_terminate_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/terminate",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkflowExecutionOptions",
+      "class": "TemporalUpdateWorkflowExecutionOptions2",
+      "slug": "temporal_update_workflow_execution_options_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/update-options",
+      "type": "write"
+    },
+    {
+      "operation_id": "UpdateWorkflowExecution",
+      "class": "TemporalUpdateWorkflowExecution2",
+      "slug": "temporal_update_workflow_execution_2",
+      "method": "post",
+      "path": "/namespaces/{namespace}/workflows/{workflow_execution.workflow_id}/update/{request.input.name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "GetSystemInfo",
+      "class": "TemporalGetSystemInfo2",
+      "slug": "temporal_get_system_info_2",
+      "method": "get",
+      "path": "/system-info",
+      "type": "read"
+    }
+  ]
+}

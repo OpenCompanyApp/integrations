@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MongoDB\MongoDBService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Insert one document into a MongoDB Atlas Data API collection.
+ *
+ * Returns the Data API insertedId response.
+ */
 class MongoDBInsertOne implements Tool
 {
+    /**
+     * @param  MongoDBService  $service  MongoDB Atlas Data API client.
+     */
     public function __construct(
         private MongoDBService $service,
     ) {}
@@ -31,6 +39,11 @@ class MongoDBInsertOne implements Tool
         ];
     }
 
+    /**
+     * Insert one document into the configured collection.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (database, collection, document).
+     */
     public function execute(array $args): ToolResult
     {
         try {

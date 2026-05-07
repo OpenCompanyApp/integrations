@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Chroma\ChromaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Check the Chroma v2 heartbeat endpoint.
+ */
 class ChromaGetHealth implements Tool
 {
+    /**
+     * @param  ChromaService  $service  Chroma API client.
+     */
     public function __construct(
         private ChromaService $service,
     ) {}
@@ -27,6 +33,11 @@ class ChromaGetHealth implements Tool
         return [];
     }
 
+    /**
+     * Execute the health check.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are used.
+     */
     public function execute(array $args): ToolResult
     {
         try {

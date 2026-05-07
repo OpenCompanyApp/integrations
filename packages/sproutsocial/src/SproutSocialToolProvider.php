@@ -93,7 +93,7 @@ class SproutSocialToolProvider implements ToolProvider, ConfigurableIntegration,
             'description' => 'Social media management platform — schedule posts, manage social profiles, engage with messages, and analyze performance across multiple accounts.',
             'icon' => 'ph:chat-centered-dots',
             'logo' => 'simple-icons:sproutsocial',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.sproutsocial.com/docs/',
         ];

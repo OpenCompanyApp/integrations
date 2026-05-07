@@ -1,243 +1,139 @@
-# Mattermost — Lua API Reference
+# Mattermost
 
-## list_channels
+Mattermost tools are exposed under `app.integrations.mattermost`. The integration targets the Mattermost REST API v4 using a personal access token or bot token.
 
-List channels the current user belongs to.
+## Raw API Helpers
 
-### Parameters
+Use raw helpers for REST API v4 endpoints that do not yet have a first-class tool:
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (0-indexed). Default: 0. |
-| `per_page` | integer | no | Number of channels per page. Default: 60. |
+- `mattermost_api_get`
+- `mattermost_api_post`
+- `mattermost_api_put`
+- `mattermost_api_patch`
+- `mattermost_api_delete`
 
-### Response
-
-Returns an array of channel objects:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Channel ID |
-| `name` | string | Channel URL name |
-| `display_name` | string | Human-readable name |
-| `type` | string | Channel type: `O` (public), `P` (private), `D` (direct) |
-| `team_id` | string | Team this channel belongs to |
-| `header` | string | Channel header text |
-| `purpose` | string | Channel purpose text |
-
-### Example
+Paths can be relative to `/api/v4` or include `/api/v4`.
 
 ```lua
-local channels = app.integrations.mattermost.list_channels({
+local users = app.integrations.mattermost.mattermost_api_get({
+  path = "/users",
+  query = {
+    page = 0,
+    per_page = 20
+  }
+})
+```
+
+## Users
+
+```lua
+local me = app.integrations.mattermost.mattermost_get_current_user({})
+
+local results = app.integrations.mattermost.mattermost_search_users({
+  term = "alex",
+  team_id = "team_123"
+})
+```
+
+User tools:
+
+- `mattermost_list_users`
+- `mattermost_search_users`
+- `mattermost_get_user`
+- `mattermost_get_user_by_username`
+- `mattermost_create_user`
+- `mattermost_patch_user`
+- `mattermost_deactivate_user`
+- `mattermost_get_current_user`
+
+User creation and activation changes require server permissions for the token.
+
+## Teams
+
+```lua
+local teams = app.integrations.mattermost.mattermost_list_teams({
   page = 0,
-  per_page = 20
+  per_page = 60
 })
 
-for _, ch in ipairs(channels) do
-  print(ch.display_name .. " (" .. ch.type .. ") - " .. ch.id)
-end
-```
-
----
-
-## get_channel
-
-Get details of a specific channel by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The channel ID. |
-
-### Example
-
-```lua
-local channel = app.integrations.mattermost.get_channel({
-  channel_id = "abc123def456"
+app.integrations.mattermost.mattermost_add_team_member({
+  team_id = "team_123",
+  user_id = "user_123"
 })
-
-print(channel.display_name .. ": " .. (channel.purpose or "No purpose set"))
 ```
 
----
+Team tools:
 
-## create_post
+- `mattermost_list_teams`
+- `mattermost_get_team`
+- `mattermost_create_team`
+- `mattermost_patch_team`
+- `mattermost_list_team_members`
+- `mattermost_add_team_member`
+- `mattermost_remove_team_member`
 
-Post a message to a channel.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The channel to post the message in. |
-| `message` | string | yes | The message text. Supports Markdown. |
-
-### Response
-
-Returns the created post object with `id`, `create_at`, `update_at`, and the message content.
-
-### Example
+## Channels
 
 ```lua
-local post = app.integrations.mattermost.create_post({
-  channel_id = "abc123def456",
-  message = "Hello from the AI agent! :robot:"
-})
-
-print("Posted message ID: " .. post.id)
-```
-
----
-
-## list_posts
-
-List posts in a channel.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The channel ID. |
-| `page` | integer | no | Page number (0-indexed). Default: 0. |
-| `per_page` | integer | no | Number of posts per page. Default: 60. |
-
-### Response
-
-Returns an object with `order` (array of post IDs) and `posts` (map of post ID → post object). Each post has:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Post ID |
-| `message` | string | Post content |
-| `user_id` | string | Author user ID |
-| `channel_id` | string | Channel ID |
-| `create_at` | integer | Creation timestamp (ms) |
-| `update_at` | integer | Last update timestamp (ms) |
-
-### Example
-
-```lua
-local result = app.integrations.mattermost.list_posts({
-  channel_id = "abc123def456",
+local channels = app.integrations.mattermost.mattermost_list_team_channels({
+  team_id = "team_123",
   page = 0,
-  per_page = 10
+  per_page = 50
 })
 
-for _, postId in ipairs(result.order) do
-  local post = result.posts[postId]
-  print(post.user_id .. ": " .. post.message)
-end
+local created = app.integrations.mattermost.mattermost_create_channel({
+  team_id = "team_123",
+  name = "release-updates",
+  display_name = "Release Updates",
+  type = "O"
+})
 ```
 
----
+Channel tools:
 
-## get_post
+- `mattermost_list_channels`
+- `mattermost_list_team_channels`
+- `mattermost_search_channels`
+- `mattermost_create_channel`
+- `mattermost_get_channel`
+- `mattermost_patch_channel`
+- `mattermost_delete_channel`
+- `mattermost_list_channel_members`
+- `mattermost_add_channel_member`
+- `mattermost_remove_channel_member`
 
-Get a specific post by ID.
+The legacy `mattermost_list_channels` tool lists channels for the current user. Use `mattermost_list_team_channels` when you need channels in a specific team.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `post_id` | string | yes | The post ID. |
-
-### Example
+## Posts, Threads, And Reactions
 
 ```lua
-local post = app.integrations.mattermost.get_post({
-  post_id = "xyz789"
+local post = app.integrations.mattermost.mattermost_create_post({
+  channel_id = "channel_123",
+  message = "Deployment finished."
 })
 
-print("Message: " .. post.message)
-print("Author: " .. post.user_id)
+local thread = app.integrations.mattermost.mattermost_get_post_thread({
+  post_id = post.id
+})
 ```
 
----
+Post and reaction tools:
 
-## list_teams
+- `mattermost_create_post`
+- `mattermost_list_posts`
+- `mattermost_get_post`
+- `mattermost_patch_post`
+- `mattermost_delete_post`
+- `mattermost_search_posts`
+- `mattermost_get_post_thread`
+- `mattermost_list_post_reactions`
+- `mattermost_create_reaction`
+- `mattermost_delete_reaction`
 
-List teams the current user belongs to.
+## Files
 
-### Parameters
+`mattermost_get_file_info` returns metadata for a file ID. File upload/download endpoints can involve multipart or binary payloads, so use raw helpers only when the host can handle that request or response shape.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (0-indexed). Default: 0. |
-| `per_page` | integer | no | Number of teams per page. Default: 60. |
+## Output Shape
 
-### Response
-
-Returns an array of team objects:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Team ID |
-| `name` | string | Team URL name |
-| `display_name` | string | Human-readable team name |
-| `description` | string | Team description |
-| `type` | string | Team type: `O` (open), `I` (invite) |
-| `email` | string | Team email |
-
-### Example
-
-```lua
-local teams = app.integrations.mattermost.list_teams({})
-
-for _, team in ipairs(teams) do
-  print(team.display_name .. " (" .. team.type .. ")")
-end
-```
-
----
-
-## get_current_user
-
-Get the profile of the currently authenticated user.
-
-### Parameters
-
-None.
-
-### Response
-
-Returns a user object:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | User ID |
-| `username` | string | Username |
-| `email` | string | Email address |
-| `nickname` | string | Display nickname |
-| `first_name` | string | First name |
-| `last_name` | string | Last name |
-| `roles` | string | User roles (e.g., "system_admin") |
-| `locale` | string | User locale (e.g., "en") |
-
-### Example
-
-```lua
-local user = app.integrations.mattermost.get_current_user({})
-
-print("Logged in as: @" .. user.username .. " (" .. user.email .. ")")
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Mattermost accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.mattermost.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.mattermost.default.function_name({...})
-
--- Named accounts
-app.integrations.mattermost.work.function_name({...})
-app.integrations.mattermost.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Existing compatibility tools such as `mattermost_list_posts`, `mattermost_list_channels`, and `mattermost_get_current_user` keep their current normalized responses. New endpoint-mapped tools return Mattermost's parsed JSON response directly, or an empty object for `204 No Content`.

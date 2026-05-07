@@ -9,10 +9,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool: clearbit_reveal
  *
- * Identifies the company and person behind an IP address using the Clearbit
+ * Identifies the company behind an IP address using the Clearbit
  * Reveal API. Useful for de-anonymizing website visitors in real time.
  *
- * Endpoint: GET /reveal?ip=…
+ * Endpoint: GET https://reveal.clearbit.com/v1/companies/find?ip=…
  */
 class ClearbitReveal implements Tool
 {
@@ -36,7 +36,7 @@ class ClearbitReveal implements Tool
      */
     public function description(): string
     {
-        return 'Identify the company and person behind an IP address using Clearbit Reveal. Returns company information and, when available, the associated person.';
+        return 'Identify the company behind an IP address using Clearbit Reveal.';
     }
 
     /**
@@ -47,7 +47,7 @@ class ClearbitReveal implements Tool
     public function parameters(): array
     {
         return [
-            'ip' => ['type' => 'string', 'required' => true, 'description' => 'The IP address to look up (IPv4 or IPv6, e.g., "104.193.168.24").'],
+            'ip' => ['type' => 'string', 'required' => true, 'description' => 'The IP address to look up (IPv4 or IPv6, e.g., "203.0.113.10").'],
         ];
     }
 

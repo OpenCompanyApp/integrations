@@ -6,10 +6,18 @@ use OpenCompany\Integrations\MailerSend\MailerSendService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Send an email through the MailerSend Email API.
+ *
+ * Supports the core send endpoint plus common optional fields such as template
+ * IDs, personalization, tags, reply-to, CC/BCC, and scheduled sending.
+ */
 class MailerSendSendEmail implements Tool
 {
     /**
      * Create a new MailerSendSendEmail tool instance.
+     *
+     *   MailerSendService  $service  The MailerSend API client.
      */
     public function __construct(
         private MailerSendService $service,
@@ -62,6 +70,47 @@ class MailerSendSendEmail implements Tool
                 'type' => 'string',
                 'description' => 'Plain text body content for the email.',
             ],
+            'template_id' => [
+                'type' => 'string',
+                'description' => 'Optional MailerSend template ID.',
+            ],
+            'personalization' => [
+                'type' => 'array',
+                'description' => 'Optional personalization objects.',
+                'items' => ['type' => 'object'],
+            ],
+            'tags' => [
+                'type' => 'array',
+                'description' => 'Optional message tags.',
+                'items' => ['type' => 'string'],
+            ],
+            'reply_to' => [
+                'type' => 'object',
+                'description' => 'Optional reply-to object with email and name.',
+            ],
+            'cc' => [
+                'type' => 'array',
+                'description' => 'Optional CC recipient objects.',
+                'items' => ['type' => 'object'],
+            ],
+            'bcc' => [
+                'type' => 'array',
+                'description' => 'Optional BCC recipient objects.',
+                'items' => ['type' => 'object'],
+            ],
+            'attachments' => [
+                'type' => 'array',
+                'description' => 'Optional MailerSend attachment objects.',
+                'items' => ['type' => 'object'],
+            ],
+            'send_at' => [
+                'type' => 'integer',
+                'description' => 'Optional Unix timestamp for scheduled sending.',
+            ],
+            'in_reply_to' => [
+                'type' => 'string',
+                'description' => 'Optional Message-ID this email replies to.',
+            ],
         ];
     }
 
@@ -108,8 +157,15 @@ class MailerSendSendEmail implements Tool
 
             $html = $args['html'] ?? null;
             $text = $args['text'] ?? null;
+            $options = [];
 
-            $result = $this->service->sendEmail($from, $to, $subject, $html, $text);
+            foreach (['template_id', 'personalization', 'tags', 'reply_to', 'cc', 'bcc', 'attachments', 'send_at', 'in_reply_to'] as $field) {
+                if (array_key_exists($field, $args) && $args[$field] !== null && $args[$field] !== '') {
+                    $options[$field] = $args[$field];
+                }
+            }
+
+            $result = $this->service->sendEmail($from, $to, $subject, $html, $text, $options);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -2,44 +2,32 @@
 
 namespace OpenCompany\Integrations\CloudConvert\Tools;
 
-use OpenCompany\Integrations\CloudConvert\CloudConvertService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class CloudConvertGetCurrentUser implements Tool
+/**
+ * Get the authenticated CloudConvert user profile and remaining credits.
+ */
+class CloudConvertGetCurrentUser extends AbstractCloudConvertTool
 {
-    public function __construct(
-        private CloudConvertService $service,
-    ) {}
+    protected string $toolName = 'cloudconvert_get_current_user';
 
-    public function name(): string
-    {
-        return 'cloudconvert_get_current_user';
-    }
+    protected string $toolDescription = 'Get the authenticated CloudConvert user profile and remaining credits.';
 
-    public function description(): string
-    {
-        return 'Get the authenticated CloudConvert user profile, including remaining credits and subscription info.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/users/me';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CloudConvert integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+];
 
-            $result = $this->service->getCurrentUser();
-            $data = $result['data'] ?? $result;
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            return ToolResult::success($data);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

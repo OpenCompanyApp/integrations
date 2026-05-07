@@ -6,10 +6,15 @@ use OpenCompany\Integrations\MailerSend\MailerSendService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a MailerSend message by ID.
+ */
 class MailerSendGetMessage implements Tool
 {
     /**
      * Create a new MailerSendGetMessage tool instance.
+     *
+     *   MailerSendService  $service  The MailerSend API client.
      */
     public function __construct(
         private MailerSendService $service,

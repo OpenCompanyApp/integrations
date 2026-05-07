@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-aircall",
-    "description": "Aircall integration for Laravel — manage calls, contacts, users, and phone numbers.",
+    "description": "Aircall integration for Laravel - manage calls, contacts, users, teams, numbers, tags, webhooks, and conversation intelligence.",
     "license": "MIT",
     "authors": [
         {

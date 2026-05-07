@@ -99,7 +99,7 @@ class ContentfulToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Content types, entries, assets, and space management',
             'icon' => 'ph:article',
             'logo' => 'simple-icons:contentful',
-            'category' => 'cms',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.contentful.com/developers/docs/references/content-management-api/',
         ];

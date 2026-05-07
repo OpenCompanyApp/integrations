@@ -10,7 +10,7 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
  * Laravel service provider for the WhatsApp Business API integration.
  *
  * Registers the {@see WhatsAppService} singleton and bootstraps the
- * {@see WhatsAppToolProvider} into the tool-registry when available.
+ * {@see WhatsAppToolProvider} into the tool registry when available.
  */
 class WhatsAppServiceProvider extends ServiceProvider
 {
@@ -25,13 +25,14 @@ class WhatsAppServiceProvider extends ServiceProvider
             return new WhatsAppService(
                 accessToken: $creds->get('whatsapp', 'access_token', ''),
                 phoneNumberId: $creds->get('whatsapp', 'phone_number_id', ''),
-                baseUrl: $creds->get('whatsapp', 'base_url', 'https://graph.facebook.com/v21.0'),
+                whatsAppBusinessAccountId: $creds->get('whatsapp', 'whatsapp_business_account_id', ''),
+                baseUrl: $creds->get('whatsapp', 'base_url', 'https://graph.facebook.com/v24.0'),
             );
         });
     }
 
     /**
-     * Boot the service provider — register the tool provider.
+     * Boot the service provider and register the tool provider.
      */
     public function boot(): void
     {

@@ -59,9 +59,7 @@ class BubbleDeleteRecord implements Tool
                 return ToolResult::error('Bubble integration is not configured.');
             }
 
-            $this->service->deleteRecord($args['type'], $args['id']);
-
-            return ToolResult::success("Record '{$args['id']}' of type '{$args['type']}' has been deleted.");
+            return ToolResult::success($this->service->deleteRecord($args['type'], $args['id']));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

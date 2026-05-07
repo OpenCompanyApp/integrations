@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-hackernews",
-    "description": "Hacker News integration for Laravel — fetch stories, items, and user profiles from the HN API.",
+    "description": "Hacker News integration for Laravel — fetch stories, items, users, live feed IDs, max item IDs, and changed item/profile IDs from the official HN API.",
     "license": "MIT",
     "authors": [
         {

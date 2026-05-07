@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-chartmogul",
-    "description": "ChartMogul integration for Laravel — query customers, subscriptions, plans, invoices, and metrics.",
+    "description": "ChartMogul integration for Laravel — query customers, customer subscriptions, plans, invoices, and subscription metrics.",
     "license": "MIT",
     "authors": [
         {

@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Raindrop;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropListBookmarks;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropGetBookmark;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropCreateBookmark;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropUpdateBookmark;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropListCollections;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropGetCollection;
-use OpenCompany\Integrations\Raindrop\Tools\RaindropGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Raindrop.io.
+ *
+ * Exposes official Raindrop.io REST API operations from RaindropOperations and
+ * resolves default or named account credentials for tool instances.
+ */
+class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +25,27 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Raindrop.io uses OAuth access tokens in the Authorization: Bearer header.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +58,7 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'label' => 'Raindrop.io',
-            'description' => 'Bookmark manager',
+            'description' => 'Bookmark manager, collections, tags, highlights, import, export, and backups',
             'icon' => 'ph:bookmark-simple',
             'logo' => 'simple-icons:raindropio',
         ];
@@ -89,74 +68,46 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'name' => 'Raindrop.io',
-            'description' => 'All-in-one bookmark manager — save, organize, and search bookmarks',
+            'description' => 'Manage Raindrop.io bookmarks, collections, tags, highlights, filters, imports, exports, backups, and user settings.',
             'icon' => 'ph:bookmark-simple',
             'logo' => 'simple-icons:raindropio',
-            'category' => 'bookmarks',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.raindrop.io/',
         ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Raindrop.io access token',
-                'hint' => 'Generate an access token in your Raindrop.io account settings under "Integrations"',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.raindrop.io/rest/v1',
-                'hint' => 'The Raindrop.io REST API base URL. Change only if using a custom endpoint.',
-                'default' => 'https://api.raindrop.io/rest/v1',
-            ],
-        ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Test Raindrop.io credentials with the current user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Configuration values to test.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.raindrop.io/rest/v1', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.raindrop.io/rest/v1'), '/');
 
-        if (empty($accessToken)) {
+        if ($accessToken === '') {
             return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/user');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Raindrop API at {$baseUrl}. Check the URL.",
-                ];
-            }
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl.'/user');
 
             if (!$response->successful()) {
-                $error = $json['errorMessage'] ?? 'Unknown error';
-                return [
-                    'success' => false,
-                    'error' => "Raindrop API error: {$error}",
-                ];
+                return ['success' => false, 'error' => "Raindrop.io API returned HTTP {$response->status()}."];
             }
 
-            $user = $json['user'] ?? [];
-            $name = trim(($user['fullName'] ?? '') . ' (' . ($user['email'] ?? '') . ')');
-
-            return [
-                'success' => true,
-                'message' => "Connected to Raindrop.io as {$name}.",
-            ];
+            return ['success' => true, 'message' => 'Connected to Raindrop.io API.'];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -170,65 +121,7 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function tools(): array
-    {
-        return [
-            'raindrop_list_bookmarks' => [
-                'class' => RaindropListBookmarks::class,
-                'type' => 'read',
-                'name' => 'List Bookmarks',
-                'description' => 'List bookmarks with optional collection and search filters.',
-                'icon' => 'ph:list',
-            ],
-            'raindrop_get_bookmark' => [
-                'class' => RaindropGetBookmark::class,
-                'type' => 'read',
-                'name' => 'Get Bookmark',
-                'description' => 'Get a single bookmark by ID.',
-                'icon' => 'ph:bookmark-simple',
-            ],
-            'raindrop_create_bookmark' => [
-                'class' => RaindropCreateBookmark::class,
-                'type' => 'write',
-                'name' => 'Create Bookmark',
-                'description' => 'Save a new bookmark with optional title, tags, and collection.',
-                'icon' => 'ph:plus',
-            ],
-            'raindrop_update_bookmark' => [
-                'class' => RaindropUpdateBookmark::class,
-                'type' => 'write',
-                'name' => 'Update Bookmark',
-                'description' => 'Update an existing bookmark\'s fields.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'raindrop_list_collections' => [
-                'class' => RaindropListCollections::class,
-                'type' => 'read',
-                'name' => 'List Collections',
-                'description' => 'List all bookmark collections.',
-                'icon' => 'ph:folder',
-            ],
-            'raindrop_get_collection' => [
-                'class' => RaindropGetCollection::class,
-                'type' => 'read',
-                'name' => 'Get Collection',
-                'description' => 'Get details of a specific collection.',
-                'icon' => 'ph:folder-open',
-            ],
-            'raindrop_get_current_user' => [
-                'class' => RaindropGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:user',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/raindrop.md';
-    }    public function credentialFields(): array
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -236,26 +129,65 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
+    /**
+     * Registered Raindrop.io operation tools keyed by tool slug.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
+    public function tools(): array
+    {
+        $tools = [];
+        foreach (RaindropService::operations() as $definition) {
+            $tools[(string) $definition['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$definition['class'],
+                'type' => (string) $definition['type'],
+                'name' => (string) $definition['name'],
+                'description' => (string) $definition['description'],
+                'icon' => $definition['type'] === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            ];
+        }
+
+        return $tools;
+    }
+
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__.'/../lua-docs/raindrop.md';
+    }
+
     public function isIntegration(): bool
     {
         return true;
     }
 
+    /**
+     * Create a Raindrop.io tool instance.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a Raindrop.io service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): RaindropService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new RaindropService(
+            return new RaindropService(
                 accessToken: $creds->get('raindrop', 'access_token', '', $account),
                 baseUrl: $creds->get('raindrop', 'url', 'https://api.raindrop.io/rest/v1', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(RaindropService::class));
+        return app(RaindropService::class);
     }
 }

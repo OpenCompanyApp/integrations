@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Gotify\GotifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Delete one Gotify message with a client token.
+ */
 class GotifyDeleteMessage implements Tool
 {
+    /**
+     * @param  GotifyService  $service  The Gotify API client.
+     */
     public function __construct(
         private GotifyService $service,
     ) {}
@@ -29,14 +35,22 @@ class GotifyDeleteMessage implements Tool
         ];
     }
 
+    /**
+     * Delete a Gotify message by id.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gotify integration is not configured.');
+            if (!$this->service->isClientConfigured()) {
+                return ToolResult::error('Gotify client token is not configured. Deleting messages requires a client token.');
             }
 
-            $id = (int) $args['id'];
+            $id = (int) ($args['id'] ?? 0);
+            if ($id <= 0) {
+                return ToolResult::error('A valid positive message id is required.');
+            }
 
             $this->service->deleteMessage($id);
 

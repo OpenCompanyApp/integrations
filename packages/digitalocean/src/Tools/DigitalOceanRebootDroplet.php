@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Start a reboot action for a DigitalOcean Droplet.
+ */
 class DigitalOceanRebootDroplet implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -29,6 +35,11 @@ class DigitalOceanRebootDroplet implements Tool
         ];
     }
 
+    /**
+     * Request a Droplet reboot action by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

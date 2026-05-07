@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Square\SquareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a Square customer profile.
+ *
+ * Accepts basic name, email, and phone fields and includes an idempotency key
+ * for safe retries.
+ */
 class SquareCreateCustomer implements Tool
 {
     /**

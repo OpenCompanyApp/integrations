@@ -9,8 +9,8 @@ use OpenCompany\Integrations\Vero\VeroService;
 /**
  * Identify (create or update) a user in Vero.
  *
- * Creates a new user profile or updates an existing one identified
- * by their unique ID. Supports setting email, name, and custom attributes.
+ * Creates a new user profile or updates an existing one using Vero's
+ * POST /users/track endpoint.
  */
 class VeroIdentifyUser implements Tool
 {
@@ -38,6 +38,11 @@ class VeroIdentifyUser implements Tool
             'email' => ['type' => 'string', 'required' => true, 'description' => 'User email address.'],
             'name' => ['type' => 'string', 'description' => 'Display name for the user.'],
             'data' => ['type' => 'object', 'description' => 'Custom user attributes as key-value pairs (e.g., {"plan": "premium", "signup_date": "2025-01-15"}).'],
+            'channels' => [
+                'type' => 'array',
+                'description' => 'Optional Vero channel objects, such as push tokens with type, address, and platform.',
+                'items' => ['type' => 'object'],
+            ],
         ];
     }
 
@@ -67,12 +72,14 @@ class VeroIdentifyUser implements Tool
             $name = $args['name'] ?? '';
             $data = $args['data'] ?? [];
 
-            $result = $this->service->identifyUser($id, $email, $name, $data);
+            $channels = $args['channels'] ?? [];
+            $result = $this->service->identifyUser($id, $email, $name, $data, $channels);
 
             return ToolResult::success([
                 'id' => $id,
                 'email' => $email,
-                'status' => $result['status'] ?? 'identified',
+                'status' => $result['status'] ?? 200,
+                'message' => $result['message'] ?? 'identified',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

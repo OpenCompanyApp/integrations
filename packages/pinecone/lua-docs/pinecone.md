@@ -1,261 +1,151 @@
-# Pinecone — Lua API Reference
+# Pinecone Lua Reference
 
-## list_indexes
+Namespace: `pinecone`
 
-List all vector indexes in your Pinecone project.
+This integration covers common Pinecone Database control-plane and data-plane operations from the REST API. Pinecone requests use an `Api-Key` header and the configured `X-Pinecone-Api-Version`, defaulting to `2026-04`.
 
-### Parameters
+Control-plane tools use the configured API base URL, usually `https://api.pinecone.io`. Data-plane tools require the target index host returned by `pinecone.get_index`.
 
-None.
+## Indexes
 
-### Example
+### `pinecone.list_indexes`
+
+List indexes in the project.
 
 ```lua
-local result = app.integrations.pinecone.list_indexes({})
-
-for _, index in ipairs(result.indexes or {}) do
-  print(index.name .. " (" .. index.dimension .. "d, " .. index.metric .. ")")
-end
+local indexes = app.integrations.pinecone.list_indexes({})
 ```
 
----
+### `pinecone.get_index`
 
-## get_index
-
-Get detailed information about a specific vector index.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | The index name |
-
-### Example
+Get one index description, including its host.
 
 ```lua
-local result = app.integrations.pinecone.get_index({
-  name = "my-index"
-})
-
-print("Host: " .. result.host)
-print("Dimension: " .. result.dimension)
-print("Status: " .. (result.status and result.status.ready and "ready" or "not ready"))
+local index = app.integrations.pinecone.get_index({ name = "docs-example" })
 ```
 
----
+### `pinecone.create_index`
 
-## create_index
-
-Create a new serverless vector index in Pinecone.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Unique index name |
-| `dimension` | integer | yes | Vector dimension (e.g., 1536 for OpenAI ada-002) |
-| `metric` | string | no | Similarity metric: `"cosine"` (default), `"euclidean"`, or `"dotproduct"` |
-
-### Example
+Create a serverless index.
 
 ```lua
-local result = app.integrations.pinecone.create_index({
-  name = "documents",
+local created = app.integrations.pinecone.create_index({
+  name = "docs-example",
   dimension = 1536,
-  metric = "cosine"
+  metric = "cosine",
+  cloud = "aws",
+  region = "us-east-1"
 })
-
-print("Created index: " .. result.name)
 ```
 
----
+### `pinecone.configure_index`
 
-## upsert_vectors
+Patch configurable index settings.
 
-Insert or update vectors in an index.
+```lua
+local updated = app.integrations.pinecone.configure_index({
+  name = "docs-example",
+  config = {
+    deletion_protection = "enabled",
+    tags = { environment = "test" }
+  }
+})
+```
 
-### Parameters
+### `pinecone.delete_index`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `index_host` | string | yes | The index host URL (from get_index response) |
-| `vectors` | array | yes | Array of vector objects |
+Delete an index after deletion protection is disabled.
 
-### Vector Object
+```lua
+app.integrations.pinecone.delete_index({ name = "docs-example" })
+```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | string | yes | Unique vector identifier |
-| `values` | array | yes | Array of floats (must match index dimension) |
-| `metadata` | object | no | Key-value metadata for filtering |
+## Vectors
 
-### Example
+### `pinecone.upsert_vectors`
+
+Upsert dense vectors into an index host.
 
 ```lua
 local result = app.integrations.pinecone.upsert_vectors({
-  index_host = "idx-abc123.svc.us-east-1.pinecone.io",
+  index_host = "https://example-index.svc.us-east-1.pinecone.io",
+  namespace = "docs",
   vectors = {
-    {
-      id = "doc1",
-      values = {0.1, 0.2, 0.3, 0.4},
-      metadata = { title = "Introduction", category = "docs" }
-    },
-    {
-      id = "doc2",
-      values = {0.5, 0.6, 0.7, 0.8},
-      metadata = { title = "Getting Started", category = "docs" }
-    }
+    { id = "vec1", values = { 0.1, 0.2 }, metadata = { source = "example" } }
   }
 })
-
-print("Upserted " .. (result.upserted_count or 0) .. " vectors")
 ```
 
----
+### `pinecone.query_vectors`
 
-## query_vectors
-
-Search for similar vectors in an index.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `index_host` | string | yes | The index host URL (from get_index response) |
-| `vector` | array | yes | Query vector embedding (must match index dimension) |
-| `top_k` | integer | no | Number of results to return (default: 10) |
-| `filter` | object | no | Metadata filter expression |
-| `include_metadata` | boolean | no | Include metadata in results (default: true) |
-
-### Filter Syntax
-
-Metadata filters use Pinecone's filter expressions:
-
-```lua
-filter = {
-  category = { ["$eq"] = "docs" }
-}
-
--- Multiple conditions
-filter = {
-  category = { ["$in"] = { "docs", "blog" } },
-  year = { ["$gte"] = 2024 }
-}
-```
-
-Operators: `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`
-
-### Example
+Search by vector.
 
 ```lua
 local result = app.integrations.pinecone.query_vectors({
-  index_host = "idx-abc123.svc.us-east-1.pinecone.io",
-  vector = {0.1, 0.2, 0.3, 0.4},
+  index_host = "https://example-index.svc.us-east-1.pinecone.io",
+  namespace = "docs",
+  vector = { 0.1, 0.2 },
   top_k = 5,
   include_metadata = true,
-  filter = {
-    category = { ["$eq"] = "docs" }
-  }
-})
-
-for _, match in ipairs(result.matches or {}) do
-  print(match.id .. " (score: " .. match.score .. ")")
-  if match.metadata then
-    print("  title: " .. (match.metadata.title or "N/A"))
-  end
-end
-```
-
----
-
-## list_collections
-
-List all collections in your Pinecone project.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.pinecone.list_collections({})
-
-for _, col in ipairs(result.collections or {}) do
-  print(col.name .. " (source: " .. (col.source or "N/A") .. ")")
-end
-```
-
----
-
-## get_current_user
-
-Get information about the currently authenticated Pinecone user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.pinecone.get_current_user({})
-
-print("User: " .. (result.user_name or "N/A"))
-print("Email: " .. (result.user_email or "N/A"))
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Pinecone accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.pinecone.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.pinecone.default.function_name({...})
-
--- Named accounts
-app.integrations.pinecone.production.function_name({...})
-app.integrations.pinecone.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
-
----
-
-## Common Workflows
-
-### Create an index, upsert, and query
-
-```lua
--- Step 1: Create an index
-local index = app.integrations.pinecone.create_index({
-  name = "my-docs",
-  dimension = 1536,
-  metric = "cosine"
-})
-
--- Step 2: Get the host URL (once index is ready)
-local details = app.integrations.pinecone.get_index({ name = "my-docs" })
-local host = details.host
-
--- Step 3: Upsert vectors
-app.integrations.pinecone.upsert_vectors({
-  index_host = host,
-  vectors = {
-    { id = "doc1", values = {0.1, 0.2, ...}, metadata = { title = "Doc 1" } },
-    { id = "doc2", values = {0.3, 0.4, ...}, metadata = { title = "Doc 2" } }
-  }
-})
-
--- Step 4: Query for similar vectors
-local results = app.integrations.pinecone.query_vectors({
-  index_host = host,
-  vector = {0.1, 0.15, ...},
-  top_k = 5
+  include_values = false
 })
 ```
+
+### `pinecone.fetch_vectors`
+
+Fetch vectors by ID.
+
+```lua
+local result = app.integrations.pinecone.fetch_vectors({
+  index_host = "https://example-index.svc.us-east-1.pinecone.io",
+  namespace = "docs",
+  ids = { "vec1", "vec2" }
+})
+```
+
+### `pinecone.update_vector`
+
+Update values or metadata by ID, or metadata across records matching a filter.
+
+```lua
+local result = app.integrations.pinecone.update_vector({
+  index_host = "https://example-index.svc.us-east-1.pinecone.io",
+  namespace = "docs",
+  id = "vec1",
+  set_metadata = { status = "reviewed" }
+})
+```
+
+### `pinecone.delete_vectors`
+
+Delete by IDs, metadata filter, or `delete_all`.
+
+```lua
+app.integrations.pinecone.delete_vectors({
+  index_host = "https://example-index.svc.us-east-1.pinecone.io",
+  namespace = "docs",
+  ids = { "vec1" }
+})
+```
+
+### `pinecone.describe_index_stats`
+
+Describe vector counts and namespace stats.
+
+```lua
+local stats = app.integrations.pinecone.describe_index_stats({
+  index_host = "https://example-index.svc.us-east-1.pinecone.io"
+})
+```
+
+## Collections
+
+### `pinecone.list_collections`
+
+List collections in the project.
+
+```lua
+local collections = app.integrations.pinecone.list_collections({})
+```
+
+Collections are part of Pinecone's control-plane API. Prefer index and vector tools for current RAG workflows.

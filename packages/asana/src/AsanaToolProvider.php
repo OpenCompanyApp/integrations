@@ -4,6 +4,8 @@ namespace OpenCompany\Integrations\Asana;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Asana\Tools\AsanaAddComment;
@@ -27,14 +29,14 @@ use OpenCompany\Integrations\Asana\Tools\AsanaListUsers;
 use OpenCompany\Integrations\Asana\Tools\AsanaListWorkspaces;
 use OpenCompany\Integrations\Asana\Tools\AsanaUpdateTask;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers all Asana tools and provides integration metadata.
  *
  * Exposes 20 tools covering tasks, projects, sections, workspaces,
  * teams, users, tags, and stories (comments) via the ToolProvider contract.
  */
-class AsanaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+class AsanaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
 
 /**
      * Describe host and authentication capabilities for catalog and setup flows.
@@ -331,7 +333,9 @@ class AsanaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/asana.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -359,7 +363,7 @@ class AsanaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             return new AsanaService(
                 accessToken: $creds->get('asana', 'access_token', '', $account),

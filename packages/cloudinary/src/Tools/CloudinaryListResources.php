@@ -49,6 +49,7 @@ class CloudinaryListResources implements Tool
             'max_results' => ['type' => 'integer', 'description' => 'Maximum number of resources to return (max 500, default 10).'],
             'next_cursor' => ['type' => 'string', 'description' => 'Pagination cursor from a previous response to get the next page.'],
             'prefix' => ['type' => 'string', 'description' => 'Only include resources whose public ID starts with this prefix (e.g. "blog/").'],
+            'delivery_type' => ['type' => 'string', 'description' => 'Delivery type such as upload, private, or authenticated. Default: upload.'],
         ];
     }
 
@@ -68,8 +69,9 @@ class CloudinaryListResources implements Tool
             $maxResults = isset($args['max_results']) ? (int) $args['max_results'] : null;
             $nextCursor = $args['next_cursor'] ?? null;
             $prefix = $args['prefix'] ?? null;
+            $deliveryType = $args['delivery_type'] ?? 'upload';
 
-            $result = $this->service->listResources($type, $maxResults, $nextCursor, $prefix);
+            $result = $this->service->listResources($type, $maxResults, $nextCursor, $prefix, $deliveryType);
 
             $resources = array_map(function (array $resource): array {
                 return [

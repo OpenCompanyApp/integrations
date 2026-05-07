@@ -107,7 +107,7 @@ class SpotifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Spotify integration for Laravel — search tracks, manage playlists, browse artists and albums.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

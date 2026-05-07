@@ -1,0 +1,49 @@
+<?php
+
+namespace OpenCompany\Integrations\Pulumi\Tools;
+
+/**
+ * DecryptProjectValue.
+ *
+ * Maps to the official Pulumi Cloud endpoint post /api/projects/{orgName}/{projectName}/decrypt.
+ */
+class PulumiOrganizationsDecryptProjectValue extends AbstractPulumiTool
+{
+    protected const NAME = 'pulumi_organizations_decrypt_project_value';
+    protected const DESCRIPTION = 'DecryptProjectValue
+
+Official Pulumi Cloud endpoint: POST /api/projects/{orgName}/{projectName}/decrypt
+
+DecryptProjectValue works just like DecryptValueHandler, but using the project\'s encryption key instead of the stack\'s';
+    protected const PARAMETERS = array (
+  'org_name' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `orgName` from the official Pulumi Cloud API operation. The organization name',
+  ),
+  'project_name' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `projectName` from the official Pulumi Cloud API operation. The project name',
+  ),
+  'body' =>
+  array (
+    'type' => 'object',
+    'required' => false,
+    'description' => 'JSON request body matching the official Pulumi Cloud API request schema.',
+  ),
+);
+    protected const METHOD = 'post';
+    protected const PATH = '/api/projects/{orgName}/{projectName}/decrypt';
+    protected const PATH_PARAMS = array (
+  'orgName' => 'org_name',
+  'projectName' => 'project_name',
+);
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = false;
+}

@@ -1,288 +1,113 @@
-# YouTube — Lua API Reference
+# YouTube
 
-All YouTube tools are available under `app.integrations.youtube`.
+YouTube tools are exposed under `app.integrations.youtube`. This package is generated from Google's official YouTube Data API v3 Discovery document and exposes 83 REST methods.
 
-## search_videos
+## Coverage
 
-Search for videos, channels, or playlists on YouTube using keywords, filters, and sorting options.
+- Source: `https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest`
+- Read tools: 28
+- Write tools: 55
+- Media upload tools: 8
+- Base URL: `https://youtube.googleapis.com`
 
-### Parameters
+## Usage Notes
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | Search query text |
-| `type` | string | no | Resource type: `video`, `channel`, or `playlist`. Default: `video` |
-| `max_results` | integer | no | Max results per page (1-50). Default: 10 |
-| `page_token` | string | no | Token for the next page of results |
-| `order` | string | no | Sort order: `date`, `rating`, `relevance`, `title`, `videoCount`, `viewCount` |
-| `published_after` | string | no | RFC 3339 date-time (e.g., `"2024-01-01T00:00:00Z"`) |
-| `published_before` | string | no | RFC 3339 date-time |
-| `region_code` | string | no | ISO 3166-1 alpha-2 country code (e.g., `"US"`) |
-| `channel_id` | string | no | Limit search to a specific channel |
-| `video_duration` | string | no | Duration filter: `any`, `long`, `medium`, `short` |
-| `safe_search` | string | no | Safe search: `moderate`, `none`, `strict` |
+Public read operations can use `api_key`; private, write, moderation, live, caption, and upload operations require an OAuth access token with the YouTube scopes documented by Google. Query parameters can be passed as top-level shortcuts or inside `query`. Request bodies go inside `body`. Upload endpoints accept `file_path`, optional `mime_type`, and optional metadata in `body`; the integration sends multipart upload requests with `uploadType=multipart`.
 
-### Example
+The YouTube API uses quota costs and many methods require `part`; pass `part` exactly as documented, often as a comma-separated string such as `snippet,contentDetails`.
 
-```lua
-local result = app.integrations.youtube.search_videos({
-  query = "rust programming tutorial",
-  max_results = 5,
-  order = "viewCount",
-  video_duration = "long"
-})
+## Tools
 
-if result and result.items then
-  for _, item in ipairs(result.items) do
-    print(item.snippet.title)
-    print("  Channel: " .. item.snippet.channelTitle)
-    print("  Published: " .. item.snippet.publishedAt)
-  end
-end
-```
+- `youtube_video_trainability_get` - GET /youtube/v3/videoTrainability
+- `youtube_live_chat_moderators_list` - GET /youtube/v3/liveChat/moderators
+- `youtube_live_chat_moderators_delete` - DELETE /youtube/v3/liveChat/moderators
+- `youtube_live_chat_moderators_insert` - POST /youtube/v3/liveChat/moderators
+- `youtube_channel_sections_insert` - POST /youtube/v3/channelSections
+- `youtube_channel_sections_update` - PUT /youtube/v3/channelSections
+- `youtube_channel_sections_list` - GET /youtube/v3/channelSections
+- `youtube_channel_sections_delete` - DELETE /youtube/v3/channelSections
+- `youtube_live_chat_messages_transition` - POST /youtube/v3/liveChat/messages/transition
+- `youtube_live_chat_messages_list` - GET /youtube/v3/liveChat/messages
+- `youtube_live_chat_messages_delete` - DELETE /youtube/v3/liveChat/messages
+- `youtube_live_chat_messages_insert` - POST /youtube/v3/liveChat/messages
+- `youtube_search_list` - GET /youtube/v3/search
+- `youtube_channel_banners_insert` - POST /youtube/v3/channelBanners/insert (media upload)
+- `youtube_comments_insert` - POST /youtube/v3/comments
+- `youtube_comments_mark_as_spam` - POST /youtube/v3/comments/markAsSpam
+- `youtube_comments_list` - GET /youtube/v3/comments
+- `youtube_comments_delete` - DELETE /youtube/v3/comments
+- `youtube_comments_set_moderation_status` - POST /youtube/v3/comments/setModerationStatus
+- `youtube_comments_update` - PUT /youtube/v3/comments
+- `youtube_video_categories_list` - GET /youtube/v3/videoCategories
+- `youtube_i18n_regions_list` - GET /youtube/v3/i18nRegions
+- `youtube_playlist_images_list` - GET /youtube/v3/playlistImages
+- `youtube_playlist_images_delete` - DELETE /youtube/v3/playlistImages
+- `youtube_playlist_images_insert` - POST /youtube/v3/playlistImages (media upload)
+- `youtube_playlist_images_update` - PUT /youtube/v3/playlistImages (media upload)
+- `youtube_super_chat_events_list` - GET /youtube/v3/superChatEvents
+- `youtube_members_list` - GET /youtube/v3/members
+- `youtube_videos_rate` - POST /youtube/v3/videos/rate
+- `youtube_videos_insert` - POST /youtube/v3/videos (media upload)
+- `youtube_videos_list` - GET /youtube/v3/videos
+- `youtube_videos_delete` - DELETE /youtube/v3/videos
+- `youtube_videos_get_rating` - GET /youtube/v3/videos/getRating
+- `youtube_videos_update` - PUT /youtube/v3/videos
+- `youtube_videos_report_abuse` - POST /youtube/v3/videos/reportAbuse
+- `youtube_playlist_items_insert` - POST /youtube/v3/playlistItems
+- `youtube_playlist_items_update` - PUT /youtube/v3/playlistItems
+- `youtube_playlist_items_list` - GET /youtube/v3/playlistItems
+- `youtube_playlist_items_delete` - DELETE /youtube/v3/playlistItems
+- `youtube_abuse_reports_insert` - POST /youtube/v3/abuseReports
+- `youtube_youtube_v3_update_comment_threads` - PUT /youtube/v3/commentThreads
+- `youtube_youtube_v3_live_chat_messages_stream` - GET /youtube/v3/liveChat/messages/stream
+- `youtube_tests_insert` - POST /youtube/v3/tests
+- `youtube_watermarks_set` - POST /youtube/v3/watermarks/set (media upload)
+- `youtube_watermarks_unset` - POST /youtube/v3/watermarks/unset
+- `youtube_live_broadcasts_transition` - POST /youtube/v3/liveBroadcasts/transition
+- `youtube_live_broadcasts_insert_cuepoint` - POST /youtube/v3/liveBroadcasts/cuepoint
+- `youtube_live_broadcasts_insert` - POST /youtube/v3/liveBroadcasts
+- `youtube_live_broadcasts_bind` - POST /youtube/v3/liveBroadcasts/bind
+- `youtube_live_broadcasts_list` - GET /youtube/v3/liveBroadcasts
+- `youtube_live_broadcasts_delete` - DELETE /youtube/v3/liveBroadcasts
+- `youtube_live_broadcasts_update` - PUT /youtube/v3/liveBroadcasts
+- `youtube_channels_update` - PUT /youtube/v3/channels
+- `youtube_channels_list` - GET /youtube/v3/channels
+- `youtube_memberships_levels_list` - GET /youtube/v3/membershipsLevels
+- `youtube_i18n_languages_list` - GET /youtube/v3/i18nLanguages
+- `youtube_video_abuse_report_reasons_list` - GET /youtube/v3/videoAbuseReportReasons
+- `youtube_playlists_list` - GET /youtube/v3/playlists
+- `youtube_playlists_delete` - DELETE /youtube/v3/playlists
+- `youtube_playlists_insert` - POST /youtube/v3/playlists
+- `youtube_playlists_update` - PUT /youtube/v3/playlists
+- `youtube_subscriptions_list` - GET /youtube/v3/subscriptions
+- `youtube_subscriptions_delete` - DELETE /youtube/v3/subscriptions
+- `youtube_subscriptions_insert` - POST /youtube/v3/subscriptions
+- `youtube_live_chat_bans_insert` - POST /youtube/v3/liveChat/bans
+- `youtube_live_chat_bans_delete` - DELETE /youtube/v3/liveChat/bans
+- `youtube_thumbnails_set` - POST /youtube/v3/thumbnails/set (media upload)
+- `youtube_captions_insert` - POST /youtube/v3/captions (media upload)
+- `youtube_captions_update` - PUT /youtube/v3/captions (media upload)
+- `youtube_captions_list` - GET /youtube/v3/captions
+- `youtube_captions_delete` - DELETE /youtube/v3/captions
+- `youtube_captions_download` - GET /youtube/v3/captions/{id}
+- `youtube_live_streams_insert` - POST /youtube/v3/liveStreams
+- `youtube_live_streams_update` - PUT /youtube/v3/liveStreams
+- `youtube_live_streams_list` - GET /youtube/v3/liveStreams
+- `youtube_live_streams_delete` - DELETE /youtube/v3/liveStreams
+- `youtube_comment_threads_list` - GET /youtube/v3/commentThreads
+- `youtube_comment_threads_insert` - POST /youtube/v3/commentThreads
+- `youtube_third_party_links_insert` - POST /youtube/v3/thirdPartyLinks
+- `youtube_third_party_links_update` - PUT /youtube/v3/thirdPartyLinks
+- `youtube_third_party_links_list` - GET /youtube/v3/thirdPartyLinks
+- `youtube_third_party_links_delete` - DELETE /youtube/v3/thirdPartyLinks
+- `youtube_activities_list` - GET /youtube/v3/activities
 
----
-
-## get_video_details
-
-Get detailed information about one or more YouTube videos by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `video_ids` | string | yes | Comma-separated video IDs (max 50). E.g., `"dQw4w9WgXcQ"` |
-| `part` | string | no | Comma-separated resource parts. Default: `snippet,contentDetails,statistics` |
-
-### Example
-
-```lua
-local result = app.integrations.youtube.get_video_details({
-  video_ids = "dQw4w9WgXcQ"
-})
-
-if result and result.items then
-  for _, video in ipairs(result.items) do
-    print(video.snippet.title)
-    print("  Views: " .. (video.statistics.viewCount or "N/A"))
-    print("  Likes: " .. (video.statistics.likeCount or "N/A"))
-    print("  Duration: " .. (video.contentDetails.duration or "N/A"))
-  end
-end
-```
-
----
-
-## list_channels
-
-List YouTube channels by username, channel ID, or category.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `for_username` | string | no* | YouTube username |
-| `channel_ids` | string | no* | Comma-separated channel IDs (max 50) |
-| `category_id` | string | no* | Guide category ID |
-| `mine` | boolean | no* | Set `true` for authenticated user's channel |
-| `max_results` | integer | no | Max results per page (1-50). Default: 5 |
-| `page_token` | string | no | Token for the next page of results |
-| `hl` | string | no | Language code for localized text (e.g., `"en"`) |
-
-*At least one filter is required.
-
-### Example
-
-```lua
-local result = app.integrations.youtube.list_channels({
-  for_username = "Google"
-})
-
-if result and result.items then
-  for _, channel in ipairs(result.items) do
-    print(channel.snippet.title)
-    print("  Subscribers: " .. (channel.statistics.subscriberCount or "hidden"))
-    print("  Videos: " .. (channel.statistics.videoCount or "N/A"))
-  end
-end
-```
-
----
-
-## get_channel
-
-Get detailed information about a specific YouTube channel by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | YouTube channel ID (e.g., `"UC_x5XG1OV2P6uZZ5FSM9Ttw"`) |
-| `part` | string | no | Comma-separated resource parts. Default: `snippet,contentDetails,statistics,brandingSettings` |
-
-### Example
+## Examples
 
 ```lua
-local result = app.integrations.youtube.get_channel({
-  channel_id = "UC_x5XG1OV2P6uZZ5FSM9Ttw"
-})
+local videos = app.integrations.youtube.youtube_videos_list({ part = "snippet,statistics", id = "dQw4w9WgXcQ" })
 
-if result and result.items and result.items[1] then
-  local ch = result.items[1]
-  print(ch.snippet.title)
-  print("  Description: " .. (ch.snippet.description or ""))
-  print("  Subscribers: " .. (ch.statistics.subscriberCount or "hidden"))
-  print("  Total views: " .. (ch.statistics.viewCount or "N/A"))
-end
+local search = app.integrations.youtube.youtube_search_list({ part = "snippet", q = "open source laravel", maxResults = 5 })
 ```
 
----
-
-## list_playlists
-
-List playlists for a YouTube channel or by playlist IDs.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | no* | Channel ID to list playlists for |
-| `playlist_ids` | string | no* | Comma-separated playlist IDs (max 50) |
-| `mine` | boolean | no* | Set `true` for authenticated user's playlists |
-| `max_results` | integer | no | Max results per page (1-50). Default: 5 |
-| `page_token` | string | no | Token for the next page of results |
-
-*At least one filter is required.
-
-### Example
-
-```lua
-local result = app.integrations.youtube.list_playlists({
-  channel_id = "UC_x5XG1OV2P6uZZ5FSM9Ttw",
-  max_results = 10
-})
-
-if result and result.items then
-  for _, pl in ipairs(result.items) do
-    print(pl.snippet.title)
-    print("  Item count: " .. (pl.contentDetails.itemCount or "N/A"))
-  end
-end
-```
-
----
-
-## get_playlist
-
-Get details about a specific YouTube playlist and its items.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `playlist_id` | string | yes | YouTube playlist ID |
-| `max_results` | integer | no | Max playlist items to return (1-50). Default: 10 |
-| `page_token` | string | no | Token for the next page of items |
-
-### Example
-
-```lua
-local result = app.integrations.youtube.get_playlist({
-  playlist_id = "PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf",
-  max_results = 5
-})
-
-if result and result.items and result.items.items then
-  print("Playlist: " .. (result.items.items[1].snippet.title or "Unknown"))
-  for _, item in ipairs(result.items.items or {}) do
-    print("  " .. item.snippet.title)
-  end
-end
-```
-
----
-
-## get_current_user
-
-Get the authenticated user's YouTube channel information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.youtube.get_current_user({})
-
-if result and result.items and result.items[1] then
-  local ch = result.items[1]
-  print("Channel: " .. ch.snippet.title)
-  print("Subscribers: " .. (ch.statistics.subscriberCount or "hidden"))
-  print("Total views: " .. (ch.statistics.viewCount or "N/A"))
-  print("Videos: " .. (ch.statistics.videoCount or "N/A"))
-end
-```
-
----
-
-## Common Patterns
-
-### Search videos and get full details
-
-```lua
-local search = app.integrations.youtube.search_videos({
-  query = "machine learning intro",
-  max_results = 3,
-  order = "relevance"
-})
-
-if search and search.items then
-  local ids = {}
-  for _, item in ipairs(search.items) do
-    table.insert(ids, item.id.videoId)
-  end
-
-  local details = app.integrations.youtube.get_video_details({
-    video_ids = table.concat(ids, ",")
-  })
-
-  if details and details.items then
-    for _, video in ipairs(details.items) do
-      print(video.snippet.title)
-      print("  Views: " .. (video.statistics.viewCount or "0"))
-      print("  Duration: " .. (video.contentDetails.duration or "N/A"))
-    end
-  end
-end
-```
-
-### Paginate through search results
-
-```lua
-local page = nil
-local all_items = {}
-
-for i = 1, 3 do
-  local params = {
-    query = "web development 2024",
-    max_results = 10
-  }
-  if page then
-    params.page_token = page
-  end
-
-  local result = app.integrations.youtube.search_videos(params)
-
-  if not result or not result.items then break end
-
-  for _, item in ipairs(result.items) do
-    table.insert(all_items, item.snippet.title)
-  end
-
-  page = result.nextPageToken
-  if not page then break end
-end
-
-print("Found " .. #all_items .. " results")
-```
+Responses are decoded YouTube Data API JSON responses, or `{ success = true, status = ... }` for successful empty responses.

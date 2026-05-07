@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Attio\AttioService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Attio records for an object.
+ */
 class AttioListRecords implements Tool
 {
     /**

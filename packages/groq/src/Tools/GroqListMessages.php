@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Deprecated unsupported conversation message listing tool.
+ */
 class GroqListMessages implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -27,10 +33,15 @@ class GroqListMessages implements Tool
         return [
             'conversation_id' => ['type' => 'string', 'required' => true, 'description' => 'The conversation ID to list messages for.'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of messages to return per page (default: 20).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — message ID to start after.'],
+            'after' => ['type' => 'string', 'description' => 'Cursor for pagination: message ID to start after.'],
         ];
     }
 
+    /**
+     * Execute the deprecated conversation message listing request.
+     *
+     * @param  array<string, mixed>  $args  Legacy conversation arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

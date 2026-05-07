@@ -32,13 +32,13 @@ end
 
 ## get_transaction
 
-Get details of a specific transaction.
+Get details of a specific transaction by numeric Paystack transaction ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | Transaction ID or reference |
+| `id` | string | yes | Numeric transaction ID. Use `verify_transaction` when you have a transaction reference. |
 
 ### Example
 
@@ -49,6 +49,29 @@ local result = app.integrations.paystack.get_transaction({
 
 print("Status: " .. result.data.status)
 print("Amount: " .. result.data.amount)
+```
+
+---
+
+## verify_transaction
+
+Verify a transaction by reference. This is the right tool after checkout redirects, webhook delivery, or any workflow where you have the merchant reference rather than Paystack's numeric transaction ID.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `reference` | string | yes | Transaction reference returned during initialization or webhook processing |
+
+### Example
+
+```lua
+local result = app.integrations.paystack.verify_transaction({
+  reference = "order_123"
+})
+
+print("Status: " .. result.data.status)
+print("Reference: " .. result.data.reference)
 ```
 
 ---

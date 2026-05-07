@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-hetzner",
-    "description": "Hetzner Cloud integration for Laravel — manage cloud servers, volumes, networks, and SSH keys.",
+    "description": "Hetzner Cloud integration for Laravel agents with generated Cloud API coverage.",
     "license": "MIT",
     "authors": [
         {

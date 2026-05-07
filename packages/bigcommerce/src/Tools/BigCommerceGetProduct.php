@@ -2,54 +2,52 @@
 
 namespace OpenCompany\Integrations\BigCommerce\Tools;
 
-use OpenCompany\Integrations\BigCommerce\BigCommerceService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get a single product from the BigCommerce catalog by ID.
+ * Get one catalog product by ID.
  */
-class BigCommerceGetProduct implements Tool
+class BigCommerceGetProduct extends AbstractBigCommerceEndpointTool
 {
-    public function __construct(
-        private BigCommerceService $service,
-    ) {}
+    protected string $toolName = 'bigcommerce_get_product';
 
-    public function name(): string
-    {
-        return 'bigcommerce_get_product';
-    }
+    protected string $toolDescription = 'Get one catalog product by ID.';
 
-    public function description(): string
-    {
-        return 'Get a single product from the BigCommerce catalog by its ID. Returns full product details.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The product ID.'],
-            'include' => ['type' => 'string', 'description' => 'Comma-separated related resources to include (e.g., "variants,images,custom_fields,bulk_pricing_rules").'],
-        ];
-    }
+    protected string $path = '/v3/catalog/products/{product_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('BigCommerce integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = array (
+  'product_id' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'BigCommerce product ID.',
+  ),
+  'include' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Comma-separated related resources to include.',
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'required' => false,
+    'description' => 'Additional documented query parameters.',
+  ),
+);
 
-            $params = [];
-            if (isset($args['include'])) {
-                $params['include'] = $args['include'];
-            }
+    /** @var list<string> */
+    protected array $required = array (
+  0 => 'product_id',
+);
 
-            $result = $this->service->getProduct((int) $args['id'], $params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = array (
+  0 => 'include',
+);
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = array (
+);
 }

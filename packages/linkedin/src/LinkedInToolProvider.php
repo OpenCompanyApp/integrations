@@ -95,7 +95,7 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Professional networking platform – posts, organizations, and ad accounts',
             'icon' => 'ph:linkedin-logo',
             'logo' => 'simple-icons:linkedin',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://learn.microsoft.com/en-us/linkedin/marketing/',
         ];

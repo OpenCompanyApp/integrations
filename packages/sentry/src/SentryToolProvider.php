@@ -91,7 +91,7 @@ class SentryToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Application error monitoring and performance tracking',
             'icon' => 'ph:bug',
             'logo' => 'simple-icons:sentry',
-            'category' => 'monitoring',
+            'category' => 'analytics',
             'badge' => 'verified',
             'docs_url' => 'https://docs.sentry.io/api/',
         ];

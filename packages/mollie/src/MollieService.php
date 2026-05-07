@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\Mollie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Mollie REST API.
+ *
+ * Handles Bearer-token authentication and request execution for payments,
+ * customers, subscriptions, invoices, and payment methods.
+ */
 class MollieService
 {
     /**

@@ -7,7 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: BlandAI Make Call
+ * Send a Bland AI phone call.
  *
  * Initiates an AI-powered phone call via the BlandAI API.
  * The AI agent will follow the provided task instructions during the call
@@ -44,11 +44,19 @@ class BlandAIMakeCall implements Tool
     {
         return [
             'phone_number' => ['type' => 'string', 'required' => true, 'description' => 'The phone number to call in E.164 format (e.g., "+1234567890").'],
-            'task' => ['type' => 'string', 'required' => true, 'description' => 'Instructions or task description for the AI agent to follow during the call.'],
+            'task' => ['type' => 'string', 'description' => 'Instructions or task description for the AI agent to follow during the call.'],
+            'pathway_id' => ['type' => 'string', 'description' => 'Conversational pathway ID. Required when task is omitted.'],
             'voice' => ['type' => 'string', 'description' => 'Voice identifier to use for the call (e.g., a voice name or ID). Leave empty for the default voice.'],
+            'first_sentence' => ['type' => 'string', 'description' => 'Optional first sentence the AI should say.'],
+            'model' => ['type' => 'string', 'description' => 'Optional model name.'],
+            'language' => ['type' => 'string', 'description' => 'Optional call language.'],
             'wait_for_greeting' => ['type' => 'boolean', 'description' => 'Whether to wait for the callee to speak first before the AI begins (default: false).'],
             'record' => ['type' => 'boolean', 'description' => 'Whether to record the call (default: true).'],
             'max_duration' => ['type' => 'integer', 'description' => 'Maximum call duration in minutes.'],
+            'from' => ['type' => 'string', 'description' => 'Outbound caller ID number.'],
+            'request_data' => ['type' => 'object', 'description' => 'Variables available to the call agent.'],
+            'metadata' => ['type' => 'object', 'description' => 'Metadata stored with the call.'],
+            'webhook' => ['type' => 'string', 'description' => 'Webhook URL for call events.'],
         ];
     }
 
@@ -64,22 +72,39 @@ class BlandAIMakeCall implements Tool
                 return ToolResult::error('BlandAI integration is not configured.');
             }
 
-            $phoneNumber = $args['phone_number'];
-            $task = $args['task'];
-            $voice = $args['voice'] ?? null;
-
-            $options = [];
-            if (isset($args['wait_for_greeting'])) {
-                $options['wait_for_greeting'] = (bool) $args['wait_for_greeting'];
+            if (empty($args['phone_number'])) {
+                return ToolResult::error('phone_number is required.');
             }
-            if (isset($args['record'])) {
-                $options['record'] = (bool) $args['record'];
-            }
-            if (isset($args['max_duration'])) {
-                $options['max_duration'] = (int) $args['max_duration'];
+            if (empty($args['task']) && empty($args['pathway_id'])) {
+                return ToolResult::error('Either task or pathway_id is required.');
             }
 
-            $result = $this->service->makeCall($phoneNumber, $task, $voice, $options);
+            $params = array_intersect_key($args, array_flip([
+                'phone_number',
+                'task',
+                'pathway_id',
+                'pathway_version',
+                'voice',
+                'first_sentence',
+                'model',
+                'language',
+                'wait_for_greeting',
+                'record',
+                'max_duration',
+                'from',
+                'request_data',
+                'metadata',
+                'webhook',
+                'tools',
+                'transfer_phone_number',
+                'summary_prompt',
+                'keywords',
+                'background_track',
+                'noise_cancellation',
+                'block_interruptions',
+            ]));
+
+            $result = $this->service->sendCall($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -1,0 +1,1134 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/reportroot?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 187,
+  "path_prefixes": [
+    "/reports"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/reports",
+      "operationId": "reports.reportRoot.GetReportRoot",
+      "tool": "microsoft_reports_reports_report_root_get_report_root"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports",
+      "operationId": "reports.reportRoot.UpdateReportRoot",
+      "tool": "microsoft_reports_reports_report_root_update_report_root"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/authenticationMethods",
+      "operationId": "reports.DeleteAuthenticationMethods",
+      "tool": "microsoft_reports_reports_delete_authentication_methods"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods",
+      "operationId": "reports.GetAuthenticationMethods",
+      "tool": "microsoft_reports_reports_get_authentication_methods"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/authenticationMethods",
+      "operationId": "reports.UpdateAuthenticationMethods",
+      "tool": "microsoft_reports_reports_update_authentication_methods"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/userRegistrationDetails",
+      "operationId": "reports.authenticationMethods.ListUserRegistrationDetails",
+      "tool": "microsoft_reports_reports_authentication_methods_list_user_registration_details"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/authenticationMethods/userRegistrationDetails",
+      "operationId": "reports.authenticationMethods.CreateUserRegistrationDetails",
+      "tool": "microsoft_reports_reports_authentication_methods_create_user_registration_details"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/userRegistrationDetails/$count",
+      "operationId": "reports.authenticationMethods.userRegistrationDetails.GetCount-0ab7",
+      "tool": "microsoft_reports_reports_authentication_methods_user_registration_details_get_count_0ab7"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/authenticationMethods/userRegistrationDetails/{userRegistrationDetails-id}",
+      "operationId": "reports.authenticationMethods.DeleteUserRegistrationDetails",
+      "tool": "microsoft_reports_reports_authentication_methods_delete_user_registration_details"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/userRegistrationDetails/{userRegistrationDetails-id}",
+      "operationId": "reports.authenticationMethods.GetUserRegistrationDetails",
+      "tool": "microsoft_reports_reports_authentication_methods_get_user_registration_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/authenticationMethods/userRegistrationDetails/{userRegistrationDetails-id}",
+      "operationId": "reports.authenticationMethods.UpdateUserRegistrationDetails",
+      "tool": "microsoft_reports_reports_authentication_methods_update_user_registration_details"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/usersRegisteredByFeature()",
+      "operationId": "reports.authenticationMethods.usersRegisteredByFeature-07f2",
+      "tool": "microsoft_reports_reports_authentication_methods_users_registered_by_feature_07f2"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/usersRegisteredByFeature(includedUserTypes='{includedUserTypes}',includedUserRoles='{includedUserRoles}')",
+      "operationId": "reports.authenticationMethods.usersRegisteredByFeature-b345",
+      "tool": "microsoft_reports_reports_authentication_methods_users_registered_by_feature_b345"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/usersRegisteredByMethod()",
+      "operationId": "reports.authenticationMethods.usersRegisteredByMethod-d25d",
+      "tool": "microsoft_reports_reports_authentication_methods_users_registered_by_method_d25d"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/authenticationMethods/usersRegisteredByMethod(includedUserTypes='{includedUserTypes}',includedUserRoles='{includedUserRoles}')",
+      "operationId": "reports.authenticationMethods.usersRegisteredByMethod-fb94",
+      "tool": "microsoft_reports_reports_authentication_methods_users_registered_by_method_fb94"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/dailyPrintUsageByPrinter",
+      "operationId": "reports.ListDailyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_list_daily_print_usage_by_printer"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/dailyPrintUsageByPrinter",
+      "operationId": "reports.CreateDailyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_create_daily_print_usage_by_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/dailyPrintUsageByPrinter/$count",
+      "operationId": "reports.dailyPrintUsageByPrinter.GetCount-73e4",
+      "tool": "microsoft_reports_reports_daily_print_usage_by_printer_get_count_73e4"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/dailyPrintUsageByPrinter/{printUsageByPrinter-id}",
+      "operationId": "reports.DeleteDailyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_delete_daily_print_usage_by_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/dailyPrintUsageByPrinter/{printUsageByPrinter-id}",
+      "operationId": "reports.GetDailyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_get_daily_print_usage_by_printer"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/dailyPrintUsageByPrinter/{printUsageByPrinter-id}",
+      "operationId": "reports.UpdateDailyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_update_daily_print_usage_by_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/dailyPrintUsageByUser",
+      "operationId": "reports.ListDailyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_list_daily_print_usage_by_user"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/dailyPrintUsageByUser",
+      "operationId": "reports.CreateDailyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_create_daily_print_usage_by_user"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/dailyPrintUsageByUser/$count",
+      "operationId": "reports.dailyPrintUsageByUser.GetCount-e839",
+      "tool": "microsoft_reports_reports_daily_print_usage_by_user_get_count_e839"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/dailyPrintUsageByUser/{printUsageByUser-id}",
+      "operationId": "reports.DeleteDailyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_delete_daily_print_usage_by_user"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/dailyPrintUsageByUser/{printUsageByUser-id}",
+      "operationId": "reports.GetDailyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_get_daily_print_usage_by_user"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/dailyPrintUsageByUser/{printUsageByUser-id}",
+      "operationId": "reports.UpdateDailyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_update_daily_print_usage_by_user"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/deviceConfigurationDeviceActivity()",
+      "operationId": "reports.deviceConfigurationDeviceActivity",
+      "tool": "microsoft_reports_reports_device_configuration_device_activity"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/deviceConfigurationUserActivity()",
+      "operationId": "reports.deviceConfigurationUserActivity",
+      "tool": "microsoft_reports_reports_device_configuration_user_activity"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailActivityCounts(period='{period}')",
+      "operationId": "reports.getEmailActivityCounts",
+      "tool": "microsoft_reports_reports_get_email_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailActivityUserCounts(period='{period}')",
+      "operationId": "reports.getEmailActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_email_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailActivityUserDetail(date={date})",
+      "operationId": "reports.getEmailActivityUserDetail-4d91",
+      "tool": "microsoft_reports_reports_get_email_activity_user_detail_4d91"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailActivityUserDetail(period='{period}')",
+      "operationId": "reports.getEmailActivityUserDetail-6549",
+      "tool": "microsoft_reports_reports_get_email_activity_user_detail_6549"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailAppUsageAppsUserCounts(period='{period}')",
+      "operationId": "reports.getEmailAppUsageAppsUserCounts",
+      "tool": "microsoft_reports_reports_get_email_app_usage_apps_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailAppUsageUserCounts(period='{period}')",
+      "operationId": "reports.getEmailAppUsageUserCounts",
+      "tool": "microsoft_reports_reports_get_email_app_usage_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailAppUsageUserDetail(date={date})",
+      "operationId": "reports.getEmailAppUsageUserDetail-d5d6",
+      "tool": "microsoft_reports_reports_get_email_app_usage_user_detail_d5d6"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailAppUsageUserDetail(period='{period}')",
+      "operationId": "reports.getEmailAppUsageUserDetail-6aff",
+      "tool": "microsoft_reports_reports_get_email_app_usage_user_detail_6aff"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getEmailAppUsageVersionsUserCounts(period='{period}')",
+      "operationId": "reports.getEmailAppUsageVersionsUserCounts",
+      "tool": "microsoft_reports_reports_get_email_app_usage_versions_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getGroupArchivedPrintJobs(groupId='{groupId}',startDateTime={startDateTime},endDateTime={endDateTime})",
+      "operationId": "reports.getGroupArchivedPrintJobs",
+      "tool": "microsoft_reports_reports_get_group_archived_print_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getM365AppPlatformUserCounts(period='{period}')",
+      "operationId": "reports.getM365AppPlatformUserCounts",
+      "tool": "microsoft_reports_reports_get_m365_app_platform_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getM365AppUserCounts(period='{period}')",
+      "operationId": "reports.getM365AppUserCounts",
+      "tool": "microsoft_reports_reports_get_m365_app_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getM365AppUserDetail(date={date})",
+      "operationId": "reports.getM365AppUserDetail-0f08",
+      "tool": "microsoft_reports_reports_get_m365_app_user_detail_0f08"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getM365AppUserDetail(period='{period}')",
+      "operationId": "reports.getM365AppUserDetail-8c91",
+      "tool": "microsoft_reports_reports_get_m365_app_user_detail_8c91"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getMailboxUsageDetail(period='{period}')",
+      "operationId": "reports.getMailboxUsageDetail",
+      "tool": "microsoft_reports_reports_get_mailbox_usage_detail"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getMailboxUsageMailboxCounts(period='{period}')",
+      "operationId": "reports.getMailboxUsageMailboxCounts",
+      "tool": "microsoft_reports_reports_get_mailbox_usage_mailbox_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getMailboxUsageQuotaStatusMailboxCounts(period='{period}')",
+      "operationId": "reports.getMailboxUsageQuotaStatusMailboxCounts",
+      "tool": "microsoft_reports_reports_get_mailbox_usage_quota_status_mailbox_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getMailboxUsageStorage(period='{period}')",
+      "operationId": "reports.getMailboxUsageStorage",
+      "tool": "microsoft_reports_reports_get_mailbox_usage_storage"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ActivationCounts()",
+      "operationId": "reports.getOffice365ActivationCounts",
+      "tool": "microsoft_reports_reports_get_office365_activation_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ActivationsUserCounts()",
+      "operationId": "reports.getOffice365ActivationsUserCounts",
+      "tool": "microsoft_reports_reports_get_office365_activations_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ActivationsUserDetail()",
+      "operationId": "reports.getOffice365ActivationsUserDetail",
+      "tool": "microsoft_reports_reports_get_office365_activations_user_detail"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ActiveUserCounts(period='{period}')",
+      "operationId": "reports.getOffice365ActiveUserCounts",
+      "tool": "microsoft_reports_reports_get_office365_active_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ActiveUserDetail(date={date})",
+      "operationId": "reports.getOffice365ActiveUserDetail-b911",
+      "tool": "microsoft_reports_reports_get_office365_active_user_detail_b911"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ActiveUserDetail(period='{period}')",
+      "operationId": "reports.getOffice365ActiveUserDetail-3cc0",
+      "tool": "microsoft_reports_reports_get_office365_active_user_detail_3cc0"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365GroupsActivityCounts(period='{period}')",
+      "operationId": "reports.getOffice365GroupsActivityCounts",
+      "tool": "microsoft_reports_reports_get_office365_groups_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365GroupsActivityDetail(date={date})",
+      "operationId": "reports.getOffice365GroupsActivityDetail-87d6",
+      "tool": "microsoft_reports_reports_get_office365_groups_activity_detail_87d6"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365GroupsActivityDetail(period='{period}')",
+      "operationId": "reports.getOffice365GroupsActivityDetail-fe77",
+      "tool": "microsoft_reports_reports_get_office365_groups_activity_detail_fe77"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365GroupsActivityFileCounts(period='{period}')",
+      "operationId": "reports.getOffice365GroupsActivityFileCounts",
+      "tool": "microsoft_reports_reports_get_office365_groups_activity_file_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365GroupsActivityGroupCounts(period='{period}')",
+      "operationId": "reports.getOffice365GroupsActivityGroupCounts",
+      "tool": "microsoft_reports_reports_get_office365_groups_activity_group_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365GroupsActivityStorage(period='{period}')",
+      "operationId": "reports.getOffice365GroupsActivityStorage",
+      "tool": "microsoft_reports_reports_get_office365_groups_activity_storage"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOffice365ServicesUserCounts(period='{period}')",
+      "operationId": "reports.getOffice365ServicesUserCounts",
+      "tool": "microsoft_reports_reports_get_office365_services_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveActivityFileCounts(period='{period}')",
+      "operationId": "reports.getOneDriveActivityFileCounts",
+      "tool": "microsoft_reports_reports_get_one_drive_activity_file_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveActivityUserCounts(period='{period}')",
+      "operationId": "reports.getOneDriveActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_one_drive_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveActivityUserDetail(date={date})",
+      "operationId": "reports.getOneDriveActivityUserDetail-77b1",
+      "tool": "microsoft_reports_reports_get_one_drive_activity_user_detail_77b1"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveActivityUserDetail(period='{period}')",
+      "operationId": "reports.getOneDriveActivityUserDetail-657c",
+      "tool": "microsoft_reports_reports_get_one_drive_activity_user_detail_657c"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveUsageAccountCounts(period='{period}')",
+      "operationId": "reports.getOneDriveUsageAccountCounts",
+      "tool": "microsoft_reports_reports_get_one_drive_usage_account_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveUsageAccountDetail(date={date})",
+      "operationId": "reports.getOneDriveUsageAccountDetail-3b63",
+      "tool": "microsoft_reports_reports_get_one_drive_usage_account_detail_3b63"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveUsageAccountDetail(period='{period}')",
+      "operationId": "reports.getOneDriveUsageAccountDetail-20b2",
+      "tool": "microsoft_reports_reports_get_one_drive_usage_account_detail_20b2"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveUsageFileCounts(period='{period}')",
+      "operationId": "reports.getOneDriveUsageFileCounts",
+      "tool": "microsoft_reports_reports_get_one_drive_usage_file_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getOneDriveUsageStorage(period='{period}')",
+      "operationId": "reports.getOneDriveUsageStorage",
+      "tool": "microsoft_reports_reports_get_one_drive_usage_storage"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getPrinterArchivedPrintJobs(printerId='{printerId}',startDateTime={startDateTime},endDateTime={endDateTime})",
+      "operationId": "reports.getPrinterArchivedPrintJobs",
+      "tool": "microsoft_reports_reports_get_printer_archived_print_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getRelyingPartyDetailedSummary(period='{period}')",
+      "operationId": "reports.getRelyingPartyDetailedSummary",
+      "tool": "microsoft_reports_reports_get_relying_party_detailed_summary"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointActivityFileCounts(period='{period}')",
+      "operationId": "reports.getSharePointActivityFileCounts",
+      "tool": "microsoft_reports_reports_get_share_point_activity_file_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointActivityPages(period='{period}')",
+      "operationId": "reports.getSharePointActivityPages",
+      "tool": "microsoft_reports_reports_get_share_point_activity_pages"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointActivityUserCounts(period='{period}')",
+      "operationId": "reports.getSharePointActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_share_point_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointActivityUserDetail(date={date})",
+      "operationId": "reports.getSharePointActivityUserDetail-48b2",
+      "tool": "microsoft_reports_reports_get_share_point_activity_user_detail_48b2"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointActivityUserDetail(period='{period}')",
+      "operationId": "reports.getSharePointActivityUserDetail-9e51",
+      "tool": "microsoft_reports_reports_get_share_point_activity_user_detail_9e51"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointSiteUsageDetail(date={date})",
+      "operationId": "reports.getSharePointSiteUsageDetail-a4c0",
+      "tool": "microsoft_reports_reports_get_share_point_site_usage_detail_a4c0"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointSiteUsageDetail(period='{period}')",
+      "operationId": "reports.getSharePointSiteUsageDetail-4fd6",
+      "tool": "microsoft_reports_reports_get_share_point_site_usage_detail_4fd6"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointSiteUsageFileCounts(period='{period}')",
+      "operationId": "reports.getSharePointSiteUsageFileCounts",
+      "tool": "microsoft_reports_reports_get_share_point_site_usage_file_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointSiteUsagePages(period='{period}')",
+      "operationId": "reports.getSharePointSiteUsagePages",
+      "tool": "microsoft_reports_reports_get_share_point_site_usage_pages"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointSiteUsageSiteCounts(period='{period}')",
+      "operationId": "reports.getSharePointSiteUsageSiteCounts",
+      "tool": "microsoft_reports_reports_get_share_point_site_usage_site_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSharePointSiteUsageStorage(period='{period}')",
+      "operationId": "reports.getSharePointSiteUsageStorage",
+      "tool": "microsoft_reports_reports_get_share_point_site_usage_storage"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessActivityCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessActivityCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessActivityUserCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessActivityUserDetail(date={date})",
+      "operationId": "reports.getSkypeForBusinessActivityUserDetail-83d0",
+      "tool": "microsoft_reports_reports_get_skype_for_business_activity_user_detail_83d0"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessActivityUserDetail(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessActivityUserDetail-74d9",
+      "tool": "microsoft_reports_reports_get_skype_for_business_activity_user_detail_74d9"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessDeviceUsageDistributionUserCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessDeviceUsageDistributionUserCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_device_usage_distribution_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessDeviceUsageUserCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessDeviceUsageUserCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_device_usage_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessDeviceUsageUserDetail(date={date})",
+      "operationId": "reports.getSkypeForBusinessDeviceUsageUserDetail-fe29",
+      "tool": "microsoft_reports_reports_get_skype_for_business_device_usage_user_detail_fe29"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessDeviceUsageUserDetail(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessDeviceUsageUserDetail-ee84",
+      "tool": "microsoft_reports_reports_get_skype_for_business_device_usage_user_detail_ee84"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessOrganizerActivityCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessOrganizerActivityCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_organizer_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessOrganizerActivityMinuteCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessOrganizerActivityMinuteCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_organizer_activity_minute_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessOrganizerActivityUserCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessOrganizerActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_organizer_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessParticipantActivityCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessParticipantActivityCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_participant_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessParticipantActivityMinuteCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessParticipantActivityMinuteCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_participant_activity_minute_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessParticipantActivityUserCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessParticipantActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_participant_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessPeerToPeerActivityCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessPeerToPeerActivityCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_peer_to_peer_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessPeerToPeerActivityMinuteCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessPeerToPeerActivityMinuteCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_peer_to_peer_activity_minute_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getSkypeForBusinessPeerToPeerActivityUserCounts(period='{period}')",
+      "operationId": "reports.getSkypeForBusinessPeerToPeerActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_skype_for_business_peer_to_peer_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsDeviceUsageDistributionUserCounts(period='{period}')",
+      "operationId": "reports.getTeamsDeviceUsageDistributionUserCounts",
+      "tool": "microsoft_reports_reports_get_teams_device_usage_distribution_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsDeviceUsageUserCounts(period='{period}')",
+      "operationId": "reports.getTeamsDeviceUsageUserCounts",
+      "tool": "microsoft_reports_reports_get_teams_device_usage_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsDeviceUsageUserDetail(date={date})",
+      "operationId": "reports.getTeamsDeviceUsageUserDetail-8630",
+      "tool": "microsoft_reports_reports_get_teams_device_usage_user_detail_8630"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsDeviceUsageUserDetail(period='{period}')",
+      "operationId": "reports.getTeamsDeviceUsageUserDetail-62d3",
+      "tool": "microsoft_reports_reports_get_teams_device_usage_user_detail_62d3"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsTeamActivityCounts(period='{period}')",
+      "operationId": "reports.getTeamsTeamActivityCounts",
+      "tool": "microsoft_reports_reports_get_teams_team_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsTeamActivityDetail(date={date})",
+      "operationId": "reports.getTeamsTeamActivityDetail-391d",
+      "tool": "microsoft_reports_reports_get_teams_team_activity_detail_391d"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsTeamActivityDetail(period='{period}')",
+      "operationId": "reports.getTeamsTeamActivityDetail-ee18",
+      "tool": "microsoft_reports_reports_get_teams_team_activity_detail_ee18"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsTeamActivityDistributionCounts(period='{period}')",
+      "operationId": "reports.getTeamsTeamActivityDistributionCounts",
+      "tool": "microsoft_reports_reports_get_teams_team_activity_distribution_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsTeamCounts(period='{period}')",
+      "operationId": "reports.getTeamsTeamCounts",
+      "tool": "microsoft_reports_reports_get_teams_team_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsUserActivityCounts(period='{period}')",
+      "operationId": "reports.getTeamsUserActivityCounts",
+      "tool": "microsoft_reports_reports_get_teams_user_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsUserActivityUserCounts(period='{period}')",
+      "operationId": "reports.getTeamsUserActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_teams_user_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsUserActivityUserDetail(date={date})",
+      "operationId": "reports.getTeamsUserActivityUserDetail-fba7",
+      "tool": "microsoft_reports_reports_get_teams_user_activity_user_detail_fba7"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getTeamsUserActivityUserDetail(period='{period}')",
+      "operationId": "reports.getTeamsUserActivityUserDetail-7554",
+      "tool": "microsoft_reports_reports_get_teams_user_activity_user_detail_7554"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getUserArchivedPrintJobs(userId='{userId}',startDateTime={startDateTime},endDateTime={endDateTime})",
+      "operationId": "reports.getUserArchivedPrintJobs",
+      "tool": "microsoft_reports_reports_get_user_archived_print_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerActivityCounts(period='{period}')",
+      "operationId": "reports.getYammerActivityCounts",
+      "tool": "microsoft_reports_reports_get_yammer_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerActivityUserCounts(period='{period}')",
+      "operationId": "reports.getYammerActivityUserCounts",
+      "tool": "microsoft_reports_reports_get_yammer_activity_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerActivityUserDetail(date={date})",
+      "operationId": "reports.getYammerActivityUserDetail-41fe",
+      "tool": "microsoft_reports_reports_get_yammer_activity_user_detail_41fe"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerActivityUserDetail(period='{period}')",
+      "operationId": "reports.getYammerActivityUserDetail-9506",
+      "tool": "microsoft_reports_reports_get_yammer_activity_user_detail_9506"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerDeviceUsageDistributionUserCounts(period='{period}')",
+      "operationId": "reports.getYammerDeviceUsageDistributionUserCounts",
+      "tool": "microsoft_reports_reports_get_yammer_device_usage_distribution_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerDeviceUsageUserCounts(period='{period}')",
+      "operationId": "reports.getYammerDeviceUsageUserCounts",
+      "tool": "microsoft_reports_reports_get_yammer_device_usage_user_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerDeviceUsageUserDetail(date={date})",
+      "operationId": "reports.getYammerDeviceUsageUserDetail-e734",
+      "tool": "microsoft_reports_reports_get_yammer_device_usage_user_detail_e734"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerDeviceUsageUserDetail(period='{period}')",
+      "operationId": "reports.getYammerDeviceUsageUserDetail-07bb",
+      "tool": "microsoft_reports_reports_get_yammer_device_usage_user_detail_07bb"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerGroupsActivityCounts(period='{period}')",
+      "operationId": "reports.getYammerGroupsActivityCounts",
+      "tool": "microsoft_reports_reports_get_yammer_groups_activity_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerGroupsActivityDetail(date={date})",
+      "operationId": "reports.getYammerGroupsActivityDetail-9ea3",
+      "tool": "microsoft_reports_reports_get_yammer_groups_activity_detail_9ea3"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerGroupsActivityDetail(period='{period}')",
+      "operationId": "reports.getYammerGroupsActivityDetail-99d3",
+      "tool": "microsoft_reports_reports_get_yammer_groups_activity_detail_99d3"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/getYammerGroupsActivityGroupCounts(period='{period}')",
+      "operationId": "reports.getYammerGroupsActivityGroupCounts",
+      "tool": "microsoft_reports_reports_get_yammer_groups_activity_group_counts"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/managedDeviceEnrollmentFailureDetails()",
+      "operationId": "reports.managedDeviceEnrollmentFailureDetails-8191",
+      "tool": "microsoft_reports_reports_managed_device_enrollment_failure_details_8191"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/managedDeviceEnrollmentFailureDetails(skip={skip},top={top},filter='{filter}',skipToken='{skipToken}')",
+      "operationId": "reports.managedDeviceEnrollmentFailureDetails-aa46",
+      "tool": "microsoft_reports_reports_managed_device_enrollment_failure_details_aa46"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/managedDeviceEnrollmentTopFailures()",
+      "operationId": "reports.managedDeviceEnrollmentTopFailures-9ce7",
+      "tool": "microsoft_reports_reports_managed_device_enrollment_top_failures_9ce7"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/managedDeviceEnrollmentTopFailures(period='{period}')",
+      "operationId": "reports.managedDeviceEnrollmentTopFailures-2157",
+      "tool": "microsoft_reports_reports_managed_device_enrollment_top_failures_2157"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/monthlyPrintUsageByPrinter",
+      "operationId": "reports.ListMonthlyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_list_monthly_print_usage_by_printer"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/monthlyPrintUsageByPrinter",
+      "operationId": "reports.CreateMonthlyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_create_monthly_print_usage_by_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/monthlyPrintUsageByPrinter/$count",
+      "operationId": "reports.monthlyPrintUsageByPrinter.GetCount-18cc",
+      "tool": "microsoft_reports_reports_monthly_print_usage_by_printer_get_count_18cc"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/monthlyPrintUsageByPrinter/{printUsageByPrinter-id}",
+      "operationId": "reports.DeleteMonthlyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_delete_monthly_print_usage_by_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/monthlyPrintUsageByPrinter/{printUsageByPrinter-id}",
+      "operationId": "reports.GetMonthlyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_get_monthly_print_usage_by_printer"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/monthlyPrintUsageByPrinter/{printUsageByPrinter-id}",
+      "operationId": "reports.UpdateMonthlyPrintUsageByPrinter",
+      "tool": "microsoft_reports_reports_update_monthly_print_usage_by_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/monthlyPrintUsageByUser",
+      "operationId": "reports.ListMonthlyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_list_monthly_print_usage_by_user"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/monthlyPrintUsageByUser",
+      "operationId": "reports.CreateMonthlyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_create_monthly_print_usage_by_user"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/monthlyPrintUsageByUser/$count",
+      "operationId": "reports.monthlyPrintUsageByUser.GetCount-60f0",
+      "tool": "microsoft_reports_reports_monthly_print_usage_by_user_get_count_60f0"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/monthlyPrintUsageByUser/{printUsageByUser-id}",
+      "operationId": "reports.DeleteMonthlyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_delete_monthly_print_usage_by_user"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/monthlyPrintUsageByUser/{printUsageByUser-id}",
+      "operationId": "reports.GetMonthlyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_get_monthly_print_usage_by_user"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/monthlyPrintUsageByUser/{printUsageByUser-id}",
+      "operationId": "reports.UpdateMonthlyPrintUsageByUser",
+      "tool": "microsoft_reports_reports_update_monthly_print_usage_by_user"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners",
+      "operationId": "reports.DeletePartners",
+      "tool": "microsoft_reports_reports_delete_partners"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners",
+      "operationId": "reports.GetPartners",
+      "tool": "microsoft_reports_reports_get_partners"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners",
+      "operationId": "reports.UpdatePartners",
+      "tool": "microsoft_reports_reports_update_partners"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing",
+      "operationId": "reports.partners.DeleteBilling",
+      "tool": "microsoft_reports_reports_partners_delete_billing"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing",
+      "operationId": "reports.partners.GetBilling",
+      "tool": "microsoft_reports_reports_partners_get_billing"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing",
+      "operationId": "reports.partners.UpdateBilling",
+      "tool": "microsoft_reports_reports_partners_update_billing"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/manifests",
+      "operationId": "reports.partners.billing.ListManifests",
+      "tool": "microsoft_reports_reports_partners_billing_list_manifests"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/partners/billing/manifests",
+      "operationId": "reports.partners.billing.CreateManifests",
+      "tool": "microsoft_reports_reports_partners_billing_create_manifests"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/manifests/$count",
+      "operationId": "reports.partners.billing.manifests.GetCount-f888",
+      "tool": "microsoft_reports_reports_partners_billing_manifests_get_count_f888"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/manifests/{manifest-id}",
+      "operationId": "reports.partners.billing.DeleteManifests",
+      "tool": "microsoft_reports_reports_partners_billing_delete_manifests"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/manifests/{manifest-id}",
+      "operationId": "reports.partners.billing.GetManifests",
+      "tool": "microsoft_reports_reports_partners_billing_get_manifests"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/manifests/{manifest-id}",
+      "operationId": "reports.partners.billing.UpdateManifests",
+      "tool": "microsoft_reports_reports_partners_billing_update_manifests"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/operations",
+      "operationId": "reports.partners.billing.ListOperations",
+      "tool": "microsoft_reports_reports_partners_billing_list_operations"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/partners/billing/operations",
+      "operationId": "reports.partners.billing.CreateOperations",
+      "tool": "microsoft_reports_reports_partners_billing_create_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/operations/$count",
+      "operationId": "reports.partners.billing.operations.GetCount-9331",
+      "tool": "microsoft_reports_reports_partners_billing_operations_get_count_9331"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/operations/{operation-id}",
+      "operationId": "reports.partners.billing.DeleteOperations",
+      "tool": "microsoft_reports_reports_partners_billing_delete_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/operations/{operation-id}",
+      "operationId": "reports.partners.billing.GetOperations",
+      "tool": "microsoft_reports_reports_partners_billing_get_operations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/operations/{operation-id}",
+      "operationId": "reports.partners.billing.UpdateOperations",
+      "tool": "microsoft_reports_reports_partners_billing_update_operations"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/reconciliation",
+      "operationId": "reports.partners.billing.DeleteReconciliation",
+      "tool": "microsoft_reports_reports_partners_billing_delete_reconciliation"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/reconciliation",
+      "operationId": "reports.partners.billing.GetReconciliation",
+      "tool": "microsoft_reports_reports_partners_billing_get_reconciliation"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/reconciliation",
+      "operationId": "reports.partners.billing.UpdateReconciliation",
+      "tool": "microsoft_reports_reports_partners_billing_update_reconciliation"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/reconciliation/billed",
+      "operationId": "reports.partners.billing.reconciliation.DeleteBilled",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_delete_billed"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/reconciliation/billed",
+      "operationId": "reports.partners.billing.reconciliation.GetBilled",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_get_billed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/reconciliation/billed",
+      "operationId": "reports.partners.billing.reconciliation.UpdateBilled",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_update_billed"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/partners/billing/reconciliation/billed/microsoft.graph.partners.billing.export",
+      "operationId": "reports.partners.billing.reconciliation.billed.export",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_billed_export"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/reconciliation/unbilled",
+      "operationId": "reports.partners.billing.reconciliation.DeleteUnbilled",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_delete_unbilled"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/reconciliation/unbilled",
+      "operationId": "reports.partners.billing.reconciliation.GetUnbilled",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_get_unbilled"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/reconciliation/unbilled",
+      "operationId": "reports.partners.billing.reconciliation.UpdateUnbilled",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_update_unbilled"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/partners/billing/reconciliation/unbilled/microsoft.graph.partners.billing.export",
+      "operationId": "reports.partners.billing.reconciliation.unbilled.export",
+      "tool": "microsoft_reports_reports_partners_billing_reconciliation_unbilled_export"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/usage",
+      "operationId": "reports.partners.billing.DeleteUsage",
+      "tool": "microsoft_reports_reports_partners_billing_delete_usage"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/usage",
+      "operationId": "reports.partners.billing.GetUsage",
+      "tool": "microsoft_reports_reports_partners_billing_get_usage"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/usage",
+      "operationId": "reports.partners.billing.UpdateUsage",
+      "tool": "microsoft_reports_reports_partners_billing_update_usage"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/usage/billed",
+      "operationId": "reports.partners.billing.usage.DeleteBilled",
+      "tool": "microsoft_reports_reports_partners_billing_usage_delete_billed"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/usage/billed",
+      "operationId": "reports.partners.billing.usage.GetBilled",
+      "tool": "microsoft_reports_reports_partners_billing_usage_get_billed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/usage/billed",
+      "operationId": "reports.partners.billing.usage.UpdateBilled",
+      "tool": "microsoft_reports_reports_partners_billing_usage_update_billed"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/partners/billing/usage/billed/microsoft.graph.partners.billing.export",
+      "operationId": "reports.partners.billing.usage.billed.export",
+      "tool": "microsoft_reports_reports_partners_billing_usage_billed_export"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/partners/billing/usage/unbilled",
+      "operationId": "reports.partners.billing.usage.DeleteUnbilled",
+      "tool": "microsoft_reports_reports_partners_billing_usage_delete_unbilled"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/partners/billing/usage/unbilled",
+      "operationId": "reports.partners.billing.usage.GetUnbilled",
+      "tool": "microsoft_reports_reports_partners_billing_usage_get_unbilled"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/partners/billing/usage/unbilled",
+      "operationId": "reports.partners.billing.usage.UpdateUnbilled",
+      "tool": "microsoft_reports_reports_partners_billing_usage_update_unbilled"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/partners/billing/usage/unbilled/microsoft.graph.partners.billing.export",
+      "operationId": "reports.partners.billing.usage.unbilled.export",
+      "tool": "microsoft_reports_reports_partners_billing_usage_unbilled_export"
+    },
+    {
+      "method": "DELETE",
+      "path": "/reports/security",
+      "operationId": "reports.DeleteSecurity",
+      "tool": "microsoft_reports_reports_delete_security"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/security",
+      "operationId": "reports.GetSecurity",
+      "tool": "microsoft_reports_reports_get_security"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/security",
+      "operationId": "reports.UpdateSecurity",
+      "tool": "microsoft_reports_reports_update_security"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/security/getAttackSimulationRepeatOffenders()",
+      "operationId": "reports.security.getAttackSimulationRepeatOffenders",
+      "tool": "microsoft_reports_reports_security_get_attack_simulation_repeat_offenders"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/security/getAttackSimulationSimulationUserCoverage()",
+      "operationId": "reports.security.getAttackSimulationSimulationUserCoverage",
+      "tool": "microsoft_reports_reports_security_get_attack_simulation_simulation_user_coverage"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/security/getAttackSimulationTrainingUserCoverage()",
+      "operationId": "reports.security.getAttackSimulationTrainingUserCoverage",
+      "tool": "microsoft_reports_reports_security_get_attack_simulation_training_user_coverage"
+    }
+  ]
+}

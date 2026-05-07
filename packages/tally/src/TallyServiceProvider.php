@@ -22,6 +22,7 @@ class TallyServiceProvider extends ServiceProvider
             return new TallyService(
                 accessToken: $creds->get('tally', 'access_token', ''),
                 baseUrl: $creds->get('tally', 'url', 'https://api.tally.so'),
+                apiVersion: $creds->get('tally', 'api_version', '2026-02-05'),
             );
         });
     }

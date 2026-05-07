@@ -12,12 +12,12 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Returns the user/business ID, name, and email associated with the
  * access token currently configured for the integration.
  *
- * @see https://developers.facebook.com/docs/graph-api/reference/v21.0/me
+ * @see https://developers.facebook.com/docs/graph-api/reference/user
  */
 class WhatsAppGetCurrentUser implements Tool
 {
     /**
-     * Create a new WhatsAppGetCurrentUser tool instance.
+     * @param  WhatsAppService  $service  WhatsApp API client.
      */
     public function __construct(
         private WhatsAppService $service,
@@ -36,7 +36,7 @@ class WhatsAppGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the authenticated WhatsApp Business user info — name, email, and business ID. Useful for verifying which account is connected.';
+        return 'Get the authenticated WhatsApp Business user info - name, email, and business ID. Useful for verifying which account is connected.';
     }
 
     /**
@@ -50,15 +50,15 @@ class WhatsAppGetCurrentUser implements Tool
     }
 
     /**
-     * Execute the tool — fetch the current user from the API.
+     * Execute the tool and fetch the current user from the API.
      *
      * @param  array<string, mixed>  $args
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('WhatsApp integration is not configured.');
+            if (! $this->service->hasAccessToken()) {
+                return ToolResult::error('WhatsApp access token is not configured.');
             }
 
             $result = $this->service->getCurrentUser();

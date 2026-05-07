@@ -1,0 +1,1363 @@
+{
+    "source_url": "https://api.incident.io/v1/openapiV3.json",
+    "openapi": "3.0.3",
+    "title": "incident.io",
+    "version": "1.0.0",
+    "base_url": "https://api.incident.io",
+    "auth": "bearer",
+    "method_count": 169,
+    "operations": [
+        {
+            "operation_id": "Actions V1#List",
+            "class": "IncidentIoActionsV1List",
+            "slug": "incident_io_actions_v1_list",
+            "method": "get",
+            "path": "/v1/actions",
+            "type": "read"
+        },
+        {
+            "operation_id": "Actions V1#Show",
+            "class": "IncidentIoActionsV1Show",
+            "slug": "incident_io_actions_v1_show",
+            "method": "get",
+            "path": "/v1/actions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "API Keys V1#List",
+            "class": "IncidentIoApiKeysV1List",
+            "slug": "incident_io_api_keys_v1_list",
+            "method": "get",
+            "path": "/v1/api_keys",
+            "type": "read"
+        },
+        {
+            "operation_id": "API Keys V1#Create",
+            "class": "IncidentIoApiKeysV1Create",
+            "slug": "incident_io_api_keys_v1_create",
+            "method": "post",
+            "path": "/v1/api_keys",
+            "type": "write"
+        },
+        {
+            "operation_id": "API Keys V1#Show",
+            "class": "IncidentIoApiKeysV1Show",
+            "slug": "incident_io_api_keys_v1_show",
+            "method": "get",
+            "path": "/v1/api_keys/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "API Keys V1#Update",
+            "class": "IncidentIoApiKeysV1Update",
+            "slug": "incident_io_api_keys_v1_update",
+            "method": "put",
+            "path": "/v1/api_keys/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "API Keys V1#Delete",
+            "class": "IncidentIoApiKeysV1Delete",
+            "slug": "incident_io_api_keys_v1_delete",
+            "method": "delete",
+            "path": "/v1/api_keys/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "API Keys V1#Rotate",
+            "class": "IncidentIoApiKeysV1Rotate",
+            "slug": "incident_io_api_keys_v1_rotate",
+            "method": "post",
+            "path": "/v1/api_keys/{id}/actions/rotate",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Field Options V1#List",
+            "class": "IncidentIoCustomFieldOptionsV1List",
+            "slug": "incident_io_custom_field_options_v1_list",
+            "method": "get",
+            "path": "/v1/custom_field_options",
+            "type": "read"
+        },
+        {
+            "operation_id": "Custom Field Options V1#Create",
+            "class": "IncidentIoCustomFieldOptionsV1Create",
+            "slug": "incident_io_custom_field_options_v1_create",
+            "method": "post",
+            "path": "/v1/custom_field_options",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Field Options V1#Show",
+            "class": "IncidentIoCustomFieldOptionsV1Show",
+            "slug": "incident_io_custom_field_options_v1_show",
+            "method": "get",
+            "path": "/v1/custom_field_options/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Custom Field Options V1#Update",
+            "class": "IncidentIoCustomFieldOptionsV1Update",
+            "slug": "incident_io_custom_field_options_v1_update",
+            "method": "put",
+            "path": "/v1/custom_field_options/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Field Options V1#Delete",
+            "class": "IncidentIoCustomFieldOptionsV1Delete",
+            "slug": "incident_io_custom_field_options_v1_delete",
+            "method": "delete",
+            "path": "/v1/custom_field_options/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Fields V1#List",
+            "class": "IncidentIoCustomFieldsV1List",
+            "slug": "incident_io_custom_fields_v1_list",
+            "method": "get",
+            "path": "/v1/custom_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "Custom Fields V1#Create",
+            "class": "IncidentIoCustomFieldsV1Create",
+            "slug": "incident_io_custom_fields_v1_create",
+            "method": "post",
+            "path": "/v1/custom_fields",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Fields V1#Show",
+            "class": "IncidentIoCustomFieldsV1Show",
+            "slug": "incident_io_custom_fields_v1_show",
+            "method": "get",
+            "path": "/v1/custom_fields/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Custom Fields V1#Update",
+            "class": "IncidentIoCustomFieldsV1Update",
+            "slug": "incident_io_custom_fields_v1_update",
+            "method": "put",
+            "path": "/v1/custom_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Fields V1#Delete",
+            "class": "IncidentIoCustomFieldsV1Delete",
+            "slug": "incident_io_custom_fields_v1_delete",
+            "method": "delete",
+            "path": "/v1/custom_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Utilities V1#Identity",
+            "class": "IncidentIoUtilitiesV1Identity",
+            "slug": "incident_io_utilities_v1_identity",
+            "method": "get",
+            "path": "/v1/identity",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Attachments V1#List",
+            "class": "IncidentIoIncidentAttachmentsV1List",
+            "slug": "incident_io_incident_attachments_v1_list",
+            "method": "get",
+            "path": "/v1/incident_attachments",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Attachments V1#Create",
+            "class": "IncidentIoIncidentAttachmentsV1Create",
+            "slug": "incident_io_incident_attachments_v1_create",
+            "method": "post",
+            "path": "/v1/incident_attachments",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Attachments V1#Delete",
+            "class": "IncidentIoIncidentAttachmentsV1Delete",
+            "slug": "incident_io_incident_attachments_v1_delete",
+            "method": "delete",
+            "path": "/v1/incident_attachments/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Memberships V1#Create",
+            "class": "IncidentIoIncidentMembershipsV1Create",
+            "slug": "incident_io_incident_memberships_v1_create",
+            "method": "post",
+            "path": "/v1/incident_memberships",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Memberships V1#Revoke",
+            "class": "IncidentIoIncidentMembershipsV1Revoke",
+            "slug": "incident_io_incident_memberships_v1_revoke",
+            "method": "post",
+            "path": "/v1/incident_memberships/actions/revoke",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Relationships V1#List",
+            "class": "IncidentIoIncidentRelationshipsV1List",
+            "slug": "incident_io_incident_relationships_v1_list",
+            "method": "get",
+            "path": "/v1/incident_relationships",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Roles V1#List",
+            "class": "IncidentIoIncidentRolesV1List",
+            "slug": "incident_io_incident_roles_v1_list",
+            "method": "get",
+            "path": "/v1/incident_roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Roles V1#Create",
+            "class": "IncidentIoIncidentRolesV1Create",
+            "slug": "incident_io_incident_roles_v1_create",
+            "method": "post",
+            "path": "/v1/incident_roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Roles V1#Show",
+            "class": "IncidentIoIncidentRolesV1Show",
+            "slug": "incident_io_incident_roles_v1_show",
+            "method": "get",
+            "path": "/v1/incident_roles/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Roles V1#Update",
+            "class": "IncidentIoIncidentRolesV1Update",
+            "slug": "incident_io_incident_roles_v1_update",
+            "method": "put",
+            "path": "/v1/incident_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Roles V1#Delete",
+            "class": "IncidentIoIncidentRolesV1Delete",
+            "slug": "incident_io_incident_roles_v1_delete",
+            "method": "delete",
+            "path": "/v1/incident_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Statuses V1#List",
+            "class": "IncidentIoIncidentStatusesV1List",
+            "slug": "incident_io_incident_statuses_v1_list",
+            "method": "get",
+            "path": "/v1/incident_statuses",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Statuses V1#Create",
+            "class": "IncidentIoIncidentStatusesV1Create",
+            "slug": "incident_io_incident_statuses_v1_create",
+            "method": "post",
+            "path": "/v1/incident_statuses",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Statuses V1#Show",
+            "class": "IncidentIoIncidentStatusesV1Show",
+            "slug": "incident_io_incident_statuses_v1_show",
+            "method": "get",
+            "path": "/v1/incident_statuses/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Statuses V1#Update",
+            "class": "IncidentIoIncidentStatusesV1Update",
+            "slug": "incident_io_incident_statuses_v1_update",
+            "method": "put",
+            "path": "/v1/incident_statuses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Statuses V1#Delete",
+            "class": "IncidentIoIncidentStatusesV1Delete",
+            "slug": "incident_io_incident_statuses_v1_delete",
+            "method": "delete",
+            "path": "/v1/incident_statuses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Types V1#List",
+            "class": "IncidentIoIncidentTypesV1List",
+            "slug": "incident_io_incident_types_v1_list",
+            "method": "get",
+            "path": "/v1/incident_types",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Types V1#Show",
+            "class": "IncidentIoIncidentTypesV1Show",
+            "slug": "incident_io_incident_types_v1_show",
+            "method": "get",
+            "path": "/v1/incident_types/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incidents V1#List",
+            "class": "IncidentIoIncidentsV1List",
+            "slug": "incident_io_incidents_v1_list",
+            "method": "get",
+            "path": "/v1/incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incidents V1#Create",
+            "class": "IncidentIoIncidentsV1Create",
+            "slug": "incident_io_incidents_v1_create",
+            "method": "post",
+            "path": "/v1/incidents",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incidents V1#Show",
+            "class": "IncidentIoIncidentsV1Show",
+            "slug": "incident_io_incidents_v1_show",
+            "method": "get",
+            "path": "/v1/incidents/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "IPAllowlists V1#ShowIPAllowlist",
+            "class": "IncidentIoIpallowlistsV1ShowIpallowlist",
+            "slug": "incident_io_ipallowlists_v1_show_ipallowlist",
+            "method": "get",
+            "path": "/v1/ip_allowlists",
+            "type": "read"
+        },
+        {
+            "operation_id": "IPAllowlists V1#UpdateIPAllowlist",
+            "class": "IncidentIoIpallowlistsV1UpdateIpallowlist",
+            "slug": "incident_io_ipallowlists_v1_update_ipallowlist",
+            "method": "put",
+            "path": "/v1/ip_allowlists",
+            "type": "write"
+        },
+        {
+            "operation_id": "MaintenanceWindows V1#List",
+            "class": "IncidentIoMaintenanceWindowsV1List",
+            "slug": "incident_io_maintenance_windows_v1_list",
+            "method": "get",
+            "path": "/v1/maintenance_windows",
+            "type": "read"
+        },
+        {
+            "operation_id": "MaintenanceWindows V1#Create",
+            "class": "IncidentIoMaintenanceWindowsV1Create",
+            "slug": "incident_io_maintenance_windows_v1_create",
+            "method": "post",
+            "path": "/v1/maintenance_windows",
+            "type": "write"
+        },
+        {
+            "operation_id": "MaintenanceWindows V1#Show",
+            "class": "IncidentIoMaintenanceWindowsV1Show",
+            "slug": "incident_io_maintenance_windows_v1_show",
+            "method": "get",
+            "path": "/v1/maintenance_windows/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "MaintenanceWindows V1#Update",
+            "class": "IncidentIoMaintenanceWindowsV1Update",
+            "slug": "incident_io_maintenance_windows_v1_update",
+            "method": "put",
+            "path": "/v1/maintenance_windows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "MaintenanceWindows V1#Delete",
+            "class": "IncidentIoMaintenanceWindowsV1Delete",
+            "slug": "incident_io_maintenance_windows_v1_delete",
+            "method": "delete",
+            "path": "/v1/maintenance_windows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Utilities V1#OpenAPI",
+            "class": "IncidentIoUtilitiesV1OpenApi",
+            "slug": "incident_io_utilities_v1_open_api",
+            "method": "get",
+            "path": "/v1/openapi.json",
+            "type": "read"
+        },
+        {
+            "operation_id": "Utilities V1#OpenAPIV3",
+            "class": "IncidentIoUtilitiesV1OpenApiv3",
+            "slug": "incident_io_utilities_v1_open_apiv3",
+            "method": "get",
+            "path": "/v1/openapiV3.json",
+            "type": "read"
+        },
+        {
+            "operation_id": "PostmortemDocuments V1#List",
+            "class": "IncidentIoPostmortemDocumentsV1List",
+            "slug": "incident_io_postmortem_documents_v1_list",
+            "method": "get",
+            "path": "/v1/postmortem_documents",
+            "type": "read"
+        },
+        {
+            "operation_id": "PostmortemDocuments V1#Show",
+            "class": "IncidentIoPostmortemDocumentsV1Show",
+            "slug": "incident_io_postmortem_documents_v1_show",
+            "method": "get",
+            "path": "/v1/postmortem_documents/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "PostmortemDocuments V1#UpdateStatus",
+            "class": "IncidentIoPostmortemDocumentsV1UpdateStatus",
+            "slug": "incident_io_postmortem_documents_v1_update_status",
+            "method": "put",
+            "path": "/v1/postmortem_documents/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "PostmortemDocuments V1#ShowContent",
+            "class": "IncidentIoPostmortemDocumentsV1ShowContent",
+            "slug": "incident_io_postmortem_documents_v1_show_content",
+            "method": "get",
+            "path": "/v1/postmortem_documents/{id}/content",
+            "type": "read"
+        },
+        {
+            "operation_id": "Severities V1#List",
+            "class": "IncidentIoSeveritiesV1List",
+            "slug": "incident_io_severities_v1_list",
+            "method": "get",
+            "path": "/v1/severities",
+            "type": "read"
+        },
+        {
+            "operation_id": "Severities V1#Create",
+            "class": "IncidentIoSeveritiesV1Create",
+            "slug": "incident_io_severities_v1_create",
+            "method": "post",
+            "path": "/v1/severities",
+            "type": "write"
+        },
+        {
+            "operation_id": "Severities V1#Show",
+            "class": "IncidentIoSeveritiesV1Show",
+            "slug": "incident_io_severities_v1_show",
+            "method": "get",
+            "path": "/v1/severities/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Severities V1#Update",
+            "class": "IncidentIoSeveritiesV1Update",
+            "slug": "incident_io_severities_v1_update",
+            "method": "put",
+            "path": "/v1/severities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Severities V1#Delete",
+            "class": "IncidentIoSeveritiesV1Delete",
+            "slug": "incident_io_severities_v1_delete",
+            "method": "delete",
+            "path": "/v1/severities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V1#ListResponseIncidents",
+            "class": "IncidentIoStatusPagesV1ListResponseIncidents",
+            "slug": "incident_io_status_pages_v1_list_response_incidents",
+            "method": "get",
+            "path": "/v1/status-pages/{id}/incidents/{incident_id}/response-incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "Actions V2#List",
+            "class": "IncidentIoActionsV2List",
+            "slug": "incident_io_actions_v2_list",
+            "method": "get",
+            "path": "/v2/actions",
+            "type": "read"
+        },
+        {
+            "operation_id": "Actions V2#Show",
+            "class": "IncidentIoActionsV2Show",
+            "slug": "incident_io_actions_v2_show",
+            "method": "get",
+            "path": "/v2/actions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Attributes V2#List",
+            "class": "IncidentIoAlertAttributesV2List",
+            "slug": "incident_io_alert_attributes_v2_list",
+            "method": "get",
+            "path": "/v2/alert_attributes",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Attributes V2#Create",
+            "class": "IncidentIoAlertAttributesV2Create",
+            "slug": "incident_io_alert_attributes_v2_create",
+            "method": "post",
+            "path": "/v2/alert_attributes",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Attributes V2#Show",
+            "class": "IncidentIoAlertAttributesV2Show",
+            "slug": "incident_io_alert_attributes_v2_show",
+            "method": "get",
+            "path": "/v2/alert_attributes/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Attributes V2#Update",
+            "class": "IncidentIoAlertAttributesV2Update",
+            "slug": "incident_io_alert_attributes_v2_update",
+            "method": "put",
+            "path": "/v2/alert_attributes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Attributes V2#Destroy",
+            "class": "IncidentIoAlertAttributesV2Destroy",
+            "slug": "incident_io_alert_attributes_v2_destroy",
+            "method": "delete",
+            "path": "/v2/alert_attributes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Events V2#CreateHTTP",
+            "class": "IncidentIoAlertEventsV2CreateHttp",
+            "slug": "incident_io_alert_events_v2_create_http",
+            "method": "post",
+            "path": "/v2/alert_events/http/{alert_source_config_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Routes V2#List",
+            "class": "IncidentIoAlertRoutesV2List",
+            "slug": "incident_io_alert_routes_v2_list",
+            "method": "get",
+            "path": "/v2/alert_routes",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Routes V2#Create",
+            "class": "IncidentIoAlertRoutesV2Create",
+            "slug": "incident_io_alert_routes_v2_create",
+            "method": "post",
+            "path": "/v2/alert_routes",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Routes V2#Show",
+            "class": "IncidentIoAlertRoutesV2Show",
+            "slug": "incident_io_alert_routes_v2_show",
+            "method": "get",
+            "path": "/v2/alert_routes/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Routes V2#Update",
+            "class": "IncidentIoAlertRoutesV2Update",
+            "slug": "incident_io_alert_routes_v2_update",
+            "method": "put",
+            "path": "/v2/alert_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Routes V2#Delete",
+            "class": "IncidentIoAlertRoutesV2Delete",
+            "slug": "incident_io_alert_routes_v2_delete",
+            "method": "delete",
+            "path": "/v2/alert_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Sources V2#List",
+            "class": "IncidentIoAlertSourcesV2List",
+            "slug": "incident_io_alert_sources_v2_list",
+            "method": "get",
+            "path": "/v2/alert_sources",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Sources V2#Create",
+            "class": "IncidentIoAlertSourcesV2Create",
+            "slug": "incident_io_alert_sources_v2_create",
+            "method": "post",
+            "path": "/v2/alert_sources",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Sources V2#Show",
+            "class": "IncidentIoAlertSourcesV2Show",
+            "slug": "incident_io_alert_sources_v2_show",
+            "method": "get",
+            "path": "/v2/alert_sources/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alert Sources V2#Update",
+            "class": "IncidentIoAlertSourcesV2Update",
+            "slug": "incident_io_alert_sources_v2_update",
+            "method": "put",
+            "path": "/v2/alert_sources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alert Sources V2#Delete",
+            "class": "IncidentIoAlertSourcesV2Delete",
+            "slug": "incident_io_alert_sources_v2_delete",
+            "method": "delete",
+            "path": "/v2/alert_sources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alerts V2#List",
+            "class": "IncidentIoAlertsV2List",
+            "slug": "incident_io_alerts_v2_list",
+            "method": "get",
+            "path": "/v2/alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "Alerts V2#Show",
+            "class": "IncidentIoAlertsV2Show",
+            "slug": "incident_io_alerts_v2_show",
+            "method": "get",
+            "path": "/v2/alerts/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V2#ListEntries",
+            "class": "IncidentIoCatalogV2ListEntries",
+            "slug": "incident_io_catalog_v2_list_entries",
+            "method": "get",
+            "path": "/v2/catalog_entries",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V2#CreateEntry",
+            "class": "IncidentIoCatalogV2CreateEntry",
+            "slug": "incident_io_catalog_v2_create_entry",
+            "method": "post",
+            "path": "/v2/catalog_entries",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V2#ShowEntry",
+            "class": "IncidentIoCatalogV2ShowEntry",
+            "slug": "incident_io_catalog_v2_show_entry",
+            "method": "get",
+            "path": "/v2/catalog_entries/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V2#UpdateEntry",
+            "class": "IncidentIoCatalogV2UpdateEntry",
+            "slug": "incident_io_catalog_v2_update_entry",
+            "method": "put",
+            "path": "/v2/catalog_entries/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V2#DestroyEntry",
+            "class": "IncidentIoCatalogV2DestroyEntry",
+            "slug": "incident_io_catalog_v2_destroy_entry",
+            "method": "delete",
+            "path": "/v2/catalog_entries/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V2#ListResources",
+            "class": "IncidentIoCatalogV2ListResources",
+            "slug": "incident_io_catalog_v2_list_resources",
+            "method": "get",
+            "path": "/v2/catalog_resources",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V2#ListTypes",
+            "class": "IncidentIoCatalogV2ListTypes",
+            "slug": "incident_io_catalog_v2_list_types",
+            "method": "get",
+            "path": "/v2/catalog_types",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V2#CreateType",
+            "class": "IncidentIoCatalogV2CreateType",
+            "slug": "incident_io_catalog_v2_create_type",
+            "method": "post",
+            "path": "/v2/catalog_types",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V2#ShowType",
+            "class": "IncidentIoCatalogV2ShowType",
+            "slug": "incident_io_catalog_v2_show_type",
+            "method": "get",
+            "path": "/v2/catalog_types/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V2#UpdateType",
+            "class": "IncidentIoCatalogV2UpdateType",
+            "slug": "incident_io_catalog_v2_update_type",
+            "method": "put",
+            "path": "/v2/catalog_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V2#DestroyType",
+            "class": "IncidentIoCatalogV2DestroyType",
+            "slug": "incident_io_catalog_v2_destroy_type",
+            "method": "delete",
+            "path": "/v2/catalog_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V2#UpdateTypeSchema",
+            "class": "IncidentIoCatalogV2UpdateTypeSchema",
+            "slug": "incident_io_catalog_v2_update_type_schema",
+            "method": "post",
+            "path": "/v2/catalog_types/{id}/actions/update_schema",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Fields V2#List",
+            "class": "IncidentIoCustomFieldsV2List",
+            "slug": "incident_io_custom_fields_v2_list",
+            "method": "get",
+            "path": "/v2/custom_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "Custom Fields V2#Create",
+            "class": "IncidentIoCustomFieldsV2Create",
+            "slug": "incident_io_custom_fields_v2_create",
+            "method": "post",
+            "path": "/v2/custom_fields",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Fields V2#Show",
+            "class": "IncidentIoCustomFieldsV2Show",
+            "slug": "incident_io_custom_fields_v2_show",
+            "method": "get",
+            "path": "/v2/custom_fields/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Custom Fields V2#Update",
+            "class": "IncidentIoCustomFieldsV2Update",
+            "slug": "incident_io_custom_fields_v2_update",
+            "method": "put",
+            "path": "/v2/custom_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Custom Fields V2#Delete",
+            "class": "IncidentIoCustomFieldsV2Delete",
+            "slug": "incident_io_custom_fields_v2_delete",
+            "method": "delete",
+            "path": "/v2/custom_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Escalations V2#ListPaths",
+            "class": "IncidentIoEscalationsV2ListPaths",
+            "slug": "incident_io_escalations_v2_list_paths",
+            "method": "get",
+            "path": "/v2/escalation_paths",
+            "type": "read"
+        },
+        {
+            "operation_id": "Escalations V2#CreatePath",
+            "class": "IncidentIoEscalationsV2CreatePath",
+            "slug": "incident_io_escalations_v2_create_path",
+            "method": "post",
+            "path": "/v2/escalation_paths",
+            "type": "write"
+        },
+        {
+            "operation_id": "Escalations V2#ShowPath",
+            "class": "IncidentIoEscalationsV2ShowPath",
+            "slug": "incident_io_escalations_v2_show_path",
+            "method": "get",
+            "path": "/v2/escalation_paths/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Escalations V2#UpdatePath",
+            "class": "IncidentIoEscalationsV2UpdatePath",
+            "slug": "incident_io_escalations_v2_update_path",
+            "method": "put",
+            "path": "/v2/escalation_paths/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Escalations V2#DestroyPath",
+            "class": "IncidentIoEscalationsV2DestroyPath",
+            "slug": "incident_io_escalations_v2_destroy_path",
+            "method": "delete",
+            "path": "/v2/escalation_paths/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Escalations V2#List",
+            "class": "IncidentIoEscalationsV2List",
+            "slug": "incident_io_escalations_v2_list",
+            "method": "get",
+            "path": "/v2/escalations",
+            "type": "read"
+        },
+        {
+            "operation_id": "Escalations V2#Create",
+            "class": "IncidentIoEscalationsV2Create",
+            "slug": "incident_io_escalations_v2_create",
+            "method": "post",
+            "path": "/v2/escalations",
+            "type": "write"
+        },
+        {
+            "operation_id": "Escalations V2#Show",
+            "class": "IncidentIoEscalationsV2Show",
+            "slug": "incident_io_escalations_v2_show",
+            "method": "get",
+            "path": "/v2/escalations/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Follow-ups V2#List",
+            "class": "IncidentIoFollowUpsV2List",
+            "slug": "incident_io_follow_ups_v2_list",
+            "method": "get",
+            "path": "/v2/follow_ups",
+            "type": "read"
+        },
+        {
+            "operation_id": "Follow-ups V2#Show",
+            "class": "IncidentIoFollowUpsV2Show",
+            "slug": "incident_io_follow_ups_v2_show",
+            "method": "get",
+            "path": "/v2/follow_ups/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Heartbeat V2#Ping#1",
+            "class": "IncidentIoHeartbeatV2Ping1",
+            "slug": "incident_io_heartbeat_v2_ping_1",
+            "method": "get",
+            "path": "/v2/heartbeat/{alert_source_config_id}/ping",
+            "type": "read"
+        },
+        {
+            "operation_id": "Heartbeat V2#Ping",
+            "class": "IncidentIoHeartbeatV2Ping",
+            "slug": "incident_io_heartbeat_v2_ping",
+            "method": "post",
+            "path": "/v2/heartbeat/{alert_source_config_id}/ping",
+            "type": "write"
+        },
+        {
+            "operation_id": "Alerts V2#ListIncidentAlerts",
+            "class": "IncidentIoAlertsV2ListIncidentAlerts",
+            "slug": "incident_io_alerts_v2_list_incident_alerts",
+            "method": "get",
+            "path": "/v2/incident_alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Roles V2#List",
+            "class": "IncidentIoIncidentRolesV2List",
+            "slug": "incident_io_incident_roles_v2_list",
+            "method": "get",
+            "path": "/v2/incident_roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Roles V2#Create",
+            "class": "IncidentIoIncidentRolesV2Create",
+            "slug": "incident_io_incident_roles_v2_create",
+            "method": "post",
+            "path": "/v2/incident_roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Roles V2#Show",
+            "class": "IncidentIoIncidentRolesV2Show",
+            "slug": "incident_io_incident_roles_v2_show",
+            "method": "get",
+            "path": "/v2/incident_roles/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Roles V2#Update",
+            "class": "IncidentIoIncidentRolesV2Update",
+            "slug": "incident_io_incident_roles_v2_update",
+            "method": "put",
+            "path": "/v2/incident_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Roles V2#Delete",
+            "class": "IncidentIoIncidentRolesV2Delete",
+            "slug": "incident_io_incident_roles_v2_delete",
+            "method": "delete",
+            "path": "/v2/incident_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incident Timestamps V2#List",
+            "class": "IncidentIoIncidentTimestampsV2List",
+            "slug": "incident_io_incident_timestamps_v2_list",
+            "method": "get",
+            "path": "/v2/incident_timestamps",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Timestamps V2#Show",
+            "class": "IncidentIoIncidentTimestampsV2Show",
+            "slug": "incident_io_incident_timestamps_v2_show",
+            "method": "get",
+            "path": "/v2/incident_timestamps/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incident Updates V2#List",
+            "class": "IncidentIoIncidentUpdatesV2List",
+            "slug": "incident_io_incident_updates_v2_list",
+            "method": "get",
+            "path": "/v2/incident_updates",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incidents V2#List",
+            "class": "IncidentIoIncidentsV2List",
+            "slug": "incident_io_incidents_v2_list",
+            "method": "get",
+            "path": "/v2/incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incidents V2#Create",
+            "class": "IncidentIoIncidentsV2Create",
+            "slug": "incident_io_incidents_v2_create",
+            "method": "post",
+            "path": "/v2/incidents",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incidents V2#Show",
+            "class": "IncidentIoIncidentsV2Show",
+            "slug": "incident_io_incidents_v2_show",
+            "method": "get",
+            "path": "/v2/incidents/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Incidents V2#Edit",
+            "class": "IncidentIoIncidentsV2Edit",
+            "slug": "incident_io_incidents_v2_edit",
+            "method": "post",
+            "path": "/v2/incidents/{id}/actions/edit",
+            "type": "write"
+        },
+        {
+            "operation_id": "Incidents V2#ImportPostmortemDocument",
+            "class": "IncidentIoIncidentsV2ImportPostmortemDocument",
+            "slug": "incident_io_incidents_v2_import_postmortem_document",
+            "method": "post",
+            "path": "/v2/incidents/{id}/actions/import_postmortem_document",
+            "type": "write"
+        },
+        {
+            "operation_id": "Schedules V2#ListScheduleEntries",
+            "class": "IncidentIoSchedulesV2ListScheduleEntries",
+            "slug": "incident_io_schedules_v2_list_schedule_entries",
+            "method": "get",
+            "path": "/v2/schedule_entries",
+            "type": "read"
+        },
+        {
+            "operation_id": "Schedules V2#CreateOverride",
+            "class": "IncidentIoSchedulesV2CreateOverride",
+            "slug": "incident_io_schedules_v2_create_override",
+            "method": "post",
+            "path": "/v2/schedule_overrides",
+            "type": "write"
+        },
+        {
+            "operation_id": "Schedules V2#List",
+            "class": "IncidentIoSchedulesV2List",
+            "slug": "incident_io_schedules_v2_list",
+            "method": "get",
+            "path": "/v2/schedules",
+            "type": "read"
+        },
+        {
+            "operation_id": "Schedules V2#Create",
+            "class": "IncidentIoSchedulesV2Create",
+            "slug": "incident_io_schedules_v2_create",
+            "method": "post",
+            "path": "/v2/schedules",
+            "type": "write"
+        },
+        {
+            "operation_id": "Schedules V2#Show",
+            "class": "IncidentIoSchedulesV2Show",
+            "slug": "incident_io_schedules_v2_show",
+            "method": "get",
+            "path": "/v2/schedules/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Schedules V2#Update",
+            "class": "IncidentIoSchedulesV2Update",
+            "slug": "incident_io_schedules_v2_update",
+            "method": "put",
+            "path": "/v2/schedules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Schedules V2#Destroy",
+            "class": "IncidentIoSchedulesV2Destroy",
+            "slug": "incident_io_schedules_v2_destroy",
+            "method": "delete",
+            "path": "/v2/schedules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Schedules V2#ListScheduleReplicas",
+            "class": "IncidentIoSchedulesV2ListScheduleReplicas",
+            "slug": "incident_io_schedules_v2_list_schedule_replicas",
+            "method": "get",
+            "path": "/v2/schedules/{schedule_id}/replicas",
+            "type": "read"
+        },
+        {
+            "operation_id": "Schedules V2#CreateScheduleReplica",
+            "class": "IncidentIoSchedulesV2CreateScheduleReplica",
+            "slug": "incident_io_schedules_v2_create_schedule_replica",
+            "method": "post",
+            "path": "/v2/schedules/{schedule_id}/replicas",
+            "type": "write"
+        },
+        {
+            "operation_id": "Schedules V2#ShowScheduleReplica",
+            "class": "IncidentIoSchedulesV2ShowScheduleReplica",
+            "slug": "incident_io_schedules_v2_show_schedule_replica",
+            "method": "get",
+            "path": "/v2/schedules/{schedule_id}/replicas/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Schedules V2#DestroyScheduleReplica",
+            "class": "IncidentIoSchedulesV2DestroyScheduleReplica",
+            "slug": "incident_io_schedules_v2_destroy_schedule_replica",
+            "method": "delete",
+            "path": "/v2/schedules/{schedule_id}/replicas/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V2#CreateStatusPageIncidentUpdate",
+            "class": "IncidentIoStatusPagesV2CreateStatusPageIncidentUpdate",
+            "slug": "incident_io_status_pages_v2_create_status_page_incident_update",
+            "method": "post",
+            "path": "/v2/status_page_incident_updates",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V2#ListStatusPageIncidents",
+            "class": "IncidentIoStatusPagesV2ListStatusPageIncidents",
+            "slug": "incident_io_status_pages_v2_list_status_page_incidents",
+            "method": "get",
+            "path": "/v2/status_page_incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "Status Pages V2#CreateStatusPageIncident",
+            "class": "IncidentIoStatusPagesV2CreateStatusPageIncident",
+            "slug": "incident_io_status_pages_v2_create_status_page_incident",
+            "method": "post",
+            "path": "/v2/status_page_incidents",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V2#ShowStatusPageIncident",
+            "class": "IncidentIoStatusPagesV2ShowStatusPageIncident",
+            "slug": "incident_io_status_pages_v2_show_status_page_incident",
+            "method": "get",
+            "path": "/v2/status_page_incidents/{status_page_incident_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Status Pages V2#UpdateStatusPageIncident",
+            "class": "IncidentIoStatusPagesV2UpdateStatusPageIncident",
+            "slug": "incident_io_status_pages_v2_update_status_page_incident",
+            "method": "put",
+            "path": "/v2/status_page_incidents/{status_page_incident_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V2#CreateStatusPageMaintenanceUpdate",
+            "class": "IncidentIoStatusPagesV2CreateStatusPageMaintenanceUpdate",
+            "slug": "incident_io_status_pages_v2_create_status_page_maintenance_update",
+            "method": "post",
+            "path": "/v2/status_page_maintenance_updates",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V2#ListStatusPageMaintenances",
+            "class": "IncidentIoStatusPagesV2ListStatusPageMaintenances",
+            "slug": "incident_io_status_pages_v2_list_status_page_maintenances",
+            "method": "get",
+            "path": "/v2/status_page_maintenances",
+            "type": "read"
+        },
+        {
+            "operation_id": "Status Pages V2#CreateStatusPageMaintenance",
+            "class": "IncidentIoStatusPagesV2CreateStatusPageMaintenance",
+            "slug": "incident_io_status_pages_v2_create_status_page_maintenance",
+            "method": "post",
+            "path": "/v2/status_page_maintenances",
+            "type": "write"
+        },
+        {
+            "operation_id": "Status Pages V2#ShowStatusPageMaintenance",
+            "class": "IncidentIoStatusPagesV2ShowStatusPageMaintenance",
+            "slug": "incident_io_status_pages_v2_show_status_page_maintenance",
+            "method": "get",
+            "path": "/v2/status_page_maintenances/{status_page_maintenance_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Status Pages V2#ShowStatusPageStructure",
+            "class": "IncidentIoStatusPagesV2ShowStatusPageStructure",
+            "slug": "incident_io_status_pages_v2_show_status_page_structure",
+            "method": "get",
+            "path": "/v2/status_page_structures/{status_page_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Status Pages V2#ListStatusPages",
+            "class": "IncidentIoStatusPagesV2ListStatusPages",
+            "slug": "incident_io_status_pages_v2_list_status_pages",
+            "method": "get",
+            "path": "/v2/status_pages",
+            "type": "read"
+        },
+        {
+            "operation_id": "Telemetry V2#UpdateDataSource",
+            "class": "IncidentIoTelemetryV2UpdateDataSource",
+            "slug": "incident_io_telemetry_v2_update_data_source",
+            "method": "put",
+            "path": "/v2/telemetry/data_sources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Users V2#List",
+            "class": "IncidentIoUsersV2List",
+            "slug": "incident_io_users_v2_list",
+            "method": "get",
+            "path": "/v2/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "Users V2#Show",
+            "class": "IncidentIoUsersV2Show",
+            "slug": "incident_io_users_v2_show",
+            "method": "get",
+            "path": "/v2/users/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Users V2#ListNotificationMethods",
+            "class": "IncidentIoUsersV2ListNotificationMethods",
+            "slug": "incident_io_users_v2_list_notification_methods",
+            "method": "get",
+            "path": "/v2/users/{user_id}/notification_methods",
+            "type": "read"
+        },
+        {
+            "operation_id": "Users V2#ListNotificationRules",
+            "class": "IncidentIoUsersV2ListNotificationRules",
+            "slug": "incident_io_users_v2_list_notification_rules",
+            "method": "get",
+            "path": "/v2/users/{user_id}/notification_rules",
+            "type": "read"
+        },
+        {
+            "operation_id": "Workflows V2#ListWorkflows",
+            "class": "IncidentIoWorkflowsV2ListWorkflows",
+            "slug": "incident_io_workflows_v2_list_workflows",
+            "method": "get",
+            "path": "/v2/workflows",
+            "type": "read"
+        },
+        {
+            "operation_id": "Workflows V2#CreateWorkflow",
+            "class": "IncidentIoWorkflowsV2CreateWorkflow",
+            "slug": "incident_io_workflows_v2_create_workflow",
+            "method": "post",
+            "path": "/v2/workflows",
+            "type": "write"
+        },
+        {
+            "operation_id": "Workflows V2#ShowWorkflow",
+            "class": "IncidentIoWorkflowsV2ShowWorkflow",
+            "slug": "incident_io_workflows_v2_show_workflow",
+            "method": "get",
+            "path": "/v2/workflows/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Workflows V2#UpdateWorkflow",
+            "class": "IncidentIoWorkflowsV2UpdateWorkflow",
+            "slug": "incident_io_workflows_v2_update_workflow",
+            "method": "put",
+            "path": "/v2/workflows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Workflows V2#DestroyWorkflow",
+            "class": "IncidentIoWorkflowsV2DestroyWorkflow",
+            "slug": "incident_io_workflows_v2_destroy_workflow",
+            "method": "delete",
+            "path": "/v2/workflows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#ListEntries",
+            "class": "IncidentIoCatalogV3ListEntries",
+            "slug": "incident_io_catalog_v3_list_entries",
+            "method": "get",
+            "path": "/v3/catalog_entries",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V3#CreateEntry",
+            "class": "IncidentIoCatalogV3CreateEntry",
+            "slug": "incident_io_catalog_v3_create_entry",
+            "method": "post",
+            "path": "/v3/catalog_entries",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#BulkUpdateEntries",
+            "class": "IncidentIoCatalogV3BulkUpdateEntries",
+            "slug": "incident_io_catalog_v3_bulk_update_entries",
+            "method": "post",
+            "path": "/v3/catalog_entries/actions/bulk_update",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#ShowEntry",
+            "class": "IncidentIoCatalogV3ShowEntry",
+            "slug": "incident_io_catalog_v3_show_entry",
+            "method": "get",
+            "path": "/v3/catalog_entries/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V3#UpdateEntry",
+            "class": "IncidentIoCatalogV3UpdateEntry",
+            "slug": "incident_io_catalog_v3_update_entry",
+            "method": "put",
+            "path": "/v3/catalog_entries/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#DestroyEntry",
+            "class": "IncidentIoCatalogV3DestroyEntry",
+            "slug": "incident_io_catalog_v3_destroy_entry",
+            "method": "delete",
+            "path": "/v3/catalog_entries/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#ListResources",
+            "class": "IncidentIoCatalogV3ListResources",
+            "slug": "incident_io_catalog_v3_list_resources",
+            "method": "get",
+            "path": "/v3/catalog_resources",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V3#ListTypes",
+            "class": "IncidentIoCatalogV3ListTypes",
+            "slug": "incident_io_catalog_v3_list_types",
+            "method": "get",
+            "path": "/v3/catalog_types",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V3#CreateType",
+            "class": "IncidentIoCatalogV3CreateType",
+            "slug": "incident_io_catalog_v3_create_type",
+            "method": "post",
+            "path": "/v3/catalog_types",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#ShowType",
+            "class": "IncidentIoCatalogV3ShowType",
+            "slug": "incident_io_catalog_v3_show_type",
+            "method": "get",
+            "path": "/v3/catalog_types/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "Catalog V3#UpdateType",
+            "class": "IncidentIoCatalogV3UpdateType",
+            "slug": "incident_io_catalog_v3_update_type",
+            "method": "put",
+            "path": "/v3/catalog_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#DestroyType",
+            "class": "IncidentIoCatalogV3DestroyType",
+            "slug": "incident_io_catalog_v3_destroy_type",
+            "method": "delete",
+            "path": "/v3/catalog_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "Catalog V3#UpdateTypeSchema",
+            "class": "IncidentIoCatalogV3UpdateTypeSchema",
+            "slug": "incident_io_catalog_v3_update_type_schema",
+            "method": "post",
+            "path": "/v3/catalog_types/{id}/actions/update_schema",
+            "type": "write"
+        },
+        {
+            "operation_id": "Teams V3#List",
+            "class": "IncidentIoTeamsV3List",
+            "slug": "incident_io_teams_v3_list",
+            "method": "get",
+            "path": "/v3/teams",
+            "type": "read"
+        },
+        {
+            "operation_id": "Teams V3#Show",
+            "class": "IncidentIoTeamsV3Show",
+            "slug": "incident_io_teams_v3_show",
+            "method": "get",
+            "path": "/v3/teams/{id}",
+            "type": "read"
+        }
+    ]
+}

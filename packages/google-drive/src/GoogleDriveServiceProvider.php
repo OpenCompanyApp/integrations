@@ -5,46 +5,25 @@ namespace OpenCompany\Integrations\GoogleDrive;
 use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-use OpenCompany\Integrations\Google\GoogleServiceProvider;
 
 /**
- * Laravel service provider for the Google Drive integration.
+ * Registers the Google Drive integration with Laravel's service container.
  *
- * Registers the GoogleDriveService singleton and boots the tool provider
- * into the ToolProviderRegistry when available.
+ * Binds GoogleDriveService from host credentials and registers the generated
+ * GoogleDriveToolProvider with the shared provider registry.
  */
 class GoogleDriveServiceProvider extends ServiceProvider
 {
-    private function shouldDeferToGoogleWorkspacePackage(): bool
-    {
-        return class_exists(GoogleServiceProvider::class);
-    }
-
     public function register(): void
     {
-        if ($this->shouldDeferToGoogleWorkspacePackage()) {
-            return;
-        }
-
-        $this->app->singleton(GoogleDriveService::class, function ($app) {
-            $creds = $app->make(CredentialResolver::class);
-
-            return new GoogleDriveService(
-                accessToken: $creds->get('google-drive', 'access_token', ''),
-                baseUrl: $creds->get('google-drive', 'url', 'https://www.googleapis.com'),
-            );
+        $this->app->singleton(GoogleDriveService::class, function ($app): GoogleDriveService {
+            $creds = $app->bound(CredentialResolver::class) ? $app->make(CredentialResolver::class) : null;
+            return new GoogleDriveService(accessToken: $creds?->get('google-drive', 'access_token', '') ?? '', baseUrl: $creds?->get('google-drive', 'url', 'https://www.googleapis.com') ?? 'https://www.googleapis.com');
         });
     }
 
     public function boot(): void
     {
-        if ($this->shouldDeferToGoogleWorkspacePackage()) {
-            return;
-        }
-
-        if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new GoogleDriveToolProvider);
-        }
+        if ($this->app->bound(ToolProviderRegistry::class)) $this->app->make(ToolProviderRegistry::class)->register(new GoogleDriveToolProvider);
     }
 }

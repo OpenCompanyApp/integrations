@@ -6,10 +6,13 @@ use OpenCompany\Integrations\AcuityScheduling\AcuitySchedulingService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get an appointment from Acuity Scheduling.
+ */
 class AcuityGetAppointment implements Tool
 {
     /**
-     * Create a new Get Appointment tool instance.
+     * @param  AcuitySchedulingService  $service  Acuity Scheduling API client.
      */
     public function __construct(
         private AcuitySchedulingService $service,

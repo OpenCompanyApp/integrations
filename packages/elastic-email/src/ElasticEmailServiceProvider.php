@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers Elastic Email services and tools with Laravel hosts.
+ */
 class ElasticEmailServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -15,7 +18,7 @@ class ElasticEmailServiceProvider extends ServiceProvider
 
             return new ElasticEmailService(
                 apiKey: $creds->get('elastic-email', 'api_key', ''),
-                baseUrl: $creds->get('elastic-email', 'url', 'https://api.elasticemail.com/v2'),
+                baseUrl: $creds->get('elastic-email', 'url', 'https://api.elasticemail.com/v4'),
             );
         });
     }

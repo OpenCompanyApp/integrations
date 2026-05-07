@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for retrieving the current authenticated user's account information.
+ * Retrieve APITemplate.io account information.
  *
- * Sends a GET request to the /account endpoint to fetch the user's profile,
- * API usage, and subscription details.
+ * Keeps the historical tool slug while mapping to the current v2 account-information endpoint.
  */
 class ApiTemplateIOGetCurrentUser implements Tool
 {
@@ -40,7 +39,7 @@ class ApiTemplateIOGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the current authenticated user\'s account information from API Template IO, including usage and subscription details.';
+        return 'Get APITemplate.io account information for the configured API key, including plan and usage fields returned by the API.';
     }
 
     /**

@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\DailyCo;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoCreateRoom;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoDeleteRoom;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoGetMeeting;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoGetRoom;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoListMeetings;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoListRecordings;
-use OpenCompany\Integrations\DailyCo\Tools\DailyCoListRooms;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Daily.co.
+ *
+ * Exposes Daily REST API operations from the official generated SDK and
+ * resolves default or named account credentials for tool instances.
+ */
+class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,46 +25,27 @@ class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => ['Daily API keys are sent as Authorization: Bearer tokens.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -78,7 +58,7 @@ class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'label' => 'Daily.co',
-            'description' => 'Video conferencing and recordings',
+            'description' => 'Video rooms, meeting tokens, recordings, analytics, logs, presence, phone numbers, and webhooks',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:dailydotco',
         ];
@@ -88,73 +68,44 @@ class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'name' => 'Daily.co',
-            'description' => 'Video and audio conferencing platform with recording capabilities',
+            'description' => 'Manage Daily video rooms, domain config, meeting tokens, meetings, recordings, transcripts, presence, phone numbers, logs, and webhooks.',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:dailydotco',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.daily.co/reference/rest-api',
         ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'api_key',
-                'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Daily.co API key',
-                'hint' => 'Find your API key in Daily.co under Developers → API Keys',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.daily.co/v1',
-                'hint' => 'Defaults to <code>https://api.daily.co/v1</code>. Change only if using a custom endpoint.',
-                'default' => 'https://api.daily.co/v1',
-            ],
-        ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Test Daily credentials with a lightweight rooms request.
+     *
+     * @param  array<string, mixed>  $config  Configuration values to test.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.daily.co/v1', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.daily.co/v1'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/rooms', ['limit' => 1]);
+            $response = Http::withToken($apiKey)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl.'/rooms', ['limit' => 1]);
 
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Daily.co API at {$baseUrl}. Check the URL.",
-                ];
-            }
-
-            if (!$response->successful()) {
-                $error = $json['error'] ?? $json['message'] ?? 'Unknown error';
-                return [
-                    'success' => false,
-                    'error' => "Daily.co API returned an error: {$error}",
-                ];
-            }
-
-            $roomCount = count($json['data'] ?? []);
-
-            return [
-                'success' => true,
-                'message' => "Connected to Daily.co API successfully (found {$roomCount} room(s)).",
-            ];
+            return $response->successful()
+                ? ['success' => true, 'message' => 'Connected to Daily.co API.']
+                : ['success' => false, 'error' => "Daily.co API returned HTTP {$response->status()}."];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -168,65 +119,7 @@ class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function tools(): array
-    {
-        return [
-            'daily_co_list_rooms' => [
-                'class' => DailyCoListRooms::class,
-                'type' => 'read',
-                'name' => 'List Rooms',
-                'description' => 'List video rooms.',
-                'icon' => 'ph:video-camera',
-            ],
-            'daily_co_get_room' => [
-                'class' => DailyCoGetRoom::class,
-                'type' => 'read',
-                'name' => 'Get Room',
-                'description' => 'Get details of a specific room.',
-                'icon' => 'ph:video-camera',
-            ],
-            'daily_co_create_room' => [
-                'class' => DailyCoCreateRoom::class,
-                'type' => 'write',
-                'name' => 'Create Room',
-                'description' => 'Create a new video room.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'daily_co_delete_room' => [
-                'class' => DailyCoDeleteRoom::class,
-                'type' => 'write',
-                'name' => 'Delete Room',
-                'description' => 'Delete a video room.',
-                'icon' => 'ph:trash',
-            ],
-            'daily_co_list_meetings' => [
-                'class' => DailyCoListMeetings::class,
-                'type' => 'read',
-                'name' => 'List Meetings',
-                'description' => 'List meetings with optional filters.',
-                'icon' => 'ph:users',
-            ],
-            'daily_co_get_meeting' => [
-                'class' => DailyCoGetMeeting::class,
-                'type' => 'read',
-                'name' => 'Get Meeting',
-                'description' => 'Get details of a specific meeting.',
-                'icon' => 'ph:users',
-            ],
-            'daily_co_list_recordings' => [
-                'class' => DailyCoListRecordings::class,
-                'type' => 'read',
-                'name' => 'List Recordings',
-                'description' => 'List recordings with optional filters.',
-                'icon' => 'ph:record',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/daily-co.md';
-    }    public function credentialFields(): array
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -234,26 +127,65 @@ class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
+    /**
+     * Registered Daily operation tools keyed by tool slug.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
+    public function tools(): array
+    {
+        $tools = [];
+        foreach (DailyCoService::operations() as $definition) {
+            $tools[(string) $definition['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$definition['class'],
+                'type' => (string) $definition['type'],
+                'name' => (string) $definition['name'],
+                'description' => (string) $definition['description'],
+                'icon' => $definition['type'] === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            ];
+        }
+
+        return $tools;
+    }
+
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__.'/../lua-docs/daily-co.md';
+    }
+
     public function isIntegration(): bool
     {
         return true;
     }
 
+    /**
+     * Create a Daily tool instance.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a Daily service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): DailyCoService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new DailyCoService(
+            return new DailyCoService(
                 apiKey: $creds->get('daily-co', 'api_key', '', $account),
                 baseUrl: $creds->get('daily-co', 'url', 'https://api.daily.co/v1', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(DailyCoService::class));
+        return app(DailyCoService::class);
     }
 }

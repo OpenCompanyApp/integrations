@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
  */
 class VimeoGetCurrentUser implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -34,7 +37,9 @@ class VimeoGetCurrentUser implements Tool
     }
 
     /**
-     * @param  array<string, mixed>  $args
+     * Get the authenticated user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

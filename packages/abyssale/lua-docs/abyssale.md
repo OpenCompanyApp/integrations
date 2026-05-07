@@ -1,211 +1,144 @@
-# Abyssale — Lua API Reference
+# Abyssale Lua API Reference
 
-## list_generations
+Namespace: `app.integrations.abyssale`
 
-List image generation jobs with optional pagination and status filter.
+Use Abyssale to inspect creative designs, generate static or async media, retrieve generated files, manage projects, duplicate workspace templates, create dynamic image URLs, and request ZIP exports. Responses are decoded Abyssale JSON with no heavy reshaping.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `limit` | integer | no | Results per page (default: 20, max: 100) |
-| `status` | string | no | Filter by status: `"finished"`, `"processing"`, or `"failed"` |
-
-### Example
+## Designs
 
 ```lua
-local result = app.integrations.abyssale.list_generations({
-  page = 1,
-  limit = 10,
-  status = "finished"
+local designs = app.integrations.abyssale.list_designs({})
+
+local design = app.integrations.abyssale.get_design({
+  design_id = "38cb7df3-1160-4824-8531-2bacde2b6517"
 })
 
-for _, gen in ipairs(result.generations) do
-  print(gen.id .. ": " .. gen.status)
-end
-```
-
----
-
-## get_generation
-
-Get details of a specific image generation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The generation UUID |
-
-### Example
-
-```lua
-local result = app.integrations.abyssale.get_generation({
-  id = "gen_abc123"
+local format = app.integrations.abyssale.get_design_format({
+  design_id = "38cb7df3-1160-4824-8531-2bacde2b6517",
+  format_specifier = "facebook-feed"
 })
-
-print("Status: " .. result.status)
-print("Outputs:")
-for _, output in ipairs(result.outputs) do
-  print("  " .. output.url)
-end
 ```
 
----
+Read design details before generating assets. Abyssale generation payloads reference layer names and format names from the design.
 
-## create_generation
+## Generation
 
-Generate images from a template with custom modifications.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `template_id` | string | yes | The template UUID |
-| `format_ids` | array | yes | Array of format UUIDs to generate |
-| `modifications` | object | no | Element modifications (keys = element names, values = override objects) |
-
-### Modifications Syntax
-
-Each key in the modifications object corresponds to an element name in the template. The value defines the override:
+Synchronous generation is for a single static image:
 
 ```lua
-modifications = {
-  title = { payload = "New Headline" },
-  subtitle = { payload = "Updated subtitle text" },
-  background = { payload = "https://example.com/bg.jpg" }
-}
+local image = app.integrations.abyssale.generate_image({
+  design_id = "38cb7df3-1160-4824-8531-2bacde2b6517",
+  template_format_name = "facebook-feed",
+  elements = {
+    title = { text = "Spring launch" },
+    background = { background_color = "#FF0000" }
+  }
+})
 ```
 
-### Example
+Asynchronous generation supports multiple formats and media types:
 
 ```lua
-local result = app.integrations.abyssale.create_generation({
-  template_id = "tmpl_abc123",
-  format_ids = { "fmt_facebook_post", "fmt_instagram_square" },
-  modifications = {
-    headline = { payload = "Summer Sale 50% Off" },
-    cta_text = { payload = "Shop Now" },
-    product_image = { payload = "https://example.com/product.jpg" }
+local request = app.integrations.abyssale.generate_multi_format_media({
+  design_id = "38cb7df3-1160-4824-8531-2bacde2b6517",
+  template_format_names = { "facebook-feed", "instagram-post" },
+  callback_url = "https://example.test/abyssale/files",
+  elements = {
+    title = { text = "Spring launch" }
   }
 })
 
-print("Generation ID: " .. result.id)
-print("Status: " .. result.status)
+print(request.generation_request_id)
 ```
 
----
+Omit `template_format_names` or pass an empty array to generate every format for the design.
 
-## list_templates
-
-List available design templates.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `limit` | integer | no | Results per page (default: 20, max: 100) |
-
-### Example
+## Fonts, Files, And Exports
 
 ```lua
-local result = app.integrations.abyssale.list_templates({
-  page = 1,
-  limit = 10
+local fonts = app.integrations.abyssale.list_fonts({})
+
+local file = app.integrations.abyssale.get_file({
+  banner_id = "64238d01-d402-474b-8c2d-fbc957e9d290"
 })
 
-for _, tmpl in ipairs(result.templates) do
-  print(tmpl.id .. ": " .. tmpl.name)
-end
+local export = app.integrations.abyssale.create_banner_export({
+  ids = { "64238d01-d402-474b-8c2d-fbc957e9d290" },
+  callback_url = "https://example.test/abyssale/export"
+})
 ```
 
----
+Exports are asynchronous. Abyssale posts the completed archive payload to your callback URL.
 
-## get_template
-
-Get details of a specific template, including its formats and editable elements.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The template UUID |
-
-### Example
+## Projects And Workspace Templates
 
 ```lua
-local result = app.integrations.abyssale.get_template({
-  id = "tmpl_abc123"
+local projects = app.integrations.abyssale.list_projects({})
+
+local project = app.integrations.abyssale.create_project({
+  name = "Summer Campaign"
 })
 
-print("Template: " .. result.name)
-print("Formats:")
-for _, fmt in ipairs(result.formats) do
-  print("  " .. fmt.id .. " (" .. fmt.width .. "x" .. fmt.height .. ")")
-end
-```
-
----
-
-## list_formats
-
-List available output formats (sizes and dimensions).
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `limit` | integer | no | Results per page (default: 20, max: 100) |
-
-### Example
-
-```lua
-local result = app.integrations.abyssale.list_formats({
-  limit = 50
+local duplicate = app.integrations.abyssale.duplicate_workspace_template({
+  company_template_id = "0c967bd0-4137-4690-ad70-249aa021c68b",
+  project_id = project.id,
+  name = "Localized banner"
 })
 
-for _, fmt in ipairs(result.formats) do
-  print(fmt.id .. ": " .. fmt.name .. " (" .. fmt.width .. "x" .. fmt.height .. ")")
-end
+local status = app.integrations.abyssale.get_duplication_request({
+  duplicate_request_id = duplicate.duplication_request_id
+})
 ```
 
----
+Duplication is asynchronous; poll the request status before trying to use the duplicated design.
 
-## get_current_user
-
-Get the profile of the currently authenticated user.
-
-### Parameters
-
-None.
-
-### Example
+## Dynamic Images And Multi-Page PDFs
 
 ```lua
-local result = app.integrations.abyssale.get_current_user({})
-print("User: " .. result.first_name .. " " .. result.last_name)
-print("Email: " .. result.email)
+local dynamic = app.integrations.abyssale.create_dynamic_image_url({
+  design_id = "38cb7df3-1160-4824-8531-2bacde2b6517",
+  enable_rate_limit = true,
+  enable_production_mode = true
+})
+
+local pdf = app.integrations.abyssale.generate_multi_page_pdf({
+  design_id = "38cb7df3-1160-4824-8531-2bacde2b6517",
+  callback_url = "https://example.test/abyssale/pdf",
+  pages = {
+    page_1 = {
+      title = { text = "Page one" }
+    }
+  }
+})
 ```
 
----
+Dynamic image URLs allow query-based image customization. Multi-page PDF generation is asynchronous and returns a generation request ID.
+
+## Generic API Tools
+
+```lua
+local raw = app.integrations.abyssale.api_get({
+  path = "/designs"
+})
+
+local posted = app.integrations.abyssale.api_post({
+  path = "/projects",
+  payload = { name = "Campaign" }
+})
+```
+
+Use generic API tools only for documented Abyssale endpoints that do not yet have a named helper. Prefer named tools because they validate required IDs and use agent-friendly parameter names.
+
+## Webhook Payloads
+
+Abyssale posts file and export completion events to the callback URLs you provide. Common payloads include generated file data with `file.url`, `file.cdn_url`, `format`, and `template`, or export data with `export_id` and `archive_url`.
 
 ## Multi-Account Usage
 
-If you have multiple Abyssale accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.abyssale.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.abyssale.default.function_name({...})
-
--- Named accounts
-app.integrations.abyssale.production.function_name({...})
-app.integrations.abyssale.staging.function_name({...})
+app.integrations.abyssale.list_designs({})
+app.integrations.abyssale.default.list_designs({})
+app.integrations.abyssale.production.list_designs({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only stored API keys differ.

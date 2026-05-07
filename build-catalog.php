@@ -27,7 +27,7 @@ $packagesDir = $root . '/packages';
  */
 function extractMethodBody(string $source, string $methodName): ?string
 {
-    $pattern = '/public\s+function\s+' . preg_quote($methodName, '/') . '\s*\([^)]*\)\s*(?::\s*[\w?\\\\]+\s*)?\{/';
+    $pattern = '/public\s+(?:static\s+)?function\s+' . preg_quote($methodName, '/') . '\s*\([^)]*\)\s*(?::\s*[\w?\\\\]+\s*)?\{/';
     if (!preg_match($pattern, $source, $match, PREG_OFFSET_CAPTURE)) {
         return null;
     }
@@ -291,6 +291,325 @@ function extractImportedToolClasses(string $source): array
     return array_values(array_unique($matches[1] ?? []));
 }
 
+/**
+ * Extract compact TOOL_DEFINITIONS maps used by generated providers.
+ *
+ * Supports entries shaped as:
+ *   'slug' => ['ToolClass', 'read', 'Name', 'Description', 'ph:icon']
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function extractToolDefinitionConst(string $source, string $constName = 'TOOL_DEFINITIONS'): array
+{
+    if (!preg_match('/namespace\s+([\w\\\\]+)\s*;/', $source, $ns)) {
+        return [];
+    }
+
+    if (!preg_match('/(?:private|protected|public)\s+const\s+'.preg_quote($constName, '/').'\s*=\s*\[/', $source, $match, PREG_OFFSET_CAPTURE)) {
+        return [];
+    }
+
+    $arrayStart = $match[0][1] + strlen($match[0][0]) - 1;
+    $arraySrc = substr($source, $arrayStart);
+    $depth = 0;
+    $inString = false;
+    $stringChar = '';
+    $i = 0;
+    $arrayLen = strlen($arraySrc);
+
+    while ($i < $arrayLen) {
+        $ch = $arraySrc[$i];
+        if ($inString) {
+            if ($ch === '\\' && $i + 1 < $arrayLen) {
+                $i += 2;
+                continue;
+            }
+            if ($ch === $stringChar) {
+                $inString = false;
+            }
+        } else {
+            if ($ch === "'" || $ch === '"') {
+                $inString = true;
+                $stringChar = $ch;
+            } elseif ($ch === '[') {
+                $depth++;
+            } elseif ($ch === ']') {
+                $depth--;
+                if ($depth === 0) {
+                    break;
+                }
+            }
+        }
+        $i++;
+    }
+
+    $arrayCode = substr($arraySrc, 0, $i + 1);
+
+    try {
+        set_error_handler(function (int $severity, string $message, string $file, int $line): never {
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
+        $definitions = eval('return ' . $arrayCode . ';');
+    } catch (Throwable $e) {
+        return [];
+    } finally {
+        restore_error_handler();
+    }
+
+    if (!is_array($definitions)) {
+        return [];
+    }
+
+    $tools = [];
+    foreach ($definitions as $slug => $definition) {
+        if (!is_string($slug) || !is_array($definition) || count($definition) < 5) {
+            continue;
+        }
+
+        [$class, $type, $name, $description, $icon] = array_values($definition);
+        if (!is_string($class)) {
+            continue;
+        }
+
+        $tools[$slug] = [
+            'class' => $ns[1] . '\\Tools\\' . $class,
+            'type' => is_string($type) ? $type : inferToolType($slug),
+            'name' => is_string($name) ? $name : humanizeSlug($slug),
+            'description' => is_string($description) ? $description : '',
+            'icon' => is_string($icon) ? $icon : '',
+        ];
+    }
+
+    return $tools;
+}
+
+/**
+ * Extract generated operation maps consumed through Service::operations().
+ *
+ * Supports packages with a sibling `{Name}Operations::all()` file whose
+ * definitions include slug, class, type, name, description, and path fields.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function extractOperationMapToolDefinitions(string $providerSource, string $pkgDir): array
+{
+    if (!preg_match('/namespace\s+([\w\\\\]+)\s*;/', $providerSource, $ns)) {
+        return [];
+    }
+
+    if (!preg_match('/\b([A-Za-z0-9_]+)Service::operations\s*\(\s*\)/', $providerSource, $service)) {
+        return [];
+    }
+
+    $prefix = $service[1];
+    $operationsFile = $pkgDir.'/src/'.$prefix.'Operations.php';
+    $rawTools = extractToolDefinitionConst($providerSource, 'RAW_TOOLS');
+    if (!is_file($operationsFile)) {
+        return array_merge(
+            extractServiceOperationConstToolDefinitions($ns[1], $prefix, $pkgDir),
+            $rawTools,
+        );
+    }
+
+    $operationsSource = file_get_contents($operationsFile);
+    $operations = extractReturnArray($operationsSource, 'all') ?? extractLegacyArrayReturn($operationsSource, 'all');
+    if (!is_array($operations)) {
+        return [];
+    }
+
+    $tools = [];
+    foreach ($operations as $operationSlug => $definition) {
+        if (!is_array($definition)) {
+            continue;
+        }
+
+        $slug = $definition['slug'] ?? (is_string($operationSlug) ? $operationSlug : null);
+        $class = $definition['class'] ?? null;
+        if (!is_string($slug) || !is_string($class)) {
+            continue;
+        }
+
+        $tools[$slug] = [
+            'class' => $ns[1].'\\Tools\\'.$class,
+            'type' => is_string($definition['type'] ?? null) ? $definition['type'] : inferToolType($slug),
+            'name' => is_string($definition['name'] ?? null) ? $definition['name'] : humanizeSlug($slug),
+            'description' => is_string($definition['description'] ?? null) ? $definition['description'] : '',
+            'icon' => ($definition['type'] ?? '') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            'operation_id' => is_string($definition['operation'] ?? null) ? $definition['operation'] : null,
+            'operation' => [
+                'method' => $definition['method'] ?? null,
+                'path' => $definition['path'] ?? null,
+            ],
+        ];
+    }
+
+    return array_merge($rawTools, $tools);
+}
+
+/**
+ * Extract tuple operation maps defined as `private const OPERATIONS` on services.
+ *
+ * Supports entries shaped as:
+ *   'operation_key' => ['GET', '/path', [], 'read', 'Name', 'Description']
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function extractServiceOperationConstToolDefinitions(string $namespace, string $prefix, string $pkgDir): array
+{
+    $serviceFile = $pkgDir.'/src/'.$prefix.'Service.php';
+    if (!is_file($serviceFile)) {
+        return [];
+    }
+
+    $source = file_get_contents($serviceFile);
+    if (!preg_match('/(?:private|protected|public)\s+const\s+OPERATIONS\s*=\s*\[/', $source, $match, PREG_OFFSET_CAPTURE)) {
+        return [];
+    }
+
+    $arrayStart = $match[0][1] + strlen($match[0][0]) - 1;
+    $arraySrc = substr($source, $arrayStart);
+    $depth = 0;
+    $inString = false;
+    $stringChar = '';
+    $i = 0;
+    $arrayLen = strlen($arraySrc);
+
+    while ($i < $arrayLen) {
+        $ch = $arraySrc[$i];
+        if ($inString) {
+            if ($ch === '\\' && $i + 1 < $arrayLen) {
+                $i += 2;
+                continue;
+            }
+            if ($ch === $stringChar) {
+                $inString = false;
+            }
+        } else {
+            if ($ch === "'" || $ch === '"') {
+                $inString = true;
+                $stringChar = $ch;
+            } elseif ($ch === '[') {
+                $depth++;
+            } elseif ($ch === ']') {
+                $depth--;
+                if ($depth === 0) {
+                    break;
+                }
+            }
+        }
+        $i++;
+    }
+
+    $arrayCode = substr($arraySrc, 0, $i + 1);
+
+    try {
+        set_error_handler(function (int $severity, string $message, string $file, int $line): never {
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
+        $operations = eval('return '.$arrayCode.';');
+    } catch (Throwable $e) {
+        return [];
+    } finally {
+        restore_error_handler();
+    }
+
+    if (!is_array($operations)) {
+        return [];
+    }
+
+    $tools = [];
+    foreach ($operations as $operation => $definition) {
+        if (!is_string($operation) || !is_array($definition) || count($definition) < 6) {
+            continue;
+        }
+
+        [$method, $path, , $type, $name, $description] = array_values($definition);
+        $slug = strtolower($prefix).'_'.$operation;
+
+        $tools[$slug] = [
+            'class' => $namespace.'\\Tools\\'.$prefix.str_replace(' ', '', ucwords(str_replace('_', ' ', $operation))),
+            'type' => is_string($type) ? $type : inferToolType($slug),
+            'name' => is_string($name) ? $name : humanizeSlug($slug),
+            'description' => is_string($description) ? $description : '',
+            'icon' => $type === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            'operation_id' => $operation,
+            'operation' => [
+                'method' => is_string($method) ? $method : null,
+                'path' => is_string($path) ? $path : null,
+            ],
+        ];
+    }
+
+    return $tools;
+}
+
+/**
+ * Extract a method return written as `return array (...)`.
+ *
+ * @return array<string, mixed>|null
+ */
+function extractLegacyArrayReturn(string $source, string $methodName): ?array
+{
+    $body = extractMethodBody($source, $methodName);
+    if ($body === null || !preg_match('/return\s+array\s*\(/', $body, $m, PREG_OFFSET_CAPTURE)) {
+        return null;
+    }
+
+    $arrayStart = $m[0][1] + strlen($m[0][0]) - 1;
+    $arraySrc = substr($body, $arrayStart);
+    $depth = 0;
+    $inString = false;
+    $stringChar = '';
+    $len = strlen($arraySrc);
+
+    for ($i = 0; $i < $len; $i++) {
+        $ch = $arraySrc[$i];
+        if ($inString) {
+            if ($ch === '\\' && $i + 1 < $len) {
+                $i++;
+                continue;
+            }
+            if ($ch === $stringChar) {
+                $inString = false;
+            }
+            continue;
+        }
+
+        if ($ch === "'" || $ch === '"') {
+            $inString = true;
+            $stringChar = $ch;
+            continue;
+        }
+
+        if ($ch === '(') {
+            $depth++;
+            continue;
+        }
+
+        if ($ch === ')') {
+            $depth--;
+            if ($depth === 0) {
+                break;
+            }
+        }
+    }
+
+    $arrayCode = 'array'.substr($arraySrc, 0, $i + 1);
+
+    try {
+        set_error_handler(function (int $severity, string $message, string $file, int $line): never {
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
+        $result = eval('return '.$arrayCode.';');
+
+        return is_array($result) ? $result : null;
+    } catch (Throwable $e) {
+        return null;
+    } finally {
+        restore_error_handler();
+    }
+}
+
 // --- Helpers ---
 
 /**
@@ -354,6 +673,7 @@ function readComposerJson(string $pkgDir): array
         'type' => $data['type'] ?? null,
         'require' => $data['require'] ?? [],
         'replace' => $data['replace'] ?? [],
+        'abandoned' => $data['abandoned'] ?? null,
         'providers' => is_array($providers) ? array_values($providers) : [],
         'namespace' => is_array($psr4) && !empty($psr4) ? array_key_first($psr4) : null,
     ];
@@ -877,7 +1197,7 @@ function fallbackIntegrationMeta(string $appName): array
         ],
         'recaptcha' => [
             'name' => 'reCAPTCHA',
-            'category' => 'authentication',
+            'category' => 'data',
             'docs_url' => 'https://developers.google.com/recaptcha',
             'badge' => 'verified',
         ],
@@ -983,31 +1303,42 @@ $errors = [];
 
 foreach ($providerFiles as $providerFile) {
     $source = file_get_contents($providerFile);
+    $pkgDir = dirname($providerFile, 2);
+    $composer = readComposerJson($pkgDir);
 
     $appName = extractReturnString($source, 'appName');
     if ($appName === null) {
+        if (!empty($composer['abandoned'])) {
+            continue;
+        }
+
         $errors[] = "appName: {$providerFile}";
         continue;
     }
 
     $pkgSlug = packageSlug($providerFile);
-    $pkgDir = dirname($providerFile, 2);
 
-    $appMeta = extractReturnArray($source, 'appMeta') ?? [];
-    $toolDefs = extractReturnArray($source, 'tools') ?? [];
+    $appMeta = extractReturnArray($source, 'appMeta') ?? extractLegacyArrayReturn($source, 'appMeta') ?? [];
+    $toolDefs = extractReturnArray($source, 'tools') ?? extractLegacyArrayReturn($source, 'tools') ?? [];
+    if (empty($toolDefs)) {
+        $toolDefs = extractToolDefinitionConst($source);
+    }
+    if (empty($toolDefs)) {
+        $toolDefs = extractOperationMapToolDefinitions($source, $pkgDir);
+    }
     if (empty($toolDefs)) {
         $toolDefs = extractImportedToolClasses($source);
     }
-    $credFields = extractReturnArray($source, 'credentialFields') ?? [];
-    $configSchema = extractReturnArray($source, 'configSchema') ?? [];
-    $validationRules = extractReturnArray($source, 'validationRules') ?? [];
+    $credFields = extractReturnArray($source, 'credentialFields') ?? extractLegacyArrayReturn($source, 'credentialFields') ?? [];
+    $configSchema = extractReturnArray($source, 'configSchema') ?? extractLegacyArrayReturn($source, 'configSchema') ?? [];
+    $validationRules = extractReturnArray($source, 'validationRules') ?? extractLegacyArrayReturn($source, 'validationRules') ?? [];
     $explicitCapabilities = extractReturnArray($source, 'capabilities')
         ?? extractReturnArray($source, 'integrationCapabilities')
         ?? [];
 
     $integrationMeta = array_merge(
         fallbackIntegrationMeta($appName ?? ''),
-        extractReturnArray($source, 'integrationMeta') ?? []
+        extractReturnArray($source, 'integrationMeta') ?? extractLegacyArrayReturn($source, 'integrationMeta') ?? []
     );
 
     if (($integrationMeta['catalog_visibility'] ?? 'public') === 'hidden') {
@@ -1016,10 +1347,9 @@ foreach ($providerFiles as $providerFile) {
 
     $triggerDefs = [];
     if (sourceImplements($source, 'HasTriggers')) {
-        $triggerDefs = extractReturnArray($source, 'triggers') ?? [];
+        $triggerDefs = extractReturnArray($source, 'triggers') ?? extractLegacyArrayReturn($source, 'triggers') ?? [];
     }
 
-    $composer = readComposerJson($pkgDir);
     $providerFqcn = resolveFqcn($source);
     $expectedProviderFqcn = expectedProviderFqcn($providerFile, $pkgDir, $composer);
     $providerFqcnMatchesPsr4 = $expectedProviderFqcn === null || $providerFqcn === $expectedProviderFqcn;
@@ -1091,7 +1421,7 @@ foreach ($providerFiles as $providerFile) {
             }
 
             // Extract parameters
-            $params = extractReturnArray($toolSource, 'parameters');
+            $params = extractReturnArray($toolSource, 'parameters') ?? extractLegacyArrayReturn($toolSource, 'parameters');
             if ($params !== null) {
                 $toolParameters = $params;
             }
@@ -1377,7 +1707,7 @@ $catalog = [
     'integrations' => $integrations,
 ];
 
-$json = json_encode($catalog, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$json = json_encode($catalog, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
 if ($json === false) {
     fwrite(STDERR, "JSON encode failed: " . json_last_error_msg() . "\n");

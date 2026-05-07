@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
  */
 class VimeoCreateVideo implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -65,7 +68,9 @@ class VimeoCreateVideo implements Tool
     }
 
     /**
-     * @param  array<string, mixed>  $args
+     * Create a video upload resource.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

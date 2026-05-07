@@ -5,6 +5,10 @@
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
     "keywords": ["tools", "hubspot", "crm", "opencompany"],
     "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "replace": {
+        "opencompanyapp/integration-hubspot3": "self.version",
+        "opencompanyapp/ai-tool-hubspot3": "self.version"
+    },
     "autoload": {"psr-4": {"OpenCompany\\Integrations\\HubSpot\\": "src/"}},
     "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\HubSpot\\HubSpotServiceProvider"]}},
     "minimum-stability": "stable",

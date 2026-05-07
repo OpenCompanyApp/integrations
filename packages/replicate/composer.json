@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-replicate",
-    "description": "Replicate integration for Laravel — AI model hosting, predictions, and model management.",
+    "description": "Replicate HTTP API integration for Laravel: models, predictions, deployments, files, trainings, and webhooks.",
     "license": "MIT",
     "authors": [
         {

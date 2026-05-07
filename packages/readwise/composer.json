@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-readwise",
+    "description": "Readwise and Reader integration for Laravel AI agents - highlights, books, export sync, review queue, Reader documents, and tags.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Readwise\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Readwise\\ReadwiseServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

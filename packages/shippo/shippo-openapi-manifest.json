@@ -1,0 +1,713 @@
+{
+  "source": "https://docs.goshippo.com/spec/shippoapi/public-api.yaml",
+  "docs": "https://docs.goshippo.com/api-reference/overview",
+  "openapi": "3.1.0",
+  "api_version": "2018-02-08",
+  "base_url": "https://api.goshippo.com",
+  "method_count": 70,
+  "auth": {
+    "APIKeyHeader": 70
+  },
+  "operations": [
+    {
+      "tool": "shippo_list_addresses",
+      "operation_id": "ListAddresses",
+      "method": "GET",
+      "path": "/addresses",
+      "class": "ShippoListAddresses",
+      "tags": [
+        "Addresses"
+      ]
+    },
+    {
+      "tool": "shippo_create_address",
+      "operation_id": "CreateAddress",
+      "method": "POST",
+      "path": "/addresses",
+      "class": "ShippoCreateAddress",
+      "tags": [
+        "Addresses"
+      ]
+    },
+    {
+      "tool": "shippo_get_address",
+      "operation_id": "GetAddress",
+      "method": "GET",
+      "path": "/addresses/{AddressId}",
+      "class": "ShippoGetAddress",
+      "tags": [
+        "Addresses"
+      ]
+    },
+    {
+      "tool": "shippo_validate_address",
+      "operation_id": "ValidateAddress",
+      "method": "GET",
+      "path": "/addresses/{AddressId}/validate",
+      "class": "ShippoValidateAddress",
+      "tags": [
+        "Addresses"
+      ]
+    },
+    {
+      "tool": "shippo_create_batch",
+      "operation_id": "CreateBatch",
+      "method": "POST",
+      "path": "/batches",
+      "class": "ShippoCreateBatch",
+      "tags": [
+        "Batches"
+      ]
+    },
+    {
+      "tool": "shippo_get_batch",
+      "operation_id": "GetBatch",
+      "method": "GET",
+      "path": "/batches/{BatchId}",
+      "class": "ShippoGetBatch",
+      "tags": [
+        "Batches"
+      ]
+    },
+    {
+      "tool": "shippo_add_shipments_to_batch",
+      "operation_id": "AddShipmentsToBatch",
+      "method": "POST",
+      "path": "/batches/{BatchId}/add_shipments",
+      "class": "ShippoAddShipmentsToBatch",
+      "tags": [
+        "Batches"
+      ]
+    },
+    {
+      "tool": "shippo_purchase_batch",
+      "operation_id": "PurchaseBatch",
+      "method": "POST",
+      "path": "/batches/{BatchId}/purchase",
+      "class": "ShippoPurchaseBatch",
+      "tags": [
+        "Batches"
+      ]
+    },
+    {
+      "tool": "shippo_remove_shipments_from_batch",
+      "operation_id": "RemoveShipmentsFromBatch",
+      "method": "POST",
+      "path": "/batches/{BatchId}/remove_shipments",
+      "class": "ShippoRemoveShipmentsFromBatch",
+      "tags": [
+        "Batches"
+      ]
+    },
+    {
+      "tool": "shippo_list_carrier_accounts",
+      "operation_id": "ListCarrierAccounts",
+      "method": "GET",
+      "path": "/carrier_accounts",
+      "class": "ShippoListCarrierAccounts",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_create_carrier_account",
+      "operation_id": "CreateCarrierAccount",
+      "method": "POST",
+      "path": "/carrier_accounts",
+      "class": "ShippoCreateCarrierAccount",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_get_carrier_account",
+      "operation_id": "GetCarrierAccount",
+      "method": "GET",
+      "path": "/carrier_accounts/{CarrierAccountId}",
+      "class": "ShippoGetCarrierAccount",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_update_carrier_account",
+      "operation_id": "UpdateCarrierAccount",
+      "method": "PUT",
+      "path": "/carrier_accounts/{CarrierAccountId}",
+      "class": "ShippoUpdateCarrierAccount",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_initiate_oauth2_signin",
+      "operation_id": "InitiateOauth2Signin",
+      "method": "GET",
+      "path": "/carrier_accounts/{CarrierAccountObjectId}/signin/initiate",
+      "class": "ShippoInitiateOauth2Signin",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_register_carrier_account",
+      "operation_id": "RegisterCarrierAccount",
+      "method": "POST",
+      "path": "/carrier_accounts/register/new",
+      "class": "ShippoRegisterCarrierAccount",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_get_carrier_registration_status",
+      "operation_id": "GetCarrierRegistrationStatus",
+      "method": "GET",
+      "path": "/carrier_accounts/reg-status",
+      "class": "ShippoGetCarrierRegistrationStatus",
+      "tags": [
+        "Carrier Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_list_customs_declarations",
+      "operation_id": "ListCustomsDeclarations",
+      "method": "GET",
+      "path": "/customs/declarations",
+      "class": "ShippoListCustomsDeclarations",
+      "tags": [
+        "Customs Declarations"
+      ]
+    },
+    {
+      "tool": "shippo_create_customs_declaration",
+      "operation_id": "CreateCustomsDeclaration",
+      "method": "POST",
+      "path": "/customs/declarations",
+      "class": "ShippoCreateCustomsDeclaration",
+      "tags": [
+        "Customs Declarations"
+      ]
+    },
+    {
+      "tool": "shippo_get_customs_declaration",
+      "operation_id": "GetCustomsDeclaration",
+      "method": "GET",
+      "path": "/customs/declarations/{CustomsDeclarationId}",
+      "class": "ShippoGetCustomsDeclaration",
+      "tags": [
+        "Customs Declarations"
+      ]
+    },
+    {
+      "tool": "shippo_list_customs_items",
+      "operation_id": "ListCustomsItems",
+      "method": "GET",
+      "path": "/customs/items",
+      "class": "ShippoListCustomsItems",
+      "tags": [
+        "Customs Items"
+      ]
+    },
+    {
+      "tool": "shippo_create_customs_item",
+      "operation_id": "CreateCustomsItem",
+      "method": "POST",
+      "path": "/customs/items",
+      "class": "ShippoCreateCustomsItem",
+      "tags": [
+        "Customs Items"
+      ]
+    },
+    {
+      "tool": "shippo_get_customs_item",
+      "operation_id": "GetCustomsItem",
+      "method": "GET",
+      "path": "/customs/items/{CustomsItemId}",
+      "class": "ShippoGetCustomsItem",
+      "tags": [
+        "Customs Items"
+      ]
+    },
+    {
+      "tool": "shippo_create_live_rate",
+      "operation_id": "CreateLiveRate",
+      "method": "POST",
+      "path": "/live-rates",
+      "class": "ShippoCreateLiveRate",
+      "tags": [
+        "Rates at Checkout"
+      ]
+    },
+    {
+      "tool": "shippo_get_default_parcel_template",
+      "operation_id": "GetDefaultParcelTemplate",
+      "method": "GET",
+      "path": "/live-rates/settings/parcel-template",
+      "class": "ShippoGetDefaultParcelTemplate",
+      "tags": [
+        "Rates at Checkout"
+      ]
+    },
+    {
+      "tool": "shippo_update_default_parcel_template",
+      "operation_id": "UpdateDefaultParcelTemplate",
+      "method": "PUT",
+      "path": "/live-rates/settings/parcel-template",
+      "class": "ShippoUpdateDefaultParcelTemplate",
+      "tags": [
+        "Rates at Checkout"
+      ]
+    },
+    {
+      "tool": "shippo_delete_default_parcel_template",
+      "operation_id": "DeleteDefaultParcelTemplate",
+      "method": "DELETE",
+      "path": "/live-rates/settings/parcel-template",
+      "class": "ShippoDeleteDefaultParcelTemplate",
+      "tags": [
+        "Rates at Checkout"
+      ]
+    },
+    {
+      "tool": "shippo_list_manifests",
+      "operation_id": "ListManifests",
+      "method": "GET",
+      "path": "/manifests",
+      "class": "ShippoListManifests",
+      "tags": [
+        "Manifests"
+      ]
+    },
+    {
+      "tool": "shippo_create_manifest",
+      "operation_id": "CreateManifest",
+      "method": "POST",
+      "path": "/manifests",
+      "class": "ShippoCreateManifest",
+      "tags": [
+        "Manifests"
+      ]
+    },
+    {
+      "tool": "shippo_get_manifest",
+      "operation_id": "GetManifest",
+      "method": "GET",
+      "path": "/manifests/{ManifestId}",
+      "class": "ShippoGetManifest",
+      "tags": [
+        "Manifests"
+      ]
+    },
+    {
+      "tool": "shippo_list_orders",
+      "operation_id": "ListOrders",
+      "method": "GET",
+      "path": "/orders",
+      "class": "ShippoListOrders",
+      "tags": [
+        "Orders"
+      ]
+    },
+    {
+      "tool": "shippo_create_order",
+      "operation_id": "CreateOrder",
+      "method": "POST",
+      "path": "/orders",
+      "class": "ShippoCreateOrder",
+      "tags": [
+        "Orders"
+      ]
+    },
+    {
+      "tool": "shippo_get_order",
+      "operation_id": "GetOrder",
+      "method": "GET",
+      "path": "/orders/{OrderId}",
+      "class": "ShippoGetOrder",
+      "tags": [
+        "Orders"
+      ]
+    },
+    {
+      "tool": "shippo_list_carrier_parcel_templates",
+      "operation_id": "ListCarrierParcelTemplates",
+      "method": "GET",
+      "path": "/parcel-templates",
+      "class": "ShippoListCarrierParcelTemplates",
+      "tags": [
+        "Carrier Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_get_carrier_parcel_template",
+      "operation_id": "GetCarrierParcelTemplate",
+      "method": "GET",
+      "path": "/parcel-templates/{CarrierParcelTemplateToken}",
+      "class": "ShippoGetCarrierParcelTemplate",
+      "tags": [
+        "Carrier Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_list_parcels",
+      "operation_id": "ListParcels",
+      "method": "GET",
+      "path": "/parcels",
+      "class": "ShippoListParcels",
+      "tags": [
+        "Parcels"
+      ]
+    },
+    {
+      "tool": "shippo_create_parcel",
+      "operation_id": "CreateParcel",
+      "method": "POST",
+      "path": "/parcels",
+      "class": "ShippoCreateParcel",
+      "tags": [
+        "Parcels"
+      ]
+    },
+    {
+      "tool": "shippo_get_parcel",
+      "operation_id": "GetParcel",
+      "method": "GET",
+      "path": "/parcels/{ParcelId}",
+      "class": "ShippoGetParcel",
+      "tags": [
+        "Parcels"
+      ]
+    },
+    {
+      "tool": "shippo_create_pickup",
+      "operation_id": "CreatePickup",
+      "method": "POST",
+      "path": "/pickups",
+      "class": "ShippoCreatePickup",
+      "tags": [
+        "Pickups"
+      ]
+    },
+    {
+      "tool": "shippo_get_rate",
+      "operation_id": "GetRate",
+      "method": "GET",
+      "path": "/rates/{RateId}",
+      "class": "ShippoGetRate",
+      "tags": [
+        "Rates"
+      ]
+    },
+    {
+      "tool": "shippo_create_refund",
+      "operation_id": "CreateRefund",
+      "method": "POST",
+      "path": "/refunds",
+      "class": "ShippoCreateRefund",
+      "tags": [
+        "Refunds"
+      ]
+    },
+    {
+      "tool": "shippo_list_refunds",
+      "operation_id": "ListRefunds",
+      "method": "GET",
+      "path": "/refunds/",
+      "class": "ShippoListRefunds",
+      "tags": [
+        "Refunds"
+      ]
+    },
+    {
+      "tool": "shippo_get_refund",
+      "operation_id": "GetRefund",
+      "method": "GET",
+      "path": "/refunds/{RefundId}",
+      "class": "ShippoGetRefund",
+      "tags": [
+        "Refunds"
+      ]
+    },
+    {
+      "tool": "shippo_list_service_groups",
+      "operation_id": "ListServiceGroups",
+      "method": "GET",
+      "path": "/service-groups",
+      "class": "ShippoListServiceGroups",
+      "tags": [
+        "Service Groups"
+      ]
+    },
+    {
+      "tool": "shippo_create_service_group",
+      "operation_id": "CreateServiceGroup",
+      "method": "POST",
+      "path": "/service-groups",
+      "class": "ShippoCreateServiceGroup",
+      "tags": [
+        "Service Groups"
+      ]
+    },
+    {
+      "tool": "shippo_update_service_group",
+      "operation_id": "UpdateServiceGroup",
+      "method": "PUT",
+      "path": "/service-groups",
+      "class": "ShippoUpdateServiceGroup",
+      "tags": [
+        "Service Groups"
+      ]
+    },
+    {
+      "tool": "shippo_delete_service_group",
+      "operation_id": "DeleteServiceGroup",
+      "method": "DELETE",
+      "path": "/service-groups/{ServiceGroupId}",
+      "class": "ShippoDeleteServiceGroup",
+      "tags": [
+        "Service Groups"
+      ]
+    },
+    {
+      "tool": "shippo_list_shipments",
+      "operation_id": "ListShipments",
+      "method": "GET",
+      "path": "/shipments",
+      "class": "ShippoListShipments",
+      "tags": [
+        "Shipments"
+      ]
+    },
+    {
+      "tool": "shippo_create_shipment",
+      "operation_id": "CreateShipment",
+      "method": "POST",
+      "path": "/shipments",
+      "class": "ShippoCreateShipment",
+      "tags": [
+        "Shipments"
+      ]
+    },
+    {
+      "tool": "shippo_get_shipment",
+      "operation_id": "GetShipment",
+      "method": "GET",
+      "path": "/shipments/{ShipmentId}",
+      "class": "ShippoGetShipment",
+      "tags": [
+        "Shipments"
+      ]
+    },
+    {
+      "tool": "shippo_list_shipment_rates",
+      "operation_id": "ListShipmentRates",
+      "method": "GET",
+      "path": "/shipments/{ShipmentId}/rates",
+      "class": "ShippoListShipmentRates",
+      "tags": [
+        "Rates"
+      ]
+    },
+    {
+      "tool": "shippo_list_shipment_rates_by_currency_code",
+      "operation_id": "ListShipmentRatesByCurrencyCode",
+      "method": "GET",
+      "path": "/shipments/{ShipmentId}/rates/{CurrencyCode}",
+      "class": "ShippoListShipmentRatesByCurrencyCode",
+      "tags": [
+        "Rates"
+      ]
+    },
+    {
+      "tool": "shippo_create_track",
+      "operation_id": "CreateTrack",
+      "method": "POST",
+      "path": "/tracks",
+      "class": "ShippoCreateTrack",
+      "tags": [
+        "Tracking Status"
+      ]
+    },
+    {
+      "tool": "shippo_get_track",
+      "operation_id": "GetTrack",
+      "method": "GET",
+      "path": "/tracks/{Carrier}/{TrackingNumber}",
+      "class": "ShippoGetTrack",
+      "tags": [
+        "Tracking Status"
+      ]
+    },
+    {
+      "tool": "shippo_list_transactions",
+      "operation_id": "ListTransactions",
+      "method": "GET",
+      "path": "/transactions",
+      "class": "ShippoListTransactions",
+      "tags": [
+        "Transactions"
+      ]
+    },
+    {
+      "tool": "shippo_create_transaction",
+      "operation_id": "CreateTransaction",
+      "method": "POST",
+      "path": "/transactions",
+      "class": "ShippoCreateTransaction",
+      "tags": [
+        "Transactions"
+      ]
+    },
+    {
+      "tool": "shippo_get_transaction",
+      "operation_id": "GetTransaction",
+      "method": "GET",
+      "path": "/transactions/{TransactionId}",
+      "class": "ShippoGetTransaction",
+      "tags": [
+        "Transactions"
+      ]
+    },
+    {
+      "tool": "shippo_list_user_parcel_templates",
+      "operation_id": "ListUserParcelTemplates",
+      "method": "GET",
+      "path": "/user-parcel-templates",
+      "class": "ShippoListUserParcelTemplates",
+      "tags": [
+        "User Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_create_user_parcel_template",
+      "operation_id": "CreateUserParcelTemplate",
+      "method": "POST",
+      "path": "/user-parcel-templates",
+      "class": "ShippoCreateUserParcelTemplate",
+      "tags": [
+        "User Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_delete_user_parcel_template",
+      "operation_id": "DeleteUserParcelTemplate",
+      "method": "DELETE",
+      "path": "/user-parcel-templates/{UserParcelTemplateObjectId}",
+      "class": "ShippoDeleteUserParcelTemplate",
+      "tags": [
+        "User Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_get_user_parcel_template",
+      "operation_id": "GetUserParcelTemplate",
+      "method": "GET",
+      "path": "/user-parcel-templates/{UserParcelTemplateObjectId}",
+      "class": "ShippoGetUserParcelTemplate",
+      "tags": [
+        "User Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_update_user_parcel_template",
+      "operation_id": "UpdateUserParcelTemplate",
+      "method": "PUT",
+      "path": "/user-parcel-templates/{UserParcelTemplateObjectId}",
+      "class": "ShippoUpdateUserParcelTemplate",
+      "tags": [
+        "User Parcel Templates"
+      ]
+    },
+    {
+      "tool": "shippo_list_shippo_accounts",
+      "operation_id": "ListShippoAccounts",
+      "method": "GET",
+      "path": "/shippo-accounts",
+      "class": "ShippoListShippoAccounts",
+      "tags": [
+        "Shippo Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_create_shippo_account",
+      "operation_id": "CreateShippoAccount",
+      "method": "POST",
+      "path": "/shippo-accounts",
+      "class": "ShippoCreateShippoAccount",
+      "tags": [
+        "Shippo Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_get_shippo_account",
+      "operation_id": "GetShippoAccount",
+      "method": "GET",
+      "path": "/shippo-accounts/{ShippoAccountId}",
+      "class": "ShippoGetShippoAccount",
+      "tags": [
+        "Shippo Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_update_shippo_account",
+      "operation_id": "UpdateShippoAccount",
+      "method": "PUT",
+      "path": "/shippo-accounts/{ShippoAccountId}",
+      "class": "ShippoUpdateShippoAccount",
+      "tags": [
+        "Shippo Accounts"
+      ]
+    },
+    {
+      "tool": "shippo_create_webhook",
+      "operation_id": "createWebhook",
+      "method": "POST",
+      "path": "/webhooks",
+      "class": "ShippoCreateWebhook",
+      "tags": [
+        "Webhooks"
+      ]
+    },
+    {
+      "tool": "shippo_list_webhooks",
+      "operation_id": "listWebhooks",
+      "method": "GET",
+      "path": "/webhooks",
+      "class": "ShippoListWebhooks",
+      "tags": [
+        "Webhooks"
+      ]
+    },
+    {
+      "tool": "shippo_get_webhook",
+      "operation_id": "getWebhook",
+      "method": "GET",
+      "path": "/webhooks/{webhookId}",
+      "class": "ShippoGetWebhook",
+      "tags": [
+        "Webhooks"
+      ]
+    },
+    {
+      "tool": "shippo_update_webhook",
+      "operation_id": "updateWebhook",
+      "method": "PUT",
+      "path": "/webhooks/{webhookId}",
+      "class": "ShippoUpdateWebhook",
+      "tags": [
+        "Webhooks"
+      ]
+    },
+    {
+      "tool": "shippo_delete_webhook",
+      "operation_id": "deleteWebhook",
+      "method": "DELETE",
+      "path": "/webhooks/{webhookId}",
+      "class": "ShippoDeleteWebhook",
+      "tags": [
+        "Webhooks"
+      ]
+    }
+  ]
+}

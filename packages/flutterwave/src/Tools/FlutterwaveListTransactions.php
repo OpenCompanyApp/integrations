@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Flutterwave transactions.
+ *
+ * Supports pagination, status, date range, customer, reference, and currency
+ * filters from the Flutterwave transactions API.
+ */
 class FlutterwaveListTransactions implements Tool
 {
     /**
@@ -45,14 +51,17 @@ class FlutterwaveListTransactions implements Tool
             'status' => ['type' => 'string', 'description' => 'Filter by transaction status (e.g. "successful", "failed", "pending").'],
             'from' => ['type' => 'string', 'description' => 'Start date for filtering transactions (YYYY-MM-DD).'],
             'to' => ['type' => 'string', 'description' => 'End date for filtering transactions (YYYY-MM-DD).'],
+            'customer_email' => ['type' => 'string', 'description' => 'Filter by the customer email address.'],
+            'tx_ref' => ['type' => 'string', 'description' => 'Filter by merchant transaction reference.'],
+            'customer_fullname' => ['type' => 'string', 'description' => 'Filter by the customer full name.'],
+            'currency' => ['type' => 'string', 'description' => 'Filter by transaction currency.'],
         ];
     }
 
     /**
      * Execute the tool: list transactions from Flutterwave.
      *
-     * @param  array  $args  The tool arguments (page, status, from, to).
-     * @return ToolResult The result containing the list of transactions or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {
@@ -77,6 +86,22 @@ class FlutterwaveListTransactions implements Tool
 
             if (isset($args['to'])) {
                 $params['to'] = $args['to'];
+            }
+
+            if (isset($args['customer_email'])) {
+                $params['customer_email'] = $args['customer_email'];
+            }
+
+            if (isset($args['tx_ref'])) {
+                $params['tx_ref'] = $args['tx_ref'];
+            }
+
+            if (isset($args['customer_fullname'])) {
+                $params['customer_fullname'] = $args['customer_fullname'];
+            }
+
+            if (isset($args['currency'])) {
+                $params['currency'] = $args['currency'];
             }
 
             $result = $this->service->listTransactions($params);

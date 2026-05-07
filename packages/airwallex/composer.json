@@ -1,0 +1,24 @@
+{
+  "name": "opencompanyapp/integration-airwallex",
+  "description": "Airwallex API integration for OpenCompany agents.",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "OpenCompany\\Integrations\\Airwallex\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "OpenCompany\\Integrations\\Airwallex\\AirwallexServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^11.0|^12.0",
+    "illuminate/http": "^11.0|^12.0",
+    "opencompanyapp/integration-core": "*"
+  }
+}

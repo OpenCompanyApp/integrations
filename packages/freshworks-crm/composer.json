@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-freshworks-crm",
-    "description": "Freshworks CRM integration for Laravel — manage contacts, deals, and accounts.",
+    "description": "Freshworks CRM integration for Laravel: manage contacts, accounts, deals, tasks, appointments, notes, activities, and metadata.",
     "license": "MIT",
     "authors": [
         {

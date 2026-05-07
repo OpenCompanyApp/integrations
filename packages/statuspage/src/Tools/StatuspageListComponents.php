@@ -6,8 +6,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Statuspage\StatuspageService;
 
+/**
+ * List components on the configured Statuspage page.
+ *
+ * Supports Statuspage pagination parameters and returns normalized component objects.
+ */
 class StatuspageListComponents implements Tool
 {
+    /**
+     * @param  StatuspageService  $service  The Statuspage API client.
+     */
     public function __construct(
         private StatuspageService $service,
     ) {}
@@ -30,6 +38,11 @@ class StatuspageListComponents implements Tool
         ];
     }
 
+    /**
+     * List Statuspage components with optional pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -45,7 +58,7 @@ class StatuspageListComponents implements Tool
                 $params['per_page'] = (int) $args['per_page'];
             }
 
-            $result = $this->service->listComponents();
+            $result = $this->service->listComponents($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

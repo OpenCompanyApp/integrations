@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MongoDB\MongoDBService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Find one document in a MongoDB Atlas Data API collection.
+ *
+ * Returns the first document matching the supplied filter.
+ */
 class MongoDBFindOne implements Tool
 {
+    /**
+     * @param  MongoDBService  $service  MongoDB Atlas Data API client.
+     */
     public function __construct(
         private MongoDBService $service,
     ) {}
@@ -32,6 +40,11 @@ class MongoDBFindOne implements Tool
         ];
     }
 
+    /**
+     * Execute a findOne action against the configured collection.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (database, collection, filter, projection).
+     */
     public function execute(array $args): ToolResult
     {
         try {

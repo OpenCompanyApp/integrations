@@ -2,45 +2,28 @@
 
 namespace OpenCompany\Integrations\Gumroad\Tools;
 
-use OpenCompany\Integrations\Gumroad\GumroadService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class GumroadGetCurrentUser implements Tool
+/**
+ * Get the authenticated Gumroad user profile.
+ */
+class GumroadGetCurrentUser extends AbstractGumroadEndpointTool
 {
-    public function __construct(
-        private GumroadService $service,
-    ) {}
+    protected string $toolName = 'gumroad_get_current_user';
 
-    public function name(): string
-    {
-        return 'gumroad_get_current_user';
-    }
+    protected string $toolDescription = 'Get the authenticated Gumroad user profile.';
 
-    public function description(): string
-    {
-        return 'Get the profile of the currently authenticated Gumroad user. Useful to verify the connection and see account details.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/user';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gumroad integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [];
 
-            $result = $this->service->getCurrentUser();
+    /** @var list<string> */
+    protected array $required = [];
 
-            $user = $result['user'] ?? $result;
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            return ToolResult::success($user);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

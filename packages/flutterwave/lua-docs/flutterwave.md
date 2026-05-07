@@ -12,6 +12,10 @@ List transactions from your Flutterwave account. Supports filtering by status an
 | `status` | string | no | Filter by transaction status (e.g., `"successful"`, `"failed"`, `"pending"`) |
 | `from` | string | no | Start date for filtering transactions (YYYY-MM-DD) |
 | `to` | string | no | End date for filtering transactions (YYYY-MM-DD) |
+| `customer_email` | string | no | Filter by customer email address |
+| `tx_ref` | string | no | Filter by merchant transaction reference |
+| `customer_fullname` | string | no | Filter by customer full name |
+| `currency` | string | no | Filter by transaction currency |
 
 ### Examples
 
@@ -33,7 +37,9 @@ end
 local result = app.integrations.flutterwave.list_transactions({
   from = "2024-01-01",
   to = "2024-06-30",
-  status = "successful"
+  status = "successful",
+  tx_ref = "txn-001",
+  currency = "NGN"
 })
 ```
 

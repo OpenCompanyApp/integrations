@@ -1,154 +1,133 @@
-# BlandAI — Lua API Reference
+# Bland AI Lua Reference
 
-## make_call
+This integration targets Bland AI's documented v1 and v2 API surfaces. Configure the base URL as `https://api.bland.ai` unless Bland provides a regional endpoint. The service sends the API key in the `authorization` header.
 
-Initiate an AI-powered phone call via BlandAI.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `phone_number` | string | yes | Phone number in E.164 format, e.g. `"+1234567890"` |
-| `task` | string | yes | Instructions for the AI agent to follow during the call |
-| `voice` | string | no | Voice identifier to use (leave empty for default) |
-| `wait_for_greeting` | boolean | no | Wait for callee to speak first (default: false) |
-| `record` | boolean | no | Record the call (default: true) |
-| `max_duration` | integer | no | Maximum call duration in minutes |
-
-### Example
+## Calls
 
 ```lua
-local result = app.integrations.blandai.make_call({
-  phone_number = "+1234567890",
-  task = "Ask the customer if they are satisfied with their recent purchase and collect feedback.",
-  voice = "josh"
+local call = app.integrations.blandai.make_call({
+  phone_number = "+12223334444",
+  task = "Confirm the appointment time and summarize any requested changes.",
+  voice = "maya",
+  record = true,
+  wait_for_greeting = true,
+  request_data = {
+    customer_name = "Ada"
+  },
+  webhook = "https://example.test/bland-webhook"
 })
-
-print("Call ID: " .. result.call_id)
-print("Status: " .. result.status)
 ```
 
----
-
-## get_call
-
-Retrieve details for a specific call, including transcript, status, and metadata.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `call_id` | string | yes | The unique identifier of the call |
-
-### Example
+You can use `pathway_id` instead of `task` for conversational pathway calls.
 
 ```lua
-local result = app.integrations.blandai.get_call({
-  call_id = "abc123-def456-ghi789"
+local calls = app.integrations.blandai.list_calls({
+  limit = 20,
+  batch_id = "batch_123"
 })
 
-print("Status: " .. result.status)
-print("Duration: " .. tostring(result.call_length) .. " seconds")
-print("Transcript: " .. result.transcript)
-```
-
----
-
-## list_calls
-
-List phone calls with optional pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of calls to return (default: 50) |
-| `offset` | integer | no | Number of calls to skip for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.blandai.list_calls({
-  limit = 10,
-  offset = 0
+local detail = app.integrations.blandai.get_call({
+  call_id = "call_123"
 })
 
-for _, call in ipairs(result.calls or {}) do
-  print(call.call_id .. ": " .. call.status .. " (" .. call.to .. ")")
-end
+app.integrations.blandai.stop_call({ call_id = "call_123" })
+app.integrations.blandai.stop_all_active_calls({})
 ```
 
----
-
-## analyze_call
-
-Analyze a call transcript with a custom prompt to extract insights or evaluate outcomes.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `call_id` | string | yes | The unique identifier of the call to analyze |
-| `prompt` | string | yes | Analysis prompt (e.g. "Summarize the key points discussed") |
-
-### Example
+## Analysis
 
 ```lua
 local result = app.integrations.blandai.analyze_call({
-  call_id = "abc123-def456-ghi789",
-  prompt = "Was the customer satisfied? Extract key concerns and any action items mentioned."
+  call_id = "call_123",
+  goal = "Understand the call outcome",
+  questions = {
+    { "Who answered the call?", "human or voicemail" },
+    { "Did the customer confirm the appointment?", "boolean" }
+  }
 })
-
-print("Analysis: " .. tostring(result.analysis or result.answer))
 ```
 
-### More prompt examples
+## Batches
 
 ```lua
--- Sentiment analysis
-analyze_call({ call_id = "...", prompt = "Rate the customer's sentiment from 1-10 with a brief explanation." })
+local batch = app.integrations.blandai.create_batch({
+  name = "Appointment reminders",
+  phone_numbers = {
+    { phone_number = "+12223334444", request_data = { customer_name = "Ada" } }
+  },
+  call_params = {
+    task = "Remind the customer about their appointment.",
+    voice = "maya"
+  }
+})
 
--- Action item extraction
-analyze_call({ call_id = "...", prompt = "List all action items and follow-ups mentioned during the call." })
-
--- Data extraction
-analyze_call({ call_id = "...", prompt = "Extract the customer's name, email, and phone number from the conversation." })
+local batches = app.integrations.blandai.list_batches({
+  take = 25,
+  skip = 0
+})
 ```
 
----
+Passing `sequence` turns a batch into a campaign with retries.
 
-## get_current_user
+## Voices
 
-Get the authenticated user's account information.
+```lua
+local voices = app.integrations.blandai.list_voices({})
+local voice = app.integrations.blandai.get_voice({ voice_id = "maya" })
+```
 
-### Parameters
+## Knowledge Bases
 
-None.
+```lua
+local bases = app.integrations.blandai.list_knowledge_bases({
+  limit = 20
+})
 
-### Example
+local kb = app.integrations.blandai.create_text_knowledge_base({
+  name = "Support FAQ",
+  description = "Refund and shipping policy answers",
+  text = "Refunds are available within 30 days..."
+})
+
+app.integrations.blandai.update_knowledge_base({
+  knowledge_base_id = "kb_123",
+  name = "Updated Support FAQ"
+})
+
+local answer = app.integrations.blandai.chat_knowledge_base({
+  knowledge_base_id = "kb_123",
+  messages = {
+    { role = "user", content = "What is the refund policy?" }
+  }
+})
+```
+
+## Custom Tools
+
+```lua
+local tool = app.integrations.blandai.create_tool({
+  name = "lookup_order",
+  description = "Look up order status",
+  url = "https://example.test/orders",
+  method = "GET",
+  query = {
+    order_id = "{{order_id}}"
+  }
+})
+```
+
+## Account Check
+
+`get_current_user` is retained for compatibility. Bland AI does not expose a dedicated current-user endpoint in the documented public API, so this performs a lightweight call-list check.
 
 ```lua
 local result = app.integrations.blandai.get_current_user({})
-
-print("Account: " .. tostring(result.email or result.name))
 ```
-
----
 
 ## Multi-Account Usage
 
-If you have multiple BlandAI accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.blandai.make_call({...})
-
--- Explicit default (portable across setups)
 app.integrations.blandai.default.make_call({...})
-
--- Named accounts
-app.integrations.blandai.production.make_call({...})
-app.integrations.blandai.staging.make_call({...})
+app.integrations.blandai.sales.make_call({...})
 ```
-
-All functions are identical across accounts — only the credentials differ.

@@ -1,0 +1,555 @@
+{
+  "source": {
+    "type": "openapi",
+    "url": "https://cdn.uptimerobot.com/api/openapi.yaml",
+    "docs_url": "https://uptimerobot.com/api/v3/"
+  },
+  "openapi": "3.0.0",
+  "version": "3.0",
+  "title": "UptimeRobot API",
+  "base_url": "https://api.uptimerobot.com/v3",
+  "path_count": 35,
+  "method_count": 54,
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/monitors/bulk/pause",
+      "operation_id": "BulkMonitorsController_bulkPause",
+      "tool": "uptimerobot_bulk_monitors_bulk_pause",
+      "class": "UptimeRobotBulkMonitorsBulkPause",
+      "tags": [
+        "Monitors - Bulk Operations"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitors/bulk/start",
+      "operation_id": "BulkMonitorsController_bulkStart",
+      "tool": "uptimerobot_bulk_monitors_bulk_start",
+      "class": "UptimeRobotBulkMonitorsBulkStart",
+      "tags": [
+        "Monitors - Bulk Operations"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitors/bulk/update",
+      "operation_id": "BulkMonitorsController_bulkUpdate",
+      "tool": "uptimerobot_bulk_monitors_bulk_update",
+      "class": "UptimeRobotBulkMonitorsBulkUpdate",
+      "tags": [
+        "Monitors - Bulk Operations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/incidents",
+      "operation_id": "IncidentsController_list",
+      "tool": "uptimerobot_incidents_list",
+      "class": "UptimeRobotIncidentsList",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/incidents/{id}",
+      "operation_id": "IncidentsController_get",
+      "tool": "uptimerobot_incidents_get",
+      "class": "UptimeRobotIncidentsGet",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/incidents/{id}/comments",
+      "operation_id": "IncidentsController_listComments",
+      "tool": "uptimerobot_incidents_list_comments",
+      "class": "UptimeRobotIncidentsListComments",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/incidents/{id}/comments",
+      "operation_id": "IncidentsController_createComment",
+      "tool": "uptimerobot_incidents_create_comment",
+      "class": "UptimeRobotIncidentsCreateComment",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/incidents/{id}/activity-log",
+      "operation_id": "IncidentsController_getActivityLog",
+      "tool": "uptimerobot_incidents_get_activity_log",
+      "class": "UptimeRobotIncidentsGetActivityLog",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/incidents/{id}/alerts",
+      "operation_id": "IncidentsController_getAlerts",
+      "tool": "uptimerobot_incidents_get_alerts",
+      "class": "UptimeRobotIncidentsGetAlerts",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/incidents/{id}/comments/{commentId}",
+      "operation_id": "IncidentsController_updateComment",
+      "tool": "uptimerobot_incidents_update_comment",
+      "class": "UptimeRobotIncidentsUpdateComment",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/incidents/{id}/comments/{commentId}",
+      "operation_id": "IncidentsController_deleteComment",
+      "tool": "uptimerobot_incidents_delete_comment",
+      "class": "UptimeRobotIncidentsDeleteComment",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitor-groups",
+      "operation_id": "MonitorGroupsController_create",
+      "tool": "uptimerobot_monitor_groups_create",
+      "class": "UptimeRobotMonitorGroupsCreate",
+      "tags": [
+        "Monitor Groups"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitor-groups",
+      "operation_id": "MonitorGroupsController_list",
+      "tool": "uptimerobot_monitor_groups_list",
+      "class": "UptimeRobotMonitorGroupsList",
+      "tags": [
+        "Monitor Groups"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitor-groups/{id}",
+      "operation_id": "MonitorGroupsController_get",
+      "tool": "uptimerobot_monitor_groups_get",
+      "class": "UptimeRobotMonitorGroupsGet",
+      "tags": [
+        "Monitor Groups"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/monitor-groups/{id}",
+      "operation_id": "MonitorGroupsController_update",
+      "tool": "uptimerobot_monitor_groups_update",
+      "class": "UptimeRobotMonitorGroupsUpdate",
+      "tags": [
+        "Monitor Groups"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/monitor-groups/{id}",
+      "operation_id": "MonitorGroupsController_delete",
+      "tool": "uptimerobot_monitor_groups_delete",
+      "class": "UptimeRobotMonitorGroupsDelete",
+      "tags": [
+        "Monitor Groups"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitors",
+      "operation_id": "MonitorsController_list",
+      "tool": "uptimerobot_monitors_list",
+      "class": "UptimeRobotMonitorsList",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitors",
+      "operation_id": "MonitorsController_create",
+      "tool": "uptimerobot_monitors_create",
+      "class": "UptimeRobotMonitorsCreate",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitors/uptime-stats",
+      "operation_id": "MonitorsController_getUptimeStats",
+      "tool": "uptimerobot_monitors_get_uptime_stats",
+      "class": "UptimeRobotMonitorsGetUptimeStats",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitors/{id}/stats/uptime",
+      "operation_id": "MonitorsController_getMonitorUptimeStats",
+      "tool": "uptimerobot_monitors_get_monitor_uptime_stats",
+      "class": "UptimeRobotMonitorsGetMonitorUptimeStats",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitors/{id}/stats/response-time/all",
+      "operation_id": "MonitorsController_getMonitorResponseTimeStatsByRegion",
+      "tool": "uptimerobot_monitors_get_monitor_response_time_stats_by_region",
+      "class": "UptimeRobotMonitorsGetMonitorResponseTimeStatsByRegion",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitors/{id}/stats/response-time",
+      "operation_id": "MonitorsController_getMonitorResponseTimeStats",
+      "tool": "uptimerobot_monitors_get_monitor_response_time_stats",
+      "class": "UptimeRobotMonitorsGetMonitorResponseTimeStats",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/monitors/{id}",
+      "operation_id": "MonitorsController_get",
+      "tool": "uptimerobot_monitors_get",
+      "class": "UptimeRobotMonitorsGet",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/monitors/{id}",
+      "operation_id": "MonitorsController_update",
+      "tool": "uptimerobot_monitors_update",
+      "class": "UptimeRobotMonitorsUpdate",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/monitors/{id}",
+      "operation_id": "MonitorsController_delete",
+      "tool": "uptimerobot_monitors_delete",
+      "class": "UptimeRobotMonitorsDelete",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitors/{id}/reset",
+      "operation_id": "MonitorsController_reset",
+      "tool": "uptimerobot_monitors_reset",
+      "class": "UptimeRobotMonitorsReset",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitors/{id}/pause",
+      "operation_id": "MonitorsController_pause",
+      "tool": "uptimerobot_monitors_pause",
+      "class": "UptimeRobotMonitorsPause",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/monitors/{id}/start",
+      "operation_id": "MonitorsController_start",
+      "tool": "uptimerobot_monitors_start",
+      "class": "UptimeRobotMonitorsStart",
+      "tags": [
+        "Monitors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/psps",
+      "operation_id": "PspController_list",
+      "tool": "uptimerobot_psp_list",
+      "class": "UptimeRobotPspList",
+      "tags": [
+        "Public Status Pages"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/psps",
+      "operation_id": "PspController_create",
+      "tool": "uptimerobot_psp_create",
+      "class": "UptimeRobotPspCreate",
+      "tags": [
+        "Public Status Pages"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/psps/{id}",
+      "operation_id": "PspController_get",
+      "tool": "uptimerobot_psp_get",
+      "class": "UptimeRobotPspGet",
+      "tags": [
+        "Public Status Pages"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/psps/{id}",
+      "operation_id": "PspController_update",
+      "tool": "uptimerobot_psp_update",
+      "class": "UptimeRobotPspUpdate",
+      "tags": [
+        "Public Status Pages"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/psps/{id}",
+      "operation_id": "PspController_delete",
+      "tool": "uptimerobot_psp_delete",
+      "class": "UptimeRobotPspDelete",
+      "tags": [
+        "Public Status Pages"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/psps/{pspId}/announcements",
+      "operation_id": "PspAnnouncementsController_list",
+      "tool": "uptimerobot_psp_announcements_list",
+      "class": "UptimeRobotPspAnnouncementsList",
+      "tags": [
+        "PSP Announcements"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/psps/{pspId}/announcements",
+      "operation_id": "PspAnnouncementsController_create",
+      "tool": "uptimerobot_psp_announcements_create",
+      "class": "UptimeRobotPspAnnouncementsCreate",
+      "tags": [
+        "PSP Announcements"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/psps/{pspId}/announcements/{id}",
+      "operation_id": "PspAnnouncementsController_get",
+      "tool": "uptimerobot_psp_announcements_get",
+      "class": "UptimeRobotPspAnnouncementsGet",
+      "tags": [
+        "PSP Announcements"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/psps/{pspId}/announcements/{id}",
+      "operation_id": "PspAnnouncementsController_update",
+      "tool": "uptimerobot_psp_announcements_update",
+      "class": "UptimeRobotPspAnnouncementsUpdate",
+      "tags": [
+        "PSP Announcements"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/psps/{pspId}/announcements/{id}/pin",
+      "operation_id": "PspAnnouncementsController_pin",
+      "tool": "uptimerobot_psp_announcements_pin",
+      "class": "UptimeRobotPspAnnouncementsPin",
+      "tags": [
+        "PSP Announcements"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/psps/{pspId}/announcements/{id}/unpin",
+      "operation_id": "PspAnnouncementsController_unpin",
+      "tool": "uptimerobot_psp_announcements_unpin",
+      "class": "UptimeRobotPspAnnouncementsUnpin",
+      "tags": [
+        "PSP Announcements"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/maintenance-windows",
+      "operation_id": "MaintenanceWindowsController_list",
+      "tool": "uptimerobot_maintenance_windows_list",
+      "class": "UptimeRobotMaintenanceWindowsList",
+      "tags": [
+        "Maintenance Windows"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/maintenance-windows",
+      "operation_id": "MaintenanceWindowsController_create",
+      "tool": "uptimerobot_maintenance_windows_create",
+      "class": "UptimeRobotMaintenanceWindowsCreate",
+      "tags": [
+        "Maintenance Windows"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/maintenance-windows/{id}",
+      "operation_id": "MaintenanceWindowsController_get",
+      "tool": "uptimerobot_maintenance_windows_get",
+      "class": "UptimeRobotMaintenanceWindowsGet",
+      "tags": [
+        "Maintenance Windows"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/maintenance-windows/{id}",
+      "operation_id": "MaintenanceWindowsController_update",
+      "tool": "uptimerobot_maintenance_windows_update",
+      "class": "UptimeRobotMaintenanceWindowsUpdate",
+      "tags": [
+        "Maintenance Windows"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/maintenance-windows/{id}",
+      "operation_id": "MaintenanceWindowsController_delete",
+      "tool": "uptimerobot_maintenance_windows_delete",
+      "class": "UptimeRobotMaintenanceWindowsDelete",
+      "tags": [
+        "Maintenance Windows"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/user/me",
+      "operation_id": "UserController_getMe",
+      "tool": "uptimerobot_user_get_me",
+      "class": "UptimeRobotUserGetMe",
+      "tags": [
+        "User"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/user/alert-contacts",
+      "operation_id": "UserController_getAlertContacts",
+      "tool": "uptimerobot_user_get_alert_contacts",
+      "class": "UptimeRobotUserGetAlertContacts",
+      "tags": [
+        "User"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/user/all-alert-contacts",
+      "operation_id": "UserController_getAllAlertContacts",
+      "tool": "uptimerobot_user_get_all_alert_contacts",
+      "class": "UptimeRobotUserGetAllAlertContacts",
+      "tags": [
+        "User"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/integrations",
+      "operation_id": "IntegrationsController_list",
+      "tool": "uptimerobot_integrations_list",
+      "class": "UptimeRobotIntegrationsList",
+      "tags": [
+        "Integrations"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/integrations",
+      "operation_id": "IntegrationsController_create",
+      "tool": "uptimerobot_integrations_create",
+      "class": "UptimeRobotIntegrationsCreate",
+      "tags": [
+        "Integrations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/integrations/{id}",
+      "operation_id": "IntegrationsController_get",
+      "tool": "uptimerobot_integrations_get",
+      "class": "UptimeRobotIntegrationsGet",
+      "tags": [
+        "Integrations"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/integrations/{id}",
+      "operation_id": "IntegrationsController_update",
+      "tool": "uptimerobot_integrations_update",
+      "class": "UptimeRobotIntegrationsUpdate",
+      "tags": [
+        "Integrations"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/integrations/{id}",
+      "operation_id": "IntegrationsController_delete",
+      "tool": "uptimerobot_integrations_delete",
+      "class": "UptimeRobotIntegrationsDelete",
+      "tags": [
+        "Integrations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tags",
+      "operation_id": "TagsController_getTags",
+      "tool": "uptimerobot_tags_get_tags",
+      "class": "UptimeRobotTagsGetTags",
+      "tags": [
+        "Tags"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/tags/{id}",
+      "operation_id": "TagsController_deleteTag",
+      "tool": "uptimerobot_tags_delete_tag",
+      "class": "UptimeRobotTagsDeleteTag",
+      "tags": [
+        "Tags"
+      ]
+    }
+  ]
+}

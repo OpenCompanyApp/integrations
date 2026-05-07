@@ -1,0 +1,1386 @@
+{
+  "source": {
+    "type": "openapi",
+    "url": "https://developer.gocardless.com/openapi-schema-public.json",
+    "docs_url": "https://developer.gocardless.com/api-reference/openapi/"
+  },
+  "openapi": "3.0.0",
+  "version": "2015-07-06",
+  "schema_version": "0.61.0",
+  "title": "GoCardless API",
+  "base_url": "https://api.gocardless.com",
+  "path_count": 107,
+  "method_count": 137,
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/balances",
+      "operation_id": "list_balance",
+      "tool": "gocardless_list_balance",
+      "class": "GoCardlessListBalance",
+      "tags": [
+        "Balance"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/bank_account_details/{customer_bank_account_id}",
+      "operation_id": "get_bank_account_details",
+      "tool": "gocardless_get_bank_account_details",
+      "class": "GoCardlessGetBankAccountDetails",
+      "tags": [
+        "Bank Account Detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/bank_account_holder_verifications",
+      "operation_id": "create_bank_account_holder_verification",
+      "tool": "gocardless_create_bank_account_holder_verification",
+      "class": "GoCardlessCreateBankAccountHolderVerification",
+      "tags": [
+        "Bank Account Holder Verification"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/bank_account_holder_verifications/{bank_account_holder_verification_id}",
+      "operation_id": "get_bank_account_holder_verifications",
+      "tool": "gocardless_get_bank_account_holder_verifications",
+      "class": "GoCardlessGetBankAccountHolderVerifications",
+      "tags": [
+        "Bank Account Holder Verification"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/bank_authorisations",
+      "operation_id": "create_bank_authorisation",
+      "tool": "gocardless_create_bank_authorisation",
+      "class": "GoCardlessCreateBankAuthorisation",
+      "tags": [
+        "Bank Authorisation"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/bank_authorisations/{bank_authorisation_id}",
+      "operation_id": "get_bank_authorisations",
+      "tool": "gocardless_get_bank_authorisations",
+      "class": "GoCardlessGetBankAuthorisations",
+      "tags": [
+        "Bank Authorisation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/bank_details_lookups",
+      "operation_id": "create_bank_details_lookup",
+      "tool": "gocardless_create_bank_details_lookup",
+      "class": "GoCardlessCreateBankDetailsLookup",
+      "tags": [
+        "Bank Details Lookup"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests",
+      "operation_id": "create_billing_request",
+      "tool": "gocardless_create_billing_request",
+      "class": "GoCardlessCreateBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/billing_requests",
+      "operation_id": "list_billing_request",
+      "tool": "gocardless_list_billing_request",
+      "class": "GoCardlessListBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/collect_customer_details",
+      "operation_id": "collect_customer_details_billing_request",
+      "tool": "gocardless_collect_customer_details_billing_request",
+      "class": "GoCardlessCollectCustomerDetailsBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/collect_bank_account",
+      "operation_id": "collect_bank_account_billing_request",
+      "tool": "gocardless_collect_bank_account_billing_request",
+      "class": "GoCardlessCollectBankAccountBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/confirm_payer_details",
+      "operation_id": "confirm_payer_details_billing_request",
+      "tool": "gocardless_confirm_payer_details_billing_request",
+      "class": "GoCardlessConfirmPayerDetailsBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/fulfil",
+      "operation_id": "fulfil_billing_request",
+      "tool": "gocardless_fulfil_billing_request",
+      "class": "GoCardlessFulfilBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/cancel",
+      "operation_id": "cancel_billing_request",
+      "tool": "gocardless_cancel_billing_request",
+      "class": "GoCardlessCancelBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/billing_requests/{billing_request_id}",
+      "operation_id": "get_billing_requests",
+      "tool": "gocardless_get_billing_requests",
+      "class": "GoCardlessGetBillingRequests",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/notify",
+      "operation_id": "notify_billing_request",
+      "tool": "gocardless_notify_billing_request",
+      "class": "GoCardlessNotifyBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/fallback",
+      "operation_id": "fallback_billing_request",
+      "tool": "gocardless_fallback_billing_request",
+      "class": "GoCardlessFallbackBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/choose_currency",
+      "operation_id": "choose_currency_billing_request",
+      "tool": "gocardless_choose_currency_billing_request",
+      "class": "GoCardlessChooseCurrencyBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/{billing_request_id}/actions/select_institution",
+      "operation_id": "select_institution_billing_request",
+      "tool": "gocardless_select_institution_billing_request",
+      "class": "GoCardlessSelectInstitutionBillingRequest",
+      "tags": [
+        "Billing Request"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_request_flows",
+      "operation_id": "create_billing_request_flow",
+      "tool": "gocardless_create_billing_request_flow",
+      "class": "GoCardlessCreateBillingRequestFlow",
+      "tags": [
+        "Billing Request Flow"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_request_flows/{billing_request_flow_id}/actions/initialise",
+      "operation_id": "initialise_billing_request_flow",
+      "tool": "gocardless_initialise_billing_request_flow",
+      "class": "GoCardlessInitialiseBillingRequestFlow",
+      "tags": [
+        "Billing Request Flow"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/billing_request_templates",
+      "operation_id": "list_billing_request_template",
+      "tool": "gocardless_list_billing_request_template",
+      "class": "GoCardlessListBillingRequestTemplate",
+      "tags": [
+        "Billing Request Template"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_request_templates",
+      "operation_id": "create_billing_request_template",
+      "tool": "gocardless_create_billing_request_template",
+      "class": "GoCardlessCreateBillingRequestTemplate",
+      "tags": [
+        "Billing Request Template"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/billing_request_templates/{billing_request_template_id}",
+      "operation_id": "get_billing_request_templates",
+      "tool": "gocardless_get_billing_request_templates",
+      "class": "GoCardlessGetBillingRequestTemplates",
+      "tags": [
+        "Billing Request Template"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/billing_request_templates/{billing_request_template_id}",
+      "operation_id": "update_billing_request_templates",
+      "tool": "gocardless_update_billing_request_templates",
+      "class": "GoCardlessUpdateBillingRequestTemplates",
+      "tags": [
+        "Billing Request Template"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/billing_requests/create_with_actions",
+      "operation_id": "create_with_actions_billing_requests",
+      "tool": "gocardless_create_with_actions_billing_requests",
+      "class": "GoCardlessCreateWithActionsBillingRequests",
+      "tags": [
+        "Billing Request With Action"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/blocks",
+      "operation_id": "create_block",
+      "tool": "gocardless_create_block",
+      "class": "GoCardlessCreateBlock",
+      "tags": [
+        "Block"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/blocks",
+      "operation_id": "list_block",
+      "tool": "gocardless_list_block",
+      "class": "GoCardlessListBlock",
+      "tags": [
+        "Block"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/blocks/{block_id}",
+      "operation_id": "get_blocks",
+      "tool": "gocardless_get_blocks",
+      "class": "GoCardlessGetBlocks",
+      "tags": [
+        "Block"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/blocks/{block_id}/actions/disable",
+      "operation_id": "disable_block",
+      "tool": "gocardless_disable_block",
+      "class": "GoCardlessDisableBlock",
+      "tags": [
+        "Block"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/blocks/{block_id}/actions/enable",
+      "operation_id": "enable_block",
+      "tool": "gocardless_enable_block",
+      "class": "GoCardlessEnableBlock",
+      "tags": [
+        "Block"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/blocks/block_by_ref",
+      "operation_id": "block_by_ref_blocks",
+      "tool": "gocardless_block_by_ref_blocks",
+      "class": "GoCardlessBlockByRefBlocks",
+      "tags": [
+        "Block"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/creditors",
+      "operation_id": "create_creditor",
+      "tool": "gocardless_create_creditor",
+      "class": "GoCardlessCreateCreditor",
+      "tags": [
+        "Creditor"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/creditors",
+      "operation_id": "list_creditor",
+      "tool": "gocardless_list_creditor",
+      "class": "GoCardlessListCreditor",
+      "tags": [
+        "Creditor"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/creditors/{creditor_id}",
+      "operation_id": "get_creditors",
+      "tool": "gocardless_get_creditors",
+      "class": "GoCardlessGetCreditors",
+      "tags": [
+        "Creditor"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/creditors/{creditor_id}",
+      "operation_id": "update_creditors",
+      "tool": "gocardless_update_creditors",
+      "class": "GoCardlessUpdateCreditors",
+      "tags": [
+        "Creditor"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/creditor_bank_accounts",
+      "operation_id": "create_creditor_bank_account",
+      "tool": "gocardless_create_creditor_bank_account",
+      "class": "GoCardlessCreateCreditorBankAccount",
+      "tags": [
+        "Creditor Bank Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/creditor_bank_accounts",
+      "operation_id": "list_creditor_bank_account",
+      "tool": "gocardless_list_creditor_bank_account",
+      "class": "GoCardlessListCreditorBankAccount",
+      "tags": [
+        "Creditor Bank Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/creditor_bank_accounts/{creditor_bank_account_id}",
+      "operation_id": "get_creditor_bank_accounts",
+      "tool": "gocardless_get_creditor_bank_accounts",
+      "class": "GoCardlessGetCreditorBankAccounts",
+      "tags": [
+        "Creditor Bank Account"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/creditor_bank_accounts/{creditor_bank_account_id}/actions/disable",
+      "operation_id": "disable_creditor_bank_account",
+      "tool": "gocardless_disable_creditor_bank_account",
+      "class": "GoCardlessDisableCreditorBankAccount",
+      "tags": [
+        "Creditor Bank Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/currency_exchange_rates",
+      "operation_id": "list_currency_exchange_rate",
+      "tool": "gocardless_list_currency_exchange_rate",
+      "class": "GoCardlessListCurrencyExchangeRate",
+      "tags": [
+        "Currency Exchange Rate"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/customers",
+      "operation_id": "create_customer",
+      "tool": "gocardless_create_customer",
+      "class": "GoCardlessCreateCustomer",
+      "tags": [
+        "Customer"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/customers",
+      "operation_id": "list_customer",
+      "tool": "gocardless_list_customer",
+      "class": "GoCardlessListCustomer",
+      "tags": [
+        "Customer"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{customer_id}",
+      "operation_id": "get_customers",
+      "tool": "gocardless_get_customers",
+      "class": "GoCardlessGetCustomers",
+      "tags": [
+        "Customer"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/customers/{customer_id}",
+      "operation_id": "update_customers",
+      "tool": "gocardless_update_customers",
+      "class": "GoCardlessUpdateCustomers",
+      "tags": [
+        "Customer"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/customers/{customer_id}",
+      "operation_id": "delete_customers",
+      "tool": "gocardless_delete_customers",
+      "class": "GoCardlessDeleteCustomers",
+      "tags": [
+        "Customer"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/customer_bank_accounts",
+      "operation_id": "create_customer_bank_account",
+      "tool": "gocardless_create_customer_bank_account",
+      "class": "GoCardlessCreateCustomerBankAccount",
+      "tags": [
+        "Customer Bank Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/customer_bank_accounts",
+      "operation_id": "list_customer_bank_account",
+      "tool": "gocardless_list_customer_bank_account",
+      "class": "GoCardlessListCustomerBankAccount",
+      "tags": [
+        "Customer Bank Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/customer_bank_accounts/{customer_bank_account_id}",
+      "operation_id": "get_customer_bank_accounts",
+      "tool": "gocardless_get_customer_bank_accounts",
+      "class": "GoCardlessGetCustomerBankAccounts",
+      "tags": [
+        "Customer Bank Account"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/customer_bank_accounts/{customer_bank_account_id}",
+      "operation_id": "update_customer_bank_accounts",
+      "tool": "gocardless_update_customer_bank_accounts",
+      "class": "GoCardlessUpdateCustomerBankAccounts",
+      "tags": [
+        "Customer Bank Account"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/customer_bank_accounts/{customer_bank_account_id}/actions/disable",
+      "operation_id": "disable_customer_bank_account",
+      "tool": "gocardless_disable_customer_bank_account",
+      "class": "GoCardlessDisableCustomerBankAccount",
+      "tags": [
+        "Customer Bank Account"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/customer_notifications/{customer_notification_id}/actions/handle",
+      "operation_id": "handle_customer_notification",
+      "tool": "gocardless_handle_customer_notification",
+      "class": "GoCardlessHandleCustomerNotification",
+      "tags": [
+        "Customer Notification"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/events",
+      "operation_id": "list_event",
+      "tool": "gocardless_list_event",
+      "class": "GoCardlessListEvent",
+      "tags": [
+        "Event"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/events/{event_id}",
+      "operation_id": "get_events",
+      "tool": "gocardless_get_events",
+      "class": "GoCardlessGetEvents",
+      "tags": [
+        "Event"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/exports/{export_id}",
+      "operation_id": "get_exports",
+      "tool": "gocardless_get_exports",
+      "class": "GoCardlessGetExports",
+      "tags": [
+        "Export"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/exports",
+      "operation_id": "list_export",
+      "tool": "gocardless_list_export",
+      "class": "GoCardlessListExport",
+      "tags": [
+        "Export"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/funds_availability/{mandate_id}",
+      "operation_id": "get_funds_availability",
+      "tool": "gocardless_get_funds_availability",
+      "class": "GoCardlessGetFundsAvailability",
+      "tags": [
+        "Funds Availability"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/instalment_schedules",
+      "operation_id": "create_instalment_schedule",
+      "tool": "gocardless_create_instalment_schedule",
+      "class": "GoCardlessCreateInstalmentSchedule",
+      "tags": [
+        "Instalment Schedule"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/instalment_schedules",
+      "operation_id": "list_instalment_schedule",
+      "tool": "gocardless_list_instalment_schedule",
+      "class": "GoCardlessListInstalmentSchedule",
+      "tags": [
+        "Instalment Schedule"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/instalment_schedules/{instalment_schedule_id}",
+      "operation_id": "get_instalment_schedules",
+      "tool": "gocardless_get_instalment_schedules",
+      "class": "GoCardlessGetInstalmentSchedules",
+      "tags": [
+        "Instalment Schedule"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/instalment_schedules/{instalment_schedule_id}",
+      "operation_id": "update_instalment_schedules",
+      "tool": "gocardless_update_instalment_schedules",
+      "class": "GoCardlessUpdateInstalmentSchedules",
+      "tags": [
+        "Instalment Schedule"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/instalment_schedules/{instalment_schedule_id}/actions/cancel",
+      "operation_id": "cancel_instalment_schedule",
+      "tool": "gocardless_cancel_instalment_schedule",
+      "class": "GoCardlessCancelInstalmentSchedule",
+      "tags": [
+        "Instalment Schedule"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/institutions",
+      "operation_id": "list_institution",
+      "tool": "gocardless_list_institution",
+      "class": "GoCardlessListInstitution",
+      "tags": [
+        "Institution"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/billing_requests/{billing_request_id}/institutions",
+      "operation_id": "get_institutions_from_institution",
+      "tool": "gocardless_get_institutions_from_institution",
+      "class": "GoCardlessGetInstitutionsFromInstitution",
+      "tags": [
+        "Institution"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/branding/logos",
+      "operation_id": "logos_branding",
+      "tool": "gocardless_logos_branding",
+      "class": "GoCardlessLogosBranding",
+      "tags": [
+        "Logo"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandates",
+      "operation_id": "create_mandate",
+      "tool": "gocardless_create_mandate",
+      "class": "GoCardlessCreateMandate",
+      "tags": [
+        "Mandate"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/mandates",
+      "operation_id": "list_mandate",
+      "tool": "gocardless_list_mandate",
+      "class": "GoCardlessListMandate",
+      "tags": [
+        "Mandate"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/mandates/{mandate_id}",
+      "operation_id": "get_mandates",
+      "tool": "gocardless_get_mandates",
+      "class": "GoCardlessGetMandates",
+      "tags": [
+        "Mandate"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/mandates/{mandate_id}",
+      "operation_id": "update_mandates",
+      "tool": "gocardless_update_mandates",
+      "class": "GoCardlessUpdateMandates",
+      "tags": [
+        "Mandate"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandates/{mandate_id}/actions/cancel",
+      "operation_id": "cancel_mandate",
+      "tool": "gocardless_cancel_mandate",
+      "class": "GoCardlessCancelMandate",
+      "tags": [
+        "Mandate"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandates/{mandate_id}/actions/reinstate",
+      "operation_id": "reinstate_mandate",
+      "tool": "gocardless_reinstate_mandate",
+      "class": "GoCardlessReinstateMandate",
+      "tags": [
+        "Mandate"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandate_imports",
+      "operation_id": "create_mandate_import",
+      "tool": "gocardless_create_mandate_import",
+      "class": "GoCardlessCreateMandateImport",
+      "tags": [
+        "Mandate Import"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/mandate_imports/{mandate_import_id}",
+      "operation_id": "get_mandate_imports",
+      "tool": "gocardless_get_mandate_imports",
+      "class": "GoCardlessGetMandateImports",
+      "tags": [
+        "Mandate Import"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandate_imports/{mandate_import_id}/actions/submit",
+      "operation_id": "submit_mandate_import",
+      "tool": "gocardless_submit_mandate_import",
+      "class": "GoCardlessSubmitMandateImport",
+      "tags": [
+        "Mandate Import"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandate_imports/{mandate_import_id}/actions/cancel",
+      "operation_id": "cancel_mandate_import",
+      "tool": "gocardless_cancel_mandate_import",
+      "class": "GoCardlessCancelMandateImport",
+      "tags": [
+        "Mandate Import"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandate_import_entries",
+      "operation_id": "create_mandate_import_entry",
+      "tool": "gocardless_create_mandate_import_entry",
+      "class": "GoCardlessCreateMandateImportEntry",
+      "tags": [
+        "Mandate Import Entry"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/mandate_import_entries",
+      "operation_id": "list_mandate_import_entry",
+      "tool": "gocardless_list_mandate_import_entry",
+      "class": "GoCardlessListMandateImportEntry",
+      "tags": [
+        "Mandate Import Entry"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/mandate_pdfs",
+      "operation_id": "create_mandate_pdf",
+      "tool": "gocardless_create_mandate_pdf",
+      "class": "GoCardlessCreateMandatePdf",
+      "tags": [
+        "Mandate Pdf"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/negative_balance_limits",
+      "operation_id": "list_negative_balance_limit",
+      "tool": "gocardless_list_negative_balance_limit",
+      "class": "GoCardlessListNegativeBalanceLimit",
+      "tags": [
+        "Negative Balance Limit"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/outbound_payments",
+      "operation_id": "create_outbound_payment",
+      "tool": "gocardless_create_outbound_payment",
+      "class": "GoCardlessCreateOutboundPayment",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/outbound_payments",
+      "operation_id": "list_outbound_payment",
+      "tool": "gocardless_list_outbound_payment",
+      "class": "GoCardlessListOutboundPayment",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/outbound_payments/withdrawal",
+      "operation_id": "withdrawal_outbound_payments",
+      "tool": "gocardless_withdrawal_outbound_payments",
+      "class": "GoCardlessWithdrawalOutboundPayments",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/outbound_payments/{outbound_payment_id}/actions/cancel",
+      "operation_id": "cancel_outbound_payment",
+      "tool": "gocardless_cancel_outbound_payment",
+      "class": "GoCardlessCancelOutboundPayment",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/outbound_payments/{outbound_payment_id}/actions/approve",
+      "operation_id": "approve_outbound_payment",
+      "tool": "gocardless_approve_outbound_payment",
+      "class": "GoCardlessApproveOutboundPayment",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/outbound_payments/{outbound_payment_id}",
+      "operation_id": "get_outbound_payments",
+      "tool": "gocardless_get_outbound_payments",
+      "class": "GoCardlessGetOutboundPayments",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/outbound_payments/{outbound_payment_id}",
+      "operation_id": "update_outbound_payments",
+      "tool": "gocardless_update_outbound_payments",
+      "class": "GoCardlessUpdateOutboundPayments",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/outbound_payments/stats",
+      "operation_id": "list_outbound_payments_stats",
+      "tool": "gocardless_list_outbound_payments_stats",
+      "class": "GoCardlessListOutboundPaymentsStats",
+      "tags": [
+        "Outbound Payment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/outbound_payment_imports",
+      "operation_id": "create_outbound_payment_import",
+      "tool": "gocardless_create_outbound_payment_import",
+      "class": "GoCardlessCreateOutboundPaymentImport",
+      "tags": [
+        "Outbound Payment Import"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/outbound_payment_imports",
+      "operation_id": "list_outbound_payment_import",
+      "tool": "gocardless_list_outbound_payment_import",
+      "class": "GoCardlessListOutboundPaymentImport",
+      "tags": [
+        "Outbound Payment Import"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/outbound_payment_imports/{outbound_payment_import_id}",
+      "operation_id": "get_outbound_payment_imports",
+      "tool": "gocardless_get_outbound_payment_imports",
+      "class": "GoCardlessGetOutboundPaymentImports",
+      "tags": [
+        "Outbound Payment Import"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/outbound_payment_import_entries",
+      "operation_id": "list_outbound_payment_import_entry",
+      "tool": "gocardless_list_outbound_payment_import_entry",
+      "class": "GoCardlessListOutboundPaymentImportEntry",
+      "tags": [
+        "Outbound Payment Import Entry"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payer_authorisations/{payer_authorisation_id}",
+      "operation_id": "get_payer_authorisations",
+      "tool": "gocardless_get_payer_authorisations",
+      "class": "GoCardlessGetPayerAuthorisations",
+      "tags": [
+        "Payer Authorisation"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/payer_authorisations/{payer_authorisation_id}",
+      "operation_id": "update_payer_authorisations",
+      "tool": "gocardless_update_payer_authorisations",
+      "class": "GoCardlessUpdatePayerAuthorisations",
+      "tags": [
+        "Payer Authorisation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/payer_authorisations",
+      "operation_id": "create_payer_authorisation",
+      "tool": "gocardless_create_payer_authorisation",
+      "class": "GoCardlessCreatePayerAuthorisation",
+      "tags": [
+        "Payer Authorisation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/payer_authorisations/{payer_authorisation_id}/actions/submit",
+      "operation_id": "submit_payer_authorisation",
+      "tool": "gocardless_submit_payer_authorisation",
+      "class": "GoCardlessSubmitPayerAuthorisation",
+      "tags": [
+        "Payer Authorisation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/payer_authorisations/{payer_authorisation_id}/actions/confirm",
+      "operation_id": "confirm_payer_authorisation",
+      "tool": "gocardless_confirm_payer_authorisation",
+      "class": "GoCardlessConfirmPayerAuthorisation",
+      "tags": [
+        "Payer Authorisation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/branding/payer_themes",
+      "operation_id": "payer_themes_branding",
+      "tool": "gocardless_payer_themes_branding",
+      "class": "GoCardlessPayerThemesBranding",
+      "tags": [
+        "Payer Theme"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/payments",
+      "operation_id": "create_payment",
+      "tool": "gocardless_create_payment",
+      "class": "GoCardlessCreatePayment",
+      "tags": [
+        "Payment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payments",
+      "operation_id": "list_payment",
+      "tool": "gocardless_list_payment",
+      "class": "GoCardlessListPayment",
+      "tags": [
+        "Payment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payments/{payment_id}",
+      "operation_id": "get_payments",
+      "tool": "gocardless_get_payments",
+      "class": "GoCardlessGetPayments",
+      "tags": [
+        "Payment"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/payments/{payment_id}",
+      "operation_id": "update_payments",
+      "tool": "gocardless_update_payments",
+      "class": "GoCardlessUpdatePayments",
+      "tags": [
+        "Payment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{payment_id}/actions/cancel",
+      "operation_id": "cancel_payment",
+      "tool": "gocardless_cancel_payment",
+      "class": "GoCardlessCancelPayment",
+      "tags": [
+        "Payment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{payment_id}/actions/retry",
+      "operation_id": "retry_payment",
+      "tool": "gocardless_retry_payment",
+      "class": "GoCardlessRetryPayment",
+      "tags": [
+        "Payment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payment_accounts/{payment_account_id}",
+      "operation_id": "get_payment_accounts",
+      "tool": "gocardless_get_payment_accounts",
+      "class": "GoCardlessGetPaymentAccounts",
+      "tags": [
+        "Payment Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payment_accounts",
+      "operation_id": "list_payment_account",
+      "tool": "gocardless_list_payment_account",
+      "class": "GoCardlessListPaymentAccount",
+      "tags": [
+        "Payment Account"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payment_account_transactions/{payment_account_transaction_id}",
+      "operation_id": "get_payment_account_transactions",
+      "tool": "gocardless_get_payment_account_transactions",
+      "class": "GoCardlessGetPaymentAccountTransactions",
+      "tags": [
+        "Payment Account Transaction"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payment_accounts/{payment_account_transaction_id}/transactions",
+      "operation_id": "get_transactions_from_payment_account_transaction",
+      "tool": "gocardless_get_transactions_from_payment_account_transaction",
+      "class": "GoCardlessGetTransactionsFromPaymentAccountTransaction",
+      "tags": [
+        "Payment Account Transaction"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payouts",
+      "operation_id": "list_payout",
+      "tool": "gocardless_list_payout",
+      "class": "GoCardlessListPayout",
+      "tags": [
+        "Payout"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payouts/{payout_id}",
+      "operation_id": "get_payouts",
+      "tool": "gocardless_get_payouts",
+      "class": "GoCardlessGetPayouts",
+      "tags": [
+        "Payout"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/payouts/{payout_id}",
+      "operation_id": "update_payouts",
+      "tool": "gocardless_update_payouts",
+      "class": "GoCardlessUpdatePayouts",
+      "tags": [
+        "Payout"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/payout_items",
+      "operation_id": "list_payout_item",
+      "tool": "gocardless_list_payout_item",
+      "class": "GoCardlessListPayoutItem",
+      "tags": [
+        "Payout Item"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/redirect_flows",
+      "operation_id": "create_redirect_flow",
+      "tool": "gocardless_create_redirect_flow",
+      "class": "GoCardlessCreateRedirectFlow",
+      "tags": [
+        "Redirect Flow"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/redirect_flows/{redirect_flow_id}",
+      "operation_id": "get_redirect_flows",
+      "tool": "gocardless_get_redirect_flows",
+      "class": "GoCardlessGetRedirectFlows",
+      "tags": [
+        "Redirect Flow"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/redirect_flows/{redirect_flow_id}/actions/complete",
+      "operation_id": "complete_redirect_flow",
+      "tool": "gocardless_complete_redirect_flow",
+      "class": "GoCardlessCompleteRedirectFlow",
+      "tags": [
+        "Redirect Flow"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/refunds",
+      "operation_id": "create_refund",
+      "tool": "gocardless_create_refund",
+      "class": "GoCardlessCreateRefund",
+      "tags": [
+        "Refund"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/refunds",
+      "operation_id": "list_refund",
+      "tool": "gocardless_list_refund",
+      "class": "GoCardlessListRefund",
+      "tags": [
+        "Refund"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/refunds/{refund_id}",
+      "operation_id": "get_refunds",
+      "tool": "gocardless_get_refunds",
+      "class": "GoCardlessGetRefunds",
+      "tags": [
+        "Refund"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/refunds/{refund_id}",
+      "operation_id": "update_refunds",
+      "tool": "gocardless_update_refunds",
+      "class": "GoCardlessUpdateRefunds",
+      "tags": [
+        "Refund"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/scenario_simulators/{scenario_simulator_id}/actions/run",
+      "operation_id": "run_scenario_simulator",
+      "tool": "gocardless_run_scenario_simulator",
+      "class": "GoCardlessRunScenarioSimulator",
+      "tags": [
+        "Scenario Simulator"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/scheme_identifiers",
+      "operation_id": "create_scheme_identifier",
+      "tool": "gocardless_create_scheme_identifier",
+      "class": "GoCardlessCreateSchemeIdentifier",
+      "tags": [
+        "Scheme Identifier"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/scheme_identifiers",
+      "operation_id": "list_scheme_identifier",
+      "tool": "gocardless_list_scheme_identifier",
+      "class": "GoCardlessListSchemeIdentifier",
+      "tags": [
+        "Scheme Identifier"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/scheme_identifiers/{scheme_identifier_id}",
+      "operation_id": "get_scheme_identifiers",
+      "tool": "gocardless_get_scheme_identifiers",
+      "class": "GoCardlessGetSchemeIdentifiers",
+      "tags": [
+        "Scheme Identifier"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/subscriptions",
+      "operation_id": "create_subscription",
+      "tool": "gocardless_create_subscription",
+      "class": "GoCardlessCreateSubscription",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/subscriptions",
+      "operation_id": "list_subscription",
+      "tool": "gocardless_list_subscription",
+      "class": "GoCardlessListSubscription",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/subscriptions/{subscription_id}",
+      "operation_id": "get_subscriptions",
+      "tool": "gocardless_get_subscriptions",
+      "class": "GoCardlessGetSubscriptions",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/subscriptions/{subscription_id}",
+      "operation_id": "update_subscriptions",
+      "tool": "gocardless_update_subscriptions",
+      "class": "GoCardlessUpdateSubscriptions",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/subscriptions/{subscription_id}/actions/pause",
+      "operation_id": "pause_subscription",
+      "tool": "gocardless_pause_subscription",
+      "class": "GoCardlessPauseSubscription",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/subscriptions/{subscription_id}/actions/resume",
+      "operation_id": "resume_subscription",
+      "tool": "gocardless_resume_subscription",
+      "class": "GoCardlessResumeSubscription",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/subscriptions/{subscription_id}/actions/cancel",
+      "operation_id": "cancel_subscription",
+      "tool": "gocardless_cancel_subscription",
+      "class": "GoCardlessCancelSubscription",
+      "tags": [
+        "Subscription"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tax_rates",
+      "operation_id": "list_tax_rate",
+      "tool": "gocardless_list_tax_rate",
+      "class": "GoCardlessListTaxRate",
+      "tags": [
+        "Tax Rate"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tax_rates/{tax_rate_id}",
+      "operation_id": "get_tax_rates",
+      "tool": "gocardless_get_tax_rates",
+      "class": "GoCardlessGetTaxRates",
+      "tags": [
+        "Tax Rate"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/transferred_mandates/{mandate_id}",
+      "operation_id": "get_transferred_mandates",
+      "tool": "gocardless_get_transferred_mandates",
+      "class": "GoCardlessGetTransferredMandates",
+      "tags": [
+        "Transferred Mandate"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/verification_details",
+      "operation_id": "create_verification_detail",
+      "tool": "gocardless_create_verification_detail",
+      "class": "GoCardlessCreateVerificationDetail",
+      "tags": [
+        "Verification Detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/verification_details",
+      "operation_id": "list_verification_detail",
+      "tool": "gocardless_list_verification_detail",
+      "class": "GoCardlessListVerificationDetail",
+      "tags": [
+        "Verification Detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/webhooks",
+      "operation_id": "list_webhook",
+      "tool": "gocardless_list_webhook",
+      "class": "GoCardlessListWebhook",
+      "tags": [
+        "Webhook"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/webhooks/{webhook_id}",
+      "operation_id": "get_webhooks",
+      "tool": "gocardless_get_webhooks",
+      "class": "GoCardlessGetWebhooks",
+      "tags": [
+        "Webhook"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/webhooks/{webhook_id}/actions/retry",
+      "operation_id": "retry_webhook",
+      "tool": "gocardless_retry_webhook",
+      "class": "GoCardlessRetryWebhook",
+      "tags": [
+        "Webhook"
+      ]
+    }
+  ]
+}

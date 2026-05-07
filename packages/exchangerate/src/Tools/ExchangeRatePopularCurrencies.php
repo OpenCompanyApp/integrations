@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ExchangeRate\ExchangeRateService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Return a static list of common currency codes.
+ */
 class ExchangeRatePopularCurrencies implements Tool
 {
+    /**
+     * @param  ExchangeRateService  $service  The exchange-rate API client.
+     */
     public function __construct(
         private ExchangeRateService $service,
     ) {}
@@ -36,6 +42,11 @@ class ExchangeRatePopularCurrencies implements Tool
         return [];
     }
 
+    /**
+     * Return popular currency codes without making an API call.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         $items = array_map(fn (string $name, string $code) => [

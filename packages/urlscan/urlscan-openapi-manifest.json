@@ -1,0 +1,515 @@
+{
+  "source": {
+    "type": "openapi",
+    "url": "https://docs.urlscan.io/_bundle/apis/urlscan-openapi.json?download",
+    "docs_url": "https://docs.urlscan.io/apis/urlscan-openapi"
+  },
+  "openapi": "3.0.0",
+  "version": "1.0.0",
+  "title": "urlscan.io APIs",
+  "base_url": "https://urlscan.io",
+  "path_count": 41,
+  "method_count": 50,
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/api/v1/scan",
+      "operation_id": "submitScan",
+      "tool": "urlscan_submit_scan",
+      "class": "UrlscanSubmitScan",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/search",
+      "operation_id": "searchDatasource",
+      "tool": "urlscan_search_datasource",
+      "class": "UrlscanSearchDatasource",
+      "tags": [
+        "Search"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/result/{scanId}/",
+      "operation_id": "getResult",
+      "tool": "urlscan_get_result",
+      "class": "UrlscanGetResult",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/screenshots/{scanId}.png",
+      "operation_id": "getScreenshot",
+      "tool": "urlscan_get_screenshot",
+      "class": "UrlscanGetScreenshot",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/dom/{scanId}/",
+      "operation_id": "getDom",
+      "tool": "urlscan_get_dom",
+      "class": "UrlscanGetDom",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/responses/{fileHash}/",
+      "operation_id": "getResponse",
+      "tool": "urlscan_get_response",
+      "class": "UrlscanGetResponse",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/result/{scanId}/visibility/",
+      "operation_id": "updateResultVisibility",
+      "tool": "urlscan_update_result_visibility",
+      "class": "UrlscanUpdateResultVisibility",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/result/{scanId}/visibility/",
+      "operation_id": "deleteResultVisibility",
+      "tool": "urlscan_delete_result_visibility",
+      "class": "UrlscanDeleteResultVisibility",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/availableCountries",
+      "operation_id": "getAvailableCountries",
+      "tool": "urlscan_get_available_countries",
+      "class": "UrlscanGetAvailableCountries",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/userAgents",
+      "operation_id": "getUserAgents",
+      "tool": "urlscan_get_user_agents",
+      "class": "UrlscanGetUserAgents",
+      "tags": [
+        "Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/quotas",
+      "operation_id": "getQuotas",
+      "tool": "urlscan_get_quotas",
+      "class": "UrlscanGetQuotas",
+      "tags": [
+        "Generic"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pro/availableBrands",
+      "operation_id": "getAvailableBrands",
+      "tool": "urlscan_get_available_brands",
+      "class": "UrlscanGetAvailableBrands",
+      "tags": [
+        "Brands"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pro/brands",
+      "operation_id": "getBrandSummary",
+      "tool": "urlscan_get_brand_summary",
+      "class": "UrlscanGetBrandSummary",
+      "tags": [
+        "Brands"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pro/phishfeed",
+      "operation_id": "getPhishfeed",
+      "tool": "urlscan_get_phishfeed",
+      "class": "UrlscanGetPhishfeed",
+      "tags": [
+        "Search"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/livescan/scanners/",
+      "operation_id": "getLivescanScanners",
+      "tool": "urlscan_get_livescan_scanners",
+      "class": "UrlscanGetLivescanScanners",
+      "tags": [
+        "Live Scanning"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/livescan/{scannerId}/task/",
+      "operation_id": "createLivescanTask",
+      "tool": "urlscan_create_livescan_task",
+      "class": "UrlscanCreateLivescanTask",
+      "tags": [
+        "Live Scanning"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/livescan/{scannerId}/scan/",
+      "operation_id": "createLivescanScan",
+      "tool": "urlscan_create_livescan_scan",
+      "class": "UrlscanCreateLivescanScan",
+      "tags": [
+        "Live Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/livescan/{scannerId}/{resourceType}/{resourceId}",
+      "operation_id": "getLivescanResource",
+      "tool": "urlscan_get_livescan_resource",
+      "class": "UrlscanGetLivescanResource",
+      "tags": [
+        "Live Scanning"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/livescan/{scannerId}/{scanId}/",
+      "operation_id": "storeLivescanResult",
+      "tool": "urlscan_store_livescan_result",
+      "class": "UrlscanStoreLivescanResult",
+      "tags": [
+        "Live Scanning"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/livescan/{scannerId}/{scanId}/",
+      "operation_id": "discardLivescanResult",
+      "tool": "urlscan_discard_livescan_result",
+      "class": "UrlscanDiscardLivescanResult",
+      "tags": [
+        "Live Scanning"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hostname/{hostname}",
+      "operation_id": "getHostnameHistory",
+      "tool": "urlscan_get_hostname_history",
+      "class": "UrlscanGetHostnameHistory",
+      "tags": [
+        "Hostnames"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pro/username",
+      "operation_id": "getProUsername",
+      "tool": "urlscan_get_pro_username",
+      "class": "UrlscanGetProUsername",
+      "tags": [
+        "Generic"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pro/result/{scanId}/similar/",
+      "operation_id": "getSimilarResults",
+      "tool": "urlscan_get_similar_results",
+      "class": "UrlscanGetSimilarResults",
+      "tags": [
+        "Search"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/searches/",
+      "operation_id": "listSavedSearches",
+      "tool": "urlscan_list_saved_searches",
+      "class": "UrlscanListSavedSearches",
+      "tags": [
+        "Saved Searches"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user/searches/",
+      "operation_id": "createSavedSearch",
+      "tool": "urlscan_create_saved_search",
+      "class": "UrlscanCreateSavedSearch",
+      "tags": [
+        "Saved Searches"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user/searches/{searchId}/",
+      "operation_id": "updateSavedSearch",
+      "tool": "urlscan_update_saved_search",
+      "class": "UrlscanUpdateSavedSearch",
+      "tags": [
+        "Saved Searches"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/user/searches/{searchId}/",
+      "operation_id": "deleteSavedSearch",
+      "tool": "urlscan_delete_saved_search",
+      "class": "UrlscanDeleteSavedSearch",
+      "tags": [
+        "Saved Searches"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/searches/{searchId}/results/",
+      "operation_id": "getSavedSearchResults",
+      "tool": "urlscan_get_saved_search_results",
+      "class": "UrlscanGetSavedSearchResults",
+      "tags": [
+        "Saved Searches"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/subscriptions/",
+      "operation_id": "listSubscriptions",
+      "tool": "urlscan_list_subscriptions",
+      "class": "UrlscanListSubscriptions",
+      "tags": [
+        "Subscriptions"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user/subscriptions/",
+      "operation_id": "createSubscription",
+      "tool": "urlscan_create_subscription",
+      "class": "UrlscanCreateSubscription",
+      "tags": [
+        "Subscriptions"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user/subscriptions/{subscriptionId}/",
+      "operation_id": "updateSubscription",
+      "tool": "urlscan_update_subscription",
+      "class": "UrlscanUpdateSubscription",
+      "tags": [
+        "Subscriptions"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/user/subscriptions/{subscriptionId}/",
+      "operation_id": "deleteSubscription",
+      "tool": "urlscan_delete_subscription",
+      "class": "UrlscanDeleteSubscription",
+      "tags": [
+        "Subscriptions"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/subscriptions/{subscriptionId}/results/{datasource}/",
+      "operation_id": "getSubscriptionResults",
+      "tool": "urlscan_get_subscription_results",
+      "class": "UrlscanGetSubscriptionResults",
+      "tags": [
+        "Subscriptions"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/channels/",
+      "operation_id": "listChannels",
+      "tool": "urlscan_list_channels",
+      "class": "UrlscanListChannels",
+      "tags": [
+        "Channels"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user/channels/",
+      "operation_id": "createChannel",
+      "tool": "urlscan_create_channel",
+      "class": "UrlscanCreateChannel",
+      "tags": [
+        "Channels"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/channels/{channelId}",
+      "operation_id": "getChannel",
+      "tool": "urlscan_get_channel",
+      "class": "UrlscanGetChannel",
+      "tags": [
+        "Channels"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user/channels/{channelId}",
+      "operation_id": "updateChannel",
+      "tool": "urlscan_update_channel",
+      "class": "UrlscanUpdateChannel",
+      "tags": [
+        "Channels"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user/incidents",
+      "operation_id": "createIncident",
+      "tool": "urlscan_create_incident",
+      "class": "UrlscanCreateIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/incidents/{incidentId}",
+      "operation_id": "getIncident",
+      "tool": "urlscan_get_incident",
+      "class": "UrlscanGetIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user/incidents/{incidentId}",
+      "operation_id": "updateIncident",
+      "tool": "urlscan_update_incident",
+      "class": "UrlscanUpdateIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user/incidents/{incidentId}/close",
+      "operation_id": "closeIncident",
+      "tool": "urlscan_close_incident",
+      "class": "UrlscanCloseIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user/incidents/{incidentId}/restart",
+      "operation_id": "restartIncident",
+      "tool": "urlscan_restart_incident",
+      "class": "UrlscanRestartIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user/incidents/{incidentId}/copy",
+      "operation_id": "copyIncident",
+      "tool": "urlscan_copy_incident",
+      "class": "UrlscanCopyIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user/incidents/{incidentId}/fork",
+      "operation_id": "forkIncident",
+      "tool": "urlscan_fork_incident",
+      "class": "UrlscanForkIncident",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/watchableAttributes",
+      "operation_id": "getWatchableAttributes",
+      "tool": "urlscan_get_watchable_attributes",
+      "class": "UrlscanGetWatchableAttributes",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/user/incidentstates/{incidentId}/",
+      "operation_id": "getIncidentStates",
+      "tool": "urlscan_get_incident_states",
+      "class": "UrlscanGetIncidentStates",
+      "tags": [
+        "Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/datadump/list/{timeWindow}/{fileType}/{date}",
+      "operation_id": "listDatadumps",
+      "tool": "urlscan_list_datadumps",
+      "class": "UrlscanListDatadumps",
+      "tags": [
+        "Data Dumps"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/datadump/link/{path}",
+      "operation_id": "getDatadumpLink",
+      "tool": "urlscan_get_datadump_link",
+      "class": "UrlscanGetDatadumpLink",
+      "tags": [
+        "Data Dumps"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/downloads/{fileHash}",
+      "operation_id": "downloadFile",
+      "tool": "urlscan_download_file",
+      "class": "UrlscanDownloadFile",
+      "tags": [
+        "Files"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/malicious/{type}/{value}",
+      "operation_id": "lookupMaliciousObservable",
+      "tool": "urlscan_lookup_malicious_observable",
+      "class": "UrlscanLookupMaliciousObservable",
+      "tags": [
+        "Malicious"
+      ]
+    }
+  ]
+}

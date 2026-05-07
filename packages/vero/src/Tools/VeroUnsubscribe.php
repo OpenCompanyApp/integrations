@@ -60,7 +60,8 @@ class VeroUnsubscribe implements Tool
 
             return ToolResult::success([
                 'id' => $id,
-                'status' => $result['status'] ?? 'unsubscribed',
+                'status' => $result['status'] ?? 200,
+                'message' => $result['message'] ?? 'unsubscribed',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

@@ -1,235 +1,82 @@
-# Airtop — Lua API Reference
+# Airtop Integration
 
-## create_session
+Airtop provides cloud browser automation through the official Airtop API. This package exposes generated tools from `https://docs.airtop.ai/openapi.json`.
 
-Create a new cloud browser session. A session is a container for browser windows.
+## Configuration
 
-### Parameters
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `api_key` | secret | Yes | Airtop API key sent as a Bearer token. |
+| `url` | url | No | API base URL. Default is `https://api.airtop.ai/api`. |
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `profile` | string | no | Browser profile name for persisting cookies and state |
-| `proxy` | string | no | Proxy configuration (e.g., `"http://user:pass@host:port"`) |
+## Usage Pattern
 
-### Example
+Tool names are generated from official Airtop operation IDs:
+
+- `airtop_sessions_create`
+- `airtop_sessions_get_info`
+- `airtop_sessions_windows_load_url`
+- `airtop_sessions_windows_scrape_content`
+- `airtop_sessions_windows_page_query`
+- `airtop_requests_status_get_request_status`
+
+Path and query parameters are exposed as snake_case tool arguments. JSON request payloads are passed through `body` with Airtop's official field names.
 
 ```lua
-local session = app.integrations.airtop.create_session({
-  profile = "default"
+local session = airtop_sessions_create({
+  body = {
+    configuration = {
+      timeoutMinutes = 10
+    }
+  }
 })
-
-print("Session ID: " .. session.id)
 ```
 
----
-
-## get_session
-
-Get details of an existing browser session.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The session ID to retrieve |
-
-### Example
-
 ```lua
-local session = app.integrations.airtop.get_session({
-  session_id = "sess_abc123"
-})
-
-print("Status: " .. session.status)
-```
-
----
-
-## create_window
-
-Open a new browser window within a session.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The session ID to create the window in |
-| `url` | string | no | Starting URL to navigate to when the window opens |
-| `width` | integer | no | Window width in pixels (default: 1280) |
-| `height` | integer | no | Window height in pixels (default: 720) |
-
-### Example
-
-```lua
-local window = app.integrations.airtop.create_window({
-  session_id = "sess_abc123",
-  url = "https://example.com",
-  width = 1920,
-  height = 1080
-})
-
-print("Window ID: " .. window.id)
-```
-
----
-
-## get_window
-
-Get details of a browser window.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The session ID |
-| `window_id` | string | yes | The window ID to retrieve |
-
-### Example
-
-```lua
-local window = app.integrations.airtop.get_window({
-  session_id = "sess_abc123",
-  window_id = "win_xyz789"
-})
-
-print("Current URL: " .. window.url)
-```
-
----
-
-## navigate
-
-Navigate a browser window to a URL.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The session ID |
-| `window_id` | string | yes | The window ID to navigate |
-| `url` | string | yes | The URL to navigate to |
-| `wait_until` | string | no | When to consider navigation complete: `"load"`, `"domcontentloaded"`, or `"networkidle"` |
-
-### Example
-
-```lua
-local result = app.integrations.airtop.navigate({
-  session_id = "sess_abc123",
-  window_id = "win_xyz789",
-  url = "https://example.com",
-  wait_until = "networkidle"
-})
-
-print("Navigated to: " .. result.url)
-```
-
----
-
-## get_page_content
-
-Extract the content of the currently loaded page.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The session ID |
-| `window_id` | string | yes | The window ID to get content from |
-
-### Example
-
-```lua
-local content = app.integrations.airtop.get_page_content({
-  session_id = "sess_abc123",
-  window_id = "win_xyz789"
-})
-
-print(content)
-```
-
----
-
-## list_sessions
-
-List all active browser sessions.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local sessions = app.integrations.airtop.list_sessions({})
-
-for _, session in ipairs(sessions) do
-  print("Session: " .. session.id .. " — " .. session.status)
-end
-```
-
----
-
-## get_current_user
-
-Get the profile of the authenticated Airtop user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local user = app.integrations.airtop.get_current_user({})
-
-print("Logged in as: " .. user.email)
-```
-
----
-
-## Typical Workflow
-
-```lua
--- 1. Create a browser session
-local session = app.integrations.airtop.create_session({})
-
--- 2. Open a window
-local window = app.integrations.airtop.create_window({
-  session_id = session.id
-})
-
--- 3. Navigate to a page
-app.integrations.airtop.navigate({
+local window = airtop_sessions_windows_create({
   session_id = session.id,
-  window_id = window.id,
-  url = "https://example.com"
+  body = {
+    url = "https://example.test"
+  }
 })
-
--- 4. Extract content
-local content = app.integrations.airtop.get_page_content({
-  session_id = session.id,
-  window_id = window.id
-})
-
-print(content)
 ```
 
----
-
-## Multi-Account Usage
-
-If you have multiple Airtop accounts configured, use account-specific namespaces:
+Some official operation IDs are generic. This integration prefixes them with the API resource path so the tool name stays unique and readable.
 
 ```lua
--- Default account (always works)
-app.integrations.airtop.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.airtop.default.function_name({...})
-
--- Named accounts
-app.integrations.airtop.work.function_name({...})
-app.integrations.airtop.client.function_name({...})
+airtop_sessions_windows_load_url({
+  session_id = "sess_123",
+  window_id = "win_123",
+  body = {
+    url = "https://example.test"
+  }
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+```lua
+airtop_sessions_windows_scrape_content({
+  session_id = "sess_123",
+  window_id = "win_123",
+  body = {
+    includeLinks = true
+  }
+})
+```
+
+Async operations return a request identifier. Poll the official status endpoint:
+
+```lua
+airtop_requests_status_get_request_status({
+  request_id = "req_123"
+})
+```
+
+## Return Shape
+
+Tools return Airtop's parsed JSON response. `204 No Content` responses return an empty object. Errors are normalized into tool errors that include the Airtop HTTP status and message when available.
+
+## Notes
+
+- This package covers the official OpenAPI operations available in the Airtop API document: sessions, windows, sync and async automation, form filling, page querying, scraping, screenshots, profiles, automations, files, and request status.
+- Prefer exact `body` objects from the Airtop API documentation when using write tools.
+- Use fake session IDs, URLs, and file names in examples and tests.

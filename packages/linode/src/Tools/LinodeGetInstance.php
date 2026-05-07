@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Linode\LinodeService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Linode instance by ID.
+ */
 class LinodeGetInstance implements Tool
 {
+    /**
+     * @param  LinodeService  $service  The Linode API client.
+     */
     public function __construct(
         private LinodeService $service,
     ) {}
@@ -29,6 +35,11 @@ class LinodeGetInstance implements Tool
         ];
     }
 
+    /**
+     * Fetch an instance by numeric ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

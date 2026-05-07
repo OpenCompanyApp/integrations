@@ -105,10 +105,10 @@ class ActivelyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'name' => 'Actively',
-            'description' => 'Sales CRM — manage campaigns, contacts, and organizations',
+            'description' => 'Sales CRM - manage campaigns, contacts, and organizations',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:actively',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.actively.com/api',
         ];

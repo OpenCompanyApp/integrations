@@ -13,6 +13,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class HuggingFaceGetCurrentUser implements Tool
 {
+    /**
+     * @param  HuggingFaceService  $service  Hugging Face Hub API client.
+     */
     public function __construct(
         private HuggingFaceService $service,
     ) {}
@@ -32,6 +35,11 @@ class HuggingFaceGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the authenticated user's Hub profile.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

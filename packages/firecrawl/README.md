@@ -1,38 +1,14 @@
 # Integration: Firecrawl
 
-> Firecrawl integration for the [Laravel AI SDK](https://github.com/laravel/ai) — scrape, crawl, map, and extract web content. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents the ability to scrape web pages, crawl entire websites, discover URLs, and extract structured data — all through the [Firecrawl](https://firecrawl.dev) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Firecrawl tool lets AI agents scrape web content, crawl websites, discover page structures, and extract structured data — giving agents the ability to interact with and understand web content.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-firecrawl
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Firecrawl v2 integration for OpenCompany agents: scrape, search, crawl, map, batch scrape, extract, agent jobs, browser sessions, and team usage APIs.
 
 ## Configuration
-
-This tool requires a Firecrawl API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
 
 ```php
 return [
     'firecrawl' => [
         'api_key' => env('FIRECRAWL_API_KEY'),
-        'url'     => env('FIRECRAWL_URL', 'https://api.firecrawl.dev/v1'),
+        'url' => env('FIRECRAWL_URL', 'https://api.firecrawl.dev/v2'),
     ],
 ];
 ```
@@ -41,89 +17,49 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `firecrawl_scrape` | read | Scrape a single URL and extract its content |
-| `firecrawl_crawl` | read | Start a crawl job to scrape all pages from a website |
-| `firecrawl_get_crawl_status` | read | Check status and retrieve results of a crawl job |
-| `firecrawl_map` | read | Discover all URLs on a website |
-| `firecrawl_extract` | read | Extract structured data from URLs using AI |
-| `firecrawl_get_current_user` | read | Get authenticated user's account information |
+| `firecrawl_scrape` | read | Scrape a single URL |
+| `firecrawl_search` | read | Search the web and optionally scrape results |
+| `firecrawl_crawl` | read | Start a crawl job |
+| `firecrawl_get_crawl_status` | read | Get crawl status and results |
+| `firecrawl_cancel_crawl` | write | Cancel a crawl job |
+| `firecrawl_get_crawl_errors` | read | List failed crawl pages |
+| `firecrawl_get_active_crawls` | read | List active crawls |
+| `firecrawl_preview_crawl_params` | read | Preview crawl params from a prompt |
+| `firecrawl_map` | read | Discover site URLs |
+| `firecrawl_batch_scrape` | read | Start a batch scrape job |
+| `firecrawl_get_batch_scrape_status` | read | Get batch scrape status and results |
+| `firecrawl_cancel_batch_scrape` | write | Cancel a batch scrape job |
+| `firecrawl_get_batch_scrape_errors` | read | List failed batch scrape URLs |
+| `firecrawl_extract` | read | Extract structured data from URLs |
+| `firecrawl_get_extract_status` | read | Get extract job status |
+| `firecrawl_agent` | read | Start an agentic extraction task |
+| `firecrawl_get_agent_status` | read | Get agent job status |
+| `firecrawl_cancel_agent` | write | Cancel an agent job |
+| `firecrawl_create_browser` | write | Create a browser session |
+| `firecrawl_list_browsers` | read | List browser sessions |
+| `firecrawl_execute_browser` | write | Execute in a browser session |
+| `firecrawl_delete_browser` | write | Delete a browser session |
+| `firecrawl_credit_usage` | read | Get remaining credits |
+| `firecrawl_historical_credit_usage` | read | Get historical credit usage |
+| `firecrawl_token_usage` | read | Get remaining extract tokens |
+| `firecrawl_historical_token_usage` | read | Get historical token usage |
+| `firecrawl_queue_status` | read | Get scrape queue metrics |
+| `firecrawl_activity` | read | List recent API activity |
 
-## Quick Start
-
-```php
-use Laravel\Ai\Facades\Ai;
-use OpenCompany\Integrations\Firecrawl\FirecrawlService;
-use OpenCompany\Integrations\Firecrawl\Tools\FirecrawlScrape;
-
-// Create tools
-$service = app(FirecrawlService::class);
-$tools = [
-    new FirecrawlScrape($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Scrape the content from https://example.com and summarize it.');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('firecrawl');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Firecrawl\Tools\FirecrawlScrape::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\Firecrawl\FirecrawlService;
 
 $service = app(FirecrawlService::class);
 
-// Scrape a page
-$result = $service->scrape('https://example.com');
-
-// Start a crawl
-$crawl = $service->crawl('https://example.com', ['limit' => 50]);
-$status = $service->getCrawlStatus($crawl['id']);
-
-// Map a site
-$urls = $service->map('https://example.com');
-
-// Extract structured data
-$data = $service->extract(
-    ['https://example.com/product/1'],
-    ['prompt' => 'Extract the product name, price, and description.']
-);
-
-// Check account info
-$user = $service->getCurrentUser();
+$page = $service->scrape('https://example.test', ['formats' => ['markdown']]);
+$search = $service->search(['query' => 'Firecrawl v2 batch scrape', 'limit' => 5]);
+$crawl = $service->crawl('https://example.test/docs', ['limit' => 25]);
+$batch = $service->batchScrape(['https://example.test/a', 'https://example.test/b']);
+$credits = $service->creditUsage();
 ```
 
-## Dependencies
+## Endpoint Notes
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Firecrawl](https://firecrawl.dev) account with API access
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+The default base URL is `https://api.firecrawl.dev/v2`. The package covers JSON endpoints from the v2 OpenAPI spec. Multipart file parsing (`POST /parse`) is not exposed in this JSON-only slice.

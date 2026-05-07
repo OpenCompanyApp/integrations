@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MongoDB\MongoDBService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Run an aggregation pipeline against a MongoDB Atlas Data API collection.
+ *
+ * Supports the pipeline stages accepted by MongoDB aggregation.
+ */
 class MongoDBAggregate implements Tool
 {
+    /**
+     * @param  MongoDBService  $service  MongoDB Atlas Data API client.
+     */
     public function __construct(
         private MongoDBService $service,
     ) {}
@@ -31,6 +39,11 @@ class MongoDBAggregate implements Tool
         ];
     }
 
+    /**
+     * Execute an aggregation pipeline against the configured collection.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (database, collection, pipeline).
+     */
     public function execute(array $args): ToolResult
     {
         try {

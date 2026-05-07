@@ -1,6 +1,11 @@
 # Integration: TrustMRR
 
-Verified startup revenue data for the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem. Browse startups, filter by revenue, MRR, asking price, growth, and more — all backed by real payment provider data.
+Verified startup revenue data for the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem. Browse startups, filter by revenue, MRR, asking price, growth, and more - all backed by real payment provider data.
+
+The current TrustMRR API documents two endpoints, and this package covers both:
+
+- `GET /api/v1/startups`
+- `GET /api/v1/startups/{slug}`
 
 ## Available Tools
 

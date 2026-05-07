@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Railway\RailwayService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Railway projects visible to the authenticated account.
+ *
+ * Returns normalized project metadata with team context.
+ */
 class RailwayListProjects implements Tool
 {
+    /**
+     * @param  RailwayService  $service  The Railway GraphQL API client.
+     */
     public function __construct(
         private RailwayService $service,
     ) {}
@@ -27,6 +35,11 @@ class RailwayListProjects implements Tool
         return [];
     }
 
+    /**
+     * Return normalized projects for the authenticated Railway account.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (none)
+     */
     public function execute(array $args): ToolResult
     {
         try {

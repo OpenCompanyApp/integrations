@@ -6,10 +6,17 @@ use OpenCompany\Integrations\MailerSend\MailerSendService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify MailerSend API connectivity.
+ *
+ * Performs a lightweight domain-list call to confirm the token is accepted.
+ */
 class MailerSendGetCurrentUser implements Tool
 {
     /**
      * Create a new MailerSendGetCurrentUser tool instance.
+     *
+     *   MailerSendService  $service  The MailerSend API client.
      */
     public function __construct(
         private MailerSendService $service,

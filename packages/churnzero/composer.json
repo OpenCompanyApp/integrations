@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-churnzero",
-    "description": "ChurnZero customer success integration for Laravel — manage accounts, contacts, alerts, and usage data.",
+    "description": "ChurnZero customer success HTTP API integration for Laravel - send attributes, events, and lifecycle actions.",
     "license": "MIT",
     "authors": [
         {

@@ -2,173 +2,137 @@
 
 namespace OpenCompany\Integrations\GoogleCalendar;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Google Calendar REST API.
+ *
+ * Handles OAuth bearer authentication, Discovery path expansion, JSON request
+ * dispatch, response parsing, and Google API error normalization.
+ */
 class GoogleCalendarService
 {
-    public function __construct(
-        private string $accessToken = '',
-        private string $baseUrl = 'https://www.googleapis.com',
-    ) {
+    /**
+     * @param  string  $accessToken  Google OAuth 2.0 access token with Calendar scopes.
+     * @param  string  $baseUrl  Google Calendar REST API base URL.
+     */
+    public function __construct(private string $accessToken = '', private string $baseUrl = 'https://www.googleapis.com/calendar/v3')
+    {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service has been configured with an access token.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '';
     }
 
     /**
-     * List events on a calendar.
+     * Execute a Google Calendar REST method.
      *
-     * @param  string  $calendarId  The calendar identifier (use "primary" for the user's primary calendar).
-     * @param  array<string, mixed>  $params  Query parameters (timeMin, timeMax, maxResults, q, orderBy, etc.).
+     * @param  array<string, mixed>  $pathParams  Path parameter values keyed by Discovery parameter name.
+     * @param  string[]  $reservedPathParams  Path parameters using `{+param}` reserved expansion.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return array<string, mixed>
      */
-    public function listEvents(string $calendarId, array $params = []): array
+    public function request(string $method, string $pathTemplate, array $pathParams = [], array $reservedPathParams = [], array $query = [], array $body = []): array
     {
-        return $this->request('GET', '/calendar/v3/calendars/' . urlencode($calendarId) . '/events', $params);
-    }
+        $response = $this->rawRequest($method, $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, $body);
 
-    /**
-     * Get a single event from a calendar.
-     *
-     * @param  string  $calendarId  The calendar identifier.
-     * @param  string  $eventId  The event identifier.
-     * @return array<string, mixed>
-     */
-    public function getEvent(string $calendarId, string $eventId): array
-    {
-        return $this->request('GET', '/calendar/v3/calendars/' . urlencode($calendarId) . '/events/' . urlencode($eventId));
-    }
-
-    /**
-     * Create an event on a calendar.
-     *
-     * @param  string  $calendarId  The calendar identifier.
-     * @param  array<string, mixed>  $event  The event payload (summary, start, end, description, attendees, location, etc.).
-     * @return array<string, mixed>
-     */
-    public function createEvent(string $calendarId, array $event): array
-    {
-        return $this->request('POST', '/calendar/v3/calendars/' . urlencode($calendarId) . '/events', $event);
-    }
-
-    /**
-     * List calendars on the user's calendar list.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (maxResults, pageToken, etc.).
-     * @return array<string, mixed>
-     */
-    public function listCalendars(array $params = []): array
-    {
-        return $this->request('GET', '/calendar/v3/users/me/calendarList', $params);
-    }
-
-    /**
-     * Get a calendar by its identifier.
-     *
-     * @param  string  $calendarId  The calendar identifier.
-     * @return array<string, mixed>
-     */
-    public function getCalendar(string $calendarId): array
-    {
-        return $this->request('GET', '/calendar/v3/calendars/' . urlencode($calendarId));
-    }
-
-    /**
-     * Get the available color definitions for calendars and events.
-     *
-     * @return array<string, mixed>
-     */
-    public function listColors(): array
-    {
-        return $this->request('GET', '/calendar/v3/colors');
-    }
-
-    /**
-     * Get the authenticated user's profile information.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/oauth2/v2/userinfo');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g., /calendar/v3/calendars/primary/events).
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
+        if ($response->body() === '') {
+            return ['success' => true, 'status' => $response->status()];
         }
 
-        return $response->json() ?? [];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
     }
 
     /**
-     * Make a raw HTTP request to the Google Calendar API.
+     * Perform a raw HTTP request against Google Calendar.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Google Calendar access token is not configured.');
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Google Calendar access token is not configured.');
         }
-
-        $url = $this->baseUrl . $path;
 
         try {
+            $method = strtoupper($method);
+            $url = $this->urlWithQuery($this->baseUrl.$path, $query);
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Authorization' => 'Bearer '.$this->accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+                'Accept' => 'application/json',
+            ])->timeout(120);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            $response = match ($method) {
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'PATCH' => $http->patch($url, $body),
+                'DELETE' => $http->delete($url, $body),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $json = $response->json();
-                $error = $json['error']['message'] ?? $response->body();
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->body();
+                Log::error("Google Calendar API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
 
-                Log::error("Google Calendar API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-
-                throw new \RuntimeException("Google Calendar API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException('Google Calendar API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Google Calendar API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Google Calendar API: {$e->getMessage()}");
+            Log::error("Google Calendar API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+
+            throw new RuntimeException("Failed to connect to Google Calendar API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Expand Discovery path templates such as `{calendarId}` and `{eventId}`.
+     *
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Parameters using reserved expansion.
+     */
+    private function expandPath(string $template, array $pathParams, array $reservedPathParams): string
+    {
+        return (string) preg_replace_callback('/\{(\+?)([A-Za-z0-9_]+)\}/', function (array $matches) use ($pathParams, $reservedPathParams): string {
+            $key = $matches[2];
+            if (!array_key_exists($key, $pathParams) || $pathParams[$key] === null || $pathParams[$key] === '') {
+                throw new RuntimeException($key.' must be a non-empty path parameter.');
+            }
+
+            $reserved = $matches[1] === '+' || in_array($key, $reservedPathParams, true);
+
+            return $reserved ? str_replace('%2F', '/', rawurlencode((string) $pathParams[$key])) : rawurlencode((string) $pathParams[$key]);
+        }, $template);
+    }
+
+    /**
+     * Append query parameters while preserving repeated Google API keys.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item !== null && $item !== '') {
+                    $parts[] = rawurlencode((string) $key).'='.rawurlencode((string) $item);
+                }
+            }
+        }
+
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

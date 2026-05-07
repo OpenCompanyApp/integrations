@@ -2,55 +2,35 @@
 
 namespace OpenCompany\Integrations\Loops\Tools;
 
-use OpenCompany\Integrations\Loops\LoopsService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class LoopsCreateContact implements Tool
+/**
+ * Create a new Loops contact.
+ *
+ * Accepts default and custom contact properties supported by Loops.
+ */
+class LoopsCreateContact extends AbstractLoopsTool
 {
-    public function __construct(
-        private LoopsService $service,
-    ) {}
+    protected const NAME = 'loops_create_contact';
+    protected const DESCRIPTION = 'Create a Loops contact with an email address and optional default or custom contact properties.';
+    protected const METHOD = 'createContact';
+    protected const PARAMETERS = [
+        'email' => ['type' => 'string', 'required' => true, 'description' => 'The contact email address.'],
+        'firstName' => ['type' => 'string', 'description' => 'The contact first name.'],
+        'lastName' => ['type' => 'string', 'description' => 'The contact last name.'],
+        'userId' => ['type' => 'string', 'description' => 'Your unique user ID for the contact.'],
+        'source' => ['type' => 'string', 'description' => 'The source label for the contact.'],
+        'subscribed' => ['type' => 'boolean', 'description' => 'Whether the contact should receive campaign and loop emails.'],
+        'mailingLists' => ['type' => 'object', 'description' => 'Mailing list IDs mapped to true for subscriptions.'],
+        'properties' => ['type' => 'object', 'description' => 'Additional custom contact properties using Loops property names.'],
+    ];
 
-    public function name(): string
+    /**
+     * Create the contact.
+     *
+     * @param  array<string, mixed>  $args  Contact fields.
+     * @return array<string, mixed>
+     */
+    protected function call(array $args): array
     {
-        return 'loops_create_contact';
-    }
-
-    public function description(): string
-    {
-        return 'Create a new contact in Loops. Requires an email address. Optionally include first and last name.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'email' => ['type' => 'string', 'required' => true, 'description' => 'The contact\'s email address.'],
-            'first_name' => ['type' => 'string', 'description' => 'The contact\'s first name.'],
-            'last_name' => ['type' => 'string', 'description' => 'The contact\'s last name.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Loops integration is not configured.');
-            }
-
-            if (empty($args['email'])) {
-                return ToolResult::error('email is required.');
-            }
-
-            $result = $this->service->createContact(
-                email: $args['email'],
-                firstName: $args['first_name'] ?? null,
-                lastName: $args['last_name'] ?? null,
-            );
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->createContact($this->mergeProperties($args));
     }
 }

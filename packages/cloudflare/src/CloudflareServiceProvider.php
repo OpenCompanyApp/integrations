@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Cloudflare integration with Laravel's service container.
+ *
+ * Binds CloudflareService from host credentials and registers CloudflareToolProvider
+ * with the shared integration registry.
+ */
 class CloudflareServiceProvider extends ServiceProvider
 {
     public function register(): void

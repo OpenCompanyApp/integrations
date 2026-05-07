@@ -24,7 +24,7 @@ class PayPalServiceProvider extends ServiceProvider
 
             return new PayPalService(
                 accessToken: $creds->get('paypal', 'access_token', ''),
-                baseUrl: $creds->get('paypal', 'url', 'https://api-m.paypal.com/v1'),
+                baseUrl: $creds->get('paypal', 'url', 'https://api-m.paypal.com'),
             );
         });
     }

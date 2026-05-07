@@ -15,10 +15,13 @@ use OpenCompany\Integrations\ServiceM8\Tools\ServiceM8ListActivities;
 use OpenCompany\Integrations\ServiceM8\Tools\ServiceM8GetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Provides ServiceM8 tools and configuration metadata for integration hosts.
+ */
 class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -73,7 +76,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
     public function appName(): string
     {
-        return 'service_m8';
+        return 'service-m8';
     }
 
     public function appMeta(): array
@@ -93,7 +96,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Job management and field service software for small businesses',
             'icon' => 'ph:wrench',
             'logo' => 'simple-icons:servicem8',
-            'category' => 'field-service',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.servicem8.com/docs',
         ];
@@ -112,9 +115,9 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api.servicem8.com/v1',
-                'hint' => 'Use <code>https://api.servicem8.com/v1</code> for the standard API, or override for testing',
-                'default' => 'https://api.servicem8.com/v1',
+                'placeholder' => 'https://api.servicem8.com/api_1.0',
+                'hint' => 'Use <code>https://api.servicem8.com/api_1.0</code> for the standard API, or override for testing',
+                'default' => 'https://api.servicem8.com/api_1.0',
             ],
         ];
     }
@@ -122,7 +125,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.servicem8.com/v1', '/');
+        $baseUrl = rtrim($config['url'] ?? 'https://api.servicem8.com/api_1.0', '/');
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided'];
@@ -132,7 +135,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/staff.json');
 
             $json = $response->json();
 
@@ -143,7 +146,8 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 ];
             }
 
-            $userName = ($json['first_name'] ?? '') . ' ' . ($json['last_name'] ?? '');
+            $staff = is_array($json) && array_is_list($json) ? ($json[0] ?? []) : $json;
+            $userName = ($staff['first'] ?? $staff['first_name'] ?? '') . ' ' . ($staff['last'] ?? $staff['last_name'] ?? '');
             $userName = trim($userName) ?: 'Unknown';
 
             return [
@@ -212,7 +216,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'class' => ServiceM8GetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated ServiceM8 user.',
+                'description' => 'List staff members visible to the authenticated ServiceM8 token.',
                 'icon' => 'ph:identification-card',
             ],
         ];
@@ -225,7 +229,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.servicem8.com/v1'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.servicem8.com/api_1.0'],
         ];
     }
 
@@ -242,8 +246,8 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             $service = new ServiceM8Service(
-                accessToken: $creds->get('service_m8', 'access_token', '', $account),
-                baseUrl: $creds->get('service_m8', 'url', 'https://api.servicem8.com/v1', $account),
+                accessToken: $creds->get('service-m8', 'access_token', '', $account) ?: $creds->get('service_m8', 'access_token', '', $account),
+                baseUrl: $creds->get('service-m8', 'url', '', $account) ?: $creds->get('service_m8', 'url', 'https://api.servicem8.com/api_1.0', $account),
             );
 
             return new $class($service);

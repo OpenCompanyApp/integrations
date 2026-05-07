@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to retrieve the current authenticated user from Chargebee.
+ * Tool to verify the configured Chargebee API credentials.
  *
- * Calls GET /v2/users/me to verify credentials and return user information.
+ * Chargebee does not expose a current-user endpoint, so this tool makes a
+ * one-item subscription list request and reports the decoded API response.
  */
 class ChargebeeGetCurrentUser implements Tool
 {
@@ -35,7 +36,7 @@ class ChargebeeGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Retrieve the current authenticated user information from Chargebee. Use this to verify credentials are working and check user details.';
+        return 'Verify Chargebee API connectivity with a lightweight subscriptions request. Use this to confirm credentials and site name are working.';
     }
 
     /**

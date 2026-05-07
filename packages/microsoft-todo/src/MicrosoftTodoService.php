@@ -58,7 +58,7 @@ class MicrosoftTodoService
      */
     public function getList(string $id): array
     {
-        return $this->request('GET', '/me/todo/lists/' . urlencode($id));
+        return $this->request('GET', '/me/todo/lists/' . rawurlencode($id));
     }
 
     /**
@@ -86,7 +86,7 @@ class MicrosoftTodoService
      */
     public function listTasks(string $listId): array
     {
-        return $this->request('GET', '/me/todo/lists/' . urlencode($listId) . '/tasks');
+        return $this->request('GET', '/me/todo/lists/' . rawurlencode($listId) . '/tasks');
     }
 
     /**
@@ -100,7 +100,7 @@ class MicrosoftTodoService
      */
     public function getTask(string $listId, string $taskId): array
     {
-        return $this->request('GET', '/me/todo/lists/' . urlencode($listId) . '/tasks/' . urlencode($taskId));
+        return $this->request('GET', '/me/todo/lists/' . rawurlencode($listId) . '/tasks/' . rawurlencode($taskId));
     }
 
     /**
@@ -131,7 +131,7 @@ class MicrosoftTodoService
             $data['dueDateTime'] = $dueDateTime;
         }
 
-        return $this->request('POST', '/me/todo/lists/' . urlencode($listId) . '/tasks', $data);
+        return $this->request('POST', '/me/todo/lists/' . rawurlencode($listId) . '/tasks', $data);
     }
 
     /**

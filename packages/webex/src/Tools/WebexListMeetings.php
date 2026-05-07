@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Webex\Tools;
 
-use OpenCompany\Integrations\Webex\WebexService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class WebexListMeetings implements Tool
+/**
+ * List scheduled Webex meetings.
+ */
+class WebexListMeetings extends AbstractWebexTool implements Tool
 {
-    public function __construct(
-        private WebexService $service,
-    ) {}
-
     public function name(): string
     {
         return 'webex_list_meetings';
@@ -27,15 +25,20 @@ class WebexListMeetings implements Tool
         return [
             'from' => ['type' => 'string', 'description' => 'Start of the date range (ISO 8601, e.g., "2025-04-01T00:00:00Z"). Lists meetings starting from this time.'],
             'to' => ['type' => 'string', 'description' => 'End of the date range (ISO 8601, e.g., "2025-04-30T23:59:59Z"). Lists meetings up to this time.'],
-            'max' => ['type' => 'integer', 'description' => 'Maximum number of meetings to return (1–100, default: 100).'],
+            'max' => ['type' => 'integer', 'description' => 'Maximum number of meetings to return (1-100, default: 100).'],
         ];
     }
 
+    /**
+     * List meetings.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Webex integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
             $max = isset($args['max']) ? (int) $args['max'] : 100;

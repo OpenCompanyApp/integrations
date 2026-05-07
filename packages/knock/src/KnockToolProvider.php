@@ -91,7 +91,7 @@ class KnockToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Notification engine for developers — trigger workflows, manage messages and recipients',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:knock',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.knock.app',
         ];

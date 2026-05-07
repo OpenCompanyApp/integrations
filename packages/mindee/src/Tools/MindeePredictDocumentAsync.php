@@ -1,0 +1,55 @@
+<?php
+
+namespace OpenCompany\Integrations\Mindee\Tools;
+
+use RuntimeException;
+
+/**
+ * Enqueue asynchronous prediction against any Mindee product endpoint.
+ */
+class MindeePredictDocumentAsync extends AbstractMindeeTool
+{
+    public function name(): string
+    {
+        return 'mindee_predict_document_async';
+    }
+
+    public function description(): string
+    {
+        return 'Send a document to a Mindee asynchronous prediction endpoint and return the queued job response.';
+    }
+
+    public function parameters(): array
+    {
+        return [
+            'account' => ['type' => 'string', 'required' => true, 'description' => 'Mindee account name.'],
+            'api_name' => ['type' => 'string', 'required' => true, 'description' => 'Mindee API name.'],
+            'api_version' => ['type' => 'string', 'required' => true, 'description' => 'Mindee API version.'],
+            'document' => ['type' => 'string', 'required' => true, 'description' => 'File path, URL, or base64-encoded document content.'],
+            'file_name' => ['type' => 'string', 'description' => 'Optional filename for multipart or base64 uploads.'],
+            'options' => ['type' => 'object', 'description' => 'Additional query parameters for the Mindee endpoint.'],
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    protected function callService(array $args): array
+    {
+        foreach (['account', 'api_name', 'api_version', 'document'] as $key) {
+            if (empty($args[$key])) {
+                throw new RuntimeException("{$key} is required.");
+            }
+        }
+
+        return $this->service->predictProductAsync(
+            (string) $args['account'],
+            (string) $args['api_name'],
+            (string) $args['api_version'],
+            (string) $args['document'],
+            $args['file_name'] ?? null,
+            $this->options($args),
+        );
+    }
+}

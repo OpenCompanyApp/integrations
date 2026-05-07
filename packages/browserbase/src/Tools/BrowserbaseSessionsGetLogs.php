@@ -1,0 +1,33 @@
+<?php
+
+namespace OpenCompany\Integrations\Browserbase\Tools;
+
+/**
+ * Session Logs.
+ *
+ * Maps to the official Browserbase endpoint GET /v1/sessions/{id}/logs.
+ */
+class BrowserbaseSessionsGetLogs extends AbstractBrowserbaseTool
+{
+    protected const NAME = 'browserbase_sessions_get_logs';
+    protected const DESCRIPTION = 'Session Logs
+
+Official Browserbase endpoint: GET /v1/sessions/{id}/logs.';
+    protected const PARAMETERS = [
+        'id' => [
+            'type' => 'string',
+            'required' => true,
+            'description' => 'id',
+        ],
+    ];
+    protected const METHOD = 'GET';
+    protected const PATH = '/v1/sessions/{id}/logs';
+    protected const PATH_PARAMS = [
+        'id' => 'id',
+    ];
+    protected const QUERY_PARAMS = [];
+    protected const FORM_PARAMS = [];
+    protected const FORM_REQUIRED_PARAMS = [];
+    protected const BODY_REQUIRED = false;
+    protected const BODY_CONTENT_TYPE = 'json';
+}

@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Sendy\SendyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Compatibility alias for listing Sendy brands.
+ *
+ * The old tool name is retained, but the implementation maps to Sendy's documented get-brands endpoint.
+ */
 class SendyGetCurrentUser implements Tool
 {
+    /**
+     * @param  SendyService  $service  The Sendy API client
+     */
     public function __construct(
         private SendyService $service,
     ) {}
@@ -25,7 +33,7 @@ class SendyGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the current brand/account information from Sendy. Useful for verifying credentials and retrieving brand details.';
+        return 'Get Sendy brands for the configured API key. This keeps the historical get_current_user tool slug for compatibility.';
     }
 
     /**

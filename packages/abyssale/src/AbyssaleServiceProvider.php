@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers Abyssale services and tool provider with Laravel.
+ */
 class AbyssaleServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,7 +17,7 @@ class AbyssaleServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new AbyssaleService(
-                accessToken: $creds->get('abyssale', 'access_token', ''),
+                apiKey: $creds->get('abyssale', 'access_token', ''),
                 baseUrl: $creds->get('abyssale', 'url', 'https://api.abyssale.com'),
             );
         });

@@ -6,12 +6,18 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Cal\Tools\CalApiDelete;
+use OpenCompany\Integrations\Cal\Tools\CalApiGet;
+use OpenCompany\Integrations\Cal\Tools\CalApiPatch;
+use OpenCompany\Integrations\Cal\Tools\CalApiPost;
+use OpenCompany\Integrations\Cal\Tools\CalCancelBooking;
 use OpenCompany\Integrations\Cal\Tools\CalListEventTypes;
 use OpenCompany\Integrations\Cal\Tools\CalGetEventType;
 use OpenCompany\Integrations\Cal\Tools\CalListBookings;
 use OpenCompany\Integrations\Cal\Tools\CalGetBooking;
 use OpenCompany\Integrations\Cal\Tools\CalCreateBooking;
 use OpenCompany\Integrations\Cal\Tools\CalGetCurrentUser;
+use OpenCompany\Integrations\Cal\Tools\CalRescheduleBooking;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 
@@ -107,9 +113,9 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
             'description' => 'Open scheduling infrastructure for booking and calendar management',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calcom',
-            'category' => 'scheduling',
+            'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://developer.cal.com/api',
+            'docs_url' => 'https://cal.com/docs/api-reference/v2/introduction',
         ];
     }/**
      * Get the configuration schema for Cal.com credentials.
@@ -129,9 +135,9 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api.cal.com/v1',
-                'hint' => 'Use <code>https://api.cal.com/v1</code> for cloud, or your self-hosted Cal.com API URL',
-                'default' => 'https://api.cal.com/v1',
+                'placeholder' => 'https://api.cal.com/v2',
+                'hint' => 'Use <code>https://api.cal.com/v2</code> for cloud, or your self-hosted Cal.com API URL',
+                'default' => 'https://api.cal.com/v2',
             ],
         ];
     }
@@ -145,7 +151,7 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.cal.com/v1', '/');
+        $baseUrl = rtrim($config['url'] ?? 'https://api.cal.com/v2', '/');
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided'];
@@ -155,7 +161,7 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/me');
 
             $json = $response->json();
 
@@ -239,12 +245,54 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
                 'description' => 'Create a new booking for an event type.',
                 'icon' => 'ph:calendar-plus',
             ],
+            'cal_cancel_booking' => [
+                'class' => CalCancelBooking::class,
+                'type' => 'write',
+                'name' => 'Cancel Booking',
+                'description' => 'Cancel a booking by UID.',
+                'icon' => 'ph:calendar-x',
+            ],
+            'cal_reschedule_booking' => [
+                'class' => CalRescheduleBooking::class,
+                'type' => 'write',
+                'name' => 'Reschedule Booking',
+                'description' => 'Reschedule a booking by UID.',
+                'icon' => 'ph:calendar-plus',
+            ],
             'cal_get_current_user' => [
                 'class' => CalGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the authenticated user\'s profile.',
                 'icon' => 'ph:user',
+            ],
+            'cal_api_get' => [
+                'class' => CalApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call any Cal.com v2 GET endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'cal_api_post' => [
+                'class' => CalApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call any Cal.com v2 POST endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'cal_api_patch' => [
+                'class' => CalApiPatch::class,
+                'type' => 'write',
+                'name' => 'API PATCH',
+                'description' => 'Call any Cal.com v2 PATCH endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'cal_api_delete' => [
+                'class' => CalApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call any Cal.com v2 DELETE endpoint.',
+                'icon' => 'ph:terminal-window',
             ],
         ];
     }
@@ -264,7 +312,7 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.cal.com/v1'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.cal.com/v2'],
         ];
     }
 
@@ -287,10 +335,20 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $accessToken = (string) $creds->get('cal', 'access_token', '', $account);
+            $baseUrl = (string) $creds->get('cal', 'url', '', $account);
+
+            if ($accessToken === '') {
+                $accessToken = (string) $creds->get('cal-com', 'access_token', '', $account);
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('cal-com', 'url', 'https://api.cal.com/v2', $account);
+            }
 
             $service = new CalService(
-                accessToken: $creds->get('cal', 'access_token', '', $account),
-                baseUrl: $creds->get('cal', 'url', 'https://api.cal.com/v1', $account),
+                accessToken: $accessToken,
+                baseUrl: $baseUrl,
             );
 
             return new $class($service);

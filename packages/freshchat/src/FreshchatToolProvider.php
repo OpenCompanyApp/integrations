@@ -92,7 +92,7 @@ class FreshchatToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Customer messaging and support platform by Freshworks',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:freshchat',
-            'category' => 'support',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.freshchat.com/api-docs/',
         ];

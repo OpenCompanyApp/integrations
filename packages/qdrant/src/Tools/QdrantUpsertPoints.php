@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Qdrant\QdrantService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Insert or update Qdrant points.
+ */
 class QdrantUpsertPoints implements Tool
 {
+    /**
+     * @param  QdrantService  $service  The Qdrant REST API client.
+     */
     public function __construct(
         private QdrantService $service,
     ) {}
@@ -32,10 +38,15 @@ class QdrantUpsertPoints implements Tool
         ];
     }
 
+    /**
+     * Upsert points into a collection.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Qdrant integration is not configured.');
             }
 
@@ -58,15 +69,11 @@ class QdrantUpsertPoints implements Tool
             }
             $body['points'] = $points;
 
-            if (isset($args['wait'])) {
-                $body['wait'] = (bool) $args['wait'];
-            }
+            $params = [];
+            $params['wait'] = isset($args['wait']) ? (bool) $args['wait'] : null;
+            $params['ordering'] = $args['ordering'] ?? null;
 
-            if (isset($args['ordering'])) {
-                $body['ordering'] = $args['ordering'];
-            }
-
-            $result = $this->service->upsertPoints($args['collection'], $body);
+            $result = $this->service->upsertPoints($args['collection'], $body, $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

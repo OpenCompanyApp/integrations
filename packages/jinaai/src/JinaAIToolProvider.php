@@ -3,24 +3,27 @@
 namespace OpenCompany\Integrations\JinaAI;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\JinaAI\Tools\JinaAISearch;
-use OpenCompany\Integrations\JinaAI\Tools\JinaAIRead;
-use OpenCompany\Integrations\JinaAI\Tools\JinaAIGround;
-use OpenCompany\Integrations\JinaAI\Tools\JinaAIEmbeddings;
-use OpenCompany\Integrations\JinaAI\Tools\JinaAIRerank;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAIClassify;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAIEmbeddings;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAIGround;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAIRead;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAIRerank;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAISearch;
+use OpenCompany\Integrations\JinaAI\Tools\JinaAISegment;
 
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool provider for the Jina AI integration.
+ *
+ * Defines metadata, credentials, multi-account service resolution, and Search Foundation tools.
  */
 class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -28,96 +31,67 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-
-
-
-/**
-     * Machine name of the integration.
-     */
     public function appName(): string
     {
         return 'jinaai';
     }
 
-/**
-     * Short metadata shown in tool listings.
-     *
-     * @return array<string, string> Label, description, icon, and logo
-     */
     public function appMeta(): array
     {
         return [
             'label' => 'Jina AI',
-            'description' => 'AI search, reader, grounding, embeddings & reranking',
+            'description' => 'Reader, search, grounding, embeddings, reranking, classification, and segmentation.',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:jinaai',
         ];
     }
 
-/**
-     * Extended metadata for the integration catalog.
-     *
-     * @return array<string, string> Name, description, icon, logo, category, badge, docs URL
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Jina AI',
-            'description' => 'AI-powered search, content extraction, grounding, embeddings, and reranking',
+            'description' => 'Search Foundation APIs for reader/search, grounding, embeddings, reranking, classification, and segmentation.',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:jinaai',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://jina.ai/api/',
+            'docs_url' => 'https://jina.ai/en-US/reader/',
         ];
-    }/**
-     * Configuration schema for the integration settings UI.
-     *
-     * @return array<int, array<string, mixed>>
-     */
+    }
+
     public function configSchema(): array
     {
         return [
@@ -134,7 +108,7 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.jina.ai/v1',
-                'hint' => 'Override only if using a custom Jina AI endpoint',
+                'hint' => 'Overrides the v1 model API endpoint. Reader/search/grounding use their documented Jina hostnames.',
                 'default' => 'https://api.jina.ai/v1',
             ],
         ];
@@ -238,6 +212,20 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'Rerank documents by relevance to a query.',
                 'icon' => 'ph:sort-ascending',
             ],
+            'jinaai_classify' => [
+                'class' => JinaAIClassify::class,
+                'type' => 'read',
+                'name' => 'Classify',
+                'description' => 'Classify text or image inputs with zero-shot labels or a trained classifier.',
+                'icon' => 'ph:tag',
+            ],
+            'jinaai_segment' => [
+                'class' => JinaAISegment::class,
+                'type' => 'read',
+                'name' => 'Segment',
+                'description' => 'Tokenize or segment long text.',
+                'icon' => 'ph:scissors',
+            ],
         ];
     }
 
@@ -266,31 +254,33 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {        return true;
+    {
+        return true;
+    }
+
+    public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
     }
 
     /**
-     * Create a tool instance, optionally using account-specific credentials.
+     * Resolve the Jina AI service for the default or named account.
      *
-     * @param  string  $class   Fully-qualified tool class name
-     * @param  array<string, mixed>  $context  Context containing optional 'account' key
-     * @return Tool Instantiated tool with the appropriate service
+     * @param  array<string, mixed>  $context  Tool execution context.
      */
-    public function createTool(string $class, array $context = []): Tool
+    private function resolveService(array $context = []): JinaAIService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new JinaAIService(
+            return new JinaAIService(
                 apiKey: $creds->get('jinaai', 'api_key', '', $account),
                 baseUrl: $creds->get('jinaai', 'url', 'https://api.jina.ai/v1', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(JinaAIService::class));
+        return app(JinaAIService::class);
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-clerk",
-    "description": "Clerk authentication integration for Laravel — manage users, organizations, and identity.",
+    "description": "Clerk authentication integration for Laravel - manage users, sessions, organizations, invitations, and identity.",
     "license": "MIT",
     "authors": [
         {

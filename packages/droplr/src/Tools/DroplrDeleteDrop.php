@@ -2,49 +2,27 @@
 
 namespace OpenCompany\Integrations\Droplr\Tools;
 
-use OpenCompany\Integrations\Droplr\DroplrService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class DroplrDeleteDrop implements Tool
+/**
+ * Delete a Droplr drop.
+ */
+class DroplrDeleteDrop extends AbstractDroplrTool
 {
-    public function __construct(
-        private DroplrService $service,
-    ) {}
+    public const NAME = 'droplr_delete_drop';
+    public const DESCRIPTION = 'Delete a Droplr drop by ID or short code.';
+    public const PARAMETERS = [
+        'id' => ['type' => 'string', 'required' => true, 'description' => 'Drop ID or short code.'],
+    ];
 
-    public function name(): string
+    /**
+     * Delete one drop.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
+    protected function call(array $args): string
     {
-        return 'droplr_delete_drop';
-    }
+        $id = $this->requiredString($args, 'id', 'drop ID');
+        $this->service->deleteDrop($id);
 
-    public function description(): string
-    {
-        return 'Delete a drop (short link, file, image, or note) from Droplr by its ID. This action is permanent.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The drop ID to delete (the short code, e.g., "abc123").'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Droplr integration is not configured.');
-            }
-
-            if (empty($args['id'])) {
-                return ToolResult::error('Drop ID is required.');
-            }
-
-            $this->service->deleteDrop($args['id']);
-
-            return ToolResult::success("Drop '{$args['id']}' has been deleted.");
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return "Drop '{$id}' has been deleted.";
     }
 }

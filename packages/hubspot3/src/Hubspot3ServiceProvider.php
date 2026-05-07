@@ -2,32 +2,14 @@
 
 namespace OpenCompany\Integrations\Hubspot3;
 
-use Illuminate\Support\ServiceProvider;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
+use OpenCompany\Integrations\HubSpot\HubSpotServiceProvider;
 
 /**
- * Laravel service provider that registers the Hubspot3Service singleton and bootstraps HubSpot tools.
+ * Legacy compatibility alias for the canonical HubSpot service provider.
+ *
+ * Hosts requiring the old package now register the canonical `hubspot` provider
+ * and can still use stored `hubspot3` credentials through fallback lookup.
  */
-class Hubspot3ServiceProvider extends ServiceProvider
+class Hubspot3ServiceProvider extends HubSpotServiceProvider
 {
-    public function register(): void
-    {
-        $this->app->singleton(Hubspot3Service::class, function ($app) {
-            $creds = $app->make(CredentialResolver::class);
-
-            return new Hubspot3Service(
-                accessToken: $creds->get('hubspot3', 'access_token', ''),
-                baseUrl: $creds->get('hubspot3', 'base_url', 'https://api.hubapi.com/v1'),
-            );
-        });
-    }
-
-    public function boot(): void
-    {
-        if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new Hubspot3ToolProvider());
-        }
-    }
 }

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-elevenlabs",
-    "description": "ElevenLabs text-to-speech integration for Laravel — generate speech, manage voices, and browse models.",
+    "description": "ElevenLabs audio AI integration for Laravel with speech, transcription, voice changer, sound effects, dubbing, voices, history, and user APIs.",
     "license": "MIT",
     "authors": [
         {
@@ -12,6 +12,10 @@
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/integration-eleven-labs": "self.version",
+        "opencompanyapp/ai-tool-eleven-labs": "self.version"
     },
     "autoload": {
         "psr-4": {

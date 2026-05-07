@@ -3,8 +3,10 @@
 namespace OpenCompany\Integrations\Paddle;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Paddle\Tools\PaddleCreateCustomer;
 use OpenCompany\Integrations\Paddle\Tools\PaddleGetCurrentUser;
@@ -14,11 +16,15 @@ use OpenCompany\Integrations\Paddle\Tools\PaddleListCustomers;
 use OpenCompany\Integrations\Paddle\Tools\PaddleListProducts;
 use OpenCompany\Integrations\Paddle\Tools\PaddleListTransactions;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Registers Paddle tools and metadata for integration discovery.
+ *
+ * Exposes Paddle Billing API operations for transactions, customers,
+ * products, and lightweight credential verification.
+ */
 class PaddleToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +32,36 @@ class PaddleToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -105,11 +100,13 @@ class PaddleToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Paddle integration for Laravel — manage transactions, customers, and products.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
+            'docs_url' => 'https://developer.paddle.com/api-reference/overview',
         ];
     }
-/**
+
+    /**
      * Get the configuration schema for the Paddle integration.
      */
     public function configSchema(): array
@@ -156,6 +153,15 @@ class PaddleToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             ])->timeout(10)->get($baseUrl . '/transactions', ['per_page' => 1]);
 
             $json = $response->json();
+
+            if (!$response->successful()) {
+                $error = $json['error']['detail'] ?? $json['error']['message'] ?? $json['error'] ?? "HTTP {$response->status()}";
+
+                return [
+                    'success' => false,
+                    'error' => is_string($error) ? $error : json_encode($error),
+                ];
+            }
 
             if ($json === null) {
                 return [
@@ -282,7 +288,7 @@ class PaddleToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new PaddleService(
                 accessToken: $creds->get('paddle', 'access_token', '', $account),

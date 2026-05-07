@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
  * Razorpay API service for interacting with the Razorpay v1 REST API.
  *
  * Handles authentication via HTTP Basic Auth (key_id:key_secret) and provides
- * methods for payments, orders, refunds, customers, and the /items endpoint.
+ * methods for payments, orders, refunds, and customers.
  */
 class RazorpayService
 {
@@ -123,15 +123,13 @@ class RazorpayService
     }
 
     /**
-     * Get the current user / items from Razorpay.
-     *
-     * Uses the GET /items endpoint to retrieve current user information.
+     * Check the configured Razorpay credentials with a lightweight payments call.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/items');
+        return $this->request('GET', '/payments', ['count' => 1]);
     }
 
     /**

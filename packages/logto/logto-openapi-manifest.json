@@ -1,0 +1,2355 @@
+{
+    "source": "https://openapi.logto.io/source.json",
+    "docs": "https://openapi.logto.io/",
+    "title": "Logto API references",
+    "version": "Cloud",
+    "method_count": 335,
+    "generated_at": "2026-05-07T19:09:18+00:00",
+    "operations": {
+        "logto_add_mfa_verification": {
+            "slug": "logto_add_mfa_verification",
+            "method": "POST",
+            "path": "/api/my-account/mfa-verifications",
+            "operation_id": "AddMfaVerification",
+            "class": "LogtoAddMfaVerification"
+        },
+        "logto_add_one_time_tokens": {
+            "slug": "logto_add_one_time_tokens",
+            "method": "POST",
+            "path": "/api/one-time-tokens",
+            "operation_id": "AddOneTimeTokens",
+            "class": "LogtoAddOneTimeTokens"
+        },
+        "logto_add_organization_applications": {
+            "slug": "logto_add_organization_applications",
+            "method": "POST",
+            "path": "/api/organizations/{id}/applications",
+            "operation_id": "AddOrganizationApplications",
+            "class": "LogtoAddOrganizationApplications"
+        },
+        "logto_add_organization_users": {
+            "slug": "logto_add_organization_users",
+            "method": "POST",
+            "path": "/api/organizations/{id}/users",
+            "operation_id": "AddOrganizationUsers",
+            "class": "LogtoAddOrganizationUsers"
+        },
+        "logto_add_user_identities": {
+            "slug": "logto_add_user_identities",
+            "method": "POST",
+            "path": "/api/my-account/identities",
+            "operation_id": "AddUserIdentities",
+            "class": "LogtoAddUserIdentities"
+        },
+        "logto_add_user_profile": {
+            "slug": "logto_add_user_profile",
+            "method": "POST",
+            "path": "/api/experience/profile",
+            "operation_id": "AddUserProfile",
+            "class": "LogtoAddUserProfile"
+        },
+        "logto_assert_saml": {
+            "slug": "logto_assert_saml",
+            "method": "POST",
+            "path": "/api/authn/saml/{connectorId}",
+            "operation_id": "AssertSaml",
+            "class": "LogtoAssertSaml"
+        },
+        "logto_assert_single_sign_on_saml": {
+            "slug": "logto_assert_single_sign_on_saml",
+            "method": "POST",
+            "path": "/api/authn/single-sign-on/saml/{connectorId}",
+            "operation_id": "AssertSingleSignOnSaml",
+            "class": "LogtoAssertSingleSignOnSaml"
+        },
+        "logto_assign_application_roles": {
+            "slug": "logto_assign_application_roles",
+            "method": "POST",
+            "path": "/api/applications/{applicationId}/roles",
+            "operation_id": "AssignApplicationRoles",
+            "class": "LogtoAssignApplicationRoles"
+        },
+        "logto_assign_organization_roles_to_application": {
+            "slug": "logto_assign_organization_roles_to_application",
+            "method": "POST",
+            "path": "/api/organizations/{id}/applications/{applicationId}/roles",
+            "operation_id": "AssignOrganizationRolesToApplication",
+            "class": "LogtoAssignOrganizationRolesToApplication"
+        },
+        "logto_assign_organization_roles_to_applications": {
+            "slug": "logto_assign_organization_roles_to_applications",
+            "method": "POST",
+            "path": "/api/organizations/{id}/applications/roles",
+            "operation_id": "AssignOrganizationRolesToApplications",
+            "class": "LogtoAssignOrganizationRolesToApplications"
+        },
+        "logto_assign_organization_roles_to_user": {
+            "slug": "logto_assign_organization_roles_to_user",
+            "method": "POST",
+            "path": "/api/organizations/{id}/users/{userId}/roles",
+            "operation_id": "AssignOrganizationRolesToUser",
+            "class": "LogtoAssignOrganizationRolesToUser"
+        },
+        "logto_assign_organization_roles_to_users": {
+            "slug": "logto_assign_organization_roles_to_users",
+            "method": "POST",
+            "path": "/api/organizations/{id}/users/roles",
+            "operation_id": "AssignOrganizationRolesToUsers",
+            "class": "LogtoAssignOrganizationRolesToUsers"
+        },
+        "logto_assign_user_roles": {
+            "slug": "logto_assign_user_roles",
+            "method": "POST",
+            "path": "/api/users/{userId}/roles",
+            "operation_id": "AssignUserRoles",
+            "class": "LogtoAssignUserRoles"
+        },
+        "logto_bind_mfa_verification": {
+            "slug": "logto_bind_mfa_verification",
+            "method": "POST",
+            "path": "/api/experience/profile/mfa",
+            "operation_id": "BindMfaVerification",
+            "class": "LogtoBindMfaVerification"
+        },
+        "logto_bind_passkey": {
+            "slug": "logto_bind_passkey",
+            "method": "POST",
+            "path": "/api/experience/profile/mfa/passkey",
+            "operation_id": "BindPasskey",
+            "class": "LogtoBindPasskey"
+        },
+        "logto_check_password_with_default_sign_in_experience": {
+            "slug": "logto_check_password_with_default_sign_in_experience",
+            "method": "POST",
+            "path": "/api/sign-in-exp/default/check-password",
+            "operation_id": "CheckPasswordWithDefaultSignInExperience",
+            "class": "LogtoCheckPasswordWithDefaultSignInExperience"
+        },
+        "logto_cleanup_domains": {
+            "slug": "logto_cleanup_domains",
+            "method": "POST",
+            "path": "/api/domains/cleanup",
+            "operation_id": "CleanupDomains",
+            "class": "LogtoCleanupDomains"
+        },
+        "logto_create_and_send_mfa_verification_code": {
+            "slug": "logto_create_and_send_mfa_verification_code",
+            "method": "POST",
+            "path": "/api/experience/verification/mfa-verification-code",
+            "operation_id": "CreateAndSendMfaVerificationCode",
+            "class": "LogtoCreateAndSendMfaVerificationCode"
+        },
+        "logto_create_and_send_verification_code": {
+            "slug": "logto_create_and_send_verification_code",
+            "method": "POST",
+            "path": "/api/experience/verification/verification-code",
+            "operation_id": "CreateAndSendVerificationCode",
+            "class": "LogtoCreateAndSendVerificationCode"
+        },
+        "logto_create_application": {
+            "slug": "logto_create_application",
+            "method": "POST",
+            "path": "/api/applications",
+            "operation_id": "CreateApplication",
+            "class": "LogtoCreateApplication"
+        },
+        "logto_create_application_protected_app_metadata_custom_domain": {
+            "slug": "logto_create_application_protected_app_metadata_custom_domain",
+            "method": "POST",
+            "path": "/api/applications/{id}/protected-app-metadata/custom-domains",
+            "operation_id": "CreateApplicationProtectedAppMetadataCustomDomain",
+            "class": "LogtoCreateApplicationProtectedAppMetadataCustomDomain"
+        },
+        "logto_create_application_secret": {
+            "slug": "logto_create_application_secret",
+            "method": "POST",
+            "path": "/api/applications/{id}/secrets",
+            "operation_id": "CreateApplicationSecret",
+            "class": "LogtoCreateApplicationSecret"
+        },
+        "logto_create_application_user_consent_organization": {
+            "slug": "logto_create_application_user_consent_organization",
+            "method": "POST",
+            "path": "/api/applications/{id}/users/{userId}/consent-organizations",
+            "operation_id": "CreateApplicationUserConsentOrganization",
+            "class": "LogtoCreateApplicationUserConsentOrganization"
+        },
+        "logto_create_application_user_consent_scope": {
+            "slug": "logto_create_application_user_consent_scope",
+            "method": "POST",
+            "path": "/api/applications/{applicationId}/user-consent-scopes",
+            "operation_id": "CreateApplicationUserConsentScope",
+            "class": "LogtoCreateApplicationUserConsentScope"
+        },
+        "logto_create_connector": {
+            "slug": "logto_create_connector",
+            "method": "POST",
+            "path": "/api/connectors",
+            "operation_id": "CreateConnector",
+            "class": "LogtoCreateConnector"
+        },
+        "logto_create_connector_authorization_uri": {
+            "slug": "logto_create_connector_authorization_uri",
+            "method": "POST",
+            "path": "/api/connectors/{connectorId}/authorization-uri",
+            "operation_id": "CreateConnectorAuthorizationUri",
+            "class": "LogtoCreateConnectorAuthorizationUri"
+        },
+        "logto_create_connector_test": {
+            "slug": "logto_create_connector_test",
+            "method": "POST",
+            "path": "/api/connectors/{factoryId}/test",
+            "operation_id": "CreateConnectorTest",
+            "class": "LogtoCreateConnectorTest"
+        },
+        "logto_create_custom_profile_field": {
+            "slug": "logto_create_custom_profile_field",
+            "method": "POST",
+            "path": "/api/custom-profile-fields",
+            "operation_id": "CreateCustomProfileField",
+            "class": "LogtoCreateCustomProfileField"
+        },
+        "logto_create_custom_profile_fields_batch": {
+            "slug": "logto_create_custom_profile_fields_batch",
+            "method": "POST",
+            "path": "/api/custom-profile-fields/batch",
+            "operation_id": "CreateCustomProfileFieldsBatch",
+            "class": "LogtoCreateCustomProfileFieldsBatch"
+        },
+        "logto_create_domain": {
+            "slug": "logto_create_domain",
+            "method": "POST",
+            "path": "/api/domains",
+            "operation_id": "CreateDomain",
+            "class": "LogtoCreateDomain"
+        },
+        "logto_create_enterprise_sso_verification": {
+            "slug": "logto_create_enterprise_sso_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/sso/{connectorId}/authorization-uri",
+            "operation_id": "CreateEnterpriseSsoVerification",
+            "class": "LogtoCreateEnterpriseSsoVerification"
+        },
+        "logto_create_hook": {
+            "slug": "logto_create_hook",
+            "method": "POST",
+            "path": "/api/hooks",
+            "operation_id": "CreateHook",
+            "class": "LogtoCreateHook"
+        },
+        "logto_create_hook_test": {
+            "slug": "logto_create_hook_test",
+            "method": "POST",
+            "path": "/api/hooks/{id}/test",
+            "operation_id": "CreateHookTest",
+            "class": "LogtoCreateHookTest"
+        },
+        "logto_create_new_password_identity_verification": {
+            "slug": "logto_create_new_password_identity_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/new-password-identity",
+            "operation_id": "CreateNewPasswordIdentityVerification",
+            "class": "LogtoCreateNewPasswordIdentityVerification"
+        },
+        "logto_create_or_replace_totp_mfa_verification": {
+            "slug": "logto_create_or_replace_totp_mfa_verification",
+            "method": "PUT",
+            "path": "/api/my-account/mfa-verifications/totp",
+            "operation_id": "CreateOrReplaceTotpMfaVerification",
+            "class": "LogtoCreateOrReplaceTotpMfaVerification"
+        },
+        "logto_create_organization": {
+            "slug": "logto_create_organization",
+            "method": "POST",
+            "path": "/api/organizations",
+            "operation_id": "CreateOrganization",
+            "class": "LogtoCreateOrganization"
+        },
+        "logto_create_organization_invitation": {
+            "slug": "logto_create_organization_invitation",
+            "method": "POST",
+            "path": "/api/organization-invitations",
+            "operation_id": "CreateOrganizationInvitation",
+            "class": "LogtoCreateOrganizationInvitation"
+        },
+        "logto_create_organization_invitation_message": {
+            "slug": "logto_create_organization_invitation_message",
+            "method": "POST",
+            "path": "/api/organization-invitations/{id}/message",
+            "operation_id": "CreateOrganizationInvitationMessage",
+            "class": "LogtoCreateOrganizationInvitationMessage"
+        },
+        "logto_create_organization_jit_email_domain": {
+            "slug": "logto_create_organization_jit_email_domain",
+            "method": "POST",
+            "path": "/api/organizations/{id}/jit/email-domains",
+            "operation_id": "CreateOrganizationJitEmailDomain",
+            "class": "LogtoCreateOrganizationJitEmailDomain"
+        },
+        "logto_create_organization_jit_role": {
+            "slug": "logto_create_organization_jit_role",
+            "method": "POST",
+            "path": "/api/organizations/{id}/jit/roles",
+            "operation_id": "CreateOrganizationJitRole",
+            "class": "LogtoCreateOrganizationJitRole"
+        },
+        "logto_create_organization_jit_sso_connector": {
+            "slug": "logto_create_organization_jit_sso_connector",
+            "method": "POST",
+            "path": "/api/organizations/{id}/jit/sso-connectors",
+            "operation_id": "CreateOrganizationJitSsoConnector",
+            "class": "LogtoCreateOrganizationJitSsoConnector"
+        },
+        "logto_create_organization_role": {
+            "slug": "logto_create_organization_role",
+            "method": "POST",
+            "path": "/api/organization-roles",
+            "operation_id": "CreateOrganizationRole",
+            "class": "LogtoCreateOrganizationRole"
+        },
+        "logto_create_organization_role_resource_scope": {
+            "slug": "logto_create_organization_role_resource_scope",
+            "method": "POST",
+            "path": "/api/organization-roles/{id}/resource-scopes",
+            "operation_id": "CreateOrganizationRoleResourceScope",
+            "class": "LogtoCreateOrganizationRoleResourceScope"
+        },
+        "logto_create_organization_role_scope": {
+            "slug": "logto_create_organization_role_scope",
+            "method": "POST",
+            "path": "/api/organization-roles/{id}/scopes",
+            "operation_id": "CreateOrganizationRoleScope",
+            "class": "LogtoCreateOrganizationRoleScope"
+        },
+        "logto_create_organization_scope": {
+            "slug": "logto_create_organization_scope",
+            "method": "POST",
+            "path": "/api/organization-scopes",
+            "operation_id": "CreateOrganizationScope",
+            "class": "LogtoCreateOrganizationScope"
+        },
+        "logto_create_password_verification": {
+            "slug": "logto_create_password_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/password",
+            "operation_id": "CreatePasswordVerification",
+            "class": "LogtoCreatePasswordVerification"
+        },
+        "logto_create_resource": {
+            "slug": "logto_create_resource",
+            "method": "POST",
+            "path": "/api/resources",
+            "operation_id": "CreateResource",
+            "class": "LogtoCreateResource"
+        },
+        "logto_create_resource_scope": {
+            "slug": "logto_create_resource_scope",
+            "method": "POST",
+            "path": "/api/resources/{resourceId}/scopes",
+            "operation_id": "CreateResourceScope",
+            "class": "LogtoCreateResourceScope"
+        },
+        "logto_create_role": {
+            "slug": "logto_create_role",
+            "method": "POST",
+            "path": "/api/roles",
+            "operation_id": "CreateRole",
+            "class": "LogtoCreateRole"
+        },
+        "logto_create_role_application": {
+            "slug": "logto_create_role_application",
+            "method": "POST",
+            "path": "/api/roles/{id}/applications",
+            "operation_id": "CreateRoleApplication",
+            "class": "LogtoCreateRoleApplication"
+        },
+        "logto_create_role_scope": {
+            "slug": "logto_create_role_scope",
+            "method": "POST",
+            "path": "/api/roles/{id}/scopes",
+            "operation_id": "CreateRoleScope",
+            "class": "LogtoCreateRoleScope"
+        },
+        "logto_create_role_user": {
+            "slug": "logto_create_role_user",
+            "method": "POST",
+            "path": "/api/roles/{id}/users",
+            "operation_id": "CreateRoleUser",
+            "class": "LogtoCreateRoleUser"
+        },
+        "logto_create_saml_application": {
+            "slug": "logto_create_saml_application",
+            "method": "POST",
+            "path": "/api/saml-applications",
+            "operation_id": "CreateSamlApplication",
+            "class": "LogtoCreateSamlApplication"
+        },
+        "logto_create_saml_application_secret": {
+            "slug": "logto_create_saml_application_secret",
+            "method": "POST",
+            "path": "/api/saml-applications/{id}/secrets",
+            "operation_id": "CreateSamlApplicationSecret",
+            "class": "LogtoCreateSamlApplicationSecret"
+        },
+        "logto_create_saml_authn": {
+            "slug": "logto_create_saml_authn",
+            "method": "POST",
+            "path": "/api/saml/{id}/authn",
+            "operation_id": "CreateSamlAuthn",
+            "class": "LogtoCreateSamlAuthn"
+        },
+        "logto_create_sign_in_passkey_authentication": {
+            "slug": "logto_create_sign_in_passkey_authentication",
+            "method": "POST",
+            "path": "/api/experience/preflight/sign-in-passkey/authentication",
+            "operation_id": "CreateSignInPasskeyAuthentication",
+            "class": "LogtoCreateSignInPasskeyAuthentication"
+        },
+        "logto_create_sign_in_passkey_authentication_with_identifier": {
+            "slug": "logto_create_sign_in_passkey_authentication_with_identifier",
+            "method": "POST",
+            "path": "/api/experience/verification/sign-in-passkey/authentication",
+            "operation_id": "CreateSignInPasskeyAuthenticationWithIdentifier",
+            "class": "LogtoCreateSignInPasskeyAuthenticationWithIdentifier"
+        },
+        "logto_create_social_verification": {
+            "slug": "logto_create_social_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/social/{connectorId}/authorization-uri",
+            "operation_id": "CreateSocialVerification",
+            "class": "LogtoCreateSocialVerification"
+        },
+        "logto_create_sso_connector": {
+            "slug": "logto_create_sso_connector",
+            "method": "POST",
+            "path": "/api/sso-connectors",
+            "operation_id": "CreateSsoConnector",
+            "class": "LogtoCreateSsoConnector"
+        },
+        "logto_create_subject_token": {
+            "slug": "logto_create_subject_token",
+            "method": "POST",
+            "path": "/api/subject-tokens",
+            "operation_id": "CreateSubjectToken",
+            "class": "LogtoCreateSubjectToken"
+        },
+        "logto_create_totp_secret": {
+            "slug": "logto_create_totp_secret",
+            "method": "POST",
+            "path": "/api/experience/verification/totp/secret",
+            "operation_id": "CreateTotpSecret",
+            "class": "LogtoCreateTotpSecret"
+        },
+        "logto_create_user": {
+            "slug": "logto_create_user",
+            "method": "POST",
+            "path": "/api/users",
+            "operation_id": "CreateUser",
+            "class": "LogtoCreateUser"
+        },
+        "logto_create_user_asset": {
+            "slug": "logto_create_user_asset",
+            "method": "POST",
+            "path": "/api/user-assets",
+            "operation_id": "CreateUserAsset",
+            "class": "LogtoCreateUserAsset"
+        },
+        "logto_create_user_identity": {
+            "slug": "logto_create_user_identity",
+            "method": "POST",
+            "path": "/api/users/{userId}/identities",
+            "operation_id": "CreateUserIdentity",
+            "class": "LogtoCreateUserIdentity"
+        },
+        "logto_create_user_mfa_verification": {
+            "slug": "logto_create_user_mfa_verification",
+            "method": "POST",
+            "path": "/api/users/{userId}/mfa-verifications",
+            "operation_id": "CreateUserMfaVerification",
+            "class": "LogtoCreateUserMfaVerification"
+        },
+        "logto_create_user_personal_access_token": {
+            "slug": "logto_create_user_personal_access_token",
+            "method": "POST",
+            "path": "/api/users/{userId}/personal-access-tokens",
+            "operation_id": "CreateUserPersonalAccessToken",
+            "class": "LogtoCreateUserPersonalAccessToken"
+        },
+        "logto_create_verification_by_password": {
+            "slug": "logto_create_verification_by_password",
+            "method": "POST",
+            "path": "/api/verifications/password",
+            "operation_id": "CreateVerificationByPassword",
+            "class": "LogtoCreateVerificationByPassword"
+        },
+        "logto_create_verification_by_social": {
+            "slug": "logto_create_verification_by_social",
+            "method": "POST",
+            "path": "/api/verifications/social",
+            "operation_id": "CreateVerificationBySocial",
+            "class": "LogtoCreateVerificationBySocial"
+        },
+        "logto_create_verification_by_verification_code": {
+            "slug": "logto_create_verification_by_verification_code",
+            "method": "POST",
+            "path": "/api/verifications/verification-code",
+            "operation_id": "CreateVerificationByVerificationCode",
+            "class": "LogtoCreateVerificationByVerificationCode"
+        },
+        "logto_create_verification_code": {
+            "slug": "logto_create_verification_code",
+            "method": "POST",
+            "path": "/api/verification-codes",
+            "operation_id": "CreateVerificationCode",
+            "class": "LogtoCreateVerificationCode"
+        },
+        "logto_create_web_authn_authentication_verification": {
+            "slug": "logto_create_web_authn_authentication_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/web-authn/authentication",
+            "operation_id": "CreateWebAuthnAuthenticationVerification",
+            "class": "LogtoCreateWebAuthnAuthenticationVerification"
+        },
+        "logto_create_web_authn_registration_verification": {
+            "slug": "logto_create_web_authn_registration_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/web-authn/registration",
+            "operation_id": "CreateWebAuthnRegistrationVerification",
+            "class": "LogtoCreateWebAuthnRegistrationVerification"
+        },
+        "logto_delete_application": {
+            "slug": "logto_delete_application",
+            "method": "DELETE",
+            "path": "/api/applications/{id}",
+            "operation_id": "DeleteApplication",
+            "class": "LogtoDeleteApplication"
+        },
+        "logto_delete_application_legacy_secret": {
+            "slug": "logto_delete_application_legacy_secret",
+            "method": "DELETE",
+            "path": "/api/applications/{id}/legacy-secret",
+            "operation_id": "DeleteApplicationLegacySecret",
+            "class": "LogtoDeleteApplicationLegacySecret"
+        },
+        "logto_delete_application_protected_app_metadata_custom_domain": {
+            "slug": "logto_delete_application_protected_app_metadata_custom_domain",
+            "method": "DELETE",
+            "path": "/api/applications/{id}/protected-app-metadata/custom-domains/{domain}",
+            "operation_id": "DeleteApplicationProtectedAppMetadataCustomDomain",
+            "class": "LogtoDeleteApplicationProtectedAppMetadataCustomDomain"
+        },
+        "logto_delete_application_role": {
+            "slug": "logto_delete_application_role",
+            "method": "DELETE",
+            "path": "/api/applications/{applicationId}/roles/{roleId}",
+            "operation_id": "DeleteApplicationRole",
+            "class": "LogtoDeleteApplicationRole"
+        },
+        "logto_delete_application_secret": {
+            "slug": "logto_delete_application_secret",
+            "method": "DELETE",
+            "path": "/api/applications/{id}/secrets/{name}",
+            "operation_id": "DeleteApplicationSecret",
+            "class": "LogtoDeleteApplicationSecret"
+        },
+        "logto_delete_application_user_consent_organization": {
+            "slug": "logto_delete_application_user_consent_organization",
+            "method": "DELETE",
+            "path": "/api/applications/{id}/users/{userId}/consent-organizations/{organizationId}",
+            "operation_id": "DeleteApplicationUserConsentOrganization",
+            "class": "LogtoDeleteApplicationUserConsentOrganization"
+        },
+        "logto_delete_application_user_consent_scope": {
+            "slug": "logto_delete_application_user_consent_scope",
+            "method": "DELETE",
+            "path": "/api/applications/{applicationId}/user-consent-scopes/{scopeType}/{scopeId}",
+            "operation_id": "DeleteApplicationUserConsentScope",
+            "class": "LogtoDeleteApplicationUserConsentScope"
+        },
+        "logto_delete_captcha_provider": {
+            "slug": "logto_delete_captcha_provider",
+            "method": "DELETE",
+            "path": "/api/captcha-provider",
+            "operation_id": "DeleteCaptchaProvider",
+            "class": "LogtoDeleteCaptchaProvider"
+        },
+        "logto_delete_connector": {
+            "slug": "logto_delete_connector",
+            "method": "DELETE",
+            "path": "/api/connectors/{id}",
+            "operation_id": "DeleteConnector",
+            "class": "LogtoDeleteConnector"
+        },
+        "logto_delete_custom_phrase": {
+            "slug": "logto_delete_custom_phrase",
+            "method": "DELETE",
+            "path": "/api/custom-phrases/{languageTag}",
+            "operation_id": "DeleteCustomPhrase",
+            "class": "LogtoDeleteCustomPhrase"
+        },
+        "logto_delete_custom_profile_field_by_name": {
+            "slug": "logto_delete_custom_profile_field_by_name",
+            "method": "DELETE",
+            "path": "/api/custom-profile-fields/{name}",
+            "operation_id": "DeleteCustomProfileFieldByName",
+            "class": "LogtoDeleteCustomProfileFieldByName"
+        },
+        "logto_delete_domain": {
+            "slug": "logto_delete_domain",
+            "method": "DELETE",
+            "path": "/api/domains/{id}",
+            "operation_id": "DeleteDomain",
+            "class": "LogtoDeleteDomain"
+        },
+        "logto_delete_email_template": {
+            "slug": "logto_delete_email_template",
+            "method": "DELETE",
+            "path": "/api/email-templates/{id}",
+            "operation_id": "DeleteEmailTemplate",
+            "class": "LogtoDeleteEmailTemplate"
+        },
+        "logto_delete_email_templates": {
+            "slug": "logto_delete_email_templates",
+            "method": "DELETE",
+            "path": "/api/email-templates",
+            "operation_id": "DeleteEmailTemplates",
+            "class": "LogtoDeleteEmailTemplates"
+        },
+        "logto_delete_grant_by_id": {
+            "slug": "logto_delete_grant_by_id",
+            "method": "DELETE",
+            "path": "/api/my-account/grants/{grantId}",
+            "operation_id": "DeleteGrantById",
+            "class": "LogtoDeleteGrantById"
+        },
+        "logto_delete_hook": {
+            "slug": "logto_delete_hook",
+            "method": "DELETE",
+            "path": "/api/hooks/{id}",
+            "operation_id": "DeleteHook",
+            "class": "LogtoDeleteHook"
+        },
+        "logto_delete_identity": {
+            "slug": "logto_delete_identity",
+            "method": "DELETE",
+            "path": "/api/my-account/identities/{target}",
+            "operation_id": "DeleteIdentity",
+            "class": "LogtoDeleteIdentity"
+        },
+        "logto_delete_jwt_customizer": {
+            "slug": "logto_delete_jwt_customizer",
+            "method": "DELETE",
+            "path": "/api/configs/jwt-customizer/{tokenTypePath}",
+            "operation_id": "DeleteJwtCustomizer",
+            "class": "LogtoDeleteJwtCustomizer"
+        },
+        "logto_delete_mfa_verification": {
+            "slug": "logto_delete_mfa_verification",
+            "method": "DELETE",
+            "path": "/api/my-account/mfa-verifications/{verificationId}",
+            "operation_id": "DeleteMfaVerification",
+            "class": "LogtoDeleteMfaVerification"
+        },
+        "logto_delete_oidc_key": {
+            "slug": "logto_delete_oidc_key",
+            "method": "DELETE",
+            "path": "/api/configs/oidc/{keyType}/{keyId}",
+            "operation_id": "DeleteOidcKey",
+            "class": "LogtoDeleteOidcKey"
+        },
+        "logto_delete_one_time_token": {
+            "slug": "logto_delete_one_time_token",
+            "method": "DELETE",
+            "path": "/api/one-time-tokens/{id}",
+            "operation_id": "DeleteOneTimeToken",
+            "class": "LogtoDeleteOneTimeToken"
+        },
+        "logto_delete_organization": {
+            "slug": "logto_delete_organization",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}",
+            "operation_id": "DeleteOrganization",
+            "class": "LogtoDeleteOrganization"
+        },
+        "logto_delete_organization_application": {
+            "slug": "logto_delete_organization_application",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/applications/{applicationId}",
+            "operation_id": "DeleteOrganizationApplication",
+            "class": "LogtoDeleteOrganizationApplication"
+        },
+        "logto_delete_organization_application_role": {
+            "slug": "logto_delete_organization_application_role",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/applications/{applicationId}/roles/{organizationRoleId}",
+            "operation_id": "DeleteOrganizationApplicationRole",
+            "class": "LogtoDeleteOrganizationApplicationRole"
+        },
+        "logto_delete_organization_invitation": {
+            "slug": "logto_delete_organization_invitation",
+            "method": "DELETE",
+            "path": "/api/organization-invitations/{id}",
+            "operation_id": "DeleteOrganizationInvitation",
+            "class": "LogtoDeleteOrganizationInvitation"
+        },
+        "logto_delete_organization_jit_email_domain": {
+            "slug": "logto_delete_organization_jit_email_domain",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/jit/email-domains/{emailDomain}",
+            "operation_id": "DeleteOrganizationJitEmailDomain",
+            "class": "LogtoDeleteOrganizationJitEmailDomain"
+        },
+        "logto_delete_organization_jit_role": {
+            "slug": "logto_delete_organization_jit_role",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/jit/roles/{organizationRoleId}",
+            "operation_id": "DeleteOrganizationJitRole",
+            "class": "LogtoDeleteOrganizationJitRole"
+        },
+        "logto_delete_organization_jit_sso_connector": {
+            "slug": "logto_delete_organization_jit_sso_connector",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/jit/sso-connectors/{ssoConnectorId}",
+            "operation_id": "DeleteOrganizationJitSsoConnector",
+            "class": "LogtoDeleteOrganizationJitSsoConnector"
+        },
+        "logto_delete_organization_role": {
+            "slug": "logto_delete_organization_role",
+            "method": "DELETE",
+            "path": "/api/organization-roles/{id}",
+            "operation_id": "DeleteOrganizationRole",
+            "class": "LogtoDeleteOrganizationRole"
+        },
+        "logto_delete_organization_role_resource_scope": {
+            "slug": "logto_delete_organization_role_resource_scope",
+            "method": "DELETE",
+            "path": "/api/organization-roles/{id}/resource-scopes/{scopeId}",
+            "operation_id": "DeleteOrganizationRoleResourceScope",
+            "class": "LogtoDeleteOrganizationRoleResourceScope"
+        },
+        "logto_delete_organization_role_scope": {
+            "slug": "logto_delete_organization_role_scope",
+            "method": "DELETE",
+            "path": "/api/organization-roles/{id}/scopes/{organizationScopeId}",
+            "operation_id": "DeleteOrganizationRoleScope",
+            "class": "LogtoDeleteOrganizationRoleScope"
+        },
+        "logto_delete_organization_scope": {
+            "slug": "logto_delete_organization_scope",
+            "method": "DELETE",
+            "path": "/api/organization-scopes/{id}",
+            "operation_id": "DeleteOrganizationScope",
+            "class": "LogtoDeleteOrganizationScope"
+        },
+        "logto_delete_organization_user": {
+            "slug": "logto_delete_organization_user",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/users/{userId}",
+            "operation_id": "DeleteOrganizationUser",
+            "class": "LogtoDeleteOrganizationUser"
+        },
+        "logto_delete_organization_user_role": {
+            "slug": "logto_delete_organization_user_role",
+            "method": "DELETE",
+            "path": "/api/organizations/{id}/users/{userId}/roles/{organizationRoleId}",
+            "operation_id": "DeleteOrganizationUserRole",
+            "class": "LogtoDeleteOrganizationUserRole"
+        },
+        "logto_delete_personal_access_token_post": {
+            "slug": "logto_delete_personal_access_token_post",
+            "method": "POST",
+            "path": "/api/users/{userId}/personal-access-tokens/delete",
+            "operation_id": "DeletePersonalAccessTokenPost",
+            "class": "LogtoDeletePersonalAccessTokenPost"
+        },
+        "logto_delete_primary_email": {
+            "slug": "logto_delete_primary_email",
+            "method": "DELETE",
+            "path": "/api/my-account/primary-email",
+            "operation_id": "DeletePrimaryEmail",
+            "class": "LogtoDeletePrimaryEmail"
+        },
+        "logto_delete_primary_phone": {
+            "slug": "logto_delete_primary_phone",
+            "method": "DELETE",
+            "path": "/api/my-account/primary-phone",
+            "operation_id": "DeletePrimaryPhone",
+            "class": "LogtoDeletePrimaryPhone"
+        },
+        "logto_delete_resource": {
+            "slug": "logto_delete_resource",
+            "method": "DELETE",
+            "path": "/api/resources/{id}",
+            "operation_id": "DeleteResource",
+            "class": "LogtoDeleteResource"
+        },
+        "logto_delete_resource_scope": {
+            "slug": "logto_delete_resource_scope",
+            "method": "DELETE",
+            "path": "/api/resources/{resourceId}/scopes/{scopeId}",
+            "operation_id": "DeleteResourceScope",
+            "class": "LogtoDeleteResourceScope"
+        },
+        "logto_delete_role": {
+            "slug": "logto_delete_role",
+            "method": "DELETE",
+            "path": "/api/roles/{id}",
+            "operation_id": "DeleteRole",
+            "class": "LogtoDeleteRole"
+        },
+        "logto_delete_role_application": {
+            "slug": "logto_delete_role_application",
+            "method": "DELETE",
+            "path": "/api/roles/{id}/applications/{applicationId}",
+            "operation_id": "DeleteRoleApplication",
+            "class": "LogtoDeleteRoleApplication"
+        },
+        "logto_delete_role_scope": {
+            "slug": "logto_delete_role_scope",
+            "method": "DELETE",
+            "path": "/api/roles/{id}/scopes/{scopeId}",
+            "operation_id": "DeleteRoleScope",
+            "class": "LogtoDeleteRoleScope"
+        },
+        "logto_delete_role_user": {
+            "slug": "logto_delete_role_user",
+            "method": "DELETE",
+            "path": "/api/roles/{id}/users/{userId}",
+            "operation_id": "DeleteRoleUser",
+            "class": "LogtoDeleteRoleUser"
+        },
+        "logto_delete_saml_application": {
+            "slug": "logto_delete_saml_application",
+            "method": "DELETE",
+            "path": "/api/saml-applications/{id}",
+            "operation_id": "DeleteSamlApplication",
+            "class": "LogtoDeleteSamlApplication"
+        },
+        "logto_delete_saml_application_secret": {
+            "slug": "logto_delete_saml_application_secret",
+            "method": "DELETE",
+            "path": "/api/saml-applications/{id}/secrets/{secretId}",
+            "operation_id": "DeleteSamlApplicationSecret",
+            "class": "LogtoDeleteSamlApplicationSecret"
+        },
+        "logto_delete_secret": {
+            "slug": "logto_delete_secret",
+            "method": "DELETE",
+            "path": "/api/secrets/{id}",
+            "operation_id": "DeleteSecret",
+            "class": "LogtoDeleteSecret"
+        },
+        "logto_delete_sentinel_activities": {
+            "slug": "logto_delete_sentinel_activities",
+            "method": "POST",
+            "path": "/api/sentinel-activities/delete",
+            "operation_id": "DeleteSentinelActivities",
+            "class": "LogtoDeleteSentinelActivities"
+        },
+        "logto_delete_session_by_id": {
+            "slug": "logto_delete_session_by_id",
+            "method": "DELETE",
+            "path": "/api/my-account/sessions/{sessionId}",
+            "operation_id": "DeleteSessionById",
+            "class": "LogtoDeleteSessionById"
+        },
+        "logto_delete_sso_connector": {
+            "slug": "logto_delete_sso_connector",
+            "method": "DELETE",
+            "path": "/api/sso-connectors/{id}",
+            "operation_id": "DeleteSsoConnector",
+            "class": "LogtoDeleteSsoConnector"
+        },
+        "logto_delete_user": {
+            "slug": "logto_delete_user",
+            "method": "DELETE",
+            "path": "/api/users/{userId}",
+            "operation_id": "DeleteUser",
+            "class": "LogtoDeleteUser"
+        },
+        "logto_delete_user_grant": {
+            "slug": "logto_delete_user_grant",
+            "method": "DELETE",
+            "path": "/api/users/{userId}/grants/{grantId}",
+            "operation_id": "DeleteUserGrant",
+            "class": "LogtoDeleteUserGrant"
+        },
+        "logto_delete_user_identity": {
+            "slug": "logto_delete_user_identity",
+            "method": "DELETE",
+            "path": "/api/users/{userId}/identities/{target}",
+            "operation_id": "DeleteUserIdentity",
+            "class": "LogtoDeleteUserIdentity"
+        },
+        "logto_delete_user_mfa_verification": {
+            "slug": "logto_delete_user_mfa_verification",
+            "method": "DELETE",
+            "path": "/api/users/{userId}/mfa-verifications/{verificationId}",
+            "operation_id": "DeleteUserMfaVerification",
+            "class": "LogtoDeleteUserMfaVerification"
+        },
+        "logto_delete_user_personal_access_token": {
+            "slug": "logto_delete_user_personal_access_token",
+            "method": "DELETE",
+            "path": "/api/users/{userId}/personal-access-tokens/{name}",
+            "operation_id": "DeleteUserPersonalAccessToken",
+            "class": "LogtoDeleteUserPersonalAccessToken"
+        },
+        "logto_delete_user_role": {
+            "slug": "logto_delete_user_role",
+            "method": "DELETE",
+            "path": "/api/users/{userId}/roles/{roleId}",
+            "operation_id": "DeleteUserRole",
+            "class": "LogtoDeleteUserRole"
+        },
+        "logto_delete_user_session": {
+            "slug": "logto_delete_user_session",
+            "method": "DELETE",
+            "path": "/api/users/{userId}/sessions/{sessionId}",
+            "operation_id": "DeleteUserSession",
+            "class": "LogtoDeleteUserSession"
+        },
+        "logto_generate_backup_codes": {
+            "slug": "logto_generate_backup_codes",
+            "method": "POST",
+            "path": "/api/experience/verification/backup-code/generate",
+            "operation_id": "GenerateBackupCodes",
+            "class": "LogtoGenerateBackupCodes"
+        },
+        "logto_generate_my_account_backup_codes": {
+            "slug": "logto_generate_my_account_backup_codes",
+            "method": "POST",
+            "path": "/api/my-account/mfa-verifications/backup-codes/generate",
+            "operation_id": "GenerateMyAccountBackupCodes",
+            "class": "LogtoGenerateMyAccountBackupCodes"
+        },
+        "logto_generate_totp_secret": {
+            "slug": "logto_generate_totp_secret",
+            "method": "POST",
+            "path": "/api/my-account/mfa-verifications/totp-secret/generate",
+            "operation_id": "GenerateTotpSecret",
+            "class": "LogtoGenerateTotpSecret"
+        },
+        "logto_generate_web_authn_registration_options": {
+            "slug": "logto_generate_web_authn_registration_options",
+            "method": "POST",
+            "path": "/api/verifications/web-authn/registration",
+            "operation_id": "GenerateWebAuthnRegistrationOptions",
+            "class": "LogtoGenerateWebAuthnRegistrationOptions"
+        },
+        "logto_get_account_center_settings": {
+            "slug": "logto_get_account_center_settings",
+            "method": "GET",
+            "path": "/api/account-center",
+            "operation_id": "GetAccountCenterSettings",
+            "class": "LogtoGetAccountCenterSettings"
+        },
+        "logto_get_active_user_counts": {
+            "slug": "logto_get_active_user_counts",
+            "method": "GET",
+            "path": "/api/dashboard/users/active",
+            "operation_id": "GetActiveUserCounts",
+            "class": "LogtoGetActiveUserCounts"
+        },
+        "logto_get_admin_console_config": {
+            "slug": "logto_get_admin_console_config",
+            "method": "GET",
+            "path": "/api/configs/admin-console",
+            "operation_id": "GetAdminConsoleConfig",
+            "class": "LogtoGetAdminConsoleConfig"
+        },
+        "logto_get_application": {
+            "slug": "logto_get_application",
+            "method": "GET",
+            "path": "/api/applications/{id}",
+            "operation_id": "GetApplication",
+            "class": "LogtoGetApplication"
+        },
+        "logto_get_application_sign_in_experience": {
+            "slug": "logto_get_application_sign_in_experience",
+            "method": "GET",
+            "path": "/api/applications/{applicationId}/sign-in-experience",
+            "operation_id": "GetApplicationSignInExperience",
+            "class": "LogtoGetApplicationSignInExperience"
+        },
+        "logto_get_backup_codes": {
+            "slug": "logto_get_backup_codes",
+            "method": "GET",
+            "path": "/api/my-account/mfa-verifications/backup-codes",
+            "operation_id": "GetBackupCodes",
+            "class": "LogtoGetBackupCodes"
+        },
+        "logto_get_captcha_provider": {
+            "slug": "logto_get_captcha_provider",
+            "method": "GET",
+            "path": "/api/captcha-provider",
+            "operation_id": "GetCaptchaProvider",
+            "class": "LogtoGetCaptchaProvider"
+        },
+        "logto_get_connector": {
+            "slug": "logto_get_connector",
+            "method": "GET",
+            "path": "/api/connectors/{id}",
+            "operation_id": "GetConnector",
+            "class": "LogtoGetConnector"
+        },
+        "logto_get_connector_factory": {
+            "slug": "logto_get_connector_factory",
+            "method": "GET",
+            "path": "/api/connector-factories/{id}",
+            "operation_id": "GetConnectorFactory",
+            "class": "LogtoGetConnectorFactory"
+        },
+        "logto_get_custom_phrase": {
+            "slug": "logto_get_custom_phrase",
+            "method": "GET",
+            "path": "/api/custom-phrases/{languageTag}",
+            "operation_id": "GetCustomPhrase",
+            "class": "LogtoGetCustomPhrase"
+        },
+        "logto_get_custom_profile_field_by_name": {
+            "slug": "logto_get_custom_profile_field_by_name",
+            "method": "GET",
+            "path": "/api/custom-profile-fields/{name}",
+            "operation_id": "GetCustomProfileFieldByName",
+            "class": "LogtoGetCustomProfileFieldByName"
+        },
+        "logto_get_domain": {
+            "slug": "logto_get_domain",
+            "method": "GET",
+            "path": "/api/domains/{id}",
+            "operation_id": "GetDomain",
+            "class": "LogtoGetDomain"
+        },
+        "logto_get_email_template": {
+            "slug": "logto_get_email_template",
+            "method": "GET",
+            "path": "/api/email-templates/{id}",
+            "operation_id": "GetEmailTemplate",
+            "class": "LogtoGetEmailTemplate"
+        },
+        "logto_get_enabled_sso_connectors": {
+            "slug": "logto_get_enabled_sso_connectors",
+            "method": "GET",
+            "path": "/api/experience/sso-connectors",
+            "operation_id": "GetEnabledSsoConnectors",
+            "class": "LogtoGetEnabledSsoConnectors"
+        },
+        "logto_get_enterprise_sso_identity_access_token": {
+            "slug": "logto_get_enterprise_sso_identity_access_token",
+            "method": "GET",
+            "path": "/api/my-account/sso-identities/{connectorId}/access-token",
+            "operation_id": "GetEnterpriseSsoIdentityAccessToken",
+            "class": "LogtoGetEnterpriseSsoIdentityAccessToken"
+        },
+        "logto_get_grants": {
+            "slug": "logto_get_grants",
+            "method": "GET",
+            "path": "/api/my-account/grants",
+            "operation_id": "GetGrants",
+            "class": "LogtoGetGrants"
+        },
+        "logto_get_hasura_auth": {
+            "slug": "logto_get_hasura_auth",
+            "method": "GET",
+            "path": "/api/authn/hasura",
+            "operation_id": "GetHasuraAuth",
+            "class": "LogtoGetHasuraAuth"
+        },
+        "logto_get_hook": {
+            "slug": "logto_get_hook",
+            "method": "GET",
+            "path": "/api/hooks/{id}",
+            "operation_id": "GetHook",
+            "class": "LogtoGetHook"
+        },
+        "logto_get_id_token_config": {
+            "slug": "logto_get_id_token_config",
+            "method": "GET",
+            "path": "/api/configs/id-token",
+            "operation_id": "GetIdTokenConfig",
+            "class": "LogtoGetIdTokenConfig"
+        },
+        "logto_get_interaction": {
+            "slug": "logto_get_interaction",
+            "method": "GET",
+            "path": "/api/experience/interaction",
+            "operation_id": "GetInteraction",
+            "class": "LogtoGetInteraction"
+        },
+        "logto_get_jwt_customizer": {
+            "slug": "logto_get_jwt_customizer",
+            "method": "GET",
+            "path": "/api/configs/jwt-customizer/{tokenTypePath}",
+            "operation_id": "GetJwtCustomizer",
+            "class": "LogtoGetJwtCustomizer"
+        },
+        "logto_get_log": {
+            "slug": "logto_get_log",
+            "method": "GET",
+            "path": "/api/logs/{id}",
+            "operation_id": "GetLog",
+            "class": "LogtoGetLog"
+        },
+        "logto_get_logto_config": {
+            "slug": "logto_get_logto_config",
+            "method": "GET",
+            "path": "/api/my-account/logto-configs",
+            "operation_id": "GetLogtoConfig",
+            "class": "LogtoGetLogtoConfig"
+        },
+        "logto_get_mfa_settings": {
+            "slug": "logto_get_mfa_settings",
+            "method": "GET",
+            "path": "/api/my-account/mfa-settings",
+            "operation_id": "GetMfaSettings",
+            "class": "LogtoGetMfaSettings"
+        },
+        "logto_get_mfa_verifications": {
+            "slug": "logto_get_mfa_verifications",
+            "method": "GET",
+            "path": "/api/my-account/mfa-verifications",
+            "operation_id": "GetMfaVerifications",
+            "class": "LogtoGetMfaVerifications"
+        },
+        "logto_get_new_user_counts": {
+            "slug": "logto_get_new_user_counts",
+            "method": "GET",
+            "path": "/api/dashboard/users/new",
+            "operation_id": "GetNewUserCounts",
+            "class": "LogtoGetNewUserCounts"
+        },
+        "logto_get_oidc_keys": {
+            "slug": "logto_get_oidc_keys",
+            "method": "GET",
+            "path": "/api/configs/oidc/{keyType}",
+            "operation_id": "GetOidcKeys",
+            "class": "LogtoGetOidcKeys"
+        },
+        "logto_get_oidc_session_config": {
+            "slug": "logto_get_oidc_session_config",
+            "method": "GET",
+            "path": "/api/configs/oidc/session",
+            "operation_id": "GetOidcSessionConfig",
+            "class": "LogtoGetOidcSessionConfig"
+        },
+        "logto_get_one_time_token": {
+            "slug": "logto_get_one_time_token",
+            "method": "GET",
+            "path": "/api/one-time-tokens/{id}",
+            "operation_id": "GetOneTimeToken",
+            "class": "LogtoGetOneTimeToken"
+        },
+        "logto_get_organization": {
+            "slug": "logto_get_organization",
+            "method": "GET",
+            "path": "/api/organizations/{id}",
+            "operation_id": "GetOrganization",
+            "class": "LogtoGetOrganization"
+        },
+        "logto_get_organization_invitation": {
+            "slug": "logto_get_organization_invitation",
+            "method": "GET",
+            "path": "/api/organization-invitations/{id}",
+            "operation_id": "GetOrganizationInvitation",
+            "class": "LogtoGetOrganizationInvitation"
+        },
+        "logto_get_organization_role": {
+            "slug": "logto_get_organization_role",
+            "method": "GET",
+            "path": "/api/organization-roles/{id}",
+            "operation_id": "GetOrganizationRole",
+            "class": "LogtoGetOrganizationRole"
+        },
+        "logto_get_organization_scope": {
+            "slug": "logto_get_organization_scope",
+            "method": "GET",
+            "path": "/api/organization-scopes/{id}",
+            "operation_id": "GetOrganizationScope",
+            "class": "LogtoGetOrganizationScope"
+        },
+        "logto_get_profile": {
+            "slug": "logto_get_profile",
+            "method": "GET",
+            "path": "/api/my-account",
+            "operation_id": "GetProfile",
+            "class": "LogtoGetProfile"
+        },
+        "logto_get_resource": {
+            "slug": "logto_get_resource",
+            "method": "GET",
+            "path": "/api/resources/{id}",
+            "operation_id": "GetResource",
+            "class": "LogtoGetResource"
+        },
+        "logto_get_role": {
+            "slug": "logto_get_role",
+            "method": "GET",
+            "path": "/api/roles/{id}",
+            "operation_id": "GetRole",
+            "class": "LogtoGetRole"
+        },
+        "logto_get_saml_application": {
+            "slug": "logto_get_saml_application",
+            "method": "GET",
+            "path": "/api/saml-applications/{id}",
+            "operation_id": "GetSamlApplication",
+            "class": "LogtoGetSamlApplication"
+        },
+        "logto_get_saml_application_callback": {
+            "slug": "logto_get_saml_application_callback",
+            "method": "GET",
+            "path": "/api/saml-applications/{id}/callback",
+            "operation_id": "GetSamlApplicationCallback",
+            "class": "LogtoGetSamlApplicationCallback"
+        },
+        "logto_get_saml_authn": {
+            "slug": "logto_get_saml_authn",
+            "method": "GET",
+            "path": "/api/saml/{id}/authn",
+            "operation_id": "GetSamlAuthn",
+            "class": "LogtoGetSamlAuthn"
+        },
+        "logto_get_sessions": {
+            "slug": "logto_get_sessions",
+            "method": "GET",
+            "path": "/api/my-account/sessions",
+            "operation_id": "GetSessions",
+            "class": "LogtoGetSessions"
+        },
+        "logto_get_sign_in_exp": {
+            "slug": "logto_get_sign_in_exp",
+            "method": "GET",
+            "path": "/api/sign-in-exp",
+            "operation_id": "GetSignInExp",
+            "class": "LogtoGetSignInExp"
+        },
+        "logto_get_sign_in_experience_config": {
+            "slug": "logto_get_sign_in_experience_config",
+            "method": "GET",
+            "path": "/api/.well-known/sign-in-exp",
+            "operation_id": "GetSignInExperienceConfig",
+            "class": "LogtoGetSignInExperienceConfig"
+        },
+        "logto_get_sign_in_experience_phrases": {
+            "slug": "logto_get_sign_in_experience_phrases",
+            "method": "GET",
+            "path": "/api/.well-known/phrases",
+            "operation_id": "GetSignInExperiencePhrases",
+            "class": "LogtoGetSignInExperiencePhrases"
+        },
+        "logto_get_social_identity_access_token": {
+            "slug": "logto_get_social_identity_access_token",
+            "method": "GET",
+            "path": "/api/my-account/identities/{target}/access-token",
+            "operation_id": "GetSocialIdentityAccessToken",
+            "class": "LogtoGetSocialIdentityAccessToken"
+        },
+        "logto_get_sso_connector": {
+            "slug": "logto_get_sso_connector",
+            "method": "GET",
+            "path": "/api/sso-connectors/{id}",
+            "operation_id": "GetSsoConnector",
+            "class": "LogtoGetSsoConnector"
+        },
+        "logto_get_status": {
+            "slug": "logto_get_status",
+            "method": "GET",
+            "path": "/api/status",
+            "operation_id": "GetStatus",
+            "class": "LogtoGetStatus"
+        },
+        "logto_get_swagger_json": {
+            "slug": "logto_get_swagger_json",
+            "method": "GET",
+            "path": "/api/swagger.json",
+            "operation_id": "GetSwaggerJson",
+            "class": "LogtoGetSwaggerJson"
+        },
+        "logto_get_system_application_config": {
+            "slug": "logto_get_system_application_config",
+            "method": "GET",
+            "path": "/api/systems/application",
+            "operation_id": "GetSystemApplicationConfig",
+            "class": "LogtoGetSystemApplicationConfig"
+        },
+        "logto_get_total_user_count": {
+            "slug": "logto_get_total_user_count",
+            "method": "GET",
+            "path": "/api/dashboard/users/total",
+            "operation_id": "GetTotalUserCount",
+            "class": "LogtoGetTotalUserCount"
+        },
+        "logto_get_user": {
+            "slug": "logto_get_user",
+            "method": "GET",
+            "path": "/api/users/{userId}",
+            "operation_id": "GetUser",
+            "class": "LogtoGetUser"
+        },
+        "logto_get_user_asset_service_status": {
+            "slug": "logto_get_user_asset_service_status",
+            "method": "GET",
+            "path": "/api/user-assets/service-status",
+            "operation_id": "GetUserAssetServiceStatus",
+            "class": "LogtoGetUserAssetServiceStatus"
+        },
+        "logto_get_user_has_password": {
+            "slug": "logto_get_user_has_password",
+            "method": "GET",
+            "path": "/api/users/{userId}/has-password",
+            "operation_id": "GetUserHasPassword",
+            "class": "LogtoGetUserHasPassword"
+        },
+        "logto_get_user_identity": {
+            "slug": "logto_get_user_identity",
+            "method": "GET",
+            "path": "/api/users/{userId}/identities/{target}",
+            "operation_id": "GetUserIdentity",
+            "class": "LogtoGetUserIdentity"
+        },
+        "logto_get_user_session": {
+            "slug": "logto_get_user_session",
+            "method": "GET",
+            "path": "/api/users/{userId}/sessions/{sessionId}",
+            "operation_id": "GetUserSession",
+            "class": "LogtoGetUserSession"
+        },
+        "logto_get_user_sso_identity": {
+            "slug": "logto_get_user_sso_identity",
+            "method": "GET",
+            "path": "/api/users/{userId}/sso-identities/{ssoConnectorId}",
+            "operation_id": "GetUserSsoIdentity",
+            "class": "LogtoGetUserSsoIdentity"
+        },
+        "logto_get_well_known_account_center": {
+            "slug": "logto_get_well_known_account_center",
+            "method": "GET",
+            "path": "/api/.well-known/account-center",
+            "operation_id": "GetWellKnownAccountCenter",
+            "class": "LogtoGetWellKnownAccountCenter"
+        },
+        "logto_get_well_known_experience": {
+            "slug": "logto_get_well_known_experience",
+            "method": "GET",
+            "path": "/api/.well-known/experience",
+            "operation_id": "GetWellKnownExperience",
+            "class": "LogtoGetWellKnownExperience"
+        },
+        "logto_get_well_known_experience_openapi_json": {
+            "slug": "logto_get_well_known_experience_openapi_json",
+            "method": "GET",
+            "path": "/api/.well-known/experience.openapi.json",
+            "operation_id": "GetWellKnownExperienceOpenapiJson",
+            "class": "LogtoGetWellKnownExperienceOpenapiJson"
+        },
+        "logto_get_well_known_management_openapi_json": {
+            "slug": "logto_get_well_known_management_openapi_json",
+            "method": "GET",
+            "path": "/api/.well-known/management.openapi.json",
+            "operation_id": "GetWellKnownManagementOpenapiJson",
+            "class": "LogtoGetWellKnownManagementOpenapiJson"
+        },
+        "logto_get_well_known_user_openapi_json": {
+            "slug": "logto_get_well_known_user_openapi_json",
+            "method": "GET",
+            "path": "/api/.well-known/user.openapi.json",
+            "operation_id": "GetWellKnownUserOpenapiJson",
+            "class": "LogtoGetWellKnownUserOpenapiJson"
+        },
+        "logto_identify_user": {
+            "slug": "logto_identify_user",
+            "method": "POST",
+            "path": "/api/experience/identification",
+            "operation_id": "IdentifyUser",
+            "class": "LogtoIdentifyUser"
+        },
+        "logto_init_interaction": {
+            "slug": "logto_init_interaction",
+            "method": "PUT",
+            "path": "/api/experience",
+            "operation_id": "InitInteraction",
+            "class": "LogtoInitInteraction"
+        },
+        "logto_list_application_organizations": {
+            "slug": "logto_list_application_organizations",
+            "method": "GET",
+            "path": "/api/applications/{id}/organizations",
+            "operation_id": "ListApplicationOrganizations",
+            "class": "LogtoListApplicationOrganizations"
+        },
+        "logto_list_application_protected_app_metadata_custom_domains": {
+            "slug": "logto_list_application_protected_app_metadata_custom_domains",
+            "method": "GET",
+            "path": "/api/applications/{id}/protected-app-metadata/custom-domains",
+            "operation_id": "ListApplicationProtectedAppMetadataCustomDomains",
+            "class": "LogtoListApplicationProtectedAppMetadataCustomDomains"
+        },
+        "logto_list_application_roles": {
+            "slug": "logto_list_application_roles",
+            "method": "GET",
+            "path": "/api/applications/{applicationId}/roles",
+            "operation_id": "ListApplicationRoles",
+            "class": "LogtoListApplicationRoles"
+        },
+        "logto_list_application_secrets": {
+            "slug": "logto_list_application_secrets",
+            "method": "GET",
+            "path": "/api/applications/{id}/secrets",
+            "operation_id": "ListApplicationSecrets",
+            "class": "LogtoListApplicationSecrets"
+        },
+        "logto_list_application_user_consent_organizations": {
+            "slug": "logto_list_application_user_consent_organizations",
+            "method": "GET",
+            "path": "/api/applications/{id}/users/{userId}/consent-organizations",
+            "operation_id": "ListApplicationUserConsentOrganizations",
+            "class": "LogtoListApplicationUserConsentOrganizations"
+        },
+        "logto_list_application_user_consent_scopes": {
+            "slug": "logto_list_application_user_consent_scopes",
+            "method": "GET",
+            "path": "/api/applications/{applicationId}/user-consent-scopes",
+            "operation_id": "ListApplicationUserConsentScopes",
+            "class": "LogtoListApplicationUserConsentScopes"
+        },
+        "logto_list_applications": {
+            "slug": "logto_list_applications",
+            "method": "GET",
+            "path": "/api/applications",
+            "operation_id": "ListApplications",
+            "class": "LogtoListApplications"
+        },
+        "logto_list_connector_factories": {
+            "slug": "logto_list_connector_factories",
+            "method": "GET",
+            "path": "/api/connector-factories",
+            "operation_id": "ListConnectorFactories",
+            "class": "LogtoListConnectorFactories"
+        },
+        "logto_list_connectors": {
+            "slug": "logto_list_connectors",
+            "method": "GET",
+            "path": "/api/connectors",
+            "operation_id": "ListConnectors",
+            "class": "LogtoListConnectors"
+        },
+        "logto_list_custom_phrases": {
+            "slug": "logto_list_custom_phrases",
+            "method": "GET",
+            "path": "/api/custom-phrases",
+            "operation_id": "ListCustomPhrases",
+            "class": "LogtoListCustomPhrases"
+        },
+        "logto_list_custom_profile_fields": {
+            "slug": "logto_list_custom_profile_fields",
+            "method": "GET",
+            "path": "/api/custom-profile-fields",
+            "operation_id": "ListCustomProfileFields",
+            "class": "LogtoListCustomProfileFields"
+        },
+        "logto_list_domains": {
+            "slug": "logto_list_domains",
+            "method": "GET",
+            "path": "/api/domains",
+            "operation_id": "ListDomains",
+            "class": "LogtoListDomains"
+        },
+        "logto_list_email_templates": {
+            "slug": "logto_list_email_templates",
+            "method": "GET",
+            "path": "/api/email-templates",
+            "operation_id": "ListEmailTemplates",
+            "class": "LogtoListEmailTemplates"
+        },
+        "logto_list_hook_recent_logs": {
+            "slug": "logto_list_hook_recent_logs",
+            "method": "GET",
+            "path": "/api/hooks/{id}/recent-logs",
+            "operation_id": "ListHookRecentLogs",
+            "class": "LogtoListHookRecentLogs"
+        },
+        "logto_list_hooks": {
+            "slug": "logto_list_hooks",
+            "method": "GET",
+            "path": "/api/hooks",
+            "operation_id": "ListHooks",
+            "class": "LogtoListHooks"
+        },
+        "logto_list_jwt_customizers": {
+            "slug": "logto_list_jwt_customizers",
+            "method": "GET",
+            "path": "/api/configs/jwt-customizer",
+            "operation_id": "ListJwtCustomizers",
+            "class": "LogtoListJwtCustomizers"
+        },
+        "logto_list_logs": {
+            "slug": "logto_list_logs",
+            "method": "GET",
+            "path": "/api/logs",
+            "operation_id": "ListLogs",
+            "class": "LogtoListLogs"
+        },
+        "logto_list_one_time_tokens": {
+            "slug": "logto_list_one_time_tokens",
+            "method": "GET",
+            "path": "/api/one-time-tokens",
+            "operation_id": "ListOneTimeTokens",
+            "class": "LogtoListOneTimeTokens"
+        },
+        "logto_list_organization_application_roles": {
+            "slug": "logto_list_organization_application_roles",
+            "method": "GET",
+            "path": "/api/organizations/{id}/applications/{applicationId}/roles",
+            "operation_id": "ListOrganizationApplicationRoles",
+            "class": "LogtoListOrganizationApplicationRoles"
+        },
+        "logto_list_organization_applications": {
+            "slug": "logto_list_organization_applications",
+            "method": "GET",
+            "path": "/api/organizations/{id}/applications",
+            "operation_id": "ListOrganizationApplications",
+            "class": "LogtoListOrganizationApplications"
+        },
+        "logto_list_organization_invitations": {
+            "slug": "logto_list_organization_invitations",
+            "method": "GET",
+            "path": "/api/organization-invitations",
+            "operation_id": "ListOrganizationInvitations",
+            "class": "LogtoListOrganizationInvitations"
+        },
+        "logto_list_organization_jit_email_domains": {
+            "slug": "logto_list_organization_jit_email_domains",
+            "method": "GET",
+            "path": "/api/organizations/{id}/jit/email-domains",
+            "operation_id": "ListOrganizationJitEmailDomains",
+            "class": "LogtoListOrganizationJitEmailDomains"
+        },
+        "logto_list_organization_jit_roles": {
+            "slug": "logto_list_organization_jit_roles",
+            "method": "GET",
+            "path": "/api/organizations/{id}/jit/roles",
+            "operation_id": "ListOrganizationJitRoles",
+            "class": "LogtoListOrganizationJitRoles"
+        },
+        "logto_list_organization_jit_sso_connectors": {
+            "slug": "logto_list_organization_jit_sso_connectors",
+            "method": "GET",
+            "path": "/api/organizations/{id}/jit/sso-connectors",
+            "operation_id": "ListOrganizationJitSsoConnectors",
+            "class": "LogtoListOrganizationJitSsoConnectors"
+        },
+        "logto_list_organization_role_resource_scopes": {
+            "slug": "logto_list_organization_role_resource_scopes",
+            "method": "GET",
+            "path": "/api/organization-roles/{id}/resource-scopes",
+            "operation_id": "ListOrganizationRoleResourceScopes",
+            "class": "LogtoListOrganizationRoleResourceScopes"
+        },
+        "logto_list_organization_role_scopes": {
+            "slug": "logto_list_organization_role_scopes",
+            "method": "GET",
+            "path": "/api/organization-roles/{id}/scopes",
+            "operation_id": "ListOrganizationRoleScopes",
+            "class": "LogtoListOrganizationRoleScopes"
+        },
+        "logto_list_organization_roles": {
+            "slug": "logto_list_organization_roles",
+            "method": "GET",
+            "path": "/api/organization-roles",
+            "operation_id": "ListOrganizationRoles",
+            "class": "LogtoListOrganizationRoles"
+        },
+        "logto_list_organization_scopes": {
+            "slug": "logto_list_organization_scopes",
+            "method": "GET",
+            "path": "/api/organization-scopes",
+            "operation_id": "ListOrganizationScopes",
+            "class": "LogtoListOrganizationScopes"
+        },
+        "logto_list_organization_user_roles": {
+            "slug": "logto_list_organization_user_roles",
+            "method": "GET",
+            "path": "/api/organizations/{id}/users/{userId}/roles",
+            "operation_id": "ListOrganizationUserRoles",
+            "class": "LogtoListOrganizationUserRoles"
+        },
+        "logto_list_organization_user_scopes": {
+            "slug": "logto_list_organization_user_scopes",
+            "method": "GET",
+            "path": "/api/organizations/{id}/users/{userId}/scopes",
+            "operation_id": "ListOrganizationUserScopes",
+            "class": "LogtoListOrganizationUserScopes"
+        },
+        "logto_list_organization_users": {
+            "slug": "logto_list_organization_users",
+            "method": "GET",
+            "path": "/api/organizations/{id}/users",
+            "operation_id": "ListOrganizationUsers",
+            "class": "LogtoListOrganizationUsers"
+        },
+        "logto_list_organizations": {
+            "slug": "logto_list_organizations",
+            "method": "GET",
+            "path": "/api/organizations",
+            "operation_id": "ListOrganizations",
+            "class": "LogtoListOrganizations"
+        },
+        "logto_list_resource_scopes": {
+            "slug": "logto_list_resource_scopes",
+            "method": "GET",
+            "path": "/api/resources/{resourceId}/scopes",
+            "operation_id": "ListResourceScopes",
+            "class": "LogtoListResourceScopes"
+        },
+        "logto_list_resources": {
+            "slug": "logto_list_resources",
+            "method": "GET",
+            "path": "/api/resources",
+            "operation_id": "ListResources",
+            "class": "LogtoListResources"
+        },
+        "logto_list_role_applications": {
+            "slug": "logto_list_role_applications",
+            "method": "GET",
+            "path": "/api/roles/{id}/applications",
+            "operation_id": "ListRoleApplications",
+            "class": "LogtoListRoleApplications"
+        },
+        "logto_list_role_scopes": {
+            "slug": "logto_list_role_scopes",
+            "method": "GET",
+            "path": "/api/roles/{id}/scopes",
+            "operation_id": "ListRoleScopes",
+            "class": "LogtoListRoleScopes"
+        },
+        "logto_list_role_users": {
+            "slug": "logto_list_role_users",
+            "method": "GET",
+            "path": "/api/roles/{id}/users",
+            "operation_id": "ListRoleUsers",
+            "class": "LogtoListRoleUsers"
+        },
+        "logto_list_roles": {
+            "slug": "logto_list_roles",
+            "method": "GET",
+            "path": "/api/roles",
+            "operation_id": "ListRoles",
+            "class": "LogtoListRoles"
+        },
+        "logto_list_saml_application_metadata": {
+            "slug": "logto_list_saml_application_metadata",
+            "method": "GET",
+            "path": "/api/saml-applications/{id}/metadata",
+            "operation_id": "ListSamlApplicationMetadata",
+            "class": "LogtoListSamlApplicationMetadata"
+        },
+        "logto_list_saml_application_secrets": {
+            "slug": "logto_list_saml_application_secrets",
+            "method": "GET",
+            "path": "/api/saml-applications/{id}/secrets",
+            "operation_id": "ListSamlApplicationSecrets",
+            "class": "LogtoListSamlApplicationSecrets"
+        },
+        "logto_list_sso_connector_providers": {
+            "slug": "logto_list_sso_connector_providers",
+            "method": "GET",
+            "path": "/api/sso-connector-providers",
+            "operation_id": "ListSsoConnectorProviders",
+            "class": "LogtoListSsoConnectorProviders"
+        },
+        "logto_list_sso_connectors": {
+            "slug": "logto_list_sso_connectors",
+            "method": "GET",
+            "path": "/api/sso-connectors",
+            "operation_id": "ListSsoConnectors",
+            "class": "LogtoListSsoConnectors"
+        },
+        "logto_list_user_all_identities": {
+            "slug": "logto_list_user_all_identities",
+            "method": "GET",
+            "path": "/api/users/{userId}/all-identities",
+            "operation_id": "ListUserAllIdentities",
+            "class": "LogtoListUserAllIdentities"
+        },
+        "logto_list_user_custom_data": {
+            "slug": "logto_list_user_custom_data",
+            "method": "GET",
+            "path": "/api/users/{userId}/custom-data",
+            "operation_id": "ListUserCustomData",
+            "class": "LogtoListUserCustomData"
+        },
+        "logto_list_user_grants": {
+            "slug": "logto_list_user_grants",
+            "method": "GET",
+            "path": "/api/users/{userId}/grants",
+            "operation_id": "ListUserGrants",
+            "class": "LogtoListUserGrants"
+        },
+        "logto_list_user_logto_configs": {
+            "slug": "logto_list_user_logto_configs",
+            "method": "GET",
+            "path": "/api/users/{userId}/logto-configs",
+            "operation_id": "ListUserLogtoConfigs",
+            "class": "LogtoListUserLogtoConfigs"
+        },
+        "logto_list_user_mfa_verifications": {
+            "slug": "logto_list_user_mfa_verifications",
+            "method": "GET",
+            "path": "/api/users/{userId}/mfa-verifications",
+            "operation_id": "ListUserMfaVerifications",
+            "class": "LogtoListUserMfaVerifications"
+        },
+        "logto_list_user_organizations": {
+            "slug": "logto_list_user_organizations",
+            "method": "GET",
+            "path": "/api/users/{userId}/organizations",
+            "operation_id": "ListUserOrganizations",
+            "class": "LogtoListUserOrganizations"
+        },
+        "logto_list_user_personal_access_tokens": {
+            "slug": "logto_list_user_personal_access_tokens",
+            "method": "GET",
+            "path": "/api/users/{userId}/personal-access-tokens",
+            "operation_id": "ListUserPersonalAccessTokens",
+            "class": "LogtoListUserPersonalAccessTokens"
+        },
+        "logto_list_user_roles": {
+            "slug": "logto_list_user_roles",
+            "method": "GET",
+            "path": "/api/users/{userId}/roles",
+            "operation_id": "ListUserRoles",
+            "class": "LogtoListUserRoles"
+        },
+        "logto_list_user_sessions": {
+            "slug": "logto_list_user_sessions",
+            "method": "GET",
+            "path": "/api/users/{userId}/sessions",
+            "operation_id": "ListUserSessions",
+            "class": "LogtoListUserSessions"
+        },
+        "logto_list_users": {
+            "slug": "logto_list_users",
+            "method": "GET",
+            "path": "/api/users",
+            "operation_id": "ListUsers",
+            "class": "LogtoListUsers"
+        },
+        "logto_mark_mfa_enabled": {
+            "slug": "logto_mark_mfa_enabled",
+            "method": "POST",
+            "path": "/api/experience/profile/mfa/mfa-enabled",
+            "operation_id": "MarkMfaEnabled",
+            "class": "LogtoMarkMfaEnabled"
+        },
+        "logto_replace_application_roles": {
+            "slug": "logto_replace_application_roles",
+            "method": "PUT",
+            "path": "/api/applications/{applicationId}/roles",
+            "operation_id": "ReplaceApplicationRoles",
+            "class": "LogtoReplaceApplicationRoles"
+        },
+        "logto_replace_application_sign_in_experience": {
+            "slug": "logto_replace_application_sign_in_experience",
+            "method": "PUT",
+            "path": "/api/applications/{applicationId}/sign-in-experience",
+            "operation_id": "ReplaceApplicationSignInExperience",
+            "class": "LogtoReplaceApplicationSignInExperience"
+        },
+        "logto_replace_application_user_consent_organizations": {
+            "slug": "logto_replace_application_user_consent_organizations",
+            "method": "PUT",
+            "path": "/api/applications/{id}/users/{userId}/consent-organizations",
+            "operation_id": "ReplaceApplicationUserConsentOrganizations",
+            "class": "LogtoReplaceApplicationUserConsentOrganizations"
+        },
+        "logto_replace_custom_phrase": {
+            "slug": "logto_replace_custom_phrase",
+            "method": "PUT",
+            "path": "/api/custom-phrases/{languageTag}",
+            "operation_id": "ReplaceCustomPhrase",
+            "class": "LogtoReplaceCustomPhrase"
+        },
+        "logto_replace_email_templates": {
+            "slug": "logto_replace_email_templates",
+            "method": "PUT",
+            "path": "/api/email-templates",
+            "operation_id": "ReplaceEmailTemplates",
+            "class": "LogtoReplaceEmailTemplates"
+        },
+        "logto_replace_one_time_token_status": {
+            "slug": "logto_replace_one_time_token_status",
+            "method": "PUT",
+            "path": "/api/one-time-tokens/{id}/status",
+            "operation_id": "ReplaceOneTimeTokenStatus",
+            "class": "LogtoReplaceOneTimeTokenStatus"
+        },
+        "logto_replace_organization_application_roles": {
+            "slug": "logto_replace_organization_application_roles",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/applications/{applicationId}/roles",
+            "operation_id": "ReplaceOrganizationApplicationRoles",
+            "class": "LogtoReplaceOrganizationApplicationRoles"
+        },
+        "logto_replace_organization_applications": {
+            "slug": "logto_replace_organization_applications",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/applications",
+            "operation_id": "ReplaceOrganizationApplications",
+            "class": "LogtoReplaceOrganizationApplications"
+        },
+        "logto_replace_organization_invitation_status": {
+            "slug": "logto_replace_organization_invitation_status",
+            "method": "PUT",
+            "path": "/api/organization-invitations/{id}/status",
+            "operation_id": "ReplaceOrganizationInvitationStatus",
+            "class": "LogtoReplaceOrganizationInvitationStatus"
+        },
+        "logto_replace_organization_jit_email_domains": {
+            "slug": "logto_replace_organization_jit_email_domains",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/jit/email-domains",
+            "operation_id": "ReplaceOrganizationJitEmailDomains",
+            "class": "LogtoReplaceOrganizationJitEmailDomains"
+        },
+        "logto_replace_organization_jit_roles": {
+            "slug": "logto_replace_organization_jit_roles",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/jit/roles",
+            "operation_id": "ReplaceOrganizationJitRoles",
+            "class": "LogtoReplaceOrganizationJitRoles"
+        },
+        "logto_replace_organization_jit_sso_connectors": {
+            "slug": "logto_replace_organization_jit_sso_connectors",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/jit/sso-connectors",
+            "operation_id": "ReplaceOrganizationJitSsoConnectors",
+            "class": "LogtoReplaceOrganizationJitSsoConnectors"
+        },
+        "logto_replace_organization_role_resource_scopes": {
+            "slug": "logto_replace_organization_role_resource_scopes",
+            "method": "PUT",
+            "path": "/api/organization-roles/{id}/resource-scopes",
+            "operation_id": "ReplaceOrganizationRoleResourceScopes",
+            "class": "LogtoReplaceOrganizationRoleResourceScopes"
+        },
+        "logto_replace_organization_role_scopes": {
+            "slug": "logto_replace_organization_role_scopes",
+            "method": "PUT",
+            "path": "/api/organization-roles/{id}/scopes",
+            "operation_id": "ReplaceOrganizationRoleScopes",
+            "class": "LogtoReplaceOrganizationRoleScopes"
+        },
+        "logto_replace_organization_user_roles": {
+            "slug": "logto_replace_organization_user_roles",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/users/{userId}/roles",
+            "operation_id": "ReplaceOrganizationUserRoles",
+            "class": "LogtoReplaceOrganizationUserRoles"
+        },
+        "logto_replace_organization_users": {
+            "slug": "logto_replace_organization_users",
+            "method": "PUT",
+            "path": "/api/organizations/{id}/users",
+            "operation_id": "ReplaceOrganizationUsers",
+            "class": "LogtoReplaceOrganizationUsers"
+        },
+        "logto_replace_user_identity": {
+            "slug": "logto_replace_user_identity",
+            "method": "PUT",
+            "path": "/api/users/{userId}/identities/{target}",
+            "operation_id": "ReplaceUserIdentity",
+            "class": "LogtoReplaceUserIdentity"
+        },
+        "logto_replace_user_roles": {
+            "slug": "logto_replace_user_roles",
+            "method": "PUT",
+            "path": "/api/users/{userId}/roles",
+            "operation_id": "ReplaceUserRoles",
+            "class": "LogtoReplaceUserRoles"
+        },
+        "logto_reset_user_password": {
+            "slug": "logto_reset_user_password",
+            "method": "PUT",
+            "path": "/api/experience/profile/password",
+            "operation_id": "ResetUserPassword",
+            "class": "LogtoResetUserPassword"
+        },
+        "logto_rotate_oidc_keys": {
+            "slug": "logto_rotate_oidc_keys",
+            "method": "POST",
+            "path": "/api/configs/oidc/{keyType}/rotate",
+            "operation_id": "RotateOidcKeys",
+            "class": "LogtoRotateOidcKeys"
+        },
+        "logto_skip_mfa_binding_flow": {
+            "slug": "logto_skip_mfa_binding_flow",
+            "method": "POST",
+            "path": "/api/experience/profile/mfa/mfa-skipped",
+            "operation_id": "SkipMfaBindingFlow",
+            "class": "LogtoSkipMfaBindingFlow"
+        },
+        "logto_skip_mfa_suggestion": {
+            "slug": "logto_skip_mfa_suggestion",
+            "method": "POST",
+            "path": "/api/experience/profile/mfa/mfa-suggestion-skipped",
+            "operation_id": "SkipMfaSuggestion",
+            "class": "LogtoSkipMfaSuggestion"
+        },
+        "logto_skip_passkey_binding": {
+            "slug": "logto_skip_passkey_binding",
+            "method": "POST",
+            "path": "/api/experience/profile/mfa/passkey-skipped",
+            "operation_id": "SkipPasskeyBinding",
+            "class": "LogtoSkipPasskeyBinding"
+        },
+        "logto_submit_interaction": {
+            "slug": "logto_submit_interaction",
+            "method": "POST",
+            "path": "/api/experience/submit",
+            "operation_id": "SubmitInteraction",
+            "class": "LogtoSubmitInteraction"
+        },
+        "logto_test_jwt_customizer": {
+            "slug": "logto_test_jwt_customizer",
+            "method": "POST",
+            "path": "/api/configs/jwt-customizer/test",
+            "operation_id": "TestJwtCustomizer",
+            "class": "LogtoTestJwtCustomizer"
+        },
+        "logto_update_account_center_settings": {
+            "slug": "logto_update_account_center_settings",
+            "method": "PATCH",
+            "path": "/api/account-center",
+            "operation_id": "UpdateAccountCenterSettings",
+            "class": "LogtoUpdateAccountCenterSettings"
+        },
+        "logto_update_admin_console_config": {
+            "slug": "logto_update_admin_console_config",
+            "method": "PATCH",
+            "path": "/api/configs/admin-console",
+            "operation_id": "UpdateAdminConsoleConfig",
+            "class": "LogtoUpdateAdminConsoleConfig"
+        },
+        "logto_update_application": {
+            "slug": "logto_update_application",
+            "method": "PATCH",
+            "path": "/api/applications/{id}",
+            "operation_id": "UpdateApplication",
+            "class": "LogtoUpdateApplication"
+        },
+        "logto_update_application_custom_data": {
+            "slug": "logto_update_application_custom_data",
+            "method": "PATCH",
+            "path": "/api/applications/{applicationId}/custom-data",
+            "operation_id": "UpdateApplicationCustomData",
+            "class": "LogtoUpdateApplicationCustomData"
+        },
+        "logto_update_application_secret": {
+            "slug": "logto_update_application_secret",
+            "method": "PATCH",
+            "path": "/api/applications/{id}/secrets/{name}",
+            "operation_id": "UpdateApplicationSecret",
+            "class": "LogtoUpdateApplicationSecret"
+        },
+        "logto_update_captcha_provider": {
+            "slug": "logto_update_captcha_provider",
+            "method": "PUT",
+            "path": "/api/captcha-provider",
+            "operation_id": "UpdateCaptchaProvider",
+            "class": "LogtoUpdateCaptchaProvider"
+        },
+        "logto_update_connector": {
+            "slug": "logto_update_connector",
+            "method": "PATCH",
+            "path": "/api/connectors/{id}",
+            "operation_id": "UpdateConnector",
+            "class": "LogtoUpdateConnector"
+        },
+        "logto_update_custom_profile_field_by_name": {
+            "slug": "logto_update_custom_profile_field_by_name",
+            "method": "PUT",
+            "path": "/api/custom-profile-fields/{name}",
+            "operation_id": "UpdateCustomProfileFieldByName",
+            "class": "LogtoUpdateCustomProfileFieldByName"
+        },
+        "logto_update_custom_profile_fields_sie_order": {
+            "slug": "logto_update_custom_profile_fields_sie_order",
+            "method": "POST",
+            "path": "/api/custom-profile-fields/properties/sie-order",
+            "operation_id": "UpdateCustomProfileFieldsSieOrder",
+            "class": "LogtoUpdateCustomProfileFieldsSieOrder"
+        },
+        "logto_update_email_template_details": {
+            "slug": "logto_update_email_template_details",
+            "method": "PATCH",
+            "path": "/api/email-templates/{id}/details",
+            "operation_id": "UpdateEmailTemplateDetails",
+            "class": "LogtoUpdateEmailTemplateDetails"
+        },
+        "logto_update_hook": {
+            "slug": "logto_update_hook",
+            "method": "PATCH",
+            "path": "/api/hooks/{id}",
+            "operation_id": "UpdateHook",
+            "class": "LogtoUpdateHook"
+        },
+        "logto_update_hook_signing_key": {
+            "slug": "logto_update_hook_signing_key",
+            "method": "PATCH",
+            "path": "/api/hooks/{id}/signing-key",
+            "operation_id": "UpdateHookSigningKey",
+            "class": "LogtoUpdateHookSigningKey"
+        },
+        "logto_update_interaction_event": {
+            "slug": "logto_update_interaction_event",
+            "method": "PUT",
+            "path": "/api/experience/interaction-event",
+            "operation_id": "UpdateInteractionEvent",
+            "class": "LogtoUpdateInteractionEvent"
+        },
+        "logto_update_jwt_customizer": {
+            "slug": "logto_update_jwt_customizer",
+            "method": "PATCH",
+            "path": "/api/configs/jwt-customizer/{tokenTypePath}",
+            "operation_id": "UpdateJwtCustomizer",
+            "class": "LogtoUpdateJwtCustomizer"
+        },
+        "logto_update_logto_config": {
+            "slug": "logto_update_logto_config",
+            "method": "PATCH",
+            "path": "/api/my-account/logto-configs",
+            "operation_id": "UpdateLogtoConfig",
+            "class": "LogtoUpdateLogtoConfig"
+        },
+        "logto_update_mfa_settings": {
+            "slug": "logto_update_mfa_settings",
+            "method": "PATCH",
+            "path": "/api/my-account/mfa-settings",
+            "operation_id": "UpdateMfaSettings",
+            "class": "LogtoUpdateMfaSettings"
+        },
+        "logto_update_mfa_verification_name": {
+            "slug": "logto_update_mfa_verification_name",
+            "method": "PATCH",
+            "path": "/api/my-account/mfa-verifications/{verificationId}/name",
+            "operation_id": "UpdateMfaVerificationName",
+            "class": "LogtoUpdateMfaVerificationName"
+        },
+        "logto_update_oidc_session_config": {
+            "slug": "logto_update_oidc_session_config",
+            "method": "PATCH",
+            "path": "/api/configs/oidc/session",
+            "operation_id": "UpdateOidcSessionConfig",
+            "class": "LogtoUpdateOidcSessionConfig"
+        },
+        "logto_update_organization": {
+            "slug": "logto_update_organization",
+            "method": "PATCH",
+            "path": "/api/organizations/{id}",
+            "operation_id": "UpdateOrganization",
+            "class": "LogtoUpdateOrganization"
+        },
+        "logto_update_organization_role": {
+            "slug": "logto_update_organization_role",
+            "method": "PATCH",
+            "path": "/api/organization-roles/{id}",
+            "operation_id": "UpdateOrganizationRole",
+            "class": "LogtoUpdateOrganizationRole"
+        },
+        "logto_update_organization_scope": {
+            "slug": "logto_update_organization_scope",
+            "method": "PATCH",
+            "path": "/api/organization-scopes/{id}",
+            "operation_id": "UpdateOrganizationScope",
+            "class": "LogtoUpdateOrganizationScope"
+        },
+        "logto_update_other_profile": {
+            "slug": "logto_update_other_profile",
+            "method": "PATCH",
+            "path": "/api/my-account/profile",
+            "operation_id": "UpdateOtherProfile",
+            "class": "LogtoUpdateOtherProfile"
+        },
+        "logto_update_password": {
+            "slug": "logto_update_password",
+            "method": "POST",
+            "path": "/api/my-account/password",
+            "operation_id": "UpdatePassword",
+            "class": "LogtoUpdatePassword"
+        },
+        "logto_update_personal_access_token_name": {
+            "slug": "logto_update_personal_access_token_name",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/personal-access-tokens",
+            "operation_id": "UpdatePersonalAccessTokenName",
+            "class": "LogtoUpdatePersonalAccessTokenName"
+        },
+        "logto_update_primary_email": {
+            "slug": "logto_update_primary_email",
+            "method": "POST",
+            "path": "/api/my-account/primary-email",
+            "operation_id": "UpdatePrimaryEmail",
+            "class": "LogtoUpdatePrimaryEmail"
+        },
+        "logto_update_primary_phone": {
+            "slug": "logto_update_primary_phone",
+            "method": "POST",
+            "path": "/api/my-account/primary-phone",
+            "operation_id": "UpdatePrimaryPhone",
+            "class": "LogtoUpdatePrimaryPhone"
+        },
+        "logto_update_profile": {
+            "slug": "logto_update_profile",
+            "method": "PATCH",
+            "path": "/api/my-account",
+            "operation_id": "UpdateProfile",
+            "class": "LogtoUpdateProfile"
+        },
+        "logto_update_resource": {
+            "slug": "logto_update_resource",
+            "method": "PATCH",
+            "path": "/api/resources/{id}",
+            "operation_id": "UpdateResource",
+            "class": "LogtoUpdateResource"
+        },
+        "logto_update_resource_is_default": {
+            "slug": "logto_update_resource_is_default",
+            "method": "PATCH",
+            "path": "/api/resources/{id}/is-default",
+            "operation_id": "UpdateResourceIsDefault",
+            "class": "LogtoUpdateResourceIsDefault"
+        },
+        "logto_update_resource_scope": {
+            "slug": "logto_update_resource_scope",
+            "method": "PATCH",
+            "path": "/api/resources/{resourceId}/scopes/{scopeId}",
+            "operation_id": "UpdateResourceScope",
+            "class": "LogtoUpdateResourceScope"
+        },
+        "logto_update_role": {
+            "slug": "logto_update_role",
+            "method": "PATCH",
+            "path": "/api/roles/{id}",
+            "operation_id": "UpdateRole",
+            "class": "LogtoUpdateRole"
+        },
+        "logto_update_saml_application": {
+            "slug": "logto_update_saml_application",
+            "method": "PATCH",
+            "path": "/api/saml-applications/{id}",
+            "operation_id": "UpdateSamlApplication",
+            "class": "LogtoUpdateSamlApplication"
+        },
+        "logto_update_saml_application_secret": {
+            "slug": "logto_update_saml_application_secret",
+            "method": "PATCH",
+            "path": "/api/saml-applications/{id}/secrets/{secretId}",
+            "operation_id": "UpdateSamlApplicationSecret",
+            "class": "LogtoUpdateSamlApplicationSecret"
+        },
+        "logto_update_sign_in_exp": {
+            "slug": "logto_update_sign_in_exp",
+            "method": "PATCH",
+            "path": "/api/sign-in-exp",
+            "operation_id": "UpdateSignInExp",
+            "class": "LogtoUpdateSignInExp"
+        },
+        "logto_update_social_identity_access_token_by_verification_id": {
+            "slug": "logto_update_social_identity_access_token_by_verification_id",
+            "method": "PUT",
+            "path": "/api/my-account/identities/{target}/access-token",
+            "operation_id": "UpdateSocialIdentityAccessTokenByVerificationId",
+            "class": "LogtoUpdateSocialIdentityAccessTokenByVerificationId"
+        },
+        "logto_update_sso_connector": {
+            "slug": "logto_update_sso_connector",
+            "method": "PATCH",
+            "path": "/api/sso-connectors/{id}",
+            "operation_id": "UpdateSsoConnector",
+            "class": "LogtoUpdateSsoConnector"
+        },
+        "logto_update_user": {
+            "slug": "logto_update_user",
+            "method": "PATCH",
+            "path": "/api/users/{userId}",
+            "operation_id": "UpdateUser",
+            "class": "LogtoUpdateUser"
+        },
+        "logto_update_user_custom_data": {
+            "slug": "logto_update_user_custom_data",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/custom-data",
+            "operation_id": "UpdateUserCustomData",
+            "class": "LogtoUpdateUserCustomData"
+        },
+        "logto_update_user_is_suspended": {
+            "slug": "logto_update_user_is_suspended",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/is-suspended",
+            "operation_id": "UpdateUserIsSuspended",
+            "class": "LogtoUpdateUserIsSuspended"
+        },
+        "logto_update_user_logto_configs": {
+            "slug": "logto_update_user_logto_configs",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/logto-configs",
+            "operation_id": "UpdateUserLogtoConfigs",
+            "class": "LogtoUpdateUserLogtoConfigs"
+        },
+        "logto_update_user_password": {
+            "slug": "logto_update_user_password",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/password",
+            "operation_id": "UpdateUserPassword",
+            "class": "LogtoUpdateUserPassword"
+        },
+        "logto_update_user_personal_access_token": {
+            "slug": "logto_update_user_personal_access_token",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/personal-access-tokens/{name}",
+            "operation_id": "UpdateUserPersonalAccessToken",
+            "class": "LogtoUpdateUserPersonalAccessToken"
+        },
+        "logto_update_user_profile": {
+            "slug": "logto_update_user_profile",
+            "method": "PATCH",
+            "path": "/api/users/{userId}/profile",
+            "operation_id": "UpdateUserProfile",
+            "class": "LogtoUpdateUserProfile"
+        },
+        "logto_upload_custom_ui_assets": {
+            "slug": "logto_upload_custom_ui_assets",
+            "method": "POST",
+            "path": "/api/sign-in-exp/default/custom-ui-assets",
+            "operation_id": "UploadCustomUiAssets",
+            "class": "LogtoUploadCustomUiAssets"
+        },
+        "logto_upsert_id_token_config": {
+            "slug": "logto_upsert_id_token_config",
+            "method": "PUT",
+            "path": "/api/configs/id-token",
+            "operation_id": "UpsertIdTokenConfig",
+            "class": "LogtoUpsertIdTokenConfig"
+        },
+        "logto_upsert_jwt_customizer": {
+            "slug": "logto_upsert_jwt_customizer",
+            "method": "PUT",
+            "path": "/api/configs/jwt-customizer/{tokenTypePath}",
+            "operation_id": "UpsertJwtCustomizer",
+            "class": "LogtoUpsertJwtCustomizer"
+        },
+        "logto_verify_backup_code": {
+            "slug": "logto_verify_backup_code",
+            "method": "POST",
+            "path": "/api/experience/verification/backup-code/verify",
+            "operation_id": "VerifyBackupCode",
+            "class": "LogtoVerifyBackupCode"
+        },
+        "logto_verify_enterprise_sso_verification": {
+            "slug": "logto_verify_enterprise_sso_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/sso/{connectorId}/verify",
+            "operation_id": "VerifyEnterpriseSsoVerification",
+            "class": "LogtoVerifyEnterpriseSsoVerification"
+        },
+        "logto_verify_mfa_verification_code": {
+            "slug": "logto_verify_mfa_verification_code",
+            "method": "POST",
+            "path": "/api/experience/verification/mfa-verification-code/verify",
+            "operation_id": "VerifyMfaVerificationCode",
+            "class": "LogtoVerifyMfaVerificationCode"
+        },
+        "logto_verify_one_time_token": {
+            "slug": "logto_verify_one_time_token",
+            "method": "POST",
+            "path": "/api/one-time-tokens/verify",
+            "operation_id": "VerifyOneTimeToken",
+            "class": "LogtoVerifyOneTimeToken"
+        },
+        "logto_verify_one_time_token_verification": {
+            "slug": "logto_verify_one_time_token_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/one-time-token/verify",
+            "operation_id": "VerifyOneTimeTokenVerification",
+            "class": "LogtoVerifyOneTimeTokenVerification"
+        },
+        "logto_verify_sign_in_passkey_authentication": {
+            "slug": "logto_verify_sign_in_passkey_authentication",
+            "method": "POST",
+            "path": "/api/experience/verification/sign-in-passkey/authentication/verify",
+            "operation_id": "VerifySignInPasskeyAuthentication",
+            "class": "LogtoVerifySignInPasskeyAuthentication"
+        },
+        "logto_verify_social_verification": {
+            "slug": "logto_verify_social_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/social/{connectorId}/verify",
+            "operation_id": "VerifySocialVerification",
+            "class": "LogtoVerifySocialVerification"
+        },
+        "logto_verify_totp_verification": {
+            "slug": "logto_verify_totp_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/totp/verify",
+            "operation_id": "VerifyTotpVerification",
+            "class": "LogtoVerifyTotpVerification"
+        },
+        "logto_verify_user_password": {
+            "slug": "logto_verify_user_password",
+            "method": "POST",
+            "path": "/api/users/{userId}/password/verify",
+            "operation_id": "VerifyUserPassword",
+            "class": "LogtoVerifyUserPassword"
+        },
+        "logto_verify_verification_by_social": {
+            "slug": "logto_verify_verification_by_social",
+            "method": "POST",
+            "path": "/api/verifications/social/verify",
+            "operation_id": "VerifyVerificationBySocial",
+            "class": "LogtoVerifyVerificationBySocial"
+        },
+        "logto_verify_verification_by_verification_code": {
+            "slug": "logto_verify_verification_by_verification_code",
+            "method": "POST",
+            "path": "/api/verifications/verification-code/verify",
+            "operation_id": "VerifyVerificationByVerificationCode",
+            "class": "LogtoVerifyVerificationByVerificationCode"
+        },
+        "logto_verify_verification_code": {
+            "slug": "logto_verify_verification_code",
+            "method": "POST",
+            "path": "/api/verification-codes/verify",
+            "operation_id": "VerifyVerificationCode",
+            "class": "LogtoVerifyVerificationCode"
+        },
+        "logto_verify_verification_code_verification": {
+            "slug": "logto_verify_verification_code_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/verification-code/verify",
+            "operation_id": "VerifyVerificationCodeVerification",
+            "class": "LogtoVerifyVerificationCodeVerification"
+        },
+        "logto_verify_web_authn_authentication_verification": {
+            "slug": "logto_verify_web_authn_authentication_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/web-authn/authentication/verify",
+            "operation_id": "VerifyWebAuthnAuthenticationVerification",
+            "class": "LogtoVerifyWebAuthnAuthenticationVerification"
+        },
+        "logto_verify_web_authn_registration": {
+            "slug": "logto_verify_web_authn_registration",
+            "method": "POST",
+            "path": "/api/verifications/web-authn/registration/verify",
+            "operation_id": "VerifyWebAuthnRegistration",
+            "class": "LogtoVerifyWebAuthnRegistration"
+        },
+        "logto_verify_web_authn_registration_verification": {
+            "slug": "logto_verify_web_authn_registration_verification",
+            "method": "POST",
+            "path": "/api/experience/verification/web-authn/registration/verify",
+            "operation_id": "VerifyWebAuthnRegistrationVerification",
+            "class": "LogtoVerifyWebAuthnRegistrationVerification"
+        }
+    }
+}

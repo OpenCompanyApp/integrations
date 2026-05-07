@@ -2,223 +2,302 @@
 
 namespace OpenCompany\Integrations\Adyen;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Adyen API HTTP client.
+ * HTTP client for official Adyen Checkout and Management OpenAPI operations.
  *
- * Handles authentication via x-API-key header and provides methods for
- * interacting with the Adyen Checkout and Management APIs.
- *
- * @see https://docs.adyen.com/api-explorer/
+ * Handles API-key authentication, versioned base URLs, default merchant/company
+ * identifiers, and response parsing for generated operation tools.
  */
 class AdyenService
 {
+    private const DEFAULT_CHECKOUT_URL = 'https://checkout-test.adyen.com';
+
+    private const DEFAULT_MANAGEMENT_URL = 'https://management-test.adyen.com';
+
     /**
-     * Create a new AdyenService instance.
-     *
-     * @param  string  $apiKey           The Adyen API key (x-API-key).
-     * @param  string  $merchantAccount  The merchant account code.
-     * @param  string  $baseUrl          Base URL for the Adyen API (test or live).
+     * @param  string  $apiKey  Adyen API key sent in the X-API-Key header.
+     * @param  string  $merchantAccount  Optional default merchant account or merchant ID.
+     * @param  string  $baseUrl  Checkout API base URL without the version suffix.
+     * @param  string  $managementUrl  Management API base URL without the version suffix.
+     * @param  string  $companyId  Optional default Adyen company ID for company-scoped Management API paths.
      */
     public function __construct(
         private string $apiKey = '',
         private string $merchantAccount = '',
-        private string $baseUrl = 'https://checkout-test.adyen.com',
+        private string $baseUrl = self::DEFAULT_CHECKOUT_URL,
+        private string $managementUrl = self::DEFAULT_MANAGEMENT_URL,
+        private string $companyId = '',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl !== '' ? $this->baseUrl : self::DEFAULT_CHECKOUT_URL, '/');
+        $this->managementUrl = rtrim($this->managementUrl !== '' ? $this->managementUrl : self::DEFAULT_MANAGEMENT_URL, '/');
     }
 
-    /**
-     * Check whether the service is properly configured.
-     */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey) && ! empty($this->merchantAccount);
+        return $this->apiKey !== '';
     }
 
-    /**
-     * Get the configured merchant account.
-     */
     public function getMerchantAccount(): string
     {
         return $this->merchantAccount;
     }
 
-    /**
-     * List transactions from the Adyen transaction feed.
-     *
-     * @param  array  $params  Query/filter parameters (page, size, etc.).
-     * @return array<string, mixed>
-     */
-    public function listTransactions(array $params = []): array
+    public function getCompanyId(): string
     {
-        $body = array_merge(['merchantAccountCode' => $this->merchantAccount], $params);
-
-        return $this->request('POST', '/checkout/v67/transactionFeed', $body);
+        return $this->companyId;
     }
 
     /**
-     * Get a single transaction by its PSP reference.
+     * Return all official Adyen operations exposed by this integration.
      *
-     * @param  string  $pspReference  The PSP reference of the transaction.
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function getTransaction(string $pspReference): array
+    public static function operations(): array
     {
-        return $this->request('GET', '/checkout/v67/transactions/' . urlencode($pspReference), [
-            'merchantAccountCode' => $this->merchantAccount,
-        ]);
+        return AdyenOperations::all();
     }
 
     /**
-     * Make a payment through the Adyen Checkout API.
-     *
-     * @param  array  $data  Payment data including amount, paymentMethod, reference, etc.
-     * @return array<string, mixed>
-     */
-    public function makePayment(array $data): array
-    {
-        $body = array_merge(['merchantAccount' => $this->merchantAccount], $data);
-
-        return $this->request('POST', '/checkout/v71/payments', $body);
-    }
-
-    /**
-     * List shopper logs / stored payment methods for recurring shoppers.
-     *
-     * @param  array  $params  Query parameters (limit, page, shopperReference, etc.).
-     * @return array<string, mixed>
-     */
-    public function listShopperLogs(array $params = []): array
-    {
-        $query = array_merge(['merchantAccount' => $this->merchantAccount], $params);
-
-        return $this->request('GET', '/checkout/v71/storedPaymentMethods', $query);
-    }
-
-    /**
-     * Capture a previously authorized payment.
-     *
-     * @param  string  $pspReference  The PSP reference of the payment to capture.
-     * @param  array   $data          Capture data including amount (value + currency).
-     * @return array<string, mixed>
-     */
-    public function capturePayment(string $pspReference, array $data): array
-    {
-        $body = array_merge(['merchantAccount' => $this->merchantAccount], $data);
-
-        return $this->request('POST', '/checkout/v71/payments/' . urlencode($pspReference) . '/captures', $body);
-    }
-
-    /**
-     * Refund a payment.
-     *
-     * @param  string  $pspReference  The PSP reference of the payment to refund.
-     * @param  array   $data          Refund data including amount (value + currency).
-     * @return array<string, mixed>
-     */
-    public function refundPayment(string $pspReference, array $data): array
-    {
-        $body = array_merge(['merchantAccount' => $this->merchantAccount], $data);
-
-        return $this->request('POST', '/checkout/v71/payments/' . urlencode($pspReference) . '/refunds', $body);
-    }
-
-    /**
-     * List stores for the configured merchant account.
-     *
-     * @param  array  $params  Query parameters (limit, page, etc.).
-     * @return array<string, mixed>
-     */
-    public function listStores(array $params = []): array
-    {
-        $query = array_merge(['merchantAccount' => $this->merchantAccount], $params);
-
-        return $this->request('GET', '/checkout/v71/stores', $query);
-    }
-
-    /**
-     * Get current merchant information.
-     *
-     * Uses the paymentMethods endpoint as a health check to verify
-     * the API key and merchant account are valid.
+     * Return one operation definition by slug.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentMerchant(): array
+    public function operation(string $operation): array
     {
-        return $this->request('POST', '/checkout/v67/paymentMethods', [
-            'merchantAccount' => $this->merchantAccount,
-        ]);
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) {
+                return $definition;
+            }
+        }
+
+        throw new \RuntimeException("Unsupported Adyen operation: {$operation}");
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Execute an official Adyen OpenAPI operation using normalized tool arguments.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API endpoint path.
-     * @param  array   $data    Request body or query parameters.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    public function call(string $operation, array $args = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $definition = $this->operation($operation);
+        [$path, $pathArgs] = $this->preparePath($definition, $args);
+        $query = $this->prepareQuery($definition, $args);
+        foreach ($pathArgs as $param) {
+            unset($query[$param]);
+        }
+        $body = $this->prepareBody($definition, $args);
 
-        return $response->json() ?? [];
+        return $this->request($definition, $path, $query, $body);
     }
 
     /**
-     * Make a raw HTTP request to the Adyen API.
+     * Build request path and replace path variables.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path    API endpoint path.
-     * @param  array   $data    Request body or query parameters.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException If the API key is missing or the request fails.
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: list<string>}
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function preparePath(array $definition, array $args): array
     {
-        if (! $this->apiKey) {
+        $path = (string) $definition['path'];
+        $pathArgs = [];
+
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'path') {
+                continue;
+            }
+
+            $original = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? $this->defaultParameterValue($original);
+
+            if ($value === null || $value === '') {
+                throw new \RuntimeException("{$param} is required for {$definition['slug']}.");
+            }
+
+            $path = str_replace('{'.$original.'}', rawurlencode((string) $value), $path);
+            $pathArgs[] = $param;
+        }
+
+        return [$path, $pathArgs];
+    }
+
+    /**
+     * Build query parameters.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    private function prepareQuery(array $definition, array $args): array
+    {
+        $query = [];
+
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'query') {
+                continue;
+            }
+
+            $original = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = array_key_exists($param, $args) ? $args[$param] : $this->defaultParameterValue($original);
+            if ($value !== null && $value !== '') {
+                $query[$original] = $value;
+            }
+        }
+
+        if (isset($args['query']) && is_array($args['query'])) {
+            foreach ($args['query'] as $key => $value) {
+                $query[(string) $key] = $value;
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Build JSON body for write operations.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>|list<mixed>|null
+     */
+    private function prepareBody(array $definition, array $args): array|null
+    {
+        $bodyParameter = null;
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) === 'body') {
+                $bodyParameter = $parameter;
+                break;
+            }
+        }
+
+        if ($bodyParameter === null) {
+            return null;
+        }
+
+        if (! array_key_exists('body', $args)) {
+            if (! ($bodyParameter['required'] ?? false)) {
+                return null;
+            }
+
+            throw new \RuntimeException("body is required for {$definition['slug']}.");
+        }
+
+        if (! is_array($args['body'])) {
+            throw new \RuntimeException('body must be an object or array.');
+        }
+
+        $body = $args['body'];
+        if (($definition['service'] ?? null) === 'checkout' && $this->merchantAccount !== '' && ! array_is_list($body)) {
+            $body['merchantAccount'] ??= $this->merchantAccount;
+        }
+
+        return $body;
+    }
+
+    /**
+     * Send an HTTP request and parse the JSON response.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    private function request(array $definition, string $path, array $query = [], array|null $body = null): array
+    {
+        $response = $this->rawRequest($definition, $path, $query, $body);
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        $json = $response->json();
+
+        return is_array($json) ? $json : [];
+    }
+
+    /**
+     * Send a raw HTTP request to Adyen.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     */
+    private function rawRequest(array $definition, string $path, array $query = [], array|null $body = null): Response
+    {
+        if (! $this->isConfigured()) {
             throw new \RuntimeException('Adyen API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $method = (string) $definition['method'];
+        $url = $this->baseUrlFor($definition).$path;
 
         try {
             $http = Http::withHeaders([
-                'x-API-key' => $this->apiKey,
+                'X-API-Key' => $this->apiKey,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $options = [];
+            if ($query !== []) {
+                $options['query'] = $query;
+            }
+            if ($body !== null) {
+                $options['json'] = $body;
+            }
 
+            $response = $http->send($method, $url, $options);
             if (! $response->successful()) {
-                $error = $response->json('message') ?? $response->json('errorType') ?? $response->body();
-
+                $error = $response->json('message') ?? $response->json('errorType') ?? $response->json('title') ?? $response->body();
                 Log::error("Adyen API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
 
-                throw new \RuntimeException("Adyen API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new \RuntimeException('Adyen API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Adyen API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
+            Log::error("Adyen API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
 
             throw new \RuntimeException("Failed to connect to Adyen API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Resolve a default value for common Adyen account path/query parameters.
+     */
+    private function defaultParameterValue(string $name): ?string
+    {
+        return match ($name) {
+            'merchantId', 'merchantAccount' => $this->merchantAccount !== '' ? $this->merchantAccount : null,
+            'companyId' => $this->companyId !== '' ? $this->companyId : null,
+            default => null,
+        };
+    }
+
+    /**
+     * Build the versioned base URL for a service family.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     */
+    private function baseUrlFor(array $definition): string
+    {
+        $base = ($definition['service'] ?? null) === 'management' ? $this->managementUrl : $this->baseUrl;
+        $version = (string) ($definition['version'] ?? '');
+
+        if ($version !== '' && ! preg_match('#/v'.preg_quote($version, '#').'$#', $base)) {
+            $base .= '/v'.$version;
+        }
+
+        return $base;
     }
 }

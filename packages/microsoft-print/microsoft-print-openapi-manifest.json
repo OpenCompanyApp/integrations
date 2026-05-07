@@ -1,0 +1,864 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/print?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 142,
+  "path_prefixes": [
+    "/print"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/print",
+      "operationId": "print.print.GetPrint",
+      "tool": "microsoft_print_print_print_get_print"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print",
+      "operationId": "print.print.UpdatePrint",
+      "tool": "microsoft_print_print_print_update_print"
+    },
+    {
+      "method": "GET",
+      "path": "/print/connectors",
+      "operationId": "print.ListConnectors",
+      "tool": "microsoft_print_print_list_connectors"
+    },
+    {
+      "method": "POST",
+      "path": "/print/connectors",
+      "operationId": "print.CreateConnectors",
+      "tool": "microsoft_print_print_create_connectors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/connectors/$count",
+      "operationId": "print.connectors.GetCount-1d73",
+      "tool": "microsoft_print_print_connectors_get_count_1d73"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/connectors/{printConnector-id}",
+      "operationId": "print.DeleteConnectors",
+      "tool": "microsoft_print_print_delete_connectors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/connectors/{printConnector-id}",
+      "operationId": "print.GetConnectors",
+      "tool": "microsoft_print_print_get_connectors"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/connectors/{printConnector-id}",
+      "operationId": "print.UpdateConnectors",
+      "tool": "microsoft_print_print_update_connectors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/operations",
+      "operationId": "print.ListOperations",
+      "tool": "microsoft_print_print_list_operations"
+    },
+    {
+      "method": "POST",
+      "path": "/print/operations",
+      "operationId": "print.CreateOperations",
+      "tool": "microsoft_print_print_create_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/print/operations/$count",
+      "operationId": "print.operations.GetCount-8242",
+      "tool": "microsoft_print_print_operations_get_count_8242"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/operations/{printOperation-id}",
+      "operationId": "print.DeleteOperations",
+      "tool": "microsoft_print_print_delete_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/print/operations/{printOperation-id}",
+      "operationId": "print.GetOperations",
+      "tool": "microsoft_print_print_get_operations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/operations/{printOperation-id}",
+      "operationId": "print.UpdateOperations",
+      "tool": "microsoft_print_print_update_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers",
+      "operationId": "print.ListPrinters",
+      "tool": "microsoft_print_print_list_printers"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers",
+      "operationId": "print.CreatePrinters",
+      "tool": "microsoft_print_print_create_printers"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/$count",
+      "operationId": "print.printers.GetCount-c43f",
+      "tool": "microsoft_print_print_printers_get_count_c43f"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/create",
+      "operationId": "print.printers.create",
+      "tool": "microsoft_print_print_printers_create"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/printers/{printer-id}",
+      "operationId": "print.DeletePrinters",
+      "tool": "microsoft_print_print_delete_printers"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}",
+      "operationId": "print.GetPrinters",
+      "tool": "microsoft_print_print_get_printers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/printers/{printer-id}",
+      "operationId": "print.UpdatePrinters",
+      "tool": "microsoft_print_print_update_printers"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/connectors",
+      "operationId": "print.printers.ListConnectors",
+      "tool": "microsoft_print_print_printers_list_connectors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/connectors/$count",
+      "operationId": "print.printers.connectors.GetCount-68ae",
+      "tool": "microsoft_print_print_printers_connectors_get_count_68ae"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/connectors/{printConnector-id}",
+      "operationId": "print.printers.GetConnectors",
+      "tool": "microsoft_print_print_printers_get_connectors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs",
+      "operationId": "print.printers.ListJobs",
+      "tool": "microsoft_print_print_printers_list_jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs",
+      "operationId": "print.printers.CreateJobs",
+      "tool": "microsoft_print_print_printers_create_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/$count",
+      "operationId": "print.printers.jobs.GetCount-86c3",
+      "tool": "microsoft_print_print_printers_jobs_get_count_86c3"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}",
+      "operationId": "print.printers.DeleteJobs",
+      "tool": "microsoft_print_print_printers_delete_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}",
+      "operationId": "print.printers.GetJobs",
+      "tool": "microsoft_print_print_printers_get_jobs"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}",
+      "operationId": "print.printers.UpdateJobs",
+      "tool": "microsoft_print_print_printers_update_jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/abort",
+      "operationId": "print.printers.printer.jobs.printJob.abort",
+      "tool": "microsoft_print_print_printers_printer_jobs_print_job_abort"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/cancel",
+      "operationId": "print.printers.printer.jobs.printJob.cancel",
+      "tool": "microsoft_print_print_printers_printer_jobs_print_job_cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents",
+      "operationId": "print.printers.jobs.ListDocuments",
+      "tool": "microsoft_print_print_printers_jobs_list_documents"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents",
+      "operationId": "print.printers.jobs.CreateDocuments",
+      "tool": "microsoft_print_print_printers_jobs_create_documents"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/$count",
+      "operationId": "print.printers.jobs.documents.GetCount-db03",
+      "tool": "microsoft_print_print_printers_jobs_documents_get_count_db03"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}",
+      "operationId": "print.printers.jobs.DeleteDocuments",
+      "tool": "microsoft_print_print_printers_jobs_delete_documents"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}",
+      "operationId": "print.printers.jobs.GetDocuments",
+      "tool": "microsoft_print_print_printers_jobs_get_documents"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}",
+      "operationId": "print.printers.jobs.UpdateDocuments",
+      "tool": "microsoft_print_print_printers_jobs_update_documents"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}/$value",
+      "operationId": "print.printers.jobs.DeleteDocumentsContent",
+      "tool": "microsoft_print_print_printers_jobs_delete_documents_content"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}/$value",
+      "operationId": "print.printers.jobs.GetDocumentsContent",
+      "tool": "microsoft_print_print_printers_jobs_get_documents_content"
+    },
+    {
+      "method": "PUT",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}/$value",
+      "operationId": "print.printers.jobs.UpdateDocumentsContent",
+      "tool": "microsoft_print_print_printers_jobs_update_documents_content"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/documents/{printDocument-id}/createUploadSession",
+      "operationId": "print.printers.printer.jobs.printJob.documents.printDocument.createUploadSession",
+      "tool": "microsoft_print_print_printers_printer_jobs_print_job_documents_print_document_create_upload_session"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/redirect",
+      "operationId": "print.printers.printer.jobs.printJob.redirect",
+      "tool": "microsoft_print_print_printers_printer_jobs_print_job_redirect"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/start",
+      "operationId": "print.printers.printer.jobs.printJob.start",
+      "tool": "microsoft_print_print_printers_printer_jobs_print_job_start"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks",
+      "operationId": "print.printers.jobs.ListTasks",
+      "tool": "microsoft_print_print_printers_jobs_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks",
+      "operationId": "print.printers.jobs.CreateTasks",
+      "tool": "microsoft_print_print_printers_jobs_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks/$count",
+      "operationId": "print.printers.jobs.tasks.GetCount-7f2e",
+      "tool": "microsoft_print_print_printers_jobs_tasks_get_count_7f2e"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks/{printTask-id}",
+      "operationId": "print.printers.jobs.DeleteTasks",
+      "tool": "microsoft_print_print_printers_jobs_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks/{printTask-id}",
+      "operationId": "print.printers.jobs.GetTasks",
+      "tool": "microsoft_print_print_printers_jobs_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks/{printTask-id}",
+      "operationId": "print.printers.jobs.UpdateTasks",
+      "tool": "microsoft_print_print_printers_jobs_update_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks/{printTask-id}/definition",
+      "operationId": "print.printers.jobs.tasks.GetDefinition",
+      "tool": "microsoft_print_print_printers_jobs_tasks_get_definition"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/jobs/{printJob-id}/tasks/{printTask-id}/trigger",
+      "operationId": "print.printers.jobs.tasks.GetTrigger",
+      "tool": "microsoft_print_print_printers_jobs_tasks_get_trigger"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/restoreFactoryDefaults",
+      "operationId": "print.printers.printer.restoreFactoryDefaults",
+      "tool": "microsoft_print_print_printers_printer_restore_factory_defaults"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/shares",
+      "operationId": "print.printers.ListShares",
+      "tool": "microsoft_print_print_printers_list_shares"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/shares/$count",
+      "operationId": "print.printers.shares.GetCount-5f30",
+      "tool": "microsoft_print_print_printers_shares_get_count_5f30"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/shares/{printerShare-id}",
+      "operationId": "print.printers.GetShares",
+      "tool": "microsoft_print_print_printers_get_shares"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/taskTriggers",
+      "operationId": "print.printers.ListTaskTriggers",
+      "tool": "microsoft_print_print_printers_list_task_triggers"
+    },
+    {
+      "method": "POST",
+      "path": "/print/printers/{printer-id}/taskTriggers",
+      "operationId": "print.printers.CreateTaskTriggers",
+      "tool": "microsoft_print_print_printers_create_task_triggers"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/taskTriggers/$count",
+      "operationId": "print.printers.taskTriggers.GetCount-f066",
+      "tool": "microsoft_print_print_printers_task_triggers_get_count_f066"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/printers/{printer-id}/taskTriggers/{printTaskTrigger-id}",
+      "operationId": "print.printers.DeleteTaskTriggers",
+      "tool": "microsoft_print_print_printers_delete_task_triggers"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/taskTriggers/{printTaskTrigger-id}",
+      "operationId": "print.printers.GetTaskTriggers",
+      "tool": "microsoft_print_print_printers_get_task_triggers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/printers/{printer-id}/taskTriggers/{printTaskTrigger-id}",
+      "operationId": "print.printers.UpdateTaskTriggers",
+      "tool": "microsoft_print_print_printers_update_task_triggers"
+    },
+    {
+      "method": "GET",
+      "path": "/print/printers/{printer-id}/taskTriggers/{printTaskTrigger-id}/definition",
+      "operationId": "print.printers.taskTriggers.GetDefinition",
+      "tool": "microsoft_print_print_printers_task_triggers_get_definition"
+    },
+    {
+      "method": "GET",
+      "path": "/print/services",
+      "operationId": "print.ListServices",
+      "tool": "microsoft_print_print_list_services"
+    },
+    {
+      "method": "POST",
+      "path": "/print/services",
+      "operationId": "print.CreateServices",
+      "tool": "microsoft_print_print_create_services"
+    },
+    {
+      "method": "GET",
+      "path": "/print/services/$count",
+      "operationId": "print.services.GetCount-719b",
+      "tool": "microsoft_print_print_services_get_count_719b"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/services/{printService-id}",
+      "operationId": "print.DeleteServices",
+      "tool": "microsoft_print_print_delete_services"
+    },
+    {
+      "method": "GET",
+      "path": "/print/services/{printService-id}",
+      "operationId": "print.GetServices",
+      "tool": "microsoft_print_print_get_services"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/services/{printService-id}",
+      "operationId": "print.UpdateServices",
+      "tool": "microsoft_print_print_update_services"
+    },
+    {
+      "method": "GET",
+      "path": "/print/services/{printService-id}/endpoints",
+      "operationId": "print.services.ListEndpoints",
+      "tool": "microsoft_print_print_services_list_endpoints"
+    },
+    {
+      "method": "POST",
+      "path": "/print/services/{printService-id}/endpoints",
+      "operationId": "print.services.CreateEndpoints",
+      "tool": "microsoft_print_print_services_create_endpoints"
+    },
+    {
+      "method": "GET",
+      "path": "/print/services/{printService-id}/endpoints/$count",
+      "operationId": "print.services.endpoints.GetCount-805a",
+      "tool": "microsoft_print_print_services_endpoints_get_count_805a"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/services/{printService-id}/endpoints/{printServiceEndpoint-id}",
+      "operationId": "print.services.DeleteEndpoints",
+      "tool": "microsoft_print_print_services_delete_endpoints"
+    },
+    {
+      "method": "GET",
+      "path": "/print/services/{printService-id}/endpoints/{printServiceEndpoint-id}",
+      "operationId": "print.services.GetEndpoints",
+      "tool": "microsoft_print_print_services_get_endpoints"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/services/{printService-id}/endpoints/{printServiceEndpoint-id}",
+      "operationId": "print.services.UpdateEndpoints",
+      "tool": "microsoft_print_print_services_update_endpoints"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares",
+      "operationId": "print.ListShares",
+      "tool": "microsoft_print_print_list_shares"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares",
+      "operationId": "print.CreateShares",
+      "tool": "microsoft_print_print_create_shares"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/$count",
+      "operationId": "print.shares.GetCount-070b",
+      "tool": "microsoft_print_print_shares_get_count_070b"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}",
+      "operationId": "print.DeleteShares",
+      "tool": "microsoft_print_print_delete_shares"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}",
+      "operationId": "print.GetShares",
+      "tool": "microsoft_print_print_get_shares"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/shares/{printerShare-id}",
+      "operationId": "print.UpdateShares",
+      "tool": "microsoft_print_print_update_shares"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedGroups",
+      "operationId": "print.shares.ListAllowedGroups",
+      "tool": "microsoft_print_print_shares_list_allowed_groups"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/$count",
+      "operationId": "print.shares.allowedGroups.GetCount-9181",
+      "tool": "microsoft_print_print_shares_allowed_groups_get_count_9181"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/$ref",
+      "operationId": "print.shares.DeleteRefAllowedGroups",
+      "tool": "microsoft_print_print_shares_delete_ref_allowed_groups"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/$ref",
+      "operationId": "print.shares.ListRefAllowedGroups",
+      "tool": "microsoft_print_print_shares_list_ref_allowed_groups"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/$ref",
+      "operationId": "print.shares.CreateRefAllowedGroups",
+      "tool": "microsoft_print_print_shares_create_ref_allowed_groups"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/{group-id}/$ref",
+      "operationId": "print.shares.allowedGroups.DeleteRefGroup",
+      "tool": "microsoft_print_print_shares_allowed_groups_delete_ref_group"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/{group-id}/serviceProvisioningErrors",
+      "operationId": "print.shares.allowedGroups.ListServiceProvisioningErrors",
+      "tool": "microsoft_print_print_shares_allowed_groups_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedGroups/{group-id}/serviceProvisioningErrors/$count",
+      "operationId": "print.shares.allowedGroups.ServiceProvisioningErrors.GetCount-182d",
+      "tool": "microsoft_print_print_shares_allowed_groups_service_provisioning_errors_get_count_182d"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedUsers",
+      "operationId": "print.shares.ListAllowedUsers",
+      "tool": "microsoft_print_print_shares_list_allowed_users"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/$count",
+      "operationId": "print.shares.allowedUsers.GetCount-ee00",
+      "tool": "microsoft_print_print_shares_allowed_users_get_count_ee00"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/$ref",
+      "operationId": "print.shares.DeleteRefAllowedUsers",
+      "tool": "microsoft_print_print_shares_delete_ref_allowed_users"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/$ref",
+      "operationId": "print.shares.ListRefAllowedUsers",
+      "tool": "microsoft_print_print_shares_list_ref_allowed_users"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/$ref",
+      "operationId": "print.shares.CreateRefAllowedUsers",
+      "tool": "microsoft_print_print_shares_create_ref_allowed_users"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/{user-id}/$ref",
+      "operationId": "print.shares.allowedUsers.DeleteRefUser",
+      "tool": "microsoft_print_print_shares_allowed_users_delete_ref_user"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/{user-id}/mailboxSettings",
+      "operationId": "print.shares.allowedUsers.GetMailboxSettings",
+      "tool": "microsoft_print_print_shares_allowed_users_get_mailbox_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/{user-id}/mailboxSettings",
+      "operationId": "print.shares.allowedUsers.UpdateMailboxSettings",
+      "tool": "microsoft_print_print_shares_allowed_users_update_mailbox_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/{user-id}/serviceProvisioningErrors",
+      "operationId": "print.shares.allowedUsers.ListServiceProvisioningErrors",
+      "tool": "microsoft_print_print_shares_allowed_users_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/allowedUsers/{user-id}/serviceProvisioningErrors/$count",
+      "operationId": "print.shares.allowedUsers.ServiceProvisioningErrors.GetCount-1213",
+      "tool": "microsoft_print_print_shares_allowed_users_service_provisioning_errors_get_count_1213"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs",
+      "operationId": "print.shares.ListJobs",
+      "tool": "microsoft_print_print_shares_list_jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs",
+      "operationId": "print.shares.CreateJobs",
+      "tool": "microsoft_print_print_shares_create_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/$count",
+      "operationId": "print.shares.jobs.GetCount-d3ae",
+      "tool": "microsoft_print_print_shares_jobs_get_count_d3ae"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}",
+      "operationId": "print.shares.DeleteJobs",
+      "tool": "microsoft_print_print_shares_delete_jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}",
+      "operationId": "print.shares.GetJobs",
+      "tool": "microsoft_print_print_shares_get_jobs"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}",
+      "operationId": "print.shares.UpdateJobs",
+      "tool": "microsoft_print_print_shares_update_jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/abort",
+      "operationId": "print.shares.printerShare.jobs.printJob.abort",
+      "tool": "microsoft_print_print_shares_printer_share_jobs_print_job_abort"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/cancel",
+      "operationId": "print.shares.printerShare.jobs.printJob.cancel",
+      "tool": "microsoft_print_print_shares_printer_share_jobs_print_job_cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents",
+      "operationId": "print.shares.jobs.ListDocuments",
+      "tool": "microsoft_print_print_shares_jobs_list_documents"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents",
+      "operationId": "print.shares.jobs.CreateDocuments",
+      "tool": "microsoft_print_print_shares_jobs_create_documents"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/$count",
+      "operationId": "print.shares.jobs.documents.GetCount-acc8",
+      "tool": "microsoft_print_print_shares_jobs_documents_get_count_acc8"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}",
+      "operationId": "print.shares.jobs.DeleteDocuments",
+      "tool": "microsoft_print_print_shares_jobs_delete_documents"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}",
+      "operationId": "print.shares.jobs.GetDocuments",
+      "tool": "microsoft_print_print_shares_jobs_get_documents"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}",
+      "operationId": "print.shares.jobs.UpdateDocuments",
+      "tool": "microsoft_print_print_shares_jobs_update_documents"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}/$value",
+      "operationId": "print.shares.jobs.DeleteDocumentsContent",
+      "tool": "microsoft_print_print_shares_jobs_delete_documents_content"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}/$value",
+      "operationId": "print.shares.jobs.GetDocumentsContent",
+      "tool": "microsoft_print_print_shares_jobs_get_documents_content"
+    },
+    {
+      "method": "PUT",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}/$value",
+      "operationId": "print.shares.jobs.UpdateDocumentsContent",
+      "tool": "microsoft_print_print_shares_jobs_update_documents_content"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/documents/{printDocument-id}/createUploadSession",
+      "operationId": "print.shares.printerShare.jobs.printJob.documents.printDocument.createUploadSession",
+      "tool": "microsoft_print_print_shares_printer_share_jobs_print_job_documents_print_document_create_upload_session"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/redirect",
+      "operationId": "print.shares.printerShare.jobs.printJob.redirect",
+      "tool": "microsoft_print_print_shares_printer_share_jobs_print_job_redirect"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/start",
+      "operationId": "print.shares.printerShare.jobs.printJob.start",
+      "tool": "microsoft_print_print_shares_printer_share_jobs_print_job_start"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks",
+      "operationId": "print.shares.jobs.ListTasks",
+      "tool": "microsoft_print_print_shares_jobs_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks",
+      "operationId": "print.shares.jobs.CreateTasks",
+      "tool": "microsoft_print_print_shares_jobs_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks/$count",
+      "operationId": "print.shares.jobs.tasks.GetCount-c052",
+      "tool": "microsoft_print_print_shares_jobs_tasks_get_count_c052"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks/{printTask-id}",
+      "operationId": "print.shares.jobs.DeleteTasks",
+      "tool": "microsoft_print_print_shares_jobs_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks/{printTask-id}",
+      "operationId": "print.shares.jobs.GetTasks",
+      "tool": "microsoft_print_print_shares_jobs_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks/{printTask-id}",
+      "operationId": "print.shares.jobs.UpdateTasks",
+      "tool": "microsoft_print_print_shares_jobs_update_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks/{printTask-id}/definition",
+      "operationId": "print.shares.jobs.tasks.GetDefinition",
+      "tool": "microsoft_print_print_shares_jobs_tasks_get_definition"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/jobs/{printJob-id}/tasks/{printTask-id}/trigger",
+      "operationId": "print.shares.jobs.tasks.GetTrigger",
+      "tool": "microsoft_print_print_shares_jobs_tasks_get_trigger"
+    },
+    {
+      "method": "GET",
+      "path": "/print/shares/{printerShare-id}/printer",
+      "operationId": "print.shares.GetPrinter",
+      "tool": "microsoft_print_print_shares_get_printer"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions",
+      "operationId": "print.ListTaskDefinitions",
+      "tool": "microsoft_print_print_list_task_definitions"
+    },
+    {
+      "method": "POST",
+      "path": "/print/taskDefinitions",
+      "operationId": "print.CreateTaskDefinitions",
+      "tool": "microsoft_print_print_create_task_definitions"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/$count",
+      "operationId": "print.taskDefinitions.GetCount-ee04",
+      "tool": "microsoft_print_print_task_definitions_get_count_ee04"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}",
+      "operationId": "print.DeleteTaskDefinitions",
+      "tool": "microsoft_print_print_delete_task_definitions"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}",
+      "operationId": "print.GetTaskDefinitions",
+      "tool": "microsoft_print_print_get_task_definitions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}",
+      "operationId": "print.UpdateTaskDefinitions",
+      "tool": "microsoft_print_print_update_task_definitions"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks",
+      "operationId": "print.taskDefinitions.ListTasks",
+      "tool": "microsoft_print_print_task_definitions_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks",
+      "operationId": "print.taskDefinitions.CreateTasks",
+      "tool": "microsoft_print_print_task_definitions_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks/$count",
+      "operationId": "print.taskDefinitions.tasks.GetCount-0c4f",
+      "tool": "microsoft_print_print_task_definitions_tasks_get_count_0c4f"
+    },
+    {
+      "method": "DELETE",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}",
+      "operationId": "print.taskDefinitions.DeleteTasks",
+      "tool": "microsoft_print_print_task_definitions_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}",
+      "operationId": "print.taskDefinitions.GetTasks",
+      "tool": "microsoft_print_print_task_definitions_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}",
+      "operationId": "print.taskDefinitions.UpdateTasks",
+      "tool": "microsoft_print_print_task_definitions_update_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}/definition",
+      "operationId": "print.taskDefinitions.tasks.GetDefinition",
+      "tool": "microsoft_print_print_task_definitions_tasks_get_definition"
+    },
+    {
+      "method": "GET",
+      "path": "/print/taskDefinitions/{printTaskDefinition-id}/tasks/{printTask-id}/trigger",
+      "operationId": "print.taskDefinitions.tasks.GetTrigger",
+      "tool": "microsoft_print_print_task_definitions_tasks_get_trigger"
+    }
+  ]
+}

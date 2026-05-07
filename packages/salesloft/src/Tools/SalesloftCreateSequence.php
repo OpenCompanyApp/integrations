@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Salesloft\SalesloftService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a legacy Salesloft call sequence.
+ */
 class SalesloftCreateSequence implements Tool
 {
     public function __construct(

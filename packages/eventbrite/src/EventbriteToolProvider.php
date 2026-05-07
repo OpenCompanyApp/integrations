@@ -106,7 +106,7 @@ class EventbriteToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Eventbrite integration for Laravel — manage events, attendees, and venues.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

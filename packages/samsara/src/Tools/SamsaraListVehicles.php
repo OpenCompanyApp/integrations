@@ -6,6 +6,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Samsara\SamsaraService;
 
+/**
+ * List fleet vehicles from Samsara.
+ */
 class SamsaraListVehicles implements Tool
 {
     /**
@@ -45,7 +48,7 @@ class SamsaraListVehicles implements Tool
             ],
             'after' => [
                 'type' => 'string',
-                'description' => 'Pagination cursor — pass the "pagination.endCursor" value from a previous response to fetch the next page.',
+                'description' => 'Pagination cursor - pass the "pagination.endCursor" value from a previous response to fetch the next page.',
             ],
         ];
     }

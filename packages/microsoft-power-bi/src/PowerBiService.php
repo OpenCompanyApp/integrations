@@ -4,14 +4,25 @@ namespace OpenCompany\Integrations\PowerBi;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Microsoft Power BI REST API.
+ *
+ * Handles bearer-token authentication, request dispatch, error logging, and
+ * response parsing for workspace, dataset, and report operations.
+ */
 class PowerBiService
 {
+    /**
+     * @param  string  $accessToken  Azure AD bearer token for the Power BI REST API.
+     * @param  string  $baseUrl  Power BI REST API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.powerbi.com',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = $this->normalizeBaseUrl($this->baseUrl);
     }
 
     /**
@@ -43,7 +54,7 @@ class PowerBiService
      */
     public function getWorkspace(string $id): array
     {
-        return $this->request('GET', '/v1.0/myorg/groups/' . urlencode($id));
+        return $this->request('GET', '/v1.0/myorg/groups/' . rawurlencode($id));
     }
 
     /**
@@ -54,7 +65,7 @@ class PowerBiService
      */
     public function listDatasets(string $workspaceId): array
     {
-        return $this->request('GET', '/v1.0/myorg/groups/' . urlencode($workspaceId) . '/datasets');
+        return $this->request('GET', '/v1.0/myorg/groups/' . rawurlencode($workspaceId) . '/datasets');
     }
 
     /**
@@ -66,7 +77,7 @@ class PowerBiService
      */
     public function getDataset(string $workspaceId, string $datasetId): array
     {
-        return $this->request('GET', '/v1.0/myorg/groups/' . urlencode($workspaceId) . '/datasets/' . urlencode($datasetId));
+        return $this->request('GET', '/v1.0/myorg/groups/' . rawurlencode($workspaceId) . '/datasets/' . rawurlencode($datasetId));
     }
 
     /**
@@ -77,7 +88,7 @@ class PowerBiService
      */
     public function listReports(string $workspaceId): array
     {
-        return $this->request('GET', '/v1.0/myorg/groups/' . urlencode($workspaceId) . '/reports');
+        return $this->request('GET', '/v1.0/myorg/groups/' . rawurlencode($workspaceId) . '/reports');
     }
 
     /**
@@ -89,17 +100,7 @@ class PowerBiService
      */
     public function getReport(string $workspaceId, string $reportId): array
     {
-        return $this->request('GET', '/v1.0/myorg/groups/' . urlencode($workspaceId) . '/reports/' . urlencode($reportId));
-    }
-
-    /**
-     * Get the current authenticated user's profile information.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/v1.0/myorg/profile');
+        return $this->request('GET', '/v1.0/myorg/groups/' . rawurlencode($workspaceId) . '/reports/' . rawurlencode($reportId));
     }
 
     /**
@@ -125,12 +126,12 @@ class PowerBiService
      * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException When the request fails or the service is not configured.
+     * @throws RuntimeException When the request fails or the service is not configured.
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
         if (!$this->accessToken) {
-            throw new \RuntimeException('Power BI access token is not configured.');
+            throw new RuntimeException('Power BI access token is not configured.');
         }
 
         $url = $this->baseUrl . $path;
@@ -146,7 +147,7 @@ class PowerBiService
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
@@ -159,7 +160,7 @@ class PowerBiService
                     'error' => $error,
                 ]);
 
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Power BI API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error))
                 );
             }
@@ -170,7 +171,17 @@ class PowerBiService
                 'error' => $e->getMessage(),
             ]);
 
-            throw new \RuntimeException("Failed to connect to Power BI API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Power BI API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize legacy full API URLs to the root host expected by request paths.
+     */
+    private function normalizeBaseUrl(string $baseUrl): string
+    {
+        $baseUrl = rtrim($baseUrl, '/');
+
+        return preg_replace('#/v1\.0/myorg$#', '', $baseUrl) ?: $baseUrl;
     }
 }

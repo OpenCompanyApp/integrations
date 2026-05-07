@@ -2,12 +2,23 @@
 
 namespace OpenCompany\Integrations\Render2;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Render REST API.
+ *
+ * Handles bearer-token authentication, OpenAPI operation execution, request
+ * body encoding, multipart upload dispatch, non-JSON responses, and API errors.
+ */
 class RenderService
 {
+    /**
+     * @param  string  $apiKey  Render API key.
+     * @param  string  $baseUrl  Render API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.render.com/v1',
@@ -20,31 +31,107 @@ class RenderService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
-    // ──────────────────────────────────────────────
-    // Services
-    // ──────────────────────────────────────────────
+    /**
+     * Return official Render operation metadata used by generated tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public static function operations(): array
+    {
+        return RenderOperations::all();
+    }
+
+    /**
+     * Execute an official Render OpenAPI operation.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata from RenderOperations.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function executeOperation(array $operation, array $args = []): array
+    {
+        $path = (string) $operation['path'];
+        $query = [];
+        $headers = [];
+        $consumed = [];
+
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            $name = (string) $parameter['name'];
+            $value = $this->argument($args, $name);
+
+            if ($value === null) {
+                if (!empty($parameter['required'])) {
+                    throw new \RuntimeException("The {$this->snakeName($name)} parameter is required.");
+                }
+
+                continue;
+            }
+
+            $consumed[] = $name;
+            $consumed[] = $this->snakeName($name);
+            $consumed[] = strtolower($name);
+
+            if ($parameter['in'] === 'path') {
+                $path = str_replace('{' . $name . '}', rawurlencode((string) $value), $path);
+            } elseif ($parameter['in'] === 'query') {
+                $query[$name] = $value;
+            } elseif ($parameter['in'] === 'header') {
+                $headers[$name] = $value;
+            }
+        }
+
+        $requestBody = $operation['request_body'] ?? null;
+        $body = null;
+
+        if ($requestBody !== null) {
+            $body = $args['body'] ?? $this->bodyFromLooseArguments($args, $consumed);
+
+            if (!empty($requestBody['required']) && ($body === null || $body === [] || $body === '')) {
+                throw new \RuntimeException('body is required.');
+            }
+        }
+
+        return $this->request(
+            (string) $operation['method'],
+            $this->baseUrl . $path,
+            $query,
+            $headers,
+            $body,
+            $requestBody['content_types'] ?? [],
+        );
+    }
+
+    /**
+     * Execute an operation by slug.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    private function executeSlug(string $slug, array $args = []): array
+    {
+        $operations = self::operations();
+
+        if (!isset($operations[$slug])) {
+            throw new \RuntimeException("Unknown Render operation: {$slug}");
+        }
+
+        return $this->executeOperation($operations[$slug], $args);
+    }
 
     /**
      * List all services in the account.
      *
-     * @param  int|null  $limit  Number of items per page (max 100).
-     * @param  string|null  $cursor  Pagination cursor.
      * @return array<string, mixed>
      */
     public function listServices(?int $limit = null, ?string $cursor = null): array
     {
-        $params = [];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
-        }
-
-        return $this->request('GET', '/services', $params);
+        return $this->executeSlug('render_list_services', array_filter([
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn (mixed $value): bool => $value !== null));
     }
 
     /**
@@ -54,23 +141,19 @@ class RenderService
      */
     public function getService(string $serviceId): array
     {
-        return $this->request('GET', '/services/' . urlencode($serviceId));
+        return $this->executeSlug('render_get_service', ['service_id' => $serviceId]);
     }
 
     /**
      * Create a new service.
      *
-     * @param  array<string, mixed>  $params  Creation parameters (type, name, repo, etc.).
+     * @param  array<string, mixed>  $params  Service creation body.
      * @return array<string, mixed>
      */
     public function createService(array $params): array
     {
-        return $this->request('POST', '/services', $params);
+        return $this->executeSlug('render_create_service', ['body' => $params]);
     }
-
-    // ──────────────────────────────────────────────
-    // Deploys
-    // ──────────────────────────────────────────────
 
     /**
      * List deploys for a service.
@@ -79,15 +162,11 @@ class RenderService
      */
     public function listDeploys(string $serviceId, ?int $limit = null, ?string $cursor = null): array
     {
-        $params = [];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
-        }
-
-        return $this->request('GET', '/services/' . urlencode($serviceId) . '/deploys', $params);
+        return $this->executeSlug('render_list_deploys', array_filter([
+            'service_id' => $serviceId,
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn (mixed $value): bool => $value !== null));
     }
 
     /**
@@ -95,14 +174,13 @@ class RenderService
      *
      * @return array<string, mixed>
      */
-    public function getDeploy(string $deployId): array
+    public function getDeploy(string $serviceId, string $deployId): array
     {
-        return $this->request('GET', '/deploys/' . urlencode($deployId));
+        return $this->executeSlug('render_get_deploy', [
+            'service_id' => $serviceId,
+            'deploy_id' => $deployId,
+        ]);
     }
-
-    // ──────────────────────────────────────────────
-    // Jobs
-    // ──────────────────────────────────────────────
 
     /**
      * List jobs for a service.
@@ -111,20 +189,12 @@ class RenderService
      */
     public function listJobs(string $serviceId, ?int $limit = null, ?string $cursor = null): array
     {
-        $params = [];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
-        }
-
-        return $this->request('GET', '/services/' . urlencode($serviceId) . '/jobs', $params);
+        return $this->executeSlug('render_list_jobs', array_filter([
+            'service_id' => $serviceId,
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn (mixed $value): bool => $value !== null));
     }
-
-    // ──────────────────────────────────────────────
-    // User
-    // ──────────────────────────────────────────────
 
     /**
      * Get information about the current authenticated user.
@@ -133,24 +203,36 @@ class RenderService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/owners/me');
+        return $this->executeSlug('render_get_current_user');
     }
 
-    // ──────────────────────────────────────────────
-    // HTTP helpers
-    // ──────────────────────────────────────────────
-
     /**
-     * Make an API request and return parsed JSON.
+     * Make an API request and return parsed output.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g. "/services").
-     * @param  array<string, mixed>  $data  Query params (GET) or JSON body (POST/PUT/DELETE).
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, array $contentTypes = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $url, $query, $headers, $body, $contentTypes);
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        $contentType = (string) $response->header('Content-Type');
+
+        if (!str_contains($contentType, 'json')) {
+            return [
+                'body' => $response->body(),
+                'content_type' => $contentType,
+            ];
+        }
 
         return $response->json() ?? [];
     }
@@ -159,45 +241,40 @@ class RenderService
      * Make a raw HTTP request to the Render API.
      *
      * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Request data.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
      */
-    private function rawRequest(string $method, string $path, array $data = []): Response
+    private function rawRequest(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, array $contentTypes = []): Response
     {
-        if (!$this->apiKey) {
+        if ($this->apiKey === '') {
             throw new \RuntimeException('Render API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
-
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $http = Http::withToken($this->apiKey)
+                ->withHeaders(array_merge([
+                    'Accept' => 'application/json',
+                ], $headers))
+                ->timeout(120);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $response = $this->sendRequest($http, $method, $url, $query, $body, $contentTypes);
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+                $contentType = (string) $response->header('Content-Type');
+                $rawBody = $response->body();
 
-                if (str_contains((string) $contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Render API returned HTML for {$method} {$path}", [
+                if (str_contains($contentType, 'text/html') || str_starts_with(trim($rawBody), '<!DOCTYPE')) {
+                    Log::warning("Render API returned HTML for {$method} {$url}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Render API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
+                    throw new \RuntimeException("Render API endpoint not available (HTTP {$response->status()}).");
                 }
 
-                $error = $response->json('message') ?? $response->body();
-                Log::error("Render API error: {$method} {$path}", [
+                $error = $response->json('message') ?? $response->json('error') ?? $rawBody;
+                Log::error("Render API error: {$method} {$url}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
@@ -206,10 +283,99 @@ class RenderService
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Render API connection error: {$method} {$path}", [
+            Log::error("Render API connection error: {$method} {$url}", [
                 'error' => $e->getMessage(),
             ]);
             throw new \RuntimeException("Failed to connect to Render API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Dispatch the request with the appropriate body encoder.
+     *
+     * @param  PendingRequest  $http  Pending HTTP request.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
+     */
+    private function sendRequest(PendingRequest $http, string $method, string $url, array $query, mixed $body, array $contentTypes): Response
+    {
+        $method = strtoupper($method);
+
+        if ($query !== []) {
+            $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        }
+
+        if (in_array('multipart/form-data', $contentTypes, true)) {
+            $payload = is_array($body) ? $body : [];
+            foreach ($payload as $key => $value) {
+                if (is_string($value) && is_file($value)) {
+                    $http = $http->attach($key, file_get_contents($value) ?: '', basename($value));
+                    unset($payload[$key]);
+                    continue;
+                }
+
+                if (is_array($value)) {
+                    $payload[$key] = json_encode($value);
+                }
+            }
+
+            return $http->post($url, $payload);
+        }
+
+        return match ($method) {
+            'GET' => $http->get($url),
+            'POST' => $http->post($url, $body ?? []),
+            'PATCH' => $http->patch($url, $body ?? []),
+            'PUT' => $http->put($url, $body ?? []),
+            'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+            default => $http->send($method, $url, ['json' => $body ?? []]),
+        };
+    }
+
+    /**
+     * Resolve an argument by exact, snake_case, or lower-case parameter name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
+    private function argument(array $args, string $name): mixed
+    {
+        foreach ([$name, $this->snakeName($name), strtolower($name)] as $key) {
+            if (array_key_exists($key, $args)) {
+                return $args[$key];
+            }
+        }
+
+        return null;
+    }
+
+    private function snakeName(string $name): string
+    {
+        $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name);
+        $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name);
+        $name = (string) preg_replace('/_+/', '_', $name);
+
+        return strtolower(trim($name, '_'));
+    }
+
+    /**
+     * Build a request body from arguments that are not path/query/header params.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<int, string>  $consumed  Already consumed parameter names.
+     * @return array<string, mixed>
+     */
+    private function bodyFromLooseArguments(array $args, array $consumed): array
+    {
+        $body = [];
+        $consumed = array_flip($consumed);
+
+        foreach ($args as $key => $value) {
+            if (!isset($consumed[$key])) {
+                $body[$key] = $value;
+            }
+        }
+
+        return $body;
     }
 }

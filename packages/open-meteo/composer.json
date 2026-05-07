@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-open-meteo",
+    "description": "Open-Meteo integration for Laravel AI agents - weather, climate, marine, air quality, flood, elevation, and geocoding APIs.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\OpenMeteo\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\OpenMeteo\\OpenMeteoServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "open-meteo",
+        "weather",
+        "forecast",
+        "geocoding",
+        "climate",
+        "opencompany"
+    ]
+}

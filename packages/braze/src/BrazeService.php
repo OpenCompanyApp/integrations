@@ -2,19 +2,24 @@
 
 namespace OpenCompany\Integrations\Braze;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * Braze REST API service client.
+ * HTTP client for the Braze REST API.
  *
- * Handles authentication, request execution, and error handling for all
- * Braze REST API endpoints used by the integration tools.
- *
- * @see https://www.braze.com/docs/api/basics/
+ * Handles bearer-token authentication, region-specific REST endpoints,
+ * request dispatch, error logging, and JSON response parsing.
  */
 class BrazeService
 {
+    /**
+     * @param  string  $apiKey  Braze REST API key.
+     * @param  string  $baseUrl  Braze REST endpoint for the account region.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://rest.iad-01.braze.com',
@@ -22,188 +27,189 @@ class BrazeService
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service is configured with an API key.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
      * List campaigns with pagination.
      *
-     * @param  int  $page  Page number (0-indexed, default 0).
-     * @param  int  $limit  Number of results per page (max 100, default 100).
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
-     *
-     * @see https://www.braze.com/docs/api/endpoints/export/campaigns/get_campaigns/
      */
-    public function listCampaigns(int $page = 0, int $limit = 100): array
+    public function listCampaigns(array $params = []): array
     {
-        return $this->request('GET', '/campaigns/list', [
-            'page' => $page,
-            'limit' => $limit,
-        ]);
+        return $this->apiGet('/campaigns/list', $params);
     }
 
     /**
-     * Get details for a specific campaign.
+     * Get details for a campaign.
      *
-     * @param  string  $campaignId  The Braze campaign identifier.
      * @return array<string, mixed>
-     *
-     * @see https://www.braze.com/docs/api/endpoints/export/campaigns/get_campaign_details/
      */
     public function getCampaign(string $campaignId): array
     {
-        return $this->request('GET', '/campaigns/details', [
-            'campaign_id' => $campaignId,
-        ]);
+        return $this->apiGet('/campaigns/details', ['campaign_id' => $campaignId]);
     }
 
     /**
-     * List canvases with pagination.
+     * List Canvases with pagination.
      *
-     * @param  int  $page  Page number (0-indexed, default 0).
-     * @param  int  $limit  Number of results per page (max 100, default 100).
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
-     *
-     * @see https://www.braze.com/docs/api/endpoints/export/canvas/get_canvas/
      */
-    public function listCanvases(int $page = 0, int $limit = 100): array
+    public function listCanvases(array $params = []): array
     {
-        return $this->request('GET', '/canvas/list', [
-            'page' => $page,
-            'limit' => $limit,
-        ]);
+        return $this->apiGet('/canvas/list', $params);
     }
 
     /**
-     * Get details for a specific canvas.
+     * Get details for a Canvas.
      *
-     * @param  string  $canvasId  The Braze canvas identifier.
      * @return array<string, mixed>
-     *
-     * @see https://www.braze.com/docs/api/endpoints/export/canvas/get_canvas_details/
      */
     public function getCanvas(string $canvasId): array
     {
-        return $this->request('GET', '/canvas/details', [
-            'canvas_id' => $canvasId,
-        ]);
+        return $this->apiGet('/canvas/details', ['canvas_id' => $canvasId]);
     }
 
     /**
-     * Export users by segment or external IDs.
+     * Export users by identifier or segment.
      *
-     * @param  array<string>|null  $externalIds  Array of external IDs to look up.
-     * @param  string|null  $segmentId  Segment ID to export users from.
-     * @param  int  $limit  Maximum number of users to return (max 5000, default 50).
+     * @param  array<string, mixed>  $data  User export payload.
      * @return array<string, mixed>
-     *
-     * @see https://www.braze.com/docs/api/endpoints/export/user_data/post_users_export/
      */
-    public function exportUsers(?array $externalIds = null, ?string $segmentId = null, int $limit = 50): array
+    public function exportUsers(array $data): array
     {
-        $body = [];
-
-        if ($externalIds !== null) {
-            $body['external_ids'] = $externalIds;
-        }
-
-        if ($segmentId !== null) {
-            $body['segment_id'] = $segmentId;
-        }
-
-        $body['limit'] = $limit;
-
-        return $this->request('POST', '/users/export', $body);
+        return $this->apiPost('/users/export/ids', $data);
     }
 
     /**
-     * Get the current authenticated user's profile.
+     * Send a GET request.
      *
+     * @param  array<string, mixed>  $query  Query parameters.
      * @return array<string, mixed>
-     *
-     * @see https://www.braze.com/docs/api/endpoints/user_data/post_users_identify/
      */
-    public function getCurrentUser(): array
+    public function apiGet(string $path, array $query = []): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Send a POST request.
+     *
+     * @param  array<string, mixed>  $data  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $data, $query);
+    }
+
+    /**
+     * Send a PUT request.
+     *
+     * @param  array<string, mixed>  $data  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $data, $query);
+    }
+
+    /**
+     * Send a PATCH request.
+     *
+     * @param  array<string, mixed>  $data  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('PATCH', $path, $data, $query);
+    }
+
+    /**
+     * Send a DELETE request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $data  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = [], array $data = []): array
+    {
+        return $this->request('DELETE', $path, $data, $query);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path (e.g., "/campaigns/list").
-     * @param  array<string, mixed>  $data  Query params or JSON body.
+     * @param  array<string, mixed>  $data  Query params for GET/DELETE or body for mutating requests.
+     * @param  array<string, mixed>  $query  Query params for mutating requests.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $data, $query);
+
+        if ($response->status() === 204) {
+            return [];
+        }
 
         return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the Braze REST API.
+     * Make a raw HTTP request to Braze.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Request payload.
-     *
-     * @throws \RuntimeException On authentication or connection errors.
+     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $query
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = [], array $query = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Braze API key is not configured.');
+        if ($this->apiKey === '') {
+            throw new RuntimeException('Braze API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->baseUrl . '/' . ltrim($path, '/');
 
         try {
             $http = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ])
+                ->acceptJson()
+                ->asJson()
+                ->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'POST' => $http->withOptions(['query' => $query])->post($url, $data),
+                'PUT' => $http->withOptions(['query' => $query])->put($url, $data),
+                'PATCH' => $http->withOptions(['query' => $query])->patch($url, $data),
+                'DELETE' => $data === []
+                    ? $http->withOptions(['query' => $query])->delete($url)
+                    : $http->withOptions(['query' => $query])->send('DELETE', $url, ['json' => $data]),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+                $error = $response->json('message') ?? $response->json('error') ?? $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Braze API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Braze API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the base URL may be incorrect.");
-                }
-
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
                 Log::error("Braze API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Braze API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new RuntimeException('Braze API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Braze API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Braze API: {$e->getMessage()}");
+        } catch (ConnectionException $e) {
+            Log::error("Braze API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            throw new RuntimeException("Failed to connect to Braze API: {$e->getMessage()}");
         }
     }
 }

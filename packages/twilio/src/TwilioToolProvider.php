@@ -101,7 +101,7 @@ class TwilioToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'SMS, voice calls, WhatsApp messaging, phone number management, and usage tracking',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:twilio',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.twilio.com/docs/usage/api',
         ];

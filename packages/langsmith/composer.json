@@ -1,0 +1,26 @@
+{
+    "name": "opencompanyapp/integration-langsmith",
+    "description": "LangSmith integration for Laravel AI agents - traces, datasets, experiments, feedback, prompts, workspaces, organizations, agents, MCP, and platform administration.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\LangSmith\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\LangSmith\\LangSmithServiceProvider"
+            ]
+        }
+    },
+    "keywords": ["tools", "langsmith", "langchain", "llm", "observability", "evals", "opencompany"]
+}

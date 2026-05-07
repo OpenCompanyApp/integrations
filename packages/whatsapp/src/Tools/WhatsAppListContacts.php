@@ -7,16 +7,18 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List contacts associated with the WhatsApp Business phone number.
- *
- * Returns WhatsApp IDs and profile names for each contact.
+ * Compatibility tool for checking WhatsApp contacts.
+*
+ * The Cloud API exposes contact validation as POST /contacts. This legacy
+ * slug now validates the supplied phone numbers instead of calling a
+ * nonexistent contacts listing endpoint.
  *
  * @see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/contacts
  */
 class WhatsAppListContacts implements Tool
 {
     /**
-     * Create a new WhatsAppListContacts tool instance.
+     * @param  WhatsAppService  $service  WhatsApp API client.
      */
     public function __construct(
         private WhatsAppService $service,
@@ -35,7 +37,7 @@ class WhatsAppListContacts implements Tool
      */
     public function description(): string
     {
-        return 'List WhatsApp contacts for the business phone number. Returns WhatsApp IDs and profile names.';
+        return 'Validate WhatsApp contacts for the configured business phone number. Legacy slug for check_contacts.';
     }
 
     /**
@@ -46,25 +48,32 @@ class WhatsAppListContacts implements Tool
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of contacts to return (default: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the value from a previous response to get the next page.'],
+            'contacts' => ['type' => 'array', 'required' => true, 'items' => ['type' => 'string'], 'description' => 'Phone numbers in international format without +.'],
         ];
     }
 
     /**
-     * Execute the tool — list contacts from the API.
+     * Execute the tool and validate contacts through the API.
      *
-     * @param  array{limit?: int, after?: string}  $args
+     * @param  array<string, mixed>  $args
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('WhatsApp integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $result = $this->service->listContacts($limit, $args['after'] ?? null);
+            $contacts = $args['contacts'] ?? [];
+            if (is_string($contacts)) {
+                $contacts = array_values(array_filter(array_map('trim', explode(',', $contacts))));
+            }
+
+            if (! is_array($contacts) || $contacts === []) {
+                return ToolResult::error('contacts is required.');
+            }
+
+            $result = $this->service->checkContacts($contacts);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Unbounce\UnbounceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Unbounce landing pages.
+ */
 class UnbounceListPages implements Tool
 {
+    /**
+     * @param  UnbounceService  $service  Unbounce API client.
+     */
     public function __construct(
         private UnbounceService $service,
     ) {}
@@ -31,6 +37,11 @@ class UnbounceListPages implements Tool
         ];
     }
 
+    /**
+     * List pages.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

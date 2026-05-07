@@ -2,33 +2,14 @@
 
 namespace OpenCompany\Integrations\Teams;
 
-use Illuminate\Support\ServiceProvider;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
+use OpenCompany\Integrations\MicrosoftTeams\MicrosoftTeamsServiceProvider;
 
 /**
- * Laravel service provider for the Microsoft Teams integration.
+ * Legacy compatibility alias for the canonical Microsoft Teams service provider.
  *
- * Registers the TeamsService singleton and bootstraps the Teams tool provider.
+ * Hosts requiring the old package now register the canonical `microsoft-teams`
+ * provider and can still use stored `teams` credentials through fallback lookup.
  */
-class TeamsServiceProvider extends ServiceProvider
+class TeamsServiceProvider extends MicrosoftTeamsServiceProvider
 {
-    public function register(): void
-    {
-        $this->app->singleton(TeamsService::class, function ($app) {
-            $creds = $app->make(CredentialResolver::class);
-
-            return new TeamsService(
-                accessToken: $creds->get('teams', 'access_token', ''),
-            );
-        });
-    }
-
-    public function boot(): void
-    {
-        if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new TeamsToolProvider());
-        }
-    }
 }

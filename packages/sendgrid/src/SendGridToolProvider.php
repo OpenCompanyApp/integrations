@@ -103,7 +103,7 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Email delivery service for transactional and marketing emails, templates, and contact management',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:sendgrid',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.sendgrid.com/api-reference',
         ];

@@ -13,6 +13,8 @@ class MailerLiteCreateSubscriber implements Tool
 {
     /**
      * Create a new create subscriber tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -44,7 +46,9 @@ class MailerLiteCreateSubscriber implements Tool
         return [
             'email' => ['type' => 'string', 'required' => true, 'description' => 'Subscriber email address.'],
             'name' => ['type' => 'string', 'description' => 'Subscriber name.'],
-            'fields' => ['type' => 'object', 'description' => 'Custom fields as key-value pairs (e.g., {"company": "Acme"}).'],
+            'fields' => ['type' => 'object', 'description' => 'Custom fields as key-value pairs.'],
+            'groups' => ['type' => 'array', 'description' => 'Group IDs to add the subscriber to.'],
+            'status' => ['type' => 'string', 'enum' => ['active', 'unsubscribed', 'unconfirmed', 'bounced', 'junk'], 'description' => 'Subscriber status.'],
         ];
     }
 
@@ -62,9 +66,25 @@ class MailerLiteCreateSubscriber implements Tool
 
             $email = $args['email'];
             $name = $args['name'] ?? null;
-            $fields = $args['fields'] ?? [];
+            $payload = [
+                'email' => $email,
+            ];
 
-            $result = $this->service->createSubscriber($email, $name, $fields);
+            if ($name !== null) {
+                $payload['fields']['name'] = $name;
+            }
+
+            if (isset($args['fields']) && is_array($args['fields'])) {
+                $payload['fields'] = array_merge($payload['fields'] ?? [], $args['fields']);
+            }
+
+            foreach (['groups', 'status'] as $key) {
+                if (array_key_exists($key, $args)) {
+                    $payload[$key] = $args[$key];
+                }
+            }
+
+            $result = $this->service->createSubscriber($payload);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

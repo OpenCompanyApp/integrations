@@ -1,0 +1,34 @@
+{
+    "name": "opencompanyapp/integration-microsoft-intune",
+    "description": "Microsoft Intune device and app management integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftIntune\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftIntune\\MicrosoftIntuneServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "intune",
+        "mdm",
+        "endpoint-management",
+        "device-management",
+        "graph",
+        "opencompany"
+    ]
+}

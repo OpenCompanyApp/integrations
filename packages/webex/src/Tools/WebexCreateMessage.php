@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Webex\Tools;
 
-use OpenCompany\Integrations\Webex\WebexService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class WebexCreateMessage implements Tool
+/**
+ * Create a message in a Webex room.
+ */
+class WebexCreateMessage extends AbstractWebexTool implements Tool
 {
-    public function __construct(
-        private WebexService $service,
-    ) {}
-
     public function name(): string
     {
         return 'webex_create_message';
@@ -19,7 +17,7 @@ class WebexCreateMessage implements Tool
 
     public function description(): string
     {
-        return 'Post a new message to a Webex room. Supports plain text and Markdown formatting. Provide either "text" (plain text) or "markdown" (formatted), or both — Webex will display Markdown to clients that support it and fall back to plain text.';
+        return 'Post a new message to a Webex room. Supports plain text and Markdown formatting. Provide either "text" (plain text) or "markdown" (formatted), or both. Webex will display Markdown to clients that support it and fall back to plain text.';
     }
 
     public function parameters(): array
@@ -31,11 +29,16 @@ class WebexCreateMessage implements Tool
         ];
     }
 
+    /**
+     * Create a room message.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Webex integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
             $roomId = $args['room_id'] ?? '';

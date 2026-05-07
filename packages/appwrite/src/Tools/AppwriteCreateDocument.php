@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Appwrite\AppwriteService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create an Appwrite database document.
+ *
+ * Accepts caller-supplied document data and optional permissions.
+ */
 class AppwriteCreateDocument implements Tool
 {
     /**
@@ -53,7 +58,7 @@ class AppwriteCreateDocument implements Tool
     /**
      * Execute the tool with the given arguments.
      *
-     * @param  array $args The tool arguments.
+     * @param  array<string, mixed>  $args The tool arguments.
      * @return ToolResult The result of the tool execution.
      */
     public function execute(array $args): ToolResult

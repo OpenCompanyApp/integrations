@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Ahrefs;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for Ahrefs API v3.
+ *
+ * Handles API key authentication, request dispatch, error handling, and helper
+ * methods for common Site Explorer and subscription endpoints.
+ */
 class AhrefsService
 {
+    /**
+     * @param  string  $apiKey  Ahrefs API v3 key.
+     * @param  string  $baseUrl  Ahrefs API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.ahrefs.com',
@@ -25,12 +35,12 @@ class AhrefsService
      * @param  string  $target  The target URL or domain (e.g., "example.com").
      * @param  int  $limit  Maximum number of results to return (default: 100).
      * @param  int  $offset  Number of results to skip for pagination.
-     * @param  string  $mode  Target mode: "domain", "subdomain", "exact", "prefix".
+     * @param  string  $mode  Target mode: "exact", "prefix", "domain", or "subdomains".
      * @return array<string, mixed>
      */
-    public function listBacklinks(string $target, int $limit = 100, int $offset = 0, string $mode = 'domain'): array
+    public function listBacklinks(string $target, int $limit = 100, int $offset = 0, string $mode = 'subdomains'): array
     {
-        return $this->request('GET', '/v3/site-explorer/backlinks', [
+        return $this->request('GET', '/v3/site-explorer/all-backlinks', [
             'target' => $target,
             'limit' => $limit,
             'offset' => $offset,
@@ -44,12 +54,12 @@ class AhrefsService
      * @param  string  $target  The target URL or domain (e.g., "example.com").
      * @param  int  $limit  Maximum number of results to return (default: 100).
      * @param  int  $offset  Number of results to skip for pagination.
-     * @param  string  $mode  Target mode: "domain", "subdomain", "exact", "prefix".
+     * @param  string  $mode  Target mode: "exact", "prefix", "domain", or "subdomains".
      * @return array<string, mixed>
      */
-    public function listReferringDomains(string $target, int $limit = 100, int $offset = 0, string $mode = 'domain'): array
+    public function listReferringDomains(string $target, int $limit = 100, int $offset = 0, string $mode = 'subdomains'): array
     {
-        return $this->request('GET', '/v3/site-explorer/referring-domains', [
+        return $this->request('GET', '/v3/site-explorer/refdomains', [
             'target' => $target,
             'limit' => $limit,
             'offset' => $offset,
@@ -63,10 +73,10 @@ class AhrefsService
      * @param  string  $target  The target URL or domain (e.g., "example.com").
      * @param  int  $limit  Maximum number of results to return (default: 100).
      * @param  int  $offset  Number of results to skip for pagination.
-     * @param  string  $mode  Target mode: "domain", "subdomain", "exact", "prefix".
+     * @param  string  $mode  Target mode: "exact", "prefix", "domain", or "subdomains".
      * @return array<string, mixed>
      */
-    public function listOrganicKeywords(string $target, int $limit = 100, int $offset = 0, string $mode = 'domain'): array
+    public function listOrganicKeywords(string $target, int $limit = 100, int $offset = 0, string $mode = 'subdomains'): array
     {
         return $this->request('GET', '/v3/site-explorer/organic-keywords', [
             'target' => $target,
@@ -82,12 +92,12 @@ class AhrefsService
      * @param  string  $target  The target URL or domain (e.g., "example.com").
      * @param  int  $limit  Maximum number of results to return (default: 100).
      * @param  int  $offset  Number of results to skip for pagination.
-     * @param  string  $mode  Target mode: "domain", "subdomain", "exact", "prefix".
+     * @param  string  $mode  Target mode: "exact", "prefix", "domain", or "subdomains".
      * @return array<string, mixed>
      */
-    public function listPages(string $target, int $limit = 100, int $offset = 0, string $mode = 'domain'): array
+    public function listPages(string $target, int $limit = 100, int $offset = 0, string $mode = 'subdomains'): array
     {
-        return $this->request('GET', '/v3/site-explorer/pages', [
+        return $this->request('GET', '/v3/site-explorer/top-pages', [
             'target' => $target,
             'limit' => $limit,
             'offset' => $offset,
@@ -96,20 +106,14 @@ class AhrefsService
     }
 
     /**
-     * List paid keywords for a target.
+     * List paid pages for a target.
      *
-     * @param  string  $target  The target URL or domain (e.g., "example.com").
-     * @param  int  $limit  Maximum number of results to return (default: 100).
-     * @param  int  $offset  Number of results to skip for pagination.
+     * @param  array<string, mixed>  $params  Query parameters such as target, mode, date, limit, offset, country, and select.
      * @return array<string, mixed>
      */
-    public function listPaidKeywords(string $target, int $limit = 100, int $offset = 0): array
+    public function listPaidPages(array $params): array
     {
-        return $this->request('GET', '/v3/site-explorer/paid-keywords', [
-            'target' => $target,
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
+        return $this->request('GET', '/v3/site-explorer/paid-pages', $params);
     }
 
     /**
@@ -130,13 +134,91 @@ class AhrefsService
     }
 
     /**
-     * Get the current authenticated user's profile.
+     * Get Site Explorer overview metrics.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as target, date, mode, country, protocol, and select.
+     * @return array<string, mixed>
+     */
+    public function getMetrics(array $params): array
+    {
+        return $this->request('GET', '/v3/site-explorer/metrics', $params);
+    }
+
+    /**
+     * Get domain rating for a target and date.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as target, date, and protocol.
+     * @return array<string, mixed>
+     */
+    public function getDomainRating(array $params): array
+    {
+        return $this->request('GET', '/v3/site-explorer/domain-rating', $params);
+    }
+
+    /**
+     * Get backlink statistics for a target.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as target, date, mode, and protocol.
+     * @return array<string, mixed>
+     */
+    public function getBacklinksStats(array $params): array
+    {
+        return $this->request('GET', '/v3/site-explorer/backlinks-stats', $params);
+    }
+
+    /**
+     * List broken backlinks for a target.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as target, mode, limit, offset, and select.
+     * @return array<string, mixed>
+     */
+    public function listBrokenBacklinks(array $params): array
+    {
+        return $this->request('GET', '/v3/site-explorer/broken-backlinks', $params);
+    }
+
+    /**
+     * List organic competitors for a target.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as target, mode, date, country, limit, and select.
+     * @return array<string, mixed>
+     */
+    public function listOrganicCompetitors(array $params): array
+    {
+        return $this->request('GET', '/v3/site-explorer/organic-competitors', $params);
+    }
+
+    /**
+     * List linked domains for a target.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as target, mode, limit, offset, and select.
+     * @return array<string, mixed>
+     */
+    public function listLinkedDomains(array $params): array
+    {
+        return $this->request('GET', '/v3/site-explorer/linkeddomains', $params);
+    }
+
+    /**
+     * Get Ahrefs API subscription limits and usage.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function getLimitsAndUsage(): array
     {
-        return $this->request('GET', '/v3/users/me');
+        return $this->request('GET', '/v3/subscription-info/limits-and-usage');
+    }
+
+    /**
+     * Call any Ahrefs API v3 GET endpoint.
+     *
+     * @param  string  $path  API path relative to the base URL.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
     }
 
     /**
@@ -166,6 +248,7 @@ class AhrefsService
             $http = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
@@ -202,5 +285,13 @@ class AhrefsService
             ]);
             throw new \RuntimeException("Failed to connect to Ahrefs API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a generic API path.
+     */
+    private function normalizePath(string $path): string
+    {
+        return '/'.ltrim($path, '/');
     }
 }

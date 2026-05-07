@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-openalex",
+    "description": "OpenAlex integration for Laravel AI agents - scholarly works, authors, sources, institutions, topics, and research metadata.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\OpenAlex\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\OpenAlex\\OpenAlexServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "openalex",
+        "scholarly",
+        "research",
+        "papers",
+        "bibliometrics",
+        "opencompany"
+    ]
+}

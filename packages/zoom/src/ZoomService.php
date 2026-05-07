@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Zoom;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Zoom REST API v2.
+ *
+ * Handles bearer-token authentication and meeting, webinar, user, account,
+ * recording, and settings endpoints used by the Zoom tool classes.
+ */
 class ZoomService
 {
+    /**
+     * @param  string  $accessToken  Zoom OAuth or Server-to-Server OAuth access token
+     * @param  string  $baseUrl  Zoom API base URL
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.zoom.us/v2',
@@ -151,6 +161,102 @@ class ZoomService
     }
 
     /**
+     * Create a user in the Zoom account.
+     *
+     * @param  array<string, mixed>  $data  User creation payload
+     * @return array<string, mixed>
+     */
+    public function createUser(array $data): array
+    {
+        return $this->request('POST', '/users', $data);
+    }
+
+    /**
+     * Create a webinar for a user.
+     *
+     * @param  string  $userId  User ID, email, or "me"
+     * @param  array<string, mixed>  $data  Webinar payload
+     * @return array<string, mixed>
+     */
+    public function createWebinar(string $userId, array $data): array
+    {
+        return $this->request('POST', '/users/' . urlencode($userId) . '/webinars', $data);
+    }
+
+    /**
+     * Delete a meeting by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function deleteMeeting(string $meetingId): array
+    {
+        return $this->request('DELETE', '/meetings/' . urlencode($meetingId));
+    }
+
+    /**
+     * Get the current account details.
+     *
+     * @return array<string, mixed>
+     */
+    public function getAccount(): array
+    {
+        return $this->request('GET', '/accounts/me');
+    }
+
+    /**
+     * Get settings for a user.
+     *
+     * @return array<string, mixed>
+     */
+    public function getUserSettings(string $userId): array
+    {
+        return $this->request('GET', '/users/' . urlencode($userId) . '/settings');
+    }
+
+    /**
+     * Get a webinar by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getWebinar(string $webinarId): array
+    {
+        return $this->request('GET', '/webinars/' . urlencode($webinarId));
+    }
+
+    /**
+     * List past meeting instances for a meeting.
+     *
+     * @return array<string, mixed>
+     */
+    public function listPastMeetings(string $meetingId): array
+    {
+        return $this->request('GET', '/past_meetings/' . urlencode($meetingId) . '/instances');
+    }
+
+    /**
+     * List webinars for a user.
+     *
+     * @param  string  $userId  User ID, email, or "me"
+     * @param  array<string, mixed>  $params  Query parameters
+     * @return array<string, mixed>
+     */
+    public function listWebinars(string $userId, array $params = []): array
+    {
+        return $this->request('GET', '/users/' . urlencode($userId) . '/webinars', $params);
+    }
+
+    /**
+     * Update a meeting by ID.
+     *
+     * @param  array<string, mixed>  $data  Meeting fields to update
+     * @return array<string, mixed>
+     */
+    public function updateMeeting(string $meetingId, array $data): array
+    {
+        return $this->request('PATCH', '/meetings/' . urlencode($meetingId), $data);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method.
@@ -197,6 +303,7 @@ class ZoomService
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
@@ -205,7 +312,7 @@ class ZoomService
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains((string) $contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Zoom API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);

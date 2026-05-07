@@ -7,12 +7,15 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: accelo_get_task
+ * Get an Accelo task.
  *
  * Retrieves a single task by its ID from Accelo.
  */
 class AcceloGetTask implements Tool
 {
+    /**
+     * @param  AcceloService  $service  The Accelo API client.
+     */
     public function __construct(
         private AcceloService $service,
     ) {}
@@ -34,6 +37,11 @@ class AcceloGetTask implements Tool
         ];
     }
 
+    /**
+     * Get an Accelo task.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

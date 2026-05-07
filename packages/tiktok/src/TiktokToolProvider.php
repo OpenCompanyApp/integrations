@@ -92,7 +92,7 @@ class TiktokToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Manage TikTok Business videos, ad campaigns, and advertisers via the Business API.',
             'icon' => 'ph:tiktok-logo',
             'logo' => 'simple-icons:tiktok',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://ads.tiktok.com/marketing_api/docs/',
         ];

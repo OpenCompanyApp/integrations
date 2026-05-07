@@ -1,21 +1,23 @@
-# Integration: ElevenLabs
+# Integration: ElevenLabs Legacy Wrapper
 
-> ElevenLabs integration for the [Laravel AI SDK](https://github.com/laravel/ai) — text-to-speech, sound generation, voice and model management. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+This package is retained for compatibility with the old `eleven-labs` package ID. New integrations should use `opencompanyapp/integration-elevenlabs`, which is the canonical ElevenLabs package with broader API coverage.
 
-Give your AI agents access to AI-powered voice synthesis and sound generation. Generate speech from text, create sound effects, browse voices and models — all through the [ElevenLabs](https://elevenlabs.io) API.
+> Legacy ElevenLabs integration for the [Laravel AI SDK](https://github.com/laravel/ai). Prefer `opencompanyapp/integration-elevenlabs` for new installs.
+
+Give your AI agents access to AI-powered voice synthesis and sound generation. Generate speech from text, create sound effects, browse voices and models through the [ElevenLabs](https://elevenlabs.io) API.
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace, with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This ElevenLabs tool lets AI agents generate speech and sound effects, browse available voices and models, and check account usage — enabling rich audio experiences within automated workflows.
+This ElevenLabs tool lets AI agents generate speech and sound effects, browse available voices and models, and check account usage, enabling rich audio experiences within automated workflows.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
 ## Installation
 
 ```console
-composer require opencompanyapp/integration-eleven-labs
+composer require opencompanyapp/integration-elevenlabs
 ```
 
 Laravel auto-discovers the service provider. No manual registration needed.
@@ -129,4 +131,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

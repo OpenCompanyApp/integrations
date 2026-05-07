@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Line\LineService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a LINE user profile.
+ *
+ * Retrieves display name, picture URL, status message, and language when available.
+ */
 class LineGetProfile implements Tool
 {
+    /**
+     * @param  LineService  $service  The LINE Messaging API client
+     */
     public function __construct(
         private LineService $service,
     ) {}
@@ -29,6 +37,11 @@ class LineGetProfile implements Tool
         ];
     }
 
+    /**
+     * Get user profile.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Clerk organizations.
+ *
+ * Supports basic pagination and search filters.
+ */
 class ClerkListOrganizations implements Tool
 {
     /**
      * Create a new ClerkListOrganizations tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -48,7 +55,7 @@ class ClerkListOrganizations implements Tool
     /**
      * Execute the list organizations tool.
      *
-     * @param  array  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

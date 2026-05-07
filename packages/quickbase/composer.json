@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-quickbase",
-    "description": "QuickBase low-code database integration for Laravel — list tables, query records, create records, and more.",
+    "description": "Quickbase REST API integration for Laravel — apps, tables, fields, records, reports, and relationships.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "quickbase", "database", "low-code", "opencompany"],
+    "keywords": ["tools", "quickbase", "database", "low-code", "apps", "tables", "records", "reports", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

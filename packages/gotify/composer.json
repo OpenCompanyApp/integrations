@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-gotify",
-    "description": "Gotify integration for Laravel — send, list, and delete messages via a self-hosted notification server.",
+    "description": "Gotify integration for Laravel — send notifications and manage messages, applications, clients, health, and version metadata.",
     "license": "MIT",
     "authors": [
         {

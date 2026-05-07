@@ -33,6 +33,6 @@ List activity records from ServiceM8.
 - **Returns:** Array of activity objects.
 
 ### servicem8_get_current_user
-Get the currently authenticated ServiceM8 user.
+List staff members visible to the authenticated ServiceM8 token.
 - **Parameters:** (none)
-- **Returns:** User profile object.
+- **Returns:** Array of staff member objects. ServiceM8's public API exposes staff records rather than a dedicated `/me` endpoint.

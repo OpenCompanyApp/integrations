@@ -92,7 +92,7 @@ class PipedreamToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Automation platform for connecting APIs and building workflows',
             'icon' => 'ph:flow-arrow',
             'logo' => 'simple-icons:pipedream',
-            'category' => 'automation',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://pipedream.com/docs/api/rest',
         ];

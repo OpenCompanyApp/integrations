@@ -6,8 +6,14 @@ use OpenCompany\Integrations\WorldBank\WorldBankService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch World Bank indicator observations.
+ */
 class WorldBankGetData implements Tool
 {
+    /**
+     * @param  WorldBankService  $service  The World Bank API client.
+     */
     public function __construct(
         private WorldBankService $service,
     ) {}
@@ -33,6 +39,11 @@ class WorldBankGetData implements Tool
         ];
     }
 
+    /**
+     * Fetch indicator data for countries.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (indicator, countries, date_range, mrnev, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

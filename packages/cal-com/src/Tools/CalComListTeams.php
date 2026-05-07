@@ -12,10 +12,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Returns teams in the authenticated user's Cal.com organization
  * with optional pagination support.
  *
- * @see https://developer.cal.com/api/endpoints/teams
+ * @see https://cal.com/docs/api-reference/v2/teams/get-teams
  */
 class CalComListTeams implements Tool
 {
+    /**
+     * @param  CalComService  $service  Legacy Cal.com API client.
+     */
     public function __construct(
         private CalComService $service,
     ) {}

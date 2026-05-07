@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-blandai",
-    "description": "BlandAI integration for Laravel — make calls, retrieve call details, list calls, and analyze call transcripts.",
+    "description": "Bland AI integration for Laravel — manage AI calls, batches, voices, knowledge bases, and custom call tools.",
     "license": "MIT",
     "authors": [
         {

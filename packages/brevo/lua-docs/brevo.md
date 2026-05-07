@@ -1,201 +1,60 @@
-# Brevo — Lua API Reference
+# Brevo Lua Reference
 
-## list_contacts
+Namespace: `app.integrations.brevo`
 
-List contacts in your Brevo account with optional search and pagination.
+Brevo tools use the `api-key` header against the v3 API. Request and response payloads are decoded Brevo JSON and keep Brevo field names such as `listIds`, `htmlContent`, `sender`, and `templateId`.
 
-### Parameters
+## Common Workflows
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of contacts to return (default: 50, max: 1000) |
-| `offset` | integer | no | Number of contacts to skip for pagination (default: 0) |
-| `search` | string | no | Search term to filter contacts by email or attributes |
-
-### Example
+Create or update a contact:
 
 ```lua
-local result = app.integrations.brevo.list_contacts({
-  limit = 10,
-  offset = 0,
-  search = "john"
-})
-
-for _, contact in ipairs(result.contacts) do
-  print(contact.email)
-end
-```
-
----
-
-## get_contact
-
-Get details of a specific contact by email address.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | The email address of the contact to retrieve |
-
-### Example
-
-```lua
-local result = app.integrations.brevo.get_contact({
-  email = "john@example.com"
-})
-
-print(result.email)
-print(result.attributes.FIRSTNAME)
-```
-
----
-
-## create_contact
-
-Create a new contact in Brevo.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | The email address for the new contact |
-| `attributes` | object | no | Contact attributes, e.g. `{"FIRSTNAME": "John", "LASTNAME": "Doe"}` |
-| `listIds` | array | no | Array of list IDs (integers) to add the contact to, e.g. `{2, 5}` |
-
-### Example
-
-```lua
-local result = app.integrations.brevo.create_contact({
-  email = "jane@example.com",
+app.integrations.brevo.create_contact({
+  email = "person@example.test",
   attributes = {
-    FIRSTNAME = "Jane",
-    LASTNAME = "Doe"
+    FIRSTNAME = "Ada"
   },
-  listIds = {2, 5}
+  list_ids = { 12 },
+  update_enabled = true
 })
-
-print("Created contact with ID: " .. result.id)
 ```
 
----
-
-## list_lists
-
-List all contact lists in your Brevo account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of lists to return (default: 50, max: 1000) |
-| `offset` | integer | no | Number of lists to skip for pagination (default: 0) |
-
-### Example
+Send a transactional email:
 
 ```lua
-local result = app.integrations.brevo.list_lists({
-  limit = 20,
-  offset = 0
+app.integrations.brevo.send_email({
+  payload = {
+    sender = { email = "noreply@example.test", name = "Example" },
+    to = {
+      { email = "person@example.test", name = "Ada" }
+    },
+    subject = "Welcome",
+    htmlContent = "<p>Hello Ada</p>"
+  }
 })
-
-for _, list in ipairs(result.lists) do
-  print(list.id .. ": " .. list.name .. " (" .. list.totalSubscribers .. " subscribers)")
-end
 ```
 
----
-
-## get_list
-
-Get details of a specific contact list by its ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The ID of the contact list to retrieve |
-
-### Example
+Create an email campaign:
 
 ```lua
-local result = app.integrations.brevo.get_list({
-  id = 2
+local campaign = app.integrations.brevo.create_email_campaign({
+  payload = {
+    name = "Launch update",
+    subject = "Launch update",
+    sender = { id = 3 },
+    recipients = { listIds = { 12 } },
+    htmlContent = "<p>News</p>"
+  }
 })
-
-print(result.name .. ": " .. result.totalSubscribers .. " subscribers")
 ```
 
----
+## Coverage Notes
 
-## send_email
+- Contact tools cover contacts, attributes, lists, folders, list membership, imports, and exports.
+- Messaging tools cover transactional email, templates, SMTP logs/statistics, blocked recipients/domains, transactional SMS, and WhatsApp.
+- Campaign tools cover email, SMS, and WhatsApp campaigns plus send-now and template approval operations.
+- Account/settings tools cover senders, sender domains, webhooks, inbound parsing, external feeds, and process status.
+- eCommerce and event tools cover products, categories, order status, custom events, custom object records, and eCommerce activation.
+- Raw `api_get`, `api_post`, `api_put`, `api_patch`, and `api_delete` can call any Brevo v3 endpoint path.
 
-Send a transactional email via Brevo.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `sender` | object | yes | Sender with `name` and `email` keys |
-| `to` | array | yes | Array of recipient objects, each with `email` and optionally `name` |
-| `subject` | string | yes | The email subject line |
-| `htmlContent` | string | no | HTML body of the email (required unless `textContent` provided) |
-| `textContent` | string | no | Plain text body of the email (required unless `htmlContent` provided) |
-
-### Example
-
-```lua
-local result = app.integrations.brevo.send_email({
-  sender = {
-    name = "My App",
-    email = "noreply@example.com"
-  },
-  to = {
-    { email = "user@example.com", name = "John" }
-  },
-  subject = "Welcome!",
-  htmlContent = "<h1>Hello!</h1><p>Welcome to our service.</p>",
-  textContent = "Hello! Welcome to our service."
-})
-
-print("Message ID: " .. result.messageId)
-```
-
----
-
-## get_account
-
-Get information about the connected Brevo account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.brevo.get_account()
-
-print("Account email: " .. result.email)
-print("Plan: " .. result.plan.type)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Brevo accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.brevo.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.brevo.default.function_name({...})
-
--- Named accounts
-app.integrations.brevo.work.function_name({...})
-app.integrations.brevo.personal.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Use `payload` for full Brevo request bodies when a focused tool does not expose every optional field.

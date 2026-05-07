@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ManyChatListFlows implements Tool
 {
+    /**
+     * @param  ManyChatService  $service  The Manychat API client.
+     */
     public function __construct(
         private ManyChatService $service,
     ) {}
@@ -33,6 +36,11 @@ class ManyChatListFlows implements Tool
         return [];
     }
 
+    /**
+     * List bot flows from the official getFlows endpoint.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

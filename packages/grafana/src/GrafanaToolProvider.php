@@ -3,27 +3,21 @@
 namespace OpenCompany\Integrations\Grafana;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaListDashboards;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaGetDashboard;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaCreateDashboard;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaListDatasources;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaListAlerts;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaListTeams;
-use OpenCompany\Integrations\Grafana\Tools\GrafanaGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool catalog and setup metadata for the Grafana integration.
+ *
+ * Exposes generated tools for Grafana's official HTTP API OpenAPI document
+ * and resolves account-specific service account tokens and instance URLs.
  */
 class GrafanaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -31,259 +25,226 @@ class GrafanaToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_token',
-            'legacy_auth_type' => 'api_token',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_token',
+                'legacy_auth_type' => 'api_token',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_token'],
+                'notes' => ['Grafana HTTP API requests use Authorization: Bearer with a service account token or API token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-/**
-     * {@inheritDoc}
-     */
     public function appName(): string
     {
         return 'grafana';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function appMeta(): array
     {
         return [
             'label' => 'Grafana',
-            'description' => 'Analytics & monitoring dashboards',
-            'icon' => 'ph:chart-bar',
+            'description' => 'Dashboards, data sources, alerts, folders, teams, users, reports, snapshots, and RBAC',
+            'icon' => 'ph:chart-line',
             'logo' => 'simple-icons:grafana',
         ];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Grafana',
-            'description' => 'Open-source analytics and monitoring platform',
-            'icon' => 'ph:chart-bar',
+            'description' => 'Manage Grafana dashboards, data sources, alerts, folders, teams, users, snapshots, reports, service accounts, preferences, RBAC, and provisioning resources through the official HTTP API.',
+            'icon' => 'ph:chart-line',
             'logo' => 'simple-icons:grafana',
             'category' => 'analytics',
             'badge' => 'verified',
             'docs_url' => 'https://grafana.com/docs/grafana/latest/developers/http_api/',
+            'source_url' => 'https://raw.githubusercontent.com/grafana/grafana/main/public/openapi3.json',
         ];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function configSchema(): array
     {
         return [
             [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://grafana.example.test/api',
+                'hint' => 'Grafana instance API root. Include the /api prefix, for example https://grafana.example.test/api.',
+                'default' => 'http://localhost:3000/api',
+                'required' => true,
+            ],
+            [
                 'key' => 'api_token',
                 'type' => 'secret',
                 'label' => 'API Token',
-                'placeholder' => 'Enter your Grafana API token',
-                'hint' => 'Generate a Service Account token or Personal Access Token in Grafana under Configuration → API Keys or Service Accounts',
+                'placeholder' => 'Grafana service account token',
+                'hint' => 'Create a service account token in Grafana. Older API keys also work where enabled.',
                 'required' => true,
             ],
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * Test the configured Grafana instance by calling the signed-in user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
+        $apiToken = (string) ($config['api_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'http://localhost:3000/api'), '/');
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided'];
+        if ($apiToken === '') {
+            return ['success' => false, 'error' => 'No API token provided.'];
+        }
+
+        if ($baseUrl === '') {
+            return ['success' => false, 'error' => 'Grafana API base URL is required.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.grafana.com/v1/user');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => 'Could not reach Grafana API. Check your API token.',
-                ];
-            }
+            $response = Http::withToken($apiToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl . '/user');
 
             if (!$response->successful()) {
-                $message = $json['message'] ?? "HTTP {$response->status()}";
+                $message = $response->json('message') ?? $response->json('error') ?? $response->body();
+
                 return [
                     'success' => false,
-                    'error' => "Grafana API error: {$message}",
+                    'error' => "Grafana API error ({$response->status()}): {$message}",
                 ];
             }
 
-            $userName = $json['name'] ?? $json['login'] ?? 'Unknown';
+            $userName = $response->json('name') ?? $response->json('login') ?? $response->json('email') ?? 'authenticated user';
 
             return [
                 'success' => true,
                 'message' => "Connected to Grafana as {$userName}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
+            'url' => 'nullable|url',
             'api_token' => 'nullable|string',
         ];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function tools(): array
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
     {
-        return [
-            'grafana_list_dashboards' => [
-                'class' => GrafanaListDashboards::class,
-                'type' => 'read',
-                'name' => 'List Dashboards',
-                'description' => 'Search and list Grafana dashboards.',
-                'icon' => 'ph:squares-four',
-            ],
-            'grafana_get_dashboard' => [
-                'class' => GrafanaGetDashboard::class,
-                'type' => 'read',
-                'name' => 'Get Dashboard',
-                'description' => 'Get a Grafana dashboard by UID.',
-                'icon' => 'ph:squares-four',
-            ],
-            'grafana_create_dashboard' => [
-                'class' => GrafanaCreateDashboard::class,
-                'type' => 'write',
-                'name' => 'Create Dashboard',
-                'description' => 'Create or update a Grafana dashboard.',
-                'icon' => 'ph:plus-square',
-            ],
-            'grafana_list_datasources' => [
-                'class' => GrafanaListDatasources::class,
-                'type' => 'read',
-                'name' => 'List Datasources',
-                'description' => 'List all configured datasources.',
-                'icon' => 'ph:database',
-            ],
-            'grafana_list_alerts' => [
-                'class' => GrafanaListAlerts::class,
-                'type' => 'read',
-                'name' => 'List Alerts',
-                'description' => 'List Grafana alerts.',
-                'icon' => 'ph:bell',
-            ],
-            'grafana_list_teams' => [
-                'class' => GrafanaListTeams::class,
-                'type' => 'read',
-                'name' => 'List Teams',
-                'description' => 'List all Grafana teams.',
-                'icon' => 'ph:users-three',
-            ],
-            'grafana_get_current_user' => [
-                'class' => GrafanaGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Grafana user.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        return $this->configSchema();
     }
 
     /**
-     * {@inheritDoc}
+     * Register generated Grafana OpenAPI tools.
+     *
+     * @return array<string, array<string, mixed>>
      */
+    public function tools(): array
+    {
+        $tools = [];
+
+        foreach (GrafanaService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($slug, $operation),
+            ];
+        }
+
+        return $tools;
+    }
+
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/grafana.md';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
     /**
-     * {@inheritDoc}
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): GrafanaService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);
 
-            $service = new GrafanaService(
-                apiToken: $creds->get('grafana', 'api_token', '', $account),
+            return new GrafanaService(
+                apiToken: (string) $creds->get('grafana', 'api_token', '', (string) $account),
+                baseUrl: (string) $creds->get('grafana', 'url', 'http://localhost:3000/api', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(GrafanaService::class));
+        return app(GrafanaService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(string $slug, array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/dashboards'), str_contains($path, '/search') => 'ph:squares-four',
+            str_contains($path, '/datasources') => 'ph:database',
+            str_contains($path, '/alert'), str_contains($path, '/provisioning') => 'ph:bell',
+            str_contains($path, '/teams') => 'ph:users-three',
+            str_contains($path, '/users'), str_contains($path, '/user'), str_contains($path, '/serviceaccounts') => 'ph:user-circle',
+            str_contains($path, '/folders') => 'ph:folder',
+            str_contains($path, '/reports') => 'ph:file-text',
+            str_contains($path, '/snapshots') => 'ph:camera',
+            str_contains($path, '/access-control') => 'ph:shield-check',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

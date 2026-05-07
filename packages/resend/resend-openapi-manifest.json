@@ -1,0 +1,590 @@
+{
+  "source": "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml",
+  "service": "Resend",
+  "version": "1.5.0",
+  "operation_count": 83,
+  "generated_package": "resend",
+  "operations": [
+    {
+      "tool": "resend_send_email",
+      "class": "ResendSendEmail",
+      "http_method": "POST",
+      "path": "/emails",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_emails",
+      "class": "ResendListEmails",
+      "http_method": "GET",
+      "path": "/emails",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_email",
+      "class": "ResendGetEmail",
+      "http_method": "GET",
+      "path": "/emails/{email_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_emails",
+      "class": "ResendUpdateEmails",
+      "http_method": "PATCH",
+      "path": "/emails/{email_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_cancel_email",
+      "class": "ResendCancelEmail",
+      "http_method": "POST",
+      "path": "/emails/{email_id}/cancel",
+      "type": "write"
+    },
+    {
+      "tool": "resend_send_batch_emails",
+      "class": "ResendSendBatchEmails",
+      "http_method": "POST",
+      "path": "/emails/batch",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_attachments",
+      "class": "ResendListAttachments",
+      "http_method": "GET",
+      "path": "/emails/{email_id}/attachments",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_attachments",
+      "class": "ResendGetAttachments",
+      "http_method": "GET",
+      "path": "/emails/{email_id}/attachments/{attachment_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_list_receiving",
+      "class": "ResendListReceiving",
+      "http_method": "GET",
+      "path": "/emails/receiving",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_receiving",
+      "class": "ResendGetReceiving",
+      "http_method": "GET",
+      "path": "/emails/receiving/{email_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_list_attachments_receiving_email_id_attachments",
+      "class": "ResendListAttachmentsReceivingEmailIdAttachments",
+      "http_method": "GET",
+      "path": "/emails/receiving/{email_id}/attachments",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_attachments_email_id_attachments_attachment_id",
+      "class": "ResendGetAttachmentsEmailIdAttachmentsAttachmentId",
+      "http_method": "GET",
+      "path": "/emails/receiving/{email_id}/attachments/{attachment_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_create_domain",
+      "class": "ResendCreateDomain",
+      "http_method": "POST",
+      "path": "/domains",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_domains",
+      "class": "ResendListDomains",
+      "http_method": "GET",
+      "path": "/domains",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_domain",
+      "class": "ResendGetDomain",
+      "http_method": "GET",
+      "path": "/domains/{domain_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_domains",
+      "class": "ResendUpdateDomains",
+      "http_method": "PATCH",
+      "path": "/domains/{domain_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_domains",
+      "class": "ResendDeleteDomains",
+      "http_method": "DELETE",
+      "path": "/domains/{domain_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_verify_domain",
+      "class": "ResendVerifyDomain",
+      "http_method": "POST",
+      "path": "/domains/{domain_id}/verify",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_api_key",
+      "class": "ResendCreateApiKey",
+      "http_method": "POST",
+      "path": "/api-keys",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_api_keys",
+      "class": "ResendListApiKeys",
+      "http_method": "GET",
+      "path": "/api-keys",
+      "type": "read"
+    },
+    {
+      "tool": "resend_delete_api_keys",
+      "class": "ResendDeleteApiKeys",
+      "http_method": "DELETE",
+      "path": "/api-keys/{api_key_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_templates",
+      "class": "ResendCreateTemplates",
+      "http_method": "POST",
+      "path": "/templates",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_templates",
+      "class": "ResendListTemplates",
+      "http_method": "GET",
+      "path": "/templates",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_templates",
+      "class": "ResendGetTemplates",
+      "http_method": "GET",
+      "path": "/templates/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_templates",
+      "class": "ResendUpdateTemplates",
+      "http_method": "PATCH",
+      "path": "/templates/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_templates",
+      "class": "ResendDeleteTemplates",
+      "http_method": "DELETE",
+      "path": "/templates/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_publish_template",
+      "class": "ResendPublishTemplate",
+      "http_method": "POST",
+      "path": "/templates/{id}/publish",
+      "type": "write"
+    },
+    {
+      "tool": "resend_duplicate_template",
+      "class": "ResendDuplicateTemplate",
+      "http_method": "POST",
+      "path": "/templates/{id}/duplicate",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_audiences",
+      "class": "ResendCreateAudiences",
+      "http_method": "POST",
+      "path": "/audiences",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_audiences",
+      "class": "ResendListAudiences",
+      "http_method": "GET",
+      "path": "/audiences",
+      "type": "read"
+    },
+    {
+      "tool": "resend_delete_audiences",
+      "class": "ResendDeleteAudiences",
+      "http_method": "DELETE",
+      "path": "/audiences/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_get_audiences",
+      "class": "ResendGetAudiences",
+      "http_method": "GET",
+      "path": "/audiences/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_create_contact",
+      "class": "ResendCreateContact",
+      "http_method": "POST",
+      "path": "/contacts",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_contacts",
+      "class": "ResendListContacts",
+      "http_method": "GET",
+      "path": "/contacts",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_contacts",
+      "class": "ResendGetContacts",
+      "http_method": "GET",
+      "path": "/contacts/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_contacts",
+      "class": "ResendUpdateContacts",
+      "http_method": "PATCH",
+      "path": "/contacts/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_contacts",
+      "class": "ResendDeleteContacts",
+      "http_method": "DELETE",
+      "path": "/contacts/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_broadcasts",
+      "class": "ResendCreateBroadcasts",
+      "http_method": "POST",
+      "path": "/broadcasts",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_broadcasts",
+      "class": "ResendListBroadcasts",
+      "http_method": "GET",
+      "path": "/broadcasts",
+      "type": "read"
+    },
+    {
+      "tool": "resend_delete_broadcasts",
+      "class": "ResendDeleteBroadcasts",
+      "http_method": "DELETE",
+      "path": "/broadcasts/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_get_broadcasts",
+      "class": "ResendGetBroadcasts",
+      "http_method": "GET",
+      "path": "/broadcasts/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_broadcasts",
+      "class": "ResendUpdateBroadcasts",
+      "http_method": "PATCH",
+      "path": "/broadcasts/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_send_broadcasts",
+      "class": "ResendSendBroadcasts",
+      "http_method": "POST",
+      "path": "/broadcasts/{id}/send",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_webhooks",
+      "class": "ResendCreateWebhooks",
+      "http_method": "POST",
+      "path": "/webhooks",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_webhooks",
+      "class": "ResendListWebhooks",
+      "http_method": "GET",
+      "path": "/webhooks",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_webhooks",
+      "class": "ResendGetWebhooks",
+      "http_method": "GET",
+      "path": "/webhooks/{webhook_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_webhooks",
+      "class": "ResendUpdateWebhooks",
+      "http_method": "PATCH",
+      "path": "/webhooks/{webhook_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_webhooks",
+      "class": "ResendDeleteWebhooks",
+      "http_method": "DELETE",
+      "path": "/webhooks/{webhook_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_segments",
+      "class": "ResendCreateSegments",
+      "http_method": "POST",
+      "path": "/segments",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_segments",
+      "class": "ResendListSegments",
+      "http_method": "GET",
+      "path": "/segments",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_segments",
+      "class": "ResendGetSegments",
+      "http_method": "GET",
+      "path": "/segments/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_delete_segments",
+      "class": "ResendDeleteSegments",
+      "http_method": "DELETE",
+      "path": "/segments/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_topics",
+      "class": "ResendCreateTopics",
+      "http_method": "POST",
+      "path": "/topics",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_topics",
+      "class": "ResendListTopics",
+      "http_method": "GET",
+      "path": "/topics",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_topics",
+      "class": "ResendGetTopics",
+      "http_method": "GET",
+      "path": "/topics/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_topics",
+      "class": "ResendUpdateTopics",
+      "http_method": "PATCH",
+      "path": "/topics/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_topics",
+      "class": "ResendDeleteTopics",
+      "http_method": "DELETE",
+      "path": "/topics/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_create_contact_properties",
+      "class": "ResendCreateContactProperties",
+      "http_method": "POST",
+      "path": "/contact-properties",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_contact_properties",
+      "class": "ResendListContactProperties",
+      "http_method": "GET",
+      "path": "/contact-properties",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_contact_properties",
+      "class": "ResendGetContactProperties",
+      "http_method": "GET",
+      "path": "/contact-properties/{id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_contact_properties",
+      "class": "ResendUpdateContactProperties",
+      "http_method": "PATCH",
+      "path": "/contact-properties/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_contact_properties",
+      "class": "ResendDeleteContactProperties",
+      "http_method": "DELETE",
+      "path": "/contact-properties/{id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_segments_contacts_contact_id_segments",
+      "class": "ResendListSegmentsContactsContactIdSegments",
+      "http_method": "GET",
+      "path": "/contacts/{contact_id}/segments",
+      "type": "read"
+    },
+    {
+      "tool": "resend_create_segments_contact_id_segments_segment_id",
+      "class": "ResendCreateSegmentsContactIdSegmentsSegmentId",
+      "http_method": "POST",
+      "path": "/contacts/{contact_id}/segments/{segment_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_segments_contact_id_segments_segment_id",
+      "class": "ResendDeleteSegmentsContactIdSegmentsSegmentId",
+      "http_method": "DELETE",
+      "path": "/contacts/{contact_id}/segments/{segment_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_get_topics_contacts_contact_id_topics",
+      "class": "ResendGetTopicsContactsContactIdTopics",
+      "http_method": "GET",
+      "path": "/contacts/{contact_id}/topics",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_topics_contacts_contact_id_topics",
+      "class": "ResendUpdateTopicsContactsContactIdTopics",
+      "http_method": "PATCH",
+      "path": "/contacts/{contact_id}/topics",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_logs",
+      "class": "ResendListLogs",
+      "http_method": "GET",
+      "path": "/logs",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_logs",
+      "class": "ResendGetLogs",
+      "http_method": "GET",
+      "path": "/logs/{log_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_create_automations",
+      "class": "ResendCreateAutomations",
+      "http_method": "POST",
+      "path": "/automations",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_automations",
+      "class": "ResendListAutomations",
+      "http_method": "GET",
+      "path": "/automations",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_automations",
+      "class": "ResendGetAutomations",
+      "http_method": "GET",
+      "path": "/automations/{automation_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_automations",
+      "class": "ResendUpdateAutomations",
+      "http_method": "PATCH",
+      "path": "/automations/{automation_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_automations",
+      "class": "ResendDeleteAutomations",
+      "http_method": "DELETE",
+      "path": "/automations/{automation_id}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_stop_automations",
+      "class": "ResendStopAutomations",
+      "http_method": "POST",
+      "path": "/automations/{automation_id}/stop",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_runs",
+      "class": "ResendListRuns",
+      "http_method": "GET",
+      "path": "/automations/{automation_id}/runs",
+      "type": "read"
+    },
+    {
+      "tool": "resend_get_runs",
+      "class": "ResendGetRuns",
+      "http_method": "GET",
+      "path": "/automations/{automation_id}/runs/{run_id}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_create_events",
+      "class": "ResendCreateEvents",
+      "http_method": "POST",
+      "path": "/events",
+      "type": "write"
+    },
+    {
+      "tool": "resend_list_events",
+      "class": "ResendListEvents",
+      "http_method": "GET",
+      "path": "/events",
+      "type": "read"
+    },
+    {
+      "tool": "resend_send_events",
+      "class": "ResendSendEvents",
+      "http_method": "POST",
+      "path": "/events/send",
+      "type": "write"
+    },
+    {
+      "tool": "resend_get_events",
+      "class": "ResendGetEvents",
+      "http_method": "GET",
+      "path": "/events/{identifier}",
+      "type": "read"
+    },
+    {
+      "tool": "resend_update_events",
+      "class": "ResendUpdateEvents",
+      "http_method": "PATCH",
+      "path": "/events/{identifier}",
+      "type": "write"
+    },
+    {
+      "tool": "resend_delete_events",
+      "class": "ResendDeleteEvents",
+      "http_method": "DELETE",
+      "path": "/events/{identifier}",
+      "type": "write"
+    }
+  ]
+}

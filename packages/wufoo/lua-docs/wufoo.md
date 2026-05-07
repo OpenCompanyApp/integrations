@@ -1,207 +1,156 @@
-# Wufoo — Lua API Reference
+# Wufoo Lua Reference
 
-## list_forms
+Namespace: `wufoo`
 
-List all forms in your Wufoo account.
+Wufoo exposes form, entry, report, user, comment, and webhook resources through
+API v3. Configure an API key and a subdomain-specific base URL such as
+`https://example.wufoo.com/api/v3`. The integration authenticates with HTTP
+Basic auth using the API key as the username and `footastic` as the password.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| — | — | — | This tool takes no parameters. |
-
-### Response
-
-Returns an object containing a `Forms` array with form details including:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `Hash` | string | Unique form identifier |
-| `Name` | string | Form name |
-| `Description` | string | Form description |
-| `Url` | string | Public form URL |
-| `DateCreated` | string | Creation date |
-| `DateUpdated` | string | Last update date |
-| `EntryCount` | string | Total number of entries |
-
-### Example
+## Forms and Fields
 
 ```lua
-local result = app.integrations.wufoo.list_forms()
+local forms = app.integrations.wufoo.list_forms({})
 
-for _, form in ipairs(result.Forms) do
-  print(form.Name .. " (" .. form.Hash .. ") — " .. form.EntryCount .. " entries")
-end
-```
-
----
-
-## get_form
-
-Get details for a specific Wufoo form by its identifier.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The form hash or identifier |
-
-### Example
-
-```lua
-local result = app.integrations.wufoo.get_form({
-  form_id = "q1w2e3r4t5y6"
+local form = app.integrations.wufoo.get_form({
+  form_id = "z1abc234"
 })
 
-local form = result.Forms[1]
-print("Form: " .. form.Name)
-print("Fields: " .. #form.Fields)
+local fields = app.integrations.wufoo.list_fields({
+  form_id = "z1abc234"
+})
 ```
 
----
+Use `list_fields` before `submit_entry` so agents can use the correct Wufoo
+field API IDs such as `Field1` or `Field2`.
 
-## list_entries
-
-List entries submitted to a Wufoo form with pagination and optional filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The form hash or identifier |
-| `page` | integer | no | Page number (0-based). Default: 0 |
-| `page_size` | integer | no | Entries per page. Default: 25, max: 100 |
-| `filters` | object | no | Optional field filters (see below) |
-
-### Filter Parameters
-
-Filters are passed as key-value pairs. Common filter keys:
-
-| Key | Description |
-|-----|-------------|
-| `Filter1` | First filter expression (e.g., `"Field1+Is+equal_to+value"`) |
-| `Match` | Match logic: `"AND"` or `"OR"` when using multiple filters |
-| `SortBy` | Field to sort by (prefix with `-` for descending) |
-| `SortDirection` | Sort direction: `"ASC"` or `"DESC"` |
-
-### Example
+## Entries
 
 ```lua
--- Get first page of entries
-local result = app.integrations.wufoo.list_entries({
-  form_id = "q1w2e3r4t5y6",
+local entries = app.integrations.wufoo.list_entries({
+  form_id = "z1abc234",
   page = 0,
-  page_size = 25
-})
-
-for _, entry in ipairs(result.Entries) do
-  print(entry.EntryId .. ": " .. (entry.Field1 or "no value"))
-end
-
--- Get next page
-local page2 = app.integrations.wufoo.list_entries({
-  form_id = "q1w2e3r4t5y6",
-  page = 1,
-  page_size = 25
-})
-
--- With filters
-local filtered = app.integrations.wufoo.list_entries({
-  form_id = "q1w2e3r4t5y6",
+  page_size = 25,
   filters = {
-    Filter1 = "Field1+Is+equal_to+John"
+    Filter1 = "Field1+Is_equal_to+Example",
+    SortBy = "DateCreated",
+    SortDirection = "DESC"
+  }
+})
+
+local count = app.integrations.wufoo.count_entries({
+  form_id = "z1abc234"
+})
+
+local entry = app.integrations.wufoo.get_entry({
+  form_id = "z1abc234",
+  entry_id = "123"
+})
+
+local created = app.integrations.wufoo.submit_entry({
+  form_id = "z1abc234",
+  fields = {
+    Field1 = "Example Person",
+    Field2 = "person@example.test"
   }
 })
 ```
 
----
+Wufoo API v3 lists entries under forms. `get_entry` therefore uses the form
+entries endpoint with an `EntryId` filter and returns the filtered entries
+response.
 
-## get_entry
+`submit_entry` sends form-encoded fields because Wufoo expects form-style entry
+submissions. Returned data is the parsed Wufoo response, with submission errors
+reported as tool errors.
 
-Get a single form entry by its identifier.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `entry_id` | string | yes | The entry identifier |
-
-### Example
+## Comments
 
 ```lua
-local result = app.integrations.wufoo.get_entry({
-  entry_id = "12345"
+local comments = app.integrations.wufoo.list_form_comments({
+  form_id = "z1abc234",
+  params = { entryId = "123" }
 })
 
-local entry = result.Entries[1]
-print("Entry ID: " .. entry.EntryId)
-print("Date Created: " .. entry.DateCreated)
-```
-
----
-
-## list_reports
-
-List all reports in your Wufoo account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| — | — | — | This tool takes no parameters. |
-
-### Example
-
-```lua
-local result = app.integrations.wufoo.list_reports()
-
-for _, report in ipairs(result.Reports) do
-  print(report.Name .. " — Form: " .. report.FormName)
-end
-```
-
----
-
-## get_current_user
-
-Get the authenticated Wufoo user's profile information.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| — | — | — | This tool takes no parameters. |
-
-### Example
-
-```lua
-local result = app.integrations.wufoo.get_current_user()
-
-local user = result.Users[1]
-print("User: " .. user.FirstName .. " " .. user.LastName)
-print("Email: " .. user.Email)
-print("Organization: " .. user.Organization)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Wufoo accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.wufoo.list_forms({})
-
--- Explicit default (portable across setups)
-app.integrations.wufoo.default.list_forms({})
-
--- Named accounts
-app.integrations.wufoo.marketing.list_forms({})
-app.integrations.wufoo.support.list_entries({
-  form_id = "abc123",
-  page_size = 50
+local comment_count = app.integrations.wufoo.count_form_comments({
+  form_id = "z1abc234"
 })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Reports
+
+```lua
+local reports = app.integrations.wufoo.list_reports({})
+
+local report = app.integrations.wufoo.get_report({
+  report_id = "r1abc234"
+})
+
+local report_entries = app.integrations.wufoo.list_report_entries({
+  report_id = "r1abc234",
+  params = { pageSize = 10 }
+})
+
+local report_count = app.integrations.wufoo.count_report_entries({
+  report_id = "r1abc234"
+})
+
+local report_fields = app.integrations.wufoo.list_report_fields({
+  report_id = "r1abc234"
+})
+
+local widgets = app.integrations.wufoo.list_report_widgets({
+  report_id = "r1abc234"
+})
+```
+
+Report IDs can be hashes or title identifiers accepted by the Wufoo API.
+
+## Users
+
+```lua
+local users = app.integrations.wufoo.list_users({})
+local current = app.integrations.wufoo.get_current_user({})
+```
+
+`get_current_user` is retained as a compatibility alias for the users endpoint;
+Wufoo's API returns a `Users` collection.
+
+## Webhooks
+
+```lua
+local webhook = app.integrations.wufoo.add_webhook({
+  form_id = "z1abc234",
+  url = "https://example.test/wufoo",
+  handshake_key = "shared-secret",
+  metadata = true
+})
+
+local deleted = app.integrations.wufoo.delete_webhook({
+  form_id = "z1abc234",
+  webhook_id = "webhookhash"
+})
+```
+
+Webhook creation is a write operation and should be used carefully because Wufoo
+limits integrations per form.
+
+## Generic API
+
+Use generic helpers for official Wufoo API v3 endpoints that do not yet have a
+dedicated wrapper.
+
+```lua
+local raw = app.integrations.wufoo.api_get({
+  path = "/forms/z1abc234/fields.json",
+  params = { system = "true" }
+})
+
+local posted = app.integrations.wufoo.api_post({
+  path = "/forms/z1abc234/entries.json",
+  body = { Field1 = "Example" }
+})
+```
+
+Available generic tools: `api_get`, `api_post`, `api_put`, and `api_delete`.
+POST and PUT bodies are submitted as form-encoded data.

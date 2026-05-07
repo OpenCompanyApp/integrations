@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Sendy\SendyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the active subscriber count for a Sendy list.
+ *
+ * Keeps the historical tool name while mapping to Sendy's active-subscriber-count endpoint.
+ */
 class SendyListSubscribers implements Tool
 {
+    /**
+     * @param  SendyService  $service  The Sendy API client
+     */
     public function __construct(
         private SendyService $service,
     ) {}
@@ -25,7 +33,7 @@ class SendyListSubscribers implements Tool
      */
     public function description(): string
     {
-        return 'Get the total number of subscribers for a Sendy mailing list.';
+        return 'Get the active subscriber count for a Sendy mailing list.';
     }
 
     /**

@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Log;
 /**
  * Service class for communicating with the Constant Contact v3 API.
  *
- * Handles authentication via Bearer token and provides methods for all
- * supported endpoints: contacts, campaigns, lists, and user info.
+ * Handles authentication via Bearer token and provides methods for contacts,
+ * contact lists, account details, campaigns, reports, tags, custom fields,
+ * segments, bulk activities, and generic endpoint access.
  */
 class ConstantContactService
 {
@@ -66,7 +67,7 @@ class ConstantContactService
      */
     public function getContact(string $contactId): array
     {
-        return $this->request('GET', '/contacts/' . urlencode($contactId));
+        return $this->request('GET', '/contacts/' . $this->segment($contactId));
     }
 
     /**
@@ -101,6 +102,48 @@ class ConstantContactService
     }
 
     /**
+     * Create or update a contact by email address.
+     *
+     * @param  array<string, mixed>  $payload  Constant Contact contact payload.
+     * @return array<string, mixed>
+     */
+    public function createOrUpdateContact(array $payload): array
+    {
+        return $this->request('POST', '/contacts/sign_up_form', $payload);
+    }
+
+    /**
+     * Update a contact by ID.
+     *
+     * @param  array<string, mixed>  $payload  Constant Contact contact payload.
+     * @return array<string, mixed>
+     */
+    public function updateContact(string $contactId, array $payload): array
+    {
+        return $this->request('PUT', '/contacts/' . $this->segment($contactId), $payload);
+    }
+
+    /**
+     * Delete a contact by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function deleteContact(string $contactId): array
+    {
+        return $this->request('DELETE', '/contacts/' . $this->segment($contactId));
+    }
+
+    /**
+     * Get contact activity summary report by contact ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getContactActivitySummary(string $contactId): array
+    {
+        return $this->request('GET', '/reports/contact_reports/' . $this->segment($contactId) . '/activity_summary');
+    }
+
+    /**
      * List email campaigns with optional pagination.
      *
      * @param  int|null     $limit   Maximum number of campaigns to return per page (default: 50).
@@ -121,6 +164,59 @@ class ConstantContactService
     }
 
     /**
+     * Get an email campaign by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCampaign(string $campaignId): array
+    {
+        return $this->request('GET', '/emails/' . $this->segment($campaignId));
+    }
+
+    /**
+     * Get an email campaign activity by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCampaignActivity(string $activityId): array
+    {
+        return $this->request('GET', '/emails/activities/' . $this->segment($activityId));
+    }
+
+    /**
+     * Get sends report for a campaign activity.
+     *
+     * @param  array<string, mixed>  $params  Optional limit and cursor.
+     * @return array<string, mixed>
+     */
+    public function getEmailSendsReport(string $activityId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/email_reports/' . $this->segment($activityId) . '/tracking/sends', $params);
+    }
+
+    /**
+     * Get bounces report for a campaign activity.
+     *
+     * @param  array<string, mixed>  $params  Optional limit and cursor.
+     * @return array<string, mixed>
+     */
+    public function getEmailBouncesReport(string $activityId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/email_reports/' . $this->segment($activityId) . '/tracking/bounces', $params);
+    }
+
+    /**
+     * Get clicks report for a campaign activity.
+     *
+     * @param  array<string, mixed>  $params  Optional limit and cursor.
+     * @return array<string, mixed>
+     */
+    public function getEmailClicksReport(string $activityId, array $params = []): array
+    {
+        return $this->request('GET', '/reports/email_reports/' . $this->segment($activityId) . '/tracking/clicks', $params);
+    }
+
+    /**
      * List all contact lists.
      *
      * @return array<string, mixed>
@@ -131,13 +227,159 @@ class ConstantContactService
     }
 
     /**
-     * Get the current authenticated user's account information.
+     * Get a contact list by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getList(string $listId): array
+    {
+        return $this->request('GET', '/contact_lists/' . $this->segment($listId));
+    }
+
+    /**
+     * Create a contact list.
+     *
+     * @return array<string, mixed>
+     */
+    public function createList(string $name): array
+    {
+        return $this->request('POST', '/contact_lists', ['name' => $name]);
+    }
+
+    /**
+     * Update a contact list.
+     *
+     * @param  array<string, mixed>  $payload  Contact list payload.
+     * @return array<string, mixed>
+     */
+    public function updateList(string $listId, array $payload): array
+    {
+        return $this->request('PUT', '/contact_lists/' . $this->segment($listId), $payload);
+    }
+
+    /**
+     * Delete a contact list.
+     *
+     * @return array<string, mixed>
+     */
+    public function deleteList(string $listId): array
+    {
+        return $this->request('DELETE', '/contact_lists/' . $this->segment($listId));
+    }
+
+    /**
+     * List tags.
+     *
+     * @return array<string, mixed>
+     */
+    public function listTags(): array
+    {
+        return $this->request('GET', '/contact_tags');
+    }
+
+    /**
+     * List custom fields.
+     *
+     * @return array<string, mixed>
+     */
+    public function listCustomFields(): array
+    {
+        return $this->request('GET', '/contact_custom_fields');
+    }
+
+    /**
+     * List segments.
+     *
+     * @param  array<string, mixed>  $params  Optional limit, cursor, and status.
+     * @return array<string, mixed>
+     */
+    public function listSegments(array $params = []): array
+    {
+        return $this->request('GET', '/segments', $params);
+    }
+
+    /**
+     * Get a segment by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getSegment(string $segmentId): array
+    {
+        return $this->request('GET', '/segments/' . $this->segment($segmentId));
+    }
+
+    /**
+     * List bulk activities.
+     *
+     * @param  array<string, mixed>  $params  Optional status.
+     * @return array<string, mixed>
+     */
+    public function listActivities(array $params = []): array
+    {
+        return $this->request('GET', '/activities', $params);
+    }
+
+    /**
+     * Get bulk activity status.
+     *
+     * @return array<string, mixed>
+     */
+    public function getActivity(string $activityId): array
+    {
+        return $this->request('GET', '/activities/' . $this->segment($activityId));
+    }
+
+    /**
+     * Get the current authenticated account summary.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/user');
+        return $this->getAccountSummary();
+    }
+
+    /**
+     * Get account summary details.
+     *
+     * @param  array<string, mixed>  $params  Optional extra_fields.
+     * @return array<string, mixed>
+     */
+    public function getAccountSummary(array $params = []): array
+    {
+        return $this->request('GET', '/account/summary', $params);
+    }
+
+    /**
+     * Get account user privileges.
+     *
+     * @return array<string, mixed>
+     */
+    public function getUserPrivileges(): array
+    {
+        return $this->request('GET', '/account/user/privileges');
+    }
+
+    /**
+     * Call a read-only Constant Contact API endpoint.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->path($path), $params);
+    }
+
+    /**
+     * Call a Constant Contact POST endpoint.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->path($path), $payload);
     }
 
     /**
@@ -151,6 +393,10 @@ class ConstantContactService
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+        if ($response->status() === 204) {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 
@@ -217,5 +463,27 @@ class ConstantContactService
             ]);
             throw new \RuntimeException("Failed to connect to Constant Contact API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Encode a single URL path segment while preserving slash separators.
+     */
+    private function segment(string $value): string
+    {
+        return str_replace('%2F', '/', rawurlencode($value));
+    }
+
+    /**
+     * Validate and normalize a generic API path.
+     */
+    private function path(string $path): string
+    {
+        $path = '/' . ltrim($path, '/');
+
+        if (str_starts_with($path, '//') || str_contains($path, '://')) {
+            throw new \RuntimeException('path must be a Constant Contact API path such as /contacts.');
+        }
+
+        return $path;
     }
 }

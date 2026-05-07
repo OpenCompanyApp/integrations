@@ -18,6 +18,7 @@ class RevolutServiceProvider extends ServiceProvider
 
             return new RevolutService(
                 accessToken: $creds->get('revolut', 'access_token', ''),
+                baseUrl: $creds->get('revolut', 'url', 'https://b2b.revolut.com/api/1.0'),
             );
         });
     }

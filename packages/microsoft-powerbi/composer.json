@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-microsoft-powerbi",
-    "description": "Microsoft Power BI integration for Laravel — list reports, datasets, workspaces, and user info.",
+    "description": "Legacy Microsoft Power BI package. Use opencompanyapp/integration-microsoft-power-bi.",
     "license": "MIT",
     "authors": [
         {
@@ -13,6 +13,7 @@
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
+    "abandoned": "opencompanyapp/integration-microsoft-power-bi",
     "autoload": {
         "psr-4": {
             "OpenCompany\\Integrations\\MicrosoftPowerBI\\": "src/"

@@ -37,6 +37,7 @@ class RevolutGetTransaction implements Tool
     {
         return [
             'id' => ['type' => 'string', 'required' => true, 'description' => 'Revolut transaction ID.'],
+            'id_type' => ['type' => 'string', 'enum' => ['request_id'], 'description' => 'Set to request_id when id is the request ID supplied at payment creation.'],
         ];
     }
 
@@ -57,7 +58,12 @@ class RevolutGetTransaction implements Tool
                 return ToolResult::error('id is required.');
             }
 
-            $transaction = $this->service->getTransaction($id);
+            $params = [];
+            if (($args['id_type'] ?? null) === 'request_id') {
+                $params['id_type'] = 'request_id';
+            }
+
+            $transaction = $this->service->getTransactionById($id, $params);
 
             return ToolResult::success([
                 'id' => $transaction['id'] ?? '',

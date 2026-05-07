@@ -1,14 +1,14 @@
 # Integration: Actively
 
-> Actively CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage campaigns, contacts, and organizations. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Actively CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage campaigns, contacts, and organizations. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to your Actively CRM data. List and create campaigns, browse contacts, manage organizations, and retrieve user profiles — all through the Actively API.
+Give your AI agents access to your Actively CRM data. List and create campaigns, browse contacts, manage organizations, and retrieve user profiles - all through the Actively API.
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Actively tool lets AI agents manage sales campaigns, look up contacts, and navigate organization hierarchies — giving agents CRM-awareness for sales workflows.
+This Actively tool lets AI agents manage sales campaigns, look up contacts, and navigate organization hierarchies - giving agents CRM-awareness for sales workflows.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -130,4 +130,4 @@ $contact = $service->getContact('org_abc123', 'cont_def456');
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

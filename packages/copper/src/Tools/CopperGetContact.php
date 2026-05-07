@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Copper\CopperService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a Copper person by ID.
+ */
 class CopperGetContact implements Tool
 {
+    /**
+     * @param  CopperService  $service  The Copper API client.
+     */
     public function __construct(
         private CopperService $service,
     ) {}
@@ -29,6 +35,11 @@ class CopperGetContact implements Tool
         ];
     }
 
+    /**
+     * Fetch a Copper person.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

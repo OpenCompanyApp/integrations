@@ -1,5 +1,33 @@
 # Netlify — Lua API Reference
 
+## create_site
+
+Create a new Netlify site.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | string | yes | Name for the site |
+| `custom_domain` | string | no | Custom domain to assign to the site |
+| `repo` | object | no | Repository configuration for continuous deployment |
+| `body` | object | no | Additional site configuration fields |
+
+### Example
+
+```lua
+local result = app.integrations.netlify.create_site({
+  name = "agent-preview",
+  body = {
+    password = "preview-password"
+  }
+})
+
+print("Created site: " .. result.id)
+```
+
+---
+
 ## list_sites
 
 List all Netlify sites.
@@ -53,6 +81,56 @@ print("Site: " .. result.name)
 print("URL: " .. result.ssl_url)
 print("State: " .. result.state)
 print("Custom domain: " .. (result.custom_domain or "none"))
+```
+
+---
+
+## delete_site
+
+Delete a Netlify site permanently.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `site_id` | string | yes | The Netlify site ID to delete |
+
+### Example
+
+```lua
+app.integrations.netlify.delete_site({
+  site_id = "abc123-def456"
+})
+```
+
+---
+
+## create_deploy
+
+Trigger a new deploy for a Netlify site. The deploy body should follow Netlify's deploy API shape, such as file digests for atomic deploys or deploy options supported by the API.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `site_id` | string | yes | The Netlify site ID |
+| `title` | string | no | Deploy title, sent as a Netlify API query parameter |
+| `branch` | string | no | Branch to deploy |
+| `framework` | string | no | Framework override |
+| `body` | object | no | Additional deploy body fields |
+
+### Example
+
+```lua
+local result = app.integrations.netlify.create_deploy({
+  site_id = "abc123-def456",
+  title = "Agent deploy",
+  body = {
+    async = true
+  }
+})
+
+print("Deploy: " .. result.id .. " " .. result.state)
 ```
 
 ---

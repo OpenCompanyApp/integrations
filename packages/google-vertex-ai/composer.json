@@ -1,0 +1,16 @@
+{
+    "name": "opencompanyapp/integration-google-vertex-ai",
+    "description": "Google Vertex AI integration for Laravel AI agents - models, publishers, endpoints, datasets, pipelines, tuning, batch prediction, RAG, feature stores, metadata, tensorboards, indexes, jobs, and operations.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\GoogleVertexAi\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\GoogleVertexAi\\GoogleVertexAiServiceProvider"]}},
+    "keywords": ["tools", "google", "vertex-ai", "ai-platform", "gemini", "ml", "opencompany"]
+}

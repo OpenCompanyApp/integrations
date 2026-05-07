@@ -50,6 +50,8 @@ class BubbleListRecords implements Tool
             'constraints' => ['type' => 'string', 'description' => 'JSON-encoded array of Bubble constraint objects for filtering. Each constraint is {"key": "field_name", "constraint_type": "equals", "value": "some_value"}. Pass as a JSON string.'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of records to return (1–100, default: 100).'],
             'cursor' => ['type' => 'integer', 'description' => 'Offset for pagination (0-based). Use the "remaining" count from the previous response to determine if more pages exist.'],
+            'sort_field' => ['type' => 'string', 'description' => 'Optional field to sort the list on.'],
+            'descending' => ['type' => 'boolean', 'description' => 'Sort descending when true.'],
         ];
     }
 
@@ -77,7 +79,14 @@ class BubbleListRecords implements Tool
             $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
             $cursor = isset($args['cursor']) ? (int) $args['cursor'] : 0;
 
-            $result = $this->service->listRecords($args['type'], $constraints, $limit, $cursor);
+            $result = $this->service->listRecords(
+                $args['type'],
+                $constraints,
+                $limit,
+                $cursor,
+                isset($args['sort_field']) ? (string) $args['sort_field'] : null,
+                array_key_exists('descending', $args) ? (bool) $args['descending'] : null,
+            );
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -2,222 +2,173 @@
 
 namespace OpenCompany\Integrations\Dialpad;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Dialpad API service for managing calls, SMS messages, and users.
+ * HTTP client for the official Dialpad API.
  *
- * Handles authentication via Bearer token and provides methods for all
- * Dialpad API endpoints used by the integration tools.
+ * Handles API-key authentication, operation request mapping, and response parsing for generated tools.
  */
 class DialpadService
 {
+    /**
+     * @param  string  $accessToken  Dialpad API key.
+     * @param  string  $baseUrl  Dialpad API host root, such as https://dialpad.com or https://sandbox.dialpad.com.
+     * @param  string  $authMode  Authentication mode: bearer or query.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://dialpad.com',
+        private string $authMode = 'bearer',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($baseUrl !== '' ? $baseUrl : 'https://dialpad.com', '/');
     }
 
-    /**
-     * Check whether the service is properly configured with an access token.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '';
     }
 
     /**
-     * List call history records.
+     * Return all official Dialpad operations exposed by this integration.
      *
-     * @param  int|null  $startTime  Unix timestamp for the start of the date range.
-     * @param  int|null  $endTime    Unix timestamp for the end of the date range.
-     * @param  int       $limit      Maximum number of records to return (default: 50).
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
+     * @return list<array<string, mixed>>
+     */
+    public static function operations(): array
+    {
+        return DialpadOperations::all();
+    }
+
+    /**
+     * Return one operation definition by slug.
+     *
      * @return array<string, mixed>
      */
-    public function listCalls(?int $startTime = null, ?int $endTime = null, int $limit = 50, ?string $cursor = null): array
+    public function operation(string $operation): array
     {
-        $params = ['limit' => $limit];
-
-        if ($startTime !== null) {
-            $params['startTime'] = $startTime;
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) {
+                return $definition;
+            }
         }
-        if ($endTime !== null) {
-            $params['endTime'] = $endTime;
+        throw new \RuntimeException("Unsupported Dialpad operation: {$operation}");
+    }
+
+    /**
+     * Execute an official Dialpad operation using normalized tool arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function call(string $operation, array $args = []): array
+    {
+        $definition = $this->operation($operation);
+        $path = (string) $definition['path'];
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'path') continue;
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? null;
+            if ($value === null || $value === '') {
+                throw new \RuntimeException("{$param} is required for {$definition['slug']}.");
+            }
+            $path = str_replace('{'.(string) $parameter['name'].'}', rawurlencode((string) $value), $path);
         }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
+        $query = $this->prepareQuery($definition, $args);
+        $body = $this->prepareBody($definition, $args);
+        return $this->request((string) $definition['method'], $path, $query, $body);
+    }
+
+    /**
+     * Build query parameters from normalized and passthrough arguments.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    private function prepareQuery(array $definition, array $args): array
+    {
+        $query = [];
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'query') continue;
+            $param = (string) $parameter['param'];
+            if (array_key_exists($param, $args)) {
+                $query[(string) $parameter['name']] = $args[$param];
+            }
         }
-
-        return $this->request('GET', '/v1/call-history', $params);
-    }
-
-    /**
-     * Get a single call record by ID.
-     *
-     * @param  string  $id  The call history record ID.
-     * @return array<string, mixed>
-     */
-    public function getCall(string $id): array
-    {
-        return $this->request('GET', '/v1/call-history/' . urlencode($id));
-    }
-
-    /**
-     * List SMS messages.
-     *
-     * @param  int|null  $startTime  Unix timestamp for the start of the date range.
-     * @param  int|null  $endTime    Unix timestamp for the end of the date range.
-     * @param  int       $limit      Maximum number of records to return (default: 50).
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
-     * @return array<string, mixed>
-     */
-    public function listSms(?int $startTime = null, ?int $endTime = null, int $limit = 50, ?string $cursor = null): array
-    {
-        $params = ['limit' => $limit];
-
-        if ($startTime !== null) {
-            $params['startTime'] = $startTime;
+        if (isset($args['query']) && is_array($args['query'])) {
+            foreach ($args['query'] as $key => $value) {
+                $query[(string) $key] = $value;
+            }
         }
-        if ($endTime !== null) {
-            $params['endTime'] = $endTime;
+        if ($this->authMode === 'query') {
+            $query['apikey'] = $this->accessToken;
         }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
+        return $query;
+    }
+
+    /**
+     * Build the JSON body for write operations.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>|list<mixed>|null
+     */
+    private function prepareBody(array $definition, array $args): array|null
+    {
+        if (array_key_exists('body', $args) && is_array($args['body'])) {
+            return $args['body'];
         }
-
-        return $this->request('GET', '/v1/sms', $params);
+        return null;
     }
 
     /**
-     * Send an SMS message.
+     * Send an HTTP request to Dialpad and parse JSON responses.
      *
-     * @param  string  $to    The recipient phone number (E.164 format).
-     * @param  string  $from  The sender phone number or department ID (E.164 format).
-     * @param  string  $text  The message body.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
      * @return array<string, mixed>
      */
-    public function sendSms(string $to, string $from, string $text): array
+    private function request(string $method, string $path, array $query = [], array|null $body = null): array
     {
-        return $this->request('POST', '/v1/sms', [
-            'to' => $to,
-            'from' => $from,
-            'text' => $text,
-        ]);
-    }
-
-    /**
-     * List users in the Dialpad organization.
-     *
-     * @param  int          $limit   Maximum number of users to return (default: 50).
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
-     * @return array<string, mixed>
-     */
-    public function listUsers(int $limit = 50, ?string $cursor = null): array
-    {
-        $params = ['limit' => $limit];
-
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
+        $response = $this->rawRequest($method, $path, $query, $body);
+        if ($response->status() === 204) {
+            return [];
         }
-
-        return $this->request('GET', '/v1/users', $params);
+        $json = $response->json();
+        return is_array($json) ? $json : [];
     }
 
     /**
-     * Get a single user by ID.
+     * Send a raw HTTP request to Dialpad and raise runtime exceptions on failures.
      *
-     * @param  string  $id  The user ID.
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
      */
-    public function getUser(string $id): array
-    {
-        return $this->request('GET', '/v1/users/' . urlencode($id));
-    }
-
-    /**
-     * Get the currently authenticated user.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/v1/users/me');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API endpoint path (e.g., "/v1/users").
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Dialpad API.
-     *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path    API endpoint path.
-     * @param  array<string, mixed>  $data  Request data.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException If the access token is missing or the API returns an error.
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array|null $body = null): Response
     {
         if (!$this->accessToken) {
-            throw new \RuntimeException('Dialpad access token is not configured.');
+            throw new \RuntimeException('Dialpad API key is not configured.');
         }
-
-        $url = $this->baseUrl . $path;
-
+        $url = $this->baseUrl.$path;
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Dialpad API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Dialpad API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("Dialpad API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Dialpad API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            $http = Http::withHeaders(['Accept' => 'application/json', 'Content-Type' => 'application/json'])->timeout(30);
+            if ($this->authMode !== 'query') {
+                $http = $http->withToken($this->accessToken);
             }
-
+            $options = [];
+            if ($query !== []) $options['query'] = $query;
+            if ($body !== null) $options['json'] = $body;
+            $response = $http->send(strtoupper($method), $url, $options);
+            if (!$response->successful()) {
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+                Log::error("Dialpad API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
+                throw new \RuntimeException("Dialpad API error ({$response->status()}): ".(is_string($error) ? $error : json_encode($error)));
+            }
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Dialpad API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
+            Log::error("Dialpad API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
             throw new \RuntimeException("Failed to connect to Dialpad API: {$e->getMessage()}");
         }
     }

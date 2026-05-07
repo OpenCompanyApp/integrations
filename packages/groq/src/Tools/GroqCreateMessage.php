@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Deprecated unsupported conversation message creation tool.
+ */
 class GroqCreateMessage implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -31,6 +37,11 @@ class GroqCreateMessage implements Tool
         ];
     }
 
+    /**
+     * Execute the deprecated conversation message creation request.
+     *
+     * @param  array<string, mixed>  $args  Legacy conversation arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Nasa\NasaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Search NASA Image and Video Library assets.
+ */
 class NasaSearchImages implements Tool
 {
     /**
@@ -44,6 +47,11 @@ class NasaSearchImages implements Tool
             'q' => ['type' => 'string', 'required' => true, 'description' => 'The search query (e.g., "moon landing", "Mars", "black hole", "Saturn rings").'],
             'media_type' => ['type' => 'string', 'description' => 'Filter by media type: "image", "video", or "audio". Defaults to all types.'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default 1).'],
+            'year_start' => ['type' => 'string', 'description' => 'Optional starting year for media creation date filtering.'],
+            'year_end' => ['type' => 'string', 'description' => 'Optional ending year for media creation date filtering.'],
+            'center' => ['type' => 'string', 'description' => 'Optional NASA center filter such as JPL, KSC, or GSFC.'],
+            'keywords' => ['type' => 'string', 'description' => 'Optional comma-separated keyword filter.'],
+            'nasa_id' => ['type' => 'string', 'description' => 'Optional exact NASA media ID filter.'],
         ];
     }
 
@@ -64,6 +72,7 @@ class NasaSearchImages implements Tool
                 q: $args['q'],
                 mediaType: $args['media_type'] ?? null,
                 page: isset($args['page']) ? (int) $args['page'] : null,
+                filters: array_intersect_key($args, array_flip(['year_start', 'year_end', 'center', 'keywords', 'nasa_id'])),
             );
 
             return ToolResult::success($this->formatResponse($result));

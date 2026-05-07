@@ -1,0 +1,23 @@
+{
+    "name": "opencompanyapp/integration-snyk",
+    "description": "Snyk REST API integration for OpenCompany and KosmoKrator agents.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Snyk\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Snyk\\SnykServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

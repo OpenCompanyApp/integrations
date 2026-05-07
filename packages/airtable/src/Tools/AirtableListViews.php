@@ -2,62 +2,35 @@
 
 namespace OpenCompany\Integrations\Airtable\Tools;
 
-use OpenCompany\Integrations\Airtable\AirtableService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List views for an Airtable base.
+ * List views by reading Airtable base schema metadata.
  */
-class AirtableListViews implements Tool
+class AirtableListViews extends AbstractAirtableTool
 {
-    /**
-     * @param  AirtableService  $service  The Airtable API client
-     */
-    public function __construct(
-        private AirtableService $service,
-    ) {}
+    protected array $parameters = array (
+  'base_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'Airtable base ID.',
+    'required' => true,
+  ),
+);
 
-    public function name(): string
-    {
-        return 'airtable_list_views';
-    }
+    protected array $required = array (
+  0 => 'base_id',
+);
 
-    public function description(): string
-    {
-        return 'List views for an Airtable base.';
-    }
+    protected array $queryParams = array (
+);
 
-    public function parameters(): array
-    {
-        return [
-            'base_id' => ['type' => 'string', 'required' => true, 'description' => 'Airtable base ID (e.g., "appXXXXXXXXXXXX").'],
-        ];
-    }
+    protected array $bodyParams = array (
+);
 
-    /**
-     * List all views in a base.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (base_id)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Airtable integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $baseId = $args['base_id'] ?? '';
+    protected string $path = '/meta/bases/{base_id}/tables';
 
-            if (empty($baseId)) {
-                return ToolResult::error('base_id is required.');
-            }
+    protected string $toolName = 'airtable_list_views';
 
-            $result = $this->service->listViews($baseId);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'List views by reading Airtable base schema metadata.';
 }

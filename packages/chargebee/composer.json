@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-chargebee",
-    "description": "Chargebee integration for Laravel — manage subscriptions, customers, and invoices.",
+    "description": "Chargebee integration for Laravel: manage subscription billing, customers, invoices, catalog, payments, hosted pages and events.",
     "license": "MIT",
     "authors": [
         {

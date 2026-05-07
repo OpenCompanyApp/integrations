@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-anthropic",
-    "description": "Anthropic AI (Claude) integration for Laravel — list messages, create messages, manage models and workspaces.",
+    "description": "Anthropic Claude integration for Laravel - messages, token counting, batches, files, models, and organization administration.",
     "license": "MIT",
     "authors": [
         {

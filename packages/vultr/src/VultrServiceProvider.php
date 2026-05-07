@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Vultr integration with Laravel's service container.
+ *
+ * Binds VultrService from host credentials and registers the tool provider
+ * with the shared ToolProviderRegistry during boot.
+ */
 class VultrServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,8 +20,8 @@ class VultrServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new VultrService(
-                accessToken: $creds->get('vultr', 'access_token', ''),
-                baseUrl: $creds->get('vultr', 'url', 'https://api.vultr.com/v2'),
+                accessToken: (string) $creds->get('vultr', 'access_token', ''),
+                baseUrl: (string) $creds->get('vultr', 'url', 'https://api.vultr.com/v2'),
             );
         });
     }
@@ -24,7 +30,7 @@ class VultrServiceProvider extends ServiceProvider
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new VultrToolProvider());
+                ->register(new VultrToolProvider);
         }
     }
 }

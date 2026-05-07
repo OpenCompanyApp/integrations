@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Copper\CopperService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create an opportunity in Copper CRM.
+ */
 class CopperCreateOpportunity implements Tool
 {
+    /**
+     * @param  CopperService  $service  The Copper API client.
+     */
     public function __construct(
         private CopperService $service,
     ) {}
@@ -30,6 +36,11 @@ class CopperCreateOpportunity implements Tool
         ];
     }
 
+    /**
+     * Create a Copper opportunity.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

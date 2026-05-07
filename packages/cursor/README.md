@@ -1,16 +1,17 @@
 # Integration: Cursor
 
-> Cursor IDE integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list workspaces, members, and extensions. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Cursor Admin API integration for the OpenCompany integration ecosystem. It exposes team members, usage, spending, spend limits, and repository blocklist management from the documented Cursor Admin API.
 
-Give your AI agents access to Cursor workspace management. List workspaces, retrieve workspace details, view team members, and inspect installed extensions — all through the [Cursor](https://cursor.com) API.
+## Endpoint Coverage
 
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Cursor tool lets AI agents inspect workspace configuration, review team membership, and audit extensions — giving agents awareness of development environment setup.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+- `GET /teams/members`
+- `POST /teams/daily-usage-data`
+- `POST /teams/spend`
+- `POST /teams/filtered-usage-events`
+- `POST /teams/user-spend-limit`
+- `GET /settings/repo-blocklists/repos`
+- `POST /settings/repo-blocklists/repos/upsert`
+- `DELETE /settings/repo-blocklists/repos/{repoId}`
 
 ## Installation
 
@@ -18,21 +19,17 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-cursor
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
 
-This tool requires a Cursor API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Cursor Admin API keys are created by team admins in Cursor Dashboard > Settings > Cursor Admin API Keys. Cursor uses Basic auth with the API key as the username and an empty password.
 
 ```php
 return [
     'cursor' => [
         'api_key' => env('CURSOR_API_KEY'),
-        'url'     => env('CURSOR_API_URL', 'https://api2.cursor.sh'),
+        'url' => env('CURSOR_API_URL', 'https://api.cursor.com'),
     ],
 ];
 ```
@@ -41,81 +38,34 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `cursor_list_workspaces` | read | List all Cursor workspaces |
-| `cursor_get_workspace` | read | Get details for a specific workspace |
-| `cursor_list_team_members` | read | List all members in a workspace |
-| `cursor_list_extensions` | read | List all extensions in a workspace |
+| `cursor_list_team_members` | read | List team members and roles |
+| `cursor_get_daily_usage_data` | read | Get daily usage data for a date range |
+| `cursor_get_spend` | read | Get current-cycle spend data |
+| `cursor_get_usage_events` | read | Get detailed usage events |
+| `cursor_set_user_spend_limit` | write | Set a whole-dollar user spend limit |
+| `cursor_list_repo_blocklists` | read | List repository blocklists |
+| `cursor_upsert_repo_blocklists` | write | Upsert repository blocklist patterns |
+| `cursor_delete_repo_blocklist` | write | Delete a repository blocklist entry |
 
 ## Quick Start
 
 ```php
 use OpenCompany\Integrations\Cursor\CursorService;
-use OpenCompany\Integrations\Cursor\Tools\CursorListWorkspaces;
-use OpenCompany\Integrations\Cursor\Tools\CursorGetWorkspace;
-
-// Create tools
-$service = app(CursorService::class);
-$tools = [
-    new CursorListWorkspaces($service),
-    new CursorGetWorkspace($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List all Cursor workspaces and show their members.');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 4 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('cursor');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Cursor\Tools\CursorListWorkspaces::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Cursor\CursorService;
 
 $service = app(CursorService::class);
 
-// List workspaces
-$workspaces = $service->listWorkspaces();
-
-// Get workspace details
-$workspace = $service->getWorkspace('ws_abc123');
-
-// List team members
-$members = $service->listTeamMembers('ws_abc123');
-
-// List extensions
-$extensions = $service->listExtensions('ws_abc123');
+$members = $service->listTeamMembers();
+$spend = $service->getSpend(['page' => 1, 'pageSize' => 25]);
+$blocklists = $service->listRepoBlocklists();
 ```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Cursor](https://cursor.com) account with API access
+- `opencompanyapp/integration-core`
+- A Cursor team admin API key
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

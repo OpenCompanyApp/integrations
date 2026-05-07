@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Unbounce\UnbounceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Unbounce sub-accounts globally or under an account.
+ */
 class UnbounceListSubAccounts implements Tool
 {
+    /**
+     * @param  UnbounceService  $service  Unbounce API client.
+     */
     public function __construct(
         private UnbounceService $service,
     ) {}
@@ -25,11 +31,17 @@ class UnbounceListSubAccounts implements Tool
     public function parameters(): array
     {
         return [
+            'account_id' => ['type' => 'string', 'description' => 'Optional account ID for the official /accounts/{account_id}/sub_accounts endpoint.'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of sub-accounts to return (default: 50, max: 1000).'],
             'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
         ];
     }
 
+    /**
+     * List sub-accounts.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -40,7 +52,7 @@ class UnbounceListSubAccounts implements Tool
             $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
             $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            $result = $this->service->listSubAccounts($limit, $offset);
+            $result = $this->service->listSubAccounts($limit, $offset, $args['account_id'] ?? null);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

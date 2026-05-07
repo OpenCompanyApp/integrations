@@ -6,8 +6,14 @@ use OpenCompany\Integrations\FlyIo\FlyIoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Fly Apps visible to the token.
+ */
 class FlyIoListApps implements Tool
 {
+    /**
+     * @param  FlyIoService  $service  The Fly.io Machines API client.
+     */
     public function __construct(
         private FlyIoService $service,
     ) {}
@@ -27,6 +33,11 @@ class FlyIoListApps implements Tool
         return [];
     }
 
+    /**
+     * List apps from the Machines API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

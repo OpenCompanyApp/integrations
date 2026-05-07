@@ -5,14 +5,20 @@ namespace OpenCompany\Integrations\Pinecone;
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Pinecone\Tools\PineconeConfigureIndex;
 use OpenCompany\Integrations\Pinecone\Tools\PineconeListIndexes;
 use OpenCompany\Integrations\Pinecone\Tools\PineconeGetIndex;
 use OpenCompany\Integrations\Pinecone\Tools\PineconeCreateIndex;
+use OpenCompany\Integrations\Pinecone\Tools\PineconeDeleteIndex;
 use OpenCompany\Integrations\Pinecone\Tools\PineconeUpsertVectors;
 use OpenCompany\Integrations\Pinecone\Tools\PineconeQueryVectors;
+use OpenCompany\Integrations\Pinecone\Tools\PineconeFetchVectors;
+use OpenCompany\Integrations\Pinecone\Tools\PineconeUpdateVector;
+use OpenCompany\Integrations\Pinecone\Tools\PineconeDeleteVectors;
+use OpenCompany\Integrations\Pinecone\Tools\PineconeDescribeIndexStats;
 use OpenCompany\Integrations\Pinecone\Tools\PineconeListCollections;
-use OpenCompany\Integrations\Pinecone\Tools\PineconeGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 
@@ -30,22 +36,22 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
+            'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
             'setup_flows' =>
             [
-              0 => 'manual_token',
+              0 => 'manual_secret',
             ],
             'requires_browser_for_setup' => false,
             'refreshable' => false,
             'token_keys' =>
             [
-              0 => 'access_token',
             ],
             'notes' =>
             [
+              0 => 'Pinecone REST requests use Api-Key and X-Pinecone-Api-Version headers.',
             ],
           ],
           'host_availability' => [
@@ -53,13 +59,13 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
             [
               'setup_supported' => true,
               'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
+              'setup_mode' => 'manual_secret',
             ],
             'cli' =>
             [
               'setup_supported' => true,
               'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
+              'setup_mode' => 'manual_secret',
               'runtime_mode' => 'normal',
             ],
           ],
@@ -105,12 +111,13 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'name' => 'Pinecone',
-            'description' => 'Vector database for AI applications — store, search, and manage embeddings at scale',
+            'description' => 'Vector database for AI applications: store, search, and manage embeddings at scale',
             'icon' => 'ph:tree-structure',
             'logo' => 'simple-icons:pinecone',
-            'category' => 'database',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.pinecone.io/reference/api',
+            'source_url' => 'https://docs.pinecone.io/reference/api',
         ];
     }/**
      * Get the configuration schema for the integration settings UI.
@@ -121,9 +128,9 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             [
-                'key' => 'access_token',
+                'key' => 'api_key',
                 'type' => 'secret',
-                'label' => 'Access Token',
+                'label' => 'API Key',
                 'placeholder' => 'Enter your Pinecone API key',
                 'hint' => 'Find your API key in the Pinecone console at <code>https://app.pinecone.io</code> under API Keys',
                 'required' => true,
@@ -136,6 +143,14 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'hint' => 'Use <code>https://api.pinecone.io</code> for the standard Pinecone API',
                 'default' => 'https://api.pinecone.io',
             ],
+            [
+                'key' => 'api_version',
+                'type' => 'text',
+                'label' => 'API Version',
+                'placeholder' => '2026-04',
+                'hint' => 'Date-based Pinecone API version sent as X-Pinecone-Api-Version.',
+                'default' => '2026-04',
+            ],
         ];
     }
 
@@ -147,8 +162,9 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
      */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
+        $accessToken = $config['api_key'] ?? $config['access_token'] ?? '';
         $baseUrl = rtrim($config['url'] ?? 'https://api.pinecone.io', '/');
+        $apiVersion = (string) ($config['api_version'] ?? '2026-04');
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided'];
@@ -156,7 +172,8 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
+                'Api-Key' => $accessToken,
+                'X-Pinecone-Api-Version' => $apiVersion,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(10)->get($baseUrl . '/indexes');
@@ -187,8 +204,10 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function validationRules(): array
     {
         return [
+            'api_key' => 'nullable|string',
             'access_token' => 'nullable|string',
             'url' => 'nullable|url',
+            'api_version' => 'nullable|string',
         ];
     }
 
@@ -221,6 +240,20 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'Create a new serverless vector index.',
                 'icon' => 'ph:plus-circle',
             ],
+            'pinecone_configure_index' => [
+                'class' => PineconeConfigureIndex::class,
+                'type' => 'write',
+                'name' => 'Configure Index',
+                'description' => 'Configure an existing Pinecone index.',
+                'icon' => 'ph:sliders',
+            ],
+            'pinecone_delete_index' => [
+                'class' => PineconeDeleteIndex::class,
+                'type' => 'write',
+                'name' => 'Delete Index',
+                'description' => 'Delete a Pinecone index.',
+                'icon' => 'ph:trash',
+            ],
             'pinecone_upsert_vectors' => [
                 'class' => PineconeUpsertVectors::class,
                 'type' => 'write',
@@ -235,19 +268,40 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'Search for similar vectors in a Pinecone index.',
                 'icon' => 'ph:magnifying-glass',
             ],
+            'pinecone_fetch_vectors' => [
+                'class' => PineconeFetchVectors::class,
+                'type' => 'read',
+                'name' => 'Fetch Vectors',
+                'description' => 'Fetch vectors by ID from a Pinecone index.',
+                'icon' => 'ph:download-simple',
+            ],
+            'pinecone_update_vector' => [
+                'class' => PineconeUpdateVector::class,
+                'type' => 'write',
+                'name' => 'Update Vector',
+                'description' => 'Update vector values or metadata.',
+                'icon' => 'ph:pencil',
+            ],
+            'pinecone_delete_vectors' => [
+                'class' => PineconeDeleteVectors::class,
+                'type' => 'write',
+                'name' => 'Delete Vectors',
+                'description' => 'Delete vectors by ID, filter, or namespace.',
+                'icon' => 'ph:trash',
+            ],
+            'pinecone_describe_index_stats' => [
+                'class' => PineconeDescribeIndexStats::class,
+                'type' => 'read',
+                'name' => 'Describe Index Stats',
+                'description' => 'Describe vector and namespace statistics for an index.',
+                'icon' => 'ph:chart-bar',
+            ],
             'pinecone_list_collections' => [
                 'class' => PineconeListCollections::class,
                 'type' => 'read',
                 'name' => 'List Collections',
                 'description' => 'List all collections in your Pinecone project.',
                 'icon' => 'ph:folders',
-            ],
-            'pinecone_get_current_user' => [
-                'class' => PineconeGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get information about the authenticated Pinecone user.',
-                'icon' => 'ph:user',
             ],
         ];
     }
@@ -268,8 +322,9 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
             ['key' => 'url', 'type' => 'url', 'label' => 'Pinecone API URL', 'required' => false, 'default' => 'https://api.pinecone.io'],
+            ['key' => 'api_version', 'type' => 'text', 'label' => 'API Version', 'required' => false, 'default' => '2026-04'],
         ];
     }
 
@@ -291,11 +346,12 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new PineconeService(
-                accessToken: $creds->get('pinecone', 'access_token', '', $account),
+                accessToken: $creds->get('pinecone', 'api_key', $creds->get('pinecone', 'access_token', '', $account), $account),
                 baseUrl: $creds->get('pinecone', 'url', 'https://api.pinecone.io', $account),
+                apiVersion: $creds->get('pinecone', 'api_version', '2026-04', $account),
             );
 
             return new $class($service);

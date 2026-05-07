@@ -2,49 +2,12 @@
 
 namespace OpenCompany\Integrations\Replicate\Tools;
 
-use OpenCompany\Integrations\Replicate\ReplicateService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List Replicate model collections.
+ * List collections of models.
  *
- * Returns a list of curated collections of models, grouped by category
- * or theme (e.g., image generation, text-to-image, etc.).
+ * Generated from the official Replicate OpenAPI operation collections.list.
  */
-class ReplicateListCollections implements Tool
+class ReplicateListCollections extends AbstractReplicateOperationTool
 {
-    public function __construct(
-        private ReplicateService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'replicate_list_collections';
-    }
-
-    public function description(): string
-    {
-        return 'List curated model collections on Replicate. Returns collection names, descriptions, and model slugs.';
-    }
-
-    public function parameters(): array
-    {
-        return [];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Replicate integration is not configured.');
-            }
-
-            $result = $this->service->listCollections();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'replicate_list_collections';
 }

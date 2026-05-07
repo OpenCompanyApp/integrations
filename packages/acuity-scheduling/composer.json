@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-acuity-scheduling",
-    "description": "Acuity Scheduling integration for Laravel — manage appointments, clients, calendars, and availability.",
+    "description": "Acuity Scheduling API v1 integration for Laravel agents with appointments, clients, availability, products, webhooks, and generic REST tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "acuity-scheduling", "appointments", "scheduling", "opencompany"],
+    "keywords": ["tools", "acuity-scheduling", "appointments", "api-v1", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

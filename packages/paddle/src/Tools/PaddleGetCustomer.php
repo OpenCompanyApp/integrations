@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Paddle customer by ID.
+ *
+ * Returns the decoded Paddle customer response including status,
+ * contact fields, locale, custom data, and timestamps.
+ */
 class PaddleGetCustomer implements Tool
 {
     /**
      * Create a new PaddleGetCustomer tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

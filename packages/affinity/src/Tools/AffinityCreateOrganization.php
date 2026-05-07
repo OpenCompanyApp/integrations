@@ -2,81 +2,18 @@
 
 namespace OpenCompany\Integrations\Affinity\Tools;
 
-use OpenCompany\Integrations\Affinity\AffinityService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Tool to create a new organization in Affinity CRM.
- *
- * Creates an organization with the provided name and optional domain.
- * The organization will appear in the Affinity workspace.
+ * Create a company using Affinity API.
  */
-class AffinityCreateOrganization implements Tool
+class AffinityCreateOrganization extends AbstractAffinityEndpointTool
 {
-    /**
-     * Create a new AffinityCreateOrganization tool instance.
-     *
-     * @param  AffinityService  $service  The Affinity API service.
-     */
-    public function __construct(
-        private AffinityService $service,
-    ) {}
-
-    /**
-     * The tool name used for registration and invocation.
-     */
-    public function name(): string
-    {
-        return 'affinity_create_organization';
-    }
-
-    /**
-     * A description of what this tool does, used by AI agents.
-     */
-    public function description(): string
-    {
-        return 'Create a new organization in Affinity CRM. Provide a name (required) and optionally a domain.';
-    }
-
-    /**
-     * The parameters this tool accepts.
-     *
-     * @return array<string, array{type: string, description: string, required?: bool}>
-     */
-    public function parameters(): array
-    {
-        return [
-            'name' => ['type' => 'string', 'required' => true, 'description' => 'The organization\'s name.'],
-            'domain' => ['type' => 'string', 'description' => 'The organization\'s website domain (e.g., "example.com").'],
-        ];
-    }
-
-    /**
-     * Execute the tool and return the result.
-     *
-     * @param  array<string, mixed>  $args  The tool arguments.
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Affinity integration is not configured.');
-            }
-
-            $data = [
-                'name' => $args['name'],
-            ];
-
-            if (isset($args['domain'])) {
-                $data['domain'] = $args['domain'];
-            }
-
-            $result = $this->service->createOrganization($data);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'affinity_create_organization';
+    protected const TOOL_DESCRIPTION = 'Create a company using Affinity API.';
+    protected const METHOD = 'POST';
+    protected const PATH = '/organizations';
+    protected const PATH_KEYS = array ();
+    protected const QUERY_KEYS = array ();
+    protected const BODY_KEYS = array (  0 => 'name',  1 => 'domain',  2 => 'domains',);
+    protected const PARAMETERS = array (  'payload' =>   array (    'type' => 'object',    'description' => 'Full JSON request body. If provided, it overrides individual body fields.',  ),  'name' =>   array (    'type' => 'string',    'description' => 'Body field: name.',  ),  'domain' =>   array (    'type' => 'string',    'description' => 'Body field: domain.',  ),  'domains' =>   array (    'type' => 'array',    'description' => 'Body field: domains.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

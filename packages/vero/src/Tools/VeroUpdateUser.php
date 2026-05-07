@@ -9,8 +9,8 @@ use OpenCompany\Integrations\Vero\VeroService;
 /**
  * Update a user's profile data in Vero.
  *
- * Modifies an existing user's email address and/or custom attributes.
- * The user is identified by their unique ID.
+ * Modifies a user's email address and/or custom attributes through
+ * Vero's identify endpoint.
  */
 class VeroUpdateUser implements Tool
 {
@@ -28,7 +28,7 @@ class VeroUpdateUser implements Tool
 
     public function description(): string
     {
-        return 'Update a user\'s profile in Vero. Pass the user ID, an optional new email, and a data object with attributes to update.';
+        return 'Update a user\'s profile in Vero via the official identify endpoint. Pass the user ID, an optional email, and a data object with attributes to update.';
     }
 
     public function parameters(): array
@@ -69,7 +69,8 @@ class VeroUpdateUser implements Tool
 
             return ToolResult::success([
                 'id' => $id,
-                'status' => $result['status'] ?? 'updated',
+                'status' => $result['status'] ?? 200,
+                'message' => $result['message'] ?? 'updated',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

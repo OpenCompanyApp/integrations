@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-newsapi",
+    "description": "NewsAPI integration for Laravel AI agents - article search, top headlines, and source discovery.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\NewsApi\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\NewsApi\\NewsApiServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "newsapi",
+        "news",
+        "headlines",
+        "articles",
+        "sources",
+        "opencompany"
+    ]
+}

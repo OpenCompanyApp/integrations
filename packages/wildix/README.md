@@ -1,123 +1,59 @@
 # Integration: Wildix
 
-> Wildix PBX integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list calls, extensions, and users. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Wildix WMS/PBX integration for Laravel and AI agents. The package exposes the official command surface from `@wildix/wms-api-client` for call control, PBX users, groups, departments, OAuth clients, notifications, and PBX administration.
 
-Give your AI agents access to your Wildix unified communications platform. Look up call records, browse PBX extensions, and retrieve user information — all through the Wildix REST API.
+## Source Coverage
 
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Wildix tool lets AI agents query call history, look up extensions, and access user information — giving agents telephony awareness for support and productivity workflows.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+The tool catalog is generated from the official Wildix WMS API client package (`@wildix/wms-api-client` 1.2.2). That SDK targets Wildix PBX hosts such as `https://example.wildixin.com` and signs requests with a bearer token.
 
 ## Installation
 
-```console
+```bash
 composer require opencompanyapp/integration-wildix
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
-
 ## Configuration
 
-This tool requires a Wildix API access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
-
 ```php
-return [
-    'wildix' => [
-        'access_token' => env('WILDIX_ACCESS_TOKEN'),
-        'url'          => env('WILDIX_URL', 'https://api.wildix.com'),
-    ],
-];
+'wildix' => [
+    'access_token' => env('WILDIX_ACCESS_TOKEN'),
+    'url' => env('WILDIX_URL'), // https://example.wildixin.com
+],
 ```
 
-## Available Tools
+## Tools
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `wildix_list_calls` | read | List call records with pagination and date filtering |
-| `wildix_get_call` | read | Get details of a specific call by ID |
-| `wildix_list_extensions` | read | List PBX extensions |
-| `wildix_get_extension` | read | Get details of a specific extension by ID |
-| `wildix_list_users` | read | List Wildix PBX users |
-| `wildix_get_current_user` | read | Get the currently authenticated user profile |
+| `wildix_call_control_answer` | write | POST `/api/v2/call-control/answer` |
+| `wildix_call_control_attendant_transfer` | write | POST `/api/v2/call-control/attendant-transfer` |
+| `wildix_call_control_blind_transfer` | write | POST `/api/v2/call-control/blind-transfer` |
+| `wildix_call_control_dtmf` | write | POST `/api/v2/call-control/dtmf` |
+| `wildix_call_control_hangup` | write | POST `/api/v2/call-control/hangup` |
+| `wildix_call_control_hold` | write | POST `/api/v2/call-control/hold` |
+| `wildix_call_control_make_call` | write | POST `/api/v2/call-control/make-call` |
+| `wildix_call_control_unhold` | write | POST `/api/v2/call-control/unhold` |
+| `wildix_call_control_update_contact_info` | write | POST `/api/v2/call-control/update-contact-info` |
+| `wildix_create_pbx_acl_group` | write | POST `/api/v1/pbx/aclgroups` |
+| `wildix_create_pbx_colleague` | write | POST `/api/v1/PBX/Colleagues` |
+| `wildix_create_pbx_o_auth2_client` | write | POST `/api/v1/pbx/applications/oauth2` |
+| `wildix_delete_pbx_acl_group` | write | DELETE `/api/v1/pbx/aclgroups/{id}` |
+| `wildix_delete_pbx_colleague` | write | DELETE `/api/v1/PBX/Colleagues/{id}` |
+| `wildix_delete_pbx_o_auth2_client` | write | DELETE `/api/v1/pbx/applications/oauth2/{id}` |
+| `wildix_get_call_queues_settings` | read | GET `/api/v1/pbx/settings/callqueues/{groupId}` |
+| `wildix_get_colleague_by_id` | read | GET `/api/v1/Colleagues/{id}` |
+| `wildix_get_pbx_acl_groups_permissions` | read | GET `/api/v1/pbx/aclgroups/permissions` |
+| `wildix_get_pbx_call_groups` | read | GET `/api/v1/Dialplan/CallGroups` |
+| `wildix_get_pbx_colleagues` | read | GET `/api/v1/PBX/Colleagues` |
+| `wildix_get_pbxes` | read | GET `/api/v1/network/pbxes` |
+| `wildix_get_pbx_o_auth2_clients` | read | GET `/api/v1/pbx/applications/oauth2` |
+| `wildix_get_personal_info` | read | GET `/api/v1/personal/info` |
+| `wildix_list_pbx_departments` | read | GET `/api/v1/Departments` |
+| `wildix_list_pbx_groups` | read | GET `/api/v1/Groups` |
+| `wildix_list_user_active_calls` | read | GET `/api/v2/call-control/list-calls` |
+| `wildix_list_user_devices` | read | GET `/api/v2/call-control/list-devices` |
+| `wildix_notifications` | write | POST `/api/v1/notifications` |
+| `wildix_originate` | write | POST `/api/v1/originate` |
+| `wildix_originate_call` | write | POST `/api/v1/originate/call` |
+| `wildix_reload_broadcasts` | write | POST `/api/v1/broadcasts/reload` |
+| `wildix_update_pbx_o_auth2_client` | write | PUT `/api/v1/pbx/applications/oauth2/{id}` |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Wildix\WildixService;
-use OpenCompany\Integrations\Wildix\Tools\WildixListCalls;
-use OpenCompany\Integrations\Wildix\Tools\WildixGetCurrentUser;
-
-// Create tools
-$service = app(WildixService::class);
-$tools = [
-    new WildixListCalls($service),
-    new WildixGetCurrentUser($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('How many calls did we have yesterday?');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('wildix');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Wildix\Tools\WildixListCalls::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Wildix\WildixService;
-
-$service = app(WildixService::class);
-
-// List recent calls
-$calls = $service->listCalls(limit: 10);
-
-// Get a specific call
-$call = $service->getCall('call-123');
-
-// List extensions
-$extensions = $service->listExtensions();
-
-// Get current user
-$user = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Wildix](https://www.wildix.com) PBX system with API access enabled
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+All tools accept normalized snake_case arguments. Path, query, and body fields are mapped back to the official Wildix API field names before the request is sent. Advanced callers can pass `query` and `payload` objects for documented fields that are not useful as first-class agent parameters.

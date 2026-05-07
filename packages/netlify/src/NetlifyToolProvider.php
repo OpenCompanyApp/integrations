@@ -3,26 +3,32 @@
 namespace OpenCompany\Integrations\Netlify;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyListSites;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyGetSite;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyListDeploys;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyGetDeploy;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyListForms;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyListDnsZones;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateDeploy;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateSite;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyDeleteSite;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyGetCurrentUser;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyGetDeploy;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyGetForm;
-class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\Netlify\Tools\NetlifyGetSite;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyListDeploys;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyListDnsZones;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyListForms;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyListSites;
 
 /**
+ * Exposes Netlify REST API tools to host applications.
+ *
+ * Handles catalog metadata, credential setup, connection checks, and
+ * multi-account service resolution for Netlify.
+ */
+class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -96,11 +102,14 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Modern web deployment and hosting platform',
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:netlify',
-            'category' => 'productivity',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.netlify.com/api/get-started/',
+            'source_url' => 'https://github.com/netlify/open-api',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -122,6 +131,12 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
+    /**
+     * Verify Netlify credentials with a lightweight user request.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -173,9 +188,30 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-        public function tools(): array
+    public function tools(): array
     {
         return [
+            'netlify_create_deploy' => [
+                'class' => NetlifyCreateDeploy::class,
+                'type' => 'write',
+                'name' => 'Create Deploy',
+                'description' => 'Trigger a new deploy for a Netlify site.',
+                'icon' => 'ph:rocket-launch',
+            ],
+            'netlify_create_site' => [
+                'class' => NetlifyCreateSite::class,
+                'type' => 'write',
+                'name' => 'Create Site',
+                'description' => 'Create a new Netlify site.',
+                'icon' => 'ph:plus-circle',
+            ],
+            'netlify_delete_site' => [
+                'class' => NetlifyDeleteSite::class,
+                'type' => 'write',
+                'name' => 'Delete Site',
+                'description' => 'Delete a Netlify site permanently.',
+                'icon' => 'ph:trash',
+            ],
             'netlify_get_current_user' => [
                 'class' => NetlifyGetCurrentUser::class,
                 'type' => 'read',
@@ -232,7 +268,9 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/netlify.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
@@ -250,7 +288,7 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new NetlifyService(
                 accessToken: $creds->get('netlify', 'access_token', '', $account),

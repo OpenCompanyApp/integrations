@@ -4,6 +4,7 @@ namespace OpenCompany\Integrations\Notion;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Notion\Tools\NotionAppendBlockChildren;
@@ -353,10 +354,14 @@ class NotionToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $apiKey = $creds->get('notion', 'api_key', '', $account)
+                ?: $creds->get('notion', 'access_token', '', $account)
+                ?: $creds->get('notion2', 'api_key', '', $account)
+                ?: $creds->get('notion2', 'access_token', '', $account);
 
             return new NotionService(
-                apiKey: $creds->get('notion', 'api_key', '', $account),
+                apiKey: $apiKey,
             );
         }
 

@@ -17,6 +17,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class HuggingFaceInference implements Tool
 {
+    /**
+     * @param  HuggingFaceService  $service  Hugging Face Hub API client.
+     */
     public function __construct(
         private HuggingFaceService $service,
     ) {}
@@ -28,7 +31,7 @@ class HuggingFaceInference implements Tool
 
     public function description(): string
     {
-        return 'Run inference on a Hugging Face model via the serverless Inference API. Supports text generation, summarization, translation, classification, image analysis, and more. The payload structure depends on the model\'s task — refer to the Hugging Face Inference API docs for model-specific formats.';
+        return 'Run inference on a Hugging Face model via the serverless Inference API. Supports text generation, summarization, translation, classification, image analysis, and more. The payload structure depends on the model\'s task; refer to the Hugging Face Inference API docs for model-specific formats.';
     }
 
     public function parameters(): array
@@ -41,6 +44,11 @@ class HuggingFaceInference implements Tool
         ];
     }
 
+    /**
+     * Run serverless inference for the requested model.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (model_id, inputs, parameters, data)
+     */
     public function execute(array $args): ToolResult
     {
         try {

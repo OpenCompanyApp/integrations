@@ -2,51 +2,38 @@
 
 namespace OpenCompany\Integrations\CircleCI\Tools;
 
-use OpenCompany\Integrations\CircleCI\CircleCIService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get detailed information about a specific CircleCI pipeline.
- *
- * Returns the pipeline configuration, status, trigger details,
- * and revision information for a single pipeline run.
+ * Get details for a pipeline by ID.
  */
-class CircleCIGetPipeline implements Tool
+class CircleCIGetPipeline extends AbstractCircleCITool
 {
-    public function __construct(
-        private CircleCIService $service,
-    ) {}
+    protected string $toolName = 'circleci_get_pipeline';
 
-    public function name(): string
-    {
-        return 'circleci_get_pipeline';
-    }
+    protected string $toolDescription = 'Get details for a pipeline by ID.';
 
-    public function description(): string
-    {
-        return 'Get detailed information about a specific CircleCI pipeline, including its status, configuration, trigger source, and commit details.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The pipeline ID (UUID).'],
-        ];
-    }
+    protected string $path = '/v2/pipeline/{pipeline_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CircleCI integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'pipeline_id' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Pipeline ID.',
+    ],
+];
 
-            $result = $this->service->getPipeline($args['id']);
+    /** @var list<string> */
+    protected array $required = [
+    'pipeline_id',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

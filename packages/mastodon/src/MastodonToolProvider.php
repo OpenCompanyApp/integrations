@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Mastodon\Tools\MastodonApiDelete;
+use OpenCompany\Integrations\Mastodon\Tools\MastodonApiGet;
+use OpenCompany\Integrations\Mastodon\Tools\MastodonApiPost;
+use OpenCompany\Integrations\Mastodon\Tools\MastodonApiPut;
 use OpenCompany\Integrations\Mastodon\Tools\MastodonListStatuses;
 use OpenCompany\Integrations\Mastodon\Tools\MastodonGetStatus;
 use OpenCompany\Integrations\Mastodon\Tools\MastodonCreateStatus;
@@ -83,7 +87,7 @@ class MastodonToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'label' => 'Mastodon',
-            'description' => 'Social networking',
+            'description' => 'Mastodon API data',
             'icon' => 'ph:mastodon-logo',
             'logo' => 'simple-icons:mastodon',
         ];
@@ -96,7 +100,7 @@ class MastodonToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Decentralized social networking — post statuses, browse timelines, and manage accounts.',
             'icon' => 'ph:mastodon-logo',
             'logo' => 'simple-icons:mastodon',
-            'category' => 'social',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.joinmastodon.org/api/',
         ];
@@ -219,6 +223,34 @@ class MastodonToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'name' => 'Get Current User',
                 'description' => 'Get the authenticated user\'s Mastodon profile.',
                 'icon' => 'ph:identification-badge',
+            ],
+            'mastodon_api_get' => [
+                'class' => MastodonApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call any Mastodon GET API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'mastodon_api_post' => [
+                'class' => MastodonApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call any Mastodon POST API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'mastodon_api_put' => [
+                'class' => MastodonApiPut::class,
+                'type' => 'write',
+                'name' => 'API PUT',
+                'description' => 'Call any Mastodon PUT API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'mastodon_api_delete' => [
+                'class' => MastodonApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call any Mastodon DELETE API endpoint.',
+                'icon' => 'ph:terminal-window',
             ],
         ];
     }

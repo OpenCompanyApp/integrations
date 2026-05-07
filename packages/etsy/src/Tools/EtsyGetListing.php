@@ -2,15 +2,18 @@
 
 namespace OpenCompany\Integrations\Etsy\Tools;
 
-use OpenCompany\Integrations\Etsy\EtsyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Etsy\EtsyService;
 
 /**
  * Get details for a specific Etsy listing by ID.
  */
 class EtsyGetListing implements Tool
 {
+    /**
+     * @param  EtsyService  $service  The Etsy Open API client.
+     */
     public function __construct(
         private EtsyService $service,
     ) {}
@@ -36,6 +39,11 @@ class EtsyGetListing implements Tool
         ];
     }
 
+    /**
+     * Get one listing by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

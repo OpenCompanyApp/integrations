@@ -1,0 +1,16 @@
+{
+    "name": "opencompanyapp/integration-google-pubsub",
+    "description": "Google Pub/Sub integration for Laravel AI agents - topics, subscriptions, messages, snapshots, schemas, IAM, publish, pull, ack, and seek.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\GooglePubSub\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\GooglePubSub\\GooglePubSubServiceProvider"]}},
+    "keywords": ["tools", "google", "pubsub", "messaging", "events", "queues", "opencompany"]
+}

@@ -1,267 +1,163 @@
-# Exa AI — Lua API Reference
+# Exa AI
 
-Exa is an AI-powered search engine that uses neural embeddings to find relevant web content. Unlike keyword search, Exa understands the *meaning* of your query and returns semantically relevant results.
+Lua API reference for the `exa` integration package. Exa provides AI-oriented web search, clean content extraction, similar-link discovery, and grounded answers with citations.
 
-## search
+The integration uses the official `x-api-key` header. Exa also accepts `Authorization: Bearer`, but this package uses `x-api-key` consistently.
 
-Perform a neural search query across the web.
+## Search
 
-### Parameters
+### `exa_search`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | Natural language search query |
-| `num_results` | integer | no | Number of results (default: 10, max: 100) |
-| `use_autoprompt` | boolean | no | Let Exa optimize your query (default: true) |
-| `type` | string | no | `"keyword"`, `"neural"`, or `"auto"` (default: `"auto"`) |
-| `category` | string | no | Filter by content category (see below) |
-| `start_published_date` | string | no | Only results after this date (ISO 8601) |
-
-### Categories
-
-`"company"`, `"research paper"`, `"news"`, `"github"`, `"tweet"`, `"movie"`, `"song"`, `"personal site"`, `"or pdf"`
-
-### Examples
+Search the web with current Exa search types. Common types include `auto`, `instant`, `fast`, `deep-lite`, `deep`, and `deep-reasoning`; legacy `keyword` and `neural` are also accepted where supported.
 
 ```lua
--- Basic neural search
-local results = app.integrations.exa.search({
-  query = "best practices for building REST APIs with Laravel"
-})
-
--- Search for recent news articles
-local news = app.integrations.exa.search({
-  query = "Laravel 12 release announcement",
-  category = "news",
-  start_published_date = "2025-01-01T00:00:00Z",
-  num_results = 5
-})
-
--- Keyword search for exact matches
-local exact = app.integrations.exa.search({
-  query = "phpstan level 9 laravel",
-  type = "keyword",
-  num_results = 5
-})
-```
-
----
-
-## find_similar
-
-Find web pages similar to a given URL.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `url` | string | yes | URL to find similar pages for |
-| `num_results` | integer | no | Number of results (default: 10, max: 100) |
-
-### Examples
-
-```lua
--- Find pages similar to Laravel docs
-local similar = app.integrations.exa.find_similar({
-  url = "https://laravel.com/docs/12.x",
-  num_results = 5
-})
-
--- Discover competitors
-local competitors = app.integrations.exa.find_similar({
-  url = "https://example.com",
-  num_results = 10
-})
-```
-
----
-
-## get_contents
-
-Retrieve full page contents for a list of document IDs (obtained from search or findSimilar results).
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `ids` | array | yes | List of document IDs (URLs or Exa IDs) |
-| `text` | boolean | no | Include full page text (default: true) |
-| `highlights` | object | no | Highlight configuration (see below) |
-
-### Highlights Object
-
-| Key | Type | Description |
-|-----|------|-------------|
-| `query` | string | Query to generate highlights for |
-| `num_sentences` | integer | Sentences per highlight (default: 3) |
-
-### Examples
-
-```lua
--- Get full text for search results
-local search = app.integrations.exa.search({ query = "Laravel queues", num_results = 3 })
-local ids = {}
-for _, r in ipairs(search.results) do
-  table.insert(ids, r.id)
-end
-
-local contents = app.integrations.exa.get_contents({
-  ids = ids,
-  text = true
-})
-
--- Get contents with highlights
-local contents = app.integrations.exa.get_contents({
-  ids = { "https://example.com/article" },
-  text = true,
-  highlights = {
-    query = "Laravel queues",
-    num_sentences = 5
-  }
-})
-```
-
----
-
-## search_and_contents
-
-Search and retrieve full contents in a single call. More efficient than calling search + get_contents separately.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | Natural language search query |
-| `num_results` | integer | no | Number of results (default: 10, max: 100) |
-| `use_autoprompt` | boolean | no | Let Exa optimize your query (default: true) |
-| `type` | string | no | `"keyword"`, `"neural"`, or `"auto"` |
-| `category` | string | no | Filter by content category |
-| `start_published_date` | string | no | Only results after this date (ISO 8601) |
-| `text` | boolean | no | Include full page text (default: true) |
-| `highlights` | object | no | Highlight configuration |
-
-### Examples
-
-```lua
--- Search and get full content in one call
-local results = app.integrations.exa.search_and_contents({
-  query = "how to implement OAuth2 in Laravel",
+local results = exa_search({
+  query = "Laravel queue monitoring best practices",
+  type = "auto",
   num_results = 5,
-  text = true,
-  highlights = {
-    query = "OAuth2 Laravel implementation",
-    num_sentences = 3
-  }
-})
-
--- Search for recent research papers with content
-local papers = app.integrations.exa.search_and_contents({
-  query = "transformer architecture improvements 2024",
-  category = "research paper",
-  num_results = 5,
-  text = true
 })
 ```
 
----
-
-## get_current_user
-
-Get the authenticated user's profile and API usage information. Useful for verifying credentials.
-
-### Parameters
-
-None.
-
-### Examples
+Use domain and date filters when the source scope matters:
 
 ```lua
--- Check user info and usage
-local user = app.integrations.exa.get_current_user({})
-print("Logged in as: " .. user.email)
+local docs = exa_search({
+  query = "OpenAI Responses API file search",
+  include_domains = { "platform.openai.com" },
+  start_published_date = "2026-01-01T00:00:00Z",
+})
 ```
 
----
-
-## Common Workflows
-
-### Search, then retrieve contents for top results
+For research-like structured extraction, prefer `/search` with `type = "deep-reasoning"` and `output_schema`. Exa documents the older `/research/v1` API as deprecated as of May 1, 2026.
 
 ```lua
--- Step 1: Search
-local results = app.integrations.exa.search({
-  query = "Laravel 12 new features",
-  num_results = 5
+local structured = exa_search({
+  query = "Compare the current pricing of three vector databases",
+  type = "deep-reasoning",
+  output_schema = {
+    type = "object",
+    properties = {
+      vendors = {
+        type = "array",
+        items = {
+          type = "object",
+          properties = {
+            name = { type = "string" },
+            pricingSummary = { type = "string" },
+          },
+        },
+      },
+    },
+  },
 })
-
--- Step 2: Get full contents
-local ids = {}
-for _, r in ipairs(results.results) do
-  table.insert(ids, r.id)
-end
-
-local contents = app.integrations.exa.get_contents({
-  ids = ids,
-  text = true
-})
-
--- Step 3: Summarize
-for _, page in ipairs(contents.results) do
-  print(page.title)
-  print(page.url)
-  print(page.text:sub(1, 200) .. "...")
-  print("---")
-end
 ```
 
-### Research a topic with content retrieval
+## Search And Contents
+
+### `exa_search_and_contents`
+
+Search and retrieve content in one call. The content options are sent in Exa's current nested `contents` object.
 
 ```lua
-local results = app.integrations.exa.search_and_contents({
-  query = "best practices for API rate limiting",
-  category = "news",
+local results = exa_search_and_contents({
+  query = "latest Typefully API v2 migration guide",
   num_results = 3,
   text = true,
   highlights = {
-    query = "API rate limiting strategies",
-    num_sentences = 3
-  }
+    query = "API v2 migration",
+    maxCharacters = 3000,
+  },
 })
 ```
 
-### Find alternatives to a tool or service
+You can request summaries instead of full text:
 
 ```lua
-local similar = app.integrations.exa.find_similar({
-  url = "https://github.com/some-tool",
-  num_results = 10
+local summarized = exa_search_and_contents({
+  query = "recent Exa Search API changes",
+  type = "fast",
+  summary = {
+    query = "Summarize the API changes for developers.",
+  },
 })
 ```
 
-## Notes
+## Answer
 
-- Exa uses neural embeddings for search — describe *what you want* rather than using exact keywords
-- `use_autoprompt` is enabled by default and often improves results significantly
-- Document IDs from search results can be URLs or Exa-specific IDs — both work with `get_contents`
-- Rate limits depend on your Exa plan — use `get_current_user` to check usage
-- The `type` parameter controls search mode: `"neural"` for semantic, `"keyword"` for exact matches, `"auto"` for hybrid
+### `exa_answer`
 
----
+Generate a grounded answer to a question. Exa returns an `answer` string and may include citations and cost metadata.
+
+```lua
+local answer = exa_answer({
+  query = "What is the latest documented status of Exa research API deprecation?",
+  text = true,
+})
+print(answer.answer)
+```
+
+## Contents
+
+### `exa_get_contents`
+
+Retrieve clean page contents, highlights, summaries, and metadata for URLs or Exa document IDs. The current Exa Contents API is URL-first, while `ids` remains supported for search result IDs.
+
+```lua
+local contents = exa_get_contents({
+  urls = { "https://example.test/article" },
+  text = true,
+  summary = {
+    query = "Summarize this page for an engineering agent.",
+  },
+})
+```
+
+Use cache freshness and subpage options when crawling site sections:
+
+```lua
+local crawl = exa_get_contents({
+  urls = { "https://example.test/docs" },
+  text = true,
+  max_age_hours = 24,
+  subpages = 2,
+  subpage_target = "api reference",
+})
+```
+
+## Similar Links
+
+### `exa_find_similar`
+
+Find pages similar to a given URL.
+
+```lua
+local similar = exa_find_similar({
+  url = "https://example.test/product",
+  num_results = 10,
+  exclude_source_domain = true,
+})
+```
+
+## User
+
+### `exa_get_current_user`
+
+```lua
+local user = exa_get_current_user()
+print(user.email)
+```
+
+## Return Shapes
+
+Search, contents, similar-link, and answer tools return the raw Exa JSON shape. Common fields include `requestId`, `results`, `answer`, `citations`, `statuses`, and `costDollars`.
 
 ## Multi-Account Usage
 
-If you have multiple Exa accounts configured, use account-specific namespaces:
+Use the namespace prefix assigned by the host:
 
 ```lua
--- Default account (always works)
-app.integrations.exa.search({ query = "hello world" })
-
--- Explicit default (portable across setups)
-app.integrations.exa.default.search({ query = "hello world" })
-
--- Named accounts
-app.integrations.exa.work.search({ query = "company research" })
-app.integrations.exa.personal.search({ query = "hobby project" })
+local results = ns_exa_work.exa_search({
+  query = "company research",
+  type = "fast",
+})
 ```
-
-All functions are identical across accounts — only the credentials differ.

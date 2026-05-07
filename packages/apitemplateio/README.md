@@ -1,16 +1,6 @@
-# Integration: API Template IO
+# Integration: APITemplate.io
 
-> API Template IO integration for the [Laravel AI SDK](https://github.com/laravel/ai) — generate PDFs and images from reusable templates. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents the ability to generate professional PDFs and images from templates. Create invoices, certificates, social media images, and more — all through the [API Template IO](https://apitemplate.io) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This API Template IO tool lets AI agents generate documents and images on demand — from invoices and reports to social media graphics and certificates.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+APITemplate.io integration for OpenCompany and KosmoKrator agents. It exposes the REST API v2 surface for generating PDFs and images, managing generated objects, querying account information, and working with templates.
 
 ## Installation
 
@@ -18,115 +8,83 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-apitemplateio
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
 
-This tool requires an API Template IO API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Credentials are normally configured through the host integration settings UI.
 
 ```php
 return [
     'apitemplateio' => [
         'api_key' => env('APITEMPLATEIO_API_KEY'),
-        'url'     => env('APITEMPLATEIO_URL', 'https://api.apitemplate.io/v1'),
+        'url' => env('APITEMPLATEIO_URL', 'https://rest.apitemplate.io'),
     ],
 ];
 ```
 
-## Available Tools
+Use a regional base URL when needed, for example `https://rest-us.apitemplate.io`, `https://rest-de.apitemplate.io`, or `https://rest-au.apitemplate.io`.
+
+## Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `apitemplateio_create_pdf` | write | Generate a PDF document from a template |
-| `apitemplateio_create_image` | write | Generate an image (PNG or JPEG) from a template |
-| `apitemplateio_list_templates` | read | List available templates with pagination |
-| `apitemplateio_get_template` | read | Get details for a specific template |
-| `apitemplateio_get_current_user` | read | Get the authenticated user's account information |
+| `apitemplateio_create_pdf` | write | Generate a PDF from a saved template |
+| `apitemplateio_create_image` | write | Generate images from a visual template |
+| `apitemplateio_create_pdf_from_html` | write | Generate a PDF directly from HTML |
+| `apitemplateio_create_pdf_from_url` | write | Generate a PDF by rendering a URL |
+| `apitemplateio_create_pdf_from_markdown` | write | Generate a PDF from Markdown |
+| `apitemplateio_merge_pdfs` | write | Merge multiple PDF URLs into one PDF |
+| `apitemplateio_list_objects` | read | List generated PDFs and images |
+| `apitemplateio_delete_object` | write | Delete a generated object by transaction reference |
+| `apitemplateio_get_current_user` | read | Get account information for the configured API key |
+| `apitemplateio_list_templates` | read | List templates with documented filters |
+| `apitemplateio_get_template` | read | Get a PDF template by ID |
+| `apitemplateio_update_template` | write | Update a PDF template |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\ApiTemplateIO\ApiTemplateIOService;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdf;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreateImage;
-
-// Create tools
-$service = app(ApiTemplateIOService::class);
-$tools = [
-    new ApiTemplateIOCreatePdf($service),
-    new ApiTemplateIOCreateImage($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Generate a PDF invoice for $500 using template tpl_abc123');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 5 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('apitemplateio');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdf::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\ApiTemplateIO\ApiTemplateIOService;
 
 $service = app(ApiTemplateIOService::class);
 
-// Generate a PDF
-$pdf = $service->createPdf('tpl_abc123', [
-    'company_name' => 'Acme Corp',
-    'amount' => '$500.00',
+$pdf = $service->createPdf('tpl_invoice', [
     'invoice_number' => 'INV-001',
+    'amount' => '$500.00',
+], [
+    'filename' => 'invoice-INV-001.pdf',
 ]);
 
-// Generate a PNG image
-$image = $service->createImage('tpl_xyz789', [
-    'title' => 'Summer Sale',
-    'discount' => '30%',
-], 'png');
+$image = $service->createImage('tpl_social', [
+    'overrides' => [
+        ['name' => 'title', 'text' => 'Launch Week'],
+    ],
+], [
+    'output_image_type' => 'pngOnly',
+]);
 
-// List templates
-$templates = $service->listTemplates(50, 0);
+$htmlPdf = $service->createPdfFromHtml(
+    '<h1>Hello {{name}}</h1>',
+    '<style>h1 { color: #2563eb; }</style>',
+    ['name' => 'World'],
+);
 
-// Get a specific template
-$template = $service->getTemplate('tpl_abc123');
-
-// Get account info
-$account = $service->getCurrentUser();
+$merged = $service->mergePdfs([
+    'https://example.test/a.pdf',
+    'https://example.test/b.pdf',
+]);
 ```
 
-## Dependencies
+## Notes
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+- `get_current_user` keeps the historical tool slug but uses APITemplate.io's current `/v2/account-information` endpoint.
+- `get_template` and `update_template` are marked experimental by APITemplate.io.
+- Lua docs live in `lua-docs/apitemplateio.md` and describe normalized agent usage.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- An [API Template IO](https://apitemplate.io) account with API access
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+- `opencompanyapp/integration-core`
+- APITemplate.io API key

@@ -20,6 +20,7 @@ class PostmarkServiceProvider extends ServiceProvider
 
             return new PostmarkService(
                 serverToken: $creds->get('postmark', 'server_token', ''),
+                accountToken: $creds->get('postmark', 'account_token', ''),
                 baseUrl: $creds->get('postmark', 'base_url', 'https://api.postmarkapp.com'),
             );
         });

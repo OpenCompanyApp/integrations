@@ -1,446 +1,183 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OpenCompany\Integrations\PostHog;
 
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * PostHog API service for interacting with the PostHog platform.
+ * HTTP client for the PostHog REST and ingestion APIs.
  *
- * Handles authentication, HTTP communication, and error handling for all
- * PostHog API endpoints including events, persons, feature flags, insights,
- * dashboards, and cohorts.
+ * Executes generated operations from the official PostHog OpenAPI schema,
+ * applies bearer-token authentication, and centralizes request/error handling.
  */
 class PostHogService
 {
     /**
-     * Create a new PostHogService instance.
-     *
-     * @param  string  $apiToken  The Personal Access Token or Project API Key for authenticating with PostHog.
-     * @param  string  $baseUrl   The base URL of the PostHog instance (default: https://us.posthog.com).
+     * @param  string  $apiToken  PostHog personal API token for private API endpoints.
+     * @param  string  $baseUrl  PostHog host URL, such as https://us.posthog.com.
+     * @param  string  $projectId  Optional default project ID for project-scoped operations.
+     * @param  string  $environmentId  Optional default environment ID for environment-scoped operations.
+     * @param  string  $projectApiKey  Optional project API key for event ingestion.
      */
-    public function __construct(
-        private string $apiToken = '',
-        private string $baseUrl = 'https://us.posthog.com',
-    ) {
+    public function __construct(private string $apiToken = '', private string $baseUrl = 'https://us.posthog.com', private string $projectId = '', private string $environmentId = '', private string $projectApiKey = '')
+    {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the PostHog integration is properly configured.
-     *
-     * @return bool True if an API token is set, false otherwise.
-     */
-    public function isConfigured(): bool
-    {
-        return !empty($this->apiToken);
-    }
+    public function isConfigured(): bool { return $this->apiToken !== ''; }
+    public function canCapture(): bool { return $this->projectApiKey !== '' || $this->apiToken !== ''; }
 
-    // ─── Events ───────────────────────────────────────────────────────
+    /** @return array<string, array<string, mixed>> */
+    public static function operations(): array { return PostHogOperations::all(); }
 
     /**
-     * Capture (send) a single event to PostHog.
+     * Execute an official PostHog OpenAPI operation.
      *
-     * This endpoint uses the project API key for authentication rather than
-     * the personal access token. The event is sent to the /e/ capture endpoint.
-     *
-     * @param  string  $distinctId  The unique identifier for the user/actor.
-     * @param  string  $event       The name of the event (e.g., "pageview", "signup").
-     * @param  array   $properties  Optional properties to attach to the event.
-     * @param  string|null  $timestamp  Optional ISO 8601 timestamp for the event.
-     * @return array The parsed JSON response from the capture endpoint.
+     * @param  array<string, mixed>  $operation  Operation metadata from PostHogOperations.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function captureEvent(string $distinctId, string $event, array $properties = [], ?string $timestamp = null): array
+    public function executeOperation(array $operation, array $args = []): array
     {
-        $payload = [
-            'distinct_id' => $distinctId,
-            'event' => $event,
-            'properties' => $properties,
-        ];
-
-        if ($timestamp !== null) {
-            $payload['timestamp'] = $timestamp;
-        }
-
-        return $this->request('POST', '/e/', $payload);
-    }
-
-    /**
-     * List events from PostHog with optional filtering and pagination.
-     *
-     * @param  int     $limit       Maximum number of events to return (default: 100).
-     * @param  int     $offset      Number of events to skip for pagination (default: 0).
-     * @param  string|null  $event   Filter by event name.
-     * @param  string|null  $distinctId  Filter by distinct user ID.
-     * @param  string|null  $personId    Filter by internal person UUID.
-     * @param  string|null  $after    Only events after this timestamp (ISO 8601).
-     * @param  string|null  $before   Only events before this timestamp (ISO 8601).
-     * @return array The parsed JSON response containing events list.
-     */
-    public function listEvents(int $limit = 100, int $offset = 0, ?string $event = null, ?string $distinctId = null, ?string $personId = null, ?string $after = null, ?string $before = null): array
-    {
-        $params = [
-            'limit' => $limit,
-            'offset' => $offset,
-        ];
-
-        if ($event !== null) {
-            $params['event'] = $event;
-        }
-        if ($distinctId !== null) {
-            $params['distinct_id'] = $distinctId;
-        }
-        if ($personId !== null) {
-            $params['person_id'] = $personId;
-        }
-        if ($after !== null) {
-            $params['after'] = $after;
-        }
-        if ($before !== null) {
-            $params['before'] = $before;
-        }
-
-        return $this->request('GET', '/api/event', $params);
-    }
-
-    /**
-     * Get a single event by its ID.
-     *
-     * @param  string  $eventId  The unique identifier of the event.
-     * @return array The parsed JSON response containing the event details.
-     */
-    public function getEvent(string $eventId): array
-    {
-        return $this->request('GET', '/api/event/' . urlencode($eventId));
-    }
-
-    // ─── Persons ──────────────────────────────────────────────────────
-
-    /**
-     * List persons from PostHog with optional search and pagination.
-     *
-     * @param  int     $limit   Maximum number of persons to return (default: 100).
-     * @param  int     $offset  Number of persons to skip for pagination (default: 0).
-     * @param  string|null  $search  Search query to filter persons by name or email.
-     * @return array The parsed JSON response containing persons list.
-     */
-    public function listPersons(int $limit = 100, int $offset = 0, ?string $search = null): array
-    {
-        $params = [
-            'limit' => $limit,
-            'offset' => $offset,
-        ];
-
-        if ($search !== null) {
-            $params['search'] = $search;
-        }
-
-        return $this->request('GET', '/api/person', $params);
-    }
-
-    /**
-     * Get a single person by their ID.
-     *
-     * @param  string  $personId  The unique identifier (UUID) of the person.
-     * @return array The parsed JSON response containing the person details.
-     */
-    public function getPerson(string $personId): array
-    {
-        return $this->request('GET', '/api/person/' . urlencode($personId));
-    }
-
-    // ─── Feature Flags ────────────────────────────────────────────────
-
-    /**
-     * List all feature flags in the project.
-     *
-     * @param  int  $limit   Maximum number of feature flags to return (default: 100).
-     * @param  int  $offset  Number of feature flags to skip for pagination (default: 0).
-     * @return array The parsed JSON response containing feature flags list.
-     */
-    public function listFeatureFlags(int $limit = 100, int $offset = 0): array
-    {
-        return $this->request('GET', '/api/feature_flag', [
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
-    }
-
-    /**
-     * Get a single feature flag by its ID.
-     *
-     * @param  int  $flagId  The unique identifier of the feature flag.
-     * @return array The parsed JSON response containing the feature flag details.
-     */
-    public function getFeatureFlag(int $flagId): array
-    {
-        return $this->request('GET', '/api/feature_flag/' . $flagId);
-    }
-
-    /**
-     * Create a new feature flag.
-     *
-     * @param  string  $name               Human-readable name for the feature flag.
-     * @param  string  $key                 Unique key used to reference the flag in code.
-     * @param  bool    $active              Whether the flag is active (default: true).
-     * @param  array|null  $filters         Optional filter conditions for the flag.
-     * @param  int|null   $rolloutPercentage  Optional rollout percentage (0–100) for gradual release.
-     * @return array The parsed JSON response containing the created feature flag.
-     */
-    public function createFeatureFlag(string $name, string $key, bool $active = true, ?array $filters = null, ?int $rolloutPercentage = null): array
-    {
-        $data = [
-            'name' => $name,
-            'key' => $key,
-            'active' => $active,
-        ];
-
-        if ($filters !== null) {
-            $data['filters'] = $filters;
-        }
-        if ($rolloutPercentage !== null) {
-            $data['rollout_percentage'] = $rolloutPercentage;
-        }
-
-        return $this->request('POST', '/api/feature_flag', $data);
-    }
-
-    /**
-     * Update an existing feature flag.
-     *
-     * @param  int        $flagId  The unique identifier of the feature flag to update.
-     * @param  bool|null  $active  Set the flag active state.
-     * @param  array|null $filters Set new filter conditions.
-     * @param  int|null   $rolloutPercentage  Set a new rollout percentage (0–100).
-     * @return array The parsed JSON response containing the updated feature flag.
-     */
-    public function updateFeatureFlag(int $flagId, ?bool $active = null, ?array $filters = null, ?int $rolloutPercentage = null): array
-    {
-        $data = [];
-
-        if ($active !== null) {
-            $data['active'] = $active;
-        }
-        if ($filters !== null) {
-            $data['filters'] = $filters;
-        }
-        if ($rolloutPercentage !== null) {
-            $data['rollout_percentage'] = $rolloutPercentage;
-        }
-
-        return $this->request('PATCH', '/api/feature_flag/' . $flagId, $data);
-    }
-
-    /**
-     * Delete a feature flag.
-     *
-     * @param  int  $flagId  The unique identifier of the feature flag to delete.
-     * @return array The parsed JSON response (typically empty on success).
-     */
-    public function deleteFeatureFlag(int $flagId): array
-    {
-        return $this->request('DELETE', '/api/feature_flag/' . $flagId);
-    }
-
-    // ─── Insights ─────────────────────────────────────────────────────
-
-    /**
-     * List insights in the project.
-     *
-     * @param  int          $limit   Maximum number of insights to return (default: 100).
-     * @param  int          $offset  Number of insights to skip for pagination (default: 0).
-     * @param  string|null  $type    Filter by insight type (e.g., "TRENDS", "FUNNELS", "RETENTION", "PATHS").
-     * @return array The parsed JSON response containing insights list.
-     */
-    public function listInsights(int $limit = 100, int $offset = 0, ?string $type = null): array
-    {
-        $params = [
-            'limit' => $limit,
-            'offset' => $offset,
-        ];
-
-        if ($type !== null) {
-            $params['type'] = $type;
-        }
-
-        return $this->request('GET', '/api/insight', $params);
-    }
-
-    /**
-     * Get a single insight by its ID.
-     *
-     * @param  int  $insightId  The unique identifier of the insight.
-     * @return array The parsed JSON response containing the insight details.
-     */
-    public function getInsight(int $insightId): array
-    {
-        return $this->request('GET', '/api/insight/' . $insightId);
-    }
-
-    // ─── Dashboards ───────────────────────────────────────────────────
-
-    /**
-     * List dashboards in the project.
-     *
-     * @param  int  $limit   Maximum number of dashboards to return (default: 100).
-     * @param  int  $offset  Number of dashboards to skip for pagination (default: 0).
-     * @return array The parsed JSON response containing dashboards list.
-     */
-    public function listDashboards(int $limit = 100, int $offset = 0): array
-    {
-        return $this->request('GET', '/api/dashboard', [
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
-    }
-
-    /**
-     * Get a single dashboard by its ID.
-     *
-     * @param  int  $dashboardId  The unique identifier of the dashboard.
-     * @return array The parsed JSON response containing the dashboard details.
-     */
-    public function getDashboard(int $dashboardId): array
-    {
-        return $this->request('GET', '/api/dashboard/' . $dashboardId);
-    }
-
-    // ─── Cohorts ──────────────────────────────────────────────────────
-
-    /**
-     * List cohorts in the project.
-     *
-     * @param  int  $limit   Maximum number of cohorts to return (default: 100).
-     * @param  int  $offset  Number of cohorts to skip for pagination (default: 0).
-     * @return array The parsed JSON response containing cohorts list.
-     */
-    public function listCohorts(int $limit = 100, int $offset = 0): array
-    {
-        return $this->request('GET', '/api/cohort', [
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
-    }
-
-    // ─── Test Connection ──────────────────────────────────────────────
-
-    /**
-     * Test the connection to the PostHog API by fetching the current user.
-     *
-     * @return array Associative array with 'success' (bool), 'message' (string),
-     *               and optionally 'email' (string) on success or 'error' on failure.
-     */
-    public function testConnection(): array
-    {
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($this->baseUrl . '/api/users/@me');
-
-            if (!$response->successful()) {
-                return [
-                    'success' => false,
-                    'error' => "PostHog API returned HTTP {$response->status()}.",
-                ];
+        $path = (string) $operation['path'];
+        $query = [];
+        $headers = [];
+        $consumed = [];
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            $apiName = (string) $parameter['name'];
+            $argumentName = (string) ($parameter['argument_name'] ?? $this->snakeName($apiName));
+            $aliases = is_array($parameter['aliases'] ?? null) ? $parameter['aliases'] : [];
+            $value = $this->argument($args, $argumentName, $apiName, $aliases);
+            if ($value === null && $parameter['in'] === 'path') $value = $this->defaultPathParameter($argumentName);
+            if ($value === null) {
+                if (!empty($parameter['required'])) throw new \RuntimeException("The {$argumentName} parameter is required.");
+                continue;
             }
-
-            $data = $response->json();
-            $email = $data['email'] ?? ($data['first_name'] ?? 'Unknown user');
-
-            return [
-                'success' => true,
-                'message' => "Connected to PostHog as {$email}.",
-                'email' => $email,
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage(),
-            ];
+            $consumed[] = $apiName; $consumed[] = $argumentName; $consumed[] = $this->snakeName($apiName); $consumed[] = strtolower($apiName);
+            foreach ($aliases as $alias) $consumed[] = (string) $alias;
+            if ($parameter['in'] === 'path') $path = str_replace('{' . $apiName . '}', rawurlencode((string) $value), $path);
+            elseif ($parameter['in'] === 'query') $query[$apiName] = $value;
+            elseif ($parameter['in'] === 'header') $headers[$apiName] = $value;
         }
+        if (preg_match('/\{([^}]+)\}/', $path, $missing)) throw new \RuntimeException('The ' . $this->snakeName($missing[1]) . ' parameter is required.');
+        $requestBody = $operation['request_body'] ?? null;
+        $body = null;
+        if ($requestBody !== null) {
+            $body = $args['body'] ?? $this->bodyFromLooseArguments($args, $consumed);
+            if (!empty($requestBody['required']) && ($body === null || $body === [] || $body === '')) throw new \RuntimeException('body is required.');
+            if (($requestBody['content_type'] ?? '') !== 'application/json') $headers['Content-Type'] = (string) $requestBody['content_type'];
+        }
+        return $this->request((string) $operation['method'], $this->baseUrl . $path, $query, $headers, $body);
     }
 
-    // ─── HTTP Layer ───────────────────────────────────────────────────
+    /**
+     * Capture one analytics event through PostHog's ingestion API.
+     *
+     * @param  array<string, mixed>  $args  Event payload with event, distinct_id, properties, and optional timestamp.
+     * @return array<string, mixed>
+     */
+    public function captureEvent(array $args): array
+    {
+        $token = (string) ($args['api_key'] ?? $args['token'] ?? ($this->projectApiKey !== '' ? $this->projectApiKey : $this->apiToken));
+        if ($token === '') throw new \RuntimeException('PostHog project API key is not configured.');
+        foreach (['event', 'distinct_id'] as $required) if (($args[$required] ?? '') === '') throw new \RuntimeException("The {$required} parameter is required.");
+        $payload = ['api_key' => $token, 'event' => $args['event'], 'distinct_id' => $args['distinct_id'], 'properties' => $args['properties'] ?? []];
+        foreach (['timestamp', 'uuid', 'send_feature_flags'] as $optional) if (array_key_exists($optional, $args)) $payload[$optional] = $args[$optional];
+        return $this->request('POST', $this->baseUrl . '/capture/', [], [], $payload, false);
+    }
+
+    /** @param  array<string, mixed>  $args  Tool arguments. @return array<string, mixed> */
+    private function executeSlug(string $slug, array $args = []): array { $operations = self::operations(); if (!isset($operations[$slug])) throw new \RuntimeException("Unknown PostHog operation: {$slug}"); return $this->executeOperation($operations[$slug], $args); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listEvents(array $params = []): array { return $this->executeSlug('posthog_list_events', $params); }
+    /** @return array<string, mixed> */
+    public function getEvent(string $eventId, array $params = []): array { return $this->executeSlug('posthog_get_event', array_merge($params, ['id' => $eventId])); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listPersons(array $params = []): array { return $this->executeSlug('posthog_list_persons', $params); }
+    /** @return array<string, mixed> */
+    public function getPerson(string $personId, array $params = []): array { return $this->executeSlug('posthog_get_person', array_merge($params, ['id' => $personId])); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listFeatureFlags(array $params = []): array { return $this->executeSlug('posthog_list_feature_flags', $params); }
+    /** @return array<string, mixed> */
+    public function getFeatureFlag(int|string $flagId, array $params = []): array { return $this->executeSlug('posthog_get_feature_flag', array_merge($params, ['id' => $flagId])); }
+    /** @param  array<string, mixed>  $args  Feature flag payload. @return array<string, mixed> */
+    public function createFeatureFlag(array $args): array { return $this->executeSlug('posthog_create_feature_flag', $args); }
+    /** @param  array<string, mixed>  $args  Feature flag patch payload. @return array<string, mixed> */
+    public function updateFeatureFlag(int|string $flagId, array $args = []): array { return $this->executeSlug('posthog_update_feature_flag', array_merge($args, ['id' => $flagId])); }
+    /** @return array<string, mixed> */
+    public function deleteFeatureFlag(int|string $flagId, array $params = []): array { return $this->executeSlug('posthog_delete_feature_flag', array_merge($params, ['id' => $flagId])); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listInsights(array $params = []): array { return $this->executeSlug('posthog_list_insights', $params); }
+    /** @return array<string, mixed> */
+    public function getInsight(int|string $insightId, array $params = []): array { return $this->executeSlug('posthog_get_insight', array_merge($params, ['id' => $insightId])); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listDashboards(array $params = []): array { return $this->executeSlug('posthog_list_dashboards', $params); }
+    /** @return array<string, mixed> */
+    public function getDashboard(int|string $dashboardId, array $params = []): array { return $this->executeSlug('posthog_get_dashboard', array_merge($params, ['id' => $dashboardId])); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listCohorts(array $params = []): array { return $this->executeSlug('posthog_list_cohorts', $params); }
+
+    /** @return array{success: bool, message?: string, error?: string} */
+    public function testConnection(): array { try { $this->rawRequest('GET', $this->baseUrl . '/api/users/', ['limit' => 1], [], null, true); return ['success' => true, 'message' => 'Connected to PostHog.']; } catch (\Throwable $e) { return ['success' => false, 'error' => $e->getMessage()]; } }
 
     /**
-     * Make an API request and return the parsed JSON response.
+     * Make an API request and return parsed output.
      *
-     * @param  string  $method  The HTTP method (GET, POST, PUT, PATCH, DELETE).
-     * @param  string  $path    The API path (e.g., "/api/event").
-     * @param  array   $data    Query parameters or request body payload.
-     * @return array The parsed JSON response body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, bool $authenticated = true): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
-        }
-
+        $response = $this->rawRequest($method, $url, $query, $headers, $body, $authenticated);
+        if ($response->status() === 204 || $response->body() === '') return [];
+        $contentType = (string) $response->header('Content-Type');
+        if ($contentType !== '' && !str_contains($contentType, 'json')) return ['body' => $response->body(), 'content_type' => $contentType];
         return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the PostHog API.
+     * Make a raw HTTP request to PostHog.
      *
-     * @param  string  $method  The HTTP method (GET, POST, PUT, PATCH, DELETE).
-     * @param  string  $path    The API path (e.g., "/api/event").
-     * @param  array   $data    Query parameters or request body payload.
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException If the API token is missing or the request fails.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, bool $authenticated = true): Response
     {
-        if (!$this->apiToken) {
-            throw new \RuntimeException('PostHog API token is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
+        if ($authenticated && !$this->isConfigured()) throw new \RuntimeException('PostHog API token is not configured.');
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'PATCH' => $http->patch($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
+            $baseHeaders = ['Accept' => 'application/json', 'Content-Type' => 'application/json'];
+            if ($authenticated) $baseHeaders['Authorization'] = 'Bearer ' . $this->apiToken;
+            $http = Http::withHeaders(array_merge($baseHeaders, $headers))->timeout(120);
+            $response = $this->sendRequest($http, $method, $url, $query, $body);
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("PostHog API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("PostHog API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
-                }
-
-                $error = $response->json('detail') ?? $response->json('error') ?? $body;
-                Log::error("PostHog API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("PostHog API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $error = $response->json('detail') ?? $response->json('error') ?? $response->json('message') ?? $response->body();
+                Log::error("PostHog API error: {$method} {$url}", ['status' => $response->status(), 'error' => $error]);
+                throw new \RuntimeException('PostHog API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)));
             }
-
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("PostHog API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to PostHog API: {$e->getMessage()}");
-        }
+        } catch (\Illuminate\Http\Client\ConnectionException $e) { Log::error("PostHog API connection error: {$method} {$url}", ['error' => $e->getMessage()]); throw new \RuntimeException("Failed to connect to PostHog API: {$e->getMessage()}"); }
     }
+
+    /** @param  array<string, mixed>  $query  Query parameters. @param  mixed  $body  Request body. */
+    private function sendRequest(PendingRequest $http, string $method, string $url, array $query, mixed $body): Response
+    {
+        $method = strtoupper($method);
+        if ($query !== []) $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        return match ($method) { 'GET' => $http->get($url), 'POST' => $http->post($url, $body ?? []), 'PUT' => $http->put($url, $body ?? []), 'PATCH' => $http->patch($url, $body ?? []), 'DELETE' => $http->delete($url, is_array($body) ? $body : []), default => $http->send($method, $url, ['json' => $body ?? []]), };
+    }
+
+    private function defaultPathParameter(string $argumentName): ?string { return match ($argumentName) { 'project_id' => $this->projectId !== '' ? $this->projectId : null, 'environment_id' => $this->environmentId !== '' ? $this->environmentId : null, default => null, }; }
+    /** @param  array<string, mixed>  $args  Tool arguments. @param  array<int, string>  $aliases  Additional accepted argument names. */
+    private function argument(array $args, string $argumentName, string $apiName, array $aliases = []): mixed { foreach (array_merge([$argumentName, $apiName, $this->snakeName($apiName), strtolower($apiName)], $aliases) as $key) if (array_key_exists($key, $args)) return $args[$key]; return null; }
+    private function snakeName(string $name): string { $name = str_replace('[]', '', $name); $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name); $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name); $name = (string) preg_replace('/_+/', '_', $name); return strtolower(trim($name, '_')) ?: 'value'; }
+    /** @param  array<string, mixed>  $args  Tool arguments. @param  array<int, string>  $consumed  Already consumed parameter names. @return array<string, mixed> */
+    private function bodyFromLooseArguments(array $args, array $consumed): array { $body = []; $consumed = array_flip($consumed); foreach ($args as $key => $value) if (!isset($consumed[$key])) $body[$key] = $value; return $body; }
 }

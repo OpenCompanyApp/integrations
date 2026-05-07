@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-line",
-    "description": "LINE Messaging API integration for Laravel — send messages, broadcast, manage contacts and profiles.",
+    "description": "LINE Messaging API integration for Laravel agents: messages, webhooks, profiles, groups, quotas, rich menus, and account linking.",
     "license": "MIT",
     "authors": [
         {

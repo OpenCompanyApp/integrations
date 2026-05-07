@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ChargifyGetSubscription implements Tool
 {
+    /**
+     * @param  ChargifyService  $service  The Chargify API client.
+     */
     public function __construct(
         private ChargifyService $service,
     ) {}
@@ -35,6 +38,11 @@ class ChargifyGetSubscription implements Tool
         ];
     }
 
+    /**
+     * Get a subscription by ID through the Chargify API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (subscription_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

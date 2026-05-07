@@ -6,10 +6,13 @@ use OpenCompany\Integrations\AcuityScheduling\AcuitySchedulingService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Cancel an appointment in Acuity Scheduling.
+ */
 class AcuityCancelAppointment implements Tool
 {
     /**
-     * Create a new Cancel Appointment tool instance.
+     * @param  AcuitySchedulingService  $service  Acuity Scheduling API client.
      */
     public function __construct(
         private AcuitySchedulingService $service,

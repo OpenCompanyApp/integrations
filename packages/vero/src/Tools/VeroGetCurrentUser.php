@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Vero\VeroService;
 
 /**
- * Get the currently authenticated Vero user profile.
+ * Return local Vero Track API connection status.
  *
- * Retrieves profile information about the user associated with
- * the configured auth token. Useful for verifying API connectivity.
+ * Vero's Track API does not expose a current-user endpoint, so this tool
+ * reports configured status without making a misleading API call.
  */
 class VeroGetCurrentUser implements Tool
 {
@@ -28,7 +28,7 @@ class VeroGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the profile of the currently authenticated Vero user. Useful for verifying API connectivity and checking account details.';
+        return 'Return Vero Track API configuration status. Vero does not expose a current-user endpoint, so API access is verified when write tools run.';
     }
 
     public function parameters(): array

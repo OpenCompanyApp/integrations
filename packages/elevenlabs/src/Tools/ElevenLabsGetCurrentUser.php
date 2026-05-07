@@ -39,6 +39,11 @@ class ElevenLabsGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch current account details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

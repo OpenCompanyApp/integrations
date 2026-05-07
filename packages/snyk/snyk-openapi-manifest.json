@@ -1,0 +1,2229 @@
+{
+    "source_url": "https://docs.snyk.io/snyk-api/reference",
+    "spec_file_url": "https://2533899886-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-MdwVZ6HOZriajCf5nXH%2Fuploads%2Fgit-blob-2ca135d6eccec96b03d5c2a9525030e10522a87d%2Frest-spec.json?alt=media",
+    "openapi": "3.0.3",
+    "title": "Snyk API",
+    "version": "REST",
+    "base_url": "https://api.snyk.io/rest",
+    "auth": "api_token",
+    "default_version": "2024-10-15",
+    "method_count": 277,
+    "operations": [
+        {
+            "operation_id": "getCustomBaseImages",
+            "class": "SnykGetCustomBaseImages",
+            "slug": "snyk_get_custom_base_images",
+            "method": "get",
+            "path": "/custom_base_images",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCustomBaseImage",
+            "class": "SnykCreateCustomBaseImage",
+            "slug": "snyk_create_custom_base_image",
+            "method": "post",
+            "path": "/custom_base_images",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCustomBaseImage",
+            "class": "SnykDeleteCustomBaseImage",
+            "slug": "snyk_delete_custom_base_image",
+            "method": "delete",
+            "path": "/custom_base_images/{custombaseimage_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCustomBaseImage",
+            "class": "SnykGetCustomBaseImage",
+            "slug": "snyk_get_custom_base_image",
+            "method": "get",
+            "path": "/custom_base_images/{custombaseimage_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCustomBaseImage",
+            "class": "SnykUpdateCustomBaseImage",
+            "slug": "snyk_update_custom_base_image",
+            "method": "patch",
+            "path": "/custom_base_images/{custombaseimage_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listGroups",
+            "class": "SnykListGroups",
+            "slug": "snyk_list_groups",
+            "method": "get",
+            "path": "/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroup",
+            "class": "SnykGetGroup",
+            "slug": "snyk_get_group",
+            "method": "get",
+            "path": "/groups/{group_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAppInstallsForGroup",
+            "class": "SnykGetAppInstallsForGroup",
+            "slug": "snyk_get_app_installs_for_group",
+            "method": "get",
+            "path": "/groups/{group_id}/apps/installs",
+            "type": "read"
+        },
+        {
+            "operation_id": "createGroupAppInstall",
+            "class": "SnykCreateGroupAppInstall",
+            "slug": "snyk_create_group_app_install",
+            "method": "post",
+            "path": "/groups/{group_id}/apps/installs",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteGroupAppInstallById",
+            "class": "SnykDeleteGroupAppInstallById",
+            "slug": "snyk_delete_group_app_install_by_id",
+            "method": "delete",
+            "path": "/groups/{group_id}/apps/installs/{install_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateGroupAppInstallSecret",
+            "class": "SnykUpdateGroupAppInstallSecret",
+            "slug": "snyk_update_group_app_install_secret",
+            "method": "post",
+            "path": "/groups/{group_id}/apps/installs/{install_id}/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAliasesInGroup",
+            "class": "SnykDeleteAliasesInGroup",
+            "slug": "snyk_delete_aliases_in_group",
+            "method": "delete",
+            "path": "/groups/{group_id}/assets/repository/aliases",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRepositoryAliasesInGroup",
+            "class": "SnykListRepositoryAliasesInGroup",
+            "slug": "snyk_list_repository_aliases_in_group",
+            "method": "get",
+            "path": "/groups/{group_id}/assets/repository/aliases",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAliasInGroup",
+            "class": "SnykCreateAliasInGroup",
+            "slug": "snyk_create_alias_in_group",
+            "method": "post",
+            "path": "/groups/{group_id}/assets/repository/aliases",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAssets",
+            "class": "SnykListAssets",
+            "slug": "snyk_list_assets",
+            "method": "post",
+            "path": "/groups/{group_id}/assets/search",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAsset",
+            "class": "SnykGetAsset",
+            "slug": "snyk_get_asset",
+            "method": "get",
+            "path": "/groups/{group_id}/assets/{asset_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAsset",
+            "class": "SnykUpdateAsset",
+            "slug": "snyk_update_asset",
+            "method": "patch",
+            "path": "/groups/{group_id}/assets/{asset_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRelatedAssets",
+            "class": "SnykListRelatedAssets",
+            "slug": "snyk_list_related_assets",
+            "method": "get",
+            "path": "/groups/{group_id}/assets/{asset_id}/relationships/assets",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAssetProjects",
+            "class": "SnykListAssetProjects",
+            "slug": "snyk_list_asset_projects",
+            "method": "get",
+            "path": "/groups/{group_id}/assets/{asset_id}/relationships/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "listGroupAuditLogs",
+            "class": "SnykListGroupAuditLogs",
+            "slug": "snyk_list_group_audit_logs",
+            "method": "get",
+            "path": "/groups/{group_id}/audit_logs/search",
+            "type": "read"
+        },
+        {
+            "operation_id": "createGroupExport",
+            "class": "SnykCreateGroupExport",
+            "slug": "snyk_create_group_export",
+            "method": "post",
+            "path": "/groups/{group_id}/export",
+            "type": "write"
+        },
+        {
+            "operation_id": "getGroupExport",
+            "class": "SnykGetGroupExport",
+            "slug": "snyk_get_group_export",
+            "method": "get",
+            "path": "/groups/{group_id}/export/{export_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAssetsGroup",
+            "class": "SnykListAssetsGroup",
+            "slug": "snyk_list_assets_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAssetsBulkGroup",
+            "class": "SnykUpdateAssetsBulkGroup",
+            "slug": "snyk_update_assets_bulk_group",
+            "method": "patch",
+            "path": "/groups/{group_id}/inventory/assets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFilterFieldsGroup",
+            "class": "SnykGetFilterFieldsGroup",
+            "slug": "snyk_get_filter_fields_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/filters",
+            "type": "read"
+        },
+        {
+            "operation_id": "getFilterValuesGroup",
+            "class": "SnykGetFilterValuesGroup",
+            "slug": "snyk_get_filter_values_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/filters/{filter_id}/values",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupFieldsGroup",
+            "class": "SnykGetGroupFieldsGroup",
+            "slug": "snyk_get_group_fields_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupValuesGroup",
+            "class": "SnykGetGroupValuesGroup",
+            "slug": "snyk_get_group_values_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/groups/{group_field_id}/values",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAssetSearchGroup",
+            "class": "SnykCreateAssetSearchGroup",
+            "slug": "snyk_create_asset_search_group",
+            "method": "post",
+            "path": "/groups/{group_id}/inventory/assets/searches",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAssetSearchResultsGroup",
+            "class": "SnykGetAssetSearchResultsGroup",
+            "slug": "snyk_get_asset_search_results_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/searches/{search_id}/results",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAssetGroup",
+            "class": "SnykGetAssetGroup",
+            "slug": "snyk_get_asset_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/{asset_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAssetGroup",
+            "class": "SnykUpdateAssetGroup",
+            "slug": "snyk_update_asset_group",
+            "method": "patch",
+            "path": "/groups/{group_id}/inventory/assets/{asset_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAssetProjectsGroup",
+            "class": "SnykListAssetProjectsGroup",
+            "slug": "snyk_list_asset_projects_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/{asset_id}/relationships/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAssetTargetsGroup",
+            "class": "SnykListAssetTargetsGroup",
+            "slug": "snyk_list_asset_targets_group",
+            "method": "get",
+            "path": "/groups/{group_id}/inventory/assets/{asset_id}/relationships/targets",
+            "type": "read"
+        },
+        {
+            "operation_id": "listGroupIssues",
+            "class": "SnykListGroupIssues",
+            "slug": "snyk_list_group_issues",
+            "method": "get",
+            "path": "/groups/{group_id}/issues",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupIssueByIssueID",
+            "class": "SnykGetGroupIssueByIssueID",
+            "slug": "snyk_get_group_issue_by_issue_id",
+            "method": "get",
+            "path": "/groups/{group_id}/issues/{issue_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupExportJobStatus",
+            "class": "SnykGetGroupExportJobStatus",
+            "slug": "snyk_get_group_export_job_status",
+            "method": "get",
+            "path": "/groups/{group_id}/jobs/export/{export_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listGroupMemberships",
+            "class": "SnykListGroupMemberships",
+            "slug": "snyk_list_group_memberships",
+            "method": "get",
+            "path": "/groups/{group_id}/memberships",
+            "type": "read"
+        },
+        {
+            "operation_id": "createGroupMembership",
+            "class": "SnykCreateGroupMembership",
+            "slug": "snyk_create_group_membership",
+            "method": "post",
+            "path": "/groups/{group_id}/memberships",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteGroupMembership",
+            "class": "SnykDeleteGroupMembership",
+            "slug": "snyk_delete_group_membership",
+            "method": "delete",
+            "path": "/groups/{group_id}/memberships/{membership_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateGroupUserMembership",
+            "class": "SnykUpdateGroupUserMembership",
+            "slug": "snyk_update_group_user_membership",
+            "method": "patch",
+            "path": "/groups/{group_id}/memberships/{membership_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listGroupUserOrgMemberships",
+            "class": "SnykListGroupUserOrgMemberships",
+            "slug": "snyk_list_group_user_org_memberships",
+            "method": "get",
+            "path": "/groups/{group_id}/org_memberships",
+            "type": "read"
+        },
+        {
+            "operation_id": "listOrgsInGroup",
+            "class": "SnykListOrgsInGroup",
+            "slug": "snyk_list_orgs_in_group",
+            "method": "get",
+            "path": "/groups/{group_id}/orgs",
+            "type": "read"
+        },
+        {
+            "operation_id": "listGroupPolicies",
+            "class": "SnykListGroupPolicies",
+            "slug": "snyk_list_group_policies",
+            "method": "get",
+            "path": "/groups/{group_id}/policies",
+            "type": "read"
+        },
+        {
+            "operation_id": "createGroupPolicy",
+            "class": "SnykCreateGroupPolicy",
+            "slug": "snyk_create_group_policy",
+            "method": "post",
+            "path": "/groups/{group_id}/policies",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteGroupPolicy",
+            "class": "SnykDeleteGroupPolicy",
+            "slug": "snyk_delete_group_policy",
+            "method": "delete",
+            "path": "/groups/{group_id}/policies/{policy_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateGroupPolicy",
+            "class": "SnykUpdateGroupPolicy",
+            "slug": "snyk_update_group_policy",
+            "method": "patch",
+            "path": "/groups/{group_id}/policies/{policy_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getManyGroupServiceAccount",
+            "class": "SnykGetManyGroupServiceAccount",
+            "slug": "snyk_get_many_group_service_account",
+            "method": "get",
+            "path": "/groups/{group_id}/service_accounts",
+            "type": "read"
+        },
+        {
+            "operation_id": "createGroupServiceAccount",
+            "class": "SnykCreateGroupServiceAccount",
+            "slug": "snyk_create_group_service_account",
+            "method": "post",
+            "path": "/groups/{group_id}/service_accounts",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOneGroupServiceAccount",
+            "class": "SnykDeleteOneGroupServiceAccount",
+            "slug": "snyk_delete_one_group_service_account",
+            "method": "delete",
+            "path": "/groups/{group_id}/service_accounts/{serviceaccount_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOneGroupServiceAccount",
+            "class": "SnykGetOneGroupServiceAccount",
+            "slug": "snyk_get_one_group_service_account",
+            "method": "get",
+            "path": "/groups/{group_id}/service_accounts/{serviceaccount_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateGroupServiceAccount",
+            "class": "SnykUpdateGroupServiceAccount",
+            "slug": "snyk_update_group_service_account",
+            "method": "patch",
+            "path": "/groups/{group_id}/service_accounts/{serviceaccount_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateServiceAccountSecret",
+            "class": "SnykUpdateServiceAccountSecret",
+            "slug": "snyk_update_service_account_secret",
+            "method": "post",
+            "path": "/groups/{group_id}/service_accounts/{serviceaccount_id}/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIacSettingsForGroup",
+            "class": "SnykGetIacSettingsForGroup",
+            "slug": "snyk_get_iac_settings_for_group",
+            "method": "get",
+            "path": "/groups/{group_id}/settings/iac",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIacSettingsForGroup",
+            "class": "SnykUpdateIacSettingsForGroup",
+            "slug": "snyk_update_iac_settings_for_group",
+            "method": "patch",
+            "path": "/groups/{group_id}/settings/iac",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOpensourceBrokerSettingForGroup",
+            "class": "SnykDeleteOpensourceBrokerSettingForGroup",
+            "slug": "snyk_delete_opensource_broker_setting_for_group",
+            "method": "delete",
+            "path": "/groups/{group_id}/settings/opensource/broker",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOpensourceBrokerSettingForGroup",
+            "class": "SnykGetOpensourceBrokerSettingForGroup",
+            "slug": "snyk_get_opensource_broker_setting_for_group",
+            "method": "get",
+            "path": "/groups/{group_id}/settings/opensource/broker",
+            "type": "read"
+        },
+        {
+            "operation_id": "enableOpensourceBrokerForGroup",
+            "class": "SnykEnableOpensourceBrokerForGroup",
+            "slug": "snyk_enable_opensource_broker_for_group",
+            "method": "post",
+            "path": "/groups/{group_id}/settings/opensource/broker",
+            "type": "write"
+        },
+        {
+            "operation_id": "deletePullRequestTemplate",
+            "class": "SnykDeletePullRequestTemplate",
+            "slug": "snyk_delete_pull_request_template",
+            "method": "delete",
+            "path": "/groups/{group_id}/settings/pull_request_template",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPullRequestTemplate",
+            "class": "SnykGetPullRequestTemplate",
+            "slug": "snyk_get_pull_request_template",
+            "method": "get",
+            "path": "/groups/{group_id}/settings/pull_request_template",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrUpdatePullRequestTemplate",
+            "class": "SnykCreateOrUpdatePullRequestTemplate",
+            "slug": "snyk_create_or_update_pull_request_template",
+            "method": "post",
+            "path": "/groups/{group_id}/settings/pull_request_template",
+            "type": "write"
+        },
+        {
+            "operation_id": "listGroupSsoConnections",
+            "class": "SnykListGroupSsoConnections",
+            "slug": "snyk_list_group_sso_connections",
+            "method": "get",
+            "path": "/groups/{group_id}/sso_connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "listGroupSsoConnectionUsers",
+            "class": "SnykListGroupSsoConnectionUsers",
+            "slug": "snyk_list_group_sso_connection_users",
+            "method": "get",
+            "path": "/groups/{group_id}/sso_connections/{sso_id}/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteUser",
+            "class": "SnykDeleteUser",
+            "slug": "snyk_delete_user",
+            "method": "delete",
+            "path": "/groups/{group_id}/sso_connections/{sso_id}/users/{user_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateUser",
+            "class": "SnykUpdateUser",
+            "slug": "snyk_update_user",
+            "method": "patch",
+            "path": "/groups/{group_id}/users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listLearnCatalog",
+            "class": "SnykListLearnCatalog",
+            "slug": "snyk_list_learn_catalog",
+            "method": "get",
+            "path": "/learn/catalog",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAPIVersions",
+            "class": "SnykListAPIVersions",
+            "slug": "snyk_list_apiversions",
+            "method": "get",
+            "path": "/openapi",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAPIVersion",
+            "class": "SnykGetAPIVersion",
+            "slug": "snyk_get_apiversion",
+            "method": "get",
+            "path": "/openapi/{version}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listOrgs",
+            "class": "SnykListOrgs",
+            "slug": "snyk_list_orgs",
+            "method": "get",
+            "path": "/orgs",
+            "type": "read"
+        },
+        {
+            "operation_id": "getOrg",
+            "class": "SnykGetOrg",
+            "slug": "snyk_get_org",
+            "method": "get",
+            "path": "/orgs/{org_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrg",
+            "class": "SnykUpdateOrg",
+            "slug": "snyk_update_org",
+            "method": "patch",
+            "path": "/orgs/{org_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAiBomJob",
+            "class": "SnykGetAiBomJob",
+            "slug": "snyk_get_ai_bom_job",
+            "method": "get",
+            "path": "/orgs/{org_id}/ai_bom_jobs/{job_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAiBom",
+            "class": "SnykCreateAiBom",
+            "slug": "snyk_create_ai_bom",
+            "method": "post",
+            "path": "/orgs/{org_id}/ai_boms",
+            "type": "write"
+        },
+        {
+            "operation_id": "createAndUploadAiBom",
+            "class": "SnykCreateAndUploadAiBom",
+            "slug": "snyk_create_and_upload_ai_bom",
+            "method": "post",
+            "path": "/orgs/{org_id}/ai_boms/upload",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAiBom",
+            "class": "SnykGetAiBom",
+            "slug": "snyk_get_ai_bom",
+            "method": "get",
+            "path": "/orgs/{org_id}/ai_boms/{ai_bom_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAppBots",
+            "class": "SnykGetAppBots",
+            "slug": "snyk_get_app_bots",
+            "method": "get",
+            "path": "/orgs/{org_id}/app_bots",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteAppBot",
+            "class": "SnykDeleteAppBot",
+            "slug": "snyk_delete_app_bot",
+            "method": "delete",
+            "path": "/orgs/{org_id}/app_bots/{bot_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getApps",
+            "class": "SnykGetApps",
+            "slug": "snyk_get_apps",
+            "method": "get",
+            "path": "/orgs/{org_id}/apps",
+            "type": "read"
+        },
+        {
+            "operation_id": "createApp",
+            "class": "SnykCreateApp",
+            "slug": "snyk_create_app",
+            "method": "post",
+            "path": "/orgs/{org_id}/apps",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOrgApps",
+            "class": "SnykGetOrgApps",
+            "slug": "snyk_get_org_apps",
+            "method": "get",
+            "path": "/orgs/{org_id}/apps/creations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrgApp",
+            "class": "SnykCreateOrgApp",
+            "slug": "snyk_create_org_app",
+            "method": "post",
+            "path": "/orgs/{org_id}/apps/creations",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAppByID",
+            "class": "SnykDeleteAppByID",
+            "slug": "snyk_delete_app_by_id",
+            "method": "delete",
+            "path": "/orgs/{org_id}/apps/creations/{app_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAppByID",
+            "class": "SnykGetAppByID",
+            "slug": "snyk_get_app_by_id",
+            "method": "get",
+            "path": "/orgs/{org_id}/apps/creations/{app_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAppCreationByID",
+            "class": "SnykUpdateAppCreationByID",
+            "slug": "snyk_update_app_creation_by_id",
+            "method": "patch",
+            "path": "/orgs/{org_id}/apps/creations/{app_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "manageAppCreationSecret",
+            "class": "SnykManageAppCreationSecret",
+            "slug": "snyk_manage_app_creation_secret",
+            "method": "post",
+            "path": "/orgs/{org_id}/apps/creations/{app_id}/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAppInstallsForOrg",
+            "class": "SnykGetAppInstallsForOrg",
+            "slug": "snyk_get_app_installs_for_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/apps/installs",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrgAppInstall",
+            "class": "SnykCreateOrgAppInstall",
+            "slug": "snyk_create_org_app_install",
+            "method": "post",
+            "path": "/orgs/{org_id}/apps/installs",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAppOrgInstallById",
+            "class": "SnykDeleteAppOrgInstallById",
+            "slug": "snyk_delete_app_org_install_by_id",
+            "method": "delete",
+            "path": "/orgs/{org_id}/apps/installs/{install_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateOrgAppInstallSecret",
+            "class": "SnykUpdateOrgAppInstallSecret",
+            "slug": "snyk_update_org_app_install_secret",
+            "method": "post",
+            "path": "/orgs/{org_id}/apps/installs/{install_id}/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteApp",
+            "class": "SnykDeleteApp",
+            "slug": "snyk_delete_app",
+            "method": "delete",
+            "path": "/orgs/{org_id}/apps/{client_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getApp",
+            "class": "SnykGetApp",
+            "slug": "snyk_get_app",
+            "method": "get",
+            "path": "/orgs/{org_id}/apps/{client_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateApp",
+            "class": "SnykUpdateApp",
+            "slug": "snyk_update_app",
+            "method": "patch",
+            "path": "/orgs/{org_id}/apps/{client_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "manageSecrets",
+            "class": "SnykManageSecrets",
+            "slug": "snyk_manage_secrets",
+            "method": "post",
+            "path": "/orgs/{org_id}/apps/{client_id}/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAliasesInOrg",
+            "class": "SnykDeleteAliasesInOrg",
+            "slug": "snyk_delete_aliases_in_org",
+            "method": "delete",
+            "path": "/orgs/{org_id}/assets/repository/aliases",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRepositoryAliasesInOrg",
+            "class": "SnykListRepositoryAliasesInOrg",
+            "slug": "snyk_list_repository_aliases_in_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/assets/repository/aliases",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAliasInOrg",
+            "class": "SnykCreateAliasInOrg",
+            "slug": "snyk_create_alias_in_org",
+            "method": "post",
+            "path": "/orgs/{org_id}/assets/repository/aliases",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOrgAuditLogs",
+            "class": "SnykListOrgAuditLogs",
+            "slug": "snyk_list_org_audit_logs",
+            "method": "get",
+            "path": "/orgs/{org_id}/audit_logs/search",
+            "type": "read"
+        },
+        {
+            "operation_id": "listBrokerConnectionsForOrg",
+            "class": "SnykListBrokerConnectionsForOrg",
+            "slug": "snyk_list_broker_connections_for_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/brokers/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "listEnvironments",
+            "class": "SnykListEnvironments",
+            "slug": "snyk_list_environments",
+            "method": "get",
+            "path": "/orgs/{org_id}/cloud/environments",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEnvironment",
+            "class": "SnykCreateEnvironment",
+            "slug": "snyk_create_environment",
+            "method": "post",
+            "path": "/orgs/{org_id}/cloud/environments",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEnvironment",
+            "class": "SnykDeleteEnvironment",
+            "slug": "snyk_delete_environment",
+            "method": "delete",
+            "path": "/orgs/{org_id}/cloud/environments/{environment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateEnvironment",
+            "class": "SnykUpdateEnvironment",
+            "slug": "snyk_update_environment",
+            "method": "patch",
+            "path": "/orgs/{org_id}/cloud/environments/{environment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPermissions",
+            "class": "SnykGetPermissions",
+            "slug": "snyk_get_permissions",
+            "method": "post",
+            "path": "/orgs/{org_id}/cloud/permissions",
+            "type": "write"
+        },
+        {
+            "operation_id": "listResources",
+            "class": "SnykListResources",
+            "slug": "snyk_list_resources",
+            "method": "get",
+            "path": "/orgs/{org_id}/cloud/resources",
+            "type": "read"
+        },
+        {
+            "operation_id": "listScan",
+            "class": "SnykListScan",
+            "slug": "snyk_list_scan",
+            "method": "get",
+            "path": "/orgs/{org_id}/cloud/scans",
+            "type": "read"
+        },
+        {
+            "operation_id": "createScan",
+            "class": "SnykCreateScan",
+            "slug": "snyk_create_scan",
+            "method": "post",
+            "path": "/orgs/{org_id}/cloud/scans",
+            "type": "write"
+        },
+        {
+            "operation_id": "getScan",
+            "class": "SnykGetScan",
+            "slug": "snyk_get_scan",
+            "method": "get",
+            "path": "/orgs/{org_id}/cloud/scans/{scan_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getCollections",
+            "class": "SnykGetCollections",
+            "slug": "snyk_get_collections",
+            "method": "get",
+            "path": "/orgs/{org_id}/collections",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCollection",
+            "class": "SnykCreateCollection",
+            "slug": "snyk_create_collection",
+            "method": "post",
+            "path": "/orgs/{org_id}/collections",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCollection",
+            "class": "SnykDeleteCollection",
+            "slug": "snyk_delete_collection",
+            "method": "delete",
+            "path": "/orgs/{org_id}/collections/{collection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCollection",
+            "class": "SnykGetCollection",
+            "slug": "snyk_get_collection",
+            "method": "get",
+            "path": "/orgs/{org_id}/collections/{collection_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCollection",
+            "class": "SnykUpdateCollection",
+            "slug": "snyk_update_collection",
+            "method": "patch",
+            "path": "/orgs/{org_id}/collections/{collection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteProjectsCollection",
+            "class": "SnykDeleteProjectsCollection",
+            "slug": "snyk_delete_projects_collection",
+            "method": "delete",
+            "path": "/orgs/{org_id}/collections/{collection_id}/relationships/projects",
+            "type": "write"
+        },
+        {
+            "operation_id": "getProjectsOfCollection",
+            "class": "SnykGetProjectsOfCollection",
+            "slug": "snyk_get_projects_of_collection",
+            "method": "get",
+            "path": "/orgs/{org_id}/collections/{collection_id}/relationships/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCollectionWithProjects",
+            "class": "SnykUpdateCollectionWithProjects",
+            "slug": "snyk_update_collection_with_projects",
+            "method": "post",
+            "path": "/orgs/{org_id}/collections/{collection_id}/relationships/projects",
+            "type": "write"
+        },
+        {
+            "operation_id": "listContainerImage",
+            "class": "SnykListContainerImage",
+            "slug": "snyk_list_container_image",
+            "method": "get",
+            "path": "/orgs/{org_id}/container_images",
+            "type": "read"
+        },
+        {
+            "operation_id": "getContainerImage",
+            "class": "SnykGetContainerImage",
+            "slug": "snyk_get_container_image",
+            "method": "get",
+            "path": "/orgs/{org_id}/container_images/{image_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listImageTargetRefs",
+            "class": "SnykListImageTargetRefs",
+            "slug": "snyk_list_image_target_refs",
+            "method": "get",
+            "path": "/orgs/{org_id}/container_images/{image_id}/relationships/image_target_refs",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteContainerRegistryImportPolicy",
+            "class": "SnykDeleteContainerRegistryImportPolicy",
+            "slug": "snyk_delete_container_registry_import_policy",
+            "method": "delete",
+            "path": "/orgs/{org_id}/container_import/{integration_id}/policy",
+            "type": "write"
+        },
+        {
+            "operation_id": "getContainerRegistryImportPolicy",
+            "class": "SnykGetContainerRegistryImportPolicy",
+            "slug": "snyk_get_container_registry_import_policy",
+            "method": "get",
+            "path": "/orgs/{org_id}/container_import/{integration_id}/policy",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateContainerRegistryImportPolicy",
+            "class": "SnykUpdateContainerRegistryImportPolicy",
+            "slug": "snyk_update_container_registry_import_policy",
+            "method": "patch",
+            "path": "/orgs/{org_id}/container_import/{integration_id}/policy",
+            "type": "write"
+        },
+        {
+            "operation_id": "createContainerRegistryImportPolicy",
+            "class": "SnykCreateContainerRegistryImportPolicy",
+            "slug": "snyk_create_container_registry_import_policy",
+            "method": "post",
+            "path": "/orgs/{org_id}/container_import/{integration_id}/policy",
+            "type": "write"
+        },
+        {
+            "operation_id": "createContainerRegistryImportPolicyDryRun",
+            "class": "SnykCreateContainerRegistryImportPolicyDryRun",
+            "slug": "snyk_create_container_registry_import_policy_dry_run",
+            "method": "post",
+            "path": "/orgs/{org_id}/container_import/{integration_id}/policy/dry_run",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDryRunJob",
+            "class": "SnykGetDryRunJob",
+            "slug": "snyk_get_dry_run_job",
+            "method": "get",
+            "path": "/orgs/{org_id}/container_import/{integration_id}/policy/dry_run/{job_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getPackage",
+            "class": "SnykGetPackage",
+            "slug": "snyk_get_package",
+            "method": "get",
+            "path": "/orgs/{org_id}/ecosystems/{ecosystem}/packages/{package_name}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getPackageVersion",
+            "class": "SnykGetPackageVersion",
+            "slug": "snyk_get_package_version",
+            "method": "get",
+            "path": "/orgs/{org_id}/ecosystems/{ecosystem}/packages/{package_name}/versions/{package_version}",
+            "type": "read"
+        },
+        {
+            "operation_id": "createExport",
+            "class": "SnykCreateExport",
+            "slug": "snyk_create_export",
+            "method": "post",
+            "path": "/orgs/{org_id}/export",
+            "type": "write"
+        },
+        {
+            "operation_id": "getExport",
+            "class": "SnykGetExport",
+            "slug": "snyk_get_export",
+            "method": "get",
+            "path": "/orgs/{org_id}/export/{export_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listIntegrations",
+            "class": "SnykListIntegrations",
+            "slug": "snyk_list_integrations",
+            "method": "get",
+            "path": "/orgs/{org_id}/integrations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIntegration",
+            "class": "SnykCreateIntegration",
+            "slug": "snyk_create_integration",
+            "method": "post",
+            "path": "/orgs/{org_id}/integrations",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIntegration",
+            "class": "SnykDeleteIntegration",
+            "slug": "snyk_delete_integration",
+            "method": "delete",
+            "path": "/orgs/{org_id}/integrations/{integration_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIntegration",
+            "class": "SnykGetIntegration",
+            "slug": "snyk_get_integration",
+            "method": "get",
+            "path": "/orgs/{org_id}/integrations/{integration_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIntegration",
+            "class": "SnykUpdateIntegration",
+            "slug": "snyk_update_integration",
+            "method": "patch",
+            "path": "/orgs/{org_id}/integrations/{integration_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIntegrationSettings",
+            "class": "SnykGetIntegrationSettings",
+            "slug": "snyk_get_integration_settings",
+            "method": "get",
+            "path": "/orgs/{org_id}/integrations/{integration_id}/settings",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIntegrationSettings",
+            "class": "SnykUpdateIntegrationSettings",
+            "slug": "snyk_update_integration_settings",
+            "method": "patch",
+            "path": "/orgs/{org_id}/integrations/{integration_id}/settings",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAssetsOrg",
+            "class": "SnykListAssetsOrg",
+            "slug": "snyk_list_assets_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAssetsBulkOrg",
+            "class": "SnykUpdateAssetsBulkOrg",
+            "slug": "snyk_update_assets_bulk_org",
+            "method": "patch",
+            "path": "/orgs/{org_id}/inventory/assets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFilterFieldsOrg",
+            "class": "SnykGetFilterFieldsOrg",
+            "slug": "snyk_get_filter_fields_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/filters",
+            "type": "read"
+        },
+        {
+            "operation_id": "getFilterValuesOrg",
+            "class": "SnykGetFilterValuesOrg",
+            "slug": "snyk_get_filter_values_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/filters/{filter_id}/values",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupFieldsOrg",
+            "class": "SnykGetGroupFieldsOrg",
+            "slug": "snyk_get_group_fields_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupValuesOrg",
+            "class": "SnykGetGroupValuesOrg",
+            "slug": "snyk_get_group_values_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/groups/{group_field_id}/values",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAssetSearchOrg",
+            "class": "SnykCreateAssetSearchOrg",
+            "slug": "snyk_create_asset_search_org",
+            "method": "post",
+            "path": "/orgs/{org_id}/inventory/assets/searches",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAssetSearchResultsOrg",
+            "class": "SnykGetAssetSearchResultsOrg",
+            "slug": "snyk_get_asset_search_results_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/searches/{search_id}/results",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAssetOrg",
+            "class": "SnykGetAssetOrg",
+            "slug": "snyk_get_asset_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/{asset_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAssetOrg",
+            "class": "SnykUpdateAssetOrg",
+            "slug": "snyk_update_asset_org",
+            "method": "patch",
+            "path": "/orgs/{org_id}/inventory/assets/{asset_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAssetProjectsOrg",
+            "class": "SnykListAssetProjectsOrg",
+            "slug": "snyk_list_asset_projects_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/{asset_id}/relationships/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAssetTargetsOrg",
+            "class": "SnykListAssetTargetsOrg",
+            "slug": "snyk_list_asset_targets_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/inventory/assets/{asset_id}/relationships/targets",
+            "type": "read"
+        },
+        {
+            "operation_id": "listOrgInvitation",
+            "class": "SnykListOrgInvitation",
+            "slug": "snyk_list_org_invitation",
+            "method": "get",
+            "path": "/orgs/{org_id}/invites",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrgInvitation",
+            "class": "SnykCreateOrgInvitation",
+            "slug": "snyk_create_org_invitation",
+            "method": "post",
+            "path": "/orgs/{org_id}/invites",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOrgInvitation",
+            "class": "SnykDeleteOrgInvitation",
+            "slug": "snyk_delete_org_invitation",
+            "method": "delete",
+            "path": "/orgs/{org_id}/invites/{invite_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOrgIssues",
+            "class": "SnykListOrgIssues",
+            "slug": "snyk_list_org_issues",
+            "method": "get",
+            "path": "/orgs/{org_id}/issues",
+            "type": "read"
+        },
+        {
+            "operation_id": "getOrgIssueByIssueID",
+            "class": "SnykGetOrgIssueByIssueID",
+            "slug": "snyk_get_org_issue_by_issue_id",
+            "method": "get",
+            "path": "/orgs/{org_id}/issues/{issue_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getExportJobStatus",
+            "class": "SnykGetExportJobStatus",
+            "slug": "snyk_get_export_job_status",
+            "method": "get",
+            "path": "/orgs/{org_id}/jobs/export/{export_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteOrgAssignments",
+            "class": "SnykDeleteOrgAssignments",
+            "slug": "snyk_delete_org_assignments",
+            "method": "delete",
+            "path": "/orgs/{org_id}/learn/assignments",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOrgAssignments",
+            "class": "SnykListOrgAssignments",
+            "slug": "snyk_list_org_assignments",
+            "method": "get",
+            "path": "/orgs/{org_id}/learn/assignments",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrgAssignments",
+            "class": "SnykUpdateOrgAssignments",
+            "slug": "snyk_update_org_assignments",
+            "method": "patch",
+            "path": "/orgs/{org_id}/learn/assignments",
+            "type": "write"
+        },
+        {
+            "operation_id": "createOrgAssignments",
+            "class": "SnykCreateOrgAssignments",
+            "slug": "snyk_create_org_assignments",
+            "method": "post",
+            "path": "/orgs/{org_id}/learn/assignments",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOrgAssignmentsBulk",
+            "class": "SnykDeleteOrgAssignmentsBulk",
+            "slug": "snyk_delete_org_assignments_bulk",
+            "method": "post",
+            "path": "/orgs/{org_id}/learn/assignments/bulk_delete",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCatalogProgress",
+            "class": "SnykGetCatalogProgress",
+            "slug": "snyk_get_catalog_progress",
+            "method": "get",
+            "path": "/orgs/{org_id}/learn/progress/catalog",
+            "type": "read"
+        },
+        {
+            "operation_id": "getUsersProgress",
+            "class": "SnykGetUsersProgress",
+            "slug": "snyk_get_users_progress",
+            "method": "get",
+            "path": "/orgs/{org_id}/learn/progress/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "listOrgMemberships",
+            "class": "SnykListOrgMemberships",
+            "slug": "snyk_list_org_memberships",
+            "method": "get",
+            "path": "/orgs/{org_id}/memberships",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrgMembership",
+            "class": "SnykCreateOrgMembership",
+            "slug": "snyk_create_org_membership",
+            "method": "post",
+            "path": "/orgs/{org_id}/memberships",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOrgMembership",
+            "class": "SnykDeleteOrgMembership",
+            "slug": "snyk_delete_org_membership",
+            "method": "delete",
+            "path": "/orgs/{org_id}/memberships/{membership_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateOrgMembership",
+            "class": "SnykUpdateOrgMembership",
+            "slug": "snyk_update_org_membership",
+            "method": "patch",
+            "path": "/orgs/{org_id}/memberships/{membership_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIssuesForManyPurls",
+            "class": "SnykListIssuesForManyPurls",
+            "slug": "snyk_list_issues_for_many_purls",
+            "method": "post",
+            "path": "/orgs/{org_id}/packages/issues",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIssuesPerPurl",
+            "class": "SnykGetIssuesPerPurl",
+            "slug": "snyk_get_issues_per_purl",
+            "method": "get",
+            "path": "/orgs/{org_id}/packages/{purl}/issues",
+            "type": "read"
+        },
+        {
+            "operation_id": "getOrgPolicies",
+            "class": "SnykGetOrgPolicies",
+            "slug": "snyk_get_org_policies",
+            "method": "get",
+            "path": "/orgs/{org_id}/policies",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrgPolicy",
+            "class": "SnykCreateOrgPolicy",
+            "slug": "snyk_create_org_policy",
+            "method": "post",
+            "path": "/orgs/{org_id}/policies",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOrgPolicy",
+            "class": "SnykDeleteOrgPolicy",
+            "slug": "snyk_delete_org_policy",
+            "method": "delete",
+            "path": "/orgs/{org_id}/policies/{policy_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOrgPolicy",
+            "class": "SnykGetOrgPolicy",
+            "slug": "snyk_get_org_policy",
+            "method": "get",
+            "path": "/orgs/{org_id}/policies/{policy_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrgPolicy",
+            "class": "SnykUpdateOrgPolicy",
+            "slug": "snyk_update_org_policy",
+            "method": "patch",
+            "path": "/orgs/{org_id}/policies/{policy_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOrgPolicyEvents",
+            "class": "SnykGetOrgPolicyEvents",
+            "slug": "snyk_get_org_policy_events",
+            "method": "get",
+            "path": "/orgs/{org_id}/policies/{policy_id}/events",
+            "type": "read"
+        },
+        {
+            "operation_id": "listOrgProjects",
+            "class": "SnykListOrgProjects",
+            "slug": "snyk_list_org_projects",
+            "method": "get",
+            "path": "/orgs/{org_id}/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteOrgProject",
+            "class": "SnykDeleteOrgProject",
+            "slug": "snyk_delete_org_project",
+            "method": "delete",
+            "path": "/orgs/{org_id}/projects/{project_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOrgProject",
+            "class": "SnykGetOrgProject",
+            "slug": "snyk_get_org_project",
+            "method": "get",
+            "path": "/orgs/{org_id}/projects/{project_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrgProject",
+            "class": "SnykUpdateOrgProject",
+            "slug": "snyk_update_org_project",
+            "method": "patch",
+            "path": "/orgs/{org_id}/projects/{project_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSbom",
+            "class": "SnykGetSbom",
+            "slug": "snyk_get_sbom",
+            "method": "get",
+            "path": "/orgs/{org_id}/projects/{project_id}/sbom",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSbomTestRun",
+            "class": "SnykCreateSbomTestRun",
+            "slug": "snyk_create_sbom_test_run",
+            "method": "post",
+            "path": "/orgs/{org_id}/sbom_tests",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSbomTestStatus",
+            "class": "SnykGetSbomTestStatus",
+            "slug": "snyk_get_sbom_test_status",
+            "method": "get",
+            "path": "/orgs/{org_id}/sbom_tests/{job_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getSbomTestResult",
+            "class": "SnykGetSbomTestResult",
+            "slug": "snyk_get_sbom_test_result",
+            "method": "get",
+            "path": "/orgs/{org_id}/sbom_tests/{job_id}/results",
+            "type": "read"
+        },
+        {
+            "operation_id": "getManyOrgServiceAccounts",
+            "class": "SnykGetManyOrgServiceAccounts",
+            "slug": "snyk_get_many_org_service_accounts",
+            "method": "get",
+            "path": "/orgs/{org_id}/service_accounts",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOrgServiceAccount",
+            "class": "SnykCreateOrgServiceAccount",
+            "slug": "snyk_create_org_service_account",
+            "method": "post",
+            "path": "/orgs/{org_id}/service_accounts",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteServiceAccount",
+            "class": "SnykDeleteServiceAccount",
+            "slug": "snyk_delete_service_account",
+            "method": "delete",
+            "path": "/orgs/{org_id}/service_accounts/{serviceaccount_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOneOrgServiceAccount",
+            "class": "SnykGetOneOrgServiceAccount",
+            "slug": "snyk_get_one_org_service_account",
+            "method": "get",
+            "path": "/orgs/{org_id}/service_accounts/{serviceaccount_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrgServiceAccount",
+            "class": "SnykUpdateOrgServiceAccount",
+            "slug": "snyk_update_org_service_account",
+            "method": "patch",
+            "path": "/orgs/{org_id}/service_accounts/{serviceaccount_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateOrgServiceAccountSecret",
+            "class": "SnykUpdateOrgServiceAccountSecret",
+            "slug": "snyk_update_org_service_account_secret",
+            "method": "post",
+            "path": "/orgs/{org_id}/service_accounts/{serviceaccount_id}/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIacSettingsForOrg",
+            "class": "SnykGetIacSettingsForOrg",
+            "slug": "snyk_get_iac_settings_for_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/settings/iac",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIacSettingsForOrg",
+            "class": "SnykUpdateIacSettingsForOrg",
+            "slug": "snyk_update_iac_settings_for_org",
+            "method": "patch",
+            "path": "/orgs/{org_id}/settings/iac",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOrgLanguagesSettings",
+            "class": "SnykGetOrgLanguagesSettings",
+            "slug": "snyk_get_org_languages_settings",
+            "method": "get",
+            "path": "/orgs/{org_id}/settings/open_source/languages",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrgLanguagesSettings",
+            "class": "SnykUpdateOrgLanguagesSettings",
+            "slug": "snyk_update_org_languages_settings",
+            "method": "patch",
+            "path": "/orgs/{org_id}/settings/open_source/languages/{language}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOpenSourceSettingsForOrg",
+            "class": "SnykGetOpenSourceSettingsForOrg",
+            "slug": "snyk_get_open_source_settings_for_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/settings/opensource",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteOpensourceBrokerSettingForOrg",
+            "class": "SnykDeleteOpensourceBrokerSettingForOrg",
+            "slug": "snyk_delete_opensource_broker_setting_for_org",
+            "method": "delete",
+            "path": "/orgs/{org_id}/settings/opensource/broker",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOpensourceBrokerSetting",
+            "class": "SnykGetOpensourceBrokerSetting",
+            "slug": "snyk_get_opensource_broker_setting",
+            "method": "get",
+            "path": "/orgs/{org_id}/settings/opensource/broker",
+            "type": "read"
+        },
+        {
+            "operation_id": "enableOpensourceBrokerForOrg",
+            "class": "SnykEnableOpensourceBrokerForOrg",
+            "slug": "snyk_enable_opensource_broker_for_org",
+            "method": "post",
+            "path": "/orgs/{org_id}/settings/opensource/broker",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOpensourceBrokerEcosystemSettingsForOrg",
+            "class": "SnykGetOpensourceBrokerEcosystemSettingsForOrg",
+            "slug": "snyk_get_opensource_broker_ecosystem_settings_for_org",
+            "method": "get",
+            "path": "/orgs/{org_id}/settings/opensource/{ecosystem}/broker",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOpensourceBrokerEcosystemSettingsForOrg",
+            "class": "SnykUpdateOpensourceBrokerEcosystemSettingsForOrg",
+            "slug": "snyk_update_opensource_broker_ecosystem_settings_for_org",
+            "method": "patch",
+            "path": "/orgs/{org_id}/settings/opensource/{ecosystem}/broker",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSastSettings",
+            "class": "SnykGetSastSettings",
+            "slug": "snyk_get_sast_settings",
+            "method": "get",
+            "path": "/orgs/{org_id}/settings/sast",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOrgSastSettings",
+            "class": "SnykUpdateOrgSastSettings",
+            "slug": "snyk_update_org_sast_settings",
+            "method": "patch",
+            "path": "/orgs/{org_id}/settings/sast",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSlackDefaultNotificationSettings",
+            "class": "SnykDeleteSlackDefaultNotificationSettings",
+            "slug": "snyk_delete_slack_default_notification_settings",
+            "method": "delete",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSlackDefaultNotificationSettings",
+            "class": "SnykGetSlackDefaultNotificationSettings",
+            "slug": "snyk_get_slack_default_notification_settings",
+            "method": "get",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSlackDefaultNotificationSettings",
+            "class": "SnykCreateSlackDefaultNotificationSettings",
+            "slug": "snyk_create_slack_default_notification_settings",
+            "method": "post",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSlackProjectNotificationSettingsCollection",
+            "class": "SnykGetSlackProjectNotificationSettingsCollection",
+            "slug": "snyk_get_slack_project_notification_settings_collection",
+            "method": "get",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteSlackProjectNotificationSettings",
+            "class": "SnykDeleteSlackProjectNotificationSettings",
+            "slug": "snyk_delete_slack_project_notification_settings",
+            "method": "delete",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}/projects/{project_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateSlackProjectNotificationSettings",
+            "class": "SnykUpdateSlackProjectNotificationSettings",
+            "slug": "snyk_update_slack_project_notification_settings",
+            "method": "patch",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}/projects/{project_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "createSlackProjectNotificationSettings",
+            "class": "SnykCreateSlackProjectNotificationSettings",
+            "slug": "snyk_create_slack_project_notification_settings",
+            "method": "post",
+            "path": "/orgs/{org_id}/slack_app/{bot_id}/projects/{project_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listChannels",
+            "class": "SnykListChannels",
+            "slug": "snyk_list_channels",
+            "method": "get",
+            "path": "/orgs/{org_id}/slack_app/{tenant_id}/channels",
+            "type": "read"
+        },
+        {
+            "operation_id": "getChannelNameById",
+            "class": "SnykGetChannelNameById",
+            "slug": "snyk_get_channel_name_by_id",
+            "method": "get",
+            "path": "/orgs/{org_id}/slack_app/{tenant_id}/channels/{channel_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getOrgsTargets",
+            "class": "SnykGetOrgsTargets",
+            "slug": "snyk_get_orgs_targets",
+            "method": "get",
+            "path": "/orgs/{org_id}/targets",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteOrgsTarget",
+            "class": "SnykDeleteOrgsTarget",
+            "slug": "snyk_delete_orgs_target",
+            "method": "delete",
+            "path": "/orgs/{org_id}/targets/{target_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOrgsTarget",
+            "class": "SnykGetOrgsTarget",
+            "slug": "snyk_get_orgs_target",
+            "method": "get",
+            "path": "/orgs/{org_id}/targets/{target_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getJob",
+            "class": "SnykGetJob",
+            "slug": "snyk_get_job",
+            "method": "get",
+            "path": "/orgs/{org_id}/test_jobs/{job_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "createTest",
+            "class": "SnykCreateTest",
+            "slug": "snyk_create_test",
+            "method": "post",
+            "path": "/orgs/{org_id}/tests",
+            "type": "write"
+        },
+        {
+            "operation_id": "getTest",
+            "class": "SnykGetTest",
+            "slug": "snyk_get_test",
+            "method": "get",
+            "path": "/orgs/{org_id}/tests/{test_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listFindings",
+            "class": "SnykListFindings",
+            "slug": "snyk_list_findings",
+            "method": "get",
+            "path": "/orgs/{org_id}/tests/{test_id}/findings",
+            "type": "read"
+        },
+        {
+            "operation_id": "getUser",
+            "class": "SnykGetUser",
+            "slug": "snyk_get_user",
+            "method": "get",
+            "path": "/orgs/{org_id}/users/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "getSelf",
+            "class": "SnykGetSelf",
+            "slug": "snyk_get_self",
+            "method": "get",
+            "path": "/self",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAccessRequests",
+            "class": "SnykGetAccessRequests",
+            "slug": "snyk_get_access_requests",
+            "method": "get",
+            "path": "/self/access_requests",
+            "type": "read"
+        },
+        {
+            "operation_id": "getUserInstalledApps",
+            "class": "SnykGetUserInstalledApps",
+            "slug": "snyk_get_user_installed_apps",
+            "method": "get",
+            "path": "/self/apps",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAppInstallsForUser",
+            "class": "SnykGetAppInstallsForUser",
+            "slug": "snyk_get_app_installs_for_user",
+            "method": "get",
+            "path": "/self/apps/installs",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteUserAppInstallById",
+            "class": "SnykDeleteUserAppInstallById",
+            "slug": "snyk_delete_user_app_install_by_id",
+            "method": "delete",
+            "path": "/self/apps/installs/{install_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "revokeUserInstalledApp",
+            "class": "SnykRevokeUserInstalledApp",
+            "slug": "snyk_revoke_user_installed_app",
+            "method": "delete",
+            "path": "/self/apps/{app_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getUserAppSessions",
+            "class": "SnykGetUserAppSessions",
+            "slug": "snyk_get_user_app_sessions",
+            "method": "get",
+            "path": "/self/apps/{app_id}/sessions",
+            "type": "read"
+        },
+        {
+            "operation_id": "revokeUserAppSession",
+            "class": "SnykRevokeUserAppSession",
+            "slug": "snyk_revoke_user_app_session",
+            "method": "delete",
+            "path": "/self/apps/{app_id}/sessions/{session_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listPersonalAccessToken",
+            "class": "SnykListPersonalAccessToken",
+            "slug": "snyk_list_personal_access_token",
+            "method": "get",
+            "path": "/self/personal_access_tokens",
+            "type": "read"
+        },
+        {
+            "operation_id": "deletePersonalAccessToken",
+            "class": "SnykDeletePersonalAccessToken",
+            "slug": "snyk_delete_personal_access_token",
+            "method": "delete",
+            "path": "/self/personal_access_tokens/{personal_access_token_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listTenants",
+            "class": "SnykListTenants",
+            "slug": "snyk_list_tenants",
+            "method": "get",
+            "path": "/tenants",
+            "type": "read"
+        },
+        {
+            "operation_id": "getTenant",
+            "class": "SnykGetTenant",
+            "slug": "snyk_get_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateTenant",
+            "class": "SnykUpdateTenant",
+            "slug": "snyk_update_tenant",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getBrokerConnectionIntegrations",
+            "class": "SnykGetBrokerConnectionIntegrations",
+            "slug": "snyk_get_broker_connection_integrations",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/connections/{connection_id}/integrations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createBrokerConnectionIntegration",
+            "class": "SnykCreateBrokerConnectionIntegration",
+            "slug": "snyk_create_broker_connection_integration",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/brokers/connections/{connection_id}/orgs/{org_id}/integration",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteBrokerConnectionIntegration",
+            "class": "SnykDeleteBrokerConnectionIntegration",
+            "slug": "snyk_delete_broker_connection_integration",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/connections/{connection_id}/orgs/{org_id}/integrations/{integration_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listBrokerDeploymentsForTenant",
+            "class": "SnykListBrokerDeploymentsForTenant",
+            "slug": "snyk_list_broker_deployments_for_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/deployments",
+            "type": "read"
+        },
+        {
+            "operation_id": "listConnectionContexts",
+            "class": "SnykListConnectionContexts",
+            "slug": "snyk_list_connection_contexts",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/connections/{connection_id}/contexts",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteBrokerContext",
+            "class": "SnykDeleteBrokerContext",
+            "slug": "snyk_delete_broker_context",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/contexts/{context_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getConnectionContext",
+            "class": "SnykGetConnectionContext",
+            "slug": "snyk_get_connection_context",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/contexts/{context_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateBrokerContext",
+            "class": "SnykUpdateBrokerContext",
+            "slug": "snyk_update_broker_context",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/contexts/{context_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateBrokerContextIntegration",
+            "class": "SnykUpdateBrokerContextIntegration",
+            "slug": "snyk_update_broker_context_integration",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/contexts/{context_id}/integration",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteBrokerContextIntegration",
+            "class": "SnykDeleteBrokerContextIntegration",
+            "slug": "snyk_delete_broker_context_integration",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/contexts/{context_id}/integrations/{integration_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listBrokerDeployments",
+            "class": "SnykListBrokerDeployments",
+            "slug": "snyk_list_broker_deployments",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments",
+            "type": "read"
+        },
+        {
+            "operation_id": "createBrokerDeployment",
+            "class": "SnykCreateBrokerDeployment",
+            "slug": "snyk_create_broker_deployment",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteBrokerDeployment",
+            "class": "SnykDeleteBrokerDeployment",
+            "slug": "snyk_delete_broker_deployment",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateBrokerDeployment",
+            "class": "SnykUpdateBrokerDeployment",
+            "slug": "snyk_update_broker_deployment",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteBrokerConnections",
+            "class": "SnykDeleteBrokerConnections",
+            "slug": "snyk_delete_broker_connections",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "listBrokerConnections",
+            "class": "SnykListBrokerConnections",
+            "slug": "snyk_list_broker_connections",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "createBrokerConnection",
+            "class": "SnykCreateBrokerConnection",
+            "slug": "snyk_create_broker_connection",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteBrokerConnection",
+            "class": "SnykDeleteBrokerConnection",
+            "slug": "snyk_delete_broker_connection",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections/{connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getBrokerConnection",
+            "class": "SnykGetBrokerConnection",
+            "slug": "snyk_get_broker_connection",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections/{connection_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateBrokerConnection",
+            "class": "SnykUpdateBrokerConnection",
+            "slug": "snyk_update_broker_connection",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections/{connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listBrokerOrgsForBulkMigration",
+            "class": "SnykListBrokerOrgsForBulkMigration",
+            "slug": "snyk_list_broker_orgs_for_bulk_migration",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections/{connection_id}/bulk_migration",
+            "type": "read"
+        },
+        {
+            "operation_id": "createBrokerOrgsForBulkMigration",
+            "class": "SnykCreateBrokerOrgsForBulkMigration",
+            "slug": "snyk_create_broker_orgs_for_bulk_migration",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/connections/{connection_id}/bulk_migration",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDeploymentContexts",
+            "class": "SnykListDeploymentContexts",
+            "slug": "snyk_list_deployment_contexts",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/contexts",
+            "type": "read"
+        },
+        {
+            "operation_id": "createBrokerContext",
+            "class": "SnykCreateBrokerContext",
+            "slug": "snyk_create_broker_context",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/contexts",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDeploymentCredentials",
+            "class": "SnykListDeploymentCredentials",
+            "slug": "snyk_list_deployment_credentials",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/credentials",
+            "type": "read"
+        },
+        {
+            "operation_id": "createDeploymentCredential",
+            "class": "SnykCreateDeploymentCredential",
+            "slug": "snyk_create_deployment_credential",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/credentials",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteDeploymentCredential",
+            "class": "SnykDeleteDeploymentCredential",
+            "slug": "snyk_delete_deployment_credential",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/credentials/{credential_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDeploymentCredential",
+            "class": "SnykGetDeploymentCredential",
+            "slug": "snyk_get_deployment_credential",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/credentials/{credential_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateDeploymentCredential",
+            "class": "SnykUpdateDeploymentCredential",
+            "slug": "snyk_update_deployment_credential",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/brokers/installs/{install_id}/deployments/{deployment_id}/credentials/{credential_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAssetsTenant",
+            "class": "SnykListAssetsTenant",
+            "slug": "snyk_list_assets_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAssetsBulkTenant",
+            "class": "SnykUpdateAssetsBulkTenant",
+            "slug": "snyk_update_assets_bulk_tenant",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/inventory/assets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFilterFieldsTenant",
+            "class": "SnykGetFilterFieldsTenant",
+            "slug": "snyk_get_filter_fields_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/filters",
+            "type": "read"
+        },
+        {
+            "operation_id": "getFilterValuesTenant",
+            "class": "SnykGetFilterValuesTenant",
+            "slug": "snyk_get_filter_values_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/filters/{filter_id}/values",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupFieldsTenant",
+            "class": "SnykGetGroupFieldsTenant",
+            "slug": "snyk_get_group_fields_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "getGroupValuesTenant",
+            "class": "SnykGetGroupValuesTenant",
+            "slug": "snyk_get_group_values_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/groups/{group_field_id}/values",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAssetSearchTenant",
+            "class": "SnykCreateAssetSearchTenant",
+            "slug": "snyk_create_asset_search_tenant",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/inventory/assets/searches",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAssetSearchResultsTenant",
+            "class": "SnykGetAssetSearchResultsTenant",
+            "slug": "snyk_get_asset_search_results_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/searches/{search_id}/results",
+            "type": "read"
+        },
+        {
+            "operation_id": "getAssetTenant",
+            "class": "SnykGetAssetTenant",
+            "slug": "snyk_get_asset_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/{asset_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAssetTenant",
+            "class": "SnykUpdateAssetTenant",
+            "slug": "snyk_update_asset_tenant",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/inventory/assets/{asset_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAssetProjectsTenant",
+            "class": "SnykListAssetProjectsTenant",
+            "slug": "snyk_list_asset_projects_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/{asset_id}/relationships/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAssetTargetsTenant",
+            "class": "SnykListAssetTargetsTenant",
+            "slug": "snyk_list_asset_targets_tenant",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/inventory/assets/{asset_id}/relationships/targets",
+            "type": "read"
+        },
+        {
+            "operation_id": "getTenantMemberships",
+            "class": "SnykGetTenantMemberships",
+            "slug": "snyk_get_tenant_memberships",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/memberships",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteTenantMembership",
+            "class": "SnykDeleteTenantMembership",
+            "slug": "snyk_delete_tenant_membership",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/memberships/{membership_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateTenantMembership",
+            "class": "SnykUpdateTenantMembership",
+            "slug": "snyk_update_tenant_membership",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/memberships/{membership_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listTenantRoles",
+            "class": "SnykListTenantRoles",
+            "slug": "snyk_list_tenant_roles",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "createTenantRole",
+            "class": "SnykCreateTenantRole",
+            "slug": "snyk_create_tenant_role",
+            "method": "post",
+            "path": "/tenants/{tenant_id}/roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteTenantRole",
+            "class": "SnykDeleteTenantRole",
+            "slug": "snyk_delete_tenant_role",
+            "method": "delete",
+            "path": "/tenants/{tenant_id}/roles/{role_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getTenantRole",
+            "class": "SnykGetTenantRole",
+            "slug": "snyk_get_tenant_role",
+            "method": "get",
+            "path": "/tenants/{tenant_id}/roles/{role_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateTenantRole",
+            "class": "SnykUpdateTenantRole",
+            "slug": "snyk_update_tenant_role",
+            "method": "patch",
+            "path": "/tenants/{tenant_id}/roles/{role_id}",
+            "type": "write"
+        }
+    ]
+}

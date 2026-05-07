@@ -8,14 +8,20 @@ use Illuminate\Support\Facades\Log;
 /**
  * Pinecone API service for managing vector indexes, upserting vectors, and querying embeddings.
  *
- * Handles authentication via Bearer token and communicates with the Pinecone REST API.
+ * Handles API key authentication and communicates with the Pinecone REST API.
  * Supports configurable base URL for different Pinecone environments.
  */
 class PineconeService
 {
+    /**
+     * @param  string  $accessToken  Pinecone API key.
+     * @param  string  $baseUrl  Pinecone control-plane API base URL.
+     * @param  string  $apiVersion  Date-based Pinecone API version.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.pinecone.io',
+        private string $apiVersion = '2026-04',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -55,9 +61,11 @@ class PineconeService
      * @param  string  $name  The index name.
      * @param  int  $dimension  The dimension size for vectors.
      * @param  string  $metric  The similarity metric (cosine, euclidean, dotproduct).
+     * @param  string  $cloud  Serverless cloud provider.
+     * @param  string  $region  Serverless cloud region.
      * @return array<string, mixed> The created index description.
      */
-    public function createIndex(string $name, int $dimension, string $metric = 'cosine'): array
+    public function createIndex(string $name, int $dimension, string $metric = 'cosine', string $cloud = 'aws', string $region = 'us-east-1'): array
     {
         return $this->request('POST', '/indexes', [
             'name' => $name,
@@ -65,11 +73,34 @@ class PineconeService
             'metric' => $metric,
             'spec' => [
                 'serverless' => [
-                    'cloud' => 'aws',
-                    'region' => 'us-east-1',
+                    'cloud' => $cloud,
+                    'region' => $region,
                 ],
             ],
         ]);
+    }
+
+    /**
+     * Configure an existing index.
+     *
+     * @param  string  $name  The index name.
+     * @param  array<string, mixed>  $config  Index configuration body.
+     * @return array<string, mixed> The updated index description.
+     */
+    public function configureIndex(string $name, array $config): array
+    {
+        return $this->request('PATCH', '/indexes/' . urlencode($name), $config);
+    }
+
+    /**
+     * Delete an index.
+     *
+     * @param  string  $name  The index name.
+     * @return array<string, mixed>
+     */
+    public function deleteIndex(string $name): array
+    {
+        return $this->request('DELETE', '/indexes/' . urlencode($name));
     }
 
     /**
@@ -77,13 +108,20 @@ class PineconeService
      *
      * @param  string  $indexHost  The index host URL (e.g., "idx-abc.svc.us-east-1.pinecone.io").
      * @param  array<int, array{id: string, values: float[], metadata?: array<string, mixed>}>  $vectors  The vectors to upsert.
+     * @param  string|null  $namespace  Optional namespace.
      * @return array<string, mixed> The upsert response.
      */
-    public function upsertVectors(string $indexHost, array $vectors): array
+    public function upsertVectors(string $indexHost, array $vectors, ?string $namespace = null): array
     {
-        return $this->request('POST', '/vectors/upsert', [
+        $body = [
             'vectors' => $vectors,
-        ], $indexHost);
+        ];
+
+        if ($namespace !== null && $namespace !== '') {
+            $body['namespace'] = $namespace;
+        }
+
+        return $this->request('POST', '/vectors/upsert', $body, $indexHost);
     }
 
     /**
@@ -94,6 +132,8 @@ class PineconeService
      * @param  int  $topK  Number of top results to return.
      * @param  array<string, mixed>|null  $filter  Metadata filter expression.
      * @param  bool  $includeMetadata  Whether to include metadata in results.
+     * @param  bool  $includeValues  Whether to include vector values in results.
+     * @param  string|null  $namespace  Optional namespace.
      * @return array<string, mixed> The query response with matches.
      */
     public function queryVectors(
@@ -102,18 +142,83 @@ class PineconeService
         int $topK = 10,
         ?array $filter = null,
         bool $includeMetadata = true,
+        bool $includeValues = false,
+        ?string $namespace = null,
     ): array {
         $body = [
             'vector' => $vector,
             'top_k' => $topK,
             'include_metadata' => $includeMetadata,
+            'include_values' => $includeValues,
         ];
 
         if ($filter !== null) {
             $body['filter'] = $filter;
         }
+        if ($namespace !== null && $namespace !== '') {
+            $body['namespace'] = $namespace;
+        }
 
         return $this->request('POST', '/query', $body, $indexHost);
+    }
+
+    /**
+     * Fetch vectors by ID from an index.
+     *
+     * @param  string  $indexHost  The index host URL.
+     * @param  array<int, string>  $ids  Vector IDs to fetch.
+     * @param  string|null  $namespace  Optional namespace.
+     * @return array<string, mixed> The fetched vectors.
+     */
+    public function fetchVectors(string $indexHost, array $ids, ?string $namespace = null): array
+    {
+        $query = [];
+
+        foreach ($ids as $id) {
+            $query[] = 'ids=' . rawurlencode((string) $id);
+        }
+
+        if ($namespace !== null && $namespace !== '') {
+            $query[] = 'namespace=' . rawurlencode($namespace);
+        }
+
+        return $this->request('GET', '/vectors/fetch?' . implode('&', $query), [], $indexHost);
+    }
+
+    /**
+     * Update vector values or metadata.
+     *
+     * @param  string  $indexHost  The index host URL.
+     * @param  array<string, mixed>  $payload  Update request body.
+     * @return array<string, mixed> The update response.
+     */
+    public function updateVector(string $indexHost, array $payload): array
+    {
+        return $this->request('POST', '/vectors/update', $payload, $indexHost);
+    }
+
+    /**
+     * Delete vectors by IDs, filter, or all records in a namespace.
+     *
+     * @param  string  $indexHost  The index host URL.
+     * @param  array<string, mixed>  $payload  Delete request body.
+     * @return array<string, mixed> The delete response.
+     */
+    public function deleteVectors(string $indexHost, array $payload): array
+    {
+        return $this->request('POST', '/vectors/delete', $payload, $indexHost);
+    }
+
+    /**
+     * Describe index statistics.
+     *
+     * @param  string  $indexHost  The index host URL.
+     * @param  array<string, mixed>|null  $filter  Optional metadata filter.
+     * @return array<string, mixed> Index statistics.
+     */
+    public function describeIndexStats(string $indexHost, ?array $filter = null): array
+    {
+        return $this->request('POST', '/describe_index_stats', $filter !== null ? ['filter' => $filter] : [], $indexHost);
     }
 
     /**
@@ -127,19 +232,9 @@ class PineconeService
     }
 
     /**
-     * Get the current authenticated user.
-     *
-     * @return array<string, mixed> The user information.
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/user');
-    }
-
-    /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method (GET, POST, PATCH, PUT, DELETE).
      * @param  string  $path  API endpoint path.
      * @param  array<string, mixed>  $data  Request body or query parameters.
      * @param  string|null  $overrideHost  Optional override host URL (for index-specific operations).
@@ -178,21 +273,23 @@ class PineconeService
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Api-Key' => $this->accessToken,
+                'X-Pinecone-Api-Version' => $this->apiVersion,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
+                'GET' => $data === [] ? $http->get($url) : $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
+                $contentType = (string) $response->header('Content-Type');
                 $body = $response->body();
 
                 if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {

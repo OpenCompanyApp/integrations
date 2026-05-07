@@ -1,0 +1,2648 @@
+{
+    "source": "https://github.com/plaid/plaid-openapi/blob/master/2020-09-14.yml",
+    "openapi": "3.0.0",
+    "api_version": "2020-09-14",
+    "method_count": 330,
+    "operations": [
+        {
+            "operation_id": "assetReportCreate",
+            "method": "POST",
+            "path": "/asset_report/create",
+            "tool": "plaid_asset_report_create",
+            "class": "PlaidAssetReportCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportGet",
+            "method": "POST",
+            "path": "/asset_report/get",
+            "tool": "plaid_asset_report_get",
+            "class": "PlaidAssetReportGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportPdfGet",
+            "method": "POST",
+            "path": "/asset_report/pdf/get",
+            "tool": "plaid_asset_report_pdf_get",
+            "class": "PlaidAssetReportPdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "assetReportRefresh",
+            "method": "POST",
+            "path": "/asset_report/refresh",
+            "tool": "plaid_asset_report_refresh",
+            "class": "PlaidAssetReportRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportFilter",
+            "method": "POST",
+            "path": "/asset_report/filter",
+            "tool": "plaid_asset_report_filter",
+            "class": "PlaidAssetReportFilter",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportRemove",
+            "method": "POST",
+            "path": "/asset_report/remove",
+            "tool": "plaid_asset_report_remove",
+            "class": "PlaidAssetReportRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportAuditCopyCreate",
+            "method": "POST",
+            "path": "/asset_report/audit_copy/create",
+            "tool": "plaid_asset_report_audit_copy_create",
+            "class": "PlaidAssetReportAuditCopyCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportAuditCopyGet",
+            "method": "POST",
+            "path": "/asset_report/audit_copy/get",
+            "tool": "plaid_asset_report_audit_copy_get",
+            "class": "PlaidAssetReportAuditCopyGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "assetReportAuditCopyPdfGet",
+            "method": "POST",
+            "path": "/asset_report/audit_copy/pdf/get",
+            "tool": "plaid_asset_report_audit_copy_pdf_get",
+            "class": "PlaidAssetReportAuditCopyPdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "assetReportAuditCopyRemove",
+            "method": "POST",
+            "path": "/asset_report/audit_copy/remove",
+            "tool": "plaid_asset_report_audit_copy_remove",
+            "class": "PlaidAssetReportAuditCopyRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craMonitoringInsightsSubscribe",
+            "method": "POST",
+            "path": "/cra/monitoring_insights/subscribe",
+            "tool": "plaid_cra_monitoring_insights_subscribe",
+            "class": "PlaidCraMonitoringInsightsSubscribe",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craMonitoringInsightsUnsubscribe",
+            "method": "POST",
+            "path": "/cra/monitoring_insights/unsubscribe",
+            "tool": "plaid_cra_monitoring_insights_unsubscribe",
+            "class": "PlaidCraMonitoringInsightsUnsubscribe",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craMonitoringInsightsGet",
+            "method": "POST",
+            "path": "/cra/monitoring_insights/get",
+            "tool": "plaid_cra_monitoring_insights_get",
+            "class": "PlaidCraMonitoringInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditAuditCopyTokenUpdate",
+            "method": "POST",
+            "path": "/credit/audit_copy_token/update",
+            "tool": "plaid_credit_audit_copy_token_update",
+            "class": "PlaidCreditAuditCopyTokenUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craPartnerInsightsGet",
+            "method": "POST",
+            "path": "/cra/partner_insights/get",
+            "tool": "plaid_cra_partner_insights_get",
+            "class": "PlaidCraPartnerInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportIncomeInsightsGet",
+            "method": "POST",
+            "path": "/cra/check_report/income_insights/get",
+            "tool": "plaid_cra_check_report_income_insights_get",
+            "class": "PlaidCraCheckReportIncomeInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportBaseReportGet",
+            "method": "POST",
+            "path": "/cra/check_report/base_report/get",
+            "tool": "plaid_cra_check_report_base_report_get",
+            "class": "PlaidCraCheckReportBaseReportGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportPdfGet",
+            "method": "POST",
+            "path": "/cra/check_report/pdf/get",
+            "tool": "plaid_cra_check_report_pdf_get",
+            "class": "PlaidCraCheckReportPdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "craCheckReportCreate",
+            "method": "POST",
+            "path": "/cra/check_report/create",
+            "tool": "plaid_cra_check_report_create",
+            "class": "PlaidCraCheckReportCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportPartnerInsightsGet",
+            "method": "POST",
+            "path": "/cra/check_report/partner_insights/get",
+            "tool": "plaid_cra_check_report_partner_insights_get",
+            "class": "PlaidCraCheckReportPartnerInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportCashflowInsightsGet",
+            "method": "POST",
+            "path": "/cra/check_report/cashflow_insights/get",
+            "tool": "plaid_cra_check_report_cashflow_insights_get",
+            "class": "PlaidCraCheckReportCashflowInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportLendScoreGet",
+            "method": "POST",
+            "path": "/cra/check_report/lend_score/get",
+            "tool": "plaid_cra_check_report_lend_score_get",
+            "class": "PlaidCraCheckReportLendScoreGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportNetworkInsightsGet",
+            "method": "POST",
+            "path": "/cra/check_report/network_insights/get",
+            "tool": "plaid_cra_check_report_network_insights_get",
+            "class": "PlaidCraCheckReportNetworkInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportVerificationGet",
+            "method": "POST",
+            "path": "/cra/check_report/verification/get",
+            "tool": "plaid_cra_check_report_verification_get",
+            "class": "PlaidCraCheckReportVerificationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCheckReportVerificationPdfGet",
+            "method": "POST",
+            "path": "/cra/check_report/verification/pdf/get",
+            "tool": "plaid_cra_check_report_verification_pdf_get",
+            "class": "PlaidCraCheckReportVerificationPdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "craLoansApplicationsRegister",
+            "method": "POST",
+            "path": "/cra/loans/applications/register",
+            "tool": "plaid_cra_loans_applications_register",
+            "class": "PlaidCraLoansApplicationsRegister",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craLoansRegister",
+            "method": "POST",
+            "path": "/cra/loans/register",
+            "tool": "plaid_cra_loans_register",
+            "class": "PlaidCraLoansRegister",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craLoansUpdate",
+            "method": "POST",
+            "path": "/cra/loans/update",
+            "tool": "plaid_cra_loans_update",
+            "class": "PlaidCraLoansUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craLoansUnregister",
+            "method": "POST",
+            "path": "/cra/loans/unregister",
+            "tool": "plaid_cra_loans_unregister",
+            "class": "PlaidCraLoansUnregister",
+            "binary_response": false
+        },
+        {
+            "operation_id": "craCreditProfileReportGet",
+            "method": "POST",
+            "path": "/cra/credit_profile/report/get",
+            "tool": "plaid_cra_credit_profile_report_get",
+            "class": "PlaidCraCreditProfileReportGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "consumerReportPdfGet",
+            "method": "POST",
+            "path": "/consumer_report/pdf/get",
+            "tool": "plaid_consumer_report_pdf_get",
+            "class": "PlaidConsumerReportPdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "oauthToken",
+            "method": "POST",
+            "path": "/oauth/token",
+            "tool": "plaid_oauth_token",
+            "class": "PlaidOauthToken",
+            "binary_response": false
+        },
+        {
+            "operation_id": "oauthIntrospect",
+            "method": "POST",
+            "path": "/oauth/introspect",
+            "tool": "plaid_oauth_introspect",
+            "class": "PlaidOauthIntrospect",
+            "binary_response": false
+        },
+        {
+            "operation_id": "oauthRevoke",
+            "method": "POST",
+            "path": "/oauth/revoke",
+            "tool": "plaid_oauth_revoke",
+            "class": "PlaidOauthRevoke",
+            "binary_response": false
+        },
+        {
+            "operation_id": "statementsList",
+            "method": "POST",
+            "path": "/statements/list",
+            "tool": "plaid_statements_list",
+            "class": "PlaidStatementsList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "statementsDownload",
+            "method": "POST",
+            "path": "/statements/download",
+            "tool": "plaid_statements_download",
+            "class": "PlaidStatementsDownload",
+            "binary_response": false
+        },
+        {
+            "operation_id": "statementsRefresh",
+            "method": "POST",
+            "path": "/statements/refresh",
+            "tool": "plaid_statements_refresh",
+            "class": "PlaidStatementsRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "consentEventsGet",
+            "method": "POST",
+            "path": "/consent/events/get",
+            "tool": "plaid_consent_events_get",
+            "class": "PlaidConsentEventsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemActivityList",
+            "method": "POST",
+            "path": "/item/activity/list",
+            "tool": "plaid_item_activity_list",
+            "class": "PlaidItemActivityList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemApplicationList",
+            "method": "POST",
+            "path": "/item/application/list",
+            "tool": "plaid_item_application_list",
+            "class": "PlaidItemApplicationList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemApplicationUnlink",
+            "method": "POST",
+            "path": "/item/application/unlink",
+            "tool": "plaid_item_application_unlink",
+            "class": "PlaidItemApplicationUnlink",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemApplicationScopesUpdate",
+            "method": "POST",
+            "path": "/item/application/scopes/update",
+            "tool": "plaid_item_application_scopes_update",
+            "class": "PlaidItemApplicationScopesUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "applicationGet",
+            "method": "POST",
+            "path": "/application/get",
+            "tool": "plaid_application_get",
+            "class": "PlaidApplicationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemGet",
+            "method": "POST",
+            "path": "/item/get",
+            "tool": "plaid_item_get",
+            "class": "PlaidItemGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userAccountSessionGet",
+            "method": "POST",
+            "path": "/user_account/session/get",
+            "tool": "plaid_user_account_session_get",
+            "class": "PlaidUserAccountSessionGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userAccountSessionEventSend",
+            "method": "POST",
+            "path": "/user_account/session/event/send",
+            "tool": "plaid_user_account_session_event_send",
+            "class": "PlaidUserAccountSessionEventSend",
+            "binary_response": false
+        },
+        {
+            "operation_id": "profileNetworkStatusGet",
+            "method": "POST",
+            "path": "/profile/network_status/get",
+            "tool": "plaid_profile_network_status_get",
+            "class": "PlaidProfileNetworkStatusGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "networkStatusGet",
+            "method": "POST",
+            "path": "/network/status/get",
+            "tool": "plaid_network_status_get",
+            "class": "PlaidNetworkStatusGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "authGet",
+            "method": "POST",
+            "path": "/auth/get",
+            "tool": "plaid_auth_get",
+            "class": "PlaidAuthGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "authVerify",
+            "method": "POST",
+            "path": "/auth/verify",
+            "tool": "plaid_auth_verify",
+            "class": "PlaidAuthVerify",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsGet",
+            "method": "POST",
+            "path": "/transactions/get",
+            "tool": "plaid_transactions_get",
+            "class": "PlaidTransactionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsRefresh",
+            "method": "POST",
+            "path": "/transactions/refresh",
+            "tool": "plaid_transactions_refresh",
+            "class": "PlaidTransactionsRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransactionsCreate",
+            "method": "POST",
+            "path": "/sandbox/transactions/create",
+            "tool": "plaid_sandbox_transactions_create",
+            "class": "PlaidSandboxTransactionsCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "cashflowReportRefresh",
+            "method": "POST",
+            "path": "/cashflow_report/refresh",
+            "tool": "plaid_cashflow_report_refresh",
+            "class": "PlaidCashflowReportRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "cashflowReportGet",
+            "method": "POST",
+            "path": "/cashflow_report/get",
+            "tool": "plaid_cashflow_report_get",
+            "class": "PlaidCashflowReportGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "cashflowReportTransactionsGet",
+            "method": "POST",
+            "path": "/cashflow_report/transactions/get",
+            "tool": "plaid_cashflow_report_transactions_get",
+            "class": "PlaidCashflowReportTransactionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "cashflowReportInsightsGet",
+            "method": "POST",
+            "path": "/cashflow_report/insights/get",
+            "tool": "plaid_cashflow_report_insights_get",
+            "class": "PlaidCashflowReportInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsRecurringGet",
+            "method": "POST",
+            "path": "/transactions/recurring/get",
+            "tool": "plaid_transactions_recurring_get",
+            "class": "PlaidTransactionsRecurringGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsSync",
+            "method": "POST",
+            "path": "/transactions/sync",
+            "tool": "plaid_transactions_sync",
+            "class": "PlaidTransactionsSync",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsEnrich",
+            "method": "POST",
+            "path": "/transactions/enrich",
+            "tool": "plaid_transactions_enrich",
+            "class": "PlaidTransactionsEnrich",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userTransactionsRefresh",
+            "method": "POST",
+            "path": "/user/transactions/refresh",
+            "tool": "plaid_user_transactions_refresh",
+            "class": "PlaidUserTransactionsRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userFinancialDataRefresh",
+            "method": "POST",
+            "path": "/user/financial_data/refresh",
+            "tool": "plaid_user_financial_data_refresh",
+            "class": "PlaidUserFinancialDataRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "institutionsGet",
+            "method": "POST",
+            "path": "/institutions/get",
+            "tool": "plaid_institutions_get",
+            "class": "PlaidInstitutionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "institutionsSearch",
+            "method": "POST",
+            "path": "/institutions/search",
+            "tool": "plaid_institutions_search",
+            "class": "PlaidInstitutionsSearch",
+            "binary_response": false
+        },
+        {
+            "operation_id": "institutionsGetById",
+            "method": "POST",
+            "path": "/institutions/get_by_id",
+            "tool": "plaid_institutions_get_by_id",
+            "class": "PlaidInstitutionsGetById",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemRemove",
+            "method": "POST",
+            "path": "/item/remove",
+            "tool": "plaid_item_remove",
+            "class": "PlaidItemRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemProductsTerminate",
+            "method": "POST",
+            "path": "/item/products/terminate",
+            "tool": "plaid_item_products_terminate",
+            "class": "PlaidItemProductsTerminate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemHandleFraudReport",
+            "method": "POST",
+            "path": "/item/handle_fraud_report",
+            "tool": "plaid_item_handle_fraud_report",
+            "class": "PlaidItemHandleFraudReport",
+            "binary_response": false
+        },
+        {
+            "operation_id": "accountsGet",
+            "method": "POST",
+            "path": "/accounts/get",
+            "tool": "plaid_accounts_get",
+            "class": "PlaidAccountsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "categoriesGet",
+            "method": "POST",
+            "path": "/categories/get",
+            "tool": "plaid_categories_get",
+            "class": "PlaidCategoriesGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxProcessorTokenCreate",
+            "method": "POST",
+            "path": "/sandbox/processor_token/create",
+            "tool": "plaid_sandbox_processor_token_create",
+            "class": "PlaidSandboxProcessorTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxPublicTokenCreate",
+            "method": "POST",
+            "path": "/sandbox/public_token/create",
+            "tool": "plaid_sandbox_public_token_create",
+            "class": "PlaidSandboxPublicTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxItemFireWebhook",
+            "method": "POST",
+            "path": "/sandbox/item/fire_webhook",
+            "tool": "plaid_sandbox_item_fire_webhook",
+            "class": "PlaidSandboxItemFireWebhook",
+            "binary_response": false
+        },
+        {
+            "operation_id": "accountsBalanceGet",
+            "method": "POST",
+            "path": "/accounts/balance/get",
+            "tool": "plaid_accounts_balance_get",
+            "class": "PlaidAccountsBalanceGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityGet",
+            "method": "POST",
+            "path": "/identity/get",
+            "tool": "plaid_identity_get",
+            "class": "PlaidIdentityGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityDocumentsUploadsGet",
+            "method": "POST",
+            "path": "/identity/documents/uploads/get",
+            "tool": "plaid_identity_documents_uploads_get",
+            "class": "PlaidIdentityDocumentsUploadsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityMatch",
+            "method": "POST",
+            "path": "/identity/match",
+            "tool": "plaid_identity_match",
+            "class": "PlaidIdentityMatch",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityRefresh",
+            "method": "POST",
+            "path": "/identity/refresh",
+            "tool": "plaid_identity_refresh",
+            "class": "PlaidIdentityRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "dashboardUserGet",
+            "method": "POST",
+            "path": "/dashboard_user/get",
+            "tool": "plaid_dashboard_user_get",
+            "class": "PlaidDashboardUserGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "dashboardUserList",
+            "method": "POST",
+            "path": "/dashboard_user/list",
+            "tool": "plaid_dashboard_user_list",
+            "class": "PlaidDashboardUserList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityVerificationCreate",
+            "method": "POST",
+            "path": "/identity_verification/create",
+            "tool": "plaid_identity_verification_create",
+            "class": "PlaidIdentityVerificationCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityVerificationGet",
+            "method": "POST",
+            "path": "/identity_verification/get",
+            "tool": "plaid_identity_verification_get",
+            "class": "PlaidIdentityVerificationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityVerificationList",
+            "method": "POST",
+            "path": "/identity_verification/list",
+            "tool": "plaid_identity_verification_list",
+            "class": "PlaidIdentityVerificationList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityVerificationRetry",
+            "method": "POST",
+            "path": "/identity_verification/retry",
+            "tool": "plaid_identity_verification_retry",
+            "class": "PlaidIdentityVerificationRetry",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityCreate",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/create",
+            "tool": "plaid_watchlist_screening_entity_create",
+            "class": "PlaidWatchlistScreeningEntityCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityGet",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/get",
+            "tool": "plaid_watchlist_screening_entity_get",
+            "class": "PlaidWatchlistScreeningEntityGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityHistoryList",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/history/list",
+            "tool": "plaid_watchlist_screening_entity_history_list",
+            "class": "PlaidWatchlistScreeningEntityHistoryList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityHitList",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/hit/list",
+            "tool": "plaid_watchlist_screening_entity_hit_list",
+            "class": "PlaidWatchlistScreeningEntityHitList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityList",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/list",
+            "tool": "plaid_watchlist_screening_entity_list",
+            "class": "PlaidWatchlistScreeningEntityList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityProgramGet",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/program/get",
+            "tool": "plaid_watchlist_screening_entity_program_get",
+            "class": "PlaidWatchlistScreeningEntityProgramGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityProgramList",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/program/list",
+            "tool": "plaid_watchlist_screening_entity_program_list",
+            "class": "PlaidWatchlistScreeningEntityProgramList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityReviewCreate",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/review/create",
+            "tool": "plaid_watchlist_screening_entity_review_create",
+            "class": "PlaidWatchlistScreeningEntityReviewCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityReviewList",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/review/list",
+            "tool": "plaid_watchlist_screening_entity_review_list",
+            "class": "PlaidWatchlistScreeningEntityReviewList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningEntityUpdate",
+            "method": "POST",
+            "path": "/watchlist_screening/entity/update",
+            "tool": "plaid_watchlist_screening_entity_update",
+            "class": "PlaidWatchlistScreeningEntityUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualCreate",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/create",
+            "tool": "plaid_watchlist_screening_individual_create",
+            "class": "PlaidWatchlistScreeningIndividualCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualGet",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/get",
+            "tool": "plaid_watchlist_screening_individual_get",
+            "class": "PlaidWatchlistScreeningIndividualGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualHistoryList",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/history/list",
+            "tool": "plaid_watchlist_screening_individual_history_list",
+            "class": "PlaidWatchlistScreeningIndividualHistoryList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualHitList",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/hit/list",
+            "tool": "plaid_watchlist_screening_individual_hit_list",
+            "class": "PlaidWatchlistScreeningIndividualHitList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualList",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/list",
+            "tool": "plaid_watchlist_screening_individual_list",
+            "class": "PlaidWatchlistScreeningIndividualList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualProgramGet",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/program/get",
+            "tool": "plaid_watchlist_screening_individual_program_get",
+            "class": "PlaidWatchlistScreeningIndividualProgramGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualProgramList",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/program/list",
+            "tool": "plaid_watchlist_screening_individual_program_list",
+            "class": "PlaidWatchlistScreeningIndividualProgramList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualReviewCreate",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/review/create",
+            "tool": "plaid_watchlist_screening_individual_review_create",
+            "class": "PlaidWatchlistScreeningIndividualReviewCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualReviewList",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/review/list",
+            "tool": "plaid_watchlist_screening_individual_review_list",
+            "class": "PlaidWatchlistScreeningIndividualReviewList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "watchlistScreeningIndividualUpdate",
+            "method": "POST",
+            "path": "/watchlist_screening/individual/update",
+            "tool": "plaid_watchlist_screening_individual_update",
+            "class": "PlaidWatchlistScreeningIndividualUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconAccountRiskEvaluate",
+            "method": "POST",
+            "path": "/beacon/account_risk/v1/evaluate",
+            "tool": "plaid_beacon_account_risk_evaluate",
+            "class": "PlaidBeaconAccountRiskEvaluate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconUserCreate",
+            "method": "POST",
+            "path": "/beacon/user/create",
+            "tool": "plaid_beacon_user_create",
+            "class": "PlaidBeaconUserCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconUserGet",
+            "method": "POST",
+            "path": "/beacon/user/get",
+            "tool": "plaid_beacon_user_get",
+            "class": "PlaidBeaconUserGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconUserReview",
+            "method": "POST",
+            "path": "/beacon/user/review",
+            "tool": "plaid_beacon_user_review",
+            "class": "PlaidBeaconUserReview",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconReportCreate",
+            "method": "POST",
+            "path": "/beacon/report/create",
+            "tool": "plaid_beacon_report_create",
+            "class": "PlaidBeaconReportCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconReportList",
+            "method": "POST",
+            "path": "/beacon/report/list",
+            "tool": "plaid_beacon_report_list",
+            "class": "PlaidBeaconReportList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconReportSyndicationList",
+            "method": "POST",
+            "path": "/beacon/report_syndication/list",
+            "tool": "plaid_beacon_report_syndication_list",
+            "class": "PlaidBeaconReportSyndicationList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconReportGet",
+            "method": "POST",
+            "path": "/beacon/report/get",
+            "tool": "plaid_beacon_report_get",
+            "class": "PlaidBeaconReportGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconReportSyndicationGet",
+            "method": "POST",
+            "path": "/beacon/report_syndication/get",
+            "tool": "plaid_beacon_report_syndication_get",
+            "class": "PlaidBeaconReportSyndicationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconUserUpdate",
+            "method": "POST",
+            "path": "/beacon/user/update",
+            "tool": "plaid_beacon_user_update",
+            "class": "PlaidBeaconUserUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconDuplicateGet",
+            "method": "POST",
+            "path": "/beacon/duplicate/get",
+            "tool": "plaid_beacon_duplicate_get",
+            "class": "PlaidBeaconDuplicateGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "identityVerificationAutofillCreate",
+            "method": "POST",
+            "path": "/identity_verification/autofill/create",
+            "tool": "plaid_identity_verification_autofill_create",
+            "class": "PlaidIdentityVerificationAutofillCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconUserHistoryList",
+            "method": "POST",
+            "path": "/beacon/user/history/list",
+            "tool": "plaid_beacon_user_history_list",
+            "class": "PlaidBeaconUserHistoryList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "beaconUserAccountInsightsGet",
+            "method": "POST",
+            "path": "/beacon/user/account_insights/get",
+            "tool": "plaid_beacon_user_account_insights_get",
+            "class": "PlaidBeaconUserAccountInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "protectUserInsightsGet",
+            "method": "POST",
+            "path": "/protect/user/insights/get",
+            "tool": "plaid_protect_user_insights_get",
+            "class": "PlaidProtectUserInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "protectReportCreate",
+            "method": "POST",
+            "path": "/protect/report/create",
+            "tool": "plaid_protect_report_create",
+            "class": "PlaidProtectReportCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "protectCompute",
+            "method": "POST",
+            "path": "/protect/compute",
+            "tool": "plaid_protect_compute",
+            "class": "PlaidProtectCompute",
+            "binary_response": false
+        },
+        {
+            "operation_id": "protectEventSend",
+            "method": "POST",
+            "path": "/protect/event/send",
+            "tool": "plaid_protect_event_send",
+            "class": "PlaidProtectEventSend",
+            "binary_response": false
+        },
+        {
+            "operation_id": "protectEventGet",
+            "method": "POST",
+            "path": "/protect/event/get",
+            "tool": "plaid_protect_event_get",
+            "class": "PlaidProtectEventGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "businessVerificationGet",
+            "method": "POST",
+            "path": "/business_verification/get",
+            "tool": "plaid_business_verification_get",
+            "class": "PlaidBusinessVerificationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "businessVerificationCreate",
+            "method": "POST",
+            "path": "/business_verification/create",
+            "tool": "plaid_business_verification_create",
+            "class": "PlaidBusinessVerificationCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorAuthGet",
+            "method": "POST",
+            "path": "/processor/auth/get",
+            "tool": "plaid_processor_auth_get",
+            "class": "PlaidProcessorAuthGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorAccountGet",
+            "method": "POST",
+            "path": "/processor/account/get",
+            "tool": "plaid_processor_account_get",
+            "class": "PlaidProcessorAccountGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorInvestmentsHoldingsGet",
+            "method": "POST",
+            "path": "/processor/investments/holdings/get",
+            "tool": "plaid_processor_investments_holdings_get",
+            "class": "PlaidProcessorInvestmentsHoldingsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorInvestmentsAuthGet",
+            "method": "POST",
+            "path": "/processor/investments/auth/get",
+            "tool": "plaid_processor_investments_auth_get",
+            "class": "PlaidProcessorInvestmentsAuthGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorInvestmentsTransactionsGet",
+            "method": "POST",
+            "path": "/processor/investments/transactions/get",
+            "tool": "plaid_processor_investments_transactions_get",
+            "class": "PlaidProcessorInvestmentsTransactionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTransactionsGet",
+            "method": "POST",
+            "path": "/processor/transactions/get",
+            "tool": "plaid_processor_transactions_get",
+            "class": "PlaidProcessorTransactionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTransactionsSync",
+            "method": "POST",
+            "path": "/processor/transactions/sync",
+            "tool": "plaid_processor_transactions_sync",
+            "class": "PlaidProcessorTransactionsSync",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTransactionsRefresh",
+            "method": "POST",
+            "path": "/processor/transactions/refresh",
+            "tool": "plaid_processor_transactions_refresh",
+            "class": "PlaidProcessorTransactionsRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTransactionsRecurringGet",
+            "method": "POST",
+            "path": "/processor/transactions/recurring/get",
+            "tool": "plaid_processor_transactions_recurring_get",
+            "class": "PlaidProcessorTransactionsRecurringGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorSignalEvaluate",
+            "method": "POST",
+            "path": "/processor/signal/evaluate",
+            "tool": "plaid_processor_signal_evaluate",
+            "class": "PlaidProcessorSignalEvaluate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorSignalDecisionReport",
+            "method": "POST",
+            "path": "/processor/signal/decision/report",
+            "tool": "plaid_processor_signal_decision_report",
+            "class": "PlaidProcessorSignalDecisionReport",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorSignalReturnReport",
+            "method": "POST",
+            "path": "/processor/signal/return/report",
+            "tool": "plaid_processor_signal_return_report",
+            "class": "PlaidProcessorSignalReturnReport",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorSignalPrepare",
+            "method": "POST",
+            "path": "/processor/signal/prepare",
+            "tool": "plaid_processor_signal_prepare",
+            "class": "PlaidProcessorSignalPrepare",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorBankTransferCreate",
+            "method": "POST",
+            "path": "/processor/bank_transfer/create",
+            "tool": "plaid_processor_bank_transfer_create",
+            "class": "PlaidProcessorBankTransferCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorLiabilitiesGet",
+            "method": "POST",
+            "path": "/processor/liabilities/get",
+            "tool": "plaid_processor_liabilities_get",
+            "class": "PlaidProcessorLiabilitiesGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorIdentityGet",
+            "method": "POST",
+            "path": "/processor/identity/get",
+            "tool": "plaid_processor_identity_get",
+            "class": "PlaidProcessorIdentityGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorIdentityMatch",
+            "method": "POST",
+            "path": "/processor/identity/match",
+            "tool": "plaid_processor_identity_match",
+            "class": "PlaidProcessorIdentityMatch",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorBalanceGet",
+            "method": "POST",
+            "path": "/processor/balance/get",
+            "tool": "plaid_processor_balance_get",
+            "class": "PlaidProcessorBalanceGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemWebhookUpdate",
+            "method": "POST",
+            "path": "/item/webhook/update",
+            "tool": "plaid_item_webhook_update",
+            "class": "PlaidItemWebhookUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemAccessTokenInvalidate",
+            "method": "POST",
+            "path": "/item/access_token/invalidate",
+            "tool": "plaid_item_access_token_invalidate",
+            "class": "PlaidItemAccessTokenInvalidate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "webhookVerificationKeyGet",
+            "method": "POST",
+            "path": "/webhook_verification_key/get",
+            "tool": "plaid_webhook_verification_key_get",
+            "class": "PlaidWebhookVerificationKeyGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "liabilitiesGet",
+            "method": "POST",
+            "path": "/liabilities/get",
+            "tool": "plaid_liabilities_get",
+            "class": "PlaidLiabilitiesGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationRecipientCreate",
+            "method": "POST",
+            "path": "/payment_initiation/recipient/create",
+            "tool": "plaid_payment_initiation_recipient_create",
+            "class": "PlaidPaymentInitiationRecipientCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationPaymentReverse",
+            "method": "POST",
+            "path": "/payment_initiation/payment/reverse",
+            "tool": "plaid_payment_initiation_payment_reverse",
+            "class": "PlaidPaymentInitiationPaymentReverse",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationRecipientGet",
+            "method": "POST",
+            "path": "/payment_initiation/recipient/get",
+            "tool": "plaid_payment_initiation_recipient_get",
+            "class": "PlaidPaymentInitiationRecipientGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationRecipientList",
+            "method": "POST",
+            "path": "/payment_initiation/recipient/list",
+            "tool": "plaid_payment_initiation_recipient_list",
+            "class": "PlaidPaymentInitiationRecipientList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationPaymentCreate",
+            "method": "POST",
+            "path": "/payment_initiation/payment/create",
+            "tool": "plaid_payment_initiation_payment_create",
+            "class": "PlaidPaymentInitiationPaymentCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "createPaymentToken",
+            "method": "POST",
+            "path": "/payment_initiation/payment/token/create",
+            "tool": "plaid_create_payment_token",
+            "class": "PlaidCreatePaymentToken",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationConsentCreate",
+            "method": "POST",
+            "path": "/payment_initiation/consent/create",
+            "tool": "plaid_payment_initiation_consent_create",
+            "class": "PlaidPaymentInitiationConsentCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationConsentGet",
+            "method": "POST",
+            "path": "/payment_initiation/consent/get",
+            "tool": "plaid_payment_initiation_consent_get",
+            "class": "PlaidPaymentInitiationConsentGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationConsentRevoke",
+            "method": "POST",
+            "path": "/payment_initiation/consent/revoke",
+            "tool": "plaid_payment_initiation_consent_revoke",
+            "class": "PlaidPaymentInitiationConsentRevoke",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationConsentPaymentExecute",
+            "method": "POST",
+            "path": "/payment_initiation/consent/payment/execute",
+            "tool": "plaid_payment_initiation_consent_payment_execute",
+            "class": "PlaidPaymentInitiationConsentPaymentExecute",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxItemResetLogin",
+            "method": "POST",
+            "path": "/sandbox/item/reset_login",
+            "tool": "plaid_sandbox_item_reset_login",
+            "class": "PlaidSandboxItemResetLogin",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxItemApplicationSeed",
+            "method": "POST",
+            "path": "/sandbox/item/application/seed",
+            "tool": "plaid_sandbox_item_application_seed",
+            "class": "PlaidSandboxItemApplicationSeed",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxItemSetVerificationStatus",
+            "method": "POST",
+            "path": "/sandbox/item/set_verification_status",
+            "tool": "plaid_sandbox_item_set_verification_status",
+            "class": "PlaidSandboxItemSetVerificationStatus",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxUserResetLogin",
+            "method": "POST",
+            "path": "/sandbox/user/reset_login",
+            "tool": "plaid_sandbox_user_reset_login",
+            "class": "PlaidSandboxUserResetLogin",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemPublicTokenExchange",
+            "method": "POST",
+            "path": "/item/public_token/exchange",
+            "tool": "plaid_item_public_token_exchange",
+            "class": "PlaidItemPublicTokenExchange",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemCreatePublicToken",
+            "method": "POST",
+            "path": "/item/public_token/create",
+            "tool": "plaid_item_create_public_token",
+            "class": "PlaidItemCreatePublicToken",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userCreate",
+            "method": "POST",
+            "path": "/user/create",
+            "tool": "plaid_user_create",
+            "class": "PlaidUserCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userGet",
+            "method": "POST",
+            "path": "/user/get",
+            "tool": "plaid_user_get",
+            "class": "PlaidUserGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userIdentityRemove",
+            "method": "POST",
+            "path": "/user/identity/remove",
+            "tool": "plaid_user_identity_remove",
+            "class": "PlaidUserIdentityRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userUpdate",
+            "method": "POST",
+            "path": "/user/update",
+            "tool": "plaid_user_update",
+            "class": "PlaidUserUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userRemove",
+            "method": "POST",
+            "path": "/user/remove",
+            "tool": "plaid_user_remove",
+            "class": "PlaidUserRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userProductsTerminate",
+            "method": "POST",
+            "path": "/user/products/terminate",
+            "tool": "plaid_user_products_terminate",
+            "class": "PlaidUserProductsTerminate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userItemsGet",
+            "method": "POST",
+            "path": "/user/items/get",
+            "tool": "plaid_user_items_get",
+            "class": "PlaidUserItemsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userItemsAssociate",
+            "method": "POST",
+            "path": "/user/items/associate",
+            "tool": "plaid_user_items_associate",
+            "class": "PlaidUserItemsAssociate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userItemsRemove",
+            "method": "POST",
+            "path": "/user/items/remove",
+            "tool": "plaid_user_items_remove",
+            "class": "PlaidUserItemsRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userThirdPartyTokenCreate",
+            "method": "POST",
+            "path": "/user/third_party_token/create",
+            "tool": "plaid_user_third_party_token_create",
+            "class": "PlaidUserThirdPartyTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "userThirdPartyTokenRemove",
+            "method": "POST",
+            "path": "/user/third_party_token/remove",
+            "tool": "plaid_user_third_party_token_remove",
+            "class": "PlaidUserThirdPartyTokenRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditSessionsGet",
+            "method": "POST",
+            "path": "/credit/sessions/get",
+            "tool": "plaid_credit_sessions_get",
+            "class": "PlaidCreditSessionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationPaymentGet",
+            "method": "POST",
+            "path": "/payment_initiation/payment/get",
+            "tool": "plaid_payment_initiation_payment_get",
+            "class": "PlaidPaymentInitiationPaymentGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentInitiationPaymentList",
+            "method": "POST",
+            "path": "/payment_initiation/payment/list",
+            "tool": "plaid_payment_initiation_payment_list",
+            "class": "PlaidPaymentInitiationPaymentList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "investmentsHoldingsGet",
+            "method": "POST",
+            "path": "/investments/holdings/get",
+            "tool": "plaid_investments_holdings_get",
+            "class": "PlaidInvestmentsHoldingsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "investmentsTransactionsGet",
+            "method": "POST",
+            "path": "/investments/transactions/get",
+            "tool": "plaid_investments_transactions_get",
+            "class": "PlaidInvestmentsTransactionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "investmentsRefresh",
+            "method": "POST",
+            "path": "/investments/refresh",
+            "tool": "plaid_investments_refresh",
+            "class": "PlaidInvestmentsRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "investmentsAuthGet",
+            "method": "POST",
+            "path": "/investments/auth/get",
+            "tool": "plaid_investments_auth_get",
+            "class": "PlaidInvestmentsAuthGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTokenCreate",
+            "method": "POST",
+            "path": "/processor/token/create",
+            "tool": "plaid_processor_token_create",
+            "class": "PlaidProcessorTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTokenPermissionsSet",
+            "method": "POST",
+            "path": "/processor/token/permissions/set",
+            "tool": "plaid_processor_token_permissions_set",
+            "class": "PlaidProcessorTokenPermissionsSet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTokenPermissionsGet",
+            "method": "POST",
+            "path": "/processor/token/permissions/get",
+            "tool": "plaid_processor_token_permissions_get",
+            "class": "PlaidProcessorTokenPermissionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorTokenWebhookUpdate",
+            "method": "POST",
+            "path": "/processor/token/webhook/update",
+            "tool": "plaid_processor_token_webhook_update",
+            "class": "PlaidProcessorTokenWebhookUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorStripeBankAccountTokenCreate",
+            "method": "POST",
+            "path": "/processor/stripe/bank_account_token/create",
+            "tool": "plaid_processor_stripe_bank_account_token_create",
+            "class": "PlaidProcessorStripeBankAccountTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "processorApexProcessorTokenCreate",
+            "method": "POST",
+            "path": "/processor/apex/processor_token/create",
+            "tool": "plaid_processor_apex_processor_token_create",
+            "class": "PlaidProcessorApexProcessorTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "itemImport",
+            "method": "POST",
+            "path": "/item/import",
+            "tool": "plaid_item_import",
+            "class": "PlaidItemImport",
+            "binary_response": false
+        },
+        {
+            "operation_id": "linkTokenCreate",
+            "method": "POST",
+            "path": "/link/token/create",
+            "tool": "plaid_link_token_create",
+            "class": "PlaidLinkTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "linkTokenGet",
+            "method": "POST",
+            "path": "/link/token/get",
+            "tool": "plaid_link_token_get",
+            "class": "PlaidLinkTokenGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "linkOauthCorrelationIdExchange",
+            "method": "POST",
+            "path": "/link/oauth/correlation_id/exchange",
+            "tool": "plaid_link_oauth_correlation_id_exchange",
+            "class": "PlaidLinkOauthCorrelationIdExchange",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sessionTokenCreate",
+            "method": "POST",
+            "path": "/session/token/create",
+            "tool": "plaid_session_token_create",
+            "class": "PlaidSessionTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferGet",
+            "method": "POST",
+            "path": "/transfer/get",
+            "tool": "plaid_transfer_get",
+            "class": "PlaidTransferGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRecurringGet",
+            "method": "POST",
+            "path": "/transfer/recurring/get",
+            "tool": "plaid_transfer_recurring_get",
+            "class": "PlaidTransferRecurringGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferGet",
+            "method": "POST",
+            "path": "/bank_transfer/get",
+            "tool": "plaid_bank_transfer_get",
+            "class": "PlaidBankTransferGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferAuthorizationCreate",
+            "method": "POST",
+            "path": "/transfer/authorization/create",
+            "tool": "plaid_transfer_authorization_create",
+            "class": "PlaidTransferAuthorizationCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferAuthorizationCancel",
+            "method": "POST",
+            "path": "/transfer/authorization/cancel",
+            "tool": "plaid_transfer_authorization_cancel",
+            "class": "PlaidTransferAuthorizationCancel",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferBalanceGet",
+            "method": "POST",
+            "path": "/transfer/balance/get",
+            "tool": "plaid_transfer_balance_get",
+            "class": "PlaidTransferBalanceGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferCapabilitiesGet",
+            "method": "POST",
+            "path": "/transfer/capabilities/get",
+            "tool": "plaid_transfer_capabilities_get",
+            "class": "PlaidTransferCapabilitiesGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferConfigurationGet",
+            "method": "POST",
+            "path": "/transfer/configuration/get",
+            "tool": "plaid_transfer_configuration_get",
+            "class": "PlaidTransferConfigurationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferLedgerGet",
+            "method": "POST",
+            "path": "/transfer/ledger/get",
+            "tool": "plaid_transfer_ledger_get",
+            "class": "PlaidTransferLedgerGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferLedgerDistribute",
+            "method": "POST",
+            "path": "/transfer/ledger/distribute",
+            "tool": "plaid_transfer_ledger_distribute",
+            "class": "PlaidTransferLedgerDistribute",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferLedgerDeposit",
+            "method": "POST",
+            "path": "/transfer/ledger/deposit",
+            "tool": "plaid_transfer_ledger_deposit",
+            "class": "PlaidTransferLedgerDeposit",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferLedgerWithdraw",
+            "method": "POST",
+            "path": "/transfer/ledger/withdraw",
+            "tool": "plaid_transfer_ledger_withdraw",
+            "class": "PlaidTransferLedgerWithdraw",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferOriginatorFundingAccountUpdate",
+            "method": "POST",
+            "path": "/transfer/originator/funding_account/update",
+            "tool": "plaid_transfer_originator_funding_account_update",
+            "class": "PlaidTransferOriginatorFundingAccountUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferOriginatorFundingAccountCreate",
+            "method": "POST",
+            "path": "/transfer/originator/funding_account/create",
+            "tool": "plaid_transfer_originator_funding_account_create",
+            "class": "PlaidTransferOriginatorFundingAccountCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferMetricsGet",
+            "method": "POST",
+            "path": "/transfer/metrics/get",
+            "tool": "plaid_transfer_metrics_get",
+            "class": "PlaidTransferMetricsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferCreate",
+            "method": "POST",
+            "path": "/transfer/create",
+            "tool": "plaid_transfer_create",
+            "class": "PlaidTransferCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRecurringCreate",
+            "method": "POST",
+            "path": "/transfer/recurring/create",
+            "tool": "plaid_transfer_recurring_create",
+            "class": "PlaidTransferRecurringCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferCreate",
+            "method": "POST",
+            "path": "/bank_transfer/create",
+            "tool": "plaid_bank_transfer_create",
+            "class": "PlaidBankTransferCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferList",
+            "method": "POST",
+            "path": "/transfer/list",
+            "tool": "plaid_transfer_list",
+            "class": "PlaidTransferList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRecurringList",
+            "method": "POST",
+            "path": "/transfer/recurring/list",
+            "tool": "plaid_transfer_recurring_list",
+            "class": "PlaidTransferRecurringList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferList",
+            "method": "POST",
+            "path": "/bank_transfer/list",
+            "tool": "plaid_bank_transfer_list",
+            "class": "PlaidBankTransferList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferCancel",
+            "method": "POST",
+            "path": "/transfer/cancel",
+            "tool": "plaid_transfer_cancel",
+            "class": "PlaidTransferCancel",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRecurringCancel",
+            "method": "POST",
+            "path": "/transfer/recurring/cancel",
+            "tool": "plaid_transfer_recurring_cancel",
+            "class": "PlaidTransferRecurringCancel",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferCancel",
+            "method": "POST",
+            "path": "/bank_transfer/cancel",
+            "tool": "plaid_bank_transfer_cancel",
+            "class": "PlaidBankTransferCancel",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferEventList",
+            "method": "POST",
+            "path": "/transfer/event/list",
+            "tool": "plaid_transfer_event_list",
+            "class": "PlaidTransferEventList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferLedgerEventList",
+            "method": "POST",
+            "path": "/transfer/ledger/event/list",
+            "tool": "plaid_transfer_ledger_event_list",
+            "class": "PlaidTransferLedgerEventList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferEventList",
+            "method": "POST",
+            "path": "/bank_transfer/event/list",
+            "tool": "plaid_bank_transfer_event_list",
+            "class": "PlaidBankTransferEventList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferEventSync",
+            "method": "POST",
+            "path": "/transfer/event/sync",
+            "tool": "plaid_transfer_event_sync",
+            "class": "PlaidTransferEventSync",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferEventSync",
+            "method": "POST",
+            "path": "/bank_transfer/event/sync",
+            "tool": "plaid_bank_transfer_event_sync",
+            "class": "PlaidBankTransferEventSync",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferSweepGet",
+            "method": "POST",
+            "path": "/transfer/sweep/get",
+            "tool": "plaid_transfer_sweep_get",
+            "class": "PlaidTransferSweepGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferSweepGet",
+            "method": "POST",
+            "path": "/bank_transfer/sweep/get",
+            "tool": "plaid_bank_transfer_sweep_get",
+            "class": "PlaidBankTransferSweepGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferSweepList",
+            "method": "POST",
+            "path": "/transfer/sweep/list",
+            "tool": "plaid_transfer_sweep_list",
+            "class": "PlaidTransferSweepList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferSweepList",
+            "method": "POST",
+            "path": "/bank_transfer/sweep/list",
+            "tool": "plaid_bank_transfer_sweep_list",
+            "class": "PlaidBankTransferSweepList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferBalanceGet",
+            "method": "POST",
+            "path": "/bank_transfer/balance/get",
+            "tool": "plaid_bank_transfer_balance_get",
+            "class": "PlaidBankTransferBalanceGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "bankTransferMigrateAccount",
+            "method": "POST",
+            "path": "/bank_transfer/migrate_account",
+            "tool": "plaid_bank_transfer_migrate_account",
+            "class": "PlaidBankTransferMigrateAccount",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferMigrateAccount",
+            "method": "POST",
+            "path": "/transfer/migrate_account",
+            "tool": "plaid_transfer_migrate_account",
+            "class": "PlaidTransferMigrateAccount",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferIntentCreate",
+            "method": "POST",
+            "path": "/transfer/intent/create",
+            "tool": "plaid_transfer_intent_create",
+            "class": "PlaidTransferIntentCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferIntentGet",
+            "method": "POST",
+            "path": "/transfer/intent/get",
+            "tool": "plaid_transfer_intent_get",
+            "class": "PlaidTransferIntentGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRepaymentList",
+            "method": "POST",
+            "path": "/transfer/repayment/list",
+            "tool": "plaid_transfer_repayment_list",
+            "class": "PlaidTransferRepaymentList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRepaymentReturnList",
+            "method": "POST",
+            "path": "/transfer/repayment/return/list",
+            "tool": "plaid_transfer_repayment_return_list",
+            "class": "PlaidTransferRepaymentReturnList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferPlatformRequirementSubmit",
+            "method": "POST",
+            "path": "/transfer/platform/requirement/submit",
+            "tool": "plaid_transfer_platform_requirement_submit",
+            "class": "PlaidTransferPlatformRequirementSubmit",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferOriginatorCreate",
+            "method": "POST",
+            "path": "/transfer/originator/create",
+            "tool": "plaid_transfer_originator_create",
+            "class": "PlaidTransferOriginatorCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferQuestionnaireCreate",
+            "method": "POST",
+            "path": "/transfer/questionnaire/create",
+            "tool": "plaid_transfer_questionnaire_create",
+            "class": "PlaidTransferQuestionnaireCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferDiligenceSubmit",
+            "method": "POST",
+            "path": "/transfer/diligence/submit",
+            "tool": "plaid_transfer_diligence_submit",
+            "class": "PlaidTransferDiligenceSubmit",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferDiligenceDocumentUpload",
+            "method": "POST",
+            "path": "/transfer/diligence/document/upload",
+            "tool": "plaid_transfer_diligence_document_upload",
+            "class": "PlaidTransferDiligenceDocumentUpload",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferOriginatorGet",
+            "method": "POST",
+            "path": "/transfer/originator/get",
+            "tool": "plaid_transfer_originator_get",
+            "class": "PlaidTransferOriginatorGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferOriginatorList",
+            "method": "POST",
+            "path": "/transfer/originator/list",
+            "tool": "plaid_transfer_originator_list",
+            "class": "PlaidTransferOriginatorList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRefundCreate",
+            "method": "POST",
+            "path": "/transfer/refund/create",
+            "tool": "plaid_transfer_refund_create",
+            "class": "PlaidTransferRefundCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRefundGet",
+            "method": "POST",
+            "path": "/transfer/refund/get",
+            "tool": "plaid_transfer_refund_get",
+            "class": "PlaidTransferRefundGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferRefundCancel",
+            "method": "POST",
+            "path": "/transfer/refund/cancel",
+            "tool": "plaid_transfer_refund_cancel",
+            "class": "PlaidTransferRefundCancel",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferPlatformOriginatorCreate",
+            "method": "POST",
+            "path": "/transfer/platform/originator/create",
+            "tool": "plaid_transfer_platform_originator_create",
+            "class": "PlaidTransferPlatformOriginatorCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transferPlatformPersonCreate",
+            "method": "POST",
+            "path": "/transfer/platform/person/create",
+            "tool": "plaid_transfer_platform_person_create",
+            "class": "PlaidTransferPlatformPersonCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxBankTransferSimulate",
+            "method": "POST",
+            "path": "/sandbox/bank_transfer/simulate",
+            "tool": "plaid_sandbox_bank_transfer_simulate",
+            "class": "PlaidSandboxBankTransferSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferSweepSimulate",
+            "method": "POST",
+            "path": "/sandbox/transfer/sweep/simulate",
+            "tool": "plaid_sandbox_transfer_sweep_simulate",
+            "class": "PlaidSandboxTransferSweepSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferSimulate",
+            "method": "POST",
+            "path": "/sandbox/transfer/simulate",
+            "tool": "plaid_sandbox_transfer_simulate",
+            "class": "PlaidSandboxTransferSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferRefundSimulate",
+            "method": "POST",
+            "path": "/sandbox/transfer/refund/simulate",
+            "tool": "plaid_sandbox_transfer_refund_simulate",
+            "class": "PlaidSandboxTransferRefundSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferLedgerSimulateAvailable",
+            "method": "POST",
+            "path": "/sandbox/transfer/ledger/simulate_available",
+            "tool": "plaid_sandbox_transfer_ledger_simulate_available",
+            "class": "PlaidSandboxTransferLedgerSimulateAvailable",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferLedgerDepositSimulate",
+            "method": "POST",
+            "path": "/sandbox/transfer/ledger/deposit/simulate",
+            "tool": "plaid_sandbox_transfer_ledger_deposit_simulate",
+            "class": "PlaidSandboxTransferLedgerDepositSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferLedgerWithdrawSimulate",
+            "method": "POST",
+            "path": "/sandbox/transfer/ledger/withdraw/simulate",
+            "tool": "plaid_sandbox_transfer_ledger_withdraw_simulate",
+            "class": "PlaidSandboxTransferLedgerWithdrawSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferRepaymentSimulate",
+            "method": "POST",
+            "path": "/sandbox/transfer/repayment/simulate",
+            "tool": "plaid_sandbox_transfer_repayment_simulate",
+            "class": "PlaidSandboxTransferRepaymentSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferFireWebhook",
+            "method": "POST",
+            "path": "/sandbox/transfer/fire_webhook",
+            "tool": "plaid_sandbox_transfer_fire_webhook",
+            "class": "PlaidSandboxTransferFireWebhook",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferTestClockCreate",
+            "method": "POST",
+            "path": "/sandbox/transfer/test_clock/create",
+            "tool": "plaid_sandbox_transfer_test_clock_create",
+            "class": "PlaidSandboxTransferTestClockCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferTestClockAdvance",
+            "method": "POST",
+            "path": "/sandbox/transfer/test_clock/advance",
+            "tool": "plaid_sandbox_transfer_test_clock_advance",
+            "class": "PlaidSandboxTransferTestClockAdvance",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferTestClockGet",
+            "method": "POST",
+            "path": "/sandbox/transfer/test_clock/get",
+            "tool": "plaid_sandbox_transfer_test_clock_get",
+            "class": "PlaidSandboxTransferTestClockGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxTransferTestClockList",
+            "method": "POST",
+            "path": "/sandbox/transfer/test_clock/list",
+            "tool": "plaid_sandbox_transfer_test_clock_list",
+            "class": "PlaidSandboxTransferTestClockList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxPaymentProfileResetLogin",
+            "method": "POST",
+            "path": "/sandbox/payment_profile/reset_login",
+            "tool": "plaid_sandbox_payment_profile_reset_login",
+            "class": "PlaidSandboxPaymentProfileResetLogin",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxPaymentSimulate",
+            "method": "POST",
+            "path": "/sandbox/payment/simulate",
+            "tool": "plaid_sandbox_payment_simulate",
+            "class": "PlaidSandboxPaymentSimulate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "employersSearch",
+            "method": "POST",
+            "path": "/employers/search",
+            "tool": "plaid_employers_search",
+            "class": "PlaidEmployersSearch",
+            "binary_response": false
+        },
+        {
+            "operation_id": "incomeVerificationCreate",
+            "method": "POST",
+            "path": "/income/verification/create",
+            "tool": "plaid_income_verification_create",
+            "class": "PlaidIncomeVerificationCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "incomeVerificationPaystubsGet",
+            "method": "POST",
+            "path": "/income/verification/paystubs/get",
+            "tool": "plaid_income_verification_paystubs_get",
+            "class": "PlaidIncomeVerificationPaystubsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "incomeVerificationDocumentsDownload",
+            "method": "POST",
+            "path": "/income/verification/documents/download",
+            "tool": "plaid_income_verification_documents_download",
+            "class": "PlaidIncomeVerificationDocumentsDownload",
+            "binary_response": false
+        },
+        {
+            "operation_id": "incomeVerificationTaxformsGet",
+            "method": "POST",
+            "path": "/income/verification/taxforms/get",
+            "tool": "plaid_income_verification_taxforms_get",
+            "class": "PlaidIncomeVerificationTaxformsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "incomeVerificationPrecheck",
+            "method": "POST",
+            "path": "/income/verification/precheck",
+            "tool": "plaid_income_verification_precheck",
+            "class": "PlaidIncomeVerificationPrecheck",
+            "binary_response": false
+        },
+        {
+            "operation_id": "employmentVerificationGet",
+            "method": "POST",
+            "path": "/employment/verification/get",
+            "tool": "plaid_employment_verification_get",
+            "class": "PlaidEmploymentVerificationGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditAuditCopyTokenCreate",
+            "method": "POST",
+            "path": "/credit/audit_copy_token/create",
+            "tool": "plaid_credit_audit_copy_token_create",
+            "class": "PlaidCreditAuditCopyTokenCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditReportAuditCopyRemove",
+            "method": "POST",
+            "path": "/credit/audit_copy_token/remove",
+            "tool": "plaid_credit_report_audit_copy_remove",
+            "class": "PlaidCreditReportAuditCopyRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditAssetReportFreddieMacGet",
+            "method": "POST",
+            "path": "/credit/asset_report/freddie_mac/get",
+            "tool": "plaid_credit_asset_report_freddie_mac_get",
+            "class": "PlaidCreditAssetReportFreddieMacGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditFreddieMacReportsGet",
+            "method": "POST",
+            "path": "/credit/freddie_mac/reports/get",
+            "tool": "plaid_credit_freddie_mac_reports_get",
+            "class": "PlaidCreditFreddieMacReportsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditBankEmploymentGet",
+            "method": "POST",
+            "path": "/beta/credit/v1/bank_employment/get",
+            "tool": "plaid_credit_bank_employment_get",
+            "class": "PlaidCreditBankEmploymentGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditBankIncomeGet",
+            "method": "POST",
+            "path": "/credit/bank_income/get",
+            "tool": "plaid_credit_bank_income_get",
+            "class": "PlaidCreditBankIncomeGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditBankIncomePdfGet",
+            "method": "POST",
+            "path": "/credit/bank_income/pdf/get",
+            "tool": "plaid_credit_bank_income_pdf_get",
+            "class": "PlaidCreditBankIncomePdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "creditBankIncomeRefresh",
+            "method": "POST",
+            "path": "/credit/bank_income/refresh",
+            "tool": "plaid_credit_bank_income_refresh",
+            "class": "PlaidCreditBankIncomeRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditBankIncomeWebhookUpdate",
+            "method": "POST",
+            "path": "/credit/bank_income/webhook/update",
+            "tool": "plaid_credit_bank_income_webhook_update",
+            "class": "PlaidCreditBankIncomeWebhookUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditPayrollIncomeParsingConfigUpdate",
+            "method": "POST",
+            "path": "/credit/payroll_income/parsing_config/update",
+            "tool": "plaid_credit_payroll_income_parsing_config_update",
+            "class": "PlaidCreditPayrollIncomeParsingConfigUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditBankStatementsUploadsGet",
+            "method": "POST",
+            "path": "/credit/bank_statements/uploads/get",
+            "tool": "plaid_credit_bank_statements_uploads_get",
+            "class": "PlaidCreditBankStatementsUploadsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditPayrollIncomeGet",
+            "method": "POST",
+            "path": "/credit/payroll_income/get",
+            "tool": "plaid_credit_payroll_income_get",
+            "class": "PlaidCreditPayrollIncomeGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditPayrollIncomeRiskSignalsGet",
+            "method": "POST",
+            "path": "/credit/payroll_income/risk_signals/get",
+            "tool": "plaid_credit_payroll_income_risk_signals_get",
+            "class": "PlaidCreditPayrollIncomeRiskSignalsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditPayrollIncomePrecheck",
+            "method": "POST",
+            "path": "/credit/payroll_income/precheck",
+            "tool": "plaid_credit_payroll_income_precheck",
+            "class": "PlaidCreditPayrollIncomePrecheck",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditEmploymentGet",
+            "method": "POST",
+            "path": "/credit/employment/get",
+            "tool": "plaid_credit_employment_get",
+            "class": "PlaidCreditEmploymentGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditPayrollIncomeRefresh",
+            "method": "POST",
+            "path": "/credit/payroll_income/refresh",
+            "tool": "plaid_credit_payroll_income_refresh",
+            "class": "PlaidCreditPayrollIncomeRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditRelayCreate",
+            "method": "POST",
+            "path": "/credit/relay/create",
+            "tool": "plaid_credit_relay_create",
+            "class": "PlaidCreditRelayCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditRelayGet",
+            "method": "POST",
+            "path": "/credit/relay/get",
+            "tool": "plaid_credit_relay_get",
+            "class": "PlaidCreditRelayGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditRelayPdfGet",
+            "method": "POST",
+            "path": "/credit/relay/pdf/get",
+            "tool": "plaid_credit_relay_pdf_get",
+            "class": "PlaidCreditRelayPdfGet",
+            "binary_response": true
+        },
+        {
+            "operation_id": "creditRelayRefresh",
+            "method": "POST",
+            "path": "/credit/relay/refresh",
+            "tool": "plaid_credit_relay_refresh",
+            "class": "PlaidCreditRelayRefresh",
+            "binary_response": false
+        },
+        {
+            "operation_id": "creditRelayRemove",
+            "method": "POST",
+            "path": "/credit/relay/remove",
+            "tool": "plaid_credit_relay_remove",
+            "class": "PlaidCreditRelayRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxBankTransferFireWebhook",
+            "method": "POST",
+            "path": "/sandbox/bank_transfer/fire_webhook",
+            "tool": "plaid_sandbox_bank_transfer_fire_webhook",
+            "class": "PlaidSandboxBankTransferFireWebhook",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxIncomeFireWebhook",
+            "method": "POST",
+            "path": "/sandbox/income/fire_webhook",
+            "tool": "plaid_sandbox_income_fire_webhook",
+            "class": "PlaidSandboxIncomeFireWebhook",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxBankIncomeFireWebhook",
+            "method": "POST",
+            "path": "/sandbox/bank_income/fire_webhook",
+            "tool": "plaid_sandbox_bank_income_fire_webhook",
+            "class": "PlaidSandboxBankIncomeFireWebhook",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxCraCashflowUpdatesUpdate",
+            "method": "POST",
+            "path": "/sandbox/cra/cashflow_updates/update",
+            "tool": "plaid_sandbox_cra_cashflow_updates_update",
+            "class": "PlaidSandboxCraCashflowUpdatesUpdate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "sandboxOauthSelectAccounts",
+            "method": "POST",
+            "path": "/sandbox/oauth/select_accounts",
+            "tool": "plaid_sandbox_oauth_select_accounts",
+            "class": "PlaidSandboxOauthSelectAccounts",
+            "binary_response": false
+        },
+        {
+            "operation_id": "signalEvaluate",
+            "method": "POST",
+            "path": "/signal/evaluate",
+            "tool": "plaid_signal_evaluate",
+            "class": "PlaidSignalEvaluate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "signalSchedule",
+            "method": "POST",
+            "path": "/signal/schedule",
+            "tool": "plaid_signal_schedule",
+            "class": "PlaidSignalSchedule",
+            "binary_response": false
+        },
+        {
+            "operation_id": "signalDecisionReport",
+            "method": "POST",
+            "path": "/signal/decision/report",
+            "tool": "plaid_signal_decision_report",
+            "class": "PlaidSignalDecisionReport",
+            "binary_response": false
+        },
+        {
+            "operation_id": "signalReturnReport",
+            "method": "POST",
+            "path": "/signal/return/report",
+            "tool": "plaid_signal_return_report",
+            "class": "PlaidSignalReturnReport",
+            "binary_response": false
+        },
+        {
+            "operation_id": "signalPrepare",
+            "method": "POST",
+            "path": "/signal/prepare",
+            "tool": "plaid_signal_prepare",
+            "class": "PlaidSignalPrepare",
+            "binary_response": false
+        },
+        {
+            "operation_id": "walletCreate",
+            "method": "POST",
+            "path": "/wallet/create",
+            "tool": "plaid_wallet_create",
+            "class": "PlaidWalletCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "walletGet",
+            "method": "POST",
+            "path": "/wallet/get",
+            "tool": "plaid_wallet_get",
+            "class": "PlaidWalletGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "walletList",
+            "method": "POST",
+            "path": "/wallet/list",
+            "tool": "plaid_wallet_list",
+            "class": "PlaidWalletList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "walletTransactionExecute",
+            "method": "POST",
+            "path": "/wallet/transaction/execute",
+            "tool": "plaid_wallet_transaction_execute",
+            "class": "PlaidWalletTransactionExecute",
+            "binary_response": false
+        },
+        {
+            "operation_id": "walletTransactionGet",
+            "method": "POST",
+            "path": "/wallet/transaction/get",
+            "tool": "plaid_wallet_transaction_get",
+            "class": "PlaidWalletTransactionGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "walletTransactionList",
+            "method": "POST",
+            "path": "/wallet/transaction/list",
+            "tool": "plaid_wallet_transaction_list",
+            "class": "PlaidWalletTransactionList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsEnhance",
+            "method": "POST",
+            "path": "/beta/transactions/v1/enhance",
+            "tool": "plaid_transactions_enhance",
+            "class": "PlaidTransactionsEnhance",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsRulesCreate",
+            "method": "POST",
+            "path": "/beta/transactions/rules/v1/create",
+            "tool": "plaid_transactions_rules_create",
+            "class": "PlaidTransactionsRulesCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsRulesList",
+            "method": "POST",
+            "path": "/beta/transactions/rules/v1/list",
+            "tool": "plaid_transactions_rules_list",
+            "class": "PlaidTransactionsRulesList",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsRulesRemove",
+            "method": "POST",
+            "path": "/beta/transactions/rules/v1/remove",
+            "tool": "plaid_transactions_rules_remove",
+            "class": "PlaidTransactionsRulesRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "transactionsUserInsightsGet",
+            "method": "POST",
+            "path": "/beta/transactions/user_insights/v1/get",
+            "tool": "plaid_transactions_user_insights_get",
+            "class": "PlaidTransactionsUserInsightsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "betaEwaReportV1Get",
+            "method": "POST",
+            "path": "/beta/ewa_report/v1/get",
+            "tool": "plaid_beta_ewa_report_v1_get",
+            "class": "PlaidBetaEwaReportV1Get",
+            "binary_response": false
+        },
+        {
+            "operation_id": "issuesSearch",
+            "method": "POST",
+            "path": "/issues/search",
+            "tool": "plaid_issues_search",
+            "class": "PlaidIssuesSearch",
+            "binary_response": false
+        },
+        {
+            "operation_id": "issuesGet",
+            "method": "POST",
+            "path": "/issues/get",
+            "tool": "plaid_issues_get",
+            "class": "PlaidIssuesGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "issuesSubscribe",
+            "method": "POST",
+            "path": "/issues/subscribe",
+            "tool": "plaid_issues_subscribe",
+            "class": "PlaidIssuesSubscribe",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentProfileCreate",
+            "method": "POST",
+            "path": "/payment_profile/create",
+            "tool": "plaid_payment_profile_create",
+            "class": "PlaidPaymentProfileCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentProfileGet",
+            "method": "POST",
+            "path": "/payment_profile/get",
+            "tool": "plaid_payment_profile_get",
+            "class": "PlaidPaymentProfileGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "paymentProfileRemove",
+            "method": "POST",
+            "path": "/payment_profile/remove",
+            "tool": "plaid_payment_profile_remove",
+            "class": "PlaidPaymentProfileRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "partnerCustomerCreate",
+            "method": "POST",
+            "path": "/partner/customer/create",
+            "tool": "plaid_partner_customer_create",
+            "class": "PlaidPartnerCustomerCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "partnerCustomerGet",
+            "method": "POST",
+            "path": "/partner/customer/get",
+            "tool": "plaid_partner_customer_get",
+            "class": "PlaidPartnerCustomerGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "partnerCustomerEnable",
+            "method": "POST",
+            "path": "/partner/customer/enable",
+            "tool": "plaid_partner_customer_enable",
+            "class": "PlaidPartnerCustomerEnable",
+            "binary_response": false
+        },
+        {
+            "operation_id": "partnerCustomerRemove",
+            "method": "POST",
+            "path": "/partner/customer/remove",
+            "tool": "plaid_partner_customer_remove",
+            "class": "PlaidPartnerCustomerRemove",
+            "binary_response": false
+        },
+        {
+            "operation_id": "partnerCustomerOauthInstitutionsGet",
+            "method": "POST",
+            "path": "/partner/customer/oauth_institutions/get",
+            "tool": "plaid_partner_customer_oauth_institutions_get",
+            "class": "PlaidPartnerCustomerOauthInstitutionsGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "betaPartnerCustomerV1Create",
+            "method": "POST",
+            "path": "/beta/partner/customer/v1/create",
+            "tool": "plaid_beta_partner_customer_v1_create",
+            "class": "PlaidBetaPartnerCustomerV1Create",
+            "binary_response": false
+        },
+        {
+            "operation_id": "betaPartnerCustomerV1Get",
+            "method": "POST",
+            "path": "/beta/partner/customer/v1/get",
+            "tool": "plaid_beta_partner_customer_v1_get",
+            "class": "PlaidBetaPartnerCustomerV1Get",
+            "binary_response": false
+        },
+        {
+            "operation_id": "betaPartnerCustomerV1Update",
+            "method": "POST",
+            "path": "/beta/partner/customer/v1/update",
+            "tool": "plaid_beta_partner_customer_v1_update",
+            "class": "PlaidBetaPartnerCustomerV1Update",
+            "binary_response": false
+        },
+        {
+            "operation_id": "betaPartnerCustomerV1Enable",
+            "method": "POST",
+            "path": "/beta/partner/customer/v1/enable",
+            "tool": "plaid_beta_partner_customer_v1_enable",
+            "class": "PlaidBetaPartnerCustomerV1Enable",
+            "binary_response": false
+        },
+        {
+            "operation_id": "linkDeliveryCreate",
+            "method": "POST",
+            "path": "/link_delivery/create",
+            "tool": "plaid_link_delivery_create",
+            "class": "PlaidLinkDeliveryCreate",
+            "binary_response": false
+        },
+        {
+            "operation_id": "linkDeliveryGet",
+            "method": "POST",
+            "path": "/link_delivery/get",
+            "tool": "plaid_link_delivery_get",
+            "class": "PlaidLinkDeliveryGet",
+            "binary_response": false
+        },
+        {
+            "operation_id": "fdxNotifications",
+            "method": "POST",
+            "path": "/fdx/notifications",
+            "tool": "plaid_fdx_notifications",
+            "class": "PlaidFdxNotifications",
+            "binary_response": false
+        },
+        {
+            "operation_id": "getRecipients",
+            "method": "GET",
+            "path": "/fdx/recipients",
+            "tool": "plaid_get_recipients",
+            "class": "PlaidGetRecipients",
+            "binary_response": false
+        },
+        {
+            "operation_id": "getRecipient",
+            "method": "GET",
+            "path": "/fdx/recipient/{recipientId}",
+            "tool": "plaid_get_recipient",
+            "class": "PlaidGetRecipient",
+            "binary_response": false
+        },
+        {
+            "operation_id": "networkInsightsReportGet",
+            "method": "POST",
+            "path": "/network_insights/report/get",
+            "tool": "plaid_network_insights_report_get",
+            "class": "PlaidNetworkInsightsReportGet",
+            "binary_response": false
+        }
+    ]
+}

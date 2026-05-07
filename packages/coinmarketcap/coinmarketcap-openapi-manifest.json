@@ -1,0 +1,22 @@
+{
+  "source": "official_coinmarketcap_markdown_api_summaries",
+  "source_url": "https://pro.coinmarketcap.com/llms.txt",
+  "schema_url": "https://pro.coinmarketcap.com/api/documentation/pro-api-reference",
+  "version": "2.0.4",
+  "method_count": 91,
+  "categories": [
+    "cryptocurrency",
+    "exchange",
+    "global-metrics",
+    "content",
+    "community",
+    "cmc-index",
+    "token",
+    "platform",
+    "holder",
+    "ohlcv",
+    "tools",
+    "crypto-others",
+    "deprecated"
+  ]
+}

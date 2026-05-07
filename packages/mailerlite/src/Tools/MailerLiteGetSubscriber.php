@@ -13,6 +13,8 @@ class MailerLiteGetSubscriber implements Tool
 {
     /**
      * Create a new get subscriber tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -31,7 +33,7 @@ class MailerLiteGetSubscriber implements Tool
      */
     public function description(): string
     {
-        return 'Get details for a single MailerLite subscriber by their ID.';
+        return 'Get details for a single MailerLite subscriber by ID or email address.';
     }
 
     /**
@@ -42,7 +44,7 @@ class MailerLiteGetSubscriber implements Tool
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber ID or email address.'],
         ];
     }
 

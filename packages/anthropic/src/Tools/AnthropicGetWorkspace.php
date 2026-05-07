@@ -7,12 +7,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get details for a specific Anthropic workspace.
+ * Get details for a specific Anthropic organization workspace.
  *
- * Sends a GET request to /workspaces/{id} and returns the workspace
- * resource with its name, configuration, and metadata.
+ * Sends a GET request to /organizations/workspaces/{id} through the Admin API.
  *
- * @see https://docs.anthropic.com/en/api/get-workspace
+ * @see https://docs.anthropic.com/en/api/admin-api/workspaces/get-workspace
  */
 class AnthropicGetWorkspace implements Tool
 {
@@ -36,7 +35,7 @@ class AnthropicGetWorkspace implements Tool
      */
     public function description(): string
     {
-        return 'Get detailed information about a specific Anthropic workspace, including its name, configuration, and usage settings.';
+        return 'Get details for a specific Anthropic organization workspace. Requires an Admin API key.';
     }
 
     /**
@@ -60,8 +59,8 @@ class AnthropicGetWorkspace implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Anthropic integration is not configured.');
+            if (!$this->service->isAdminConfigured()) {
+                return ToolResult::error('Anthropic Admin API key is not configured.');
             }
 
             if (empty($args['id'])) {

@@ -39,6 +39,8 @@ class PineconeQueryVectors implements Tool
             'top_k' => ['type' => 'integer', 'description' => 'Number of top matches to return (default: 10).'],
             'filter' => ['type' => 'object', 'description' => 'Optional metadata filter expression.'],
             'include_metadata' => ['type' => 'boolean', 'description' => 'Whether to include metadata in matches (default: true).'],
+            'include_values' => ['type' => 'boolean', 'description' => 'Whether to include vector values in matches (default: false).'],
+            'namespace' => ['type' => 'string', 'description' => 'Optional namespace to query.'],
         ];
     }
 
@@ -66,6 +68,8 @@ class PineconeQueryVectors implements Tool
                 isset($args['top_k']) ? (int) $args['top_k'] : 10,
                 is_array($args['filter'] ?? null) ? $args['filter'] : null,
                 array_key_exists('include_metadata', $args) ? (bool) $args['include_metadata'] : true,
+                array_key_exists('include_values', $args) ? (bool) $args['include_values'] : false,
+                isset($args['namespace']) ? (string) $args['namespace'] : null,
             ));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

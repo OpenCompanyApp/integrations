@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Clerk integration with Laravel's service container.
+ *
+ * Binds ClerkService from host credentials and registers the Clerk tool provider
+ * with the shared registry.
+ */
 class ClerkServiceProvider extends ServiceProvider
 {
     /**

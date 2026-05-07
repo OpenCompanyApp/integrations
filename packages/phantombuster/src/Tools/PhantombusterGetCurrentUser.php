@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Phantombuster\Tools;
 
-use OpenCompany\Integrations\Phantombuster\PhantombusterService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class PhantombusterGetCurrentUser implements Tool
+/**
+ * Get the authenticated Phantombuster user.
+ */
+class PhantombusterGetCurrentUser extends AbstractPhantombusterTool implements Tool
 {
-    public function __construct(
-        private PhantombusterService $service,
-    ) {}
-
     public function name(): string
     {
         return 'phantombuster_get_current_user';
@@ -27,11 +25,16 @@ class PhantombusterGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the current user profile.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Phantombuster integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
             $result = $this->service->getCurrentUser();

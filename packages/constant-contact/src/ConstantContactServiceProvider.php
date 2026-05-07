@@ -23,8 +23,8 @@ class ConstantContactServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new ConstantContactService(
-                accessToken: $creds->get('constant_contact', 'access_token', ''),
-                baseUrl: $creds->get('constant_contact', 'url', 'https://api.cc.email/v3'),
+                accessToken: $creds->get('constant-contact', 'access_token', '') ?: $creds->get('constant_contact', 'access_token', ''),
+                baseUrl: $creds->get('constant-contact', 'url', '') ?: $creds->get('constant_contact', 'url', 'https://api.cc.email/v3'),
             );
         });
     }

@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Beamer;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Beamer REST API.
+ *
+ * Handles Beamer-Api-Key authentication, JSON dispatch, and error
+ * normalization for typed and generic Beamer endpoints.
+ */
 class BeamerService
 {
+    /**
+     * @param  string  $apiKey  Beamer API key sent in the Beamer-Api-Key header.
+     * @param  string  $baseUrl  Base URL for the Beamer API.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.getbeamer.com/v0',
@@ -115,6 +125,54 @@ class BeamerService
     }
 
     /**
+     * Call any Beamer GET API endpoint.
+     *
+     * @param  string  $path  API path relative to the v0 base URL.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Call any Beamer POST API endpoint.
+     *
+     * @param  string  $path  API path relative to the v0 base URL.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $body);
+    }
+
+    /**
+     * Call any Beamer PUT API endpoint.
+     *
+     * @param  string  $path  API path relative to the v0 base URL.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $body);
+    }
+
+    /**
+     * Call any Beamer DELETE API endpoint.
+     *
+     * @param  string  $path  API path relative to the v0 base URL.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $body = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $body);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
@@ -149,7 +207,7 @@ class BeamerService
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Beamer-Api-Key' => $this->apiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
@@ -187,5 +245,13 @@ class BeamerService
             ]);
             throw new \RuntimeException("Failed to connect to Beamer API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a generic API path.
+     */
+    private function normalizePath(string $path): string
+    {
+        return '/'.ltrim($path, '/');
     }
 }

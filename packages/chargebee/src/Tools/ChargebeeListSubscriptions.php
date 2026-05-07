@@ -45,7 +45,7 @@ class ChargebeeListSubscriptions implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of subscriptions to return per page (max 100, default 10).'],
-            'page' => ['type' => 'string', 'description' => 'Pagination cursor — pass the value from a previous response to get the next page.'],
+            'page' => ['type' => 'string', 'description' => 'Pagination cursor. Pass the value from a previous response to get the next page.'],
             'state' => ['type' => 'string', 'description' => 'Filter by subscription state: active, cancelled, non_renewing, paused, in_trial, future.'],
         ];
     }

@@ -2,16 +2,28 @@
 
 namespace OpenCompany\Integrations\Courier;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Courier API.
+ *
+ * Handles official operation lookup, bearer authentication, parameter mapping,
+ * request dispatch, and normalized API error handling.
+ */
 class CourierService
 {
+    /**
+     * @param  string  $apiKey  Courier API key.
+     * @param  string  $baseUrl  Courier API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.courier.com',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl ?: 'https://api.courier.com', '/');
     }
 
     /**
@@ -19,198 +31,208 @@ class CourierService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return trim($this->apiKey) !== '';
     }
 
     /**
-     * Send a message through Courier.
+     * Return the official Courier operation map.
      *
-     * @param  array<string, mixed>  $message  The message payload (template, content, routing, etc.).
-     * @param  string|array<string, mixed>|null  $recipient  A recipient user ID, email, or recipient object.
+     * @return list<array<string, mixed>>
+     */
+    public static function operations(): array
+    {
+        return CourierOperations::all();
+    }
+
+    /**
+     * Return metadata for one Courier operation by tool slug or operation ID.
+     *
      * @return array<string, mixed>
      */
-    public function sendMessage(array $message, string|array|null $recipient = null): array
+    public function operation(string $operation): array
     {
-        $payload = $message;
-
-        if ($recipient !== null) {
-            if (is_string($recipient)) {
-                $payload['to'] = $recipient;
-            } else {
-                $payload['to'] = $recipient;
+        foreach (self::operations() as $definition) {
+            if (($definition['slug'] ?? null) === $operation || ($definition['operation'] ?? null) === $operation) {
+                return $definition;
             }
         }
 
-        return $this->request('POST', '/send', $payload);
+        throw new RuntimeException("Unsupported Courier operation: {$operation}");
     }
 
     /**
-     * List messages with optional filtering and pagination.
+     * Execute an official Courier operation.
      *
-     * @param  int|null  $limit  Maximum number of messages to return.
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
-     * @param  string|null  $status  Filter by message status (e.g. "delivered", "undelivered").
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    public function listMessages(?int $limit = null, ?string $cursor = null, ?string $status = null): array
+    public function call(string $operation, array $args = []): array
     {
-        $params = [];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
-        }
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
+        $definition = $this->operation($operation);
+        [$path, $query, $payload] = $this->shapeRequest($definition, $args);
 
-        return $this->request('GET', '/messages', $params);
+        return $this->request(
+            method: (string) $definition['method'],
+            path: $path,
+            query: $query,
+            payload: $payload,
+        );
     }
 
     /**
-     * Get a single message by ID.
+     * Shape tool arguments into path, query, and JSON body data.
      *
-     * @param  string  $id  The message ID.
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>}
      */
-    public function getMessage(string $id): array
+    private function shapeRequest(array $definition, array $args): array
     {
-        return $this->request('GET', '/messages/' . urlencode($id));
-    }
+        $path = (string) $definition['path'];
+        $query = isset($args['query']) && is_array($args['query']) ? $args['query'] : [];
+        $payload = isset($args['payload']) && is_array($args['payload']) ? $args['payload'] : [];
+        $consumed = ['query' => true, 'payload' => true];
 
-    /**
-     * List recipients with optional pagination.
-     *
-     * @param  int|null  $limit  Maximum number of recipients to return.
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
-     * @return array<string, mixed>
-     */
-    public function listRecipients(?int $limit = null, ?string $cursor = null): array
-    {
-        $params = [];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
-        }
+        foreach ($definition['parameters'] as $parameter) {
+            $param = (string) $parameter['param'];
+            $source = (string) $parameter['source'];
+            $value = $args[$param] ?? null;
+            $consumed[$param] = true;
 
-        return $this->request('GET', '/recipients', $params);
-    }
+            if ($value === null && $source === 'query') {
+                $value = $query[$param] ?? $query[$parameter['name']] ?? null;
+            }
 
-    /**
-     * Get a single recipient by ID.
-     *
-     * @param  string  $id  The recipient ID.
-     * @return array<string, mixed>
-     */
-    public function getRecipient(string $id): array
-    {
-        return $this->request('GET', '/recipients/' . urlencode($id));
-    }
+            if (($parameter['required'] ?? false) && ($value === null || $value === '')) {
+                throw new RuntimeException($param.' is required.');
+            }
 
-    /**
-     * List notification templates with optional pagination.
-     *
-     * @param  int|null  $limit  Maximum number of templates to return.
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
-     * @return array<string, mixed>
-     */
-    public function listTemplates(?int $limit = null, ?string $cursor = null): array
-    {
-        $params = [];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            if ($source === 'path') {
+                $path = str_replace('{'.$parameter['name'].'}', rawurlencode((string) $value), $path);
+            } elseif ($source === 'query') {
+                $query[$parameter['name']] = $value;
+            }
         }
 
-        return $this->request('GET', '/templates', $params);
-    }
+        if (str_contains($path, '{')) {
+            throw new RuntimeException('Missing required Courier path parameter.');
+        }
 
-    /**
-     * Get the currently authenticated user.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/users/me');
+        if (($definition['request_body'] ?? false) === true) {
+            foreach ($args as $key => $value) {
+                if (!isset($consumed[$key])) {
+                    $payload[$key] = $value;
+                }
+            }
+
+            if (($definition['request_body_required'] ?? false) && empty($payload)) {
+                throw new RuntimeException('payload is required.');
+            }
+
+            foreach (($definition['request_required_fields'] ?? []) as $field) {
+                if (($payload[$field] ?? null) === null || $payload[$field] === '') {
+                    throw new RuntimeException($field.' is required in payload.');
+                }
+            }
+        }
+
+        return [$path, $query, $payload];
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query params or JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $query = [], array $payload = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+        $response = $this->rawRequest($method, $path, $query, $payload);
+
+        return $this->decodeResponse($response);
     }
 
     /**
      * Make a raw HTTP request to the Courier API.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Request data.
-     * @return \Illuminate\Http\Client\Response
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $payload = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Courier API key is not configured.');
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Courier API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $options = [];
+        if ($query !== []) {
+            $options['query'] = $query;
+        }
+
+        if ($payload !== []) {
+            $options['json'] = $payload;
+        }
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $response = Http::withToken($this->apiKey)
+                ->acceptJson()
+                ->timeout(30)
+                ->send(strtoupper($method), $this->baseUrl.$path, $options);
+        } catch (\Throwable $e) {
+            Log::error("Courier API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Courier API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Courier API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
-                }
-
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
-                Log::error("Courier API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Courier API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
-            }
-
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Courier API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Courier API: {$e->getMessage()}");
+            throw new RuntimeException('Failed to connect to Courier API: '.$e->getMessage());
         }
+
+        if (!$response->successful()) {
+            $this->throwApiError($method, $path, $response);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Throw a normalized Courier API error.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $json = $response->json();
+        $message = is_array($json)
+            ? (string) ($json['message'] ?? $json['error'] ?? $json['type'] ?? '')
+            : trim($response->body());
+
+        Log::error("Courier API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        throw new RuntimeException('Courier API error ('.$response->status().'): '.($message !== '' ? $message : 'Unexpected API error.'));
+    }
+
+    /**
+     * Decode JSON, text, or empty Courier responses.
+     *
+     * @return array<string, mixed>
+     */
+    private function decodeResponse(Response $response): array
+    {
+        $body = trim($response->body());
+        if ($body === '') {
+            return ['success' => true];
+        }
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['value' => $body];
     }
 }

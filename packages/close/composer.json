@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-close",
-    "description": "Close CRM integration for Laravel — manage leads, contacts, activities, and tasks.",
+    "description": "Close CRM integration for Laravel: manage leads, contacts, opportunities, activities, and tasks.",
     "license": "MIT",
     "authors": [
         {

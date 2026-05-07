@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Permanently delete a DigitalOcean Droplet.
+ */
 class DigitalOceanDeleteDroplet implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -29,6 +35,11 @@ class DigitalOceanDeleteDroplet implements Tool
         ];
     }
 
+    /**
+     * Delete a Droplet by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

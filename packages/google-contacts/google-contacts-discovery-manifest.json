@@ -1,0 +1,201 @@
+{
+    "source": "https://people.googleapis.com/$discovery/rest?version=v1",
+    "service": "People API",
+    "version": "v1",
+    "method_count": 24,
+    "generated_package": "google-contacts",
+    "methods": [
+        {
+            "discovery_id": "people.searchDirectoryPeople",
+            "tool": "google_contacts_people_search_directory_people",
+            "class": "GoogleContactsPeopleSearchDirectoryPeople",
+            "http_method": "GET",
+            "path": "/v1/people:searchDirectoryPeople",
+            "type": "read"
+        },
+        {
+            "discovery_id": "people.deleteContactPhoto",
+            "tool": "google_contacts_people_delete_contact_photo",
+            "class": "GoogleContactsPeopleDeleteContactPhoto",
+            "http_method": "DELETE",
+            "path": "/v1/{+resourceName}:deleteContactPhoto",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.batchDeleteContacts",
+            "tool": "google_contacts_people_batch_delete_contacts",
+            "class": "GoogleContactsPeopleBatchDeleteContacts",
+            "http_method": "POST",
+            "path": "/v1/people:batchDeleteContacts",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.createContact",
+            "tool": "google_contacts_people_create_contact",
+            "class": "GoogleContactsPeopleCreateContact",
+            "http_method": "POST",
+            "path": "/v1/people:createContact",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.listDirectoryPeople",
+            "tool": "google_contacts_people_list_directory_people",
+            "class": "GoogleContactsPeopleListDirectoryPeople",
+            "http_method": "GET",
+            "path": "/v1/people:listDirectoryPeople",
+            "type": "read"
+        },
+        {
+            "discovery_id": "people.updateContact",
+            "tool": "google_contacts_people_update_contact",
+            "class": "GoogleContactsPeopleUpdateContact",
+            "http_method": "PATCH",
+            "path": "/v1/{+resourceName}:updateContact",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.updateContactPhoto",
+            "tool": "google_contacts_people_update_contact_photo",
+            "class": "GoogleContactsPeopleUpdateContactPhoto",
+            "http_method": "PATCH",
+            "path": "/v1/{+resourceName}:updateContactPhoto",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.get",
+            "tool": "google_contacts_people_get",
+            "class": "GoogleContactsPeopleGet",
+            "http_method": "GET",
+            "path": "/v1/{+resourceName}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "people.deleteContact",
+            "tool": "google_contacts_people_delete_contact",
+            "class": "GoogleContactsPeopleDeleteContact",
+            "http_method": "DELETE",
+            "path": "/v1/{+resourceName}:deleteContact",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.getBatchGet",
+            "tool": "google_contacts_people_get_batch_get",
+            "class": "GoogleContactsPeopleGetBatchGet",
+            "http_method": "GET",
+            "path": "/v1/people:batchGet",
+            "type": "read"
+        },
+        {
+            "discovery_id": "people.batchUpdateContacts",
+            "tool": "google_contacts_people_batch_update_contacts",
+            "class": "GoogleContactsPeopleBatchUpdateContacts",
+            "http_method": "POST",
+            "path": "/v1/people:batchUpdateContacts",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.searchContacts",
+            "tool": "google_contacts_people_search_contacts",
+            "class": "GoogleContactsPeopleSearchContacts",
+            "http_method": "GET",
+            "path": "/v1/people:searchContacts",
+            "type": "read"
+        },
+        {
+            "discovery_id": "people.batchCreateContacts",
+            "tool": "google_contacts_people_batch_create_contacts",
+            "class": "GoogleContactsPeopleBatchCreateContacts",
+            "http_method": "POST",
+            "path": "/v1/people:batchCreateContacts",
+            "type": "write"
+        },
+        {
+            "discovery_id": "people.connections.list",
+            "tool": "google_contacts_people_connections_list",
+            "class": "GoogleContactsPeopleConnectionsList",
+            "http_method": "GET",
+            "path": "/v1/{+resourceName}/connections",
+            "type": "read"
+        },
+        {
+            "discovery_id": "otherContacts.list",
+            "tool": "google_contacts_other_contacts_list",
+            "class": "GoogleContactsOtherContactsList",
+            "http_method": "GET",
+            "path": "/v1/otherContacts",
+            "type": "read"
+        },
+        {
+            "discovery_id": "otherContacts.search",
+            "tool": "google_contacts_other_contacts_search",
+            "class": "GoogleContactsOtherContactsSearch",
+            "http_method": "GET",
+            "path": "/v1/otherContacts:search",
+            "type": "read"
+        },
+        {
+            "discovery_id": "otherContacts.copyOtherContactToMyContactsGroup",
+            "tool": "google_contacts_other_contacts_copy_other_contact_to_my_contacts_group",
+            "class": "GoogleContactsOtherContactsCopyOtherContactToMyContactsGroup",
+            "http_method": "POST",
+            "path": "/v1/{+resourceName}:copyOtherContactToMyContactsGroup",
+            "type": "write"
+        },
+        {
+            "discovery_id": "contactGroups.create",
+            "tool": "google_contacts_contact_groups_create",
+            "class": "GoogleContactsContactGroupsCreate",
+            "http_method": "POST",
+            "path": "/v1/contactGroups",
+            "type": "write"
+        },
+        {
+            "discovery_id": "contactGroups.get",
+            "tool": "google_contacts_contact_groups_get",
+            "class": "GoogleContactsContactGroupsGet",
+            "http_method": "GET",
+            "path": "/v1/{+resourceName}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "contactGroups.list",
+            "tool": "google_contacts_contact_groups_list",
+            "class": "GoogleContactsContactGroupsList",
+            "http_method": "GET",
+            "path": "/v1/contactGroups",
+            "type": "read"
+        },
+        {
+            "discovery_id": "contactGroups.batchGet",
+            "tool": "google_contacts_contact_groups_batch_get",
+            "class": "GoogleContactsContactGroupsBatchGet",
+            "http_method": "GET",
+            "path": "/v1/contactGroups:batchGet",
+            "type": "read"
+        },
+        {
+            "discovery_id": "contactGroups.update",
+            "tool": "google_contacts_contact_groups_update",
+            "class": "GoogleContactsContactGroupsUpdate",
+            "http_method": "PUT",
+            "path": "/v1/{+resourceName}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "contactGroups.delete",
+            "tool": "google_contacts_contact_groups_delete",
+            "class": "GoogleContactsContactGroupsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+resourceName}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "contactGroups.members.modify",
+            "tool": "google_contacts_contact_groups_members_modify",
+            "class": "GoogleContactsContactGroupsMembersModify",
+            "http_method": "POST",
+            "path": "/v1/{+resourceName}/members:modify",
+            "type": "write"
+        }
+    ]
+}

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\LaunchDarkly\LaunchDarklyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List LaunchDarkly projects.
+ */
 class LaunchDarklyListProjects implements Tool
 {
+    /**
+     * @param  LaunchDarklyService  $service  LaunchDarkly API client.
+     */
     public function __construct(
         private LaunchDarklyService $service,
     ) {}
@@ -27,6 +33,11 @@ class LaunchDarklyListProjects implements Tool
         return [];
     }
 
+    /**
+     * List and normalize LaunchDarkly projects.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Linode\LinodeService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Linode DNS domain by ID.
+ */
 class LinodeGetDomain implements Tool
 {
+    /**
+     * @param  LinodeService  $service  The Linode API client.
+     */
     public function __construct(
         private LinodeService $service,
     ) {}
@@ -29,6 +35,11 @@ class LinodeGetDomain implements Tool
         ];
     }
 
+    /**
+     * Fetch a domain by numeric ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

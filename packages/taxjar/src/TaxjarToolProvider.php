@@ -108,7 +108,7 @@ class TaxjarToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Sales tax calculation, collection, and reporting',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:taxjar',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.taxjar.com/api/reference/',
         ];

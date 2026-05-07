@@ -108,7 +108,7 @@ class FirebaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Firebase integration for Laravel — manage projects, databases, documents, collections, and users.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

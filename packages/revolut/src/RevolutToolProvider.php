@@ -6,13 +6,15 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Revolut\Tools\RevolutGetAccountBankDetails;
 use OpenCompany\Integrations\Revolut\Tools\RevolutListAccounts;
 use OpenCompany\Integrations\Revolut\Tools\RevolutGetAccount;
 use OpenCompany\Integrations\Revolut\Tools\RevolutListTransactions;
 use OpenCompany\Integrations\Revolut\Tools\RevolutGetTransaction;
 use OpenCompany\Integrations\Revolut\Tools\RevolutListCards;
 use OpenCompany\Integrations\Revolut\Tools\RevolutGetCard;
-use OpenCompany\Integrations\Revolut\Tools\RevolutGetCurrentUser;
+use OpenCompany\Integrations\Revolut\Tools\RevolutGetSensitiveCardDetails;
+use OpenCompany\Integrations\Revolut\Tools\RevolutListTeamMembers;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
@@ -94,7 +96,7 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Business banking — accounts, transactions, and card management',
             'icon' => 'ph:bank',
             'logo' => 'simple-icons:revolut',
-            'category' => 'sales',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.revolut.com/docs/business-api',
         ];
@@ -111,12 +113,21 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'hint' => 'Generate an access token in the Revolut Business Developer Portal. Use a token with the permissions you need.',
                 'required' => true,
             ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'Base URL',
+                'placeholder' => 'https://b2b.revolut.com/api/1.0',
+                'hint' => 'Use https://sandbox-b2b.revolut.com/api/1.0 for sandbox credentials.',
+                'required' => false,
+            ],
         ];
     }
 
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://b2b.revolut.com/api/1.0'), '/');
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided. Generate one in the Revolut Business Developer Portal.'];
@@ -125,7 +136,7 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         try {
             $response = Http::withToken($accessToken)
                 ->timeout(10)
-                ->get('https://api.revolut.com/v1/accounts');
+                ->get($baseUrl . '/accounts');
 
             if ($response->successful()) {
                 $accounts = $response->json() ?? [];
@@ -174,6 +185,13 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'Retrieve a Revolut account by ID.',
                 'icon' => 'ph:bank',
             ],
+            'revolut_get_account_bank_details' => [
+                'class' => RevolutGetAccountBankDetails::class,
+                'type' => 'read',
+                'name' => 'Get Account Bank Details',
+                'description' => 'Retrieve full bank details for a Revolut account.',
+                'icon' => 'ph:bank',
+            ],
             // Transactions
             'revolut_list_transactions' => [
                 'class' => RevolutListTransactions::class,
@@ -204,12 +222,19 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'Retrieve a Revolut card by ID.',
                 'icon' => 'ph:credit-card',
             ],
-            // User
-            'revolut_get_current_user' => [
-                'class' => RevolutGetCurrentUser::class,
+            'revolut_get_sensitive_card_details' => [
+                'class' => RevolutGetSensitiveCardDetails::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Revolut user.',
+                'name' => 'Get Sensitive Card Details',
+                'description' => 'Retrieve sensitive card details when the token has READ_SENSITIVE_CARD_DATA scope.',
+                'icon' => 'ph:credit-card',
+            ],
+            // Team members
+            'revolut_list_team_members' => [
+                'class' => RevolutListTeamMembers::class,
+                'type' => 'read',
+                'name' => 'List Team Members',
+                'description' => 'Retrieve Revolut Business team members with pagination.',
                 'icon' => 'ph:user',
             ],
         ];
@@ -250,6 +275,7 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
 
             return new RevolutService(
                 accessToken: $creds->get('revolut', 'access_token', '', $account),
+                baseUrl: $creds->get('revolut', 'url', 'https://b2b.revolut.com/api/1.0', $account),
             );
         }
 

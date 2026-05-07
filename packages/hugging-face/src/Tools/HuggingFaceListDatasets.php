@@ -13,6 +13,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class HuggingFaceListDatasets implements Tool
 {
+    /**
+     * @param  HuggingFaceService  $service  Hugging Face Hub API client.
+     */
     public function __construct(
         private HuggingFaceService $service,
     ) {}
@@ -40,6 +43,11 @@ class HuggingFaceListDatasets implements Tool
         ];
     }
 
+    /**
+     * Search datasets on the Hub.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments for dataset search.
+     */
     public function execute(array $args): ToolResult
     {
         try {

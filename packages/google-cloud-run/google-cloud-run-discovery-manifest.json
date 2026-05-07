@@ -1,0 +1,473 @@
+{
+    "source": "https://run.googleapis.com/$discovery/rest?version=v2",
+    "docs": "https://cloud.google.com/run/docs/reference/rest/v2",
+    "version": "v2",
+    "method_count": 58,
+    "generated_at": "2026-05-06",
+    "methods": [
+        {
+            "tool": "google_cloud_run_projects_locations_export_image_metadata",
+            "class": "GoogleCloudRunProjectsLocationsExportImageMetadata",
+            "method": "GET",
+            "path": "/v2/{+name}:exportImageMetadata",
+            "discovery_id": "projects.locations.exportImageMetadata",
+            "summary": "Projects Locations Export Image Metadata"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_export_project_metadata",
+            "class": "GoogleCloudRunProjectsLocationsExportProjectMetadata",
+            "method": "GET",
+            "path": "/v2/{+name}:exportProjectMetadata",
+            "discovery_id": "projects.locations.exportProjectMetadata",
+            "summary": "Projects Locations Export Project Metadata"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_export_image",
+            "class": "GoogleCloudRunProjectsLocationsExportImage",
+            "method": "POST",
+            "path": "/v2/{+name}:exportImage",
+            "discovery_id": "projects.locations.exportImage",
+            "summary": "Projects Locations Export Image"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_export_metadata",
+            "class": "GoogleCloudRunProjectsLocationsExportMetadata",
+            "method": "GET",
+            "path": "/v2/{+name}:exportMetadata",
+            "discovery_id": "projects.locations.exportMetadata",
+            "summary": "Projects Locations Export Metadata"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_list",
+            "class": "GoogleCloudRunProjectsLocationsServicesList",
+            "method": "GET",
+            "path": "/v2/{+parent}/services",
+            "discovery_id": "projects.locations.services.list",
+            "summary": "Projects Locations Services List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_delete",
+            "class": "GoogleCloudRunProjectsLocationsServicesDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.services.delete",
+            "summary": "Projects Locations Services Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_set_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsServicesSetIamPolicy",
+            "method": "POST",
+            "path": "/v2/{+resource}:setIamPolicy",
+            "discovery_id": "projects.locations.services.setIamPolicy",
+            "summary": "Projects Locations Services Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_get",
+            "class": "GoogleCloudRunProjectsLocationsServicesGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.services.get",
+            "summary": "Projects Locations Services Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_get_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsServicesGetIamPolicy",
+            "method": "GET",
+            "path": "/v2/{+resource}:getIamPolicy",
+            "discovery_id": "projects.locations.services.getIamPolicy",
+            "summary": "Projects Locations Services Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_patch",
+            "class": "GoogleCloudRunProjectsLocationsServicesPatch",
+            "method": "PATCH",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.services.patch",
+            "summary": "Projects Locations Services Patch"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_create",
+            "class": "GoogleCloudRunProjectsLocationsServicesCreate",
+            "method": "POST",
+            "path": "/v2/{+parent}/services",
+            "discovery_id": "projects.locations.services.create",
+            "summary": "Projects Locations Services Create"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_test_iam_permissions",
+            "class": "GoogleCloudRunProjectsLocationsServicesTestIamPermissions",
+            "method": "POST",
+            "path": "/v2/{+resource}:testIamPermissions",
+            "discovery_id": "projects.locations.services.testIamPermissions",
+            "summary": "Projects Locations Services Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_revisions_get",
+            "class": "GoogleCloudRunProjectsLocationsServicesRevisionsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.services.revisions.get",
+            "summary": "Projects Locations Services Revisions Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_revisions_export_status",
+            "class": "GoogleCloudRunProjectsLocationsServicesRevisionsExportStatus",
+            "method": "GET",
+            "path": "/v2/{+name}/{+operationId}:exportStatus",
+            "discovery_id": "projects.locations.services.revisions.exportStatus",
+            "summary": "Projects Locations Services Revisions Export Status"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_revisions_list",
+            "class": "GoogleCloudRunProjectsLocationsServicesRevisionsList",
+            "method": "GET",
+            "path": "/v2/{+parent}/revisions",
+            "discovery_id": "projects.locations.services.revisions.list",
+            "summary": "Projects Locations Services Revisions List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_services_revisions_delete",
+            "class": "GoogleCloudRunProjectsLocationsServicesRevisionsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.services.revisions.delete",
+            "summary": "Projects Locations Services Revisions Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_create",
+            "class": "GoogleCloudRunProjectsLocationsJobsCreate",
+            "method": "POST",
+            "path": "/v2/{+parent}/jobs",
+            "discovery_id": "projects.locations.jobs.create",
+            "summary": "Projects Locations Jobs Create"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_test_iam_permissions",
+            "class": "GoogleCloudRunProjectsLocationsJobsTestIamPermissions",
+            "method": "POST",
+            "path": "/v2/{+resource}:testIamPermissions",
+            "discovery_id": "projects.locations.jobs.testIamPermissions",
+            "summary": "Projects Locations Jobs Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_patch",
+            "class": "GoogleCloudRunProjectsLocationsJobsPatch",
+            "method": "PATCH",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.jobs.patch",
+            "summary": "Projects Locations Jobs Patch"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_get",
+            "class": "GoogleCloudRunProjectsLocationsJobsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.jobs.get",
+            "summary": "Projects Locations Jobs Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_list",
+            "class": "GoogleCloudRunProjectsLocationsJobsList",
+            "method": "GET",
+            "path": "/v2/{+parent}/jobs",
+            "discovery_id": "projects.locations.jobs.list",
+            "summary": "Projects Locations Jobs List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_delete",
+            "class": "GoogleCloudRunProjectsLocationsJobsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.jobs.delete",
+            "summary": "Projects Locations Jobs Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_get_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsJobsGetIamPolicy",
+            "method": "GET",
+            "path": "/v2/{+resource}:getIamPolicy",
+            "discovery_id": "projects.locations.jobs.getIamPolicy",
+            "summary": "Projects Locations Jobs Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_run",
+            "class": "GoogleCloudRunProjectsLocationsJobsRun",
+            "method": "POST",
+            "path": "/v2/{+name}:run",
+            "discovery_id": "projects.locations.jobs.run",
+            "summary": "Projects Locations Jobs Run"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_set_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsJobsSetIamPolicy",
+            "method": "POST",
+            "path": "/v2/{+resource}:setIamPolicy",
+            "discovery_id": "projects.locations.jobs.setIamPolicy",
+            "summary": "Projects Locations Jobs Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_export_status",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsExportStatus",
+            "method": "GET",
+            "path": "/v2/{+name}/{+operationId}:exportStatus",
+            "discovery_id": "projects.locations.jobs.executions.exportStatus",
+            "summary": "Projects Locations Jobs Executions Export Status"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_cancel",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsCancel",
+            "method": "POST",
+            "path": "/v2/{+name}:cancel",
+            "discovery_id": "projects.locations.jobs.executions.cancel",
+            "summary": "Projects Locations Jobs Executions Cancel"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_list",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsList",
+            "method": "GET",
+            "path": "/v2/{+parent}/executions",
+            "discovery_id": "projects.locations.jobs.executions.list",
+            "summary": "Projects Locations Jobs Executions List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_delete",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.jobs.executions.delete",
+            "summary": "Projects Locations Jobs Executions Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_get",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.jobs.executions.get",
+            "summary": "Projects Locations Jobs Executions Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_tasks_get",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsTasksGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.jobs.executions.tasks.get",
+            "summary": "Projects Locations Jobs Executions Tasks Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_jobs_executions_tasks_list",
+            "class": "GoogleCloudRunProjectsLocationsJobsExecutionsTasksList",
+            "method": "GET",
+            "path": "/v2/{+parent}/tasks",
+            "discovery_id": "projects.locations.jobs.executions.tasks.list",
+            "summary": "Projects Locations Jobs Executions Tasks List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_operations_get",
+            "class": "GoogleCloudRunProjectsLocationsOperationsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.operations.get",
+            "summary": "Projects Locations Operations Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_operations_wait",
+            "class": "GoogleCloudRunProjectsLocationsOperationsWait",
+            "method": "POST",
+            "path": "/v2/{+name}:wait",
+            "discovery_id": "projects.locations.operations.wait",
+            "summary": "Projects Locations Operations Wait"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_operations_list",
+            "class": "GoogleCloudRunProjectsLocationsOperationsList",
+            "method": "GET",
+            "path": "/v2/{+name}/operations",
+            "discovery_id": "projects.locations.operations.list",
+            "summary": "Projects Locations Operations List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_operations_delete",
+            "class": "GoogleCloudRunProjectsLocationsOperationsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.operations.delete",
+            "summary": "Projects Locations Operations Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_get_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsInstancesGetIamPolicy",
+            "method": "GET",
+            "path": "/v2/{+resource}:getIamPolicy",
+            "discovery_id": "projects.locations.instances.getIamPolicy",
+            "summary": "Projects Locations Instances Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_stop",
+            "class": "GoogleCloudRunProjectsLocationsInstancesStop",
+            "method": "POST",
+            "path": "/v2/{+name}:stop",
+            "discovery_id": "projects.locations.instances.stop",
+            "summary": "Projects Locations Instances Stop"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_set_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsInstancesSetIamPolicy",
+            "method": "POST",
+            "path": "/v2/{+resource}:setIamPolicy",
+            "discovery_id": "projects.locations.instances.setIamPolicy",
+            "summary": "Projects Locations Instances Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_start",
+            "class": "GoogleCloudRunProjectsLocationsInstancesStart",
+            "method": "POST",
+            "path": "/v2/{+name}:start",
+            "discovery_id": "projects.locations.instances.start",
+            "summary": "Projects Locations Instances Start"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_patch",
+            "class": "GoogleCloudRunProjectsLocationsInstancesPatch",
+            "method": "PATCH",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.instances.patch",
+            "summary": "Projects Locations Instances Patch"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_create",
+            "class": "GoogleCloudRunProjectsLocationsInstancesCreate",
+            "method": "POST",
+            "path": "/v2/{+parent}/instances",
+            "discovery_id": "projects.locations.instances.create",
+            "summary": "Projects Locations Instances Create"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_test_iam_permissions",
+            "class": "GoogleCloudRunProjectsLocationsInstancesTestIamPermissions",
+            "method": "POST",
+            "path": "/v2/{+resource}:testIamPermissions",
+            "discovery_id": "projects.locations.instances.testIamPermissions",
+            "summary": "Projects Locations Instances Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_delete",
+            "class": "GoogleCloudRunProjectsLocationsInstancesDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.instances.delete",
+            "summary": "Projects Locations Instances Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_list",
+            "class": "GoogleCloudRunProjectsLocationsInstancesList",
+            "method": "GET",
+            "path": "/v2/{+parent}/instances",
+            "discovery_id": "projects.locations.instances.list",
+            "summary": "Projects Locations Instances List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_instances_get",
+            "class": "GoogleCloudRunProjectsLocationsInstancesGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.instances.get",
+            "summary": "Projects Locations Instances Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_patch",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsPatch",
+            "method": "PATCH",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.workerPools.patch",
+            "summary": "Projects Locations Worker Pools Patch"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_get_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsGetIamPolicy",
+            "method": "GET",
+            "path": "/v2/{+resource}:getIamPolicy",
+            "discovery_id": "projects.locations.workerPools.getIamPolicy",
+            "summary": "Projects Locations Worker Pools Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_create",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsCreate",
+            "method": "POST",
+            "path": "/v2/{+parent}/workerPools",
+            "discovery_id": "projects.locations.workerPools.create",
+            "summary": "Projects Locations Worker Pools Create"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_test_iam_permissions",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsTestIamPermissions",
+            "method": "POST",
+            "path": "/v2/{+resource}:testIamPermissions",
+            "discovery_id": "projects.locations.workerPools.testIamPermissions",
+            "summary": "Projects Locations Worker Pools Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_set_iam_policy",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsSetIamPolicy",
+            "method": "POST",
+            "path": "/v2/{+resource}:setIamPolicy",
+            "discovery_id": "projects.locations.workerPools.setIamPolicy",
+            "summary": "Projects Locations Worker Pools Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_list",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsList",
+            "method": "GET",
+            "path": "/v2/{+parent}/workerPools",
+            "discovery_id": "projects.locations.workerPools.list",
+            "summary": "Projects Locations Worker Pools List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_delete",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.workerPools.delete",
+            "summary": "Projects Locations Worker Pools Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_get",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.workerPools.get",
+            "summary": "Projects Locations Worker Pools Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_revisions_get",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsRevisionsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.workerPools.revisions.get",
+            "summary": "Projects Locations Worker Pools Revisions Get"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_revisions_list",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsRevisionsList",
+            "method": "GET",
+            "path": "/v2/{+parent}/revisions",
+            "discovery_id": "projects.locations.workerPools.revisions.list",
+            "summary": "Projects Locations Worker Pools Revisions List"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_worker_pools_revisions_delete",
+            "class": "GoogleCloudRunProjectsLocationsWorkerPoolsRevisionsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.workerPools.revisions.delete",
+            "summary": "Projects Locations Worker Pools Revisions Delete"
+        },
+        {
+            "tool": "google_cloud_run_projects_locations_builds_submit",
+            "class": "GoogleCloudRunProjectsLocationsBuildsSubmit",
+            "method": "POST",
+            "path": "/v2/{+parent}/builds:submit",
+            "discovery_id": "projects.locations.builds.submit",
+            "summary": "Projects Locations Builds Submit"
+        }
+    ]
+}

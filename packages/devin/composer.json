@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-devin",
-    "description": "Devin AI integration for Laravel — create and manage Devin sessions, send messages.",
+    "description": "Devin integration for Laravel - manage v3 organization sessions, messages, insights, tags, and secrets.",
     "license": "MIT",
     "authors": [
         {

@@ -19,7 +19,7 @@ List invoices from Zoho Books.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.list_invoices({
+local result = app.integrations["zoho-books"].zohobooks_list_invoices({
   status = "unpaid",
   per_page = 10
 })
@@ -44,7 +44,7 @@ Get full details of a specific invoice.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.get_invoice({
+local result = app.integrations["zoho-books"].zohobooks_get_invoice({
   invoice_id = "4815000000046819"
 })
 
@@ -91,7 +91,7 @@ Each line item object:
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.create_invoice({
+local result = app.integrations["zoho-books"].zohobooks_create_invoice({
   customer_id = "4815000000044001",
   line_items = {
     {
@@ -136,7 +136,7 @@ Update an existing invoice.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.update_invoice({
+local result = app.integrations["zoho-books"].zohobooks_update_invoice({
   invoice_id = "4815000000046819",
   notes = "Updated: payment via bank transfer",
   status = "sent"
@@ -164,7 +164,7 @@ List contacts (customers and vendors).
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.list_contacts({
+local result = app.integrations["zoho-books"].zohobooks_list_contacts({
   contact_type = "customer",
   per_page = 20
 })
@@ -189,7 +189,7 @@ Get full details of a specific contact.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.get_contact({
+local result = app.integrations["zoho-books"].zohobooks_get_contact({
   contact_id = "4815000000044001"
 })
 
@@ -234,7 +234,7 @@ Create a new contact (customer or vendor).
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.create_contact({
+local result = app.integrations["zoho-books"].zohobooks_create_contact({
   name = "Acme Corp",
   email = "billing@acme.com",
   contact_type = "customer",
@@ -268,7 +268,7 @@ List items (products and services).
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.list_items({
+local result = app.integrations["zoho-books"].zohobooks_list_items({
   filter_type = "active"
 })
 
@@ -298,7 +298,7 @@ Create a new item (product or service).
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.create_item({
+local result = app.integrations["zoho-books"].zohobooks_create_item({
   name = "Consulting Hour",
   rate = 175.00,
   description = "Professional consulting per hour",
@@ -330,7 +330,7 @@ List estimates (quotes).
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.list_estimates({
+local result = app.integrations["zoho-books"].zohobooks_list_estimates({
   status = "accepted"
 })
 
@@ -361,7 +361,7 @@ Create a new estimate (quote).
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.create_estimate({
+local result = app.integrations["zoho-books"].zohobooks_create_estimate({
   customer_id = "4815000000044001",
   line_items = {
     {
@@ -392,7 +392,7 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_books.get_current_user({})
+local result = app.integrations["zoho-books"].zohobooks_get_current_user({})
 
 print("Logged in as: " .. (result.users and result.users[1] and result.users[1].name or "Unknown"))
 ```
@@ -405,14 +405,14 @@ If you have multiple Zoho Books accounts configured, use account-specific namesp
 
 ```lua
 -- Default account (always works)
-app.integrations.zoho_books.function_name({...})
+app.integrations["zoho-books"].zohobooks_function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.zoho_books.default.function_name({...})
+app.integrations["zoho-books"].default.zohobooks_function_name({...})
 
 -- Named accounts
-app.integrations.zoho_books.production.function_name({...})
-app.integrations.zoho_books.sandbox.function_name({...})
+app.integrations["zoho-books"].production.zohobooks_function_name({...})
+app.integrations["zoho-books"].sandbox.zohobooks_function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

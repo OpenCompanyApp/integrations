@@ -91,7 +91,7 @@ class LobToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
             'description' => 'Print and mail automation — send letters and postcards, manage addresses',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:lob',
-            'category' => 'print',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.lob.com/',
         ];

@@ -15,6 +15,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AuthZeroGetUser implements Tool
 {
+    /**
+     * @param  AuthZeroService  $service  The Auth0 Management API client.
+     */
     public function __construct(
         private AuthZeroService $service,
     ) {}
@@ -36,6 +39,11 @@ class AuthZeroGetUser implements Tool
         ];
     }
 
+    /**
+     * Retrieve a single Auth0 user by user ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

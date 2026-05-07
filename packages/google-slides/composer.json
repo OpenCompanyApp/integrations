@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-slides",
-    "description": "Google Slides integration for Laravel — list, get, and create presentations and slides.",
+    "description": "Google Slides integration for Laravel AI agents - generated Slides API v1 coverage for presentations, batch updates, pages, and thumbnails.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google-slides", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-slides": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,12 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "slides",
+        "workspace",
+        "presentations",
+        "opencompany"
+    ]
 }

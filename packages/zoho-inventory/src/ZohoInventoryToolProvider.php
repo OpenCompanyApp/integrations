@@ -3,8 +3,10 @@
 namespace OpenCompany\Integrations\ZohoInventory;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\ZohoInventory\Tools\ZohoInventoryListItems;
 use OpenCompany\Integrations\ZohoInventory\Tools\ZohoInventoryGetItem;
@@ -14,7 +16,6 @@ use OpenCompany\Integrations\ZohoInventory\Tools\ZohoInventoryListShipments;
 use OpenCompany\Integrations\ZohoInventory\Tools\ZohoInventoryListPackages;
 use OpenCompany\Integrations\ZohoInventory\Tools\ZohoInventoryGetCurrentUser;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 class ZohoInventoryToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -73,7 +74,7 @@ class ZohoInventoryToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function appName(): string
     {
-        return 'zoho_inventory';
+        return 'zoho-inventory';
     }
 
     public function appMeta(): array
@@ -93,7 +94,7 @@ class ZohoInventoryToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Inventory management, sales orders, shipments, and packages',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:zoho',
-            'category' => 'ecommerce',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://www.zoho.com/inventory/api/v1/',
         ];
@@ -260,12 +261,19 @@ class ZohoInventoryToolProvider implements ToolProvider, ConfigurableIntegration
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('zoho-inventory', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_inventory', $key, $default, $account);
+            };
 
             $service = new ZohoInventoryService(
-                accessToken: $creds->get('zoho_inventory', 'access_token', '', $account),
-                organizationId: $creds->get('zoho_inventory', 'organization_id', '', $account),
-                baseUrl: $creds->get('zoho_inventory', 'url', 'https://www.zohoapis.com/inventory', $account),
+                accessToken: $get('access_token'),
+                organizationId: $get('organization_id'),
+                baseUrl: $get('url', 'https://www.zohoapis.com/inventory'),
             );
 
             return new $class($service);

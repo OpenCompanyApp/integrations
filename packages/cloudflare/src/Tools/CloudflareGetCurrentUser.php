@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Cloudflare\CloudflareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the current Cloudflare user.
+ *
+ * Returns a compact profile for the authenticated API token owner.
+ */
 class CloudflareGetCurrentUser implements Tool
 {
+    /**
+     * @param  CloudflareService  $service  Cloudflare API client.
+     */
     public function __construct(
         private CloudflareService $service,
     ) {}
@@ -27,6 +35,11 @@ class CloudflareGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the authenticated user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

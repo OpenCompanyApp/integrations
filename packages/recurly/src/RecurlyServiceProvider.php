@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Recurly integration with Laravel's service container.
+ *
+ * Binds the Recurly service from stored credentials and registers the
+ * tool provider with the shared registry when available.
+ */
 class RecurlyServiceProvider extends ServiceProvider
 {
     /**

@@ -94,7 +94,7 @@ class OktaToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Identity and access management — manage users, groups, and applications.',
             'icon' => 'ph:shield-check',
             'logo' => 'simple-icons:okta',
-            'category' => 'identity',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.okta.com/docs/reference/api/',
         ];

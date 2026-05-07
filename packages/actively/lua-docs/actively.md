@@ -1,4 +1,4 @@
-# Actively CRM — Lua API Reference
+# Actively CRM - Lua API Reference
 
 ## list_organizations
 
@@ -197,4 +197,4 @@ app.integrations.actively.work.function_name({...})
 app.integrations.actively.personal.function_name({...})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts - only the credentials differ.

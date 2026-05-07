@@ -1,0 +1,39 @@
+<?php
+
+namespace OpenCompany\Integrations\Databricks\Tools;
+
+/**
+ * Settings Get Enable Notebook Table Clipboard.
+ *
+ * Maps to the official Databricks SDK endpoint get /api/2.0/settings/types/enable-notebook-table-clipboard/names/default.
+ */
+class DatabricksSettingsGetEnableNotebookTableClipboard extends AbstractDatabricksTool
+{
+    protected const NAME = 'databricks_settings_get_enable_notebook_table_clipboard';
+    protected const DESCRIPTION = 'Settings Get Enable Notebook Table Clipboard
+
+Official Databricks SDK endpoint: GET /api/2.0/settings/types/enable-notebook-table-clipboard/names/default
+
+Generated from the official databricks-sdk-go surface, which is generated from Databricks OpenAPI specs.';
+    protected const PARAMETERS = array (
+  'query' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional query string parameters matching the Databricks REST API request fields.',
+  ),
+  'headers' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional additional request headers for advanced Databricks endpoints.',
+  ),
+  'body' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional JSON request body matching the Databricks REST API request fields.',
+  ),
+);
+    protected const METHOD = 'get';
+    protected const PATH = '/api/2.0/settings/types/enable-notebook-table-clipboard/names/default';
+    protected const PATH_PARAMS = array (
+);
+}

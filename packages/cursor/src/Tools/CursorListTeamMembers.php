@@ -2,18 +2,18 @@
 
 namespace OpenCompany\Integrations\Cursor\Tools;
 
-use OpenCompany\Integrations\Cursor\CursorService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Cursor\CursorService;
 
 /**
- * List all team members in a Cursor workspace.
- *
- * Returns a list of member objects including names, email addresses,
- * and roles for the specified workspace.
+ * List all Cursor team members.
  */
 class CursorListTeamMembers implements Tool
 {
+    /**
+     * @param  CursorService  $service  The Cursor Admin API client.
+     */
     public function __construct(
         private CursorService $service,
     ) {}
@@ -31,7 +31,7 @@ class CursorListTeamMembers implements Tool
      */
     public function description(): string
     {
-        return 'List all team members in a Cursor workspace. Returns member names, emails, and roles.';
+        return 'List all Cursor team members and their roles.';
     }
 
     /**
@@ -42,14 +42,13 @@ class CursorListTeamMembers implements Tool
     public function parameters(): array
     {
         return [
-            'workspace_id' => ['type' => 'string', 'required' => true, 'description' => 'The workspace identifier.'],
         ];
     }
 
     /**
      * Execute the tool and return the result.
      *
-     * @param  array<string, mixed>  $args
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
      */
     public function execute(array $args): ToolResult
     {
@@ -58,12 +57,7 @@ class CursorListTeamMembers implements Tool
                 return ToolResult::error('Cursor integration is not configured.');
             }
 
-            $workspaceId = $args['workspace_id'] ?? '';
-            if (empty($workspaceId)) {
-                return ToolResult::error('workspace_id is required.');
-            }
-
-            $result = $this->service->listTeamMembers($workspaceId);
+            $result = $this->service->listTeamMembers();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

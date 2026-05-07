@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Netlify deploy by ID.
+ */
 class NetlifyGetDeploy implements Tool
 {
+    /**
+     * @param  NetlifyService  $service  The Netlify REST API client.
+     */
     public function __construct(
         private NetlifyService $service,
     ) {}
@@ -29,6 +35,11 @@ class NetlifyGetDeploy implements Tool
         ];
     }
 
+    /**
+     * Fetch and normalize a deploy.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (deploy_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

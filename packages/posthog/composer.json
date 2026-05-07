@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-posthog",
-    "description": "PostHog integration for Laravel — capture events, manage feature flags, query insights and dashboards.",
+    "description": "PostHog integration for Laravel with generated coverage from the official PostHog OpenAPI schema.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "posthog", "analytics", "feature-flags", "opencompany"],
+    "keywords": [
+        "tools",
+        "posthog",
+        "analytics",
+        "feature-flags",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

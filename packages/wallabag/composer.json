@@ -1,0 +1,25 @@
+{
+    "name": "opencompanyapp/integration-wallabag",
+    "description": "wallabag integration for Laravel AI agents - OAuth tokens, entries, tags, exports, annotations, and guarded raw API calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Wallabag\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Wallabag\\WallabagServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -2,212 +2,253 @@
 
 namespace OpenCompany\Integrations\Svix;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Svix REST API.
+ *
+ * Handles bearer authentication, official operation lookup, request shaping,
+ * response parsing, and normalized API errors for all Svix tools.
+ */
 class SvixService
 {
+    private const DEFAULT_BASE_URL = 'https://api.svix.com';
+
+    /**
+     * @param  string  $authToken  Svix authentication token or self-hosted JWT.
+     * @param  string  $baseUrl  Svix API base URL.
+     */
     public function __construct(
         private string $authToken = '',
-        private string $baseUrl = 'https://api.svix.com',
+        private string $baseUrl = self::DEFAULT_BASE_URL,
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl ?: self::DEFAULT_BASE_URL, '/');
     }
 
+    /**
+     * Check whether the service has an authentication token.
+     */
     public function isConfigured(): bool
     {
-        return !empty($this->authToken);
+        return trim($this->authToken) !== '';
     }
 
     /**
-     * List applications.
+     * Return the official Svix operation map.
      *
-     * @param  int  $limit  Maximum number of items to return (default 50, max 250).
-     * @param  string|null  $iterator  Cursor for pagination — pass the iterator from a previous response.
+     * @return list<array<string, mixed>>
+     */
+    public static function operations(): array
+    {
+        return SvixOperations::all();
+    }
+
+    /**
+     * Return metadata for one Svix operation by tool slug or operation id.
+     *
      * @return array<string, mixed>
      */
-    public function listApplications(int $limit = 50, ?string $iterator = null): array
+    public function operation(string $operation): array
     {
-        $params = ['limit' => $limit];
-        if ($iterator !== null) {
-            $params['iterator'] = $iterator;
+        foreach (self::operations() as $definition) {
+            if (($definition['slug'] ?? null) === $operation || ($definition['operation'] ?? null) === $operation) {
+                return $definition;
+            }
         }
 
-        return $this->request('GET', '/api/v1/app', $params);
+        throw new RuntimeException("Unsupported Svix operation: {$operation}");
     }
 
     /**
-     * Get an application by ID.
+     * Execute an official Svix API operation.
      *
-     * @param  string  $id  The application ID.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    public function getApplication(string $id): array
+    public function call(string $operation, array $args = []): array
     {
-        return $this->request('GET', '/api/v1/app/' . urlencode($id));
+        $definition = $this->operation($operation);
+        [$path, $query, $payload, $headers] = $this->shapeRequest($definition, $args);
+
+        return $this->request(
+            method: (string) $definition['method'],
+            path: $path,
+            query: $query,
+            payload: $payload,
+            headers: $headers,
+        );
     }
 
     /**
-     * Create a new application.
+     * Shape tool arguments into path, query, JSON body, and header data.
      *
-     * @param  string  $name  The application name.
-     * @param  string|null  $uid  Optional unique identifier for the application.
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>, 3: array<string, string>}
      */
-    public function createApplication(string $name, ?string $uid = null): array
+    private function shapeRequest(array $definition, array $args): array
     {
-        $data = ['name' => $name];
-        if ($uid !== null) {
-            $data['uid'] = $uid;
+        $path = (string) $definition['path'];
+        $query = isset($args['query']) && is_array($args['query']) ? $args['query'] : [];
+        $payload = isset($args['payload']) && is_array($args['payload']) ? $args['payload'] : [];
+        $headers = isset($args['headers']) && is_array($args['headers']) ? $this->stringHeaders($args['headers']) : [];
+        $consumed = ['query' => true, 'payload' => true, 'headers' => true];
+
+        foreach ($definition['parameters'] as $parameter) {
+            $name = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? $args[$name] ?? null;
+            $consumed[$param] = true;
+            $consumed[$name] = true;
+
+            if (($parameter['required'] ?? false) && ($value === null || $value === '')) {
+                throw new RuntimeException($param.' is required.');
+            }
+
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            match ((string) $parameter['in']) {
+                'path' => $path = str_replace('{'.$name.'}', rawurlencode((string) $value), $path),
+                'query' => $query[$name] = $value,
+                'header' => $headers[$name] = (string) $value,
+                default => null,
+            };
         }
 
-        return $this->request('POST', '/api/v1/app', $data);
-    }
-
-    /**
-     * List messages for an application.
-     *
-     * @param  string  $appId  The application ID.
-     * @param  int  $limit  Maximum number of items to return (default 50, max 250).
-     * @param  string|null  $iterator  Cursor for pagination.
-     * @return array<string, mixed>
-     */
-    public function listMessages(string $appId, int $limit = 50, ?string $iterator = null): array
-    {
-        $params = ['limit' => $limit];
-        if ($iterator !== null) {
-            $params['iterator'] = $iterator;
+        if (str_contains($path, '{')) {
+            throw new RuntimeException('Missing required Svix path parameter.');
         }
 
-        return $this->request('GET', '/api/v1/app/' . urlencode($appId) . '/msg', $params);
-    }
+        foreach ($args as $key => $value) {
+            if (isset($consumed[$key])) {
+                continue;
+            }
 
-    /**
-     * List endpoints for an application.
-     *
-     * @param  string  $appId  The application ID.
-     * @param  int  $limit  Maximum number of items to return (default 50, max 250).
-     * @param  string|null  $iterator  Cursor for pagination.
-     * @return array<string, mixed>
-     */
-    public function listEndpoints(string $appId, int $limit = 50, ?string $iterator = null): array
-    {
-        $params = ['limit' => $limit];
-        if ($iterator !== null) {
-            $params['iterator'] = $iterator;
+            if (($definition['request_body'] ?? false) === true) {
+                $payload[$key] = $value;
+            } else {
+                $query[$key] = $value;
+            }
         }
 
-        return $this->request('GET', '/api/v1/app/' . urlencode($appId) . '/endpoint', $params);
+        return [$path, $query, $payload, $headers];
     }
 
     /**
-     * Create an endpoint for an application.
+     * Normalize arbitrary header values into string headers.
      *
-     * @param  string  $appId  The application ID.
-     * @param  string  $url  The endpoint URL.
-     * @param  int  $version  The API version for the endpoint (e.g., 1).
-     * @param  string|null  $description  Optional description for the endpoint.
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $headers  Header values supplied by a tool caller.
+     * @return array<string, string>
      */
-    public function createEndpoint(string $appId, string $url, int $version = 1, ?string $description = null): array
+    private function stringHeaders(array $headers): array
     {
-        $data = [
-            'url' => $url,
-            'version' => $version,
-        ];
-        if ($description !== null) {
-            $data['description'] = $description;
+        $normalized = [];
+        foreach ($headers as $name => $value) {
+            if (is_scalar($value)) {
+                $normalized[(string) $name] = (string) $value;
+            }
         }
 
-        return $this->request('POST', '/api/v1/app/' . urlencode($appId) . '/endpoint', $data);
+        return $normalized;
     }
 
     /**
-     * Get the current authenticated user's dashboard usage information.
+     * Dispatch an authenticated Svix request.
      *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     * @param  array<string, string>  $headers  Additional HTTP headers.
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    private function request(string $method, string $path, array $query = [], array $payload = [], array $headers = []): array
     {
-        return $this->request('GET', '/api/v1/dashboard-usage/me');
-    }
+        $response = $this->rawRequest($method, $path, $query, $payload, $headers);
 
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g., /api/v1/app).
-     * @param  array<string, mixed>  $data  Query parameters or JSON body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
-        }
-
-        return $response->json() ?? [];
+        return $this->decodeResponse($response);
     }
 
     /**
      * Make a raw HTTP request to the Svix API.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query parameters or JSON body.
-     * @return \Illuminate\Http\Client\Response
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     * @param  array<string, string>  $headers  Additional HTTP headers.
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $payload = [], array $headers = []): Response
     {
-        if (!$this->authToken) {
-            throw new \RuntimeException('Svix authentication token is not configured.');
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Svix authentication token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $options = [];
+        if ($query !== []) {
+            $options['query'] = $query;
+        }
+        if ($payload !== []) {
+            $options['json'] = $payload;
+        }
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->authToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $response = Http::withToken($this->authToken)
+                ->acceptJson()
+                ->withHeaders($headers)
+                ->timeout(30)
+                ->send(strtoupper($method), $this->baseUrl.$path, $options);
+        } catch (\Throwable $e) {
+            Log::error("Svix API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Svix API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Svix API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
-                }
-
-                $error = $response->json('detail') ?? $response->json('error') ?? $body;
-                Log::error("Svix API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Svix API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
-            }
-
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Svix API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Svix API: {$e->getMessage()}");
+            throw new RuntimeException('Failed to connect to Svix API: '.$e->getMessage());
         }
+
+        if (!$response->successful()) {
+            $this->throwApiError($method, $path, $response);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Throw a normalized Svix API error.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $json = $response->json();
+        $message = is_array($json)
+            ? (string) data_get($json, 'detail', data_get($json, 'error.message', data_get($json, 'message', '')))
+            : trim($response->body());
+
+        Log::error("Svix API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        throw new RuntimeException('Svix API error ('.$response->status().'): '.($message !== '' ? $message : 'Unexpected API error.'));
+    }
+
+    /**
+     * Decode JSON, text, or empty Svix responses.
+     *
+     * @return array<string, mixed>
+     */
+    private function decodeResponse(Response $response): array
+    {
+        $body = trim($response->body());
+        if ($body === '' || $body === 'null') {
+            return ['success' => true, 'status' => $response->status()];
+        }
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['value' => $body, 'status' => $response->status()];
     }
 }

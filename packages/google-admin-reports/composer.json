@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-google-admin-reports",
+    "description": "Google Admin Reports integration for Laravel AI agents - audit activity reports, user/customer/entity usage reports, and watch channels.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GoogleAdminReports\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GoogleAdminReports\\GoogleAdminReportsServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "google",
+        "admin",
+        "reports",
+        "audit",
+        "workspace",
+        "opencompany"
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "opencompanyapp/integration-shipstation",
+    "description": "ShipStation V2 integration for Laravel AI agents - batches, carriers, labels, inventory, shipments, rates, pickups, manifests, purchase orders, suppliers, warehouses, users, webhooks, and raw API calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\ShipStation\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\ShipStation\\ShipStationServiceProvider"]}},
+    "require": {"php": "^8.2", "illuminate/support": "^11.0|^12.0", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

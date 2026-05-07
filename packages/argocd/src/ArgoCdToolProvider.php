@@ -4,26 +4,20 @@ namespace OpenCompany\Integrations\ArgoCd;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdListApplications;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdGetApplication;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdCreateApplication;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdListProjects;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdGetProject;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdListRepositories;
-use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdGetCurrentUser;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
- * Registers the Argo CD integration and its tools with the integration platform.
+ * Tool catalog and setup metadata for the Argo CD integration.
  *
- * Provides application, project, and repository management tools
- * via the Argo CD GitOps API.
+ * Exposes generated tools for the official Argo CD Swagger document and
+ * resolves account-specific Argo CD tokens for host applications.
  */
-class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
-
-/**
+class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -31,46 +25,27 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => ['Argo CD requests use Authorization: Bearer with a user or account token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -83,7 +58,7 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'label' => 'Argo CD',
-            'description' => 'Argo CD GitOps integration for Kubernetes application delivery',
+            'description' => 'GitOps applications, app sets, projects, repositories, clusters, accounts, settings, certificates, and GPG keys',
             'icon' => 'mdi:kubernetes',
             'logo' => 'mdi:kubernetes',
         ];
@@ -93,11 +68,13 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'name' => 'Argo CD',
-            'description' => 'Manage GitOps applications, projects, and repositories on Argo CD for Kubernetes continuous delivery.',
+            'description' => 'Manage Argo CD GitOps applications, application sets, projects, repositories, repo credentials, clusters, accounts, settings, certificates, GPG keys, and API sessions.',
             'icon' => 'mdi:kubernetes',
             'logo' => 'mdi:kubernetes',
             'category' => 'productivity',
-            'docs_url' => 'https://argo-cd.readthedocs.io/en/stable/operator-manual/server-api/',
+            'badge' => 'verified',
+            'docs_url' => 'https://argo-cd.readthedocs.io/en/stable/developer-guide/api-docs/',
+            'source_url' => 'https://raw.githubusercontent.com/argoproj/argo-cd/master/assets/swagger.json',
         ];
     }
 
@@ -109,53 +86,62 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'secret',
                 'label' => 'Bearer Token',
                 'placeholder' => 'eyJhbGciOi...',
-                'hint' => 'Generate an access token in <strong>Argo CD → User Settings → Generate New Token</strong>, or use the <code>argocd account generate-token</code> CLI command.',
+                'hint' => 'Generate an Argo CD account token in the UI or with argocd account generate-token.',
                 'required' => true,
             ],
             [
                 'key' => 'base_url',
-                'type' => 'text',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://argocd.example.com/api/v1',
-                'hint' => 'The full base URL of your Argo CD server API. Defaults to <code>https://api.argocd.io/v1</code> if left empty.',
-                'required' => false,
+                'type' => 'url',
+                'label' => 'Server URL',
+                'placeholder' => 'https://argocd.example.com',
+                'hint' => 'Use the Argo CD server root URL. Legacy values ending in /api/v1 are accepted.',
+                'default' => 'https://argocd.example.com',
             ],
         ];
     }
 
+    /**
+     * Test the configured Argo CD token with the current-user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $token = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['base_url'] ?? 'https://api.argocd.io/v1', '/');
+        $token = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['base_url'] ?? 'https://argocd.example.com'), '/');
 
-        if (empty($token)) {
-            return ['success' => false, 'error' => 'No Bearer token provided.'];
+        if ($token === '') {
+            return ['success' => false, 'error' => 'No bearer token provided.'];
+        }
+
+        if (str_ends_with($baseUrl, '/api/v1')) {
+            $baseUrl = substr($baseUrl, 0, -strlen('/api/v1'));
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$token}",
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/session/userinfo');
+            $response = Http::withToken($token)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl . '/api/v1/session/userinfo');
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $username = $data['username'] ?? $data['loggedIn'] ?? 'unknown';
+            if (!$response->successful()) {
+                $message = $response->json('message') ?? $response->json('error') ?? $response->body();
 
                 return [
-                    'success' => true,
-                    'message' => "Connected to Argo CD as {$username}.",
+                    'success' => false,
+                    'error' => 'Argo CD API error (' . $response->status() . '): ' . (is_string($message) ? $message : json_encode($message)),
                 ];
             }
 
-            $body = $response->json() ?? [];
-            $error = $body['message'] ?? $body['error'] ?? $response->body();
+            $data = $response->json() ?? [];
+            $username = is_array($data) ? ($data['username'] ?? $data['sub'] ?? 'unknown') : 'unknown';
 
             return [
-                'success' => false,
-                'error' => 'Argo CD API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'success' => true,
+                'message' => "Connected to Argo CD as {$username}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -169,59 +155,32 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    /**
+     * Register generated Argo CD Swagger tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
-        return [
-            'argocd_list_applications' => [
-                'class' => ArgoCdListApplications::class,
-                'type' => 'read',
-                'name' => 'List Applications',
-                'description' => 'List all Argo CD applications.',
-                'icon' => 'mdi:application-outline',
-            ],
-            'argocd_get_application' => [
-                'class' => ArgoCdGetApplication::class,
-                'type' => 'read',
-                'name' => 'Get Application',
-                'description' => 'Get details for a specific Argo CD application.',
-                'icon' => 'mdi:application-outline',
-            ],
-            'argocd_create_application' => [
-                'class' => ArgoCdCreateApplication::class,
-                'type' => 'write',
-                'name' => 'Create Application',
-                'description' => 'Create a new Argo CD application.',
-                'icon' => 'mdi:application-plus-outline',
-            ],
-            'argocd_list_projects' => [
-                'class' => ArgoCdListProjects::class,
-                'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List all Argo CD projects.',
-                'icon' => 'mdi:folder-outline',
-            ],
-            'argocd_get_project' => [
-                'class' => ArgoCdGetProject::class,
-                'type' => 'read',
-                'name' => 'Get Project',
-                'description' => 'Get details for a specific Argo CD project.',
-                'icon' => 'mdi:folder-outline',
-            ],
-            'argocd_list_repositories' => [
-                'class' => ArgoCdListRepositories::class,
-                'type' => 'read',
-                'name' => 'List Repositories',
-                'description' => 'List all configured Git repositories in Argo CD.',
-                'icon' => 'mdi:source-repository',
-            ],
-            'argocd_get_current_user' => [
-                'class' => ArgoCdGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated Argo CD user\'s profile.',
-                'icon' => 'mdi:account-outline',
-            ],
-        ];
+        $tools = [];
+
+        foreach (ArgoCdService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
     public function isIntegration(): bool
@@ -232,30 +191,58 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function luaDocsPath(): ?string
     {
         return dirname(__DIR__) . '/lua-docs/argocd.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'Bearer Token', 'required' => true],
-            ['key' => 'base_url', 'type' => 'text', 'label' => 'API Base URL', 'required' => false],
-        ];
     }
 
-    /** @param  array<string, mixed>  $context */
+    /**
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): ArgoCdService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new ArgoCdService(
-                token: $creds->get('argocd', 'api_key', '', $account),
-                baseUrl: $creds->get('argocd', 'base_url', 'https://api.argocd.io/v1', $account),
+            return new ArgoCdService(
+                token: (string) $creds->get('argocd', 'api_key', '', (string) $account),
+                baseUrl: (string) $creds->get('argocd', 'base_url', 'https://argocd.example.com', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(ArgoCdService::class));
+        return app(ArgoCdService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/applicationsets') => 'mdi:application-braces-outline',
+            str_contains($path, '/applications') => 'mdi:application-outline',
+            str_contains($path, '/projects') => 'mdi:folder-outline',
+            str_contains($path, '/repositories'), str_contains($path, '/repocreds') => 'mdi:source-repository',
+            str_contains($path, '/clusters') => 'mdi:kubernetes',
+            str_contains($path, '/account') => 'mdi:account-outline',
+            str_contains($path, '/certificates'), str_contains($path, '/gpgkeys') => 'mdi:certificate-outline',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

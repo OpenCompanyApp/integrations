@@ -1,0 +1,1211 @@
+{
+    "source": "https://github.com/workos/openapi-spec/blob/main/spec/open-api-spec.yaml",
+    "openapi": "3.1.1",
+    "method_count": 172,
+    "operations": [
+        {
+            "operation_id": "ApiKeysController_validateApiKey",
+            "method": "POST",
+            "path": "/api_keys/validations",
+            "tool": "workos_api_keys_validate_api_key",
+            "class": "WorkOSApiKeysValidateApiKey"
+        },
+        {
+            "operation_id": "ApiKeysController_delete",
+            "method": "DELETE",
+            "path": "/api_keys/{id}",
+            "tool": "workos_api_keys_delete",
+            "class": "WorkOSApiKeysDelete"
+        },
+        {
+            "operation_id": "AuditLogValidatorsController_list",
+            "method": "GET",
+            "path": "/audit_logs/actions",
+            "tool": "workos_audit_log_validators_list",
+            "class": "WorkOSAuditLogValidatorsList"
+        },
+        {
+            "operation_id": "AuditLogValidatorVersionsController_create",
+            "method": "POST",
+            "path": "/audit_logs/actions/{actionName}/schemas",
+            "tool": "workos_audit_log_validator_versions_create",
+            "class": "WorkOSAuditLogValidatorVersionsCreate"
+        },
+        {
+            "operation_id": "AuditLogValidatorVersionsController_schemas",
+            "method": "GET",
+            "path": "/audit_logs/actions/{actionName}/schemas",
+            "tool": "workos_audit_log_validator_versions_schemas",
+            "class": "WorkOSAuditLogValidatorVersionsSchemas"
+        },
+        {
+            "operation_id": "AuditLogEventsController_create",
+            "method": "POST",
+            "path": "/audit_logs/events",
+            "tool": "workos_audit_log_events_create",
+            "class": "WorkOSAuditLogEventsCreate"
+        },
+        {
+            "operation_id": "AuditLogExportsController_exports",
+            "method": "POST",
+            "path": "/audit_logs/exports",
+            "tool": "workos_audit_log_exports_exports",
+            "class": "WorkOSAuditLogExportsExports"
+        },
+        {
+            "operation_id": "AuditLogExportsController_export",
+            "method": "GET",
+            "path": "/audit_logs/exports/{auditLogExportId}",
+            "tool": "workos_audit_log_exports_export",
+            "class": "WorkOSAuditLogExportsExport"
+        },
+        {
+            "operation_id": "AuthenticationChallengesController_verify",
+            "method": "POST",
+            "path": "/auth/challenges/{id}/verify",
+            "tool": "workos_authentication_challenges_verify",
+            "class": "WorkOSAuthenticationChallengesVerify"
+        },
+        {
+            "operation_id": "AuthenticationFactorsController_create",
+            "method": "POST",
+            "path": "/auth/factors/enroll",
+            "tool": "workos_authentication_factors_create",
+            "class": "WorkOSAuthenticationFactorsCreate"
+        },
+        {
+            "operation_id": "AuthenticationFactorsController_get",
+            "method": "GET",
+            "path": "/auth/factors/{id}",
+            "tool": "workos_authentication_factors_get",
+            "class": "WorkOSAuthenticationFactorsGet"
+        },
+        {
+            "operation_id": "AuthenticationFactorsController_delete",
+            "method": "DELETE",
+            "path": "/auth/factors/{id}",
+            "tool": "workos_authentication_factors_delete",
+            "class": "WorkOSAuthenticationFactorsDelete"
+        },
+        {
+            "operation_id": "AuthenticationFactorsController_challenge",
+            "method": "POST",
+            "path": "/auth/factors/{id}/challenge",
+            "tool": "workos_authentication_factors_challenge",
+            "class": "WorkOSAuthenticationFactorsChallenge"
+        },
+        {
+            "operation_id": "ExternalAuthController_completeLogin",
+            "method": "POST",
+            "path": "/authkit/oauth2/complete",
+            "tool": "workos_external_auth_complete_login",
+            "class": "WorkOSExternalAuthCompleteLogin"
+        },
+        {
+            "operation_id": "AuthorizationController_check",
+            "method": "POST",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/check",
+            "tool": "workos_authorization_check",
+            "class": "WorkOSAuthorizationCheck"
+        },
+        {
+            "operation_id": "AuthorizationController_listResourcesForMembership",
+            "method": "GET",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/resources",
+            "tool": "workos_authorization_list_resources_for_membership",
+            "class": "WorkOSAuthorizationListResourcesForMembership"
+        },
+        {
+            "operation_id": "AuthorizationController_listEffectivePermissions",
+            "method": "GET",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/resources/{resource_id}/permissions",
+            "tool": "workos_authorization_list_effective_permissions",
+            "class": "WorkOSAuthorizationListEffectivePermissions"
+        },
+        {
+            "operation_id": "AuthorizationController_listEffectivePermissionsByExternalId",
+            "method": "GET",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/resources/{resource_type_slug}/{external_id}/permissions",
+            "tool": "workos_authorization_list_effective_permissions_by_external_id",
+            "class": "WorkOSAuthorizationListEffectivePermissionsByExternalId"
+        },
+        {
+            "operation_id": "AuthorizationRoleAssignmentsController_listRoleAssignments",
+            "method": "GET",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/role_assignments",
+            "tool": "workos_authorization_role_assignments_list_role_assignments",
+            "class": "WorkOSAuthorizationRoleAssignmentsListRoleAssignments"
+        },
+        {
+            "operation_id": "AuthorizationRoleAssignmentsController_assignRole",
+            "method": "POST",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/role_assignments",
+            "tool": "workos_authorization_role_assignments_assign_role",
+            "class": "WorkOSAuthorizationRoleAssignmentsAssignRole"
+        },
+        {
+            "operation_id": "AuthorizationRoleAssignmentsController_removeRoleByCriteria",
+            "method": "DELETE",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/role_assignments",
+            "tool": "workos_authorization_role_assignments_remove_role_by_criteria",
+            "class": "WorkOSAuthorizationRoleAssignmentsRemoveRoleByCriteria"
+        },
+        {
+            "operation_id": "AuthorizationRoleAssignmentsController_removeRoleById",
+            "method": "DELETE",
+            "path": "/authorization/organization_memberships/{organization_membership_id}/role_assignments/{role_assignment_id}",
+            "tool": "workos_authorization_role_assignments_remove_role_by_id",
+            "class": "WorkOSAuthorizationRoleAssignmentsRemoveRoleById"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolesController_create",
+            "method": "POST",
+            "path": "/authorization/organizations/{organizationId}/roles",
+            "tool": "workos_authorization_organization_roles_create",
+            "class": "WorkOSAuthorizationOrganizationRolesCreate"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolesController_list",
+            "method": "GET",
+            "path": "/authorization/organizations/{organizationId}/roles",
+            "tool": "workos_authorization_organization_roles_list",
+            "class": "WorkOSAuthorizationOrganizationRolesList"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolesController_get",
+            "method": "GET",
+            "path": "/authorization/organizations/{organizationId}/roles/{slug}",
+            "tool": "workos_authorization_organization_roles_get",
+            "class": "WorkOSAuthorizationOrganizationRolesGet"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolesController_update",
+            "method": "PATCH",
+            "path": "/authorization/organizations/{organizationId}/roles/{slug}",
+            "tool": "workos_authorization_organization_roles_update",
+            "class": "WorkOSAuthorizationOrganizationRolesUpdate"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolesController_delete",
+            "method": "DELETE",
+            "path": "/authorization/organizations/{organizationId}/roles/{slug}",
+            "tool": "workos_authorization_organization_roles_delete",
+            "class": "WorkOSAuthorizationOrganizationRolesDelete"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolePermissionsController_setPermissions",
+            "method": "PUT",
+            "path": "/authorization/organizations/{organizationId}/roles/{slug}/permissions",
+            "tool": "workos_authorization_organization_role_permissions_set_permissions",
+            "class": "WorkOSAuthorizationOrganizationRolePermissionsSetPermissions"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolePermissionsController_addPermission",
+            "method": "POST",
+            "path": "/authorization/organizations/{organizationId}/roles/{slug}/permissions",
+            "tool": "workos_authorization_organization_role_permissions_add_permission",
+            "class": "WorkOSAuthorizationOrganizationRolePermissionsAddPermission"
+        },
+        {
+            "operation_id": "AuthorizationOrganizationRolePermissionsController_removePermission",
+            "method": "DELETE",
+            "path": "/authorization/organizations/{organizationId}/roles/{slug}/permissions/{permissionSlug}",
+            "tool": "workos_authorization_organization_role_permissions_remove_permission",
+            "class": "WorkOSAuthorizationOrganizationRolePermissionsRemovePermission"
+        },
+        {
+            "operation_id": "AuthorizationResourcesByExternalIdController_getByExternalId",
+            "method": "GET",
+            "path": "/authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}",
+            "tool": "workos_authorization_resources_by_external_id_get_by_external_id",
+            "class": "WorkOSAuthorizationResourcesByExternalIdGetByExternalId"
+        },
+        {
+            "operation_id": "AuthorizationResourcesByExternalIdController_updateByExternalId",
+            "method": "PATCH",
+            "path": "/authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}",
+            "tool": "workos_authorization_resources_by_external_id_update_by_external_id",
+            "class": "WorkOSAuthorizationResourcesByExternalIdUpdateByExternalId"
+        },
+        {
+            "operation_id": "AuthorizationResourcesByExternalIdController_deleteByExternalId",
+            "method": "DELETE",
+            "path": "/authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}",
+            "tool": "workos_authorization_resources_by_external_id_delete_by_external_id",
+            "class": "WorkOSAuthorizationResourcesByExternalIdDeleteByExternalId"
+        },
+        {
+            "operation_id": "AuthorizationResourcesByExternalIdController_listOrganizationMembershipsForResourceByExternalId",
+            "method": "GET",
+            "path": "/authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}/organization_memberships",
+            "tool": "workos_authorization_resources_by_external_id_list_organization_memberships_for_resource_by_external_id",
+            "class": "WorkOSAuthorizationResourcesByExternalIdListOrganizationMembershipsForResourceByExternalId"
+        },
+        {
+            "operation_id": "AuthorizationRoleAssignmentsController_listRoleAssignmentsForResourceByExternalId",
+            "method": "GET",
+            "path": "/authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}/role_assignments",
+            "tool": "workos_authorization_role_assignments_list_role_assignments_for_resource_by_external_id",
+            "class": "WorkOSAuthorizationRoleAssignmentsListRoleAssignmentsForResourceByExternalId"
+        },
+        {
+            "operation_id": "AuthorizationPermissionsController_list",
+            "method": "GET",
+            "path": "/authorization/permissions",
+            "tool": "workos_authorization_permissions_list",
+            "class": "WorkOSAuthorizationPermissionsList"
+        },
+        {
+            "operation_id": "AuthorizationPermissionsController_create",
+            "method": "POST",
+            "path": "/authorization/permissions",
+            "tool": "workos_authorization_permissions_create",
+            "class": "WorkOSAuthorizationPermissionsCreate"
+        },
+        {
+            "operation_id": "AuthorizationPermissionsController_find",
+            "method": "GET",
+            "path": "/authorization/permissions/{slug}",
+            "tool": "workos_authorization_permissions_find",
+            "class": "WorkOSAuthorizationPermissionsFind"
+        },
+        {
+            "operation_id": "AuthorizationPermissionsController_update",
+            "method": "PATCH",
+            "path": "/authorization/permissions/{slug}",
+            "tool": "workos_authorization_permissions_update",
+            "class": "WorkOSAuthorizationPermissionsUpdate"
+        },
+        {
+            "operation_id": "AuthorizationPermissionsController_delete",
+            "method": "DELETE",
+            "path": "/authorization/permissions/{slug}",
+            "tool": "workos_authorization_permissions_delete",
+            "class": "WorkOSAuthorizationPermissionsDelete"
+        },
+        {
+            "operation_id": "AuthorizationResourcesController_list",
+            "method": "GET",
+            "path": "/authorization/resources",
+            "tool": "workos_authorization_resources_list",
+            "class": "WorkOSAuthorizationResourcesList"
+        },
+        {
+            "operation_id": "AuthorizationResourcesController_create",
+            "method": "POST",
+            "path": "/authorization/resources",
+            "tool": "workos_authorization_resources_create",
+            "class": "WorkOSAuthorizationResourcesCreate"
+        },
+        {
+            "operation_id": "AuthorizationResourcesController_findById",
+            "method": "GET",
+            "path": "/authorization/resources/{resource_id}",
+            "tool": "workos_authorization_resources_find_by_id",
+            "class": "WorkOSAuthorizationResourcesFindById"
+        },
+        {
+            "operation_id": "AuthorizationResourcesController_update",
+            "method": "PATCH",
+            "path": "/authorization/resources/{resource_id}",
+            "tool": "workos_authorization_resources_update",
+            "class": "WorkOSAuthorizationResourcesUpdate"
+        },
+        {
+            "operation_id": "AuthorizationResourcesController_delete",
+            "method": "DELETE",
+            "path": "/authorization/resources/{resource_id}",
+            "tool": "workos_authorization_resources_delete",
+            "class": "WorkOSAuthorizationResourcesDelete"
+        },
+        {
+            "operation_id": "AuthorizationResourcesController_listOrganizationMembershipsForResource",
+            "method": "GET",
+            "path": "/authorization/resources/{resource_id}/organization_memberships",
+            "tool": "workos_authorization_resources_list_organization_memberships_for_resource",
+            "class": "WorkOSAuthorizationResourcesListOrganizationMembershipsForResource"
+        },
+        {
+            "operation_id": "AuthorizationRoleAssignmentsController_listRoleAssignmentsForResource",
+            "method": "GET",
+            "path": "/authorization/resources/{resource_id}/role_assignments",
+            "tool": "workos_authorization_role_assignments_list_role_assignments_for_resource",
+            "class": "WorkOSAuthorizationRoleAssignmentsListRoleAssignmentsForResource"
+        },
+        {
+            "operation_id": "AuthorizationRolesController_create",
+            "method": "POST",
+            "path": "/authorization/roles",
+            "tool": "workos_authorization_roles_create",
+            "class": "WorkOSAuthorizationRolesCreate"
+        },
+        {
+            "operation_id": "AuthorizationRolesController_list",
+            "method": "GET",
+            "path": "/authorization/roles",
+            "tool": "workos_authorization_roles_list",
+            "class": "WorkOSAuthorizationRolesList"
+        },
+        {
+            "operation_id": "AuthorizationRolesController_get",
+            "method": "GET",
+            "path": "/authorization/roles/{slug}",
+            "tool": "workos_authorization_roles_get",
+            "class": "WorkOSAuthorizationRolesGet"
+        },
+        {
+            "operation_id": "AuthorizationRolesController_update",
+            "method": "PATCH",
+            "path": "/authorization/roles/{slug}",
+            "tool": "workos_authorization_roles_update",
+            "class": "WorkOSAuthorizationRolesUpdate"
+        },
+        {
+            "operation_id": "AuthorizationRolePermissionsController_setPermissions",
+            "method": "PUT",
+            "path": "/authorization/roles/{slug}/permissions",
+            "tool": "workos_authorization_role_permissions_set_permissions",
+            "class": "WorkOSAuthorizationRolePermissionsSetPermissions"
+        },
+        {
+            "operation_id": "AuthorizationRolePermissionsController_addPermission",
+            "method": "POST",
+            "path": "/authorization/roles/{slug}/permissions",
+            "tool": "workos_authorization_role_permissions_add_permission",
+            "class": "WorkOSAuthorizationRolePermissionsAddPermission"
+        },
+        {
+            "operation_id": "ApplicationsController_list",
+            "method": "GET",
+            "path": "/connect/applications",
+            "tool": "workos_applications_list",
+            "class": "WorkOSApplicationsList"
+        },
+        {
+            "operation_id": "ApplicationsController_create",
+            "method": "POST",
+            "path": "/connect/applications",
+            "tool": "workos_applications_create",
+            "class": "WorkOSApplicationsCreate"
+        },
+        {
+            "operation_id": "ApplicationsController_find",
+            "method": "GET",
+            "path": "/connect/applications/{id}",
+            "tool": "workos_applications_find",
+            "class": "WorkOSApplicationsFind"
+        },
+        {
+            "operation_id": "ApplicationsController_update",
+            "method": "PUT",
+            "path": "/connect/applications/{id}",
+            "tool": "workos_applications_update",
+            "class": "WorkOSApplicationsUpdate"
+        },
+        {
+            "operation_id": "ApplicationsController_delete",
+            "method": "DELETE",
+            "path": "/connect/applications/{id}",
+            "tool": "workos_applications_delete",
+            "class": "WorkOSApplicationsDelete"
+        },
+        {
+            "operation_id": "ApplicationCredentialsController_list",
+            "method": "GET",
+            "path": "/connect/applications/{id}/client_secrets",
+            "tool": "workos_application_credentials_list",
+            "class": "WorkOSApplicationCredentialsList"
+        },
+        {
+            "operation_id": "ApplicationCredentialsController_create",
+            "method": "POST",
+            "path": "/connect/applications/{id}/client_secrets",
+            "tool": "workos_application_credentials_create",
+            "class": "WorkOSApplicationCredentialsCreate"
+        },
+        {
+            "operation_id": "ApplicationCredentialsController_delete",
+            "method": "DELETE",
+            "path": "/connect/client_secrets/{id}",
+            "tool": "workos_application_credentials_delete",
+            "class": "WorkOSApplicationCredentialsDelete"
+        },
+        {
+            "operation_id": "ConnectionsController_list",
+            "method": "GET",
+            "path": "/connections",
+            "tool": "workos_connections_list",
+            "class": "WorkOSConnectionsList"
+        },
+        {
+            "operation_id": "ConnectionsController_find",
+            "method": "GET",
+            "path": "/connections/{id}",
+            "tool": "workos_connections_find",
+            "class": "WorkOSConnectionsFind"
+        },
+        {
+            "operation_id": "ConnectionsController_delete",
+            "method": "DELETE",
+            "path": "/connections/{id}",
+            "tool": "workos_connections_delete",
+            "class": "WorkOSConnectionsDelete"
+        },
+        {
+            "operation_id": "DataIntegrationsController_getDataIntegrationAuthorizeUrl",
+            "method": "POST",
+            "path": "/data-integrations/{slug}/authorize",
+            "tool": "workos_data_integrations_get_data_integration_authorize_url",
+            "class": "WorkOSDataIntegrationsGetDataIntegrationAuthorizeUrl"
+        },
+        {
+            "operation_id": "DataIntegrationsController_getUserlandUserToken",
+            "method": "POST",
+            "path": "/data-integrations/{slug}/token",
+            "tool": "workos_data_integrations_get_userland_user_token",
+            "class": "WorkOSDataIntegrationsGetUserlandUserToken"
+        },
+        {
+            "operation_id": "DirectoriesController_list",
+            "method": "GET",
+            "path": "/directories",
+            "tool": "workos_directories_list",
+            "class": "WorkOSDirectoriesList"
+        },
+        {
+            "operation_id": "DirectoriesController_find",
+            "method": "GET",
+            "path": "/directories/{id}",
+            "tool": "workos_directories_find",
+            "class": "WorkOSDirectoriesFind"
+        },
+        {
+            "operation_id": "DirectoriesController_deleteDirectory",
+            "method": "DELETE",
+            "path": "/directories/{id}",
+            "tool": "workos_directories_delete_directory",
+            "class": "WorkOSDirectoriesDeleteDirectory"
+        },
+        {
+            "operation_id": "DirectoryGroupsController_list",
+            "method": "GET",
+            "path": "/directory_groups",
+            "tool": "workos_directory_groups_list",
+            "class": "WorkOSDirectoryGroupsList"
+        },
+        {
+            "operation_id": "DirectoryGroupsController_find",
+            "method": "GET",
+            "path": "/directory_groups/{id}",
+            "tool": "workos_directory_groups_find",
+            "class": "WorkOSDirectoryGroupsFind"
+        },
+        {
+            "operation_id": "DirectoryUsersController_list",
+            "method": "GET",
+            "path": "/directory_users",
+            "tool": "workos_directory_users_list",
+            "class": "WorkOSDirectoryUsersList"
+        },
+        {
+            "operation_id": "DirectoryUsersController_find",
+            "method": "GET",
+            "path": "/directory_users/{id}",
+            "tool": "workos_directory_users_find",
+            "class": "WorkOSDirectoryUsersFind"
+        },
+        {
+            "operation_id": "EventsController_list",
+            "method": "GET",
+            "path": "/events",
+            "tool": "workos_events_list",
+            "class": "WorkOSEventsList"
+        },
+        {
+            "operation_id": "FeatureFlagsController_list",
+            "method": "GET",
+            "path": "/feature-flags",
+            "tool": "workos_feature_flags_list",
+            "class": "WorkOSFeatureFlagsList"
+        },
+        {
+            "operation_id": "FeatureFlagsController_findBySlug",
+            "method": "GET",
+            "path": "/feature-flags/{slug}",
+            "tool": "workos_feature_flags_find_by_slug",
+            "class": "WorkOSFeatureFlagsFindBySlug"
+        },
+        {
+            "operation_id": "FeatureFlagsController_disableFlag",
+            "method": "PUT",
+            "path": "/feature-flags/{slug}/disable",
+            "tool": "workos_feature_flags_disable_flag",
+            "class": "WorkOSFeatureFlagsDisableFlag"
+        },
+        {
+            "operation_id": "FeatureFlagsController_enableFlag",
+            "method": "PUT",
+            "path": "/feature-flags/{slug}/enable",
+            "tool": "workos_feature_flags_enable_flag",
+            "class": "WorkOSFeatureFlagsEnableFlag"
+        },
+        {
+            "operation_id": "FlagTargetsController_createTarget",
+            "method": "POST",
+            "path": "/feature-flags/{slug}/targets/{resourceId}",
+            "tool": "workos_flag_targets_create_target",
+            "class": "WorkOSFlagTargetsCreateTarget"
+        },
+        {
+            "operation_id": "FlagTargetsController_deleteTarget",
+            "method": "DELETE",
+            "path": "/feature-flags/{slug}/targets/{resourceId}",
+            "tool": "workos_flag_targets_delete_target",
+            "class": "WorkOSFlagTargetsDeleteTarget"
+        },
+        {
+            "operation_id": "OrganizationDomainsController_create",
+            "method": "POST",
+            "path": "/organization_domains",
+            "tool": "workos_organization_domains_create",
+            "class": "WorkOSOrganizationDomainsCreate"
+        },
+        {
+            "operation_id": "OrganizationDomainsController_get",
+            "method": "GET",
+            "path": "/organization_domains/{id}",
+            "tool": "workos_organization_domains_get",
+            "class": "WorkOSOrganizationDomainsGet"
+        },
+        {
+            "operation_id": "OrganizationDomainsController_delete",
+            "method": "DELETE",
+            "path": "/organization_domains/{id}",
+            "tool": "workos_organization_domains_delete",
+            "class": "WorkOSOrganizationDomainsDelete"
+        },
+        {
+            "operation_id": "OrganizationDomainsController_verify",
+            "method": "POST",
+            "path": "/organization_domains/{id}/verify",
+            "tool": "workos_organization_domains_verify",
+            "class": "WorkOSOrganizationDomainsVerify"
+        },
+        {
+            "operation_id": "OrganizationsController_list",
+            "method": "GET",
+            "path": "/organizations",
+            "tool": "workos_organizations_list",
+            "class": "WorkOSOrganizationsList"
+        },
+        {
+            "operation_id": "OrganizationsController_create",
+            "method": "POST",
+            "path": "/organizations",
+            "tool": "workos_organizations_create",
+            "class": "WorkOSOrganizationsCreate"
+        },
+        {
+            "operation_id": "OrganizationsController_getByExternalId",
+            "method": "GET",
+            "path": "/organizations/external_id/{external_id}",
+            "tool": "workos_organizations_get_by_external_id",
+            "class": "WorkOSOrganizationsGetByExternalId"
+        },
+        {
+            "operation_id": "OrganizationsController_find",
+            "method": "GET",
+            "path": "/organizations/{id}",
+            "tool": "workos_organizations_find",
+            "class": "WorkOSOrganizationsFind"
+        },
+        {
+            "operation_id": "OrganizationsController_updateOrganization",
+            "method": "PUT",
+            "path": "/organizations/{id}",
+            "tool": "workos_organizations_update_organization",
+            "class": "WorkOSOrganizationsUpdateOrganization"
+        },
+        {
+            "operation_id": "OrganizationsController_deleteOrganization",
+            "method": "DELETE",
+            "path": "/organizations/{id}",
+            "tool": "workos_organizations_delete_organization",
+            "class": "WorkOSOrganizationsDeleteOrganization"
+        },
+        {
+            "operation_id": "OrganizationsController_getAuditLogConfiguration",
+            "method": "GET",
+            "path": "/organizations/{id}/audit_log_configuration",
+            "tool": "workos_organizations_get_audit_log_configuration",
+            "class": "WorkOSOrganizationsGetAuditLogConfiguration"
+        },
+        {
+            "operation_id": "AuditLogsRetentionController_auditLogsRetention",
+            "method": "GET",
+            "path": "/organizations/{id}/audit_logs_retention",
+            "tool": "workos_audit_logs_retention_audit_logs_retention",
+            "class": "WorkOSAuditLogsRetentionAuditLogsRetention"
+        },
+        {
+            "operation_id": "AuditLogsRetentionController_updateAuditLogsRetention",
+            "method": "PUT",
+            "path": "/organizations/{id}/audit_logs_retention",
+            "tool": "workos_audit_logs_retention_update_audit_logs_retention",
+            "class": "WorkOSAuditLogsRetentionUpdateAuditLogsRetention"
+        },
+        {
+            "operation_id": "OrganizationApiKeysController_list",
+            "method": "GET",
+            "path": "/organizations/{organizationId}/api_keys",
+            "tool": "workos_organization_api_keys_list",
+            "class": "WorkOSOrganizationApiKeysList"
+        },
+        {
+            "operation_id": "OrganizationApiKeysController_create",
+            "method": "POST",
+            "path": "/organizations/{organizationId}/api_keys",
+            "tool": "workos_organization_api_keys_create",
+            "class": "WorkOSOrganizationApiKeysCreate"
+        },
+        {
+            "operation_id": "OrganizationFeatureFlagsController_list",
+            "method": "GET",
+            "path": "/organizations/{organizationId}/feature-flags",
+            "tool": "workos_organization_feature_flags_list",
+            "class": "WorkOSOrganizationFeatureFlagsList"
+        },
+        {
+            "operation_id": "GroupsController_create",
+            "method": "POST",
+            "path": "/organizations/{organizationId}/groups",
+            "tool": "workos_groups_create",
+            "class": "WorkOSGroupsCreate"
+        },
+        {
+            "operation_id": "GroupsController_list",
+            "method": "GET",
+            "path": "/organizations/{organizationId}/groups",
+            "tool": "workos_groups_list",
+            "class": "WorkOSGroupsList"
+        },
+        {
+            "operation_id": "GroupsController_get",
+            "method": "GET",
+            "path": "/organizations/{organizationId}/groups/{groupId}",
+            "tool": "workos_groups_get",
+            "class": "WorkOSGroupsGet"
+        },
+        {
+            "operation_id": "GroupsController_update",
+            "method": "PATCH",
+            "path": "/organizations/{organizationId}/groups/{groupId}",
+            "tool": "workos_groups_update",
+            "class": "WorkOSGroupsUpdate"
+        },
+        {
+            "operation_id": "GroupsController_delete",
+            "method": "DELETE",
+            "path": "/organizations/{organizationId}/groups/{groupId}",
+            "tool": "workos_groups_delete",
+            "class": "WorkOSGroupsDelete"
+        },
+        {
+            "operation_id": "GroupMembershipsController_addMember",
+            "method": "POST",
+            "path": "/organizations/{organizationId}/groups/{groupId}/organization-memberships",
+            "tool": "workos_group_memberships_add_member",
+            "class": "WorkOSGroupMembershipsAddMember"
+        },
+        {
+            "operation_id": "GroupMembershipsController_listMembers",
+            "method": "GET",
+            "path": "/organizations/{organizationId}/groups/{groupId}/organization-memberships",
+            "tool": "workos_group_memberships_list_members",
+            "class": "WorkOSGroupMembershipsListMembers"
+        },
+        {
+            "operation_id": "GroupMembershipsController_removeMember",
+            "method": "DELETE",
+            "path": "/organizations/{organizationId}/groups/{groupId}/organization-memberships/{omId}",
+            "tool": "workos_group_memberships_remove_member",
+            "class": "WorkOSGroupMembershipsRemoveMember"
+        },
+        {
+            "operation_id": "PortalSessionsController_create",
+            "method": "POST",
+            "path": "/portal/generate_link",
+            "tool": "workos_portal_sessions_create",
+            "class": "WorkOSPortalSessionsCreate"
+        },
+        {
+            "operation_id": "RadarStandaloneController_assess",
+            "method": "POST",
+            "path": "/radar/attempts",
+            "tool": "workos_radar_standalone_assess",
+            "class": "WorkOSRadarStandaloneAssess"
+        },
+        {
+            "operation_id": "RadarStandaloneController_updateRadarAttempt",
+            "method": "PUT",
+            "path": "/radar/attempts/{id}",
+            "tool": "workos_radar_standalone_update_radar_attempt",
+            "class": "WorkOSRadarStandaloneUpdateRadarAttempt"
+        },
+        {
+            "operation_id": "RadarStandaloneController_updateRadarList",
+            "method": "POST",
+            "path": "/radar/lists/{type}/{action}",
+            "tool": "workos_radar_standalone_update_radar_list",
+            "class": "WorkOSRadarStandaloneUpdateRadarList"
+        },
+        {
+            "operation_id": "RadarStandaloneController_deleteRadarListEntry",
+            "method": "DELETE",
+            "path": "/radar/lists/{type}/{action}",
+            "tool": "workos_radar_standalone_delete_radar_list_entry",
+            "class": "WorkOSRadarStandaloneDeleteRadarListEntry"
+        },
+        {
+            "operation_id": "SsoController_authorize",
+            "method": "GET",
+            "path": "/sso/authorize",
+            "tool": "workos_sso_authorize",
+            "class": "WorkOSSsoAuthorize"
+        },
+        {
+            "operation_id": "SsoController_jsonWebKeySet",
+            "method": "GET",
+            "path": "/sso/jwks/{clientId}",
+            "tool": "workos_sso_json_web_key_set",
+            "class": "WorkOSSsoJsonWebKeySet"
+        },
+        {
+            "operation_id": "SsoController_logout",
+            "method": "GET",
+            "path": "/sso/logout",
+            "tool": "workos_sso_logout",
+            "class": "WorkOSSsoLogout"
+        },
+        {
+            "operation_id": "SsoController_logoutAuthorize",
+            "method": "POST",
+            "path": "/sso/logout/authorize",
+            "tool": "workos_sso_logout_authorize",
+            "class": "WorkOSSsoLogoutAuthorize"
+        },
+        {
+            "operation_id": "SsoController_getProfile",
+            "method": "GET",
+            "path": "/sso/profile",
+            "tool": "workos_sso_get_profile",
+            "class": "WorkOSSsoGetProfile"
+        },
+        {
+            "operation_id": "SsoController_token",
+            "method": "POST",
+            "path": "/sso/token",
+            "tool": "workos_sso_token",
+            "class": "WorkOSSsoToken"
+        },
+        {
+            "operation_id": "UserlandSessionsController_authenticate[0]",
+            "method": "POST",
+            "path": "/user_management/authenticate",
+            "tool": "workos_userland_sessions_authenticate_0",
+            "class": "WorkOSUserlandSessionsAuthenticate0"
+        },
+        {
+            "operation_id": "UserlandSsoController_authorize",
+            "method": "GET",
+            "path": "/user_management/authorize",
+            "tool": "workos_userland_sso_authorize",
+            "class": "WorkOSUserlandSsoAuthorize"
+        },
+        {
+            "operation_id": "UserlandSsoController_deviceAuthorization",
+            "method": "POST",
+            "path": "/user_management/authorize/device",
+            "tool": "workos_userland_sso_device_authorization",
+            "class": "WorkOSUserlandSsoDeviceAuthorization"
+        },
+        {
+            "operation_id": "CorsOriginsController_createCorsOrigin",
+            "method": "POST",
+            "path": "/user_management/cors_origins",
+            "tool": "workos_cors_origins_create_cors_origin",
+            "class": "WorkOSCorsOriginsCreateCorsOrigin"
+        },
+        {
+            "operation_id": "UserlandUsersController_getEmailVerification",
+            "method": "GET",
+            "path": "/user_management/email_verification/{id}",
+            "tool": "workos_userland_users_get_email_verification",
+            "class": "WorkOSUserlandUsersGetEmailVerification"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_list",
+            "method": "GET",
+            "path": "/user_management/invitations",
+            "tool": "workos_userland_user_invites_list",
+            "class": "WorkOSUserlandUserInvitesList"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_create",
+            "method": "POST",
+            "path": "/user_management/invitations",
+            "tool": "workos_userland_user_invites_create",
+            "class": "WorkOSUserlandUserInvitesCreate"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_getByToken",
+            "method": "GET",
+            "path": "/user_management/invitations/by_token/{token}",
+            "tool": "workos_userland_user_invites_get_by_token",
+            "class": "WorkOSUserlandUserInvitesGetByToken"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_get",
+            "method": "GET",
+            "path": "/user_management/invitations/{id}",
+            "tool": "workos_userland_user_invites_get",
+            "class": "WorkOSUserlandUserInvitesGet"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_accept",
+            "method": "POST",
+            "path": "/user_management/invitations/{id}/accept",
+            "tool": "workos_userland_user_invites_accept",
+            "class": "WorkOSUserlandUserInvitesAccept"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_resend",
+            "method": "POST",
+            "path": "/user_management/invitations/{id}/resend",
+            "tool": "workos_userland_user_invites_resend",
+            "class": "WorkOSUserlandUserInvitesResend"
+        },
+        {
+            "operation_id": "UserlandUserInvitesController_revoke",
+            "method": "POST",
+            "path": "/user_management/invitations/{id}/revoke",
+            "tool": "workos_userland_user_invites_revoke",
+            "class": "WorkOSUserlandUserInvitesRevoke"
+        },
+        {
+            "operation_id": "JwtTemplatesController_getJwtTemplate",
+            "method": "GET",
+            "path": "/user_management/jwt_template",
+            "tool": "workos_jwt_templates_get_jwt_template",
+            "class": "WorkOSJwtTemplatesGetJwtTemplate"
+        },
+        {
+            "operation_id": "JwtTemplatesController_updateJwtTemplate",
+            "method": "PUT",
+            "path": "/user_management/jwt_template",
+            "tool": "workos_jwt_templates_update_jwt_template",
+            "class": "WorkOSJwtTemplatesUpdateJwtTemplate"
+        },
+        {
+            "operation_id": "UserlandMagicAuthController_sendMagicAuthCodeAndReturn",
+            "method": "POST",
+            "path": "/user_management/magic_auth",
+            "tool": "workos_userland_magic_auth_send_magic_auth_code_and_return",
+            "class": "WorkOSUserlandMagicAuthSendMagicAuthCodeAndReturn"
+        },
+        {
+            "operation_id": "UserlandMagicAuthController_get",
+            "method": "GET",
+            "path": "/user_management/magic_auth/{id}",
+            "tool": "workos_userland_magic_auth_get",
+            "class": "WorkOSUserlandMagicAuthGet"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_list",
+            "method": "GET",
+            "path": "/user_management/organization_memberships",
+            "tool": "workos_userland_user_organization_memberships_list",
+            "class": "WorkOSUserlandUserOrganizationMembershipsList"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_create",
+            "method": "POST",
+            "path": "/user_management/organization_memberships",
+            "tool": "workos_userland_user_organization_memberships_create",
+            "class": "WorkOSUserlandUserOrganizationMembershipsCreate"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_get",
+            "method": "GET",
+            "path": "/user_management/organization_memberships/{id}",
+            "tool": "workos_userland_user_organization_memberships_get",
+            "class": "WorkOSUserlandUserOrganizationMembershipsGet"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_delete",
+            "method": "DELETE",
+            "path": "/user_management/organization_memberships/{id}",
+            "tool": "workos_userland_user_organization_memberships_delete",
+            "class": "WorkOSUserlandUserOrganizationMembershipsDelete"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_update",
+            "method": "PUT",
+            "path": "/user_management/organization_memberships/{id}",
+            "tool": "workos_userland_user_organization_memberships_update",
+            "class": "WorkOSUserlandUserOrganizationMembershipsUpdate"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_deactivate",
+            "method": "PUT",
+            "path": "/user_management/organization_memberships/{id}/deactivate",
+            "tool": "workos_userland_user_organization_memberships_deactivate",
+            "class": "WorkOSUserlandUserOrganizationMembershipsDeactivate"
+        },
+        {
+            "operation_id": "UserlandUserOrganizationMembershipsController_reactivate",
+            "method": "PUT",
+            "path": "/user_management/organization_memberships/{id}/reactivate",
+            "tool": "workos_userland_user_organization_memberships_reactivate",
+            "class": "WorkOSUserlandUserOrganizationMembershipsReactivate"
+        },
+        {
+            "operation_id": "OrganizationMembershipGroupsController_listGroups",
+            "method": "GET",
+            "path": "/user_management/organization_memberships/{omId}/groups",
+            "tool": "workos_organization_membership_groups_list_groups",
+            "class": "WorkOSOrganizationMembershipGroupsListGroups"
+        },
+        {
+            "operation_id": "UserlandUsersController_createPasswordResetToken",
+            "method": "POST",
+            "path": "/user_management/password_reset",
+            "tool": "workos_userland_users_create_password_reset_token",
+            "class": "WorkOSUserlandUsersCreatePasswordResetToken"
+        },
+        {
+            "operation_id": "UserlandUsersController_resetPassword[0]",
+            "method": "POST",
+            "path": "/user_management/password_reset/confirm",
+            "tool": "workos_userland_users_reset_password_0",
+            "class": "WorkOSUserlandUsersResetPassword0"
+        },
+        {
+            "operation_id": "UserlandUsersController_getPasswordReset",
+            "method": "GET",
+            "path": "/user_management/password_reset/{id}",
+            "tool": "workos_userland_users_get_password_reset",
+            "class": "WorkOSUserlandUsersGetPasswordReset"
+        },
+        {
+            "operation_id": "RedirectUrisController_create",
+            "method": "POST",
+            "path": "/user_management/redirect_uris",
+            "tool": "workos_redirect_uris_create",
+            "class": "WorkOSRedirectUrisCreate"
+        },
+        {
+            "operation_id": "UserlandSessionsController_logout",
+            "method": "GET",
+            "path": "/user_management/sessions/logout",
+            "tool": "workos_userland_sessions_logout",
+            "class": "WorkOSUserlandSessionsLogout"
+        },
+        {
+            "operation_id": "UserlandSessionsController_revokeSession",
+            "method": "POST",
+            "path": "/user_management/sessions/revoke",
+            "tool": "workos_userland_sessions_revoke_session",
+            "class": "WorkOSUserlandSessionsRevokeSession"
+        },
+        {
+            "operation_id": "UserlandUsersController_list[0]",
+            "method": "GET",
+            "path": "/user_management/users",
+            "tool": "workos_userland_users_list_0",
+            "class": "WorkOSUserlandUsersList0"
+        },
+        {
+            "operation_id": "UserlandUsersController_create[0]",
+            "method": "POST",
+            "path": "/user_management/users",
+            "tool": "workos_userland_users_create_0",
+            "class": "WorkOSUserlandUsersCreate0"
+        },
+        {
+            "operation_id": "UserlandUsersController_getByExternalId",
+            "method": "GET",
+            "path": "/user_management/users/external_id/{external_id}",
+            "tool": "workos_userland_users_get_by_external_id",
+            "class": "WorkOSUserlandUsersGetByExternalId"
+        },
+        {
+            "operation_id": "UserlandUsersController_update[0]",
+            "method": "PUT",
+            "path": "/user_management/users/{id}",
+            "tool": "workos_userland_users_update_0",
+            "class": "WorkOSUserlandUsersUpdate0"
+        },
+        {
+            "operation_id": "UserlandUsersController_get[0]",
+            "method": "GET",
+            "path": "/user_management/users/{id}",
+            "tool": "workos_userland_users_get_0",
+            "class": "WorkOSUserlandUsersGet0"
+        },
+        {
+            "operation_id": "UserlandUsersController_delete[0]",
+            "method": "DELETE",
+            "path": "/user_management/users/{id}",
+            "tool": "workos_userland_users_delete_0",
+            "class": "WorkOSUserlandUsersDelete0"
+        },
+        {
+            "operation_id": "UserlandUsersController_confirmEmailChange",
+            "method": "POST",
+            "path": "/user_management/users/{id}/email_change/confirm",
+            "tool": "workos_userland_users_confirm_email_change",
+            "class": "WorkOSUserlandUsersConfirmEmailChange"
+        },
+        {
+            "operation_id": "UserlandUsersController_sendEmailChange",
+            "method": "POST",
+            "path": "/user_management/users/{id}/email_change/send",
+            "tool": "workos_userland_users_send_email_change",
+            "class": "WorkOSUserlandUsersSendEmailChange"
+        },
+        {
+            "operation_id": "UserlandUsersController_emailVerification[0]",
+            "method": "POST",
+            "path": "/user_management/users/{id}/email_verification/confirm",
+            "tool": "workos_userland_users_email_verification_0",
+            "class": "WorkOSUserlandUsersEmailVerification0"
+        },
+        {
+            "operation_id": "UserlandUsersController_sendVerificationEmail[0]",
+            "method": "POST",
+            "path": "/user_management/users/{id}/email_verification/send",
+            "tool": "workos_userland_users_send_verification_email_0",
+            "class": "WorkOSUserlandUsersSendVerificationEmail0"
+        },
+        {
+            "operation_id": "UserlandUserIdentitiesController_get",
+            "method": "GET",
+            "path": "/user_management/users/{id}/identities",
+            "tool": "workos_userland_user_identities_get",
+            "class": "WorkOSUserlandUserIdentitiesGet"
+        },
+        {
+            "operation_id": "UserlandUserSessionsController_list",
+            "method": "GET",
+            "path": "/user_management/users/{id}/sessions",
+            "tool": "workos_userland_user_sessions_list",
+            "class": "WorkOSUserlandUserSessionsList"
+        },
+        {
+            "operation_id": "UserApiKeysController_list",
+            "method": "GET",
+            "path": "/user_management/users/{userId}/api_keys",
+            "tool": "workos_user_api_keys_list",
+            "class": "WorkOSUserApiKeysList"
+        },
+        {
+            "operation_id": "UserApiKeysController_create",
+            "method": "POST",
+            "path": "/user_management/users/{userId}/api_keys",
+            "tool": "workos_user_api_keys_create",
+            "class": "WorkOSUserApiKeysCreate"
+        },
+        {
+            "operation_id": "UserlandUserFeatureFlagsController_list",
+            "method": "GET",
+            "path": "/user_management/users/{userId}/feature-flags",
+            "tool": "workos_userland_user_feature_flags_list",
+            "class": "WorkOSUserlandUserFeatureFlagsList"
+        },
+        {
+            "operation_id": "AuthorizedApplicationsController_list",
+            "method": "GET",
+            "path": "/user_management/users/{user_id}/authorized_applications",
+            "tool": "workos_authorized_applications_list",
+            "class": "WorkOSAuthorizedApplicationsList"
+        },
+        {
+            "operation_id": "AuthorizedApplicationsController_delete",
+            "method": "DELETE",
+            "path": "/user_management/users/{user_id}/authorized_applications/{application_id}",
+            "tool": "workos_authorized_applications_delete",
+            "class": "WorkOSAuthorizedApplicationsDelete"
+        },
+        {
+            "operation_id": "DataIntegrationsUserManagementController_getUserDataInstallation",
+            "method": "GET",
+            "path": "/user_management/users/{user_id}/connected_accounts/{slug}",
+            "tool": "workos_data_integrations_user_management_get_user_data_installation",
+            "class": "WorkOSDataIntegrationsUserManagementGetUserDataInstallation"
+        },
+        {
+            "operation_id": "DataIntegrationsUserManagementController_deleteUserDataInstallation",
+            "method": "DELETE",
+            "path": "/user_management/users/{user_id}/connected_accounts/{slug}",
+            "tool": "workos_data_integrations_user_management_delete_user_data_installation",
+            "class": "WorkOSDataIntegrationsUserManagementDeleteUserDataInstallation"
+        },
+        {
+            "operation_id": "DataIntegrationsUserManagementController_getUserDataIntegrations",
+            "method": "GET",
+            "path": "/user_management/users/{user_id}/data_providers",
+            "tool": "workos_data_integrations_user_management_get_user_data_integrations",
+            "class": "WorkOSDataIntegrationsUserManagementGetUserDataIntegrations"
+        },
+        {
+            "operation_id": "UserlandUserAuthenticationFactorsController_create[0]",
+            "method": "POST",
+            "path": "/user_management/users/{userlandUserId}/auth_factors",
+            "tool": "workos_userland_user_authentication_factors_create_0",
+            "class": "WorkOSUserlandUserAuthenticationFactorsCreate0"
+        },
+        {
+            "operation_id": "UserlandUserAuthenticationFactorsController_list[0]",
+            "method": "GET",
+            "path": "/user_management/users/{userlandUserId}/auth_factors",
+            "tool": "workos_userland_user_authentication_factors_list_0",
+            "class": "WorkOSUserlandUserAuthenticationFactorsList0"
+        },
+        {
+            "operation_id": "WebhookEndpointsController_list",
+            "method": "GET",
+            "path": "/webhook_endpoints",
+            "tool": "workos_webhook_endpoints_list",
+            "class": "WorkOSWebhookEndpointsList"
+        },
+        {
+            "operation_id": "WebhookEndpointsController_create",
+            "method": "POST",
+            "path": "/webhook_endpoints",
+            "tool": "workos_webhook_endpoints_create",
+            "class": "WorkOSWebhookEndpointsCreate"
+        },
+        {
+            "operation_id": "WebhookEndpointsController_update",
+            "method": "PATCH",
+            "path": "/webhook_endpoints/{id}",
+            "tool": "workos_webhook_endpoints_update",
+            "class": "WorkOSWebhookEndpointsUpdate"
+        },
+        {
+            "operation_id": "WebhookEndpointsController_delete",
+            "method": "DELETE",
+            "path": "/webhook_endpoints/{id}",
+            "tool": "workos_webhook_endpoints_delete",
+            "class": "WorkOSWebhookEndpointsDelete"
+        },
+        {
+            "operation_id": "WidgetsPublicController_issueWidgetSessionToken",
+            "method": "POST",
+            "path": "/widgets/token",
+            "tool": "workos_widgets_public_issue_widget_session_token",
+            "class": "WorkOSWidgetsPublicIssueWidgetSessionToken"
+        }
+    ]
+}

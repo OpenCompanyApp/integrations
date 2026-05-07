@@ -1,0 +1,26 @@
+<?php
+
+namespace OpenCompany\Integrations\AzureDevOps\Tools;
+
+/**
+ * Checks if current identity has passed permissions on a pool..
+ *
+ * Maps to Azure DevOps REST API 7.2 endpoint GET https://dev.azure.com/{organization}/_apis/distributedtask/pools/{poolId}/permissions/{permissions}.
+ */
+class AzureDevOpsDistributedTaskPoolpermissionsHasPoolPermissions extends AbstractAzureDevOpsTool
+{
+    protected const NAME = 'azure_devops_distributed_task_poolpermissions_has_pool_permissions';
+    protected const DESCRIPTION = 'Checks if current identity has passed permissions on a pool.
+
+Official Azure DevOps REST API 7.2 endpoint: GET https://dev.azure.com/{organization}/_apis/distributedtask/pools/{poolId}/permissions/{permissions} (spec: distributedTask/7.2/taskAgent.json).';
+    protected const PARAMETERS = ['organization' => ['type' => 'string', 'required' => true, 'description' => 'The name of the Azure DevOps organization.'], 'pool_id' => ['type' => 'number', 'required' => true, 'description' => 'Id of the pool to check'], 'permissions' => ['type' => 'number', 'required' => true, 'description' => 'Permissions to check. Multiple permissions might be merged into single value using bitwise OR operator (e.g. AgentPoolPermissions.Manage | AgentPoolPermissions.View)'], 'api_version' => ['type' => 'string', 'required' => false, 'description' => 'Azure DevOps API version. Defaults to `7.2-preview.1`.']];
+    protected const METHOD = 'GET';
+    protected const HOST = 'dev.azure.com';
+    protected const PATH = '/{organization}/_apis/distributedtask/pools/{poolId}/permissions/{permissions}';
+    protected const PATH_PARAMS = ['organization' => 'organization', 'poolId' => 'pool_id', 'permissions' => 'permissions'];
+    protected const QUERY_PARAMS = ['api-version' => 'api_version'];
+    protected const HEADER_PARAMS = [];
+    protected const BODY_REQUIRED = false;
+    protected const BODY_MODE = 'json';
+    protected const API_VERSION = '7.2-preview.1';
+}

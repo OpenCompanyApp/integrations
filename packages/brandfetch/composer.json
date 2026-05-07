@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-brandfetch",
-    "description": "Brandfetch integration for Laravel — look up brand logos, colors, fonts, and assets.",
+    "description": "Brandfetch integration for Laravel - retrieve brand data, search brands, build logo URLs, and enrich transactions.",
     "license": "MIT",
     "authors": [
         {

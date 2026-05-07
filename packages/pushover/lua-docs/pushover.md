@@ -1,154 +1,321 @@
-# Pushover — Lua API Reference
+# Pushover Lua API Reference
 
-## send_message
+Namespace: `app.integrations.pushover`
 
-Send a push notification via Pushover.
+Pushover tools use the configured application token plus a default user or delivery group key. Use fake or test-only message content when validating workflows; Pushover sends real notifications for write calls.
 
-### Parameters
+## Messages
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `message` | string | yes | The notification message body |
-| `title` | string | no | Optional title for the notification |
-| `priority` | integer | no | Message priority (see table below) |
-| `url` | string | no | Supplementary URL to include |
-| `url_title` | string | no | Title for the supplementary URL |
-| `sound` | string | no | Notification sound name (use `list_sounds` to discover) |
-| `device` | string | no | Specific device name to target (omit for all devices) |
-| `timestamp` | integer | no | Unix timestamp for scheduled delivery |
-| `expire` | integer | no | Seconds until emergency messages expire (max 10800) |
-| `retry` | integer | no | Seconds between retries for emergency messages (min 30) |
+### send_message
 
-### Priority Levels
+Send a Pushover message to the configured user/group key.
 
-| Priority | Name | Behavior |
-|----------|------|----------|
-| -2 | No notification | No alert at all |
-| -1 | Quiet | Delivered silently |
-| 0 | Normal | Default priority |
-| 1 | High | Bypasses quiet hours |
-| 2 | Emergency | Requires acknowledgment; `expire` and `retry` are required |
+Required: `message`
 
-### Emergency Priority
+Optional fields: `title`, `priority`, `url`, `url_title`, `sound`, `device`, `timestamp`, `expire`, `retry`, `callback`, `tags`, `ttl`, `html`, `monospace`, `attachment_base64`, `attachment_type`, `encrypted`.
 
-When using priority `2`, you **must** also provide:
-- `retry` — seconds between re-alerts (minimum 30)
-- `expire` — seconds until the alert expires (maximum 10800)
-
-### Examples
-
-#### Simple message
+Priority `2` is an emergency message and requires `retry` and `expire`. Emergency sends may return a `receipt`; use receipt tools to inspect or cancel retries.
 
 ```lua
 local result = app.integrations.pushover.send_message({
-  message = "Deployment complete for example.com"
+  title = "Example alert",
+  message = "The example background job finished.",
+  priority = 0,
+  sound = "pushover",
 })
 
-print(result.status) -- "sent"
+print(result.request)
 ```
-
-#### Message with title and priority
 
 ```lua
 local result = app.integrations.pushover.send_message({
-  message = "Server CPU usage above 90%",
-  title = "Server Alert",
-  priority = 1
-})
-```
-
-#### Emergency alert with retry
-
-```lua
-local result = app.integrations.pushover.send_message({
-  message = "Database is unreachable!",
-  title = "CRITICAL",
+  title = "Example incident",
+  message = "Example service is unavailable.",
   priority = 2,
   retry = 60,
-  expire = 3600
+  expire = 3600,
+  tags = "example-incident",
 })
+
+print(result.receipt)
 ```
 
-#### Message with URL and custom sound
+### get_application_limits
+
+Returns the application token's monthly message quota and reset information from Pushover.
 
 ```lua
-local result = app.integrations.pushover.send_message({
-  message = "New order received!",
-  title = "Order #1234",
-  sound = "cashregister",
-  url = "https://example.com/orders/1234",
-  url_title = "View Order"
-})
+local limits = app.integrations.pushover.get_application_limits()
+print(limits.limit)
+print(limits.remaining)
+print(limits.reset)
 ```
 
----
+## Sounds And Validation
 
-## list_sounds
+### list_sounds
 
-List available notification sounds in Pushover.
-
-### Parameters
-
-No parameters required.
-
-### Example
+List available sound names and display labels.
 
 ```lua
 local result = app.integrations.pushover.list_sounds()
 
 for name, label in pairs(result.sounds) do
-  print(name .. " — " .. label)
+  print(name .. ": " .. label)
 end
--- pushover — Pushover (default)
--- bike — Bike
--- bugle — Bugle
--- cashregister — Cash Register
--- ...
 ```
 
----
+### get_current_user
 
-## get_current_user
-
-Validate the current Pushover user credentials and retrieve account information.
-
-### Parameters
-
-No parameters required.
-
-### Response Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `valid` | boolean | Whether the credentials are valid |
-| `devices` | array | List of registered device names |
-| `license` | string or null | License information |
-
-### Example
+Validate the configured default user/group key and return `valid`, `devices`, `licenses`, and raw response details.
 
 ```lua
-local result = app.integrations.pushover.get_current_user()
-
-print("Valid: " .. tostring(result.valid))
-print("Devices: " .. table.concat(result.devices, ", "))
+local user = app.integrations.pushover.get_current_user()
+print(user.valid)
 ```
 
----
+### validate_user
+
+Validate another user/group key or a specific device before sending.
+
+```lua
+local result = app.integrations.pushover.validate_user({
+  user_key = "u-example",
+  device = "iphone",
+})
+
+print(result.valid)
+```
+
+## Emergency Receipts
+
+### get_receipt
+
+Get acknowledgement and retry state for an emergency message receipt.
+
+```lua
+local receipt = app.integrations.pushover.get_receipt({
+  receipt = "r-example",
+})
+
+print(receipt.acknowledged)
+```
+
+### cancel_receipt
+
+Cancel retries for one active emergency receipt.
+
+```lua
+app.integrations.pushover.cancel_receipt({
+  receipt = "r-example",
+})
+```
+
+### cancel_receipts_by_tag
+
+Cancel retries for active emergency messages with a matching tag.
+
+```lua
+app.integrations.pushover.cancel_receipts_by_tag({
+  tag = "example-incident",
+})
+```
+
+## Subscriptions
+
+### migrate_subscription_user
+
+Migrate a legacy collected user key to a subscription-scoped user key. Subscription creation and web subscription initiation happen in the Pushover dashboard/browser flow; this tool only covers the API-backed migration endpoint.
+
+Required: `subscription`, `user_key`
+
+Optional: `device_name`, `sound`
+
+```lua
+local migrated = app.integrations.pushover.migrate_subscription_user({
+  subscription = "Example-f504h08fhlasdfj",
+  user_key = "u-example",
+  sound = "pushover",
+})
+
+print(migrated.subscribed_user_key)
+```
+
+## Teams
+
+Teams tools require the optional `team_token` credential. Pushover Teams API tokens are different from application API tokens.
+
+### get_team
+
+Show team metadata and users.
+
+```lua
+local team = app.integrations.pushover.get_team()
+print(team.name)
+```
+
+### add_team_user
+
+Add a user to a team.
+
+Required: `email`
+
+Optional: `name`, `password`, `instant`, `admin`, `group`
+
+```lua
+app.integrations.pushover.add_team_user({
+  email = "person@example.test",
+  name = "Example Person",
+  instant = true,
+  group = "Support",
+})
+```
+
+### remove_team_user
+
+Remove a user from a team by email address.
+
+```lua
+app.integrations.pushover.remove_team_user({
+  email = "person@example.test",
+})
+```
+
+## Glances
+
+### update_glance
+
+Update Pushover glance/widget data for the configured user. At least one glance field is required.
+
+```lua
+app.integrations.pushover.update_glance({
+  title = "Queue",
+  text = "Example jobs",
+  count = 3,
+  percent = 75,
+})
+```
+
+## Delivery Groups
+
+### create_group
+
+Create a delivery group and return its group key.
+
+```lua
+local group = app.integrations.pushover.create_group({
+  name = "Example Operations",
+})
+
+print(group.group)
+```
+
+### list_groups
+
+List delivery groups manageable by the application token.
+
+```lua
+local groups = app.integrations.pushover.list_groups()
+```
+
+### get_group
+
+Get group metadata and members.
+
+```lua
+local group = app.integrations.pushover.get_group({
+  group_key = "g-example",
+})
+```
+
+### add_group_user
+
+Add a user to a group. `device` and `memo` are optional.
+
+```lua
+app.integrations.pushover.add_group_user({
+  group_key = "g-example",
+  user_key = "u-example",
+  memo = "Example on-call user",
+})
+```
+
+### remove_group_user
+
+Remove a user or device-specific membership from a group.
+
+```lua
+app.integrations.pushover.remove_group_user({
+  group_key = "g-example",
+  user_key = "u-example",
+})
+```
+
+### disable_group_user
+
+Temporarily disable a group member without removing it.
+
+```lua
+app.integrations.pushover.disable_group_user({
+  group_key = "g-example",
+  user_key = "u-example",
+})
+```
+
+### enable_group_user
+
+Re-enable a disabled group member.
+
+```lua
+app.integrations.pushover.enable_group_user({
+  group_key = "g-example",
+  user_key = "u-example",
+})
+```
+
+### rename_group
+
+Rename a delivery group.
+
+```lua
+app.integrations.pushover.rename_group({
+  group_key = "g-example",
+  name = "Example Support",
+})
+```
+
+## Licenses
+
+### get_license_credits
+
+Return remaining prepaid Pushover license credits.
+
+```lua
+local credits = app.integrations.pushover.get_license_credits()
+print(credits.credits)
+```
+
+### assign_license
+
+Assign a prepaid license to an existing user key or email address. Provide either `user_key` or `email`; `os` is optional when the Pushover account can infer the target platform.
+
+```lua
+app.integrations.pushover.assign_license({
+  email = "person@example.test",
+  os = "Android",
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple Pushover accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.pushover.send_message({ message = "Hello" })
-
--- Explicit default (portable across setups)
-app.integrations.pushover.default.send_message({ message = "Hello" })
-
--- Named accounts
-app.integrations.pushover.work.send_message({ message = "Work alert" })
-app.integrations.pushover.personal.send_message({ message = "Personal note" })
+app.integrations.pushover.send_message({ message = "Default account" })
+app.integrations.pushover.default.send_message({ message = "Explicit default" })
+app.integrations.pushover.operations.send_message({ message = "Named account" })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same functions. Only credentials change.
+
+## Scope Notes
+
+This package covers the server-side Pushover application, groups, glances, licensing, subscriptions migration, and Teams API endpoints. The Pushover Open Client API is intentionally not exposed here because it requires end-user email/password login, device registration, local session secrets, and websocket client behavior rather than a server-side application token integration.

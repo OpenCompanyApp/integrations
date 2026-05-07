@@ -1,0 +1,212 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/person?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 33,
+  "path_prefixes": [
+    "/admin/people",
+    "/me/people",
+    "/users"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/admin/people",
+      "operationId": "admin.GetPeople",
+      "tool": "microsoft_people_admin_get_people"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/people/itemInsights",
+      "operationId": "admin.people.DeleteItemInsights",
+      "tool": "microsoft_people_admin_people_delete_item_insights"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/itemInsights",
+      "operationId": "admin.people.GetItemInsights",
+      "tool": "microsoft_people_admin_people_get_item_insights"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/people/itemInsights",
+      "operationId": "admin.people.UpdateItemInsights",
+      "tool": "microsoft_people_admin_people_update_item_insights"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileCardProperties",
+      "operationId": "admin.people.ListProfileCardProperties",
+      "tool": "microsoft_people_admin_people_list_profile_card_properties"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/people/profileCardProperties",
+      "operationId": "admin.people.CreateProfileCardProperties",
+      "tool": "microsoft_people_admin_people_create_profile_card_properties"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileCardProperties/$count",
+      "operationId": "admin.people.profileCardProperties.GetCount-9f88",
+      "tool": "microsoft_people_admin_people_profile_card_properties_get_count_9f88"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/people/profileCardProperties/{profileCardProperty-id}",
+      "operationId": "admin.people.DeleteProfileCardProperties",
+      "tool": "microsoft_people_admin_people_delete_profile_card_properties"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileCardProperties/{profileCardProperty-id}",
+      "operationId": "admin.people.GetProfileCardProperties",
+      "tool": "microsoft_people_admin_people_get_profile_card_properties"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/people/profileCardProperties/{profileCardProperty-id}",
+      "operationId": "admin.people.UpdateProfileCardProperties",
+      "tool": "microsoft_people_admin_people_update_profile_card_properties"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profilePropertySettings",
+      "operationId": "admin.people.ListProfilePropertySettings",
+      "tool": "microsoft_people_admin_people_list_profile_property_settings"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/people/profilePropertySettings",
+      "operationId": "admin.people.CreateProfilePropertySettings",
+      "tool": "microsoft_people_admin_people_create_profile_property_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profilePropertySettings/$count",
+      "operationId": "admin.people.profilePropertySettings.GetCount-5c10",
+      "tool": "microsoft_people_admin_people_profile_property_settings_get_count_5c10"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/people/profilePropertySettings/{profilePropertySetting-id}",
+      "operationId": "admin.people.DeleteProfilePropertySettings",
+      "tool": "microsoft_people_admin_people_delete_profile_property_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profilePropertySettings/{profilePropertySetting-id}",
+      "operationId": "admin.people.GetProfilePropertySettings",
+      "tool": "microsoft_people_admin_people_get_profile_property_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/people/profilePropertySettings/{profilePropertySetting-id}",
+      "operationId": "admin.people.UpdateProfilePropertySettings",
+      "tool": "microsoft_people_admin_people_update_profile_property_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileSources",
+      "operationId": "admin.people.ListProfileSources",
+      "tool": "microsoft_people_admin_people_list_profile_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/people/profileSources",
+      "operationId": "admin.people.CreateProfileSources",
+      "tool": "microsoft_people_admin_people_create_profile_sources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/people/profileSources(sourceId='{sourceId}')",
+      "operationId": "admin.people.profileSources.DeleteBySourceId",
+      "tool": "microsoft_people_admin_people_profile_sources_delete_by_source_id"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileSources(sourceId='{sourceId}')",
+      "operationId": "admin.people.profileSources.GetBySourceId",
+      "tool": "microsoft_people_admin_people_profile_sources_get_by_source_id"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/people/profileSources(sourceId='{sourceId}')",
+      "operationId": "admin.people.profileSources.UpdateBySourceId",
+      "tool": "microsoft_people_admin_people_profile_sources_update_by_source_id"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileSources/$count",
+      "operationId": "admin.people.profileSources.GetCount-e997",
+      "tool": "microsoft_people_admin_people_profile_sources_get_count_e997"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/people/profileSources/{profileSource-id}",
+      "operationId": "admin.people.DeleteProfileSources",
+      "tool": "microsoft_people_admin_people_delete_profile_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/profileSources/{profileSource-id}",
+      "operationId": "admin.people.GetProfileSources",
+      "tool": "microsoft_people_admin_people_get_profile_sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/people/profileSources/{profileSource-id}",
+      "operationId": "admin.people.UpdateProfileSources",
+      "tool": "microsoft_people_admin_people_update_profile_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/people/pronouns",
+      "operationId": "admin.people.GetPronouns",
+      "tool": "microsoft_people_admin_people_get_pronouns"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/people/pronouns",
+      "operationId": "admin.people.UpdatePronouns",
+      "tool": "microsoft_people_admin_people_update_pronouns"
+    },
+    {
+      "method": "GET",
+      "path": "/me/people",
+      "operationId": "me.ListPeople",
+      "tool": "microsoft_people_me_list_people"
+    },
+    {
+      "method": "GET",
+      "path": "/me/people/$count",
+      "operationId": "me.people.GetCount-eaef",
+      "tool": "microsoft_people_me_people_get_count_eaef"
+    },
+    {
+      "method": "GET",
+      "path": "/me/people/{person-id}",
+      "operationId": "me.GetPeople",
+      "tool": "microsoft_people_me_get_people"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/people",
+      "operationId": "users.ListPeople",
+      "tool": "microsoft_people_users_list_people"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/people/$count",
+      "operationId": "users.people.GetCount-d516",
+      "tool": "microsoft_people_users_people_get_count_d516"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/people/{person-id}",
+      "operationId": "users.GetPeople",
+      "tool": "microsoft_people_users_get_people"
+    }
+  ]
+}

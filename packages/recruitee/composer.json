@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-recruitee",
-    "description": "Recruitee ATS integration for Laravel — list offers, candidates, departments, and user info.",
+    "description": "Recruitee ATS integration for Laravel with candidate, offer, location, attachment, and Core API coverage.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "recruitee", "ats", "hr", "recruiting", "opencompany"],
+    "keywords": ["tools", "recruitee", "ats", "recruiting", "applicant-tracking", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

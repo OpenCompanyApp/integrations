@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ElasticEmail\ElasticEmailService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create or add an Elastic Email contact.
+ */
 class ElasticEmailCreateContact implements Tool
 {
+    /**
+     * @param  ElasticEmailService  $service  Elastic Email API client.
+     */
     public function __construct(
         private ElasticEmailService $service,
     ) {}
@@ -32,6 +38,11 @@ class ElasticEmailCreateContact implements Tool
         ];
     }
 
+    /**
+     * Execute the contact creation request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -40,10 +51,11 @@ class ElasticEmailCreateContact implements Tool
             }
 
             $options = [];
-            foreach (['first_name', 'last_name'] as $key) {
-                if (isset($args[$key])) {
-                    $options[$key] = $args[$key];
-                }
+            if (isset($args['first_name'])) {
+                $options['FirstName'] = $args['first_name'];
+            }
+            if (isset($args['last_name'])) {
+                $options['LastName'] = $args['last_name'];
             }
 
             $result = $this->service->createContact(

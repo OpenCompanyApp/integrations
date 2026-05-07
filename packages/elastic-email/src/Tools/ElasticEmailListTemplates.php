@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ElasticEmail\ElasticEmailService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Elastic Email templates.
+ */
 class ElasticEmailListTemplates implements Tool
 {
+    /**
+     * @param  ElasticEmailService  $service  Elastic Email API client.
+     */
     public function __construct(
         private ElasticEmailService $service,
     ) {}
@@ -30,6 +36,11 @@ class ElasticEmailListTemplates implements Tool
         ];
     }
 
+    /**
+     * Execute the template list request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

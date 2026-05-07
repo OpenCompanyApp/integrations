@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Linode\LinodeService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Linode DNS domains in the account.
+ */
 class LinodeListDomains implements Tool
 {
+    /**
+     * @param  LinodeService  $service  The Linode API client.
+     */
     public function __construct(
         private LinodeService $service,
     ) {}
@@ -30,6 +36,11 @@ class LinodeListDomains implements Tool
         ];
     }
 
+    /**
+     * List account domains using optional Linode pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

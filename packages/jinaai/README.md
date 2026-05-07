@@ -1,16 +1,8 @@
 # Integration: Jina AI
 
-> Jina AI integration for the [Laravel AI SDK](https://github.com/laravel/ai) — search, read, ground, embeddings, and rerank. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Jina AI integration for OpenCompany agents — search, read, ground, embeddings, rerank, classify, and segment.
 
-Give your AI agents access to powerful AI capabilities: web search, content extraction, factual grounding, text embeddings, and document reranking — all through the [Jina AI](https://jina.ai) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Jina AI integration lets AI agents search the web, read web pages, verify claims against context, generate embeddings for semantic search, and rerank documents by relevance.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+Give agents access to Jina Search Foundation APIs: web search, URL reading, factual grounding, text embeddings, document reranking, zero-shot/few-shot classification, and tokenization/segmentation.
 
 ## Installation
 
@@ -43,9 +35,11 @@ return [
 |------|------|-------------|
 | `jinaai_search` | read | Search the web — returns results with titles, URLs, and content |
 | `jinaai_read` | read | Read and extract clean content from a URL |
-| `jinaai_ground` | read | Ground a statement against context — verify factual claims |
+| `jinaai_ground` | read | Verify factual claims with Jina Grounding |
 | `jinaai_embeddings` | read | Generate text embeddings for semantic search and similarity |
 | `jinaai_rerank` | read | Rerank documents by relevance to a query |
+| `jinaai_classify` | read | Classify text or image inputs with labels or a classifier |
+| `jinaai_segment` | read | Tokenize or segment long text |
 
 ## Quick Start
 
@@ -69,7 +63,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 5 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -99,7 +93,6 @@ $content = $service->read(['url' => 'https://laravel.com/docs']);
 // Ground a statement
 $grounding = $service->ground([
     'statement' => 'PHP 8.4 was released in 2024',
-    'context' => 'PHP 8.4 was released on November 21, 2024.',
 ]);
 
 // Generate embeddings
@@ -117,7 +110,23 @@ $reranked = $service->rerank([
         'Vue.js is a JS framework.',
     ],
 ]);
+
+// Classify inputs
+$classified = $service->classify([
+    'input' => ['Composer installs Laravel packages.'],
+    'labels' => ['php', 'javascript', 'database'],
+]);
+
+// Segment text
+$segments = $service->segment([
+    'content' => 'A long paragraph that should be split before embedding.',
+    'return_chunks' => true,
+]);
 ```
+
+## Endpoint Notes
+
+Reader/search/grounding use the documented Jina hostnames: `r.jina.ai`, `s.jina.ai`, and `g.jina.ai`. The configured base URL applies to Jina v1 model APIs: embeddings, rerank, classify, and segment.
 
 ## Dependencies
 

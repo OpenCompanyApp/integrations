@@ -1,16 +1,11 @@
-# Integration: Dub.co
+# Integration: Dub
 
-> Dub.co link management integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage short links, domains, and tags. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Dub integration package for OpenCompany and compatible Laravel hosts.
 
-Give your AI agents access to [Dub.co](https://dub.co) link management. Create short links, list and search existing links, manage domains and tags — all through the Dub.co REST API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Dub.co tool lets AI agents manage short links, check link performance, and organize links with tags — enabling automated marketing workflows.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+This package exposes the official Dub API resource surface from the official
+Dub PHP SDK. It registers 52 operation tools for links, analytics, domains,
+folders, tags, events, customers, partners, commissions, payouts, QR codes, and
+conversion tracking.
 
 ## Installation
 
@@ -18,119 +13,41 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-dub
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
-
-This tool requires a Dub.co API access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
 
 ```php
 return [
     'dub' => [
-        'access_token' => env('DUB_ACCESS_TOKEN'),
-        'base_url'     => env('DUB_BASE_URL', 'https://api.dub.co'),
+        'access_token' => env('DUB_API_KEY'),
+        'base_url' => env('DUB_BASE_URL', 'https://api.dub.co'),
     ],
 ];
 ```
 
-## Available Tools
+Dub uses bearer-token authentication:
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `dub_list_links` | read | List short links with pagination, search, and filtering |
-| `dub_get_link` | read | Get details of a specific short link |
-| `dub_create_link` | write | Create a new short link |
-| `dub_list_domains` | read | List configured domains |
-| `dub_get_domain` | read | Get details of a specific domain |
-| `dub_list_tags` | read | List link tags |
-| `dub_get_current_user` | read | Get the authenticated user profile |
-
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Dub\DubService;
-use OpenCompany\Integrations\Dub\Tools\DubListLinks;
-use OpenCompany\Integrations\Dub\Tools\DubCreateLink;
-
-// Create tools
-$service = app(DubService::class);
-$tools = [
-    new DubListLinks($service),
-    new DubCreateLink($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Create a short link for https://example.com/my-long-page with the key "my-page"');
+```text
+Authorization: Bearer dub_xxxxxxxx
 ```
 
-### Via ToolProvider (recommended)
+## Tool Coverage
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+The provider exposes one tool per official SDK operation. Tool arguments use
+snake_case path parameters, `query` for query-string filters, and `payload` for
+JSON bodies.
 
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
+Representative tools:
 
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('dub');
+- `dub_links_list`, `dub_links_create`, `dub_links_update`, `dub_links_delete`
+- `dub_analytics_retrieve`, `dub_events_list`, `dub_qr_codes_get`
+- `dub_domains_list`, `dub_domains_create`, `dub_domains_check_status`
+- `dub_partners_list`, `dub_partners_create_link`, `dub_partners_analytics`
+- `dub_track_lead`, `dub_track_sale`
 
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Dub\Tools\DubListLinks::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Dub\DubService;
-
-$service = app(DubService::class);
-
-// List links
-$links = $service->listLinks(page: 1, pageSize: 10, search: 'campaign');
-
-// Get a link
-$link = $service->getLink('clx_abc123');
-
-// Create a link
-$link = $service->createLink(
-    url: 'https://example.com/long-url',
-    domain: 'dub.sh',
-    key: 'my-link',
-    title: 'My Campaign Link',
-    tags: ['campaign', 'social'],
-);
-
-// List domains
-$domains = $service->listDomains();
-
-// List tags
-$tags = $service->listTags(search: 'campaign');
-
-// Get current user
-$user = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Dub.co](https://dub.co) account with API access
+See `lua-docs/dub.md` for the full tool list and method/path reference.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

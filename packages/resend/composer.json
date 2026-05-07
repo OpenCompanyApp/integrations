@@ -1,12 +1,39 @@
 {
     "name": "opencompanyapp/integration-resend",
-    "description": "Resend integration for OpenCompany — email delivery, domains, API keys, and contacts.",
+    "description": "Resend integration for Laravel - generated coverage of the official Resend REST API.",
     "license": "MIT",
-    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
-    "keywords": ["tools", "resend", "email", "domains", "opencompany"],
-    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
-    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Resend\\": "src/"}},
-    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Resend\\ResendServiceProvider"]}},
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": [
+        "tools",
+        "resend",
+        "email",
+        "domains",
+        "contacts",
+        "broadcasts",
+        "automations",
+        "opencompany"
+    ],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Resend\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Resend\\ResendServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }

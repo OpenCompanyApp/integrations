@@ -1,5 +1,7 @@
 # Railway — Lua API Reference
 
+Railway tools use the public GraphQL API with a stored account or workspace bearer token. The integration returns normalized project, service, deployment, and user fields instead of raw GraphQL envelopes.
+
 ## list_projects
 
 List all Railway projects the authenticated user has access to.

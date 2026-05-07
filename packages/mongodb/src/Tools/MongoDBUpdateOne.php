@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MongoDB\MongoDBService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Update one document in a MongoDB Atlas Data API collection.
+ *
+ * Uses a filter and update operators, returning matched and modified counts.
+ */
 class MongoDBUpdateOne implements Tool
 {
+    /**
+     * @param  MongoDBService  $service  MongoDB Atlas Data API client.
+     */
     public function __construct(
         private MongoDBService $service,
     ) {}
@@ -32,6 +40,11 @@ class MongoDBUpdateOne implements Tool
         ];
     }
 
+    /**
+     * Update one document matching the supplied filter.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (database, collection, filter, update).
+     */
     public function execute(array $args): ToolResult
     {
         try {

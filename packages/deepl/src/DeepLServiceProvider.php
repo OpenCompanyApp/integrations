@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the DeepL integration with Laravel's service container.
+ *
+ * Binds the DeepL API client using host-provided credentials and registers
+ * the DeepL tool provider with the shared registry when available.
+ */
 class DeepLServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,8 +20,8 @@ class DeepLServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new DeepLService(
-                apiKey: $creds->get('deepl', 'api_key', ''),
-                baseUrl: $creds->get('deepl', 'base_url', 'https://api.deepl.com'),
+                apiKey: (string) $creds->get('deepl', 'api_key', ''),
+                baseUrl: (string) $creds->get('deepl', 'base_url', 'https://api.deepl.com'),
             );
         });
     }
@@ -23,8 +29,7 @@ class DeepLServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new DeepLToolProvider());
+            $this->app->make(ToolProviderRegistry::class)->register(new DeepLToolProvider);
         }
     }
 }

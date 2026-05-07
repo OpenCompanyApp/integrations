@@ -6,6 +6,12 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Recurly v3 API.
+ *
+ * Handles bearer API-key authentication, Recurly version headers,
+ * request dispatch, error normalization, and JSON response parsing.
+ */
 class RecurlyService
 {
     /**

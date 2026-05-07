@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-venmo",
-    "description": "Venmo integration for OpenCompany — payments, users, and transactions.",
+    "description": "Legacy Venmo Developer API integration for grandfathered accounts — payments, users, and transactions.",
     "license": "MIT",
     "authors": [
         {

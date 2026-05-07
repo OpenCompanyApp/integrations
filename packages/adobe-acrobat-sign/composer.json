@@ -1,0 +1,22 @@
+{
+    "name": "opencompanyapp/integration-adobe-acrobat-sign",
+    "description": "Adobe Acrobat Sign REST v6 integration generated from Adobe Swagger JSON.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\AdobeAcrobatSign\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\AdobeAcrobatSign\\AdobeAcrobatSignServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "*"
+    }
+}

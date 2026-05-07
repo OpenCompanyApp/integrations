@@ -104,7 +104,7 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
     public function appName(): string
     {
-        return 'google_ads';
+        return 'google-ads';
     }
 
     public function appMeta(): array
@@ -273,20 +273,27 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         }
 
         $creds = app(CredentialResolver::class);
+        $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+            $value = $creds->get('google-ads', $key, null, $account);
 
-        $expiresAt = $creds->get('google_ads', 'expires_at', null, $account);
+            return $value !== null && $value !== ''
+                ? $value
+                : $creds->get('google_ads', $key, $default, $account);
+        };
+
+        $expiresAt = $get('expires_at', null);
 
         return new GoogleAdsService(
-            clientId: $creds->get('google_ads', 'client_id', '', $account),
-            clientSecret: $creds->get('google_ads', 'client_secret', '', $account),
-            accessToken: $creds->get('google_ads', 'access_token', '', $account),
-            refreshToken: $creds->get('google_ads', 'refresh_token', '', $account),
+            clientId: $get('client_id'),
+            clientSecret: $get('client_secret'),
+            accessToken: $get('access_token'),
+            refreshToken: $get('refresh_token'),
             expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
-            developerToken: $creds->get('google_ads', 'developer_token', '', $account),
-            managerCustomerId: $creds->get('google_ads', 'manager_customer_id', '', $account),
-            defaultCustomerId: $creds->get('google_ads', 'default_customer_id', '', $account),
-            linkedCustomerId: $creds->get('google_ads', 'linked_customer_id', '', $account),
-            apiVersion: $creds->get('google_ads', 'api_version', 'v24', $account),
+            developerToken: $get('developer_token'),
+            managerCustomerId: $get('manager_customer_id'),
+            defaultCustomerId: $get('default_customer_id'),
+            linkedCustomerId: $get('linked_customer_id'),
+            apiVersion: $get('api_version', 'v24'),
         );
     }
 

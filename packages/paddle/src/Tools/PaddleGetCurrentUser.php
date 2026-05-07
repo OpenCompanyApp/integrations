@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify Paddle credentials with a lightweight API request.
+ *
+ * Uses a one-item transactions request as a connectivity check because
+ * Paddle does not expose a dedicated current-user endpoint.
+ */
 class PaddleGetCurrentUser implements Tool
 {
     /**
      * Create a new PaddleGetCurrentUser tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

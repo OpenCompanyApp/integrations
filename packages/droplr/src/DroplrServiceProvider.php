@@ -6,8 +6,14 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Droplr integration with Laravel's service container.
+ */
 class DroplrServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the Droplr API client singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(DroplrService::class, function ($app) {
@@ -20,6 +26,9 @@ class DroplrServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the Droplr tool provider when the registry is available.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

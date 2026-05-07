@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-aftership",
+    "description": "AfterShip Tracking integration for Laravel AI agents - trackings, couriers, courier connections, and estimated delivery dates.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\AfterShip\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\AfterShip\\AfterShipServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "aftership",
+        "tracking",
+        "couriers",
+        "estimated-delivery-date",
+        "opencompany",
+        "ai-agents"
+    ]
+}

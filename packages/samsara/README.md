@@ -1,14 +1,14 @@
 # Integration: Samsara
 
-> Samsara fleet and IoT management integration for [OpenCompany](https://github.com/OpenCompanyApp) — vehicles, drivers, sensors, and user info. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Samsara fleet and IoT management integration for [OpenCompany](https://github.com/OpenCompanyApp) - vehicles, drivers, sensors, and user info. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to fleet and IoT data. List and inspect vehicles, drivers, and sensors — all through the [Samsara](https://www.samsara.com) API.
+Give your AI agents access to fleet and IoT data. List and inspect vehicles, drivers, and sensors - all through the [Samsara](https://www.samsara.com) API.
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Samsara tool lets AI agents query fleet vehicles, retrieve driver information, list IoT sensors, and verify API connectivity — giving agents real-time awareness of fleet operations.
+This Samsara tool lets AI agents query fleet vehicles, retrieve driver information, list IoT sensors, and verify API connectivity - giving agents real-time awareness of fleet operations.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -136,4 +136,4 @@ $tool = $provider->createTool(
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-convertkit",
-    "description": "ConvertKit integration for Laravel — manage subscribers, tags, forms, and sequences.",
+    "description": "Kit (ConvertKit) integration for Laravel - manage subscribers, tags, forms, broadcasts, sequences, commerce, and webhooks.",
     "license": "MIT",
     "authors": [
         {

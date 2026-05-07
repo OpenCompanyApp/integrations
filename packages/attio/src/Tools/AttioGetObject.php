@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Attio\AttioService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get an Attio object definition.
+ */
 class AttioGetObject implements Tool
 {
     /**

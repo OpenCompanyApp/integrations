@@ -43,6 +43,29 @@ class ActiveCampaignService
         return "https://{$this->accountName}.api-us1.com/api/3";
     }
 
+    // ── Users ──────────────────────────────────────────────────────────
+
+    /**
+     * Get the current authenticated user.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCurrentUser(): array
+    {
+        return $this->request('GET', '/users/me');
+    }
+
+    /**
+     * List users in the account.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listUsers(array $params = []): array
+    {
+        return $this->request('GET', '/users', $params);
+    }
+
     // ── Contacts ───────────────────────────────────────────────────────
 
     /**
@@ -106,6 +129,17 @@ class ActiveCampaignService
         $contact = array_merge($contact, $extra);
 
         return $this->request('POST', '/contacts', ['contact' => $contact]);
+    }
+
+    /**
+     * Create or update a contact by email using ActiveCampaign's sync endpoint.
+     *
+     * @param  array<string, mixed>  $contact  Contact payload.
+     * @return array<string, mixed>
+     */
+    public function syncContact(array $contact): array
+    {
+        return $this->request('POST', '/contact/sync', ['contact' => $contact]);
     }
 
     /**
@@ -203,6 +237,138 @@ class ActiveCampaignService
         ]);
     }
 
+    // ── Tags and Fields ────────────────────────────────────────────────
+
+    /**
+     * List all tags.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listTags(array $params = []): array
+    {
+        return $this->request('GET', '/tags', $params);
+    }
+
+    /**
+     * Create a tag.
+     *
+     * @param  string  $tag  Tag name.
+     * @param  string|null  $description  Optional tag description.
+     * @param  string|null  $tagType  Optional tag type.
+     * @return array<string, mixed>
+     */
+    public function createTag(string $tag, ?string $description = null, ?string $tagType = null): array
+    {
+        $payload = ['tag' => ['tag' => $tag]];
+
+        if ($description !== null && $description !== '') {
+            $payload['tag']['description'] = $description;
+        }
+
+        if ($tagType !== null && $tagType !== '') {
+            $payload['tag']['tagType'] = $tagType;
+        }
+
+        return $this->request('POST', '/tags', $payload);
+    }
+
+    /**
+     * Add an existing tag to a contact.
+     *
+     * @param  int  $contactId  Contact ID.
+     * @param  int  $tagId  Tag ID.
+     * @return array<string, mixed>
+     */
+    public function addContactTag(int $contactId, int $tagId): array
+    {
+        return $this->request('POST', '/contactTags', [
+            'contactTag' => [
+                'contact' => $contactId,
+                'tag' => $tagId,
+            ],
+        ]);
+    }
+
+    /**
+     * Remove a tag relationship from a contact.
+     *
+     * @param  int  $contactTagId  Contact-tag relationship ID.
+     * @return array<string, mixed>
+     */
+    public function removeContactTag(int $contactTagId): array
+    {
+        return $this->request('DELETE', "/contactTags/{$contactTagId}");
+    }
+
+    /**
+     * List tags applied to a contact.
+     *
+     * @param  int  $contactId  Contact ID.
+     * @return array<string, mixed>
+     */
+    public function listContactTags(int $contactId): array
+    {
+        return $this->request('GET', "/contacts/{$contactId}/contactTags");
+    }
+
+    /**
+     * List custom contact fields.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listFields(array $params = []): array
+    {
+        return $this->request('GET', '/fields', $params);
+    }
+
+    /**
+     * Create a custom contact field.
+     *
+     * @param  array<string, mixed>  $field  Field payload.
+     * @return array<string, mixed>
+     */
+    public function createField(array $field): array
+    {
+        return $this->request('POST', '/fields', ['field' => $field]);
+    }
+
+    /**
+     * Create a contact custom field value.
+     *
+     * @param  int  $contactId  Contact ID.
+     * @param  int  $fieldId  Field ID.
+     * @param  mixed  $value  Field value.
+     * @return array<string, mixed>
+     */
+    public function createFieldValue(int $contactId, int $fieldId, mixed $value): array
+    {
+        return $this->request('POST', '/fieldValues', [
+            'fieldValue' => [
+                'contact' => $contactId,
+                'field' => $fieldId,
+                'value' => $value,
+            ],
+        ]);
+    }
+
+    /**
+     * Update an existing contact custom field value.
+     *
+     * @param  int  $fieldValueId  Field value relationship ID.
+     * @param  mixed  $value  New field value.
+     * @return array<string, mixed>
+     */
+    public function updateFieldValue(int $fieldValueId, mixed $value): array
+    {
+        return $this->request('PUT', "/fieldValues/{$fieldValueId}", [
+            'fieldValue' => [
+                'value' => $value,
+            ],
+        ]);
+    }
+
     // ── Deals ──────────────────────────────────────────────────────────
 
     /**
@@ -279,6 +445,39 @@ class ActiveCampaignService
         return $this->request('PUT', "/deals/{$dealId}", ['deal' => $data]);
     }
 
+    /**
+     * Delete a deal.
+     *
+     * @param  int  $dealId  Deal ID.
+     * @return array<string, mixed>
+     */
+    public function deleteDeal(int $dealId): array
+    {
+        return $this->request('DELETE', "/deals/{$dealId}");
+    }
+
+    /**
+     * List deal pipelines.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listDealGroups(array $params = []): array
+    {
+        return $this->request('GET', '/dealGroups', $params);
+    }
+
+    /**
+     * List deal stages.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listDealStages(array $params = []): array
+    {
+        return $this->request('GET', '/dealStages', $params);
+    }
+
     // ── Automations ────────────────────────────────────────────────────
 
     /**
@@ -299,6 +498,86 @@ class ActiveCampaignService
         }
 
         return $this->request('GET', '/automations', $params);
+    }
+
+    // ── Campaigns, Messages, and Accounts ──────────────────────────────
+
+    /**
+     * List campaigns.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listCampaigns(array $params = []): array
+    {
+        return $this->request('GET', '/campaigns', $params);
+    }
+
+    /**
+     * Retrieve a campaign.
+     *
+     * @param  int  $campaignId  Campaign ID.
+     * @return array<string, mixed>
+     */
+    public function getCampaign(int $campaignId): array
+    {
+        return $this->request('GET', "/campaigns/{$campaignId}");
+    }
+
+    /**
+     * List messages.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listMessages(array $params = []): array
+    {
+        return $this->request('GET', '/messages', $params);
+    }
+
+    /**
+     * List CRM accounts.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listAccounts(array $params = []): array
+    {
+        return $this->request('GET', '/accounts', $params);
+    }
+
+    /**
+     * Retrieve a CRM account.
+     *
+     * @param  int  $accountId  Account ID.
+     * @return array<string, mixed>
+     */
+    public function getAccount(int $accountId): array
+    {
+        return $this->request('GET', "/accounts/{$accountId}");
+    }
+
+    /**
+     * Create a CRM account.
+     *
+     * @param  array<string, mixed>  $account  Account payload.
+     * @return array<string, mixed>
+     */
+    public function createAccount(array $account): array
+    {
+        return $this->request('POST', '/accounts', ['account' => $account]);
+    }
+
+    /**
+     * Update a CRM account.
+     *
+     * @param  int  $accountId  Account ID.
+     * @param  array<string, mixed>  $account  Account payload.
+     * @return array<string, mixed>
+     */
+    public function updateAccount(int $accountId, array $account): array
+    {
+        return $this->request('PUT', "/accounts/{$accountId}", ['account' => $account]);
     }
 
     // ── Notes ──────────────────────────────────────────────────────────
@@ -330,7 +609,57 @@ class ActiveCampaignService
      */
     public function testConnection(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->getCurrentUser();
+    }
+
+    // ── Generic API escape hatch ───────────────────────────────────────
+
+    /**
+     * Send a GET request to an arbitrary ActiveCampaign API path.
+     *
+     * @param  string  $path  API path under /api/3.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Send a POST request to an arbitrary ActiveCampaign API path.
+     *
+     * @param  string  $path  API path under /api/3.
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Send a PUT request to an arbitrary ActiveCampaign API path.
+     *
+     * @param  string  $path  API path under /api/3.
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $payload = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Send a DELETE request to an arbitrary ActiveCampaign API path.
+     *
+     * @param  string  $path  API path under /api/3.
+     * @param  array<string, mixed>  $payload  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
     }
 
     // ── HTTP Layer ─────────────────────────────────────────────────────
@@ -402,5 +731,13 @@ class ActiveCampaignService
             ]);
             throw new \RuntimeException("Failed to connect to ActiveCampaign API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a caller-supplied API path.
+     */
+    private function normalizePath(string $path): string
+    {
+        return '/'.ltrim($path, '/');
     }
 }

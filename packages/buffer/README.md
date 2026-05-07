@@ -1,14 +1,14 @@
 # Integration: Buffer
 
-> Buffer integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage social media profiles and scheduled updates. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Buffer integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage social media profiles and scheduled updates. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to social media management. Schedule posts, review pending and sent updates, list connected social profiles, and look up account details — all through the [Buffer](https://buffer.com) API.
+Give your AI agents access to social media management. Schedule posts, review pending and sent updates, list connected social profiles, and look up account details - all through the [Buffer](https://buffer.com) API.
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Buffer tool lets AI agents manage social media publishing, review scheduled updates, and coordinate profiles — enabling automated social media workflows within the OpenCompany workspace.
+This Buffer tool lets AI agents manage social media publishing, review scheduled updates, and coordinate profiles - enabling automated social media workflows within the OpenCompany workspace.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -134,4 +134,4 @@ $me = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

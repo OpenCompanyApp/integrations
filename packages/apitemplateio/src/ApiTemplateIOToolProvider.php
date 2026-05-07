@@ -3,123 +3,101 @@
 namespace OpenCompany\Integrations\ApiTemplateIO;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdf;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreateImage;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOListTemplates;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOGetTemplate;
-use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreateImage;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdf;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdfFromHtml;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdfFromMarkdown;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOCreatePdfFromUrl;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIODeleteObject;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOGetCurrentUser;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOGetTemplate;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOListObjects;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOListTemplates;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOMergePdfs;
+use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOUpdateTemplate;
 
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool provider for the APITemplate.io integration.
+ *
+ * Exposes the documented REST API v2 surface for PDF generation, image generation,
+ * generated-object management, account information, and template management.
  */
 class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
-     * Describe host and authentication capabilities for catalog and setup flows.
+    /**
+     * Describe setup and runtime capabilities for catalog and host UIs.
      *
      * @return array<string, mixed>
      */
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-
-
-
-/**
-     * Get the app name identifier.
-     *
-     * @return string The integration identifier.
-     */
     public function appName(): string
     {
         return 'apitemplateio';
     }
 
-/**
-     * Get the app metadata for display in the integration registry.
-     *
-     * @return array<string, mixed> App metadata (label, description, icons).
-     */
     public function appMeta(): array
     {
         return [
-            'label' => 'API Template IO',
-            'description' => 'Document & image generation',
+            'label' => 'APITemplate.io',
+            'description' => 'PDF and image generation',
             'icon' => 'ph:file-pdf',
             'logo' => 'simple-icons:apitemplateio',
         ];
     }
 
-/**
-     * Get the integration metadata for the OpenCompany integration catalog.
-     *
-     * @return array<string, mixed> Integration metadata including category and docs URL.
-     */
     public function integrationMeta(): array
     {
         return [
-            'name' => 'API Template IO',
-            'description' => 'Generate PDFs and images from reusable templates',
+            'name' => 'APITemplate.io',
+            'description' => 'Generate PDFs and images from templates, HTML, URLs, Markdown, and PDF merge workflows',
             'icon' => 'ph:file-pdf',
             'logo' => 'simple-icons:apitemplateio',
-            'category' => 'documents',
+            'category' => 'rendering',
             'badge' => 'verified',
             'docs_url' => 'https://apitemplate.io/apiv2/',
         ];
-    }/**
-     * Get the configuration schema for this integration.
-     *
-     * @return array<int, array<string, mixed>> The configuration field definitions.
-     */
+    }
+
     public function configSchema(): array
     {
         return [
@@ -127,34 +105,33 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'api_key',
                 'type' => 'secret',
                 'label' => 'API Key',
-                'placeholder' => 'Enter your API Template IO API key',
-                'hint' => 'Find your API key in the API Template IO dashboard under "API Keys"',
+                'placeholder' => 'Enter your APITemplate.io API key',
+                'hint' => 'Find your API key in the APITemplate.io dashboard API Integration section.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api.apitemplate.io/v1',
-                'hint' => 'Override only if using a custom or regional endpoint',
-                'default' => 'https://api.apitemplate.io/v1',
+                'placeholder' => 'https://rest.apitemplate.io',
+                'hint' => 'Override for a regional endpoint such as https://rest-us.apitemplate.io or https://rest-de.apitemplate.io.',
+                'default' => 'https://rest.apitemplate.io',
             ],
         ];
     }
 
     /**
-     * Test the connection to the API Template IO API using the provided config.
+     * Test the configured APITemplate.io credentials.
      *
-     * @param array<string, mixed> $config The configuration to test.
-     *
-     * @return array{success: bool, message?: string, error?: string} The test result.
+     * @param  array<string, mixed>  $config  Integration configuration
+     * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.apitemplate.io/v1', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://rest.apitemplate.io'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
@@ -162,38 +139,26 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
             $response = Http::withHeaders([
                 'X-API-KEY' => $apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/account');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach API Template IO at {$baseUrl}. Check the URL.",
-                ];
-            }
+            ])->timeout(10)->get($baseUrl . '/v2/account-information');
 
             if ($response->successful()) {
                 return [
                     'success' => true,
-                    'message' => "Connected to API Template IO at {$baseUrl}.",
+                    'message' => "Connected to APITemplate.io at {$baseUrl}.",
                 ];
             }
 
+            $json = $response->json();
+
             return [
                 'success' => false,
-                'error' => "API returned HTTP {$response->status()}: " . ($json['message'] ?? 'Unknown error'),
+                'error' => "API returned HTTP {$response->status()}: " . ($json['message'] ?? $json['error'] ?? 'Unknown error'),
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get the validation rules for the integration configuration.
-     *
-     * @return array<string, mixed> Laravel validation rules.
-     */
     public function validationRules(): array
     {
         return [
@@ -202,11 +167,6 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Get the list of tools provided by this integration.
-     *
-     * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
-     */
     public function tools(): array
     {
         return [
@@ -214,98 +174,136 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ApiTemplateIOCreatePdf::class,
                 'type' => 'write',
                 'name' => 'Create PDF',
-                'description' => 'Generate a PDF document from a template.',
+                'description' => 'Generate a PDF document from a saved template.',
                 'icon' => 'ph:file-pdf',
             ],
             'apitemplateio_create_image' => [
                 'class' => ApiTemplateIOCreateImage::class,
                 'type' => 'write',
                 'name' => 'Create Image',
-                'description' => 'Generate an image (PNG or JPEG) from a template.',
+                'description' => 'Generate images from a visual template.',
                 'icon' => 'ph:image',
+            ],
+            'apitemplateio_create_pdf_from_html' => [
+                'class' => ApiTemplateIOCreatePdfFromHtml::class,
+                'type' => 'write',
+                'name' => 'Create PDF From HTML',
+                'description' => 'Generate a PDF directly from HTML content.',
+                'icon' => 'ph:code',
+            ],
+            'apitemplateio_create_pdf_from_url' => [
+                'class' => ApiTemplateIOCreatePdfFromUrl::class,
+                'type' => 'write',
+                'name' => 'Create PDF From URL',
+                'description' => 'Generate a PDF by rendering a public URL.',
+                'icon' => 'ph:globe',
+            ],
+            'apitemplateio_create_pdf_from_markdown' => [
+                'class' => ApiTemplateIOCreatePdfFromMarkdown::class,
+                'type' => 'write',
+                'name' => 'Create PDF From Markdown',
+                'description' => 'Generate a PDF from Markdown content.',
+                'icon' => 'ph:markdown-logo',
+            ],
+            'apitemplateio_merge_pdfs' => [
+                'class' => ApiTemplateIOMergePdfs::class,
+                'type' => 'write',
+                'name' => 'Merge PDFs',
+                'description' => 'Merge multiple PDF URLs into one PDF.',
+                'icon' => 'ph:files',
+            ],
+            'apitemplateio_list_objects' => [
+                'class' => ApiTemplateIOListObjects::class,
+                'type' => 'read',
+                'name' => 'List Generated Objects',
+                'description' => 'List generated PDFs and images.',
+                'icon' => 'ph:archive',
+            ],
+            'apitemplateio_delete_object' => [
+                'class' => ApiTemplateIODeleteObject::class,
+                'type' => 'write',
+                'name' => 'Delete Generated Object',
+                'description' => 'Delete a generated PDF or image by transaction reference.',
+                'icon' => 'ph:trash',
+            ],
+            'apitemplateio_get_current_user' => [
+                'class' => ApiTemplateIOGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Account Information',
+                'description' => 'Get account information for the configured API key.',
+                'icon' => 'ph:user',
             ],
             'apitemplateio_list_templates' => [
                 'class' => ApiTemplateIOListTemplates::class,
                 'type' => 'read',
                 'name' => 'List Templates',
-                'description' => 'List available templates with pagination.',
+                'description' => 'List saved templates with documented filters.',
                 'icon' => 'ph:files',
             ],
             'apitemplateio_get_template' => [
                 'class' => ApiTemplateIOGetTemplate::class,
                 'type' => 'read',
                 'name' => 'Get Template',
-                'description' => 'Get details for a specific template.',
+                'description' => 'Get details for a saved PDF template.',
                 'icon' => 'ph:file-text',
             ],
-            'apitemplateio_get_current_user' => [
-                'class' => ApiTemplateIOGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s account information.',
-                'icon' => 'ph:user',
+            'apitemplateio_update_template' => [
+                'class' => ApiTemplateIOUpdateTemplate::class,
+                'type' => 'write',
+                'name' => 'Update Template',
+                'description' => 'Update a saved PDF template.',
+                'icon' => 'ph:pencil-simple',
             ],
         ];
     }
 
-    /**
-     * Get the path to the Lua documentation file for this integration.
-     *
-     * @return string|null The absolute path to the Lua docs markdown file.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/apitemplateio.md';
     }
 
-    /**
-     * Get the credential field definitions for this integration.
-     *
-     * @return array<int, array{key: string, type: string, label: string, required?: bool, default?: string}>
-     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.apitemplate.io/v1'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://rest.apitemplate.io'],
         ];
     }
 
-    /**
-     * Confirm this class represents an integration.
-     *
-     * @return bool Always true.
-     */
     public function isIntegration(): bool
-    {        return true;
+    {
+        return true;
     }
 
     /**
      * Create a tool instance, optionally with account-specific credentials.
      *
-     * Supports multi-account usage by resolving credentials for the given account
-     * context and injecting them into a fresh ApiTemplateIOService instance.
-     *
-     * @param string               $class   The tool class to instantiate.
-     * @param array<string, mixed> $context Optional context with 'account' for multi-account support.
-     *
-     * @return Tool The instantiated tool.
+     * @param  string  $class  Tool class name
+     * @param  array<string, mixed>  $context  Optional account context
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the API service for default or named-account credentials.
+     *
+     * @param  array<string, mixed>  $context  Optional account context
+     */
+    private function resolveService(array $context = []): ApiTemplateIOService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new ApiTemplateIOService(
+            return new ApiTemplateIOService(
                 apiKey: $creds->get('apitemplateio', 'api_key', '', $account),
-                baseUrl: $creds->get('apitemplateio', 'url', 'https://api.apitemplate.io/v1', $account),
+                baseUrl: $creds->get('apitemplateio', 'url', 'https://rest.apitemplate.io', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(ApiTemplateIOService::class));
+        return app(ApiTemplateIOService::class);
     }
 }

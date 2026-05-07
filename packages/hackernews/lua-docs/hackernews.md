@@ -152,6 +152,111 @@ end
 
 ---
 
+## list_ask_stories
+
+Fetch the latest Ask HN stories. The official API returns up to 200 Ask HN item IDs; this tool resolves the first `limit` IDs to item data.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Max stories to return (default: 30, max: 100) |
+
+### Example
+
+```lua
+local result = app.integrations.hackernews.list_ask_stories({ limit = 10 })
+
+for _, story in ipairs(result.stories) do
+  print(story.title)
+  print(story.text or "")
+end
+```
+
+---
+
+## list_show_stories
+
+Fetch the latest Show HN stories. The official API returns up to 200 Show HN item IDs; this tool resolves the first `limit` IDs to item data.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Max stories to return (default: 30, max: 100) |
+
+### Example
+
+```lua
+local result = app.integrations.hackernews.list_show_stories({ limit = 10 })
+
+for _, story in ipairs(result.stories) do
+  print(story.title)
+  if story.url then print(story.url) end
+end
+```
+
+---
+
+## list_job_stories
+
+Fetch the latest Hacker News job stories. The official API returns up to 200 job item IDs; this tool resolves the first `limit` IDs to item data.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Max job stories to return (default: 30, max: 100) |
+
+### Example
+
+```lua
+local result = app.integrations.hackernews.list_job_stories({ limit = 10 })
+
+for _, job in ipairs(result.stories) do
+  print(job.title)
+  print(job.url or job.text or "")
+end
+```
+
+---
+
+## get_max_item
+
+Fetch the current largest Hacker News item ID. This is useful when walking backward through all public HN items.
+
+### Parameters
+
+No parameters required.
+
+### Example
+
+```lua
+local result = app.integrations.hackernews.get_max_item()
+print(result.max_item)
+```
+
+---
+
+## get_updates
+
+Fetch recently changed item IDs and user profile IDs from the official updates endpoint.
+
+### Parameters
+
+No parameters required.
+
+### Example
+
+```lua
+local updates = app.integrations.hackernews.get_updates()
+
+print("Changed items: " .. updates.item_count)
+print("Changed profiles: " .. updates.profile_count)
+```
+
+---
+
 ## Common Patterns
 
 ### Get a story and its top comments

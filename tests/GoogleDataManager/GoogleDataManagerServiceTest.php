@@ -4,19 +4,31 @@ declare(strict_types=1);
 
 namespace OpenCompany\Integrations\Tests\GoogleDataManager;
 
+use Illuminate\Container\Container;
 use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Facades\Http;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\Integrations\GoogleDataManager\GoogleDataManagerService;
 use OpenCompany\Integrations\GoogleDataManager\GoogleDataManagerToolProvider;
 use OpenCompany\Integrations\GoogleDataManager\Tools\GoogleDataManagerIngestAudienceMembers;
 use OpenCompany\Integrations\GoogleDataManager\Tools\GoogleDataManagerIngestEvents;
+use OpenCompany\Integrations\GoogleDataManager\Tools\GoogleDataManagerRetrieveRequestStatus;
 use PHPUnit\Framework\TestCase;
 
 final class GoogleDataManagerServiceTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Http::swap(new HttpFactory);
+    }
+
     protected function tearDown(): void
     {
         Http::preventStrayRequests(false);
+        Http::swap(new HttpFactory);
+        Container::getInstance()->forgetInstance(CredentialResolver::class);
         parent::tearDown();
     }
 
@@ -30,6 +42,8 @@ final class GoogleDataManagerServiceTest extends TestCase
         }
 
         self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertSame('google-data-manager', $provider->appName());
+        self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('oauth2', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->integrationCapabilities()['host_availability']['cli']['setup_supported']);
     }
@@ -129,5 +143,50 @@ final class GoogleDataManagerServiceTest extends TestCase
             return str_starts_with($request->url(), 'https://datamanager.googleapis.com/v1/requestStatus:retrieve')
                 && $request->hasHeader('Authorization', 'Bearer fresh-token');
         });
+    }
+
+    public function test_named_account_falls_back_to_legacy_underscore_credentials(): void
+    {
+        Http::fake([
+            'https://datamanager.googleapis.com/v1/requestStatus:retrieve*' => Http::response([
+                'requestStatusPerDestination' => [],
+            ], 200),
+        ]);
+
+        Container::getInstance()->instance(CredentialResolver::class, new class implements CredentialResolver {
+            public function get(string $integration, string $key, mixed $default = null, ?string $account = null): mixed
+            {
+                if ($integration === 'google-data-manager') {
+                    return '';
+                }
+
+                if ($integration === 'google_data_manager' && $account === 'ads') {
+                    return match ($key) {
+                        'access_token' => 'legacy-access-token',
+                        default => $default,
+                    };
+                }
+
+                return $default;
+            }
+
+            public function isConfigured(string $integration, ?string $account = null): bool
+            {
+                return $integration === 'google_data_manager' && $account === 'ads';
+            }
+
+            public function getAccounts(string $integration): array
+            {
+                return $integration === 'google_data_manager' ? ['ads'] : [];
+            }
+        });
+
+        $tool = (new GoogleDataManagerToolProvider)->createTool(GoogleDataManagerRetrieveRequestStatus::class, ['account' => 'ads']);
+        $result = $tool->execute(['request_id' => 'request-1']);
+
+        self::assertTrue($result->succeeded());
+
+        Http::assertSent(static fn (Request $request): bool => str_starts_with($request->url(), 'https://datamanager.googleapis.com/v1/requestStatus:retrieve')
+            && $request->hasHeader('Authorization', 'Bearer legacy-access-token'));
     }
 }

@@ -94,7 +94,7 @@ class ZendToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Zendesk email marketing automation — manage campaigns, subscriber lists, and contacts.',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:zendesk',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.zendesk.com/api-reference/',
         ];

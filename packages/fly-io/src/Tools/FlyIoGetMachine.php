@@ -6,8 +6,14 @@ use OpenCompany\Integrations\FlyIo\FlyIoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Fly Machine by app name and machine ID.
+ */
 class FlyIoGetMachine implements Tool
 {
+    /**
+     * @param  FlyIoService  $service  The Fly.io Machines API client.
+     */
     public function __construct(
         private FlyIoService $service,
     ) {}
@@ -30,6 +36,11 @@ class FlyIoGetMachine implements Tool
         ];
     }
 
+    /**
+     * Fetch a Machine for a Fly App.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (app_name, machine_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

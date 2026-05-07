@@ -6,8 +6,14 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Google\Services\GoogleAnalyticsService;
 
+/**
+ * List GA4 account summaries and accessible properties.
+ */
 class GoogleAnalyticsListProperties implements Tool
 {
+    /**
+     * @param  GoogleAnalyticsService  $service  The Google Analytics API client.
+     */
     public function __construct(
         private GoogleAnalyticsService $service,
     ) {}
@@ -22,6 +28,11 @@ class GoogleAnalyticsListProperties implements Tool
         return 'List all accessible GA4 properties with their IDs and names. Use this first to discover the propertyId needed for other Analytics tools.';
     }
 
+    /**
+     * Execute the tool and return a property discovery summary.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

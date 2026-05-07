@@ -2,16 +2,22 @@
 
 namespace OpenCompany\Integrations\Meilisearch;
 
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Meilisearch REST API.
+ *
+ * Executes generated OpenAPI operation metadata, handles optional bearer-token
+ * authentication, encodes JSON or text bodies, and parses API errors.
+ */
 class MeilisearchService
 {
     /**
-     * Create a new MeilisearchService instance.
-     *
-     * @param  string  $apiKey  The Meilisearch API key (Bearer token).
-     * @param  string  $baseUrl  The Meilisearch instance base URL.
+     * @param  string  $apiKey  Optional Meilisearch API key for protected instances.
+     * @param  string  $baseUrl  Meilisearch instance base URL.
      */
     public function __construct(
         private string $apiKey = '',
@@ -21,175 +27,238 @@ class MeilisearchService
     }
 
     /**
-     * Check whether the service is configured with an API key.
+     * Check whether a Meilisearch base URL is configured.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->baseUrl !== '';
     }
 
     /**
-     * Get the configured base URL.
-     */
-    public function getBaseUrl(): string
-    {
-        return $this->baseUrl;
-    }
-
-    /**
-     * List all indexes in the Meilisearch instance.
+     * Return official Meilisearch operation metadata used by generated tools.
      *
-     * @return array<string, mixed> The list of indexes.
+     * @return array<string, array<string, mixed>>
      */
-    public function listIndexes(): array
+    public static function operations(): array
     {
-        return $this->request('GET', '/indexes');
+        return MeilisearchOperations::all();
     }
 
     /**
-     * Get detailed information about a specific index.
+     * Execute an official Meilisearch OpenAPI operation.
      *
-     * @param  string  $uid  The index unique identifier.
-     * @return array<string, mixed> The index information.
+     * @param  array<string, mixed>  $operation  Operation metadata from MeilisearchOperations.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function getIndex(string $uid): array
+    public function executeOperation(array $operation, array $args = []): array
     {
-        return $this->request('GET', '/indexes/' . urlencode($uid));
-    }
+        $path = (string) $operation['path'];
+        $query = [];
+        $headers = [];
+        $consumed = [];
 
-    /**
-     * Create a new index in Meilisearch.
-     *
-     * @param  string  $uid  The index unique identifier.
-     * @param  string|null  $primaryKey  The primary key field for the index.
-     * @return array<string, mixed> The task information.
-     */
-    public function createIndex(string $uid, ?string $primaryKey = null): array
-    {
-        $body = ['uid' => $uid];
-        if ($primaryKey !== null) {
-            $body['primaryKey'] = $primaryKey;
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            $name = (string) $parameter['name'];
+            $value = $this->argument($args, $name);
+
+            if ($value === null) {
+                if (!empty($parameter['required'])) {
+                    throw new \RuntimeException("{$name} is required.");
+                }
+
+                continue;
+            }
+
+            $consumed[] = $name;
+            $consumed[] = $this->snakeName($name);
+            $consumed[] = strtolower($name);
+
+            if ($parameter['in'] === 'path') {
+                $path = str_replace('{' . $name . '}', rawurlencode((string) $value), $path);
+            } elseif ($parameter['in'] === 'query') {
+                $query[$name] = $value;
+            } elseif ($parameter['in'] === 'header') {
+                $headers[$name] = $value;
+            }
         }
 
-        return $this->request('POST', '/indexes', $body);
-    }
+        $requestBody = $operation['request_body'] ?? null;
+        $body = null;
 
-    /**
-     * Search for documents in an index.
-     *
-     * @param  string  $indexUid  The index unique identifier.
-     * @param  array<string, mixed>  $params  Search parameters (q, limit, offset, filter, sort, etc.).
-     * @return array<string, mixed> The search results.
-     */
-    public function searchDocuments(string $indexUid, array $params): array
-    {
-        return $this->request('POST', '/indexes/' . urlencode($indexUid) . '/search', $params);
-    }
+        if ($requestBody !== null) {
+            $body = $args['body'] ?? $this->bodyFromLooseArguments($args, $consumed);
 
-    /**
-     * Add or replace documents in an index.
-     *
-     * @param  string  $indexUid  The index unique identifier.
-     * @param  array<int, array<string, mixed>>  $documents  The documents to add.
-     * @param  string|null  $primaryKey  The primary key field (optional).
-     * @return array<string, mixed> The task information.
-     */
-    public function addDocuments(string $indexUid, array $documents, ?string $primaryKey = null): array
-    {
-        $path = '/indexes/' . urlencode($indexUid) . '/documents';
-        if ($primaryKey !== null) {
-            $path .= '?primaryKey=' . urlencode($primaryKey);
+            if (!empty($requestBody['required']) && ($body === null || $body === [] || $body === '')) {
+                throw new \RuntimeException('body is required.');
+            }
         }
 
-        return $this->request('POST', $path, $documents);
+        return $this->request(
+            (string) $operation['method'],
+            $this->baseUrl . $path,
+            $query,
+            $headers,
+            $body,
+            $requestBody['content_types'] ?? [],
+        );
     }
 
     /**
-     * Get a single document from an index.
+     * Make an API request and return parsed output.
      *
-     * @param  string  $indexUid  The index unique identifier.
-     * @param  string  $docId  The document primary key value.
-     * @return array<string, mixed> The document data.
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
+     * @return array<string, mixed>
      */
-    public function getDocument(string $indexUid, string $docId): array
+    private function request(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, array $contentTypes = []): array
     {
-        return $this->request('GET', '/indexes/' . urlencode($indexUid) . '/documents/' . urlencode($docId));
-    }
+        $response = $this->rawRequest($method, $url, $query, $headers, $body, $contentTypes);
 
-    /**
-     * Get the health status of the Meilisearch instance.
-     *
-     * @return array<string, mixed> The health status.
-     */
-    public function getHealth(): array
-    {
-        return $this->request('GET', '/health');
-    }
+        if ($response->status() === 204) {
+            return [];
+        }
 
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  The API endpoint path.
-     * @param  array<int|string, mixed>  $data  Request body or query parameters.
-     * @return array<string, mixed> The parsed JSON response.
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
+        $contentType = (string) $response->header('Content-Type');
+
+        if (!str_contains($contentType, 'json')) {
+            return [
+                'body' => $response->body(),
+                'content_type' => $contentType,
+            ];
+        }
+
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Meilisearch API.
      *
-     * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  The API endpoint path.
-     * @param  array<int|string, mixed>  $data  Request body or query parameters.
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException If the request fails or the service is not configured.
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, array $contentTypes = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Meilisearch API key is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $http = Http::withHeaders(array_merge([
+                'Accept' => 'application/json',
+            ], $headers))->timeout(60);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            if ($this->apiKey !== '') {
+                $http = $http->withToken($this->apiKey);
+            }
+
+            $response = $this->sendRequest($http, $method, $url, $query, $body, $contentTypes);
 
             if (!$response->successful()) {
-                $body = $response->body();
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
+                $contentType = (string) $response->header('Content-Type');
+                $rawBody = $response->body();
 
-                Log::error("Meilisearch API error: {$method} {$path}", [
+                if (str_contains($contentType, 'text/html') || str_starts_with(trim($rawBody), '<!DOCTYPE')) {
+                    Log::warning("Meilisearch API returned HTML for {$method} {$url}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("Meilisearch API endpoint not available (HTTP {$response->status()}).");
+                }
+
+                $error = $response->json('message') ?? $response->json('error') ?? $response->json('code') ?? $rawBody;
+                Log::error("Meilisearch API error: {$method} {$url}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-
                 throw new \RuntimeException("Meilisearch API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Meilisearch API connection error: {$method} {$path}", [
+            Log::error("Meilisearch API connection error: {$method} {$url}", [
                 'error' => $e->getMessage(),
             ]);
             throw new \RuntimeException("Failed to connect to Meilisearch API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Dispatch the request with the appropriate body encoder.
+     *
+     * @param  PendingRequest  $http  Pending HTTP request.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
+     */
+    private function sendRequest(PendingRequest $http, string $method, string $url, array $query, mixed $body, array $contentTypes): Response
+    {
+        $method = strtoupper($method);
+
+        if ($query !== []) {
+            $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        }
+
+        if (in_array('text/plain', $contentTypes, true)) {
+            return $http->withBody(is_scalar($body) ? (string) $body : json_encode($body), 'text/plain')->send($method, $url);
+        }
+
+        return match ($method) {
+            'GET' => $http->get($url),
+            'POST' => $http->post($url, $body ?? []),
+            'PATCH' => $http->patch($url, $body ?? []),
+            'PUT' => $http->put($url, $body ?? []),
+            'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+            default => $http->send($method, $url, ['json' => $body ?? []]),
+        };
+    }
+
+    /**
+     * Resolve an argument by exact, snake_case, or lower-case parameter name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
+    private function argument(array $args, string $name): mixed
+    {
+        foreach ([$name, $this->snakeName($name), strtolower($name)] as $key) {
+            if (array_key_exists($key, $args)) {
+                return $args[$key];
+            }
+        }
+
+        return null;
+    }
+
+    private function snakeName(string $name): string
+    {
+        $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name);
+        $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name);
+        $name = (string) preg_replace('/_+/', '_', $name);
+
+        return strtolower(trim($name, '_'));
+    }
+
+    /**
+     * Build a request body from arguments that are not path/query/header params.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<int, string>  $consumed  Already consumed parameter names.
+     * @return array<string, mixed>
+     */
+    private function bodyFromLooseArguments(array $args, array $consumed): array
+    {
+        $body = [];
+        $consumed = array_flip($consumed);
+
+        foreach ($args as $key => $value) {
+            if (!isset($consumed[$key])) {
+                $body[$key] = $value;
+            }
+        }
+
+        return $body;
     }
 }

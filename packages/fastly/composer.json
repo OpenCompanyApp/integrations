@@ -1,0 +1,22 @@
+{
+    "name": "opencompanyapp/integration-fastly",
+    "description": "Fastly API integration generated from Fastly maintained PHP client metadata.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Fastly\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Fastly\\FastlyServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "*"
+    }
+}

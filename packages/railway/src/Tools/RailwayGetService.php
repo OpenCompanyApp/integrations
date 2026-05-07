@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Railway\RailwayService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get details for a Railway service.
+ *
+ * Includes source and repository fields when available from Railway.
+ */
 class RailwayGetService implements Tool
 {
+    /**
+     * @param  RailwayService  $service  The Railway GraphQL API client.
+     */
     public function __construct(
         private RailwayService $service,
     ) {}
@@ -29,6 +37,11 @@ class RailwayGetService implements Tool
         ];
     }
 
+    /**
+     * Fetch a service by ID and return normalized service details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (service_id)
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -1,0 +1,11 @@
+{
+    "name": "opencompanyapp/integration-postman",
+    "description": "Postman integration for Laravel AI agents - workspaces, collections, environments, APIs, mocks, monitors, webhooks, users, groups, roles, and raw API calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Postman\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Postman\\PostmanServiceProvider"]}},
+    "require": {"php": "^8.2", "illuminate/support": "^11.0|^12.0", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

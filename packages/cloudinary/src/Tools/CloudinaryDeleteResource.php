@@ -48,6 +48,8 @@ class CloudinaryDeleteResource implements Tool
         return [
             'type' => ['type' => 'string', 'required' => true, 'description' => 'Resource type: "image", "video", or "raw".'],
             'public_id' => ['type' => 'string', 'required' => true, 'description' => 'The public ID of the resource to delete (e.g. "blog/old-photo").'],
+            'delivery_type' => ['type' => 'string', 'description' => 'Delivery type such as upload, private, or authenticated. Default: upload.'],
+            'invalidate' => ['type' => 'boolean', 'description' => 'Whether to request CDN invalidation where enabled for the account.'],
         ];
     }
 
@@ -65,8 +67,13 @@ class CloudinaryDeleteResource implements Tool
 
             $type = $args['type'];
             $publicId = $args['public_id'];
+            $deliveryType = $args['delivery_type'] ?? 'upload';
+            $options = [];
+            if (isset($args['invalidate'])) {
+                $options['invalidate'] = (bool) $args['invalidate'];
+            }
 
-            $result = $this->service->deleteResource($type, $publicId);
+            $result = $this->service->deleteResource($type, $publicId, $deliveryType, $options);
 
             return ToolResult::success([
                 'deleted' => $result['deleted'] ?? [$publicId => 'deleted'],

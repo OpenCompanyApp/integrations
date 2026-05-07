@@ -2,51 +2,38 @@
 
 namespace OpenCompany\Integrations\Brevo\Tools;
 
-use OpenCompany\Integrations\Brevo\BrevoService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BrevoGetList implements Tool
+/**
+ * Get a contact list.
+ */
+class BrevoGetList extends AbstractBrevoTool
 {
-    public function __construct(
-        private BrevoService $service,
-    ) {}
+    protected string $toolName = 'brevo_get_list';
 
-    public function name(): string
-    {
-        return 'brevo_get_list';
-    }
+    protected string $toolDescription = 'Get a contact list.';
 
-    public function description(): string
-    {
-        return 'Get details of a specific contact list in Brevo by its ID. Returns the list name, total subscribers, and other metadata.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The ID of the contact list to retrieve.'],
-        ];
-    }
+    protected string $path = '/contacts/lists/{list_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brevo integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'list_id' => [
+        'type' => 'integer',
+        'required' => true,
+        'description' => 'List ID.',
+    ],
+];
 
-            $id = $args['id'] ?? null;
+    /** @var list<string> */
+    protected array $required = [
+    'list_id',
+];
 
-            if (empty($id)) {
-                return ToolResult::error('List ID is required.');
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
 
-            $result = $this->service->getList((int) $id);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

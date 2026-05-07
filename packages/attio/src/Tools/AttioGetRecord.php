@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Attio\AttioService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a single Attio record by object and record ID.
+ */
 class AttioGetRecord implements Tool
 {
     /**

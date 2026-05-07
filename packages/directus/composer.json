@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-directus",
-    "description": "Directus headless CMS integration for Laravel — manage collections, items, and users.",
+    "description": "Directus headless CMS integration for Laravel - manage collections, items, and users.",
     "license": "MIT",
     "authors": [
         {

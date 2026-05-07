@@ -1,0 +1,2496 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/education-overview?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 414,
+  "path_prefixes": [
+    "/education"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/education",
+      "operationId": "education.educationRoot.GetEducationRoot",
+      "tool": "microsoft_education_education_education_root_get_education_root"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education",
+      "operationId": "education.educationRoot.UpdateEducationRoot",
+      "tool": "microsoft_education_education_education_root_update_education_root"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes",
+      "operationId": "education.ListClasses",
+      "tool": "microsoft_education_education_list_classes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes",
+      "operationId": "education.CreateClasses",
+      "tool": "microsoft_education_education_create_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/$count",
+      "operationId": "education.classes.GetCount-fe5a",
+      "tool": "microsoft_education_education_classes_get_count_fe5a"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/delta()",
+      "operationId": "education.classes.delta",
+      "tool": "microsoft_education_education_classes_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}",
+      "operationId": "education.DeleteClasses",
+      "tool": "microsoft_education_education_delete_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}",
+      "operationId": "education.GetClasses",
+      "tool": "microsoft_education_education_get_classes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}",
+      "operationId": "education.UpdateClasses",
+      "tool": "microsoft_education_education_update_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories",
+      "operationId": "education.classes.ListAssignmentCategories",
+      "tool": "microsoft_education_education_classes_list_assignment_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories",
+      "operationId": "education.classes.CreateAssignmentCategories",
+      "tool": "microsoft_education_education_classes_create_assignment_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories/$count",
+      "operationId": "education.classes.assignmentCategories.GetCount-8570",
+      "tool": "microsoft_education_education_classes_assignment_categories_get_count_8570"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories/delta()",
+      "operationId": "education.classes.educationClass.assignmentCategories.delta",
+      "tool": "microsoft_education_education_classes_education_class_assignment_categories_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories/{educationCategory-id}",
+      "operationId": "education.classes.DeleteAssignmentCategories",
+      "tool": "microsoft_education_education_classes_delete_assignment_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories/{educationCategory-id}",
+      "operationId": "education.classes.GetAssignmentCategories",
+      "tool": "microsoft_education_education_classes_get_assignment_categories"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignmentCategories/{educationCategory-id}",
+      "operationId": "education.classes.UpdateAssignmentCategories",
+      "tool": "microsoft_education_education_classes_update_assignment_categories"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignmentDefaults",
+      "operationId": "education.classes.DeleteAssignmentDefaults",
+      "tool": "microsoft_education_education_classes_delete_assignment_defaults"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentDefaults",
+      "operationId": "education.classes.GetAssignmentDefaults",
+      "tool": "microsoft_education_education_classes_get_assignment_defaults"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignmentDefaults",
+      "operationId": "education.classes.UpdateAssignmentDefaults",
+      "tool": "microsoft_education_education_classes_update_assignment_defaults"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings",
+      "operationId": "education.classes.DeleteAssignmentSettings",
+      "tool": "microsoft_education_education_classes_delete_assignment_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings",
+      "operationId": "education.classes.GetAssignmentSettings",
+      "tool": "microsoft_education_education_classes_get_assignment_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings",
+      "operationId": "education.classes.UpdateAssignmentSettings",
+      "tool": "microsoft_education_education_classes_update_assignment_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/defaultGradingScheme",
+      "operationId": "education.classes.assignmentSettings.GetDefaultGradingScheme",
+      "tool": "microsoft_education_education_classes_assignment_settings_get_default_grading_scheme"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingCategories",
+      "operationId": "education.classes.assignmentSettings.ListGradingCategories",
+      "tool": "microsoft_education_education_classes_assignment_settings_list_grading_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingCategories",
+      "operationId": "education.classes.assignmentSettings.CreateGradingCategories",
+      "tool": "microsoft_education_education_classes_assignment_settings_create_grading_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingCategories/$count",
+      "operationId": "education.classes.assignmentSettings.gradingCategories.GetCount-c354",
+      "tool": "microsoft_education_education_classes_assignment_settings_grading_categories_get_count_c354"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingCategories/{educationGradingCategory-id}",
+      "operationId": "education.classes.assignmentSettings.DeleteGradingCategories",
+      "tool": "microsoft_education_education_classes_assignment_settings_delete_grading_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingCategories/{educationGradingCategory-id}",
+      "operationId": "education.classes.assignmentSettings.GetGradingCategories",
+      "tool": "microsoft_education_education_classes_assignment_settings_get_grading_categories"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingCategories/{educationGradingCategory-id}",
+      "operationId": "education.classes.assignmentSettings.UpdateGradingCategories",
+      "tool": "microsoft_education_education_classes_assignment_settings_update_grading_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingSchemes",
+      "operationId": "education.classes.assignmentSettings.ListGradingSchemes",
+      "tool": "microsoft_education_education_classes_assignment_settings_list_grading_schemes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingSchemes",
+      "operationId": "education.classes.assignmentSettings.CreateGradingSchemes",
+      "tool": "microsoft_education_education_classes_assignment_settings_create_grading_schemes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingSchemes/$count",
+      "operationId": "education.classes.assignmentSettings.gradingSchemes.GetCount-c040",
+      "tool": "microsoft_education_education_classes_assignment_settings_grading_schemes_get_count_c040"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingSchemes/{educationGradingScheme-id}",
+      "operationId": "education.classes.assignmentSettings.DeleteGradingSchemes",
+      "tool": "microsoft_education_education_classes_assignment_settings_delete_grading_schemes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingSchemes/{educationGradingScheme-id}",
+      "operationId": "education.classes.assignmentSettings.GetGradingSchemes",
+      "tool": "microsoft_education_education_classes_assignment_settings_get_grading_schemes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignmentSettings/gradingSchemes/{educationGradingScheme-id}",
+      "operationId": "education.classes.assignmentSettings.UpdateGradingSchemes",
+      "tool": "microsoft_education_education_classes_assignment_settings_update_grading_schemes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments",
+      "operationId": "education.classes.ListAssignments",
+      "tool": "microsoft_education_education_classes_list_assignments"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments",
+      "operationId": "education.classes.CreateAssignments",
+      "tool": "microsoft_education_education_classes_create_assignments"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/$count",
+      "operationId": "education.classes.assignments.GetCount-a470",
+      "tool": "microsoft_education_education_classes_assignments_get_count_a470"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/delta()",
+      "operationId": "education.classes.educationClass.assignments.delta",
+      "tool": "microsoft_education_education_classes_education_class_assignments_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}",
+      "operationId": "education.classes.DeleteAssignments",
+      "tool": "microsoft_education_education_classes_delete_assignments"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}",
+      "operationId": "education.classes.GetAssignments",
+      "tool": "microsoft_education_education_classes_get_assignments"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}",
+      "operationId": "education.classes.UpdateAssignments",
+      "tool": "microsoft_education_education_classes_update_assignments"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/activate",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.activate",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_activate"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories",
+      "operationId": "education.classes.assignments.ListCategories",
+      "tool": "microsoft_education_education_classes_assignments_list_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories",
+      "operationId": "education.classes.assignments.CreateCategories",
+      "tool": "microsoft_education_education_classes_assignments_create_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories/$count",
+      "operationId": "education.classes.assignments.categories.GetCount-639a",
+      "tool": "microsoft_education_education_classes_assignments_categories_get_count_639a"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.classes.assignments.DeleteRefCategories",
+      "tool": "microsoft_education_education_classes_assignments_delete_ref_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.classes.assignments.ListRefCategories",
+      "tool": "microsoft_education_education_classes_assignments_list_ref_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.classes.assignments.CreateRefCategories",
+      "tool": "microsoft_education_education_classes_assignments_create_ref_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories/delta()",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.categories.delta",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_categories_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/categories/{educationCategory-id}/$ref",
+      "operationId": "education.classes.assignments.categories.DeleteRefEducationCategory",
+      "tool": "microsoft_education_education_classes_assignments_categories_delete_ref_education_category"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/deactivate",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.deactivate",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_deactivate"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/gradingCategory",
+      "operationId": "education.classes.assignments.GetGradingCategory",
+      "tool": "microsoft_education_education_classes_assignments_get_grading_category"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/gradingScheme",
+      "operationId": "education.classes.assignments.GetGradingScheme",
+      "tool": "microsoft_education_education_classes_assignments_get_grading_scheme"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/publish",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.publish",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_publish"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources",
+      "operationId": "education.classes.assignments.ListResources",
+      "tool": "microsoft_education_education_classes_assignments_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources",
+      "operationId": "education.classes.assignments.CreateResources",
+      "tool": "microsoft_education_education_classes_assignments_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/$count",
+      "operationId": "education.classes.assignments.resources.GetCount-f57b",
+      "tool": "microsoft_education_education_classes_assignments_resources_get_count_f57b"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.classes.assignments.DeleteResources",
+      "tool": "microsoft_education_education_classes_assignments_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.classes.assignments.GetResources",
+      "tool": "microsoft_education_education_classes_assignments_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.classes.assignments.UpdateResources",
+      "tool": "microsoft_education_education_classes_assignments_update_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources",
+      "operationId": "education.classes.assignments.resources.ListDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources",
+      "operationId": "education.classes.assignments.resources.CreateDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/$count",
+      "operationId": "education.classes.assignments.resources.dependentResources.GetCount-618c",
+      "tool": "microsoft_education_education_classes_assignments_resources_dependent_resources_get_count_618c"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.classes.assignments.resources.DeleteDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.classes.assignments.resources.GetDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.classes.assignments.resources.UpdateDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_resources_update_dependent_resources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.classes.assignments.DeleteRubric",
+      "tool": "microsoft_education_education_classes_assignments_delete_rubric"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.classes.assignments.GetRubric",
+      "tool": "microsoft_education_education_classes_assignments_get_rubric"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.classes.assignments.UpdateRubric",
+      "tool": "microsoft_education_education_classes_assignments_update_rubric"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.classes.assignments.DeleteRefRubric",
+      "tool": "microsoft_education_education_classes_assignments_delete_ref_rubric"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.classes.assignments.GetRefRubric",
+      "tool": "microsoft_education_education_classes_assignments_get_ref_rubric"
+    },
+    {
+      "method": "PUT",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.classes.assignments.UpdateRefRubric",
+      "tool": "microsoft_education_education_classes_assignments_update_ref_rubric"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/setUpFeedbackResourcesFolder",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.setUpFeedbackResourcesFolder",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_set_up_feedback_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/setUpResourcesFolder",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.setUpResourcesFolder",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_set_up_resources_folder"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions",
+      "operationId": "education.classes.assignments.ListSubmissions",
+      "tool": "microsoft_education_education_classes_assignments_list_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions",
+      "operationId": "education.classes.assignments.CreateSubmissions",
+      "tool": "microsoft_education_education_classes_assignments_create_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/$count",
+      "operationId": "education.classes.assignments.submissions.GetCount-231f",
+      "tool": "microsoft_education_education_classes_assignments_submissions_get_count_231f"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.classes.assignments.DeleteSubmissions",
+      "tool": "microsoft_education_education_classes_assignments_delete_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.classes.assignments.GetSubmissions",
+      "tool": "microsoft_education_education_classes_assignments_get_submissions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.classes.assignments.UpdateSubmissions",
+      "tool": "microsoft_education_education_classes_assignments_update_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/excuse",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.submissions.educationSubmission.excuse",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_submissions_education_submission_excuse"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes",
+      "operationId": "education.classes.assignments.submissions.ListOutcomes",
+      "tool": "microsoft_education_education_classes_assignments_submissions_list_outcomes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes",
+      "operationId": "education.classes.assignments.submissions.CreateOutcomes",
+      "tool": "microsoft_education_education_classes_assignments_submissions_create_outcomes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/$count",
+      "operationId": "education.classes.assignments.submissions.outcomes.GetCount-2ffd",
+      "tool": "microsoft_education_education_classes_assignments_submissions_outcomes_get_count_2ffd"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.classes.assignments.submissions.DeleteOutcomes",
+      "tool": "microsoft_education_education_classes_assignments_submissions_delete_outcomes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.classes.assignments.submissions.GetOutcomes",
+      "tool": "microsoft_education_education_classes_assignments_submissions_get_outcomes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.classes.assignments.submissions.UpdateOutcomes",
+      "tool": "microsoft_education_education_classes_assignments_submissions_update_outcomes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/reassign",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.submissions.educationSubmission.reassign",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_submissions_education_submission_reassign"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources",
+      "operationId": "education.classes.assignments.submissions.ListResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources",
+      "operationId": "education.classes.assignments.submissions.CreateResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/$count",
+      "operationId": "education.classes.assignments.submissions.resources.GetCount-3e92",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_get_count_3e92"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.classes.assignments.submissions.DeleteResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.classes.assignments.submissions.GetResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.classes.assignments.submissions.UpdateResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_update_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.classes.assignments.submissions.resources.ListDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.classes.assignments.submissions.resources.CreateDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/$count",
+      "operationId": "education.classes.assignments.submissions.resources.dependentResources.GetCount-7cb6",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_dependent_resources_get_count_7cb6"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.classes.assignments.submissions.resources.DeleteDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.classes.assignments.submissions.resources.GetDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.classes.assignments.submissions.resources.UpdateDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_resources_update_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/return",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.submissions.educationSubmission.return",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_submissions_education_submission_return"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/setUpResourcesFolder",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.submissions.educationSubmission.setUpResourcesFolder",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_submissions_education_submission_set_up_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submit",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.submissions.educationSubmission.submit",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_submissions_education_submission_submit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources",
+      "operationId": "education.classes.assignments.submissions.ListSubmittedResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_list_submitted_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources",
+      "operationId": "education.classes.assignments.submissions.CreateSubmittedResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_create_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/$count",
+      "operationId": "education.classes.assignments.submissions.submittedResources.GetCount-ecf9",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_get_count_ecf9"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.classes.assignments.submissions.DeleteSubmittedResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_delete_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.classes.assignments.submissions.GetSubmittedResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_get_submitted_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.classes.assignments.submissions.UpdateSubmittedResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_update_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.classes.assignments.submissions.submittedResources.ListDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.classes.assignments.submissions.submittedResources.CreateDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/$count",
+      "operationId": "education.classes.assignments.submissions.submittedResources.dependentResources.GetCount-3895",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_dependent_resources_get_count_3895"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.classes.assignments.submissions.submittedResources.DeleteDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.classes.assignments.submissions.submittedResources.GetDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.classes.assignments.submissions.submittedResources.UpdateDependentResources",
+      "tool": "microsoft_education_education_classes_assignments_submissions_submitted_resources_update_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/unsubmit",
+      "operationId": "education.classes.educationClass.assignments.educationAssignment.submissions.educationSubmission.unsubmit",
+      "tool": "microsoft_education_education_classes_education_class_assignments_education_assignment_submissions_education_submission_unsubmit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/getRecentlyModifiedSubmissions()",
+      "operationId": "education.classes.educationClass.getRecentlyModifiedSubmissions",
+      "tool": "microsoft_education_education_classes_education_class_get_recently_modified_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/group",
+      "operationId": "education.classes.GetGroup",
+      "tool": "microsoft_education_education_classes_get_group"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/group/serviceProvisioningErrors",
+      "operationId": "education.classes.group.ListServiceProvisioningErrors",
+      "tool": "microsoft_education_education_classes_group_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/group/serviceProvisioningErrors/$count",
+      "operationId": "education.classes.group.ServiceProvisioningErrors.GetCount-5a91",
+      "tool": "microsoft_education_education_classes_group_service_provisioning_errors_get_count_5a91"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/members",
+      "operationId": "education.classes.ListMembers",
+      "tool": "microsoft_education_education_classes_list_members"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/members/$count",
+      "operationId": "education.classes.members.GetCount-4459",
+      "tool": "microsoft_education_education_classes_members_get_count_4459"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/members/$ref",
+      "operationId": "education.classes.DeleteRefMembers",
+      "tool": "microsoft_education_education_classes_delete_ref_members"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/members/$ref",
+      "operationId": "education.classes.ListRefMembers",
+      "tool": "microsoft_education_education_classes_list_ref_members"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/members/$ref",
+      "operationId": "education.classes.CreateRefMembers",
+      "tool": "microsoft_education_education_classes_create_ref_members"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/members/{educationUser-id}/$ref",
+      "operationId": "education.classes.members.DeleteRefEducationUser",
+      "tool": "microsoft_education_education_classes_members_delete_ref_education_user"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/modules",
+      "operationId": "education.classes.ListModules",
+      "tool": "microsoft_education_education_classes_list_modules"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/modules",
+      "operationId": "education.classes.CreateModules",
+      "tool": "microsoft_education_education_classes_create_modules"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/modules/$count",
+      "operationId": "education.classes.modules.GetCount-7c88",
+      "tool": "microsoft_education_education_classes_modules_get_count_7c88"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}",
+      "operationId": "education.classes.DeleteModules",
+      "tool": "microsoft_education_education_classes_delete_modules"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}",
+      "operationId": "education.classes.GetModules",
+      "tool": "microsoft_education_education_classes_get_modules"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}",
+      "operationId": "education.classes.UpdateModules",
+      "tool": "microsoft_education_education_classes_update_modules"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/pin",
+      "operationId": "education.classes.educationClass.modules.educationModule.pin",
+      "tool": "microsoft_education_education_classes_education_class_modules_education_module_pin"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/publish",
+      "operationId": "education.classes.educationClass.modules.educationModule.publish",
+      "tool": "microsoft_education_education_classes_education_class_modules_education_module_publish"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/resources",
+      "operationId": "education.classes.modules.ListResources",
+      "tool": "microsoft_education_education_classes_modules_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/resources",
+      "operationId": "education.classes.modules.CreateResources",
+      "tool": "microsoft_education_education_classes_modules_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/resources/$count",
+      "operationId": "education.classes.modules.resources.GetCount-2a6c",
+      "tool": "microsoft_education_education_classes_modules_resources_get_count_2a6c"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/resources/{educationModuleResource-id}",
+      "operationId": "education.classes.modules.DeleteResources",
+      "tool": "microsoft_education_education_classes_modules_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/resources/{educationModuleResource-id}",
+      "operationId": "education.classes.modules.GetResources",
+      "tool": "microsoft_education_education_classes_modules_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/resources/{educationModuleResource-id}",
+      "operationId": "education.classes.modules.UpdateResources",
+      "tool": "microsoft_education_education_classes_modules_update_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/setUpResourcesFolder",
+      "operationId": "education.classes.educationClass.modules.educationModule.setUpResourcesFolder",
+      "tool": "microsoft_education_education_classes_education_class_modules_education_module_set_up_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/modules/{educationModule-id}/unpin",
+      "operationId": "education.classes.educationClass.modules.educationModule.unpin",
+      "tool": "microsoft_education_education_classes_education_class_modules_education_module_unpin"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/schools",
+      "operationId": "education.classes.ListSchools",
+      "tool": "microsoft_education_education_classes_list_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/schools/$count",
+      "operationId": "education.classes.schools.GetCount-fef1",
+      "tool": "microsoft_education_education_classes_schools_get_count_fef1"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/schools/{educationSchool-id}",
+      "operationId": "education.classes.GetSchools",
+      "tool": "microsoft_education_education_classes_get_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/teachers",
+      "operationId": "education.classes.ListTeachers",
+      "tool": "microsoft_education_education_classes_list_teachers"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/teachers/$count",
+      "operationId": "education.classes.teachers.GetCount-4305",
+      "tool": "microsoft_education_education_classes_teachers_get_count_4305"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/teachers/$ref",
+      "operationId": "education.classes.DeleteRefTeachers",
+      "tool": "microsoft_education_education_classes_delete_ref_teachers"
+    },
+    {
+      "method": "GET",
+      "path": "/education/classes/{educationClass-id}/teachers/$ref",
+      "operationId": "education.classes.ListRefTeachers",
+      "tool": "microsoft_education_education_classes_list_ref_teachers"
+    },
+    {
+      "method": "POST",
+      "path": "/education/classes/{educationClass-id}/teachers/$ref",
+      "operationId": "education.classes.CreateRefTeachers",
+      "tool": "microsoft_education_education_classes_create_ref_teachers"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/classes/{educationClass-id}/teachers/{educationUser-id}/$ref",
+      "operationId": "education.classes.teachers.DeleteRefEducationUser",
+      "tool": "microsoft_education_education_classes_teachers_delete_ref_education_user"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me",
+      "operationId": "education.DeleteMe",
+      "tool": "microsoft_education_education_delete_me"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me",
+      "operationId": "education.GetMe",
+      "tool": "microsoft_education_education_get_me"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me",
+      "operationId": "education.UpdateMe",
+      "tool": "microsoft_education_education_update_me"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments",
+      "operationId": "education.me.ListAssignments",
+      "tool": "microsoft_education_education_me_list_assignments"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments",
+      "operationId": "education.me.CreateAssignments",
+      "tool": "microsoft_education_education_me_create_assignments"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/$count",
+      "operationId": "education.me.assignments.GetCount-d634",
+      "tool": "microsoft_education_education_me_assignments_get_count_d634"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/delta()",
+      "operationId": "education.me.assignments.delta",
+      "tool": "microsoft_education_education_me_assignments_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}",
+      "operationId": "education.me.DeleteAssignments",
+      "tool": "microsoft_education_education_me_delete_assignments"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}",
+      "operationId": "education.me.GetAssignments",
+      "tool": "microsoft_education_education_me_get_assignments"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}",
+      "operationId": "education.me.UpdateAssignments",
+      "tool": "microsoft_education_education_me_update_assignments"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/activate",
+      "operationId": "education.me.assignments.educationAssignment.activate",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_activate"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories",
+      "operationId": "education.me.assignments.ListCategories",
+      "tool": "microsoft_education_education_me_assignments_list_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories",
+      "operationId": "education.me.assignments.CreateCategories",
+      "tool": "microsoft_education_education_me_assignments_create_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories/$count",
+      "operationId": "education.me.assignments.categories.GetCount-da6c",
+      "tool": "microsoft_education_education_me_assignments_categories_get_count_da6c"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.me.assignments.DeleteRefCategories",
+      "tool": "microsoft_education_education_me_assignments_delete_ref_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.me.assignments.ListRefCategories",
+      "tool": "microsoft_education_education_me_assignments_list_ref_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.me.assignments.CreateRefCategories",
+      "tool": "microsoft_education_education_me_assignments_create_ref_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories/delta()",
+      "operationId": "education.me.assignments.educationAssignment.categories.delta",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_categories_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/categories/{educationCategory-id}/$ref",
+      "operationId": "education.me.assignments.categories.DeleteRefEducationCategory",
+      "tool": "microsoft_education_education_me_assignments_categories_delete_ref_education_category"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/deactivate",
+      "operationId": "education.me.assignments.educationAssignment.deactivate",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_deactivate"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/gradingCategory",
+      "operationId": "education.me.assignments.GetGradingCategory",
+      "tool": "microsoft_education_education_me_assignments_get_grading_category"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/gradingScheme",
+      "operationId": "education.me.assignments.GetGradingScheme",
+      "tool": "microsoft_education_education_me_assignments_get_grading_scheme"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/publish",
+      "operationId": "education.me.assignments.educationAssignment.publish",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_publish"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources",
+      "operationId": "education.me.assignments.ListResources",
+      "tool": "microsoft_education_education_me_assignments_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources",
+      "operationId": "education.me.assignments.CreateResources",
+      "tool": "microsoft_education_education_me_assignments_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/$count",
+      "operationId": "education.me.assignments.resources.GetCount-c8bf",
+      "tool": "microsoft_education_education_me_assignments_resources_get_count_c8bf"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.me.assignments.DeleteResources",
+      "tool": "microsoft_education_education_me_assignments_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.me.assignments.GetResources",
+      "tool": "microsoft_education_education_me_assignments_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.me.assignments.UpdateResources",
+      "tool": "microsoft_education_education_me_assignments_update_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources",
+      "operationId": "education.me.assignments.resources.ListDependentResources",
+      "tool": "microsoft_education_education_me_assignments_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources",
+      "operationId": "education.me.assignments.resources.CreateDependentResources",
+      "tool": "microsoft_education_education_me_assignments_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/$count",
+      "operationId": "education.me.assignments.resources.dependentResources.GetCount-7e26",
+      "tool": "microsoft_education_education_me_assignments_resources_dependent_resources_get_count_7e26"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.me.assignments.resources.DeleteDependentResources",
+      "tool": "microsoft_education_education_me_assignments_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.me.assignments.resources.GetDependentResources",
+      "tool": "microsoft_education_education_me_assignments_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.me.assignments.resources.UpdateDependentResources",
+      "tool": "microsoft_education_education_me_assignments_resources_update_dependent_resources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.me.assignments.DeleteRubric",
+      "tool": "microsoft_education_education_me_assignments_delete_rubric"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.me.assignments.GetRubric",
+      "tool": "microsoft_education_education_me_assignments_get_rubric"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.me.assignments.UpdateRubric",
+      "tool": "microsoft_education_education_me_assignments_update_rubric"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.me.assignments.DeleteRefRubric",
+      "tool": "microsoft_education_education_me_assignments_delete_ref_rubric"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.me.assignments.GetRefRubric",
+      "tool": "microsoft_education_education_me_assignments_get_ref_rubric"
+    },
+    {
+      "method": "PUT",
+      "path": "/education/me/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.me.assignments.UpdateRefRubric",
+      "tool": "microsoft_education_education_me_assignments_update_ref_rubric"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/setUpFeedbackResourcesFolder",
+      "operationId": "education.me.assignments.educationAssignment.setUpFeedbackResourcesFolder",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_set_up_feedback_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/setUpResourcesFolder",
+      "operationId": "education.me.assignments.educationAssignment.setUpResourcesFolder",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_set_up_resources_folder"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions",
+      "operationId": "education.me.assignments.ListSubmissions",
+      "tool": "microsoft_education_education_me_assignments_list_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions",
+      "operationId": "education.me.assignments.CreateSubmissions",
+      "tool": "microsoft_education_education_me_assignments_create_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/$count",
+      "operationId": "education.me.assignments.submissions.GetCount-39e1",
+      "tool": "microsoft_education_education_me_assignments_submissions_get_count_39e1"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.me.assignments.DeleteSubmissions",
+      "tool": "microsoft_education_education_me_assignments_delete_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.me.assignments.GetSubmissions",
+      "tool": "microsoft_education_education_me_assignments_get_submissions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.me.assignments.UpdateSubmissions",
+      "tool": "microsoft_education_education_me_assignments_update_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/excuse",
+      "operationId": "education.me.assignments.educationAssignment.submissions.educationSubmission.excuse",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_submissions_education_submission_excuse"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes",
+      "operationId": "education.me.assignments.submissions.ListOutcomes",
+      "tool": "microsoft_education_education_me_assignments_submissions_list_outcomes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes",
+      "operationId": "education.me.assignments.submissions.CreateOutcomes",
+      "tool": "microsoft_education_education_me_assignments_submissions_create_outcomes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/$count",
+      "operationId": "education.me.assignments.submissions.outcomes.GetCount-86b6",
+      "tool": "microsoft_education_education_me_assignments_submissions_outcomes_get_count_86b6"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.me.assignments.submissions.DeleteOutcomes",
+      "tool": "microsoft_education_education_me_assignments_submissions_delete_outcomes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.me.assignments.submissions.GetOutcomes",
+      "tool": "microsoft_education_education_me_assignments_submissions_get_outcomes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.me.assignments.submissions.UpdateOutcomes",
+      "tool": "microsoft_education_education_me_assignments_submissions_update_outcomes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/reassign",
+      "operationId": "education.me.assignments.educationAssignment.submissions.educationSubmission.reassign",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_submissions_education_submission_reassign"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources",
+      "operationId": "education.me.assignments.submissions.ListResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources",
+      "operationId": "education.me.assignments.submissions.CreateResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/$count",
+      "operationId": "education.me.assignments.submissions.resources.GetCount-4a0c",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_get_count_4a0c"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.me.assignments.submissions.DeleteResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.me.assignments.submissions.GetResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.me.assignments.submissions.UpdateResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_update_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.me.assignments.submissions.resources.ListDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.me.assignments.submissions.resources.CreateDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/$count",
+      "operationId": "education.me.assignments.submissions.resources.dependentResources.GetCount-20a6",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_dependent_resources_get_count_20a6"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.me.assignments.submissions.resources.DeleteDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.me.assignments.submissions.resources.GetDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.me.assignments.submissions.resources.UpdateDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_resources_update_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/return",
+      "operationId": "education.me.assignments.educationAssignment.submissions.educationSubmission.return",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_submissions_education_submission_return"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/setUpResourcesFolder",
+      "operationId": "education.me.assignments.educationAssignment.submissions.educationSubmission.setUpResourcesFolder",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_submissions_education_submission_set_up_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submit",
+      "operationId": "education.me.assignments.educationAssignment.submissions.educationSubmission.submit",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_submissions_education_submission_submit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources",
+      "operationId": "education.me.assignments.submissions.ListSubmittedResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_list_submitted_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources",
+      "operationId": "education.me.assignments.submissions.CreateSubmittedResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_create_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/$count",
+      "operationId": "education.me.assignments.submissions.submittedResources.GetCount-a574",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_get_count_a574"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.me.assignments.submissions.DeleteSubmittedResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_delete_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.me.assignments.submissions.GetSubmittedResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_get_submitted_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.me.assignments.submissions.UpdateSubmittedResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_update_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.me.assignments.submissions.submittedResources.ListDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.me.assignments.submissions.submittedResources.CreateDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/$count",
+      "operationId": "education.me.assignments.submissions.submittedResources.dependentResources.GetCount-58f3",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_dependent_resources_get_count_58f3"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.me.assignments.submissions.submittedResources.DeleteDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.me.assignments.submissions.submittedResources.GetDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.me.assignments.submissions.submittedResources.UpdateDependentResources",
+      "tool": "microsoft_education_education_me_assignments_submissions_submitted_resources_update_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/unsubmit",
+      "operationId": "education.me.assignments.educationAssignment.submissions.educationSubmission.unsubmit",
+      "tool": "microsoft_education_education_me_assignments_education_assignment_submissions_education_submission_unsubmit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/classes",
+      "operationId": "education.me.ListClasses",
+      "tool": "microsoft_education_education_me_list_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/classes/$count",
+      "operationId": "education.me.classes.GetCount-94ca",
+      "tool": "microsoft_education_education_me_classes_get_count_94ca"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/classes/{educationClass-id}",
+      "operationId": "education.me.GetClasses",
+      "tool": "microsoft_education_education_me_get_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/rubrics",
+      "operationId": "education.me.ListRubrics",
+      "tool": "microsoft_education_education_me_list_rubrics"
+    },
+    {
+      "method": "POST",
+      "path": "/education/me/rubrics",
+      "operationId": "education.me.CreateRubrics",
+      "tool": "microsoft_education_education_me_create_rubrics"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/rubrics/$count",
+      "operationId": "education.me.rubrics.GetCount-346e",
+      "tool": "microsoft_education_education_me_rubrics_get_count_346e"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/me/rubrics/{educationRubric-id}",
+      "operationId": "education.me.DeleteRubrics",
+      "tool": "microsoft_education_education_me_delete_rubrics"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/rubrics/{educationRubric-id}",
+      "operationId": "education.me.GetRubrics",
+      "tool": "microsoft_education_education_me_get_rubrics"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/rubrics/{educationRubric-id}",
+      "operationId": "education.me.UpdateRubrics",
+      "tool": "microsoft_education_education_me_update_rubrics"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/schools",
+      "operationId": "education.me.ListSchools",
+      "tool": "microsoft_education_education_me_list_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/schools/$count",
+      "operationId": "education.me.schools.GetCount-c9bf",
+      "tool": "microsoft_education_education_me_schools_get_count_c9bf"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/schools/{educationSchool-id}",
+      "operationId": "education.me.GetSchools",
+      "tool": "microsoft_education_education_me_get_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/taughtClasses",
+      "operationId": "education.me.ListTaughtClasses",
+      "tool": "microsoft_education_education_me_list_taught_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/taughtClasses/$count",
+      "operationId": "education.me.taughtClasses.GetCount-94df",
+      "tool": "microsoft_education_education_me_taught_classes_get_count_94df"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/taughtClasses/{educationClass-id}",
+      "operationId": "education.me.GetTaughtClasses",
+      "tool": "microsoft_education_education_me_get_taught_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/user",
+      "operationId": "education.me.GetUser",
+      "tool": "microsoft_education_education_me_get_user"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/user/mailboxSettings",
+      "operationId": "education.me.user.GetMailboxSettings",
+      "tool": "microsoft_education_education_me_user_get_mailbox_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/me/user/mailboxSettings",
+      "operationId": "education.me.user.UpdateMailboxSettings",
+      "tool": "microsoft_education_education_me_user_update_mailbox_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/user/serviceProvisioningErrors",
+      "operationId": "education.me.user.ListServiceProvisioningErrors",
+      "tool": "microsoft_education_education_me_user_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/education/me/user/serviceProvisioningErrors/$count",
+      "operationId": "education.me.user.ServiceProvisioningErrors.GetCount-b2a3",
+      "tool": "microsoft_education_education_me_user_service_provisioning_errors_get_count_b2a3"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/reports",
+      "operationId": "education.DeleteReports",
+      "tool": "microsoft_education_education_delete_reports"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports",
+      "operationId": "education.GetReports",
+      "tool": "microsoft_education_education_get_reports"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/reports",
+      "operationId": "education.UpdateReports",
+      "tool": "microsoft_education_education_update_reports"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/readingAssignmentSubmissions",
+      "operationId": "education.reports.ListReadingAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_list_reading_assignment_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/reports/readingAssignmentSubmissions",
+      "operationId": "education.reports.CreateReadingAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_create_reading_assignment_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/readingAssignmentSubmissions/$count",
+      "operationId": "education.reports.readingAssignmentSubmissions.GetCount-536e",
+      "tool": "microsoft_education_education_reports_reading_assignment_submissions_get_count_536e"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/reports/readingAssignmentSubmissions/{readingAssignmentSubmission-id}",
+      "operationId": "education.reports.DeleteReadingAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_delete_reading_assignment_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/readingAssignmentSubmissions/{readingAssignmentSubmission-id}",
+      "operationId": "education.reports.GetReadingAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_get_reading_assignment_submissions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/reports/readingAssignmentSubmissions/{readingAssignmentSubmission-id}",
+      "operationId": "education.reports.UpdateReadingAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_update_reading_assignment_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/readingCoachPassages",
+      "operationId": "education.reports.ListReadingCoachPassages",
+      "tool": "microsoft_education_education_reports_list_reading_coach_passages"
+    },
+    {
+      "method": "POST",
+      "path": "/education/reports/readingCoachPassages",
+      "operationId": "education.reports.CreateReadingCoachPassages",
+      "tool": "microsoft_education_education_reports_create_reading_coach_passages"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/readingCoachPassages/$count",
+      "operationId": "education.reports.readingCoachPassages.GetCount-ce63",
+      "tool": "microsoft_education_education_reports_reading_coach_passages_get_count_ce63"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/reports/readingCoachPassages/{readingCoachPassage-id}",
+      "operationId": "education.reports.DeleteReadingCoachPassages",
+      "tool": "microsoft_education_education_reports_delete_reading_coach_passages"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/readingCoachPassages/{readingCoachPassage-id}",
+      "operationId": "education.reports.GetReadingCoachPassages",
+      "tool": "microsoft_education_education_reports_get_reading_coach_passages"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/reports/readingCoachPassages/{readingCoachPassage-id}",
+      "operationId": "education.reports.UpdateReadingCoachPassages",
+      "tool": "microsoft_education_education_reports_update_reading_coach_passages"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/reflectCheckInResponses",
+      "operationId": "education.reports.ListReflectCheckInResponses",
+      "tool": "microsoft_education_education_reports_list_reflect_check_in_responses"
+    },
+    {
+      "method": "POST",
+      "path": "/education/reports/reflectCheckInResponses",
+      "operationId": "education.reports.CreateReflectCheckInResponses",
+      "tool": "microsoft_education_education_reports_create_reflect_check_in_responses"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/reflectCheckInResponses/$count",
+      "operationId": "education.reports.reflectCheckInResponses.GetCount-1316",
+      "tool": "microsoft_education_education_reports_reflect_check_in_responses_get_count_1316"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/reports/reflectCheckInResponses/{reflectCheckInResponse-id}",
+      "operationId": "education.reports.DeleteReflectCheckInResponses",
+      "tool": "microsoft_education_education_reports_delete_reflect_check_in_responses"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/reflectCheckInResponses/{reflectCheckInResponse-id}",
+      "operationId": "education.reports.GetReflectCheckInResponses",
+      "tool": "microsoft_education_education_reports_get_reflect_check_in_responses"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/reports/reflectCheckInResponses/{reflectCheckInResponse-id}",
+      "operationId": "education.reports.UpdateReflectCheckInResponses",
+      "tool": "microsoft_education_education_reports_update_reflect_check_in_responses"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/speakerAssignmentSubmissions",
+      "operationId": "education.reports.ListSpeakerAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_list_speaker_assignment_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/reports/speakerAssignmentSubmissions",
+      "operationId": "education.reports.CreateSpeakerAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_create_speaker_assignment_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/speakerAssignmentSubmissions/$count",
+      "operationId": "education.reports.speakerAssignmentSubmissions.GetCount-e40d",
+      "tool": "microsoft_education_education_reports_speaker_assignment_submissions_get_count_e40d"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/reports/speakerAssignmentSubmissions/{speakerAssignmentSubmission-id}",
+      "operationId": "education.reports.DeleteSpeakerAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_delete_speaker_assignment_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/reports/speakerAssignmentSubmissions/{speakerAssignmentSubmission-id}",
+      "operationId": "education.reports.GetSpeakerAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_get_speaker_assignment_submissions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/reports/speakerAssignmentSubmissions/{speakerAssignmentSubmission-id}",
+      "operationId": "education.reports.UpdateSpeakerAssignmentSubmissions",
+      "tool": "microsoft_education_education_reports_update_speaker_assignment_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools",
+      "operationId": "education.ListSchools",
+      "tool": "microsoft_education_education_list_schools"
+    },
+    {
+      "method": "POST",
+      "path": "/education/schools",
+      "operationId": "education.CreateSchools",
+      "tool": "microsoft_education_education_create_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/$count",
+      "operationId": "education.schools.GetCount-c02b",
+      "tool": "microsoft_education_education_schools_get_count_c02b"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/delta()",
+      "operationId": "education.schools.delta",
+      "tool": "microsoft_education_education_schools_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/schools/{educationSchool-id}",
+      "operationId": "education.DeleteSchools",
+      "tool": "microsoft_education_education_delete_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}",
+      "operationId": "education.GetSchools",
+      "tool": "microsoft_education_education_get_schools"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/schools/{educationSchool-id}",
+      "operationId": "education.UpdateSchools",
+      "tool": "microsoft_education_education_update_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/administrativeUnit",
+      "operationId": "education.schools.GetAdministrativeUnit",
+      "tool": "microsoft_education_education_schools_get_administrative_unit"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/schools/{educationSchool-id}/administrativeUnit",
+      "operationId": "education.schools.UpdateAdministrativeUnit",
+      "tool": "microsoft_education_education_schools_update_administrative_unit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/classes",
+      "operationId": "education.schools.ListClasses",
+      "tool": "microsoft_education_education_schools_list_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/classes/$count",
+      "operationId": "education.schools.classes.GetCount-d3ee",
+      "tool": "microsoft_education_education_schools_classes_get_count_d3ee"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/schools/{educationSchool-id}/classes/$ref",
+      "operationId": "education.schools.DeleteRefClasses",
+      "tool": "microsoft_education_education_schools_delete_ref_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/classes/$ref",
+      "operationId": "education.schools.ListRefClasses",
+      "tool": "microsoft_education_education_schools_list_ref_classes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/schools/{educationSchool-id}/classes/$ref",
+      "operationId": "education.schools.CreateRefClasses",
+      "tool": "microsoft_education_education_schools_create_ref_classes"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/schools/{educationSchool-id}/classes/{educationClass-id}/$ref",
+      "operationId": "education.schools.classes.DeleteRefEducationClass",
+      "tool": "microsoft_education_education_schools_classes_delete_ref_education_class"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/users",
+      "operationId": "education.schools.ListUsers",
+      "tool": "microsoft_education_education_schools_list_users"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/users/$count",
+      "operationId": "education.schools.users.GetCount-e5a6",
+      "tool": "microsoft_education_education_schools_users_get_count_e5a6"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/schools/{educationSchool-id}/users/$ref",
+      "operationId": "education.schools.DeleteRefUsers",
+      "tool": "microsoft_education_education_schools_delete_ref_users"
+    },
+    {
+      "method": "GET",
+      "path": "/education/schools/{educationSchool-id}/users/$ref",
+      "operationId": "education.schools.ListRefUsers",
+      "tool": "microsoft_education_education_schools_list_ref_users"
+    },
+    {
+      "method": "POST",
+      "path": "/education/schools/{educationSchool-id}/users/$ref",
+      "operationId": "education.schools.CreateRefUsers",
+      "tool": "microsoft_education_education_schools_create_ref_users"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/schools/{educationSchool-id}/users/{educationUser-id}/$ref",
+      "operationId": "education.schools.users.DeleteRefEducationUser",
+      "tool": "microsoft_education_education_schools_users_delete_ref_education_user"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users",
+      "operationId": "education.ListUsers",
+      "tool": "microsoft_education_education_list_users"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users",
+      "operationId": "education.CreateUsers",
+      "tool": "microsoft_education_education_create_users"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/$count",
+      "operationId": "education.users.GetCount-6be9",
+      "tool": "microsoft_education_education_users_get_count_6be9"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/delta()",
+      "operationId": "education.users.delta",
+      "tool": "microsoft_education_education_users_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}",
+      "operationId": "education.DeleteUsers",
+      "tool": "microsoft_education_education_delete_users"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}",
+      "operationId": "education.GetUsers",
+      "tool": "microsoft_education_education_get_users"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}",
+      "operationId": "education.UpdateUsers",
+      "tool": "microsoft_education_education_update_users"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments",
+      "operationId": "education.users.ListAssignments",
+      "tool": "microsoft_education_education_users_list_assignments"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments",
+      "operationId": "education.users.CreateAssignments",
+      "tool": "microsoft_education_education_users_create_assignments"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/$count",
+      "operationId": "education.users.assignments.GetCount-d390",
+      "tool": "microsoft_education_education_users_assignments_get_count_d390"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/delta()",
+      "operationId": "education.users.educationUser.assignments.delta",
+      "tool": "microsoft_education_education_users_education_user_assignments_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}",
+      "operationId": "education.users.DeleteAssignments",
+      "tool": "microsoft_education_education_users_delete_assignments"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}",
+      "operationId": "education.users.GetAssignments",
+      "tool": "microsoft_education_education_users_get_assignments"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}",
+      "operationId": "education.users.UpdateAssignments",
+      "tool": "microsoft_education_education_users_update_assignments"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/activate",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.activate",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_activate"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories",
+      "operationId": "education.users.assignments.ListCategories",
+      "tool": "microsoft_education_education_users_assignments_list_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories",
+      "operationId": "education.users.assignments.CreateCategories",
+      "tool": "microsoft_education_education_users_assignments_create_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories/$count",
+      "operationId": "education.users.assignments.categories.GetCount-0551",
+      "tool": "microsoft_education_education_users_assignments_categories_get_count_0551"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.users.assignments.DeleteRefCategories",
+      "tool": "microsoft_education_education_users_assignments_delete_ref_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.users.assignments.ListRefCategories",
+      "tool": "microsoft_education_education_users_assignments_list_ref_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories/$ref",
+      "operationId": "education.users.assignments.CreateRefCategories",
+      "tool": "microsoft_education_education_users_assignments_create_ref_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories/delta()",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.categories.delta",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_categories_delta"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/categories/{educationCategory-id}/$ref",
+      "operationId": "education.users.assignments.categories.DeleteRefEducationCategory",
+      "tool": "microsoft_education_education_users_assignments_categories_delete_ref_education_category"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/deactivate",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.deactivate",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_deactivate"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/gradingCategory",
+      "operationId": "education.users.assignments.GetGradingCategory",
+      "tool": "microsoft_education_education_users_assignments_get_grading_category"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/gradingScheme",
+      "operationId": "education.users.assignments.GetGradingScheme",
+      "tool": "microsoft_education_education_users_assignments_get_grading_scheme"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/publish",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.publish",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_publish"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources",
+      "operationId": "education.users.assignments.ListResources",
+      "tool": "microsoft_education_education_users_assignments_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources",
+      "operationId": "education.users.assignments.CreateResources",
+      "tool": "microsoft_education_education_users_assignments_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/$count",
+      "operationId": "education.users.assignments.resources.GetCount-69da",
+      "tool": "microsoft_education_education_users_assignments_resources_get_count_69da"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.users.assignments.DeleteResources",
+      "tool": "microsoft_education_education_users_assignments_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.users.assignments.GetResources",
+      "tool": "microsoft_education_education_users_assignments_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}",
+      "operationId": "education.users.assignments.UpdateResources",
+      "tool": "microsoft_education_education_users_assignments_update_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources",
+      "operationId": "education.users.assignments.resources.ListDependentResources",
+      "tool": "microsoft_education_education_users_assignments_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources",
+      "operationId": "education.users.assignments.resources.CreateDependentResources",
+      "tool": "microsoft_education_education_users_assignments_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/$count",
+      "operationId": "education.users.assignments.resources.dependentResources.GetCount-e1ee",
+      "tool": "microsoft_education_education_users_assignments_resources_dependent_resources_get_count_e1ee"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.users.assignments.resources.DeleteDependentResources",
+      "tool": "microsoft_education_education_users_assignments_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.users.assignments.resources.GetDependentResources",
+      "tool": "microsoft_education_education_users_assignments_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/resources/{educationAssignmentResource-id}/dependentResources/{educationAssignmentResource-id1}",
+      "operationId": "education.users.assignments.resources.UpdateDependentResources",
+      "tool": "microsoft_education_education_users_assignments_resources_update_dependent_resources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.users.assignments.DeleteRubric",
+      "tool": "microsoft_education_education_users_assignments_delete_rubric"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.users.assignments.GetRubric",
+      "tool": "microsoft_education_education_users_assignments_get_rubric"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/rubric",
+      "operationId": "education.users.assignments.UpdateRubric",
+      "tool": "microsoft_education_education_users_assignments_update_rubric"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.users.assignments.DeleteRefRubric",
+      "tool": "microsoft_education_education_users_assignments_delete_ref_rubric"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.users.assignments.GetRefRubric",
+      "tool": "microsoft_education_education_users_assignments_get_ref_rubric"
+    },
+    {
+      "method": "PUT",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/rubric/$ref",
+      "operationId": "education.users.assignments.UpdateRefRubric",
+      "tool": "microsoft_education_education_users_assignments_update_ref_rubric"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/setUpFeedbackResourcesFolder",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.setUpFeedbackResourcesFolder",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_set_up_feedback_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/setUpResourcesFolder",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.setUpResourcesFolder",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_set_up_resources_folder"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions",
+      "operationId": "education.users.assignments.ListSubmissions",
+      "tool": "microsoft_education_education_users_assignments_list_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions",
+      "operationId": "education.users.assignments.CreateSubmissions",
+      "tool": "microsoft_education_education_users_assignments_create_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/$count",
+      "operationId": "education.users.assignments.submissions.GetCount-fe47",
+      "tool": "microsoft_education_education_users_assignments_submissions_get_count_fe47"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.users.assignments.DeleteSubmissions",
+      "tool": "microsoft_education_education_users_assignments_delete_submissions"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.users.assignments.GetSubmissions",
+      "tool": "microsoft_education_education_users_assignments_get_submissions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}",
+      "operationId": "education.users.assignments.UpdateSubmissions",
+      "tool": "microsoft_education_education_users_assignments_update_submissions"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/excuse",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.submissions.educationSubmission.excuse",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_submissions_education_submission_excuse"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes",
+      "operationId": "education.users.assignments.submissions.ListOutcomes",
+      "tool": "microsoft_education_education_users_assignments_submissions_list_outcomes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes",
+      "operationId": "education.users.assignments.submissions.CreateOutcomes",
+      "tool": "microsoft_education_education_users_assignments_submissions_create_outcomes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/$count",
+      "operationId": "education.users.assignments.submissions.outcomes.GetCount-c6c3",
+      "tool": "microsoft_education_education_users_assignments_submissions_outcomes_get_count_c6c3"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.users.assignments.submissions.DeleteOutcomes",
+      "tool": "microsoft_education_education_users_assignments_submissions_delete_outcomes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.users.assignments.submissions.GetOutcomes",
+      "tool": "microsoft_education_education_users_assignments_submissions_get_outcomes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/outcomes/{educationOutcome-id}",
+      "operationId": "education.users.assignments.submissions.UpdateOutcomes",
+      "tool": "microsoft_education_education_users_assignments_submissions_update_outcomes"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/reassign",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.submissions.educationSubmission.reassign",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_submissions_education_submission_reassign"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources",
+      "operationId": "education.users.assignments.submissions.ListResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_list_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources",
+      "operationId": "education.users.assignments.submissions.CreateResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_create_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/$count",
+      "operationId": "education.users.assignments.submissions.resources.GetCount-cb98",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_get_count_cb98"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.users.assignments.submissions.DeleteResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_delete_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.users.assignments.submissions.GetResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_get_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}",
+      "operationId": "education.users.assignments.submissions.UpdateResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_update_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.users.assignments.submissions.resources.ListDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.users.assignments.submissions.resources.CreateDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/$count",
+      "operationId": "education.users.assignments.submissions.resources.dependentResources.GetCount-ebf2",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_dependent_resources_get_count_ebf2"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.users.assignments.submissions.resources.DeleteDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.users.assignments.submissions.resources.GetDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/resources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.users.assignments.submissions.resources.UpdateDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_resources_update_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/return",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.submissions.educationSubmission.return",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_submissions_education_submission_return"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/setUpResourcesFolder",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.submissions.educationSubmission.setUpResourcesFolder",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_submissions_education_submission_set_up_resources_folder"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submit",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.submissions.educationSubmission.submit",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_submissions_education_submission_submit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources",
+      "operationId": "education.users.assignments.submissions.ListSubmittedResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_list_submitted_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources",
+      "operationId": "education.users.assignments.submissions.CreateSubmittedResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_create_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/$count",
+      "operationId": "education.users.assignments.submissions.submittedResources.GetCount-6158",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_get_count_6158"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.users.assignments.submissions.DeleteSubmittedResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_delete_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.users.assignments.submissions.GetSubmittedResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_get_submitted_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}",
+      "operationId": "education.users.assignments.submissions.UpdateSubmittedResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_update_submitted_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.users.assignments.submissions.submittedResources.ListDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_list_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources",
+      "operationId": "education.users.assignments.submissions.submittedResources.CreateDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_create_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/$count",
+      "operationId": "education.users.assignments.submissions.submittedResources.dependentResources.GetCount-ce4e",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_dependent_resources_get_count_ce4e"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.users.assignments.submissions.submittedResources.DeleteDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_delete_dependent_resources"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.users.assignments.submissions.submittedResources.GetDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_get_dependent_resources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/submittedResources/{educationSubmissionResource-id}/dependentResources/{educationSubmissionResource-id1}",
+      "operationId": "education.users.assignments.submissions.submittedResources.UpdateDependentResources",
+      "tool": "microsoft_education_education_users_assignments_submissions_submitted_resources_update_dependent_resources"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/assignments/{educationAssignment-id}/submissions/{educationSubmission-id}/unsubmit",
+      "operationId": "education.users.educationUser.assignments.educationAssignment.submissions.educationSubmission.unsubmit",
+      "tool": "microsoft_education_education_users_education_user_assignments_education_assignment_submissions_education_submission_unsubmit"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/classes",
+      "operationId": "education.users.ListClasses",
+      "tool": "microsoft_education_education_users_list_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/classes/$count",
+      "operationId": "education.users.classes.GetCount-4517",
+      "tool": "microsoft_education_education_users_classes_get_count_4517"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/classes/{educationClass-id}",
+      "operationId": "education.users.GetClasses",
+      "tool": "microsoft_education_education_users_get_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/rubrics",
+      "operationId": "education.users.ListRubrics",
+      "tool": "microsoft_education_education_users_list_rubrics"
+    },
+    {
+      "method": "POST",
+      "path": "/education/users/{educationUser-id}/rubrics",
+      "operationId": "education.users.CreateRubrics",
+      "tool": "microsoft_education_education_users_create_rubrics"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/rubrics/$count",
+      "operationId": "education.users.rubrics.GetCount-7e40",
+      "tool": "microsoft_education_education_users_rubrics_get_count_7e40"
+    },
+    {
+      "method": "DELETE",
+      "path": "/education/users/{educationUser-id}/rubrics/{educationRubric-id}",
+      "operationId": "education.users.DeleteRubrics",
+      "tool": "microsoft_education_education_users_delete_rubrics"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/rubrics/{educationRubric-id}",
+      "operationId": "education.users.GetRubrics",
+      "tool": "microsoft_education_education_users_get_rubrics"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/rubrics/{educationRubric-id}",
+      "operationId": "education.users.UpdateRubrics",
+      "tool": "microsoft_education_education_users_update_rubrics"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/schools",
+      "operationId": "education.users.ListSchools",
+      "tool": "microsoft_education_education_users_list_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/schools/$count",
+      "operationId": "education.users.schools.GetCount-a99c",
+      "tool": "microsoft_education_education_users_schools_get_count_a99c"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/schools/{educationSchool-id}",
+      "operationId": "education.users.GetSchools",
+      "tool": "microsoft_education_education_users_get_schools"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/taughtClasses",
+      "operationId": "education.users.ListTaughtClasses",
+      "tool": "microsoft_education_education_users_list_taught_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/taughtClasses/$count",
+      "operationId": "education.users.taughtClasses.GetCount-788d",
+      "tool": "microsoft_education_education_users_taught_classes_get_count_788d"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/taughtClasses/{educationClass-id}",
+      "operationId": "education.users.GetTaughtClasses",
+      "tool": "microsoft_education_education_users_get_taught_classes"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/user",
+      "operationId": "education.users.GetUser",
+      "tool": "microsoft_education_education_users_get_user"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/user/mailboxSettings",
+      "operationId": "education.users.user.GetMailboxSettings",
+      "tool": "microsoft_education_education_users_user_get_mailbox_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/education/users/{educationUser-id}/user/mailboxSettings",
+      "operationId": "education.users.user.UpdateMailboxSettings",
+      "tool": "microsoft_education_education_users_user_update_mailbox_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/user/serviceProvisioningErrors",
+      "operationId": "education.users.user.ListServiceProvisioningErrors",
+      "tool": "microsoft_education_education_users_user_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/education/users/{educationUser-id}/user/serviceProvisioningErrors/$count",
+      "operationId": "education.users.user.ServiceProvisioningErrors.GetCount-9dc6",
+      "tool": "microsoft_education_education_users_user_service_provisioning_errors_get_count_9dc6"
+    }
+  ]
+}

@@ -3,21 +3,45 @@
 namespace OpenCompany\Integrations\Phantombuster;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListAgents;
-use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetAgent;
-use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterLaunchAgent;
-use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetContainer;
-use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListContainers;
-use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterApiDelete;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterApiGet;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterApiPost;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterApiPut;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterDeleteAgent;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterDeleteScript;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterFetchAgentOutput;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterFetchContainerOutput;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterFetchContainerResultObject;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetAgent;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetContainer;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetCurrentUser;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetIpLocation;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetOrganization;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterGetScript;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterLaunchAgent;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListAgents;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListBranches;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListContainers;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListDeletedAgents;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterListScripts;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterSaveAgent;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterSaveScript;
+use OpenCompany\Integrations\Phantombuster\Tools\PhantombusterStopAgent;
 
 /**
+ * Tool catalog and setup metadata for the Phantombuster integration.
+ *
+ * Exposes agents, containers, scripts, organization metadata, and generic
+ * relative API helpers.
+ */
+class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -90,11 +114,13 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Automated lead generation and web scraping platform',
             'icon' => 'ph:robot',
             'logo' => 'simple-icons:phantombuster',
-            'category' => 'automation',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.phantombuster.com/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -102,7 +128,7 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Phantombuster API key',
-                'hint' => 'Find your API key in Phantombuster under <strong>Settings → API</strong>',
+                'hint' => 'Find your API key in Phantombuster under <strong>Settings > API</strong>',
                 'required' => true,
             ],
             [
@@ -116,6 +142,12 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
+    /**
+     * Verify Phantombuster credentials with a lightweight user request.
+     *
+     * @param  array<string, mixed>  $config  Candidate integration config.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
@@ -140,11 +172,20 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
                 ];
             }
 
+            if (!$response->successful()) {
+                $error = $json['message'] ?? $json['error'] ?? 'Unknown error';
+
+                return [
+                    'success' => false,
+                    'error' => "Authentication failed: {$error}",
+                ];
+            }
+
             return [
                 'success' => true,
-                'message' => "Connected to Phantombuster API as {$json['email']}.",
+                'message' => 'Connected to Phantombuster API as ' . ($json['email'] ?? 'the authenticated user') . '.',
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -181,6 +222,41 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Launch a Phantombuster agent to start an automation.',
                 'icon' => 'ph:play',
             ],
+            'phantombuster_save_agent' => [
+                'class' => PhantombusterSaveAgent::class,
+                'type' => 'write',
+                'name' => 'Save Agent',
+                'description' => 'Create or update a Phantombuster agent.',
+                'icon' => 'ph:floppy-disk',
+            ],
+            'phantombuster_stop_agent' => [
+                'class' => PhantombusterStopAgent::class,
+                'type' => 'write',
+                'name' => 'Stop Agent',
+                'description' => 'Stop a running Phantombuster agent.',
+                'icon' => 'ph:stop',
+            ],
+            'phantombuster_delete_agent' => [
+                'class' => PhantombusterDeleteAgent::class,
+                'type' => 'write',
+                'name' => 'Delete Agent',
+                'description' => 'Delete a Phantombuster agent.',
+                'icon' => 'ph:trash',
+            ],
+            'phantombuster_list_deleted_agents' => [
+                'class' => PhantombusterListDeletedAgents::class,
+                'type' => 'read',
+                'name' => 'List Deleted Agents',
+                'description' => 'List deleted Phantombuster agents.',
+                'icon' => 'ph:archive',
+            ],
+            'phantombuster_fetch_agent_output' => [
+                'class' => PhantombusterFetchAgentOutput::class,
+                'type' => 'read',
+                'name' => 'Fetch Agent Output',
+                'description' => 'Fetch incremental output from the latest relevant agent container.',
+                'icon' => 'ph:terminal-window',
+            ],
             'phantombuster_list_containers' => [
                 'class' => PhantombusterListContainers::class,
                 'type' => 'read',
@@ -195,6 +271,69 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get details for a specific Phantombuster container.',
                 'icon' => 'ph:cube',
             ],
+            'phantombuster_fetch_container_output' => [
+                'class' => PhantombusterFetchContainerOutput::class,
+                'type' => 'read',
+                'name' => 'Fetch Container Output',
+                'description' => 'Fetch JSON or raw output for a container.',
+                'icon' => 'ph:file-text',
+            ],
+            'phantombuster_fetch_container_result_object' => [
+                'class' => PhantombusterFetchContainerResultObject::class,
+                'type' => 'read',
+                'name' => 'Fetch Container Result Object',
+                'description' => 'Fetch the result object for a container.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'phantombuster_list_scripts' => [
+                'class' => PhantombusterListScripts::class,
+                'type' => 'read',
+                'name' => 'List Scripts',
+                'description' => 'List Phantombuster scripts.',
+                'icon' => 'ph:code',
+            ],
+            'phantombuster_get_script' => [
+                'class' => PhantombusterGetScript::class,
+                'type' => 'read',
+                'name' => 'Get Script',
+                'description' => 'Get a Phantombuster script.',
+                'icon' => 'ph:code',
+            ],
+            'phantombuster_save_script' => [
+                'class' => PhantombusterSaveScript::class,
+                'type' => 'write',
+                'name' => 'Save Script',
+                'description' => 'Create or update a Phantombuster script.',
+                'icon' => 'ph:floppy-disk',
+            ],
+            'phantombuster_delete_script' => [
+                'class' => PhantombusterDeleteScript::class,
+                'type' => 'write',
+                'name' => 'Delete Script',
+                'description' => 'Delete a Phantombuster script.',
+                'icon' => 'ph:trash',
+            ],
+            'phantombuster_list_branches' => [
+                'class' => PhantombusterListBranches::class,
+                'type' => 'read',
+                'name' => 'List Branches',
+                'description' => 'List Phantombuster script branches.',
+                'icon' => 'ph:git-branch',
+            ],
+            'phantombuster_get_organization' => [
+                'class' => PhantombusterGetOrganization::class,
+                'type' => 'read',
+                'name' => 'Get Organization',
+                'description' => 'Get current Phantombuster organization metadata.',
+                'icon' => 'ph:buildings',
+            ],
+            'phantombuster_get_ip_location' => [
+                'class' => PhantombusterGetIpLocation::class,
+                'type' => 'read',
+                'name' => 'Get IP Location',
+                'description' => 'Resolve country metadata for an IP address.',
+                'icon' => 'ph:map-pin',
+            ],
             'phantombuster_get_current_user' => [
                 'class' => PhantombusterGetCurrentUser::class,
                 'type' => 'read',
@@ -202,13 +341,43 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get the authenticated Phantombuster user profile.',
                 'icon' => 'ph:user',
             ],
+            'phantombuster_api_get' => [
+                'class' => PhantombusterApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call a relative Phantombuster API GET endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'phantombuster_api_post' => [
+                'class' => PhantombusterApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call a relative Phantombuster API POST endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'phantombuster_api_put' => [
+                'class' => PhantombusterApiPut::class,
+                'type' => 'write',
+                'name' => 'API PUT',
+                'description' => 'Call a relative Phantombuster API PUT endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'phantombuster_api_delete' => [
+                'class' => PhantombusterApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call a relative Phantombuster API DELETE endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/phantombuster.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -226,7 +395,7 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new PhantombusterService(
                 apiKey: $creds->get('phantombuster', 'api_key', '', $account),

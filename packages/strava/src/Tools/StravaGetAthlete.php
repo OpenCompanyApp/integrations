@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Strava\StravaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the authenticated Strava athlete.
+ */
 class StravaGetAthlete implements Tool
 {
     /**
@@ -28,7 +31,7 @@ class StravaGetAthlete implements Tool
      */
     public function description(): string
     {
-        return 'Get the authenticated athlete\'s Strava profile — name, location, follower/following counts, and stats.';
+        return 'Get the authenticated athlete\'s Strava profile: name, location, follower/following counts, and stats.';
     }
 
     /**

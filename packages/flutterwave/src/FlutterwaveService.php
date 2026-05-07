@@ -6,6 +6,12 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Flutterwave v3 REST API.
+ *
+ * Handles bearer secret-key authentication, JSON request dispatch, error
+ * normalization, and response parsing for Flutterwave tools.
+ */
 class FlutterwaveService
 {
     /**
@@ -32,8 +38,8 @@ class FlutterwaveService
     /**
      * List transactions with optional filtering and pagination.
      *
-     * @param  array  $params  Query parameters (e.g. page, status, from, to).
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @param  array<string, mixed>  $params  Query parameters (page, status, from, to, customer_email, tx_ref, customer_fullname, currency).
+     * @return array<string, mixed>
      */
     public function listTransactions(array $params = []): array
     {
@@ -44,7 +50,7 @@ class FlutterwaveService
      * Retrieve a single transaction by its ID.
      *
      * @param  int|string  $id  The Flutterwave transaction ID.
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @return array<string, mixed>
      */
     public function getTransaction(int|string $id): array
     {
@@ -54,8 +60,8 @@ class FlutterwaveService
     /**
      * Initiate a new payment via the Flutterwave Charge API.
      *
-     * @param  array  $data  Payment payload (tx_ref, amount, currency, customer, etc.).
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @param  array<string, mixed>  $data  Payment payload (tx_ref, amount, currency, customer, etc.).
+     * @return array<string, mixed>
      */
     public function initiatePayment(array $data): array
     {
@@ -63,10 +69,10 @@ class FlutterwaveService
     }
 
     /**
-     * Verify a transaction by its transaction reference or ID.
+     * Verify a transaction by its transaction ID.
      *
-     * @param  int|string  $txRef  The transaction reference or ID to verify.
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @param  int|string  $txRef  The transaction ID to verify.
+     * @return array<string, mixed>
      */
     public function verifyTransaction(int|string $txRef): array
     {
@@ -76,8 +82,8 @@ class FlutterwaveService
     /**
      * List customers with optional pagination.
      *
-     * @param  array  $params  Query parameters (e.g. page).
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @param  array<string, mixed>  $params  Query parameters (e.g. page).
+     * @return array<string, mixed>
      */
     public function listCustomers(array $params = []): array
     {
@@ -87,8 +93,8 @@ class FlutterwaveService
     /**
      * Create a new customer record in Flutterwave.
      *
-     * @param  array  $data  Customer payload (email, first_name, last_name, phone, etc.).
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @param  array<string, mixed>  $data  Customer payload (email, first_name, last_name, phone, etc.).
+     * @return array<string, mixed>
      */
     public function createCustomer(array $data): array
     {
@@ -99,7 +105,7 @@ class FlutterwaveService
      * Get a list of supported banks for a given country.
      *
      * @param  string  $country  ISO country code (e.g. "NG" for Nigeria).
-     * @return array The parsed JSON response from the Flutterwave API.
+     * @return array<string, mixed>
      */
     public function getBanks(string $country = 'NG'): array
     {
@@ -111,8 +117,8 @@ class FlutterwaveService
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path    API path relative to the base URL.
-     * @param  array   $data    Query parameters or JSON body.
-     * @return array The parsed JSON response.
+     * @param  array<string, mixed>  $data  Query parameters or JSON body.
+     * @return array<string, mixed>
      *
      * @throws \RuntimeException If the API key is missing or the request fails.
      */
@@ -128,7 +134,7 @@ class FlutterwaveService
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path    API path relative to the base URL.
-     * @param  array   $data    Query parameters or JSON body.
+     * @param  array<string, mixed>  $data  Query parameters or JSON body.
      * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
      * @throws \RuntimeException If the API key is missing or the request fails.

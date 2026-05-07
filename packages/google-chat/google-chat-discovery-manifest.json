@@ -1,0 +1,414 @@
+{
+    "source": "https://chat.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Chat API",
+    "version": "v1",
+    "method_count": 45,
+    "generated_package": "google-chat",
+    "methods": [
+        {
+            "discovery_id": "spaces.setup",
+            "tool": "google_chat_spaces_setup",
+            "class": "GoogleChatSpacesSetup",
+            "http_method": "POST",
+            "path": "/v1/spaces:setup",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.completeImport",
+            "tool": "google_chat_spaces_complete_import",
+            "class": "GoogleChatSpacesCompleteImport",
+            "http_method": "POST",
+            "path": "/v1/{+name}:completeImport",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.findGroupChats",
+            "tool": "google_chat_spaces_find_group_chats",
+            "class": "GoogleChatSpacesFindGroupChats",
+            "http_method": "GET",
+            "path": "/v1/spaces:findGroupChats",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.patch",
+            "tool": "google_chat_spaces_patch",
+            "class": "GoogleChatSpacesPatch",
+            "http_method": "PATCH",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.search",
+            "tool": "google_chat_spaces_search",
+            "class": "GoogleChatSpacesSearch",
+            "http_method": "GET",
+            "path": "/v1/spaces:search",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.create",
+            "tool": "google_chat_spaces_create",
+            "class": "GoogleChatSpacesCreate",
+            "http_method": "POST",
+            "path": "/v1/spaces",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.delete",
+            "tool": "google_chat_spaces_delete",
+            "class": "GoogleChatSpacesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.findDirectMessage",
+            "tool": "google_chat_spaces_find_direct_message",
+            "class": "GoogleChatSpacesFindDirectMessage",
+            "http_method": "GET",
+            "path": "/v1/spaces:findDirectMessage",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.list",
+            "tool": "google_chat_spaces_list",
+            "class": "GoogleChatSpacesList",
+            "http_method": "GET",
+            "path": "/v1/spaces",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.get",
+            "tool": "google_chat_spaces_get",
+            "class": "GoogleChatSpacesGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.spaceEvents.get",
+            "tool": "google_chat_spaces_space_events_get",
+            "class": "GoogleChatSpacesSpaceEventsGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.spaceEvents.list",
+            "tool": "google_chat_spaces_space_events_list",
+            "class": "GoogleChatSpacesSpaceEventsList",
+            "http_method": "GET",
+            "path": "/v1/{+parent}/spaceEvents",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.members.create",
+            "tool": "google_chat_spaces_members_create",
+            "class": "GoogleChatSpacesMembersCreate",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/members",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.members.patch",
+            "tool": "google_chat_spaces_members_patch",
+            "class": "GoogleChatSpacesMembersPatch",
+            "http_method": "PATCH",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.members.get",
+            "tool": "google_chat_spaces_members_get",
+            "class": "GoogleChatSpacesMembersGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.members.delete",
+            "tool": "google_chat_spaces_members_delete",
+            "class": "GoogleChatSpacesMembersDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.members.list",
+            "tool": "google_chat_spaces_members_list",
+            "class": "GoogleChatSpacesMembersList",
+            "http_method": "GET",
+            "path": "/v1/{+parent}/members",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.get",
+            "tool": "google_chat_spaces_messages_get",
+            "class": "GoogleChatSpacesMessagesGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.delete",
+            "tool": "google_chat_spaces_messages_delete",
+            "class": "GoogleChatSpacesMessagesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.list",
+            "tool": "google_chat_spaces_messages_list",
+            "class": "GoogleChatSpacesMessagesList",
+            "http_method": "GET",
+            "path": "/v1/{+parent}/messages",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.create",
+            "tool": "google_chat_spaces_messages_create",
+            "class": "GoogleChatSpacesMessagesCreate",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/messages",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.patch",
+            "tool": "google_chat_spaces_messages_patch",
+            "class": "GoogleChatSpacesMessagesPatch",
+            "http_method": "PATCH",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.update",
+            "tool": "google_chat_spaces_messages_update",
+            "class": "GoogleChatSpacesMessagesUpdate",
+            "http_method": "PUT",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.attachments.get",
+            "tool": "google_chat_spaces_messages_attachments_get",
+            "class": "GoogleChatSpacesMessagesAttachmentsGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.reactions.list",
+            "tool": "google_chat_spaces_messages_reactions_list",
+            "class": "GoogleChatSpacesMessagesReactionsList",
+            "http_method": "GET",
+            "path": "/v1/{+parent}/reactions",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.reactions.delete",
+            "tool": "google_chat_spaces_messages_reactions_delete",
+            "class": "GoogleChatSpacesMessagesReactionsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "spaces.messages.reactions.create",
+            "tool": "google_chat_spaces_messages_reactions_create",
+            "class": "GoogleChatSpacesMessagesReactionsCreate",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/reactions",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "customEmojis.create",
+            "tool": "google_chat_custom_emojis_create",
+            "class": "GoogleChatCustomEmojisCreate",
+            "http_method": "POST",
+            "path": "/v1/customEmojis",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "customEmojis.get",
+            "tool": "google_chat_custom_emojis_get",
+            "class": "GoogleChatCustomEmojisGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "customEmojis.delete",
+            "tool": "google_chat_custom_emojis_delete",
+            "class": "GoogleChatCustomEmojisDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "customEmojis.list",
+            "tool": "google_chat_custom_emojis_list",
+            "class": "GoogleChatCustomEmojisList",
+            "http_method": "GET",
+            "path": "/v1/customEmojis",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "media.upload",
+            "tool": "google_chat_media_upload",
+            "class": "GoogleChatMediaUpload",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/attachments:upload",
+            "type": "write",
+            "media_upload": true
+        },
+        {
+            "discovery_id": "media.download",
+            "tool": "google_chat_media_download",
+            "class": "GoogleChatMediaDownload",
+            "http_method": "GET",
+            "path": "/v1/media/{+resourceName}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.spaces.getSpaceReadState",
+            "tool": "google_chat_users_spaces_get_space_read_state",
+            "class": "GoogleChatUsersSpacesGetSpaceReadState",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.spaces.updateSpaceReadState",
+            "tool": "google_chat_users_spaces_update_space_read_state",
+            "class": "GoogleChatUsersSpacesUpdateSpaceReadState",
+            "http_method": "PATCH",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.spaces.spaceNotificationSetting.get",
+            "tool": "google_chat_users_spaces_space_notification_setting_get",
+            "class": "GoogleChatUsersSpacesSpaceNotificationSettingGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.spaces.spaceNotificationSetting.patch",
+            "tool": "google_chat_users_spaces_space_notification_setting_patch",
+            "class": "GoogleChatUsersSpacesSpaceNotificationSettingPatch",
+            "http_method": "PATCH",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.spaces.threads.getThreadReadState",
+            "tool": "google_chat_users_spaces_threads_get_thread_read_state",
+            "class": "GoogleChatUsersSpacesThreadsGetThreadReadState",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.delete",
+            "tool": "google_chat_users_sections_delete",
+            "class": "GoogleChatUsersSectionsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.list",
+            "tool": "google_chat_users_sections_list",
+            "class": "GoogleChatUsersSectionsList",
+            "http_method": "GET",
+            "path": "/v1/{+parent}/sections",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.position",
+            "tool": "google_chat_users_sections_position",
+            "class": "GoogleChatUsersSectionsPosition",
+            "http_method": "POST",
+            "path": "/v1/{+name}:position",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.patch",
+            "tool": "google_chat_users_sections_patch",
+            "class": "GoogleChatUsersSectionsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.create",
+            "tool": "google_chat_users_sections_create",
+            "class": "GoogleChatUsersSectionsCreate",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/sections",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.items.list",
+            "tool": "google_chat_users_sections_items_list",
+            "class": "GoogleChatUsersSectionsItemsList",
+            "http_method": "GET",
+            "path": "/v1/{+parent}/items",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "users.sections.items.move",
+            "tool": "google_chat_users_sections_items_move",
+            "class": "GoogleChatUsersSectionsItemsMove",
+            "http_method": "POST",
+            "path": "/v1/{+name}:move",
+            "type": "write",
+            "media_upload": false
+        }
+    ]
+}

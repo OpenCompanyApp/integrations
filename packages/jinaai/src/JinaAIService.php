@@ -2,13 +2,16 @@
 
 namespace OpenCompany\Integrations\JinaAI;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
  * JinaAIService — HTTP client for the Jina AI API.
  *
- * Wraps all Jina AI v1 endpoints: search, read, ground, embeddings, and rerank.
+ * Wraps Jina Search Foundation endpoints: reader/search/grounding hosts plus v1 model APIs.
  * Each method accepts an array payload matching the upstream API and returns
  * the parsed JSON response.
  *
@@ -38,48 +41,48 @@ class JinaAIService
     }
 
     /**
-     * Search the web using Jina AI Search.
+     * Search the web using Jina AI Search Reader.
      *
-     * @param  array  $body  Request payload (must contain 'q')
+     * @param  array<string, mixed>  $body  Request payload (must contain 'q')
      * @return array<string, mixed> Parsed JSON response
      *
-     * @see https://jina.ai/api/#search
+     * @see https://jina.ai/en-US/reader/
      */
     public function search(array $body): array
     {
-        return $this->request('POST', '/search', $body);
+        return $this->request('POST', 'https://s.jina.ai/', $body);
     }
 
     /**
      * Read and extract content from a URL using Jina AI Reader.
      *
-     * @param  array  $body  Request payload (must contain 'url')
+     * @param  array<string, mixed>  $body  Request payload (must contain 'url')
      * @return array<string, mixed> Parsed JSON response
      *
-     * @see https://jina.ai/api/#reader
+     * @see https://jina.ai/en-US/reader/
      */
     public function read(array $body): array
     {
-        return $this->request('POST', '/read', $body);
+        return $this->request('POST', 'https://r.jina.ai/', $body);
     }
 
     /**
      * Ground a statement against provided context using Jina AI Grounding.
      *
-     * @param  array  $body  Request payload (must contain 'statement' and 'context')
+     * @param  array<string, mixed>  $body  Request payload (must contain 'statement')
      * @return array<string, mixed> Parsed JSON response
      *
-     * @see https://jina.ai/api/#grounding
+     * @see https://jina.ai/es/news/fact-checking-with-new-grounding-api-in-jina-reader/
      */
     public function ground(array $body): array
     {
-        return $this->request('POST', '/ground', $body);
+        return $this->request('POST', 'https://g.jina.ai/', $body);
     }
 
     /**
      * Generate embeddings for the given input using Jina AI Embeddings.
      *
-     * @param  array  $body  Request payload (must contain 'input')
+     * @param  array<string, mixed>  $body  Request payload (must contain 'input')
      * @return array<string, mixed> Parsed JSON response
      *
      * @see https://jina.ai/api/#embeddings
@@ -92,7 +95,7 @@ class JinaAIService
     /**
      * Rerank documents against a query using Jina AI Reranker.
      *
-     * @param  array  $body  Request payload (must contain 'query' and 'documents')
+     * @param  array<string, mixed>  $body  Request payload (must contain 'query' and 'documents')
      * @return array<string, mixed> Parsed JSON response
      *
      * @see https://jina.ai/api/#reranker
@@ -100,6 +103,32 @@ class JinaAIService
     public function rerank(array $body): array
     {
         return $this->request('POST', '/rerank', $body);
+    }
+
+    /**
+     * Classify inputs using zero-shot or few-shot Jina AI Classifier.
+     *
+     * @param  array<string, mixed>  $body  Request payload (must contain 'input')
+     * @return array<string, mixed> Parsed JSON response
+     *
+     * @see https://jina.ai/en-US/classifier/
+     */
+    public function classify(array $body): array
+    {
+        return $this->request('POST', '/classify', $body);
+    }
+
+    /**
+     * Tokenize or segment text using Jina AI Segmenter.
+     *
+     * @param  array<string, mixed>  $body  Request payload.
+     * @return array<string, mixed> Parsed JSON response
+     *
+     * @see https://jina.ai/en-US/segmenter/
+     */
+    public function segment(array $body): array
+    {
+        return $this->request('POST', '/segment', $body);
     }
 
     /**
@@ -127,17 +156,17 @@ class JinaAIService
      *
      * @throws \RuntimeException When the API key is missing or the request fails
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Jina AI API key is not configured.');
+        if (! $this->apiKey) {
+            throw new RuntimeException('Jina AI API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = str_starts_with($path, 'http') ? $path : $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(60);
 
@@ -146,18 +175,18 @@ class JinaAIService
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
+            if (! $response->successful()) {
+                $contentType = (string) $response->header('Content-Type');
                 $body = $response->body();
 
                 if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Jina AI API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Jina AI API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable.");
+                    throw new RuntimeException("Jina AI API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable.");
                 }
 
                 $error = $response->json('error') ?? $response->json('detail') ?? $body;
@@ -165,15 +194,15 @@ class JinaAIService
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Jina AI API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException("Jina AI API error ({$response->status()}): ".(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Jina AI API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Jina AI API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Jina AI API: {$e->getMessage()}");
         }
     }
 }

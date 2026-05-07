@@ -1,0 +1,649 @@
+{
+    "source": "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
+    "service": "Google Drive API",
+    "version": "v3",
+    "method_count": 64,
+    "generated_package": "google-drive",
+    "methods": [
+        {
+            "discovery_id": "approvals.list",
+            "tool": "google_drive_approvals_list",
+            "class": "GoogleDriveApprovalsList",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/approvals",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.decline",
+            "tool": "google_drive_approvals_decline",
+            "class": "GoogleDriveApprovalsDecline",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/approvals/{approvalId}:decline",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.get",
+            "tool": "google_drive_approvals_get",
+            "class": "GoogleDriveApprovalsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/approvals/{approvalId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.start",
+            "tool": "google_drive_approvals_start",
+            "class": "GoogleDriveApprovalsStart",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/approvals:start",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.cancel",
+            "tool": "google_drive_approvals_cancel",
+            "class": "GoogleDriveApprovalsCancel",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/approvals/{approvalId}:cancel",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.approve",
+            "tool": "google_drive_approvals_approve",
+            "class": "GoogleDriveApprovalsApprove",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/approvals/{approvalId}:approve",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.comment",
+            "tool": "google_drive_approvals_comment",
+            "class": "GoogleDriveApprovalsComment",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/approvals/{approvalId}:comment",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "approvals.reassign",
+            "tool": "google_drive_approvals_reassign",
+            "class": "GoogleDriveApprovalsReassign",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/approvals/{approvalId}:reassign",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "comments.list",
+            "tool": "google_drive_comments_list",
+            "class": "GoogleDriveCommentsList",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/comments",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "comments.update",
+            "tool": "google_drive_comments_update",
+            "class": "GoogleDriveCommentsUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "comments.delete",
+            "tool": "google_drive_comments_delete",
+            "class": "GoogleDriveCommentsDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "comments.create",
+            "tool": "google_drive_comments_create",
+            "class": "GoogleDriveCommentsCreate",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/comments",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "comments.get",
+            "tool": "google_drive_comments_get",
+            "class": "GoogleDriveCommentsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.modifyLabels",
+            "tool": "google_drive_files_modify_labels",
+            "class": "GoogleDriveFilesModifyLabels",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/modifyLabels",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.delete",
+            "tool": "google_drive_files_delete",
+            "class": "GoogleDriveFilesDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/files/{fileId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.create",
+            "tool": "google_drive_files_create",
+            "class": "GoogleDriveFilesCreate",
+            "http_method": "POST",
+            "path": "/drive/v3/files",
+            "type": "write",
+            "media_upload": true,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.generateCseToken",
+            "tool": "google_drive_files_generate_cse_token",
+            "class": "GoogleDriveFilesGenerateCseToken",
+            "http_method": "GET",
+            "path": "/drive/v3/files/generateCseToken",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.watch",
+            "tool": "google_drive_files_watch",
+            "class": "GoogleDriveFilesWatch",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/watch",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.list",
+            "tool": "google_drive_files_list",
+            "class": "GoogleDriveFilesList",
+            "http_method": "GET",
+            "path": "/drive/v3/files",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.listLabels",
+            "tool": "google_drive_files_list_labels",
+            "class": "GoogleDriveFilesListLabels",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/listLabels",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.update",
+            "tool": "google_drive_files_update",
+            "class": "GoogleDriveFilesUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/files/{fileId}",
+            "type": "write",
+            "media_upload": true,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.download",
+            "tool": "google_drive_files_download",
+            "class": "GoogleDriveFilesDownload",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/download",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.generateIds",
+            "tool": "google_drive_files_generate_ids",
+            "class": "GoogleDriveFilesGenerateIds",
+            "http_method": "GET",
+            "path": "/drive/v3/files/generateIds",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.export",
+            "tool": "google_drive_files_export",
+            "class": "GoogleDriveFilesExport",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/export",
+            "type": "read",
+            "media_upload": false,
+            "media_download": true
+        },
+        {
+            "discovery_id": "files.get",
+            "tool": "google_drive_files_get",
+            "class": "GoogleDriveFilesGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": true
+        },
+        {
+            "discovery_id": "files.copy",
+            "tool": "google_drive_files_copy",
+            "class": "GoogleDriveFilesCopy",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/copy",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "files.emptyTrash",
+            "tool": "google_drive_files_empty_trash",
+            "class": "GoogleDriveFilesEmptyTrash",
+            "http_method": "DELETE",
+            "path": "/drive/v3/files/trash",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "about.get",
+            "tool": "google_drive_about_get",
+            "class": "GoogleDriveAboutGet",
+            "http_method": "GET",
+            "path": "/drive/v3/about",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "channels.stop",
+            "tool": "google_drive_channels_stop",
+            "class": "GoogleDriveChannelsStop",
+            "http_method": "POST",
+            "path": "/drive/v3/channels/stop",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "permissions.delete",
+            "tool": "google_drive_permissions_delete",
+            "class": "GoogleDrivePermissionsDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/files/{fileId}/permissions/{permissionId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "permissions.list",
+            "tool": "google_drive_permissions_list",
+            "class": "GoogleDrivePermissionsList",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/permissions",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "permissions.update",
+            "tool": "google_drive_permissions_update",
+            "class": "GoogleDrivePermissionsUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/files/{fileId}/permissions/{permissionId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "permissions.create",
+            "tool": "google_drive_permissions_create",
+            "class": "GoogleDrivePermissionsCreate",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/permissions",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "permissions.get",
+            "tool": "google_drive_permissions_get",
+            "class": "GoogleDrivePermissionsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/permissions/{permissionId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "apps.list",
+            "tool": "google_drive_apps_list",
+            "class": "GoogleDriveAppsList",
+            "http_method": "GET",
+            "path": "/drive/v3/apps",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "apps.get",
+            "tool": "google_drive_apps_get",
+            "class": "GoogleDriveAppsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/apps/{appId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "accessproposals.resolve",
+            "tool": "google_drive_accessproposals_resolve",
+            "class": "GoogleDriveAccessproposalsResolve",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/accessproposals/{proposalId}:resolve",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "accessproposals.list",
+            "tool": "google_drive_accessproposals_list",
+            "class": "GoogleDriveAccessproposalsList",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/accessproposals",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "accessproposals.get",
+            "tool": "google_drive_accessproposals_get",
+            "class": "GoogleDriveAccessproposalsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/accessproposals/{proposalId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "operations.get",
+            "tool": "google_drive_operations_get",
+            "class": "GoogleDriveOperationsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/operations/{name}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "revisions.get",
+            "tool": "google_drive_revisions_get",
+            "class": "GoogleDriveRevisionsGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/revisions/{revisionId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": true
+        },
+        {
+            "discovery_id": "revisions.delete",
+            "tool": "google_drive_revisions_delete",
+            "class": "GoogleDriveRevisionsDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/files/{fileId}/revisions/{revisionId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "revisions.list",
+            "tool": "google_drive_revisions_list",
+            "class": "GoogleDriveRevisionsList",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/revisions",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "revisions.update",
+            "tool": "google_drive_revisions_update",
+            "class": "GoogleDriveRevisionsUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/files/{fileId}/revisions/{revisionId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "teamdrives.delete",
+            "tool": "google_drive_teamdrives_delete",
+            "class": "GoogleDriveTeamdrivesDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/teamdrives/{teamDriveId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "teamdrives.list",
+            "tool": "google_drive_teamdrives_list",
+            "class": "GoogleDriveTeamdrivesList",
+            "http_method": "GET",
+            "path": "/drive/v3/teamdrives",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "teamdrives.update",
+            "tool": "google_drive_teamdrives_update",
+            "class": "GoogleDriveTeamdrivesUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/teamdrives/{teamDriveId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "teamdrives.create",
+            "tool": "google_drive_teamdrives_create",
+            "class": "GoogleDriveTeamdrivesCreate",
+            "http_method": "POST",
+            "path": "/drive/v3/teamdrives",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "teamdrives.get",
+            "tool": "google_drive_teamdrives_get",
+            "class": "GoogleDriveTeamdrivesGet",
+            "http_method": "GET",
+            "path": "/drive/v3/teamdrives/{teamDriveId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "changes.list",
+            "tool": "google_drive_changes_list",
+            "class": "GoogleDriveChangesList",
+            "http_method": "GET",
+            "path": "/drive/v3/changes",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "changes.getStartPageToken",
+            "tool": "google_drive_changes_get_start_page_token",
+            "class": "GoogleDriveChangesGetStartPageToken",
+            "http_method": "GET",
+            "path": "/drive/v3/changes/startPageToken",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "changes.watch",
+            "tool": "google_drive_changes_watch",
+            "class": "GoogleDriveChangesWatch",
+            "http_method": "POST",
+            "path": "/drive/v3/changes/watch",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "replies.create",
+            "tool": "google_drive_replies_create",
+            "class": "GoogleDriveRepliesCreate",
+            "http_method": "POST",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "replies.get",
+            "tool": "google_drive_replies_get",
+            "class": "GoogleDriveRepliesGet",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "replies.list",
+            "tool": "google_drive_replies_list",
+            "class": "GoogleDriveRepliesList",
+            "http_method": "GET",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "replies.update",
+            "tool": "google_drive_replies_update",
+            "class": "GoogleDriveRepliesUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "replies.delete",
+            "tool": "google_drive_replies_delete",
+            "class": "GoogleDriveRepliesDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.create",
+            "tool": "google_drive_drives_create",
+            "class": "GoogleDriveDrivesCreate",
+            "http_method": "POST",
+            "path": "/drive/v3/drives",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.get",
+            "tool": "google_drive_drives_get",
+            "class": "GoogleDriveDrivesGet",
+            "http_method": "GET",
+            "path": "/drive/v3/drives/{driveId}",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.hide",
+            "tool": "google_drive_drives_hide",
+            "class": "GoogleDriveDrivesHide",
+            "http_method": "POST",
+            "path": "/drive/v3/drives/{driveId}/hide",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.delete",
+            "tool": "google_drive_drives_delete",
+            "class": "GoogleDriveDrivesDelete",
+            "http_method": "DELETE",
+            "path": "/drive/v3/drives/{driveId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.unhide",
+            "tool": "google_drive_drives_unhide",
+            "class": "GoogleDriveDrivesUnhide",
+            "http_method": "POST",
+            "path": "/drive/v3/drives/{driveId}/unhide",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.list",
+            "tool": "google_drive_drives_list",
+            "class": "GoogleDriveDrivesList",
+            "http_method": "GET",
+            "path": "/drive/v3/drives",
+            "type": "read",
+            "media_upload": false,
+            "media_download": false
+        },
+        {
+            "discovery_id": "drives.update",
+            "tool": "google_drive_drives_update",
+            "class": "GoogleDriveDrivesUpdate",
+            "http_method": "PATCH",
+            "path": "/drive/v3/drives/{driveId}",
+            "type": "write",
+            "media_upload": false,
+            "media_download": false
+        }
+    ]
+}

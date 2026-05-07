@@ -1,0 +1,1603 @@
+{
+    "source": "https://developer-docs.ramp.com/openapi/developer-api.json",
+    "openapi": "3.0.2",
+    "method_count": 228,
+    "operations": [
+        {
+            "operation_id": "get_gl_account_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/accounts",
+            "tool": "ramp_get_gl_account_list_resource",
+            "class": "RampGetGlAccountListResource"
+        },
+        {
+            "operation_id": "post_gl_account_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/accounts",
+            "tool": "ramp_post_gl_account_list_resource",
+            "class": "RampPostGlAccountListResource"
+        },
+        {
+            "operation_id": "delete_gl_account_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/accounts/{gl_account_id}",
+            "tool": "ramp_delete_gl_account_resource",
+            "class": "RampDeleteGlAccountResource"
+        },
+        {
+            "operation_id": "get_gl_account_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/accounts/{gl_account_id}",
+            "tool": "ramp_get_gl_account_resource",
+            "class": "RampGetGlAccountResource"
+        },
+        {
+            "operation_id": "patch_gl_account_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/accounts/{gl_account_id}",
+            "tool": "ramp_patch_gl_account_resource",
+            "class": "RampPatchGlAccountResource"
+        },
+        {
+            "operation_id": "get_accounting_all_connections_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/all-connections",
+            "tool": "ramp_get_accounting_all_connections_resource",
+            "class": "RampGetAccountingAllConnectionsResource"
+        },
+        {
+            "operation_id": "delete_accounting_connection_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/connection",
+            "tool": "ramp_delete_accounting_connection_resource",
+            "class": "RampDeleteAccountingConnectionResource"
+        },
+        {
+            "operation_id": "get_accounting_current_connection_resource_deprecated",
+            "method": "GET",
+            "path": "/developer/v1/accounting/connection",
+            "tool": "ramp_get_accounting_current_connection_resource_deprecated",
+            "class": "RampGetAccountingCurrentConnectionResourceDeprecated"
+        },
+        {
+            "operation_id": "post_accounting_connection_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/connection",
+            "tool": "ramp_post_accounting_connection_resource",
+            "class": "RampPostAccountingConnectionResource"
+        },
+        {
+            "operation_id": "get_accounting_connection_detail_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/connection/{connection_id}",
+            "tool": "ramp_get_accounting_connection_detail_resource",
+            "class": "RampGetAccountingConnectionDetailResource"
+        },
+        {
+            "operation_id": "patch_accounting_connection_detail_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/connection/{connection_id}",
+            "tool": "ramp_patch_accounting_connection_detail_resource",
+            "class": "RampPatchAccountingConnectionDetailResource"
+        },
+        {
+            "operation_id": "post_reactivate_connection_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/connection/{connection_id}/reactivate",
+            "tool": "ramp_post_reactivate_connection_resource",
+            "class": "RampPostReactivateConnectionResource"
+        },
+        {
+            "operation_id": "get_custom_field_option_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/field-options",
+            "tool": "ramp_get_custom_field_option_list_resource",
+            "class": "RampGetCustomFieldOptionListResource"
+        },
+        {
+            "operation_id": "post_custom_field_option_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/field-options",
+            "tool": "ramp_post_custom_field_option_list_resource",
+            "class": "RampPostCustomFieldOptionListResource"
+        },
+        {
+            "operation_id": "delete_custom_field_option_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/field-options/{field_option_id}",
+            "tool": "ramp_delete_custom_field_option_resource",
+            "class": "RampDeleteCustomFieldOptionResource"
+        },
+        {
+            "operation_id": "get_custom_field_option_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/field-options/{field_option_id}",
+            "tool": "ramp_get_custom_field_option_resource",
+            "class": "RampGetCustomFieldOptionResource"
+        },
+        {
+            "operation_id": "patch_custom_field_option_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/field-options/{field_option_id}",
+            "tool": "ramp_patch_custom_field_option_resource",
+            "class": "RampPatchCustomFieldOptionResource"
+        },
+        {
+            "operation_id": "put_custom_field_option_resource",
+            "method": "PUT",
+            "path": "/developer/v1/accounting/field-options/{field_option_id}",
+            "tool": "ramp_put_custom_field_option_resource",
+            "class": "RampPutCustomFieldOptionResource"
+        },
+        {
+            "operation_id": "get_custom_field_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/fields",
+            "tool": "ramp_get_custom_field_list_resource",
+            "class": "RampGetCustomFieldListResource"
+        },
+        {
+            "operation_id": "post_custom_field_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/fields",
+            "tool": "ramp_post_custom_field_list_resource",
+            "class": "RampPostCustomFieldListResource"
+        },
+        {
+            "operation_id": "delete_custom_field_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/fields/{field_id}",
+            "tool": "ramp_delete_custom_field_resource",
+            "class": "RampDeleteCustomFieldResource"
+        },
+        {
+            "operation_id": "get_custom_field_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/fields/{field_id}",
+            "tool": "ramp_get_custom_field_resource",
+            "class": "RampGetCustomFieldResource"
+        },
+        {
+            "operation_id": "patch_custom_field_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/fields/{field_id}",
+            "tool": "ramp_patch_custom_field_resource",
+            "class": "RampPatchCustomFieldResource"
+        },
+        {
+            "operation_id": "delete_inventory_item_field_list_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/inventory-item",
+            "tool": "ramp_delete_inventory_item_field_list_resource",
+            "class": "RampDeleteInventoryItemFieldListResource"
+        },
+        {
+            "operation_id": "get_inventory_item_field_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/inventory-item",
+            "tool": "ramp_get_inventory_item_field_list_resource",
+            "class": "RampGetInventoryItemFieldListResource"
+        },
+        {
+            "operation_id": "patch_inventory_item_field_list_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/inventory-item",
+            "tool": "ramp_patch_inventory_item_field_list_resource",
+            "class": "RampPatchInventoryItemFieldListResource"
+        },
+        {
+            "operation_id": "post_inventory_item_field_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/inventory-item",
+            "tool": "ramp_post_inventory_item_field_list_resource",
+            "class": "RampPostInventoryItemFieldListResource"
+        },
+        {
+            "operation_id": "get_inventory_item_field_options_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/inventory-item/options",
+            "tool": "ramp_get_inventory_item_field_options_list_resource",
+            "class": "RampGetInventoryItemFieldOptionsListResource"
+        },
+        {
+            "operation_id": "post_inventory_item_field_options_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/inventory-item/options",
+            "tool": "ramp_post_inventory_item_field_options_list_resource",
+            "class": "RampPostInventoryItemFieldOptionsListResource"
+        },
+        {
+            "operation_id": "delete_inventory_item_field_option_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/inventory-item/options/{option_id}",
+            "tool": "ramp_delete_inventory_item_field_option_resource",
+            "class": "RampDeleteInventoryItemFieldOptionResource"
+        },
+        {
+            "operation_id": "patch_inventory_item_field_option_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/inventory-item/options/{option_id}",
+            "tool": "ramp_patch_inventory_item_field_option_resource",
+            "class": "RampPatchInventoryItemFieldOptionResource"
+        },
+        {
+            "operation_id": "post_ramp_field_option_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/ramp-field-options",
+            "tool": "ramp_post_ramp_field_option_list_resource",
+            "class": "RampPostRampFieldOptionListResource"
+        },
+        {
+            "operation_id": "delete_ramp_field_option_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/ramp-field-options/{field_option_id}",
+            "tool": "ramp_delete_ramp_field_option_resource",
+            "class": "RampDeleteRampFieldOptionResource"
+        },
+        {
+            "operation_id": "patch_ramp_field_option_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/ramp-field-options/{field_option_id}",
+            "tool": "ramp_patch_ramp_field_option_resource",
+            "class": "RampPatchRampFieldOptionResource"
+        },
+        {
+            "operation_id": "get_ramp_field_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/ramp-fields",
+            "tool": "ramp_get_ramp_field_list_resource",
+            "class": "RampGetRampFieldListResource"
+        },
+        {
+            "operation_id": "post_ramp_field_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/ramp-fields",
+            "tool": "ramp_post_ramp_field_list_resource",
+            "class": "RampPostRampFieldListResource"
+        },
+        {
+            "operation_id": "delete_ramp_field_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/ramp-fields/{field_id}",
+            "tool": "ramp_delete_ramp_field_resource",
+            "class": "RampDeleteRampFieldResource"
+        },
+        {
+            "operation_id": "get_ramp_field_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/ramp-fields/{field_id}",
+            "tool": "ramp_get_ramp_field_resource",
+            "class": "RampGetRampFieldResource"
+        },
+        {
+            "operation_id": "patch_ramp_field_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/ramp-fields/{field_id}",
+            "tool": "ramp_patch_ramp_field_resource",
+            "class": "RampPatchRampFieldResource"
+        },
+        {
+            "operation_id": "post_ready_to_sync_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/ready-to-sync",
+            "tool": "ramp_post_ready_to_sync_resource",
+            "class": "RampPostReadyToSyncResource"
+        },
+        {
+            "operation_id": "post_sync_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/syncs",
+            "tool": "ramp_post_sync_list_resource",
+            "class": "RampPostSyncListResource"
+        },
+        {
+            "operation_id": "delete_tax_code_field_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/tax/code",
+            "tool": "ramp_delete_tax_code_field_resource",
+            "class": "RampDeleteTaxCodeFieldResource"
+        },
+        {
+            "operation_id": "get_tax_code_field_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/tax/code",
+            "tool": "ramp_get_tax_code_field_resource",
+            "class": "RampGetTaxCodeFieldResource"
+        },
+        {
+            "operation_id": "patch_tax_code_field_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/tax/code",
+            "tool": "ramp_patch_tax_code_field_resource",
+            "class": "RampPatchTaxCodeFieldResource"
+        },
+        {
+            "operation_id": "post_tax_code_field_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/tax/code",
+            "tool": "ramp_post_tax_code_field_resource",
+            "class": "RampPostTaxCodeFieldResource"
+        },
+        {
+            "operation_id": "get_tax_code_field_options_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/tax/code/options",
+            "tool": "ramp_get_tax_code_field_options_list_resource",
+            "class": "RampGetTaxCodeFieldOptionsListResource"
+        },
+        {
+            "operation_id": "post_tax_code_field_options_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/tax/code/options",
+            "tool": "ramp_post_tax_code_field_options_list_resource",
+            "class": "RampPostTaxCodeFieldOptionsListResource"
+        },
+        {
+            "operation_id": "delete_tax_code_field_option_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/tax/code/options/{option_id}",
+            "tool": "ramp_delete_tax_code_field_option_resource",
+            "class": "RampDeleteTaxCodeFieldOptionResource"
+        },
+        {
+            "operation_id": "patch_tax_code_field_option_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/tax/code/options/{option_id}",
+            "tool": "ramp_patch_tax_code_field_option_resource",
+            "class": "RampPatchTaxCodeFieldOptionResource"
+        },
+        {
+            "operation_id": "get_tax_code_rates_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/tax/rates",
+            "tool": "ramp_get_tax_code_rates_list_resource",
+            "class": "RampGetTaxCodeRatesListResource"
+        },
+        {
+            "operation_id": "post_tax_code_rates_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/tax/rates",
+            "tool": "ramp_post_tax_code_rates_list_resource",
+            "class": "RampPostTaxCodeRatesListResource"
+        },
+        {
+            "operation_id": "delete_tax_rate_detail_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/tax/rates/{tax_rate_id}",
+            "tool": "ramp_delete_tax_rate_detail_resource",
+            "class": "RampDeleteTaxRateDetailResource"
+        },
+        {
+            "operation_id": "patch_tax_rate_detail_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/tax/rates/{tax_rate_id}",
+            "tool": "ramp_patch_tax_rate_detail_resource",
+            "class": "RampPatchTaxRateDetailResource"
+        },
+        {
+            "operation_id": "get_accounting_vendor_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/vendors",
+            "tool": "ramp_get_accounting_vendor_list_resource",
+            "class": "RampGetAccountingVendorListResource"
+        },
+        {
+            "operation_id": "post_accounting_vendor_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/accounting/vendors",
+            "tool": "ramp_post_accounting_vendor_list_resource",
+            "class": "RampPostAccountingVendorListResource"
+        },
+        {
+            "operation_id": "delete_accounting_vendor_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/accounting/vendors/{vendor_id}",
+            "tool": "ramp_delete_accounting_vendor_resource",
+            "class": "RampDeleteAccountingVendorResource"
+        },
+        {
+            "operation_id": "get_accounting_vendor_resource",
+            "method": "GET",
+            "path": "/developer/v1/accounting/vendors/{vendor_id}",
+            "tool": "ramp_get_accounting_vendor_resource",
+            "class": "RampGetAccountingVendorResource"
+        },
+        {
+            "operation_id": "patch_accounting_vendor_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/accounting/vendors/{vendor_id}",
+            "tool": "ramp_patch_accounting_vendor_resource",
+            "class": "RampPatchAccountingVendorResource"
+        },
+        {
+            "operation_id": "get_application_resource",
+            "method": "GET",
+            "path": "/developer/v1/applications",
+            "tool": "ramp_get_application_resource",
+            "class": "RampGetApplicationResource"
+        },
+        {
+            "operation_id": "post_application_resource",
+            "method": "POST",
+            "path": "/developer/v1/applications",
+            "tool": "ramp_post_application_resource",
+            "class": "RampPostApplicationResource"
+        },
+        {
+            "operation_id": "get_audit_log_events_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/audit-logs/events",
+            "tool": "ramp_get_audit_log_events_list_resource",
+            "class": "RampGetAuditLogEventsListResource"
+        },
+        {
+            "operation_id": "get_bank_account_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/bank-accounts",
+            "tool": "ramp_get_bank_account_list_with_pagination",
+            "class": "RampGetBankAccountListWithPagination"
+        },
+        {
+            "operation_id": "get_bank_account_resource",
+            "method": "GET",
+            "path": "/developer/v1/bank-accounts/{bank_account_id}",
+            "tool": "ramp_get_bank_account_resource",
+            "class": "RampGetBankAccountResource"
+        },
+        {
+            "operation_id": "get_bill_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/bills",
+            "tool": "ramp_get_bill_list_with_pagination",
+            "class": "RampGetBillListWithPagination"
+        },
+        {
+            "operation_id": "post_bill_list_with_pagination",
+            "method": "POST",
+            "path": "/developer/v1/bills",
+            "tool": "ramp_post_bill_list_with_pagination",
+            "class": "RampPostBillListWithPagination"
+        },
+        {
+            "operation_id": "get_draft_bill_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/bills/drafts",
+            "tool": "ramp_get_draft_bill_list_with_pagination",
+            "class": "RampGetDraftBillListWithPagination"
+        },
+        {
+            "operation_id": "post_draft_bill_list_with_pagination",
+            "method": "POST",
+            "path": "/developer/v1/bills/drafts",
+            "tool": "ramp_post_draft_bill_list_with_pagination",
+            "class": "RampPostDraftBillListWithPagination"
+        },
+        {
+            "operation_id": "get_draft_bill_resource",
+            "method": "GET",
+            "path": "/developer/v1/bills/drafts/{draft_bill_id}",
+            "tool": "ramp_get_draft_bill_resource",
+            "class": "RampGetDraftBillResource"
+        },
+        {
+            "operation_id": "patch_draft_bill_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/bills/drafts/{draft_bill_id}",
+            "tool": "ramp_patch_draft_bill_resource",
+            "class": "RampPatchDraftBillResource"
+        },
+        {
+            "operation_id": "post_draft_bill_attachment_upload_resource",
+            "method": "POST",
+            "path": "/developer/v1/bills/drafts/{draft_bill_id}/attachments",
+            "tool": "ramp_post_draft_bill_attachment_upload_resource",
+            "class": "RampPostDraftBillAttachmentUploadResource"
+        },
+        {
+            "operation_id": "delete_bill_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/bills/{bill_id}",
+            "tool": "ramp_delete_bill_resource",
+            "class": "RampDeleteBillResource"
+        },
+        {
+            "operation_id": "get_bill_resource",
+            "method": "GET",
+            "path": "/developer/v1/bills/{bill_id}",
+            "tool": "ramp_get_bill_resource",
+            "class": "RampGetBillResource"
+        },
+        {
+            "operation_id": "patch_bill_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/bills/{bill_id}",
+            "tool": "ramp_patch_bill_resource",
+            "class": "RampPatchBillResource"
+        },
+        {
+            "operation_id": "post_bill_attachment_upload_resource",
+            "method": "POST",
+            "path": "/developer/v1/bills/{bill_id}/attachments",
+            "tool": "ramp_post_bill_attachment_upload_resource",
+            "class": "RampPostBillAttachmentUploadResource"
+        },
+        {
+            "operation_id": "post_blank_canvas_approval_document_resource",
+            "method": "POST",
+            "path": "/developer/v1/blank-canvas-approvals/documents",
+            "tool": "ramp_post_blank_canvas_approval_document_resource",
+            "class": "RampPostBlankCanvasApprovalDocumentResource"
+        },
+        {
+            "operation_id": "post_blank_canvas_approval_resource",
+            "method": "POST",
+            "path": "/developer/v1/blank-canvas-approvals/{approval_trigger_instance_id}",
+            "tool": "ramp_post_blank_canvas_approval_resource",
+            "class": "RampPostBlankCanvasApprovalResource"
+        },
+        {
+            "operation_id": "patch_blank_canvas_approval_external_approval_metadata_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/blank-canvas-approvals/{approval_trigger_instance_id}/metadata",
+            "tool": "ramp_patch_blank_canvas_approval_external_approval_metadata_resource",
+            "class": "RampPatchBlankCanvasApprovalExternalApprovalMetadataResource"
+        },
+        {
+            "operation_id": "get_business_resource",
+            "method": "GET",
+            "path": "/developer/v1/business",
+            "tool": "ramp_get_business_resource",
+            "class": "RampGetBusinessResource"
+        },
+        {
+            "operation_id": "get_business_balance_resource",
+            "method": "GET",
+            "path": "/developer/v1/business/balance",
+            "tool": "ramp_get_business_balance_resource",
+            "class": "RampGetBusinessBalanceResource"
+        },
+        {
+            "operation_id": "get_card_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/cards",
+            "tool": "ramp_get_card_list_with_pagination",
+            "class": "RampGetCardListWithPagination"
+        },
+        {
+            "operation_id": "post_physical_card",
+            "method": "POST",
+            "path": "/developer/v1/cards/deferred/physical",
+            "tool": "ramp_post_physical_card",
+            "class": "RampPostPhysicalCard"
+        },
+        {
+            "operation_id": "get_card_deferred_task_resource",
+            "method": "GET",
+            "path": "/developer/v1/cards/deferred/status/{task_id}",
+            "tool": "ramp_get_card_deferred_task_resource",
+            "class": "RampGetCardDeferredTaskResource"
+        },
+        {
+            "operation_id": "post_virtual_card",
+            "method": "POST",
+            "path": "/developer/v1/cards/deferred/virtual",
+            "tool": "ramp_post_virtual_card",
+            "class": "RampPostVirtualCard"
+        },
+        {
+            "operation_id": "get_card_resource",
+            "method": "GET",
+            "path": "/developer/v1/cards/{card_id}",
+            "tool": "ramp_get_card_resource",
+            "class": "RampGetCardResource"
+        },
+        {
+            "operation_id": "patch_card_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/cards/{card_id}",
+            "tool": "ramp_patch_card_resource",
+            "class": "RampPatchCardResource"
+        },
+        {
+            "operation_id": "post_card_suspension_resource",
+            "method": "POST",
+            "path": "/developer/v1/cards/{card_id}/deferred/suspension",
+            "tool": "ramp_post_card_suspension_resource",
+            "class": "RampPostCardSuspensionResource"
+        },
+        {
+            "operation_id": "post_card_termination_resource",
+            "method": "POST",
+            "path": "/developer/v1/cards/{card_id}/deferred/termination",
+            "tool": "ramp_post_card_termination_resource",
+            "class": "RampPostCardTerminationResource"
+        },
+        {
+            "operation_id": "post_card_unsuspension_resource",
+            "method": "POST",
+            "path": "/developer/v1/cards/{card_id}/deferred/unsuspension",
+            "tool": "ramp_post_card_unsuspension_resource",
+            "class": "RampPostCardUnsuspensionResource"
+        },
+        {
+            "operation_id": "get_cashback_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/cashbacks",
+            "tool": "ramp_get_cashback_list_with_pagination",
+            "class": "RampGetCashbackListWithPagination"
+        },
+        {
+            "operation_id": "get_cashback_resource",
+            "method": "GET",
+            "path": "/developer/v1/cashbacks/{cashback_id}",
+            "tool": "ramp_get_cashback_resource",
+            "class": "RampGetCashbackResource"
+        },
+        {
+            "operation_id": "get_comments_resource",
+            "method": "GET",
+            "path": "/developer/v1/comments/{object_type}/{object_id}",
+            "tool": "ramp_get_comments_resource",
+            "class": "RampGetCommentsResource"
+        },
+        {
+            "operation_id": "post_comments_resource",
+            "method": "POST",
+            "path": "/developer/v1/comments/{object_type}/{object_id}",
+            "tool": "ramp_post_comments_resource",
+            "class": "RampPostCommentsResource"
+        },
+        {
+            "operation_id": "get_custom_form_collection_response_resource",
+            "method": "GET",
+            "path": "/developer/v1/custom-form/collections/responses/{custom_form_collection_response_id}",
+            "tool": "ramp_get_custom_form_collection_response_resource",
+            "class": "RampGetCustomFormCollectionResponseResource"
+        },
+        {
+            "operation_id": "post_dev_api_configure_custom_tables",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/configure/custom-tables",
+            "tool": "ramp_post_dev_api_configure_custom_tables",
+            "class": "RampPostDevApiConfigureCustomTables"
+        },
+        {
+            "operation_id": "post_dev_api_configure_custom_table_columns",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/configure/custom-tables/{custom_table_name}/columns",
+            "tool": "ramp_post_dev_api_configure_custom_table_columns",
+            "class": "RampPostDevApiConfigureCustomTableColumns"
+        },
+        {
+            "operation_id": "patch_dev_api_rename_custom_table_column",
+            "method": "PATCH",
+            "path": "/developer/v1/custom-records/configure/custom-tables/{custom_table_name}/columns/{column_name}",
+            "tool": "ramp_patch_dev_api_rename_custom_table_column",
+            "class": "RampPatchDevApiRenameCustomTableColumn"
+        },
+        {
+            "operation_id": "post_dev_api_configure_native_tables",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/configure/native-tables",
+            "tool": "ramp_post_dev_api_configure_native_tables",
+            "class": "RampPostDevApiConfigureNativeTables"
+        },
+        {
+            "operation_id": "post_dev_api_configure_native_table_columns",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/configure/native-tables/{native_table_name}/columns",
+            "tool": "ramp_post_dev_api_configure_native_table_columns",
+            "class": "RampPostDevApiConfigureNativeTableColumns"
+        },
+        {
+            "operation_id": "patch_dev_api_rename_native_table_column",
+            "method": "PATCH",
+            "path": "/developer/v1/custom-records/configure/native-tables/{native_table_name}/columns/{column_name}",
+            "tool": "ramp_patch_dev_api_rename_native_table_column",
+            "class": "RampPatchDevApiRenameNativeTableColumn"
+        },
+        {
+            "operation_id": "get_dev_api_custom_table",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/custom-tables",
+            "tool": "ramp_get_dev_api_custom_table",
+            "class": "RampGetDevApiCustomTable"
+        },
+        {
+            "operation_id": "get_dev_api_custom_table_column",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/custom-tables/{custom_table_name}/columns",
+            "tool": "ramp_get_dev_api_custom_table_column",
+            "class": "RampGetDevApiCustomTableColumn"
+        },
+        {
+            "operation_id": "delete_dev_api_custom_row",
+            "method": "DELETE",
+            "path": "/developer/v1/custom-records/custom-tables/{custom_table_name}/rows",
+            "tool": "ramp_delete_dev_api_custom_row",
+            "class": "RampDeleteDevApiCustomRow"
+        },
+        {
+            "operation_id": "get_dev_api_custom_row",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/custom-tables/{custom_table_name}/rows",
+            "tool": "ramp_get_dev_api_custom_row",
+            "class": "RampGetDevApiCustomRow"
+        },
+        {
+            "operation_id": "put_dev_api_custom_row",
+            "method": "PUT",
+            "path": "/developer/v1/custom-records/custom-tables/{custom_table_name}/rows",
+            "tool": "ramp_put_dev_api_custom_row",
+            "class": "RampPutDevApiCustomRow"
+        },
+        {
+            "operation_id": "patch_dev_api_change_custom_row_external_key",
+            "method": "PATCH",
+            "path": "/developer/v1/custom-records/custom-tables/{custom_table_name}/rows/{row_id}",
+            "tool": "ramp_patch_dev_api_change_custom_row_external_key",
+            "class": "RampPatchDevApiChangeCustomRowExternalKey"
+        },
+        {
+            "operation_id": "post_dev_api_append_custom_row_cells",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/custom-tables/{table_name}/rows/-/append",
+            "tool": "ramp_post_dev_api_append_custom_row_cells",
+            "class": "RampPostDevApiAppendCustomRowCells"
+        },
+        {
+            "operation_id": "post_dev_api_remove_custom_row_cells",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/custom-tables/{table_name}/rows/-/remove",
+            "tool": "ramp_post_dev_api_remove_custom_row_cells",
+            "class": "RampPostDevApiRemoveCustomRowCells"
+        },
+        {
+            "operation_id": "get_dev_api_matrix_tables",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/matrix-tables",
+            "tool": "ramp_get_dev_api_matrix_tables",
+            "class": "RampGetDevApiMatrixTables"
+        },
+        {
+            "operation_id": "post_dev_api_matrix_tables",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/matrix-tables",
+            "tool": "ramp_post_dev_api_matrix_tables",
+            "class": "RampPostDevApiMatrixTables"
+        },
+        {
+            "operation_id": "post_dev_api_add_matrix_result_column",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/columns",
+            "tool": "ramp_post_dev_api_add_matrix_result_column",
+            "class": "RampPostDevApiAddMatrixResultColumn"
+        },
+        {
+            "operation_id": "patch_dev_api_rename_matrix_column",
+            "method": "PATCH",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/columns/{column_name}",
+            "tool": "ramp_patch_dev_api_rename_matrix_column",
+            "class": "RampPatchDevApiRenameMatrixColumn"
+        },
+        {
+            "operation_id": "post_dev_api_matrix_list_rows",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/list-rows",
+            "tool": "ramp_post_dev_api_matrix_list_rows",
+            "class": "RampPostDevApiMatrixListRows"
+        },
+        {
+            "operation_id": "post_dev_api_rename_matrix_table",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/rename",
+            "tool": "ramp_post_dev_api_rename_matrix_table",
+            "class": "RampPostDevApiRenameMatrixTable"
+        },
+        {
+            "operation_id": "put_dev_api_matrix_put_rows",
+            "method": "PUT",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/rows",
+            "tool": "ramp_put_dev_api_matrix_put_rows",
+            "class": "RampPutDevApiMatrixPutRows"
+        },
+        {
+            "operation_id": "post_dev_api_matrix_append_cells",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/rows/-/append",
+            "tool": "ramp_post_dev_api_matrix_append_cells",
+            "class": "RampPostDevApiMatrixAppendCells"
+        },
+        {
+            "operation_id": "post_dev_api_matrix_remove_cells",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/rows/-/remove",
+            "tool": "ramp_post_dev_api_matrix_remove_cells",
+            "class": "RampPostDevApiMatrixRemoveCells"
+        },
+        {
+            "operation_id": "delete_dev_api_delete_matrix_row",
+            "method": "DELETE",
+            "path": "/developer/v1/custom-records/matrix-tables/{table_name}/rows/{row_id}",
+            "tool": "ramp_delete_dev_api_delete_matrix_row",
+            "class": "RampDeleteDevApiDeleteMatrixRow"
+        },
+        {
+            "operation_id": "get_dev_api_native_table",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/native-tables",
+            "tool": "ramp_get_dev_api_native_table",
+            "class": "RampGetDevApiNativeTable"
+        },
+        {
+            "operation_id": "get_dev_api_native_table_column",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/native-tables/{native_table_name}/columns",
+            "tool": "ramp_get_dev_api_native_table_column",
+            "class": "RampGetDevApiNativeTableColumn"
+        },
+        {
+            "operation_id": "get_dev_api_native_row",
+            "method": "GET",
+            "path": "/developer/v1/custom-records/native-tables/{native_table_name}/rows",
+            "tool": "ramp_get_dev_api_native_row",
+            "class": "RampGetDevApiNativeRow"
+        },
+        {
+            "operation_id": "put_dev_api_native_row",
+            "method": "PUT",
+            "path": "/developer/v1/custom-records/native-tables/{native_table_name}/rows",
+            "tool": "ramp_put_dev_api_native_row",
+            "class": "RampPutDevApiNativeRow"
+        },
+        {
+            "operation_id": "post_dev_api_append_native_row_cells",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/native-tables/{native_table_name}/rows/-/append",
+            "tool": "ramp_post_dev_api_append_native_row_cells",
+            "class": "RampPostDevApiAppendNativeRowCells"
+        },
+        {
+            "operation_id": "post_dev_api_remove_native_row_cells",
+            "method": "POST",
+            "path": "/developer/v1/custom-records/native-tables/{native_table_name}/rows/-/remove",
+            "tool": "ramp_post_dev_api_remove_native_row_cells",
+            "class": "RampPostDevApiRemoveNativeRowCells"
+        },
+        {
+            "operation_id": "get_department_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/departments",
+            "tool": "ramp_get_department_list_with_pagination",
+            "class": "RampGetDepartmentListWithPagination"
+        },
+        {
+            "operation_id": "post_department_list_with_pagination",
+            "method": "POST",
+            "path": "/developer/v1/departments",
+            "tool": "ramp_post_department_list_with_pagination",
+            "class": "RampPostDepartmentListWithPagination"
+        },
+        {
+            "operation_id": "get_department_resource",
+            "method": "GET",
+            "path": "/developer/v1/departments/{department_id}",
+            "tool": "ramp_get_department_resource",
+            "class": "RampGetDepartmentResource"
+        },
+        {
+            "operation_id": "patch_department_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/departments/{department_id}",
+            "tool": "ramp_patch_department_resource",
+            "class": "RampPatchDepartmentResource"
+        },
+        {
+            "operation_id": "post_ramp_embedded_card_resource",
+            "method": "POST",
+            "path": "/developer/v1/embedded/cards/{card_id}/embed",
+            "tool": "ramp_post_ramp_embedded_card_resource",
+            "class": "RampPostRampEmbeddedCardResource"
+        },
+        {
+            "operation_id": "get_entity_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/entities",
+            "tool": "ramp_get_entity_list_with_pagination",
+            "class": "RampGetEntityListWithPagination"
+        },
+        {
+            "operation_id": "get_entity_resource",
+            "method": "GET",
+            "path": "/developer/v1/entities/{entity_id}",
+            "tool": "ramp_get_entity_resource",
+            "class": "RampGetEntityResource"
+        },
+        {
+            "operation_id": "get_item_receipts_resource",
+            "method": "GET",
+            "path": "/developer/v1/item-receipts",
+            "tool": "ramp_get_item_receipts_resource",
+            "class": "RampGetItemReceiptsResource"
+        },
+        {
+            "operation_id": "post_item_receipts_resource",
+            "method": "POST",
+            "path": "/developer/v1/item-receipts",
+            "tool": "ramp_post_item_receipts_resource",
+            "class": "RampPostItemReceiptsResource"
+        },
+        {
+            "operation_id": "delete_item_receipt_single_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/item-receipts/{item_receipt_id}",
+            "tool": "ramp_delete_item_receipt_single_resource",
+            "class": "RampDeleteItemReceiptSingleResource"
+        },
+        {
+            "operation_id": "get_item_receipt_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/item-receipts/{item_receipt_id}",
+            "tool": "ramp_get_item_receipt_single_resource",
+            "class": "RampGetItemReceiptSingleResource"
+        },
+        {
+            "operation_id": "get_spend_limit_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/limits",
+            "tool": "ramp_get_spend_limit_list_with_pagination",
+            "class": "RampGetSpendLimitListWithPagination"
+        },
+        {
+            "operation_id": "post_spend_limit_creation",
+            "method": "POST",
+            "path": "/developer/v1/limits/deferred",
+            "tool": "ramp_post_spend_limit_creation",
+            "class": "RampPostSpendLimitCreation"
+        },
+        {
+            "operation_id": "get_spend_limit_deferred_task_status",
+            "method": "GET",
+            "path": "/developer/v1/limits/deferred/status/{task_id}",
+            "tool": "ramp_get_spend_limit_deferred_task_status",
+            "class": "RampGetSpendLimitDeferredTaskStatus"
+        },
+        {
+            "operation_id": "get_spend_limit_resource",
+            "method": "GET",
+            "path": "/developer/v1/limits/{spend_limit_id}",
+            "tool": "ramp_get_spend_limit_resource",
+            "class": "RampGetSpendLimitResource"
+        },
+        {
+            "operation_id": "patch_spend_limit_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/limits/{spend_limit_id}",
+            "tool": "ramp_patch_spend_limit_resource",
+            "class": "RampPatchSpendLimitResource"
+        },
+        {
+            "operation_id": "put_spend_limit_resource",
+            "method": "PUT",
+            "path": "/developer/v1/limits/{spend_limit_id}",
+            "tool": "ramp_put_spend_limit_resource",
+            "class": "RampPutSpendLimitResource"
+        },
+        {
+            "operation_id": "put_spend_allocation_add_users",
+            "method": "PUT",
+            "path": "/developer/v1/limits/{spend_limit_id}/add-users",
+            "tool": "ramp_put_spend_allocation_add_users",
+            "class": "RampPutSpendAllocationAddUsers"
+        },
+        {
+            "operation_id": "post_spend_limit_termination_resource",
+            "method": "POST",
+            "path": "/developer/v1/limits/{spend_limit_id}/deferred/termination",
+            "tool": "ramp_post_spend_limit_termination_resource",
+            "class": "RampPostSpendLimitTerminationResource"
+        },
+        {
+            "operation_id": "delete_spend_allocation_delete_users",
+            "method": "DELETE",
+            "path": "/developer/v1/limits/{spend_limit_id}/delete-users",
+            "tool": "ramp_delete_spend_allocation_delete_users",
+            "class": "RampDeleteSpendAllocationDeleteUsers"
+        },
+        {
+            "operation_id": "post_spend_limit_suspension_resource",
+            "method": "POST",
+            "path": "/developer/v1/limits/{spend_limit_id}/suspension",
+            "tool": "ramp_post_spend_limit_suspension_resource",
+            "class": "RampPostSpendLimitSuspensionResource"
+        },
+        {
+            "operation_id": "post_spend_limit_unsuspension_resource",
+            "method": "POST",
+            "path": "/developer/v1/limits/{spend_limit_id}/unsuspension",
+            "tool": "ramp_post_spend_limit_unsuspension_resource",
+            "class": "RampPostSpendLimitUnsuspensionResource"
+        },
+        {
+            "operation_id": "get_location_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/locations",
+            "tool": "ramp_get_location_list_resource",
+            "class": "RampGetLocationListResource"
+        },
+        {
+            "operation_id": "post_location_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/locations",
+            "tool": "ramp_post_location_list_resource",
+            "class": "RampPostLocationListResource"
+        },
+        {
+            "operation_id": "get_location_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/locations/{location_id}",
+            "tool": "ramp_get_location_single_resource",
+            "class": "RampGetLocationSingleResource"
+        },
+        {
+            "operation_id": "patch_location_single_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/locations/{location_id}",
+            "tool": "ramp_patch_location_single_resource",
+            "class": "RampPatchLocationSingleResource"
+        },
+        {
+            "operation_id": "get_memo_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/memos",
+            "tool": "ramp_get_memo_list_with_pagination",
+            "class": "RampGetMemoListWithPagination"
+        },
+        {
+            "operation_id": "get_memo_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/memos/{transaction_id}",
+            "tool": "ramp_get_memo_single_resource",
+            "class": "RampGetMemoSingleResource"
+        },
+        {
+            "operation_id": "post_memo_create_single_resource",
+            "method": "POST",
+            "path": "/developer/v1/memos/{transaction_id}",
+            "tool": "ramp_post_memo_create_single_resource",
+            "class": "RampPostMemoCreateSingleResource"
+        },
+        {
+            "operation_id": "get_merchant_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/merchants",
+            "tool": "ramp_get_merchant_list_with_pagination",
+            "class": "RampGetMerchantListWithPagination"
+        },
+        {
+            "operation_id": "get_purchase_orders_resource",
+            "method": "GET",
+            "path": "/developer/v1/purchase-orders",
+            "tool": "ramp_get_purchase_orders_resource",
+            "class": "RampGetPurchaseOrdersResource"
+        },
+        {
+            "operation_id": "post_purchase_orders_resource",
+            "method": "POST",
+            "path": "/developer/v1/purchase-orders",
+            "tool": "ramp_post_purchase_orders_resource",
+            "class": "RampPostPurchaseOrdersResource"
+        },
+        {
+            "operation_id": "get_purchase_order_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/purchase-orders/{purchase_order_id}",
+            "tool": "ramp_get_purchase_order_single_resource",
+            "class": "RampGetPurchaseOrderSingleResource"
+        },
+        {
+            "operation_id": "patch_purchase_order_single_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/purchase-orders/{purchase_order_id}",
+            "tool": "ramp_patch_purchase_order_single_resource",
+            "class": "RampPatchPurchaseOrderSingleResource"
+        },
+        {
+            "operation_id": "post_purchase_order_archive_resource",
+            "method": "POST",
+            "path": "/developer/v1/purchase-orders/{purchase_order_id}/archive",
+            "tool": "ramp_post_purchase_order_archive_resource",
+            "class": "RampPostPurchaseOrderArchiveResource"
+        },
+        {
+            "operation_id": "post_purchase_order_line_items_resource",
+            "method": "POST",
+            "path": "/developer/v1/purchase-orders/{purchase_order_id}/line-items",
+            "tool": "ramp_post_purchase_order_line_items_resource",
+            "class": "RampPostPurchaseOrderLineItemsResource"
+        },
+        {
+            "operation_id": "delete_purchase_order_line_item_single_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/purchase-orders/{purchase_order_id}/line-items/{line_item_id}",
+            "tool": "ramp_delete_purchase_order_line_item_single_resource",
+            "class": "RampDeletePurchaseOrderLineItemSingleResource"
+        },
+        {
+            "operation_id": "patch_purchase_order_line_item_single_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/purchase-orders/{purchase_order_id}/line-items/{line_item_id}",
+            "tool": "ramp_patch_purchase_order_line_item_single_resource",
+            "class": "RampPatchPurchaseOrderLineItemSingleResource"
+        },
+        {
+            "operation_id": "get_receipt_integration_opted_out_emails_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/receipt-integrations/opt-out",
+            "tool": "ramp_get_receipt_integration_opted_out_emails_list_resource",
+            "class": "RampGetReceiptIntegrationOptedOutEmailsListResource"
+        },
+        {
+            "operation_id": "post_receipt_integration_opted_out_emails_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/receipt-integrations/opt-out",
+            "tool": "ramp_post_receipt_integration_opted_out_emails_list_resource",
+            "class": "RampPostReceiptIntegrationOptedOutEmailsListResource"
+        },
+        {
+            "operation_id": "delete_receipt_integration_opted_out_emails_delete_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/receipt-integrations/opt-out/{mailbox_opted_out_email_uuid}",
+            "tool": "ramp_delete_receipt_integration_opted_out_emails_delete_resource",
+            "class": "RampDeleteReceiptIntegrationOptedOutEmailsDeleteResource"
+        },
+        {
+            "operation_id": "get_receipt_list",
+            "method": "GET",
+            "path": "/developer/v1/receipts",
+            "tool": "ramp_get_receipt_list",
+            "class": "RampGetReceiptList"
+        },
+        {
+            "operation_id": "post_receipt_upload",
+            "method": "POST",
+            "path": "/developer/v1/receipts",
+            "tool": "ramp_post_receipt_upload",
+            "class": "RampPostReceiptUpload"
+        },
+        {
+            "operation_id": "get_receipt_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/receipts/{receipt_id}",
+            "tool": "ramp_get_receipt_single_resource",
+            "class": "RampGetReceiptSingleResource"
+        },
+        {
+            "operation_id": "get_reimbursement_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/reimbursements",
+            "tool": "ramp_get_reimbursement_list_with_pagination",
+            "class": "RampGetReimbursementListWithPagination"
+        },
+        {
+            "operation_id": "post_mileage_reimbursement_resource",
+            "method": "POST",
+            "path": "/developer/v1/reimbursements/mileage",
+            "tool": "ramp_post_mileage_reimbursement_resource",
+            "class": "RampPostMileageReimbursementResource"
+        },
+        {
+            "operation_id": "post_reimbursement_receipt_upload",
+            "method": "POST",
+            "path": "/developer/v1/reimbursements/submit-receipt",
+            "tool": "ramp_post_reimbursement_receipt_upload",
+            "class": "RampPostReimbursementReceiptUpload"
+        },
+        {
+            "operation_id": "get_reimbursement_resource",
+            "method": "GET",
+            "path": "/developer/v1/reimbursements/{reimbursement_id}",
+            "tool": "ramp_get_reimbursement_resource",
+            "class": "RampGetReimbursementResource"
+        },
+        {
+            "operation_id": "get_repayment_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/repayments",
+            "tool": "ramp_get_repayment_list_with_pagination",
+            "class": "RampGetRepaymentListWithPagination"
+        },
+        {
+            "operation_id": "get_spend_program_resource",
+            "method": "GET",
+            "path": "/developer/v1/spend-programs",
+            "tool": "ramp_get_spend_program_resource",
+            "class": "RampGetSpendProgramResource"
+        },
+        {
+            "operation_id": "post_spend_program_resource",
+            "method": "POST",
+            "path": "/developer/v1/spend-programs",
+            "tool": "ramp_post_spend_program_resource",
+            "class": "RampPostSpendProgramResource"
+        },
+        {
+            "operation_id": "get_spend_program_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/spend-programs/{spend_program_id}",
+            "tool": "ramp_get_spend_program_single_resource",
+            "class": "RampGetSpendProgramSingleResource"
+        },
+        {
+            "operation_id": "get_spend_program_workflow_nodes_resource",
+            "method": "GET",
+            "path": "/developer/v1/spend-programs/{spend_program_id}/workflow-nodes",
+            "tool": "ramp_get_spend_program_workflow_nodes_resource",
+            "class": "RampGetSpendProgramWorkflowNodesResource"
+        },
+        {
+            "operation_id": "post_spend_request_draft_via_ocr",
+            "method": "POST",
+            "path": "/developer/v1/spend-requests/draft-via-ocr",
+            "tool": "ramp_post_spend_request_draft_via_ocr",
+            "class": "RampPostSpendRequestDraftViaOcr"
+        },
+        {
+            "operation_id": "get_statement_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/statements",
+            "tool": "ramp_get_statement_list_with_pagination",
+            "class": "RampGetStatementListWithPagination"
+        },
+        {
+            "operation_id": "get_statement_resource",
+            "method": "GET",
+            "path": "/developer/v1/statements/{statement_id}",
+            "tool": "ramp_get_statement_resource",
+            "class": "RampGetStatementResource"
+        },
+        {
+            "operation_id": "post_token",
+            "method": "POST",
+            "path": "/developer/v1/token",
+            "tool": "ramp_post_token",
+            "class": "RampPostToken"
+        },
+        {
+            "operation_id": "post_revoke_token",
+            "method": "POST",
+            "path": "/developer/v1/token/revoke",
+            "tool": "ramp_post_revoke_token",
+            "class": "RampPostRevokeToken"
+        },
+        {
+            "operation_id": "get_transactions_canonical_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/transactions",
+            "tool": "ramp_get_transactions_canonical_list_with_pagination",
+            "class": "RampGetTransactionsCanonicalListWithPagination"
+        },
+        {
+            "operation_id": "get_transaction_canonical_resource",
+            "method": "GET",
+            "path": "/developer/v1/transactions/{transaction_id}",
+            "tool": "ramp_get_transaction_canonical_resource",
+            "class": "RampGetTransactionCanonicalResource"
+        },
+        {
+            "operation_id": "get_transfer_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/transfers",
+            "tool": "ramp_get_transfer_list_with_pagination",
+            "class": "RampGetTransferListWithPagination"
+        },
+        {
+            "operation_id": "get_transfer_resource",
+            "method": "GET",
+            "path": "/developer/v1/transfers/{transfer_id}",
+            "tool": "ramp_get_transfer_resource",
+            "class": "RampGetTransferResource"
+        },
+        {
+            "operation_id": "get_trip_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/trips",
+            "tool": "ramp_get_trip_list_resource",
+            "class": "RampGetTripListResource"
+        },
+        {
+            "operation_id": "get_trip_single_resource",
+            "method": "GET",
+            "path": "/developer/v1/trips/{trip_id}",
+            "tool": "ramp_get_trip_single_resource",
+            "class": "RampGetTripSingleResource"
+        },
+        {
+            "operation_id": "get_unified_request_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/unified-requests",
+            "tool": "ramp_get_unified_request_list_with_pagination",
+            "class": "RampGetUnifiedRequestListWithPagination"
+        },
+        {
+            "operation_id": "get_unified_request_detail_resource",
+            "method": "GET",
+            "path": "/developer/v1/unified-requests/{unified_request_id}",
+            "tool": "ramp_get_unified_request_detail_resource",
+            "class": "RampGetUnifiedRequestDetailResource"
+        },
+        {
+            "operation_id": "get_user_list_with_pagination",
+            "method": "GET",
+            "path": "/developer/v1/users",
+            "tool": "ramp_get_user_list_with_pagination",
+            "class": "RampGetUserListWithPagination"
+        },
+        {
+            "operation_id": "post_user_creation_deferred_task",
+            "method": "POST",
+            "path": "/developer/v1/users/deferred",
+            "tool": "ramp_post_user_creation_deferred_task",
+            "class": "RampPostUserCreationDeferredTask"
+        },
+        {
+            "operation_id": "get_user_deferred_task_resource",
+            "method": "GET",
+            "path": "/developer/v1/users/deferred/status/{task_id}",
+            "tool": "ramp_get_user_deferred_task_resource",
+            "class": "RampGetUserDeferredTaskResource"
+        },
+        {
+            "operation_id": "get_user_resource",
+            "method": "GET",
+            "path": "/developer/v1/users/{user_id}",
+            "tool": "ramp_get_user_resource",
+            "class": "RampGetUserResource"
+        },
+        {
+            "operation_id": "patch_user_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/users/{user_id}",
+            "tool": "ramp_patch_user_resource",
+            "class": "RampPatchUserResource"
+        },
+        {
+            "operation_id": "patch_user_deactivation_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/users/{user_id}/deactivate",
+            "tool": "ramp_patch_user_deactivation_resource",
+            "class": "RampPatchUserDeactivationResource"
+        },
+        {
+            "operation_id": "post_user_invite_action_resource",
+            "method": "POST",
+            "path": "/developer/v1/users/{user_id}/invite",
+            "tool": "ramp_post_user_invite_action_resource",
+            "class": "RampPostUserInviteActionResource"
+        },
+        {
+            "operation_id": "patch_user_reactivation_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/users/{user_id}/reactivate",
+            "tool": "ramp_patch_user_reactivation_resource",
+            "class": "RampPatchUserReactivationResource"
+        },
+        {
+            "operation_id": "post_card_vault_creation",
+            "method": "POST",
+            "path": "/developer/v1/vault/cards",
+            "tool": "ramp_post_card_vault_creation",
+            "class": "RampPostCardVaultCreation"
+        },
+        {
+            "operation_id": "get_card_vault_resource",
+            "method": "GET",
+            "path": "/developer/v1/vault/cards/{card_id}",
+            "tool": "ramp_get_card_vault_resource",
+            "class": "RampGetCardVaultResource"
+        },
+        {
+            "operation_id": "get_vendor_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors",
+            "tool": "ramp_get_vendor_list_resource",
+            "class": "RampGetVendorListResource"
+        },
+        {
+            "operation_id": "post_vendor_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors",
+            "tool": "ramp_post_vendor_list_resource",
+            "class": "RampPostVendorListResource"
+        },
+        {
+            "operation_id": "post_vendor_agreement_list_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/agreements",
+            "tool": "ramp_post_vendor_agreement_list_resource",
+            "class": "RampPostVendorAgreementListResource"
+        },
+        {
+            "operation_id": "delete_vendor_agreement_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}",
+            "tool": "ramp_delete_vendor_agreement_resource",
+            "class": "RampDeleteVendorAgreementResource"
+        },
+        {
+            "operation_id": "get_vendor_agreement_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}",
+            "tool": "ramp_get_vendor_agreement_resource",
+            "class": "RampGetVendorAgreementResource"
+        },
+        {
+            "operation_id": "patch_vendor_agreement_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}",
+            "tool": "ramp_patch_vendor_agreement_resource",
+            "class": "RampPatchVendorAgreementResource"
+        },
+        {
+            "operation_id": "post_vendor_agreement_document_upload_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}/documents",
+            "tool": "ramp_post_vendor_agreement_document_upload_resource",
+            "class": "RampPostVendorAgreementDocumentUploadResource"
+        },
+        {
+            "operation_id": "post_vendor_agreement_link_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}/link",
+            "tool": "ramp_post_vendor_agreement_link_resource",
+            "class": "RampPostVendorAgreementLinkResource"
+        },
+        {
+            "operation_id": "post_vendor_agreement_spend_request_link_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}/link-spend-request",
+            "tool": "ramp_post_vendor_agreement_spend_request_link_resource",
+            "class": "RampPostVendorAgreementSpendRequestLinkResource"
+        },
+        {
+            "operation_id": "delete_vendor_agreement_unlink_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/vendors/agreements/{agreement_id}/unlink",
+            "tool": "ramp_delete_vendor_agreement_unlink_resource",
+            "class": "RampDeleteVendorAgreementUnlinkResource"
+        },
+        {
+            "operation_id": "get_all_vendor_credits_list",
+            "method": "GET",
+            "path": "/developer/v1/vendors/credits",
+            "tool": "ramp_get_all_vendor_credits_list",
+            "class": "RampGetAllVendorCreditsList"
+        },
+        {
+            "operation_id": "get_vendor_credit_detail",
+            "method": "GET",
+            "path": "/developer/v1/vendors/credits/{vendor_credit_id}",
+            "tool": "ramp_get_vendor_credit_detail",
+            "class": "RampGetVendorCreditDetail"
+        },
+        {
+            "operation_id": "delete_vendor_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/vendors/{vendor_id}",
+            "tool": "ramp_delete_vendor_resource",
+            "class": "RampDeleteVendorResource"
+        },
+        {
+            "operation_id": "get_vendor_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors/{vendor_id}",
+            "tool": "ramp_get_vendor_resource",
+            "class": "RampGetVendorResource"
+        },
+        {
+            "operation_id": "patch_vendor_resource",
+            "method": "PATCH",
+            "path": "/developer/v1/vendors/{vendor_id}",
+            "tool": "ramp_patch_vendor_resource",
+            "class": "RampPatchVendorResource"
+        },
+        {
+            "operation_id": "get_vendor_bank_account_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors/{vendor_id}/accounts",
+            "tool": "ramp_get_vendor_bank_account_list_resource",
+            "class": "RampGetVendorBankAccountListResource"
+        },
+        {
+            "operation_id": "get_vendor_bank_account_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors/{vendor_id}/accounts/{bank_account_id}",
+            "tool": "ramp_get_vendor_bank_account_resource",
+            "class": "RampGetVendorBankAccountResource"
+        },
+        {
+            "operation_id": "post_vendor_bank_account_archive_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/{vendor_id}/accounts/{bank_account_id}/archive",
+            "tool": "ramp_post_vendor_bank_account_archive_resource",
+            "class": "RampPostVendorBankAccountArchiveResource"
+        },
+        {
+            "operation_id": "post_vendor_agreement_create_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/{vendor_id}/agreements",
+            "tool": "ramp_post_vendor_agreement_create_resource",
+            "class": "RampPostVendorAgreementCreateResource"
+        },
+        {
+            "operation_id": "get_vendor_contact_list_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors/{vendor_id}/contacts",
+            "tool": "ramp_get_vendor_contact_list_resource",
+            "class": "RampGetVendorContactListResource"
+        },
+        {
+            "operation_id": "get_vendor_contact_resource",
+            "method": "GET",
+            "path": "/developer/v1/vendors/{vendor_id}/contacts/{vendor_contact_id}",
+            "tool": "ramp_get_vendor_contact_resource",
+            "class": "RampGetVendorContactResource"
+        },
+        {
+            "operation_id": "get_vendor_credits_list",
+            "method": "GET",
+            "path": "/developer/v1/vendors/{vendor_id}/credits",
+            "tool": "ramp_get_vendor_credits_list",
+            "class": "RampGetVendorCreditsList"
+        },
+        {
+            "operation_id": "post_vendor_bank_account_update_resource",
+            "method": "POST",
+            "path": "/developer/v1/vendors/{vendor_id}/update-bank-accounts",
+            "tool": "ramp_post_vendor_bank_account_update_resource",
+            "class": "RampPostVendorBankAccountUpdateResource"
+        },
+        {
+            "operation_id": "get_outbound_webhook_subscription_resource",
+            "method": "GET",
+            "path": "/developer/v1/webhooks",
+            "tool": "ramp_get_outbound_webhook_subscription_resource",
+            "class": "RampGetOutboundWebhookSubscriptionResource"
+        },
+        {
+            "operation_id": "post_outbound_webhook_subscription_resource",
+            "method": "POST",
+            "path": "/developer/v1/webhooks",
+            "tool": "ramp_post_outbound_webhook_subscription_resource",
+            "class": "RampPostOutboundWebhookSubscriptionResource"
+        },
+        {
+            "operation_id": "post_mock_outbound_webhook_event_resource",
+            "method": "POST",
+            "path": "/developer/v1/webhooks/mock-webhook-event",
+            "tool": "ramp_post_mock_outbound_webhook_event_resource",
+            "class": "RampPostMockOutboundWebhookEventResource"
+        },
+        {
+            "operation_id": "delete_outbound_webhook_subscription_detail_resource",
+            "method": "DELETE",
+            "path": "/developer/v1/webhooks/{webhook_id}",
+            "tool": "ramp_delete_outbound_webhook_subscription_detail_resource",
+            "class": "RampDeleteOutboundWebhookSubscriptionDetailResource"
+        },
+        {
+            "operation_id": "get_outbound_webhook_subscription_detail_resource",
+            "method": "GET",
+            "path": "/developer/v1/webhooks/{webhook_id}",
+            "tool": "ramp_get_outbound_webhook_subscription_detail_resource",
+            "class": "RampGetOutboundWebhookSubscriptionDetailResource"
+        },
+        {
+            "operation_id": "post_outbound_webhook_subscription_verify_resource",
+            "method": "POST",
+            "path": "/developer/v1/webhooks/{webhook_id}/verify",
+            "tool": "ramp_post_outbound_webhook_subscription_verify_resource",
+            "class": "RampPostOutboundWebhookSubscriptionVerifyResource"
+        }
+    ]
+}

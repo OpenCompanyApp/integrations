@@ -25,6 +25,7 @@ class BubbleServiceProvider extends ServiceProvider
             return new BubbleService(
                 apiKey: $creds->get('bubble', 'api_key', ''),
                 baseUrl: $creds->get('bubble', 'hostname', ''),
+                apiPath: $creds->get('bubble', 'api_path', '/api/1.1'),
             );
         });
     }

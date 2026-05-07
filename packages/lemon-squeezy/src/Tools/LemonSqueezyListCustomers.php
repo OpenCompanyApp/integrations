@@ -6,8 +6,16 @@ use OpenCompany\Integrations\LemonSqueezy\LemonSqueezyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Lemon Squeezy customers.
+ *
+ * Supports Lemon Squeezy pagination controls.
+ */
 class LemonSqueezyListCustomers implements Tool
 {
+    /**
+     * @param  LemonSqueezyService  $service  The Lemon Squeezy API client
+     */
     public function __construct(
         private LemonSqueezyService $service,
     ) {}
@@ -30,6 +38,11 @@ class LemonSqueezyListCustomers implements Tool
         ];
     }
 
+    /**
+     * List customers from the configured Lemon Squeezy account.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page_size, page)
+     */
     public function execute(array $args): ToolResult
     {
         try {

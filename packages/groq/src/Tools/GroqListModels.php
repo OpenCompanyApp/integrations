@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Groq models available to the authenticated account.
+ */
 class GroqListModels implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -27,6 +33,11 @@ class GroqListModels implements Tool
         return [];
     }
 
+    /**
+     * Execute the model listing request.
+     *
+     * @param  array<string, mixed>  $args  No arguments are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

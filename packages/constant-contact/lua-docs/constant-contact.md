@@ -1,178 +1,108 @@
-# Constant Contact — Lua API Reference
+# Constant Contact Lua API Reference
 
-## list_contacts
+Namespace: `app.integrations["constant-contact"]`
 
-List contacts from Constant Contact with pagination and optional status filtering.
+The Constant Contact integration targets the V3 API. It uses OAuth Bearer tokens stored by the host.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum contacts per page (default: 50, max: 500) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-| `status` | string | no | Filter by status: `"all"`, `"active"`, `"unconfirmed"`, `"opted_out"`, `"non_subscriber"` |
-
-### Examples
+## Contacts
 
 ```lua
--- List all active contacts
-local result = app.integrations.constant_contact.list_contacts({
+local contacts = app.integrations["constant-contact"].list_contacts({
   status = "active",
   limit = 100
 })
 
--- Paginate through contacts
-local page1 = app.integrations.constant_contact.list_contacts({ limit = 50 })
-if page1._links and page1._links.next then
-  -- Extract cursor from the next link and fetch the next page
-  local page2 = app.integrations.constant_contact.list_contacts({
-    limit = 50,
-    cursor = page1._links.next -- use the cursor value from the previous response
-  })
-end
-```
-
----
-
-## get_contact
-
-Get detailed information for a single Constant Contact contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `contact_id` | string | yes | The Constant Contact contact ID |
-
-### Example
-
-```lua
-local contact = app.integrations.constant_contact.get_contact({
-  contact_id = "abc123-def456-ghi789"
-})
-print(contact.first_name .. " " .. contact.last_name)
-print(contact.email_address.address)
-```
-
----
-
-## create_contact
-
-Create a new contact in Constant Contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | Contact's email address |
-| `first_name` | string | no | Contact's first name |
-| `last_name` | string | no | Contact's last name |
-| `list_ids` | array | no | Array of list UUIDs to assign the contact to |
-
-### Examples
-
-```lua
--- Create a contact with minimal info
-local result = app.integrations.constant_contact.create_contact({
-  email = "jane@example.com"
+local contact = app.integrations["constant-contact"].get_contact({
+  contact_id = "contact_123"
 })
 
--- Create a contact with full details and list assignments
-local result = app.integrations.constant_contact.create_contact({
-  email = "john@example.com",
-  first_name = "John",
-  last_name = "Doe",
-  list_ids = {
-    "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-    "11111111-2222-3333-4444-555555555555"
-  }
+local created = app.integrations["constant-contact"].create_contact({
+  email = "person@example.test",
+  first_name = "Example",
+  list_ids = { "list_123" }
 })
 ```
 
-**Tip:** Use `list_lists` to discover available list IDs before creating contacts.
+Use `create_or_update_contact` when you want Constant Contact's sign-up form create-or-update behavior and can provide the full V3 payload.
 
----
-
-## list_campaigns
-
-List email campaigns from Constant Contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum campaigns per page (default: 50) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-
-### Example
+## Lists, Tags, Custom Fields
 
 ```lua
-local campaigns = app.integrations.constant_contact.list_campaigns({
-  limit = 20
+local lists = app.integrations["constant-contact"].list_lists({})
+local list = app.integrations["constant-contact"].get_list({ list_id = "list_123" })
+local tags = app.integrations["constant-contact"].list_tags({})
+local fields = app.integrations["constant-contact"].list_custom_fields({})
+```
+
+List create/update/delete tools are write operations.
+
+## Campaigns And Reports
+
+```lua
+local campaigns = app.integrations["constant-contact"].list_campaigns({ limit = 20 })
+local campaign = app.integrations["constant-contact"].get_campaign({
+  campaign_id = "campaign_123"
 })
 
-for _, campaign in ipairs(campaigns.campaigns or {}) do
-  print(campaign.name .. " — " .. (campaign.current_status or "unknown"))
-end
+local activity = app.integrations["constant-contact"].get_campaign_activity({
+  activity_id = "activity_123"
+})
+
+local sends = app.integrations["constant-contact"].get_email_sends_report({
+  activity_id = "activity_123",
+  params = { limit = 100 }
+})
 ```
 
----
+First-class report tools cover sends, bounces, and clicks. Use `api_get` for other tracking report endpoints such as opens, forwards, or opt-outs.
 
-## list_lists
-
-List all contact lists in Constant Contact.
-
-### Parameters
-
-None.
-
-### Example
+## Segments And Activities
 
 ```lua
-local lists = app.integrations.constant_contact.list_lists()
+local segments = app.integrations["constant-contact"].list_segments({})
+local segment = app.integrations["constant-contact"].get_segment({
+  segment_id = "segment_123"
+})
 
-for _, list in ipairs(lists.lists or {}) do
-  print(list.name .. " (" .. list.membership_count .. " members) — ID: " .. list.list_id)
-end
+local activities = app.integrations["constant-contact"].list_activities({})
+local activity_status = app.integrations["constant-contact"].get_activity({
+  activity_id = "activity_bulk_123"
+})
 ```
 
-Use the `list_id` values when assigning contacts to lists via `create_contact`.
-
----
-
-## get_current_user
-
-Get the authenticated user's Constant Contact account information.
-
-### Parameters
-
-None.
-
-### Example
+## Account
 
 ```lua
-local user = app.integrations.constant_contact.get_current_user()
-print("Account: " .. (user.first_name or "") .. " " .. (user.last_name or ""))
-print("Email: " .. (user.email or "N/A"))
-print("Organization: " .. (user.organization_name or "N/A"))
+local account = app.integrations["constant-contact"].get_account_summary({
+  params = { extra_fields = "physical_address,company_logo" }
+})
+
+local privileges = app.integrations["constant-contact"].get_user_privileges({})
 ```
 
----
+`get_current_user` is retained as a compatibility alias for account summary.
+
+## Long-Tail Endpoints
+
+```lua
+local opens = app.integrations["constant-contact"].api_get({
+  path = "/reports/email_reports/activity_123/tracking/opens"
+})
+
+local export = app.integrations["constant-contact"].api_post({
+  path = "/activities/contact_exports",
+  payload = { file_type = "CSV" }
+})
+```
+
+Generic API tools accept relative paths only.
 
 ## Multi-Account Usage
 
-If you have multiple Constant Contact accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.constant_contact.list_contacts({})
-
--- Explicit default (portable across setups)
-app.integrations.constant_contact.default.list_contacts({})
-
--- Named accounts
-app.integrations.constant_contact.marketing.list_contacts({})
-app.integrations.constant_contact.newsletter.list_contacts({})
+app.integrations["constant-contact"].list_contacts({})
+app.integrations["constant-contact"].default.list_contacts({})
+app.integrations["constant-contact"].marketing.list_campaigns({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts; only credentials differ.

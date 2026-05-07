@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a Flutterwave transaction by ID.
+ *
+ * Returns the transaction details from the Flutterwave transactions endpoint.
+ */
 class FlutterwaveGetTransaction implements Tool
 {
     /**
@@ -48,8 +53,7 @@ class FlutterwaveGetTransaction implements Tool
     /**
      * Execute the tool: fetch a single transaction from Flutterwave.
      *
-     * @param  array  $args  The tool arguments (id required).
-     * @return ToolResult The result containing the transaction details or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

@@ -50,8 +50,8 @@ class AnthropicListMessages implements Tool
         return [
             'model' => ['type' => 'string', 'description' => 'Filter messages by model ID (e.g., "claude-sonnet-4-20250514").'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of messages to return per page (default: 20, max: 1000).'],
-            'before_id' => ['type' => 'string', 'description' => 'Message ID used for cursor-based pagination — return messages before this ID.'],
-            'after_id' => ['type' => 'string', 'description' => 'Message ID used for cursor-based pagination — return messages after this ID.'],
+            'before_id' => ['type' => 'string', 'description' => 'Message ID used for cursor-based pagination - return messages before this ID.'],
+            'after_id' => ['type' => 'string', 'description' => 'Message ID used for cursor-based pagination - return messages after this ID.'],
         ];
     }
 

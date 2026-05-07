@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Pushover\PushoverService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List built-in and account-specific Pushover notification sounds.
+ */
 class PushoverListSounds implements Tool
 {
+    /**
+     * @param  PushoverService  $service  The Pushover API client.
+     */
     public function __construct(
         private PushoverService $service,
     ) {}
@@ -27,6 +33,11 @@ class PushoverListSounds implements Tool
         return [];
     }
 
+    /**
+     * List notification sounds available to the configured application token.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

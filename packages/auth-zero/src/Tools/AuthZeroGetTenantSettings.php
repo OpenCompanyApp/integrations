@@ -15,6 +15,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AuthZeroGetTenantSettings implements Tool
 {
+    /**
+     * @param  AuthZeroService  $service  The Auth0 Management API client.
+     */
     public function __construct(
         private AuthZeroService $service,
     ) {}
@@ -34,6 +37,11 @@ class AuthZeroGetTenantSettings implements Tool
         return [];
     }
 
+    /**
+     * Retrieve tenant settings for the configured Auth0 tenant.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

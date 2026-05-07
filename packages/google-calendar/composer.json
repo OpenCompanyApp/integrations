@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-calendar",
-    "description": "Google Calendar integration for Laravel — list events, create events, manage calendars.",
+    "description": "Google Calendar integration for Laravel AI agents - generated Calendar API v3 coverage for events, calendars, ACLs, settings, free/busy, and watch channels.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google-calendar", "calendar", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-calendar": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,12 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "calendar",
+        "events",
+        "workspace",
+        "opencompany"
+    ]
 }

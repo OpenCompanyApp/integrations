@@ -5,8 +5,17 @@ namespace OpenCompany\Integrations\Pushbullet;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Pushbullet API.
+ *
+ * Handles access-token authentication and exposes pushes, devices, chats, subscriptions, channels, ephemerals, and uploads.
+ */
 class PushbulletService
 {
+    /**
+     * @param  string  $accessToken  Pushbullet access token.
+     * @param  string  $baseUrl  Pushbullet API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.pushbullet.com/v2',
@@ -25,15 +34,13 @@ class PushbulletService
     /**
      * List pushes (notifications) for the current user.
      *
-     * @param  int  $limit  Maximum number of pushes to return (default: 10, max: 500).
-     * @param  string|null  $cursor  Pagination cursor from a previous response.
+     * @param  array<string, mixed>  $params  Query parameters (limit, cursor, active, modified_after).
      * @return array<string, mixed>
      */
-    public function listPushes(int $limit = 10, ?string $cursor = null): array
+    public function listPushes(array $params = []): array
     {
-        $params = ['limit' => min($limit, 500)];
-        if ($cursor !== null) {
-            $params['cursor'] = $cursor;
+        if (isset($params['limit'])) {
+            $params['limit'] = min((int) $params['limit'], 500);
         }
 
         return $this->request('GET', '/pushes', $params);
@@ -70,13 +77,67 @@ class PushbulletService
     }
 
     /**
-     * List devices registered with the current user's Pushbullet account.
+     * Update a push, most commonly to mark it dismissed.
      *
+     * @param  string  $pushIden  Push identifier.
+     * @param  array<string, mixed>  $updates  Push fields to update.
      * @return array<string, mixed>
      */
-    public function listDevices(): array
+    public function updatePush(string $pushIden, array $updates): array
     {
-        return $this->request('GET', '/devices');
+        return $this->request('POST', '/pushes/' . urlencode($pushIden), $updates);
+    }
+
+    /**
+     * Delete all pushes belonging to the current user.
+     */
+    public function deleteAllPushes(): void
+    {
+        $this->request('DELETE', '/pushes');
+    }
+
+    /**
+     * List devices registered with the current user's Pushbullet account.
+     *
+     * @param  array<string, mixed>  $params  Query parameters (limit, cursor, active, modified_after).
+     * @return array<string, mixed>
+     */
+    public function listDevices(array $params = []): array
+    {
+        return $this->request('GET', '/devices', $params);
+    }
+
+    /**
+     * Create a Pushbullet device.
+     *
+     * @param  array<string, mixed>  $device  Device fields.
+     * @return array<string, mixed>
+     */
+    public function createDevice(array $device): array
+    {
+        return $this->request('POST', '/devices', $device);
+    }
+
+    /**
+     * Update a Pushbullet device.
+     *
+     * @param  string  $deviceIden  Device identifier.
+     * @param  array<string, mixed>  $updates  Device fields to update.
+     * @return array<string, mixed>
+     */
+    public function updateDevice(string $deviceIden, array $updates): array
+    {
+        return $this->request('POST', '/devices/' . urlencode($deviceIden), $updates);
+    }
+
+    /**
+     * Delete a Pushbullet device.
+     *
+     * @param  string  $deviceIden  Device identifier.
+     */
+    public function deleteDevice(string $deviceIden): void
+    {
+        $this->request('DELETE', '/devices/' . urlencode($deviceIden));
     }
 
     /**
@@ -90,6 +151,148 @@ class PushbulletService
     }
 
     /**
+     * List chats belonging to the current user.
+     *
+     * @param  array<string, mixed>  $params  Query parameters (limit, cursor, active, modified_after).
+     * @return array<string, mixed>
+     */
+    public function listChats(array $params = []): array
+    {
+        return $this->request('GET', '/chats', $params);
+    }
+
+    /**
+     * Create a chat with another user or email address.
+     *
+     * @param  string  $email  Email address for the chat participant.
+     * @return array<string, mixed>
+     */
+    public function createChat(string $email): array
+    {
+        return $this->request('POST', '/chats', ['email' => $email]);
+    }
+
+    /**
+     * Update a chat, usually to mute or unmute it.
+     *
+     * @param  string  $chatIden  Chat identifier.
+     * @param  array<string, mixed>  $updates  Chat fields to update.
+     * @return array<string, mixed>
+     */
+    public function updateChat(string $chatIden, array $updates): array
+    {
+        return $this->request('POST', '/chats/' . urlencode($chatIden), $updates);
+    }
+
+    /**
+     * Delete a chat.
+     *
+     * @param  string  $chatIden  Chat identifier.
+     */
+    public function deleteChat(string $chatIden): void
+    {
+        $this->request('DELETE', '/chats/' . urlencode($chatIden));
+    }
+
+    /**
+     * List channel subscriptions belonging to the current user.
+     *
+     * @param  array<string, mixed>  $params  Query parameters (limit, cursor, active, modified_after).
+     * @return array<string, mixed>
+     */
+    public function listSubscriptions(array $params = []): array
+    {
+        return $this->request('GET', '/subscriptions', $params);
+    }
+
+    /**
+     * Subscribe to a channel by tag.
+     *
+     * @param  string  $channelTag  Channel tag.
+     * @return array<string, mixed>
+     */
+    public function createSubscription(string $channelTag): array
+    {
+        return $this->request('POST', '/subscriptions', ['channel_tag' => $channelTag]);
+    }
+
+    /**
+     * Update a channel subscription.
+     *
+     * @param  string  $subscriptionIden  Subscription identifier.
+     * @param  array<string, mixed>  $updates  Subscription fields to update.
+     * @return array<string, mixed>
+     */
+    public function updateSubscription(string $subscriptionIden, array $updates): array
+    {
+        return $this->request('POST', '/subscriptions/' . urlencode($subscriptionIden), $updates);
+    }
+
+    /**
+     * Delete a channel subscription.
+     *
+     * @param  string  $subscriptionIden  Subscription identifier.
+     */
+    public function deleteSubscription(string $subscriptionIden): void
+    {
+        $this->request('DELETE', '/subscriptions/' . urlencode($subscriptionIden));
+    }
+
+    /**
+     * Get public information about a channel.
+     *
+     * @param  string  $tag  Channel tag.
+     * @param  bool|null  $noRecentPushes  Whether to omit recent pushes.
+     * @return array<string, mixed>
+     */
+    public function getChannelInfo(string $tag, ?bool $noRecentPushes = null): array
+    {
+        $params = ['tag' => $tag];
+        if ($noRecentPushes !== null) {
+            $params['no_recent_pushes'] = $noRecentPushes;
+        }
+
+        return $this->request('GET', '/channel-info', $params);
+    }
+
+    /**
+     * Create a Pushbullet channel.
+     *
+     * @param  array<string, mixed>  $channel  Channel fields.
+     * @return array<string, mixed>
+     */
+    public function createChannel(array $channel): array
+    {
+        return $this->request('POST', '/channels', $channel);
+    }
+
+    /**
+     * Push an ephemeral event such as a clip or notification dismissal.
+     *
+     * @param  array<string, mixed>  $payload  Ephemeral payload.
+     * @return array<string, mixed>
+     */
+    public function pushEphemeral(array $payload): array
+    {
+        return $this->request('POST', '/ephemerals', $payload);
+    }
+
+    /**
+     * Request an upload URL for a file push.
+     *
+     * @param  string  $fileName  Name of the file.
+     * @param  string  $fileType  MIME type of the file.
+     * @return array<string, mixed>
+     */
+    public function requestUpload(string $fileName, string $fileType): array
+    {
+        return $this->request('POST', '/upload-request', [
+            'file_name' => $fileName,
+            'file_type' => $fileType,
+        ]);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
@@ -100,6 +303,11 @@ class PushbulletService
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+
+        if ($response->body() === '') {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 

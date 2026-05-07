@@ -1,0 +1,18 @@
+<?php
+
+namespace OpenCompany\Integrations\ZendeskSell\Tools;
+
+/**
+ * Delete a Zendesk Sell deal source.
+ */
+class ZendeskSellDeleteDealSource extends AbstractZendeskSellEndpointTool
+{
+    protected string $toolName = 'zendesk_sell_delete_deal_source';
+    protected string $toolDescription = 'Delete a Zendesk Sell deal source by ID.';
+    protected string $method = 'DELETE';
+    protected string $path = '/v2/deal_sources/{id}';
+    protected array $required = ['id'];
+    protected array $parameters = [
+        'id' => ['type' => 'integer', 'required' => true, 'description' => 'Deal source ID.'],
+    ];
+}

@@ -104,7 +104,7 @@ class WeaviateToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Weaviate vector database integration for Laravel — manage schemas, search and CRUD objects.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

@@ -3,24 +3,30 @@
 namespace OpenCompany\Integrations\Mollie;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Mollie\Tools\MollieListPayments;
-use OpenCompany\Integrations\Mollie\Tools\MollieGetPayment;
-use OpenCompany\Integrations\Mollie\Tools\MollieCreatePayment;
-use OpenCompany\Integrations\Mollie\Tools\MollieListCustomers;
-use OpenCompany\Integrations\Mollie\Tools\MollieCreateCustomer;
-use OpenCompany\Integrations\Mollie\Tools\MollieListSubscriptions;
-use OpenCompany\Integrations\Mollie\Tools\MollieCreateSubscription;
-use OpenCompany\Integrations\Mollie\Tools\MollieListInvoices;
-use OpenCompany\Integrations\Mollie\Tools\MollieGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class MollieToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Mollie\Tools\MollieCreateCustomer;
+use OpenCompany\Integrations\Mollie\Tools\MollieCreatePayment;
+use OpenCompany\Integrations\Mollie\Tools\MollieCreateSubscription;
+use OpenCompany\Integrations\Mollie\Tools\MollieGetCurrentUser;
+use OpenCompany\Integrations\Mollie\Tools\MollieGetPayment;
+use OpenCompany\Integrations\Mollie\Tools\MollieListCustomers;
+use OpenCompany\Integrations\Mollie\Tools\MollieListInvoices;
+use OpenCompany\Integrations\Mollie\Tools\MollieListPayments;
+use OpenCompany\Integrations\Mollie\Tools\MollieListSubscriptions;
 
 /**
+ * Tool catalog and configuration metadata for Mollie.
+ *
+ * Exposes payments, customers, subscriptions, invoices, and payment methods
+ * through the shared integration provider contracts.
+ */
+class MollieToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -107,11 +113,12 @@ class MollieToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Mollie payments integration for Laravel — manage payments, customers, subscriptions and invoices.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }
-/**
+
+    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -305,7 +312,7 @@ class MollieToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new MollieService(
                 accessToken: $creds->get('mollie', 'access_token', '', $account),

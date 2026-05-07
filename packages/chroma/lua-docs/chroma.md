@@ -1,252 +1,127 @@
-# Chroma — Lua API Reference
+# Chroma Lua API Reference
 
-## list_collections
+Namespace: `app.integrations.chroma`
 
-List all vector collections in Chroma.
+This package targets the official Chroma REST API v2. Configure the Chroma server origin, tenant, database, and API token. The service sends the token as `x-chroma-token` and builds paths as:
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max collections to return (default: 100) |
-| `after` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.chroma.list_collections({
-  limit = 50
-})
-
-for _, col in ipairs(result) do
-  print(col.name .. " (id: " .. col.id .. ")")
-end
+```text
+/api/v2/tenants/{tenant}/databases/{database}/...
 ```
 
----
-
-## get_collection
-
-Get details of a specific collection by name or UUID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection_id` | string | yes | Collection name or UUID |
-
-### Example
+## System
 
 ```lua
-local result = app.integrations.chroma.get_collection({
-  collection_id = "my_collection"
-})
-
-print("Name: " .. result.name)
-print("Documents: " .. tostring(result.count))
+local health = app.integrations.chroma.get_health({})
+print(health["nanosecond heartbeat"])
 ```
 
----
-
-## create_collection
-
-Create a new vector collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name of the collection |
-| `description` | string | no | Optional description |
-| `metadata` | object | no | Optional metadata (string key-value pairs) |
-
-### Example
+## Collections
 
 ```lua
-local result = app.integrations.chroma.create_collection({
-  name = "knowledge_base",
-  description = "Product documentation embeddings",
-  metadata = { category = "docs", version = "1.0" }
+local collections = app.integrations.chroma.list_collections({
+  limit = 50,
+  offset = 0
 })
 
-print("Created collection: " .. result.id)
+local count = app.integrations.chroma.count_collections({})
 ```
 
----
+Collection tools:
 
-## add_documents
+- `list_collections({ limit, offset })`
+- `count_collections({})`
+- `get_collection({ collection_id })`
+- `create_collection({ name, metadata, configuration })`
+- `update_collection({ collection_id, new_name, metadata, configuration })`
+- `delete_collection({ collection_id })`
 
-Add documents with embeddings to a collection.
+`collection_id` may be a collection UUID or name when the configured Chroma deployment accepts names in that path.
 
-### Parameters
+## Add And Upsert Records
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection_id` | string | yes | Collection name or UUID |
-| `ids` | array | yes | Array of unique document IDs |
-| `embeddings` | array | no | Array of embedding vectors (float arrays) |
-| `documents` | array | no | Array of text documents (auto-embedded) |
-| `metadatas` | array | no | Array of metadata objects per document |
-
-Either `embeddings` or `documents` must be provided.
-
-### Example
+Chroma record payloads are column-oriented. Matching array positions belong to the same record.
 
 ```lua
--- Add documents with auto-generated embeddings
-local result = app.integrations.chroma.add_documents({
+local added = app.integrations.chroma.add_documents({
   collection_id = "knowledge_base",
-  ids = { "doc1", "doc2", "doc3" },
+  ids = { "doc1", "doc2" },
   documents = {
-    "Chroma is an open-source vector database.",
-    "It supports similarity search with embeddings.",
-    "You can store metadata alongside documents."
+    "Chroma stores embeddings.",
+    "Chroma supports metadata filters."
   },
   metadatas = {
-    { source = "readme" },
     { source = "docs" },
-    { source = "tutorial" }
+    { source = "docs" }
   }
 })
 ```
 
-### Example with pre-computed embeddings
+Use `upsert_documents` to create missing records or update existing ones:
 
 ```lua
-local result = app.integrations.chroma.add_documents({
+local upserted = app.integrations.chroma.upsert_documents({
   collection_id = "knowledge_base",
   ids = { "vec1" },
   embeddings = {
-    { 0.1, 0.2, 0.3, 0.4, 0.5 }
+    { 0.1, 0.2, 0.3 }
   },
-  documents = { "A document with a pre-computed embedding" }
+  documents = { "A record with a provided embedding" }
 })
 ```
 
----
+## Query And Get
 
-## query_documents
-
-Search for similar documents using query embeddings or text.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection_id` | string | yes | Collection name or UUID |
-| `query_embeddings` | array | no | Array of query embedding vectors |
-| `query_texts` | array | no | Array of query text strings (auto-embedded) |
-| `n_results` | integer | no | Number of results per query (default: 10) |
-| `where` | string | no | JSON metadata filter, e.g. `{"category": "tech"}` |
-| `where_document` | string | no | JSON document content filter, e.g. `{"$contains": "term"}` |
-| `include` | array | no | Fields to include: `documents`, `embeddings`, `metadatas`, `distances` |
-
-Either `query_embeddings` or `query_texts` must be provided.
-
-### Example
-
-```lua
--- Query by text (auto-embedded)
-local result = app.integrations.chroma.query_documents({
-  collection_id = "knowledge_base",
-  query_texts = { "What is Chroma?" },
-  n_results = 5
-})
-
-for i, doc in ipairs(result.documents[1]) do
-  print(i .. ": " .. doc .. " (distance: " .. tostring(result.distances[1][i]) .. ")")
-end
-```
-
-### Example with metadata filter
+Use `query_documents` for nearest-neighbor search and `get_document` for non-ranked retrieval by IDs or filters.
 
 ```lua
 local result = app.integrations.chroma.query_documents({
   collection_id = "knowledge_base",
-  query_texts = { "vector search" },
-  n_results = 3,
-  where = '{"source": "docs"}',
+  query_embeddings = {
+    { 0.1, 0.2, 0.3 }
+  },
+  n_results = 5,
   include = { "documents", "metadatas", "distances" }
 })
 ```
 
----
-
-## get_document
-
-Retrieve specific documents by ID from a collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection_id` | string | yes | Collection name or UUID |
-| `ids` | array | no | Array of document IDs to retrieve |
-| `where` | string | no | JSON metadata filter |
-| `where_document` | string | no | JSON document content filter |
-| `include` | array | no | Fields: `documents`, `embeddings`, `metadatas` |
-| `limit` | integer | no | Max documents to return (default: 100) |
-| `offset` | integer | no | Number to skip for pagination |
-
-### Example
-
 ```lua
-local result = app.integrations.chroma.get_document({
+local records = app.integrations.chroma.get_document({
   collection_id = "knowledge_base",
-  ids = { "doc1", "doc2" }
-})
-
-for i, id in ipairs(result.ids) do
-  print(id .. ": " .. result.documents[i])
-end
-```
-
-### Example with filter and pagination
-
-```lua
-local result = app.integrations.chroma.get_document({
-  collection_id = "knowledge_base",
-  where = '{"source": "readme"}',
-  limit = 10,
-  offset = 0,
+  ids = { "doc1", "doc2" },
   include = { "documents", "metadatas" }
 })
 ```
 
----
+Filter fields such as `where` and `where_document` are passed to Chroma as JSON objects.
 
-## get_health
-
-Check the health status of the Chroma server.
-
-### Parameters
-
-None.
-
-### Example
+## Update, Delete, And Count Records
 
 ```lua
-local result = app.integrations.chroma.get_health({})
+local updated = app.integrations.chroma.update_documents({
+  collection_id = "knowledge_base",
+  ids = { "doc1" },
+  documents = { "Updated text" },
+  metadatas = { { source = "manual" } }
+})
 
-print("Status: " .. (result.status or "unknown"))
+local deleted = app.integrations.chroma.delete_documents({
+  collection_id = "knowledge_base",
+  ids = { "doc2" }
+})
+
+local total = app.integrations.chroma.count_documents({
+  collection_id = "knowledge_base"
+})
 ```
 
----
+Record tools:
 
-## Multi-Account Usage
+- `add_documents`
+- `update_documents`
+- `upsert_documents`
+- `delete_documents`
+- `count_documents`
+- `query_documents`
+- `get_document`
 
-If you have multiple Chroma instances configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.chroma.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.chroma.default.function_name({...})
-
--- Named accounts
-app.integrations.chroma.production.function_name({...})
-app.integrations.chroma.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Responses are Chroma JSON responses with no additional reshaping except count endpoints, which return `{ count = number }`.

@@ -1,221 +1,115 @@
-# Eden AI — Lua API Reference
+# Eden AI Lua API Reference
 
-## generate_text
+Namespace: `app.integrations.eden_ai`
 
-Generate text using AI models through Eden AI.
+Eden AI V3 is the current API. Use the V3 tools for new work; the V2 tools remain available for legacy accounts.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `providers` | string | yes | Comma-separated providers (e.g., `"openai"`, `"openai,anthropic"`) |
-| `text` | string | no* | Prompt text for single-turn generation |
-| `conversation` | array | no* | Multi-turn conversation with `{role, message}` objects |
-| `temperature` | number | no | Sampling temperature (0.0–1.0), default 0.0 |
-| `max_tokens` | integer | no | Maximum tokens in response |
-| `fallback_providers` | string | no | Comma-separated fallback providers |
-
-*Either `text` or `conversation` is required.
-
-### Available Providers
-
-`openai`, `anthropic`, `google`, `mistral`, `cohere`, `meta`
-
-### Examples
-
-#### Simple text generation
+## V3 Chat
 
 ```lua
-local result = app.integrations["eden-ai"].generate_text({
-  providers = "openai",
-  text = "Explain quantum computing in one paragraph.",
-  temperature = 0.7,
-  max_tokens = 256
-})
-
-for _, r in ipairs(result.results) do
-  print(r.provider .. ": " .. r.text)
-end
-```
-
-#### Multi-provider generation
-
-```lua
-local result = app.integrations["eden-ai"].generate_text({
-  providers = "openai,anthropic",
-  text = "Write a haiku about programming.",
-  temperature = 0.8
+local result = app.integrations.eden_ai.chat_completions({
+  model = "openai/gpt-4o",
+  messages = {
+    { role = "user", content = "Write a concise summary." }
+  },
+  fallbacks = { "anthropic/claude-3-5-sonnet-latest" },
+  temperature = 0.2
 })
 ```
 
-#### Multi-turn conversation
+`chat_completions` accepts OpenAI-compatible parameters through `extra`, including tools, response format, web search options, reasoning effort, and image configuration.
+
+## V3 Models And Discovery
 
 ```lua
-local result = app.integrations["eden-ai"].generate_text({
+local models = app.integrations.eden_ai.list_models()
+
+local features = app.integrations.eden_ai.list_features()
+
+local moderation = app.integrations.eden_ai.get_feature_info({
+  feature_path = "text/moderation"
+})
+```
+
+## V3 Universal AI
+
+```lua
+local result = app.integrations.eden_ai.universal_ai({
+  model = "text/moderation/openai",
+  input = {
+    text = "Text to classify"
+  },
+  fallbacks = { "text/moderation/google" }
+})
+```
+
+For async features:
+
+```lua
+local job = app.integrations.eden_ai.universal_ai_async({
+  model = "ocr/ocr_async/amazon",
+  input = {
+    file = "https://example.test/document.pdf"
+  }
+})
+
+local result = app.integrations.eden_ai.get_universal_ai_job({
+  job_id = job.public_job_id
+})
+```
+
+## V3 Files
+
+```lua
+local file = app.integrations.eden_ai.upload_file({
+  file_path = "/tmp/document.pdf",
+  purpose = "ocr-processing"
+})
+```
+
+`delete_all_uploaded_files()` permanently deletes every V3 uploaded file for the authenticated user.
+
+## Legacy V2 Tools
+
+Existing V2 helpers are still available:
+
+```lua
+app.integrations.eden_ai.generate_text({
   providers = "openai",
-  conversation = {
-    { role = "system", message = "You are a helpful coding assistant." },
-    { role = "user", message = "How do I sort a table in Lua?" }
+  text = "Write a product blurb."
+})
+
+app.integrations.eden_ai.translate_text({
+  providers = "google",
+  text = "Hello",
+  target_language = "fr"
+})
+```
+
+Legacy helpers include `generate_text`, `analyze_image`, `translate_text`, `transcribe_audio`, `ocr`, and `get_current_user`.
+
+## Generic API Helpers
+
+```lua
+local v3 = app.integrations.eden_ai.v3_api_get({
+  path = "/models"
+})
+
+local legacy = app.integrations.eden_ai.api_post({
+  path = "/text/sentiment_analysis",
+  body = {
+    providers = "openai",
+    text = "Great product"
   }
 })
 ```
 
----
-
-## analyze_image
-
-Analyze images for content, objects, and features.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `providers` | string | yes | Comma-separated providers (e.g., `"google"`) |
-| `image_url` | string | no* | URL of the image to analyze |
-| `image_base64` | string | no* | Base64-encoded image data |
-| `features` | array | no | Analysis features to request |
-| `fallback_providers` | string | no | Comma-separated fallback providers |
-
-*Either `image_url` or `image_base64` is required.
-
-### Example
-
-```lua
-local result = app.integrations["eden-ai"].analyze_image({
-  providers = "google",
-  image_url = "https://example.com/photo.jpg",
-  features = { "explicit_content", "object_detection" }
-})
-```
-
----
-
-## translate_text
-
-Translate text between languages.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `providers` | string | yes | Comma-separated providers (e.g., `"google"`, `"deepl"`) |
-| `text` | string | yes | Text to translate |
-| `target_language` | string | yes | Target language code (e.g., `"fr"`, `"de"`, `"ja"`) |
-| `source_language` | string | no | Source language code. Omit to auto-detect. |
-| `fallback_providers` | string | no | Comma-separated fallback providers |
-
-### Example
-
-```lua
-local result = app.integrations["eden-ai"].translate_text({
-  providers = "google",
-  text = "Hello, world!",
-  target_language = "fr"
-})
-
-for _, r in ipairs(result.results) do
-  print(r.provider .. ": " .. r.translation)
-end
-```
-
----
-
-## transcribe_audio
-
-Convert audio or video to text.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `providers` | string | yes | Comma-separated providers (e.g., `"openai"`) |
-| `audio_url` | string | no* | URL of the audio file |
-| `audio_base64` | string | no* | Base64-encoded audio data |
-| `language` | string | no | Language code. Omit for auto-detection. |
-| `speakers` | integer | no | Number of speakers for diarization |
-| `fallback_providers` | string | no | Comma-separated fallback providers |
-
-*Either `audio_url` or `audio_base64` is required.
-
-### Example
-
-```lua
-local result = app.integrations["eden-ai"].transcribe_audio({
-  providers = "openai",
-  audio_url = "https://example.com/recording.mp3",
-  language = "en"
-})
-
-for _, r in ipairs(result.results) do
-  print(r.provider .. ": " .. r.transcription)
-end
-```
-
----
-
-## ocr
-
-Extract text from images and documents. This is an asynchronous operation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `providers` | string | yes | Comma-separated providers (e.g., `"google"`) |
-| `document_url` | string | no* | URL of the document to process |
-| `document_base64` | string | no* | Base64-encoded document data |
-| `language` | string | no | Language hint for better accuracy |
-| `fallback_providers` | string | no | Comma-separated fallback providers |
-
-*Either `document_url` or `document_base64` is required.
-
-### Example
-
-```lua
-local result = app.integrations["eden-ai"].ocr({
-  providers = "google",
-  document_url = "https://example.com/invoice.pdf"
-})
-
--- Async: returns a job ID
-print("Job ID: " .. result.jobId)
-print("Status: " .. result.status)
-```
-
----
-
-## get_current_user
-
-Get the authenticated user's account information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["eden-ai"].get_current_user({})
-print("Email: " .. result.email)
-print("Plan: " .. (result.plan or "unknown"))
-```
-
----
+Absolute URLs are rejected; pass paths relative to `/v3` for V3 helpers and `/v2` for legacy helpers.
 
 ## Multi-Account Usage
 
-If you have multiple Eden AI accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["eden-ai"].generate_text({...})
-
--- Explicit default (portable across setups)
-app.integrations["eden-ai"].default.generate_text({...})
-
--- Named accounts
-app.integrations["eden-ai"].work.generate_text({...})
-app.integrations["eden-ai"].personal.generate_text({...})
+app.integrations.eden_ai.list_models()
+app.integrations.eden_ai.default.list_models()
+app.integrations.eden_ai.production.list_models()
 ```
-
-All functions are identical across accounts — only the credentials differ.

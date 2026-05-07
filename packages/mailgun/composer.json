@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mailgun",
-    "description": "Mailgun email delivery integration for Laravel — send emails, manage domains, routes, and webhooks.",
+    "description": "Mailgun integration for Laravel - manage sending, domains, events, stats, suppressions, routes, webhooks, lists, templates, and IPs.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "mailgun", "email", "communication", "opencompany"],
+    "keywords": [
+        "tools",
+        "mailgun",
+        "email",
+        "communication",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

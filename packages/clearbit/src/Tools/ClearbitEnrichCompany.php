@@ -13,7 +13,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Enrichment API (Company API). Returns company metrics, industry
  * categorization, social profiles, and funding data when available.
  *
- * Endpoint: GET /companies/find?domain=…
+ * Endpoint: GET https://company.clearbit.com/v2/companies/find?domain=…
  */
 class ClearbitEnrichCompany implements Tool
 {
@@ -48,7 +48,7 @@ class ClearbitEnrichCompany implements Tool
     public function parameters(): array
     {
         return [
-            'domain' => ['type' => 'string', 'required' => true, 'description' => 'The company domain to look up (e.g., "stripe.com").'],
+            'domain' => ['type' => 'string', 'required' => true, 'description' => 'The company domain to look up (e.g., "example.test").'],
         ];
     }
 

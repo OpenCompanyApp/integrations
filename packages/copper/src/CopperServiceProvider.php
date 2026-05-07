@@ -6,8 +6,17 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Copper integration with Laravel's service container.
+ *
+ * Binds CopperService using configured credentials and registers the Copper
+ * tool provider with the ToolProviderRegistry when available.
+ */
 class CopperServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the CopperService singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(CopperService::class, function ($app) {
@@ -21,6 +30,9 @@ class CopperServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Boot the provider and register the Copper tool provider.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

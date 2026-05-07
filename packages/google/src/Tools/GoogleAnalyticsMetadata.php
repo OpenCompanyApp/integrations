@@ -6,8 +6,14 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Google\Services\GoogleAnalyticsService;
 
+/**
+ * List GA4 metadata dimensions and metrics for a property.
+ */
 class GoogleAnalyticsMetadata implements Tool
 {
+    /**
+     * @param  GoogleAnalyticsService  $service  The Google Analytics API client.
+     */
     public function __construct(
         private GoogleAnalyticsService $service,
     ) {}
@@ -22,6 +28,11 @@ class GoogleAnalyticsMetadata implements Tool
         return 'List all available dimensions and metrics for a GA4 property, including custom ones. Use this to discover what data can be queried in reports.';
     }
 
+    /**
+     * Execute the tool and return grouped metadata.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (property_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

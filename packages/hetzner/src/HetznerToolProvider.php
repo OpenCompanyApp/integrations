@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Hetzner;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerListServers;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerGetServer;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerCreateServer;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerListVolumes;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerListNetworks;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerListSshKeys;
-use OpenCompany\Integrations\Hetzner\Tools\HetznerGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and setup metadata for the Hetzner Cloud integration.
+ *
+ * Exposes generated tools for the official Hetzner Cloud OpenAPI document
+ * and resolves account-specific API tokens for host applications.
+ */
+class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +25,27 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Hetzner Cloud requests use Authorization: Bearer with a project API token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +58,7 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'label' => 'Hetzner Cloud',
-            'description' => 'Cloud infrastructure management',
+            'description' => 'Servers, networks, firewalls, volumes, load balancers, DNS, images, locations, and actions',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:hetzner',
         ];
@@ -89,14 +68,17 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'name' => 'Hetzner Cloud',
-            'description' => 'Cloud infrastructure platform for servers, volumes, networks, and SSH keys',
+            'description' => 'Manage Hetzner Cloud servers, volumes, networks, firewalls, load balancers, primary IPs, floating IPs, DNS zones, SSH keys, certificates, images, pricing, and actions.',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:hetzner',
             'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.hetzner.cloud/',
+            'docs_url' => 'https://docs.hetzner.cloud/reference/cloud',
+            'source_url' => 'https://docs.hetzner.cloud/cloud.spec.json',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -104,7 +86,7 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'type' => 'secret',
                 'label' => 'API Token',
                 'placeholder' => 'Enter your Hetzner Cloud API token',
-                'hint' => 'Generate an API token from your Hetzner Cloud Console under "Security > API Tokens"',
+                'hint' => 'Generate a project API token from the Hetzner Cloud Console under Security > API Tokens.',
                 'required' => true,
             ],
             [
@@ -112,45 +94,54 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.hetzner.cloud/v1',
-                'hint' => 'Use <code>https://api.hetzner.cloud/v1</code> for the default API, or a custom endpoint',
+                'hint' => 'Use https://api.hetzner.cloud/v1 unless you are targeting a compatible endpoint.',
                 'default' => 'https://api.hetzner.cloud/v1',
             ],
         ];
     }
 
+    /**
+     * Test the configured Hetzner Cloud token with a lightweight locations call.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.hetzner.cloud/v1', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.hetzner.cloud/v1'), '/');
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No API token provided'];
+        if ($accessToken === '') {
+            return ['success' => false, 'error' => 'No API token provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/user');
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl . '/locations');
 
-            $json = $response->json();
+            if (!$response->successful()) {
+                $message = $response->json('error.message') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Hetzner Cloud API at {$baseUrl}. Check the URL.",
+                    'error' => "Hetzner Cloud API error ({$response->status()}): {$message}",
                 ];
             }
 
+            $count = count($response->json('locations') ?? []);
+
             return [
                 'success' => true,
-                'message' => "Connected to Hetzner Cloud API at {$baseUrl}.",
+                'message' => "Connected to Hetzner Cloud API at {$baseUrl}; {$count} locations visible.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
@@ -159,70 +150,37 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    /**
+     * Register generated Hetzner Cloud OpenAPI tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
-        return [
-            'hetzner_list_servers' => [
-                'class' => HetznerListServers::class,
-                'type' => 'read',
-                'name' => 'List Servers',
-                'description' => 'List Hetzner Cloud servers with optional pagination.',
-                'icon' => 'ph:servers',
-            ],
-            'hetzner_get_server' => [
-                'class' => HetznerGetServer::class,
-                'type' => 'read',
-                'name' => 'Get Server',
-                'description' => 'Get details for a specific Hetzner Cloud server.',
-                'icon' => 'ph:servers',
-            ],
-            'hetzner_create_server' => [
-                'class' => HetznerCreateServer::class,
-                'type' => 'write',
-                'name' => 'Create Server',
-                'description' => 'Create a new Hetzner Cloud server.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'hetzner_list_volumes' => [
-                'class' => HetznerListVolumes::class,
-                'type' => 'read',
-                'name' => 'List Volumes',
-                'description' => 'List Hetzner Cloud volumes with optional pagination.',
-                'icon' => 'ph:hard-drives',
-            ],
-            'hetzner_list_networks' => [
-                'class' => HetznerListNetworks::class,
-                'type' => 'read',
-                'name' => 'List Networks',
-                'description' => 'List Hetzner Cloud networks with optional pagination.',
-                'icon' => 'ph:network',
-            ],
-            'hetzner_list_ssh_keys' => [
-                'class' => HetznerListSshKeys::class,
-                'type' => 'read',
-                'name' => 'List SSH Keys',
-                'description' => 'List Hetzner Cloud SSH keys with optional pagination.',
-                'icon' => 'ph:key',
-            ],
-            'hetzner_get_current_user' => [
-                'class' => HetznerGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated user profile.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (HetznerService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/hetzner.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.hetzner.cloud/v1'],
-        ];
     }
 
     public function isIntegration(): bool
@@ -230,21 +188,59 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return true;
     }
 
+    /**
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): HetznerService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new HetznerService(
-                accessToken: $creds->get('hetzner', 'access_token', '', $account),
-                baseUrl: $creds->get('hetzner', 'url', 'https://api.hetzner.cloud/v1', $account),
+            return new HetznerService(
+                accessToken: (string) $creds->get('hetzner', 'access_token', '', (string) $account),
+                baseUrl: (string) $creds->get('hetzner', 'url', 'https://api.hetzner.cloud/v1', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(HetznerService::class));
+        return app(HetznerService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/servers') => 'ph:server',
+            str_contains($path, '/volumes') => 'ph:hard-drives',
+            str_contains($path, '/networks') => 'ph:network',
+            str_contains($path, '/firewalls') => 'ph:shield-check',
+            str_contains($path, '/load_balancers') => 'ph:git-branch',
+            str_contains($path, '/ssh_keys') => 'ph:key',
+            str_contains($path, '/floating_ips'), str_contains($path, '/primary_ips') => 'ph:globe',
+            str_contains($path, '/dns'), str_contains($path, '/zones') => 'ph:globe-hemisphere-west',
+            str_contains($path, '/actions') => 'ph:list-checks',
+            str_contains($path, '/certificates') => 'ph:certificate',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

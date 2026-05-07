@@ -1,187 +1,57 @@
-# Lemon Squeezy — Lua API Reference
+# Lemon Squeezy Lua API Reference
 
-## list_products
+Namespace: `app.integrations.lemon-squeezy`
 
-List all digital products in your Lemon Squeezy store.
+The Lemon Squeezy API uses JSON:API. Create and update tools accept `attributes` and optional `relationships`, then wrap them in a `data` object with the correct resource type.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of products per page (default: 10, max: 100) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Example
+## Catalog And Commerce
 
 ```lua
-local result = app.integrations["lemon-squeezy"].list_products({
-  page_size = 20,
-  page = 1
+local stores = app.integrations["lemon-squeezy"].list_stores({})
+local products = app.integrations["lemon-squeezy"].list_products({ page_size = 50 })
+local variants = app.integrations["lemon-squeezy"].list_variants({
+  params = { ["filter[product_id]"] = "123" }
 })
-
-for _, product in ipairs(result.data) do
-  print(product.attributes.name .. " - " .. product.attributes.price)
-end
 ```
 
----
-
-## get_product
-
-Get details for a specific product by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The product ID |
-
-### Example
+## Customers, Orders, And Subscriptions
 
 ```lua
-local result = app.integrations["lemon-squeezy"].get_product({
-  id = "12345"
-})
-
-print(result.data.attributes.name)
-print(result.data.attributes.status)
-```
-
----
-
-## list_orders
-
-List all orders in your Lemon Squeezy store.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of orders per page (default: 10, max: 100) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Example
-
-```lua
-local result = app.integrations["lemon-squeezy"].list_orders({
+local orders = app.integrations["lemon-squeezy"].list_orders({
   page_size = 25,
   page = 1
 })
 
-for _, order in ipairs(result.data) do
-  print(order.attributes.identifier .. ": " .. order.attributes.total .. " " .. order.attributes.currency)
-end
+app.integrations["lemon-squeezy"].update_subscription({
+  id = "456",
+  attributes = { cancelled = true }
+})
 ```
 
----
-
-## get_order
-
-Get details for a specific order by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The order ID |
-
-### Example
+## Discounts, Licenses, Checkouts, And Webhooks
 
 ```lua
-local result = app.integrations["lemon-squeezy"].get_order({
-  id = "67890"
+app.integrations["lemon-squeezy"].create_checkout({
+  attributes = {
+    custom_price = 1200
+  },
+  relationships = {
+    store = { data = { type = "stores", id = "1" } },
+    variant = { data = { type = "variants", id = "10" } }
+  }
 })
 
-print(result.data.attributes.identifier)
-print(result.data.attributes.status_formatted)
-print("Total: " .. result.data.attributes.total)
+local licenses = app.integrations["lemon-squeezy"].list_license_keys({})
+local webhooks = app.integrations["lemon-squeezy"].list_webhooks({})
 ```
 
----
+## Raw API Helpers
 
-## list_customers
-
-List all customers in your Lemon Squeezy store.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of customers per page (default: 10, max: 100) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Example
+Use `api_get`, `api_post`, `api_patch`, and `api_delete` for safe relative API paths. Full URLs and parent-directory paths are rejected.
 
 ```lua
-local result = app.integrations["lemon-squeezy"].list_customers({
-  page_size = 50
+local response = app.integrations["lemon-squeezy"].api_get({
+  path = "/v1/orders",
+  query = { ["filter[store_id]"] = "1" }
 })
-
-for _, customer in ipairs(result.data) do
-  print(customer.attributes.name .. " (" .. customer.attributes.email .. ")")
-end
 ```
-
----
-
-## list_subscriptions
-
-List all subscriptions in your Lemon Squeezy store.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of subscriptions per page (default: 10, max: 100) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Example
-
-```lua
-local result = app.integrations["lemon-squeezy"].list_subscriptions({
-  page_size = 50
-})
-
-for _, sub in ipairs(result.data) do
-  print(sub.attributes.user_email .. " - " .. sub.attributes.status_formatted)
-end
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Lemon Squeezy user profile.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["lemon-squeezy"].get_current_user({})
-
-print(result.data.attributes.name)
-print(result.data.attributes.email)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Lemon Squeezy accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations["lemon-squeezy"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["lemon-squeezy"].default.function_name({...})
-
--- Named accounts
-app.integrations["lemon-squeezy"].work.function_name({...})
-app.integrations["lemon-squeezy"].personal.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.

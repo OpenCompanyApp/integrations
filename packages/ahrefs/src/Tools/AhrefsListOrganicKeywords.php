@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AhrefsListOrganicKeywords implements Tool
 {
+    /**
+     * @param  AhrefsService  $service  Ahrefs API client.
+     */
     public function __construct(
         private AhrefsService $service,
     ) {}
@@ -34,10 +37,15 @@ class AhrefsListOrganicKeywords implements Tool
             'target' => ['type' => 'string', 'required' => true, 'description' => 'The target URL or domain to analyze (e.g., "example.com").'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of keywords to return (default: 100).'],
             'offset' => ['type' => 'integer', 'description' => 'Number of results to skip for pagination (default: 0).'],
-            'mode' => ['type' => 'string', 'description' => 'Target matching mode: "domain", "subdomain", "exact", "prefix". Default: "domain".'],
+            'mode' => ['type' => 'string', 'description' => 'Target matching mode: "domain", "subdomains", "exact", or "prefix". Default: "subdomains".'],
         ];
     }
 
+    /**
+     * Execute the tool.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -48,7 +56,7 @@ class AhrefsListOrganicKeywords implements Tool
             $target = $args['target'];
             $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
             $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
-            $mode = $args['mode'] ?? 'domain';
+            $mode = $args['mode'] ?? 'subdomains';
 
             $result = $this->service->listOrganicKeywords($target, $limit, $offset, $mode);
 

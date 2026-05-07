@@ -4,6 +4,8 @@ namespace OpenCompany\Integrations\ZohoInvoice;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\ZohoInvoice\Tools\ZohoInvoiceListInvoices;
@@ -13,8 +15,6 @@ use OpenCompany\Integrations\ZohoInvoice\Tools\ZohoInvoiceListContacts;
 use OpenCompany\Integrations\ZohoInvoice\Tools\ZohoInvoiceListItems;
 use OpenCompany\Integrations\ZohoInvoice\Tools\ZohoInvoiceListPayments;
 use OpenCompany\Integrations\ZohoInvoice\Tools\ZohoInvoiceGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -79,7 +79,7 @@ class ZohoInvoiceToolProvider implements ToolProvider, ConfigurableIntegration, 
 
 public function appName(): string
     {
-        return 'zoho_invoice';
+        return 'zoho-invoice';
     }
 
 public function appMeta(): array
@@ -99,7 +99,7 @@ public function integrationMeta(): array
             'description' => 'Online invoicing and billing management',
             'icon' => 'ph:invoice',
             'logo' => 'simple-icons:zoho',
-            'category' => 'accounting',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://www.zoho.com/invoice/api/v3/',
         ];
@@ -239,12 +239,19 @@ public function validationRules(): array
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('zoho-invoice', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_invoice', $key, $default, $account);
+            };
 
             return new ZohoInvoiceService(
-                accessToken: $creds->get('zoho_invoice', 'access_token', '', $account),
-                baseUrl: $creds->get('zoho_invoice', 'base_url', 'https://invoice.zoho.com/api/v3', $account),
-                organizationId: $creds->get('zoho_invoice', 'organization_id', '', $account),
+                accessToken: $get('access_token'),
+                baseUrl: $get('base_url', 'https://invoice.zoho.com/api/v3'),
+                organizationId: $get('organization_id'),
             );
         }
 

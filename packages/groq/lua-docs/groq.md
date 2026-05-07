@@ -1,219 +1,107 @@
-# Groq — Lua API Reference
+# Groq Lua API Reference
 
-## list_models
+Groq exposes OpenAI-compatible inference endpoints plus Groq-specific batch, file, and closed-beta fine-tuning APIs.
 
-List available Groq AI models.
+Namespace: `app.integrations["groq"]`
 
-### Parameters
+## Common Usage
 
-None.
-
-### Example
-
-```lua
-local result = app.integrations["groq"].list_models({})
-
-for _, model in ipairs(result.data) do
-  print(model.id)
-end
-```
-
----
-
-## create_completion
-
-Create a chat completion using a Groq model.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model` | string | yes | Model ID, e.g. `"llama-3.3-70b-versatile"` |
-| `messages` | array | yes | Array of message objects with `role` and `content` |
-| `temperature` | number | no | Randomness control (0.0–2.0) |
-| `max_tokens` | integer | no | Max tokens in the response |
-| `top_p` | number | no | Nucleus sampling (0.0–1.0) |
-| `stream` | boolean | no | Stream the response (default: false) |
-
-### Message Format
-
-The `messages` array contains message objects:
-
-```lua
-{
-  { role = "system", content = "You are a helpful assistant." },
-  { role = "user", content = "Hello!" }
-}
-```
-
-For multi-turn conversations:
-
-```lua
-{
-  { role = "system", content = "You are a helpful assistant." },
-  { role = "user", content = "Hello!" },
-  { role = "assistant", content = "Hi there!" },
-  { role = "user", content = "Tell me more." }
-}
-```
-
-### Example
+Use chat completions for normal conversational requests:
 
 ```lua
 local result = app.integrations["groq"].create_completion({
   model = "llama-3.3-70b-versatile",
   messages = {
-    { role = "system", content = "You are a helpful assistant." },
-    { role = "user", content = "Write a haiku about programming." }
+    { role = "system", content = "You are concise." },
+    { role = "user", content = "Summarize this paragraph." }
   },
-  temperature = 0.7,
-  max_tokens = 100
+  temperature = 0.2,
+  max_tokens = 120
 })
 
-for _, choice in ipairs(result.choices) do
-  print(choice.message.content)
-end
+print(result.choices[1].message.content)
 ```
 
----
-
-## list_messages
-
-List messages in a Groq Cloud conversation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `conversation_id` | string | yes | The conversation ID |
-| `limit` | integer | no | Max messages per page (default: 20) |
-| `after` | string | no | Cursor for pagination |
-
-### Example
+Use payload-based tools when the upstream endpoint has a richer request body:
 
 ```lua
-local result = app.integrations["groq"].list_messages({
-  conversation_id = "conv_abc123",
-  limit = 10
+local response = app.integrations["groq"].create_response({
+  payload = {
+    model = "openai/gpt-oss-20b",
+    input = "Draft a release note."
+  }
 })
 
-for _, msg in ipairs(result.data) do
-  print(msg.role .. ": " .. msg.content)
-end
-```
-
----
-
-## create_message
-
-Create a message in a Groq Cloud conversation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `conversation_id` | string | yes | The conversation ID |
-| `role` | string | yes | Message role (e.g., `"user"`, `"assistant"`) |
-| `content` | string | yes | The message text |
-
-### Example
-
-```lua
-local result = app.integrations["groq"].create_message({
-  conversation_id = "conv_abc123",
-  role = "user",
-  content = "What is the capital of France?"
+local transcription = app.integrations["groq"].create_transcription({
+  payload = {
+    model = "whisper-large-v3",
+    url = "https://example.test/audio/sample.wav",
+    response_format = "json"
+  }
 })
-
-print(result.id)
-print(result.role .. ": " .. result.content)
 ```
 
----
+For local audio or batch file uploads, use `file_path` inside the payload or as the file upload argument. The path must be readable by the host running the integration.
 
-## list_files
+## Tool Groups
 
-List files uploaded to the Groq Files API.
+### Models and Inference
 
-### Parameters
+- `list_models({})`
+- `get_model({ model = "llama-3.3-70b-versatile" })`
+- `create_completion({ model = "...", messages = {...}, temperature = 0.2 })`
+- `create_response({ payload = {...} })`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `purpose` | string | no | Filter by purpose (e.g., `"batch"`) |
-| `limit` | integer | no | Max files per page (default: 20) |
-| `after` | string | no | Cursor for pagination |
+### Audio
 
-### Example
+- `create_transcription({ payload = { model = "whisper-large-v3", url = "https://example.test/audio.wav" } })`
+- `create_translation({ payload = { model = "whisper-large-v3", file_path = "/tmp/audio.wav" } })`
+- `create_speech({ payload = { model = "playai-tts", voice = "...", input = "Text to speak" } })`
+
+Speech and downloaded file content may return non-JSON bodies as:
 
 ```lua
-local result = app.integrations["groq"].list_files({
-  limit = 10
-})
-
-for _, file in ipairs(result.data) do
-  print(file.id .. " — " .. file.filename .. " (" .. file.bytes .. " bytes)")
-end
+{
+  content_type = "audio/wav",
+  body_base64 = "..."
+}
 ```
 
----
+### Batches and Files
 
-## get_file
+- `upload_file({ file_path = "/tmp/batch.jsonl", purpose = "batch" })`
+- `list_files({ purpose = "batch" })`
+- `get_file({ file_id = "file_123" })`
+- `download_file({ file_id = "file_123" })`
+- `delete_file({ file_id = "file_123" })`
+- `create_batch({ payload = { input_file_id = "file_123", endpoint = "/v1/chat/completions", completion_window = "24h" } })`
+- `list_batches({ query = { limit = 20 } })`
+- `get_batch({ batch_id = "batch_123" })`
+- `cancel_batch({ batch_id = "batch_123" })`
 
-Get metadata for an uploaded file.
+### Fine Tuning
 
-### Parameters
+Groq fine tuning is a closed beta API. These tools expose the documented endpoints, but accounts without access will receive Groq API authorization or availability errors.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `file_id` | string | yes | The file identifier, e.g. `"file-abc123"` |
+- `list_fine_tunings({})`
+- `create_fine_tuning({ payload = { input_file_id = "file_123", name = "test-1", type = "lora", base_model = "llama-3.1-8b-instant" } })`
+- `get_fine_tuning({ id = "fine_tune_123" })`
+- `delete_fine_tuning({ id = "fine_tune_123" })`
 
-### Example
+## Removed Legacy Assumptions
 
-```lua
-local result = app.integrations["groq"].get_file({
-  file_id = "file-abc123"
-})
+The previous package exposed conversation message and current-user tools for endpoints that are not documented in Groq's current API reference. They are no longer registered in the provider. Use chat completions or responses with explicit message history, and use `list_models` for a lightweight credential check.
 
-print("File: " .. result.filename)
-print("Purpose: " .. result.purpose)
-print("Size: " .. result.bytes .. " bytes")
-print("Status: " .. result.status)
-```
+## Return Shapes
 
----
-
-## get_current_user
-
-Get information about the currently authenticated user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["groq"].get_current_user({})
-
-print("User: " .. (result.id or "unknown"))
-```
-
----
+Most tools return Groq's decoded JSON response unchanged so agents can access endpoint-specific fields like `choices`, `usage`, `data`, `request_counts`, file metadata, and fine-tuning job objects.
 
 ## Multi-Account Usage
 
-If you have multiple Groq accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["groq"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["groq"].default.function_name({...})
-
--- Named accounts
-app.integrations["groq"].work.function_name({...})
-app.integrations["groq"].personal.function_name({...})
+app.integrations["groq"].list_models({})
+app.integrations["groq"].default.list_models({})
+app.integrations["groq"].work.list_models({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All accounts expose the same tool names. Only credentials and optional base URL differ.

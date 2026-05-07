@@ -50,7 +50,8 @@ class CloseCreateTask implements Tool
             'text'        => ['type' => 'string', 'required' => true, 'description' => 'The task description or body text.'],
             'lead_id'     => ['type' => 'string', 'description' => 'Associate this task with a lead (e.g., "lead_abc123XYZ").'],
             'assignee_id' => ['type' => 'string', 'description' => 'User ID to assign the task to (e.g., "user_abc123XYZ").'],
-            'due_date'    => ['type' => 'string', 'description' => 'Due date in ISO 8601 format (e.g., "2026-04-15").'],
+            'date'        => ['type' => 'string', 'description' => 'Task date in YYYY-MM-DD format (e.g., "2026-04-15").'],
+            'due_date'    => ['type' => 'string', 'description' => 'Deprecated alias for date, kept for older agents.'],
             'is_complete' => ['type' => 'boolean', 'description' => 'Whether the task is already completed (default: false).'],
         ];
     }
@@ -76,7 +77,7 @@ class CloseCreateTask implements Tool
                 text: $text,
                 leadId: $args['lead_id'] ?? null,
                 assigneeId: $args['assignee_id'] ?? null,
-                dueDate: $args['due_date'] ?? null,
+                date: $args['date'] ?? $args['due_date'] ?? null,
                 isComplete: (bool) ($args['is_complete'] ?? false),
             );
 

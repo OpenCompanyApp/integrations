@@ -81,7 +81,7 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
 
     public function appName(): string
     {
-        return 'google_calendar';
+        return 'google-calendar';
     }
 
     public function appMeta(): array
@@ -104,6 +104,8 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
             'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/calendar-json.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-calendar',
         ];
     }    public function configSchema(): array
     {
@@ -262,7 +264,10 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleCalendarService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleCalendarService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleCalendarService::class);
 
         return new $class($service);
     }

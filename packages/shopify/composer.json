@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-shopify",
-    "description": "Shopify integration for Laravel — manage products, orders, and customers.",
+    "description": "Shopify integration for Laravel - manage Admin REST products, orders, customers, inventory, discounts, webhooks, themes, and content.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,12 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "shopify", "ecommerce", "opencompany"],
+    "keywords": [
+        "tools",
+        "shopify",
+        "ecommerce",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

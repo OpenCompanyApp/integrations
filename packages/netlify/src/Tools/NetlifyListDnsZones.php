@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List DNS zones available to the Netlify account.
+ */
 class NetlifyListDnsZones implements Tool
 {
+    /**
+     * @param  NetlifyService  $service  The Netlify REST API client.
+     */
     public function __construct(
         private NetlifyService $service,
     ) {}
@@ -30,6 +36,11 @@ class NetlifyListDnsZones implements Tool
         ];
     }
 
+    /**
+     * List and normalize DNS zones.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

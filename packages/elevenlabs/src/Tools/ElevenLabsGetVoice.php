@@ -41,6 +41,11 @@ class ElevenLabsGetVoice implements Tool
         ];
     }
 
+    /**
+     * Get an ElevenLabs voice by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (voice_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -48,7 +53,12 @@ class ElevenLabsGetVoice implements Tool
                 return ToolResult::error('ElevenLabs integration is not configured.');
             }
 
-            $result = $this->service->getVoice($args['voice_id']);
+            $voiceId = trim((string) ($args['voice_id'] ?? ''));
+            if ($voiceId === '') {
+                return ToolResult::error('voice_id is required.');
+            }
+
+            $result = $this->service->getVoice($voiceId);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

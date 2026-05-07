@@ -1,0 +1,4539 @@
+{
+  "source": "https://developers.smartrecruiters.com/reference/event-management-api",
+  "docs": "https://developers.smartrecruiters.com/docs/api-reference",
+  "openapi_versions": [
+    "3.0.1",
+    "3.0.2",
+    "3.0.3",
+    "3.1.0"
+  ],
+  "registry_count": 31,
+  "method_count": 312,
+  "registries": [
+    {
+      "filename": "apply-api.json",
+      "uuid": "3idhsrpjmoi8mvld",
+      "url": "https://dash.readme.com/api/v1/api-registry/3idhsrpjmoi8mvld"
+    },
+    {
+      "filename": "approvals-api.json",
+      "uuid": "iqiygl8vfj7d2",
+      "url": "https://dash.readme.com/api/v1/api-registry/iqiygl8vfj7d2"
+    },
+    {
+      "filename": "assessments-api.json",
+      "uuid": "4moyj3rl8ef1ymf",
+      "url": "https://dash.readme.com/api/v1/api-registry/4moyj3rl8ef1ymf"
+    },
+    {
+      "filename": "audit-api.json",
+      "uuid": "lfs2rmo8mw8q6",
+      "url": "https://dash.readme.com/api/v1/api-registry/lfs2rmo8mw8q6"
+    },
+    {
+      "filename": "configuration-api.json",
+      "uuid": "1at52mqmkv89eeh",
+      "url": "https://dash.readme.com/api/v1/api-registry/1at52mqmkv89eeh"
+    },
+    {
+      "filename": "interviews.json",
+      "uuid": "d8erl2im8g3kxlh",
+      "url": "https://dash.readme.com/api/v1/api-registry/d8erl2im8g3kxlh"
+    },
+    {
+      "filename": "jobs-api.json",
+      "uuid": "3yfsa30rmor0i6o3",
+      "url": "https://dash.readme.com/api/v1/api-registry/3yfsa30rmor0i6o3"
+    },
+    {
+      "filename": "candidates-api.json",
+      "uuid": "1inhx8ummvuha0k",
+      "url": "https://dash.readme.com/api/v1/api-registry/1inhx8ummvuha0k"
+    },
+    {
+      "filename": "job-applications-api.json",
+      "uuid": "32gmphufpmm9c404p",
+      "url": "https://dash.readme.com/api/v1/api-registry/32gmphufpmm9c404p"
+    },
+    {
+      "filename": "messages-api.json",
+      "uuid": "zrtr2a9la9s9qpm",
+      "url": "https://dash.readme.com/api/v1/api-registry/zrtr2a9la9s9qpm"
+    },
+    {
+      "filename": "reviews.json",
+      "uuid": "rv8vofmemmllat",
+      "url": "https://dash.readme.com/api/v1/api-registry/rv8vofmemmllat"
+    },
+    {
+      "filename": "reporting-api.json",
+      "uuid": "9sk01pm698l1qr",
+      "url": "https://dash.readme.com/api/v1/api-registry/9sk01pm698l1qr"
+    },
+    {
+      "filename": "users-api-deprecated.json",
+      "uuid": "3y1ss1olo5nrxw2",
+      "url": "https://dash.readme.com/api/v1/api-registry/3y1ss1olo5nrxw2"
+    },
+    {
+      "filename": "smartonboard.json",
+      "uuid": "lxa3c2amcyigj0r",
+      "url": "https://dash.readme.com/api/v1/api-registry/lxa3c2amcyigj0r"
+    },
+    {
+      "filename": "users-api.json",
+      "uuid": "1aj1jmes6owyg",
+      "url": "https://dash.readme.com/api/v1/api-registry/1aj1jmes6owyg"
+    },
+    {
+      "filename": "webhooks.json",
+      "uuid": "dnq41uqmor307t9",
+      "url": "https://dash.readme.com/api/v1/api-registry/dnq41uqmor307t9"
+    },
+    {
+      "filename": "assessment-partner-api.json",
+      "uuid": "69qe6mmt0wrcr",
+      "url": "https://dash.readme.com/api/v1/api-registry/69qe6mmt0wrcr"
+    },
+    {
+      "filename": "event-management-api.json",
+      "uuid": "vil16ah3mguyak2x",
+      "url": "https://dash.readme.com/api/v1/api-registry/vil16ah3mguyak2x"
+    },
+    {
+      "filename": "assessment-partner-app.json",
+      "uuid": "5pzt61blg6aszg9",
+      "url": "https://dash.readme.com/api/v1/api-registry/5pzt61blg6aszg9"
+    },
+    {
+      "filename": "apps-integrations.json",
+      "uuid": "fbnukkqkmou2ty9r",
+      "url": "https://dash.readme.com/api/v1/api-registry/fbnukkqkmou2ty9r"
+    },
+    {
+      "filename": "candidate-status-api.json",
+      "uuid": "h5gen1ml51xeij",
+      "url": "https://dash.readme.com/api/v1/api-registry/h5gen1ml51xeij"
+    },
+    {
+      "filename": "feed-api.json",
+      "uuid": "131adls6omosgv99l",
+      "url": "https://dash.readme.com/api/v1/api-registry/131adls6omosgv99l"
+    },
+    {
+      "filename": "interview-templates.json",
+      "uuid": "11913uapmmank1qq",
+      "url": "https://dash.readme.com/api/v1/api-registry/11913uapmmank1qq"
+    },
+    {
+      "filename": "offers-api.json",
+      "uuid": "3yxz5hm6un1jyv",
+      "url": "https://dash.readme.com/api/v1/api-registry/3yxz5hm6un1jyv"
+    },
+    {
+      "filename": "partners-public-api.json",
+      "uuid": "7tpx2smoiba0c3",
+      "url": "https://dash.readme.com/api/v1/api-registry/7tpx2smoiba0c3"
+    },
+    {
+      "filename": "posting-api.json",
+      "uuid": "9m901mhmj8j08l5",
+      "url": "https://dash.readme.com/api/v1/api-registry/9m901mhmj8j08l5"
+    },
+    {
+      "filename": "self-scheduling.json",
+      "uuid": "2rdt8etvmlgdyfsn",
+      "url": "https://dash.readme.com/api/v1/api-registry/2rdt8etvmlgdyfsn"
+    },
+    {
+      "filename": "url-shortener.json",
+      "uuid": "au0v2jm7k6bk6i",
+      "url": "https://dash.readme.com/api/v1/api-registry/au0v2jm7k6bk6i"
+    },
+    {
+      "filename": "notifications-api.json",
+      "uuid": "2g2892tmkzbwpwt",
+      "url": "https://dash.readme.com/api/v1/api-registry/2g2892tmkzbwpwt"
+    },
+    {
+      "filename": "email-company.json",
+      "uuid": "1xydyjml6h6fuj",
+      "url": "https://dash.readme.com/api/v1/api-registry/1xydyjml6h6fuj"
+    },
+    {
+      "filename": "message-templates-api.json",
+      "uuid": "1xydyjml6h6fuj",
+      "url": "https://dash.readme.com/api/v1/api-registry/1xydyjml6h6fuj"
+    }
+  ],
+  "operations": [
+    {
+      "tool": "smartrecruiters_apply_create_candidate",
+      "operation_id": "createCandidate",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/postings/{uuid}/candidates",
+      "class": "SmartRecruitersApplyCreateCandidate",
+      "source": "apply-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "Application API"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_apply_get_apply_configuration_for_posting",
+      "operation_id": "getApplyConfigurationForPosting",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/postings/{uuid}/configuration",
+      "class": "SmartRecruitersApplyGetApplyConfigurationForPosting",
+      "source": "apply-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "Application API"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_apply_get_application_status",
+      "operation_id": "getApplicationStatus",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/postings/{uuid}/candidates/{candidateId}/status",
+      "class": "SmartRecruitersApplyGetApplicationStatus",
+      "source": "apply-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "Application API"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_get_by_id",
+      "operation_id": "approvals.getById",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals/{approvalRequestId}",
+      "class": "SmartRecruitersApprovalsApprovalsGetById",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_comments_get",
+      "operation_id": "approvals.comments.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals/{approvalRequestId}/comments",
+      "class": "SmartRecruitersApprovalsApprovalsCommentsGet",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_comments_create",
+      "operation_id": "approvals.comments.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals/{approvalRequestId}/comments",
+      "class": "SmartRecruitersApprovalsApprovalsCommentsCreate",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_get",
+      "operation_id": "approvals.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals",
+      "class": "SmartRecruitersApprovalsApprovalsGet",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_create",
+      "operation_id": "approvals.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals",
+      "class": "SmartRecruitersApprovalsApprovalsCreate",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_approve",
+      "operation_id": "approvals.approve",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals/{approvalRequestId}/approve-decisions",
+      "class": "SmartRecruitersApprovalsApprovalsApprove",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_approvals_approvals_reject",
+      "operation_id": "approvals.reject",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/approvals-api/v201910",
+      "path": "/approvals/{approvalRequestId}/reject-decisions",
+      "class": "SmartRecruitersApprovalsApprovalsReject",
+      "source": "approvals-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "approvals"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessments_orders_get_list",
+      "operation_id": "orders.getList",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/assessment-api/v202107",
+      "path": "/assessment-orders",
+      "class": "SmartRecruitersAssessmentsOrdersGetList",
+      "source": "assessments-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assessment orders"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_audit_audit_get",
+      "operation_id": "audit.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/audit-api/v201910",
+      "path": "/audit-events",
+      "class": "SmartRecruitersAuditAuditGet",
+      "source": "audit-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "audit"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_access_group_create",
+      "operation_id": "configuration.access-group.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/access-groups",
+      "class": "SmartRecruitersConfigurationConfigurationAccessGroupCreate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_access_group_list",
+      "operation_id": "configuration.access-group.list",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/access-groups",
+      "class": "SmartRecruitersConfigurationConfigurationAccessGroupList",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_access_group_get",
+      "operation_id": "configuration.access-group.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/access-groups/{accessGroupId}",
+      "class": "SmartRecruitersConfigurationConfigurationAccessGroupGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_access_group_update",
+      "operation_id": "configuration.access-group.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/access-groups/{accessGroupId}",
+      "class": "SmartRecruitersConfigurationConfigurationAccessGroupUpdate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_access_group_delete",
+      "operation_id": "configuration.access-group.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/access-groups/{accessGroupId}",
+      "class": "SmartRecruitersConfigurationConfigurationAccessGroupDelete",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_company_my",
+      "operation_id": "configuration.company.my",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/company",
+      "class": "SmartRecruitersConfigurationConfigurationCompanyMy",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_all",
+      "operation_id": "configuration.job-properties.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_create",
+      "operation_id": "configuration.job-properties.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesCreate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_get",
+      "operation_id": "configuration.job-properties.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_update",
+      "operation_id": "configuration.job-properties.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesUpdate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_translations_patch",
+      "operation_id": "configuration.job-properties.translations.patch",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/translations",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesTranslationsPatch",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_get",
+      "operation_id": "configuration.job-properties.values.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_create",
+      "operation_id": "configuration.job-properties.values.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesCreate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_deprecated_archive",
+      "operation_id": "configuration.job-properties.values.deprecatedArchive",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesDeprecatedArchive",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_deprecated_unarchive",
+      "operation_id": "configuration.job-properties.values.deprecatedUnarchive",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesDeprecatedUnarchive",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_update",
+      "operation_id": "configuration.job-properties.values.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesUpdate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_translations_patch",
+      "operation_id": "configuration.job-properties.values.translations.patch",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}/translations",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesTranslationsPatch",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_archive",
+      "operation_id": "configuration.job-properties.values.archive",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/archive-values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesArchive",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_values_unarchive",
+      "operation_id": "configuration.job-properties.values.unarchive",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/archive-values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesValuesUnarchive",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_activate",
+      "operation_id": "configuration.job-properties.activate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/activation",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesActivate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_deactivate",
+      "operation_id": "configuration.job-properties.deactivate",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/activation",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDeactivate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_all",
+      "operation_id": "configuration.job-properties.dependents.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/dependents",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_create",
+      "operation_id": "configuration.job-properties.dependents.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/dependents",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsCreate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_remove",
+      "operation_id": "configuration.job-properties.dependents.remove",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/dependents/{dependentId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsRemove",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_values_all",
+      "operation_id": "configuration.job-properties.dependents.values.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/dependents/{dependentId}/values",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsValuesAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_values_get",
+      "operation_id": "configuration.job-properties.dependents.values.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}/dependents/{dependentId}/values",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsValuesGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_values_add",
+      "operation_id": "configuration.job-properties.dependents.values.add",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}/dependents/{dependentId}/values",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsValuesAdd",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_job_properties_dependents_values_remove",
+      "operation_id": "configuration.job-properties.dependents.values.remove",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/job-properties/{id}/values/{valueId}/dependents/{dependentId}/values/{dependentValueId}",
+      "class": "SmartRecruitersConfigurationConfigurationJobPropertiesDependentsValuesRemove",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_department_create",
+      "operation_id": "configuration.department.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/departments",
+      "class": "SmartRecruitersConfigurationConfigurationDepartmentCreate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_department_all",
+      "operation_id": "configuration.department.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/departments",
+      "class": "SmartRecruitersConfigurationConfigurationDepartmentAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_department_get",
+      "operation_id": "configuration.department.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/departments/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationDepartmentGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_hiring_process_all",
+      "operation_id": "configuration.hiring-process.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/hiring-processes",
+      "class": "SmartRecruitersConfigurationConfigurationHiringProcessAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_hiring_process_get",
+      "operation_id": "configuration.hiring-process.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/hiring-processes/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationHiringProcessGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_offer_properties_all",
+      "operation_id": "configuration.offer-properties.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/offer-properties",
+      "class": "SmartRecruitersConfigurationConfigurationOfferPropertiesAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_all",
+      "operation_id": "configuration.candidate-properties.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_get",
+      "operation_id": "configuration.candidate-properties.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_values_all",
+      "operation_id": "configuration.candidate-properties.values.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties/{id}/values",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesValuesAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_values_create",
+      "operation_id": "configuration.candidate-properties.values.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties/{id}/values",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesValuesCreate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_values_get",
+      "operation_id": "configuration.candidate-properties.values.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties/{id}/values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesValuesGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_values_update",
+      "operation_id": "configuration.candidate-properties.values.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties/{id}/values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesValuesUpdate",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_candidate_properties_values_delete",
+      "operation_id": "configuration.candidate-properties.values.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/candidate-properties/{id}/values/{valueId}",
+      "class": "SmartRecruitersConfigurationConfigurationCandidatePropertiesValuesDelete",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_source_types",
+      "operation_id": "configuration.source.types",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/sources",
+      "class": "SmartRecruitersConfigurationConfigurationSourceTypes",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_source_values_all",
+      "operation_id": "configuration.source.values.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/sources/{sourceType}/values",
+      "class": "SmartRecruitersConfigurationConfigurationSourceValuesAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_source_values_single",
+      "operation_id": "configuration.source.values.single",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/sources/{sourceType}/values/{sourceValueId}",
+      "class": "SmartRecruitersConfigurationConfigurationSourceValuesSingle",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_source_values_single_by_identifier",
+      "operation_id": "configuration.source.values.singleByIdentifier",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/sources/{sourceIdentifier}",
+      "class": "SmartRecruitersConfigurationConfigurationSourceValuesSingleByIdentifier",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_source_values_recruiter_source_by_name",
+      "operation_id": "configuration.source.values.recruiterSourceByName",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/sources/recruiters/resolve",
+      "class": "SmartRecruitersConfigurationConfigurationSourceValuesRecruiterSourceByName",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_reasons_rejection_all",
+      "operation_id": "configuration.reasons.rejection.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/rejection-reasons",
+      "class": "SmartRecruitersConfigurationConfigurationReasonsRejectionAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_reasons_withdrawal_all",
+      "operation_id": "configuration.reasons.withdrawal.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/withdrawal-reasons",
+      "class": "SmartRecruitersConfigurationConfigurationReasonsWithdrawalAll",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_careersites_list",
+      "operation_id": "configuration.careersites.list",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/career-sites",
+      "class": "SmartRecruitersConfigurationConfigurationCareersitesList",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_careersites_get",
+      "operation_id": "configuration.careersites.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/career-sites/{careerSiteId}",
+      "class": "SmartRecruitersConfigurationConfigurationCareersitesGet",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_predefined_locations_get_many",
+      "operation_id": "configuration.predefined-locations.getMany",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/predefined-locations",
+      "class": "SmartRecruitersConfigurationConfigurationPredefinedLocationsGetMany",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "predefined-locations"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_predefined_locations_create_one",
+      "operation_id": "configuration.predefined-locations.createOne",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/predefined-locations",
+      "class": "SmartRecruitersConfigurationConfigurationPredefinedLocationsCreateOne",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "predefined-locations"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_predefined_locations_delete_many",
+      "operation_id": "configuration.predefined-locations.deleteMany",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/predefined-locations",
+      "class": "SmartRecruitersConfigurationConfigurationPredefinedLocationsDeleteMany",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "predefined-locations"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_predefined_locations_get_one",
+      "operation_id": "configuration.predefined-locations.getOne",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/predefined-locations/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationPredefinedLocationsGetOne",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "predefined-locations"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_predefined_locations_update_one",
+      "operation_id": "configuration.predefined-locations.updateOne",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/predefined-locations/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationPredefinedLocationsUpdateOne",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "predefined-locations"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_configuration_configuration_predefined_locations_delete_one",
+      "operation_id": "configuration.predefined-locations.deleteOne",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/configuration/predefined-locations/{id}",
+      "class": "SmartRecruitersConfigurationConfigurationPredefinedLocationsDeleteOne",
+      "source": "configuration-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "predefined-locations"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_types_get",
+      "operation_id": "types.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interview-types",
+      "class": "SmartRecruitersInterviewsTypesGet",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview types"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_types_update",
+      "operation_id": "types.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interview-types",
+      "class": "SmartRecruitersInterviewsTypesUpdate",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview types"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_types_delete",
+      "operation_id": "types.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interview-types/{interviewType}",
+      "class": "SmartRecruitersInterviewsTypesDelete",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview types"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_interviews_get_list",
+      "operation_id": "interviews.get-list",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews",
+      "class": "SmartRecruitersInterviewsInterviewsGetList",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_interviews_create",
+      "operation_id": "interviews.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews",
+      "class": "SmartRecruitersInterviewsInterviewsCreate",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_interviews_get",
+      "operation_id": "interviews.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}",
+      "class": "SmartRecruitersInterviewsInterviewsGet",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_interviews_update",
+      "operation_id": "interviews.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}",
+      "class": "SmartRecruitersInterviewsInterviewsUpdate",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_interviews_delete",
+      "operation_id": "interviews.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}",
+      "class": "SmartRecruitersInterviewsInterviewsDelete",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_timeslots_create",
+      "operation_id": "timeslots.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots",
+      "class": "SmartRecruitersInterviewsTimeslotsCreate",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "timeslots"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_timeslots_get",
+      "operation_id": "timeslots.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots/{timeslotId}",
+      "class": "SmartRecruitersInterviewsTimeslotsGet",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "timeslots"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_timeslots_update",
+      "operation_id": "timeslots.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots/{timeslotId}",
+      "class": "SmartRecruitersInterviewsTimeslotsUpdate",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "timeslots"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_timeslots_delete",
+      "operation_id": "timeslots.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots/{timeslotId}",
+      "class": "SmartRecruitersInterviewsTimeslotsDelete",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "timeslots"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_statuses_candidate_put",
+      "operation_id": "statuses.candidate.put",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/candidate/status",
+      "class": "SmartRecruitersInterviewsStatusesCandidatePut",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "statuses"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_statuses_interviewer_put",
+      "operation_id": "statuses.interviewer.put",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots/{timeslotId}/interviewers/{userId}/status",
+      "class": "SmartRecruitersInterviewsStatusesInterviewerPut",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "statuses"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_timeslots_patch_noshow",
+      "operation_id": "timeslots.patch-noshow",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots/{timeslotId}/noshow",
+      "class": "SmartRecruitersInterviewsTimeslotsPatchNoshow",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "timeslots"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interviews_statuses_timeslot_candidate_put",
+      "operation_id": "statuses.timeslot-candidate.put",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interviews-api/v201904",
+      "path": "/interviews/{interviewId}/timeslots/{timeslotId}/candidateStatus",
+      "class": "SmartRecruitersInterviewsStatusesTimeslotCandidatePut",
+      "source": "interviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "statuses"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_positions_all",
+      "operation_id": "jobs.positions.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/positions",
+      "class": "SmartRecruitersJobsJobsPositionsAll",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_positions_create",
+      "operation_id": "jobs.positions.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/positions",
+      "class": "SmartRecruitersJobsJobsPositionsCreate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_positions_get",
+      "operation_id": "jobs.positions.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/positions/{positionId}",
+      "class": "SmartRecruitersJobsJobsPositionsGet",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_positions_update",
+      "operation_id": "jobs.positions.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/positions/{positionId}",
+      "class": "SmartRecruitersJobsJobsPositionsUpdate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_positions_remove",
+      "operation_id": "jobs.positions.remove",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/positions/{positionId}",
+      "class": "SmartRecruitersJobsJobsPositionsRemove",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_all",
+      "operation_id": "jobs.jobads.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads",
+      "class": "SmartRecruitersJobsJobsJobadsAll",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_create",
+      "operation_id": "jobs.jobads.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads",
+      "class": "SmartRecruitersJobsJobsJobadsCreate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_get",
+      "operation_id": "jobs.jobads.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads/{jobAdId}",
+      "class": "SmartRecruitersJobsJobsJobadsGet",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_update",
+      "operation_id": "jobs.jobads.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads/{jobAdId}",
+      "class": "SmartRecruitersJobsJobsJobadsUpdate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_postings_create",
+      "operation_id": "jobs.jobads.postings.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads/{jobAdId}/postings",
+      "class": "SmartRecruitersJobsJobsJobadsPostingsCreate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_postings_all",
+      "operation_id": "jobs.jobads.postings.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads/{jobAdId}/postings",
+      "class": "SmartRecruitersJobsJobsJobadsPostingsAll",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_jobads_postings_unpublish",
+      "operation_id": "jobs.jobads.postings.unpublish",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/jobads/{jobAdId}/postings",
+      "class": "SmartRecruitersJobsJobsJobadsPostingsUnpublish",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_publication_create",
+      "operation_id": "jobs.publication.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/publication",
+      "class": "SmartRecruitersJobsJobsPublicationCreate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_publication_unpublish",
+      "operation_id": "jobs.publication.unpublish",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/publication",
+      "class": "SmartRecruitersJobsJobsPublicationUnpublish",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_publication_all",
+      "operation_id": "jobs.publication.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/publication",
+      "class": "SmartRecruitersJobsJobsPublicationAll",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_hiring_team_get",
+      "operation_id": "jobs.hiring-team.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/hiring-team",
+      "class": "SmartRecruitersJobsJobsHiringTeamGet",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_hiring_team_add",
+      "operation_id": "jobs.hiring-team.add",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/hiring-team",
+      "class": "SmartRecruitersJobsJobsHiringTeamAdd",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_hiring_team_remove",
+      "operation_id": "jobs.hiring-team.remove",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/hiring-team/{userId}",
+      "class": "SmartRecruitersJobsJobsHiringTeamRemove",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_notes_get",
+      "operation_id": "jobs.notes.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/note",
+      "class": "SmartRecruitersJobsJobsNotesGet",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_notes_update",
+      "operation_id": "jobs.notes.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/note",
+      "class": "SmartRecruitersJobsJobsNotesUpdate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_headcount_update",
+      "operation_id": "jobs.headcount.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/headcount",
+      "class": "SmartRecruitersJobsJobsHeadcountUpdate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_all",
+      "operation_id": "jobs.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs",
+      "class": "SmartRecruitersJobsJobsAll",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_create",
+      "operation_id": "jobs.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs",
+      "class": "SmartRecruitersJobsJobsCreate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_get",
+      "operation_id": "jobs.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}",
+      "class": "SmartRecruitersJobsJobsGet",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_patch",
+      "operation_id": "jobs.patch",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}",
+      "class": "SmartRecruitersJobsJobsPatch",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_update",
+      "operation_id": "jobs.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}",
+      "class": "SmartRecruitersJobsJobsUpdate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_status_update",
+      "operation_id": "jobs.status.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/status",
+      "class": "SmartRecruitersJobsJobsStatusUpdate",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_status_history_get",
+      "operation_id": "jobs.status.history.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/status/history",
+      "class": "SmartRecruitersJobsJobsStatusHistoryGet",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_jobs_jobs_approvals_latest",
+      "operation_id": "jobs.approvals.latest",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/approvals/latest",
+      "class": "SmartRecruitersJobsJobsApprovalsLatest",
+      "source": "jobs-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "jobs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_tags_add",
+      "operation_id": "candidates.tags.add",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/tags",
+      "class": "SmartRecruitersCandidatesCandidatesTagsAdd",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_tags_get",
+      "operation_id": "candidates.tags.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/tags",
+      "class": "SmartRecruitersCandidatesCandidatesTagsGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_tags_replace",
+      "operation_id": "candidates.tags.replace",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/tags",
+      "class": "SmartRecruitersCandidatesCandidatesTagsReplace",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_tags_delete",
+      "operation_id": "candidates.tags.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/tags",
+      "class": "SmartRecruitersCandidatesCandidatesTagsDelete",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_onboarding_get",
+      "operation_id": "candidates.onboarding.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/onboardingStatus",
+      "class": "SmartRecruitersCandidatesCandidatesOnboardingGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_onboarding_update",
+      "operation_id": "candidates.onboarding.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/onboardingStatus",
+      "class": "SmartRecruitersCandidatesCandidatesOnboardingUpdate",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_onboarding_get_for_job",
+      "operation_id": "candidates.onboarding.getForJob",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/onboardingStatus",
+      "class": "SmartRecruitersCandidatesCandidatesOnboardingGetForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_onboarding_update_for_job",
+      "operation_id": "candidates.onboarding.updateForJob",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/onboardingStatus",
+      "class": "SmartRecruitersCandidatesCandidatesOnboardingUpdateForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_all",
+      "operation_id": "candidates.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates",
+      "class": "SmartRecruitersCandidatesCandidatesAll",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_add",
+      "operation_id": "candidates.add",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates",
+      "class": "SmartRecruitersCandidatesCandidatesAdd",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_resume_add",
+      "operation_id": "candidates.resume.add",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/cv",
+      "class": "SmartRecruitersCandidatesCandidatesResumeAdd",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_resume_parse",
+      "operation_id": "candidates.resume.parse",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/cv/parse",
+      "class": "SmartRecruitersCandidatesCandidatesResumeParse",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_consent_request_batch",
+      "operation_id": "candidates.consent.request.batch",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/consent-requests",
+      "class": "SmartRecruitersCandidatesCandidatesConsentRequestBatch",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_consent_status",
+      "operation_id": "candidates.consent.status",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/consent",
+      "class": "SmartRecruitersCandidatesCandidatesConsentStatus",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_consent_decisions",
+      "operation_id": "candidates.consent.decisions",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/consents",
+      "class": "SmartRecruitersCandidatesCandidatesConsentDecisions",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_get",
+      "operation_id": "candidates.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}",
+      "class": "SmartRecruitersCandidatesCandidatesGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_delete",
+      "operation_id": "candidates.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}",
+      "class": "SmartRecruitersCandidatesCandidatesDelete",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_update",
+      "operation_id": "candidates.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}",
+      "class": "SmartRecruitersCandidatesCandidatesUpdate",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_list",
+      "operation_id": "candidates.attachments.list",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/attachments",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsList",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_add",
+      "operation_id": "candidates.attachments.add",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/attachments",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsAdd",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_get",
+      "operation_id": "candidates.attachments.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/attachments/{attachmentId}",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_list_for_job",
+      "operation_id": "candidates.attachments.listForJob",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/attachments",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsListForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_add_for_job",
+      "operation_id": "candidates.attachments.addForJob",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/attachments",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsAddForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_get_for_job",
+      "operation_id": "candidates.attachments.getForJob",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/attachments/{attachmentId}",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsGetForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_attachments_delete_for_job",
+      "operation_id": "candidates.attachments.deleteForJob",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/attachments/{attachmentId}",
+      "class": "SmartRecruitersCandidatesCandidatesAttachmentsDeleteForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_status_update",
+      "operation_id": "candidates.status.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/status",
+      "class": "SmartRecruitersCandidatesCandidatesStatusUpdate",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_status_update_primary",
+      "operation_id": "candidates.status.updatePrimary",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/status",
+      "class": "SmartRecruitersCandidatesCandidatesStatusUpdatePrimary",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_status_history_get",
+      "operation_id": "candidates.status.history.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/status/history",
+      "class": "SmartRecruitersCandidatesCandidatesStatusHistoryGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_status_history_get_for_job",
+      "operation_id": "candidates.status.history.getForJob",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/status/history",
+      "class": "SmartRecruitersCandidatesCandidatesStatusHistoryGetForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_source_update",
+      "operation_id": "candidates.source.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/source",
+      "class": "SmartRecruitersCandidatesCandidatesSourceUpdate",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_properties_get",
+      "operation_id": "candidates.properties.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/properties",
+      "class": "SmartRecruitersCandidatesCandidatesPropertiesGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_properties_get_for_job",
+      "operation_id": "candidates.properties.getForJob",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/properties",
+      "class": "SmartRecruitersCandidatesCandidatesPropertiesGetForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_properties_values_batch_update_for_job",
+      "operation_id": "candidates.properties.values.batchUpdateForJob",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/properties",
+      "class": "SmartRecruitersCandidatesCandidatesPropertiesValuesBatchUpdateForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_properties_values_update",
+      "operation_id": "candidates.properties.values.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/properties/{propertyId}",
+      "class": "SmartRecruitersCandidatesCandidatesPropertiesValuesUpdate",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_properties_values_update_for_job",
+      "operation_id": "candidates.properties.values.updateForJob",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/properties/{propertyId}",
+      "class": "SmartRecruitersCandidatesCandidatesPropertiesValuesUpdateForJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_screening_answers_get",
+      "operation_id": "candidates.screening-answers.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/screening-answers",
+      "class": "SmartRecruitersCandidatesCandidatesScreeningAnswersGet",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_add_to_job",
+      "operation_id": "candidates.addToJob",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/candidates",
+      "class": "SmartRecruitersCandidatesCandidatesAddToJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_resume_add_to_job",
+      "operation_id": "candidates.resume.addToJob",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/jobs/{jobId}/candidates/cv",
+      "class": "SmartRecruitersCandidatesCandidatesResumeAddToJob",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_get_application",
+      "operation_id": "candidates.getApplication",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}",
+      "class": "SmartRecruitersCandidatesCandidatesGetApplication",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidates_candidates_delete_application",
+      "operation_id": "candidates.deleteApplication",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}",
+      "class": "SmartRecruitersCandidatesCandidatesDeleteApplication",
+      "source": "candidates-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_job_applications_job_applications_get_by_id",
+      "operation_id": "job-applications.getById",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/job-applications-api/v202112",
+      "path": "/job-applications/{jobApplicationId}",
+      "class": "SmartRecruitersJobApplicationsJobApplicationsGetById",
+      "source": "job-applications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-applications"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_job_applications_job_applications_delete_by_id",
+      "operation_id": "job-applications.deleteById",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/job-applications-api/v202112",
+      "path": "/job-applications/{jobApplicationId}",
+      "class": "SmartRecruitersJobApplicationsJobApplicationsDeleteById",
+      "source": "job-applications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-applications"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_job_applications_job_applications_post_consent_request",
+      "operation_id": "job-applications.postConsentRequest",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/job-applications-api/v202112",
+      "path": "/job-applications/{jobApplicationId}/consent-request",
+      "class": "SmartRecruitersJobApplicationsJobApplicationsPostConsentRequest",
+      "source": "job-applications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-applications"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_job_applications_job_applications_get_consent_decision",
+      "operation_id": "job-applications.getConsentDecision",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/job-applications-api/v202112",
+      "path": "/job-applications/{jobApplicationId}/consents",
+      "class": "SmartRecruitersJobApplicationsJobApplicationsGetConsentDecision",
+      "source": "job-applications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-applications"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_messages_messages_shares_create",
+      "operation_id": "messages.shares.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/messages/shares",
+      "class": "SmartRecruitersMessagesMessagesSharesCreate",
+      "source": "messages-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "messages"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_messages_messages_shares_delete",
+      "operation_id": "messages.shares.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/messages/shares/{id}",
+      "class": "SmartRecruitersMessagesMessagesSharesDelete",
+      "source": "messages-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "messages"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_messages_messages_fetch",
+      "operation_id": "messages.fetch",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/messages",
+      "class": "SmartRecruitersMessagesMessagesFetch",
+      "source": "messages-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "messages"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reviews_scorecards_criteria_get_by_job_id",
+      "operation_id": "scorecards.criteria.getByJobId",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reviews-api/v201910",
+      "path": "/jobs/{jobId}/criteria",
+      "class": "SmartRecruitersReviewsScorecardsCriteriaGetByJobId",
+      "source": "reviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "scorecards"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reviews_reviews_get_list",
+      "operation_id": "reviews.getList",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reviews-api/v201910",
+      "path": "/reviews",
+      "class": "SmartRecruitersReviewsReviewsGetList",
+      "source": "reviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reviews_reviews_create",
+      "operation_id": "reviews.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/reviews-api/v201910",
+      "path": "/reviews",
+      "class": "SmartRecruitersReviewsReviewsCreate",
+      "source": "reviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reviews_reviews_get",
+      "operation_id": "reviews.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reviews-api/v201910",
+      "path": "/reviews/{reviewId}",
+      "class": "SmartRecruitersReviewsReviewsGet",
+      "source": "reviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reviews_reviews_update",
+      "operation_id": "reviews.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/reviews-api/v201910",
+      "path": "/reviews/{reviewId}",
+      "class": "SmartRecruitersReviewsReviewsUpdate",
+      "source": "reviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reviews_reviews_delete",
+      "operation_id": "reviews.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/reviews-api/v201910",
+      "path": "/reviews/{reviewId}",
+      "class": "SmartRecruitersReviewsReviewsDelete",
+      "source": "reviews.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_get_report_files",
+      "operation_id": "getReportFiles",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/reports/{reportId}/files",
+      "class": "SmartRecruitersReportingGetReportFiles",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reports"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_generate_ad_hoc_report",
+      "operation_id": "generateAdHocReport",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/reports/{reportId}/files",
+      "class": "SmartRecruitersReportingGenerateAdHocReport",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reports"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_get_reports",
+      "operation_id": "getReports",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/reports",
+      "class": "SmartRecruitersReportingGetReports",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reports"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_get_report",
+      "operation_id": "getReport",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/reports/{reportId}",
+      "class": "SmartRecruitersReportingGetReport",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reports"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_get_most_recent_report_file",
+      "operation_id": "getMostRecentReportFile",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/reports/{reportId}/files/recent",
+      "class": "SmartRecruitersReportingGetMostRecentReportFile",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reports"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_download_most_recent_report_file",
+      "operation_id": "downloadMostRecentReportFile",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/reports/{reportId}/files/recent/data",
+      "class": "SmartRecruitersReportingDownloadMostRecentReportFile",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "reports"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_get_report_file",
+      "operation_id": "getReportFile",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/files/{reportFileId}",
+      "class": "SmartRecruitersReportingGetReportFile",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "files"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_reporting_download_report_file",
+      "operation_id": "downloadReportFile",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/reporting-api/v201804",
+      "path": "/files/{reportFileId}/data",
+      "class": "SmartRecruitersReportingDownloadReportFile",
+      "source": "reporting-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "files"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_all",
+      "operation_id": "users.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersAll",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_create",
+      "operation_id": "users.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersCreate",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_me",
+      "operation_id": "users.me",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/me",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersMe",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_get",
+      "operation_id": "users.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersGet",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_activation_delete",
+      "operation_id": "users.activation.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersActivationDelete",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_update",
+      "operation_id": "users.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersUpdate",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_activation_email_send",
+      "operation_id": "users.activation.email.send",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}/activation-email",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersActivationEmailSend",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_activation_activate",
+      "operation_id": "users.activation.activate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}/activation",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersActivationActivate",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_activation_deactivate",
+      "operation_id": "users.activation.deactivate",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}/activation",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersActivationDeactivate",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_api_deprecated_users_avatar_update",
+      "operation_id": "users.avatar.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/users/{id}/avatar",
+      "class": "SmartRecruitersUsersApiDeprecatedUsersAvatarUpdate",
+      "source": "users-api-deprecated.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_new_hires_get",
+      "operation_id": "new-hires.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/new-hires/{newHireId}",
+      "class": "SmartRecruitersSmartonboardNewHiresGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "new-hires"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_onboarding_processes_get",
+      "operation_id": "onboarding-processes.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/onboarding-processes/{onboardingProcessId}",
+      "class": "SmartRecruitersSmartonboardOnboardingProcessesGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "onboarding-processes"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_web_form_assignments_form_answers_get",
+      "operation_id": "web-form-assignments.form-answers.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/web-form-assignments/{webFormAssignmentId}/form-answers",
+      "class": "SmartRecruitersSmartonboardWebFormAssignmentsFormAnswersGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments-submissions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_web_form_assignments_fields_metadata_get",
+      "operation_id": "web-form-assignments.fields-metadata.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/web-form-assignments/{webFormAssignmentId}/fields-metadata",
+      "class": "SmartRecruitersSmartonboardWebFormAssignmentsFieldsMetadataGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments-submissions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_fillable_pdf_form_assignments_form_answers_get",
+      "operation_id": "fillable-pdf-form-assignments.form-answers.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/fillable-pdf-form-assignments/{fillablePdfFormAssignmentId}/form-answers",
+      "class": "SmartRecruitersSmartonboardFillablePdfFormAssignmentsFormAnswersGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments-submissions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_onboarding_processes_assignments_get",
+      "operation_id": "onboarding-processes.assignments.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/onboarding-processes/{onboardingProcessId}/assignments",
+      "class": "SmartRecruitersSmartonboardOnboardingProcessesAssignmentsGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_onboarding_processes_assignment_get",
+      "operation_id": "onboarding-processes.assignment.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/onboarding-processes/{onboardingProcessId}/assignments/{assignmentId}",
+      "class": "SmartRecruitersSmartonboardOnboardingProcessesAssignmentGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_activity_assignments_attachments_get",
+      "operation_id": "activity-assignments.attachments.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/activity-assignments/{activityAssignmentId}/attachments",
+      "class": "SmartRecruitersSmartonboardActivityAssignmentsAttachmentsGet",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments-submissions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_smartonboard_activity_assignments_attachments_get_by_id",
+      "operation_id": "activity-assignments.attachments.getById",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/smartonboard-api/v202205",
+      "path": "/activity-assignments/{activityAssignmentId}/attachments/{attachmentId}",
+      "class": "SmartRecruitersSmartonboardActivityAssignmentsAttachmentsGetById",
+      "source": "smartonboard.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "assignments-submissions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_all",
+      "operation_id": "users.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users",
+      "class": "SmartRecruitersUsersUsersAll",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_create",
+      "operation_id": "users.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users",
+      "class": "SmartRecruitersUsersUsersCreate",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_me",
+      "operation_id": "users.me",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/me",
+      "class": "SmartRecruitersUsersUsersMe",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_get",
+      "operation_id": "users.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}",
+      "class": "SmartRecruitersUsersUsersGet",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_update",
+      "operation_id": "users.update",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}",
+      "class": "SmartRecruitersUsersUsersUpdate",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_password_reset",
+      "operation_id": "users.password.reset",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}/reset-password",
+      "class": "SmartRecruitersUsersUsersPasswordReset",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_activation_email_send",
+      "operation_id": "users.activation.email.send",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}/activation-email",
+      "class": "SmartRecruitersUsersUsersActivationEmailSend",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_activation_activate",
+      "operation_id": "users.activation.activate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}/activation",
+      "class": "SmartRecruitersUsersUsersActivationActivate",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_activation_deactivate",
+      "operation_id": "users.activation.deactivate",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}/activation",
+      "class": "SmartRecruitersUsersUsersActivationDeactivate",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_users_avatar_update",
+      "operation_id": "users.avatar.update",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/users/{id}/avatar",
+      "class": "SmartRecruitersUsersUsersAvatarUpdate",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_system_roles_all",
+      "operation_id": "system-roles.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/system-roles",
+      "class": "SmartRecruitersUsersSystemRolesAll",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_access_groups_all",
+      "operation_id": "access-groups.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/access-groups",
+      "class": "SmartRecruitersUsersAccessGroupsAll",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_access_groups_users_remove",
+      "operation_id": "access-groups.users.remove",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/access-groups/{accessGroupId}/users/{id}",
+      "class": "SmartRecruitersUsersAccessGroupsUsersRemove",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_users_access_groups_users_assign",
+      "operation_id": "access-groups.users.assign",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/user-api/v201804",
+      "path": "/access-groups/{accessGroupId}/users",
+      "class": "SmartRecruitersUsersAccessGroupsUsersAssign",
+      "source": "users-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "users"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_create",
+      "operation_id": "subscriptions.create",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions",
+      "class": "SmartRecruitersWebhooksSubscriptionsCreate",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_get_all",
+      "operation_id": "subscriptions.getAll",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions",
+      "class": "SmartRecruitersWebhooksSubscriptionsGetAll",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_get",
+      "operation_id": "subscriptions.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions/{id}",
+      "class": "SmartRecruitersWebhooksSubscriptionsGet",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_delete",
+      "operation_id": "subscriptions.delete",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions/{id}",
+      "class": "SmartRecruitersWebhooksSubscriptionsDelete",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_activate",
+      "operation_id": "subscriptions.activate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions/{id}/activation",
+      "class": "SmartRecruitersWebhooksSubscriptionsActivate",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_generate_secret_key",
+      "operation_id": "subscriptions.generateSecretKey",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions/{id}/secret-key",
+      "class": "SmartRecruitersWebhooksSubscriptionsGenerateSecretKey",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_get_secret_key",
+      "operation_id": "subscriptions.getSecretKey",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions/{id}/secret-key",
+      "class": "SmartRecruitersWebhooksSubscriptionsGetSecretKey",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_webhooks_subscriptions_search_callback_log",
+      "operation_id": "subscriptions.searchCallbackLog",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/webhooks-api/v201907",
+      "path": "/subscriptions/{id}/callbacks-log",
+      "class": "SmartRecruitersWebhooksSubscriptionsSearchCallbackLog",
+      "source": "webhooks.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "subscriptions"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_get_partner_config",
+      "operation_id": "getPartnerConfig",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/assessment-api/v202010",
+      "path": "/partner/configuration",
+      "class": "SmartRecruitersAssessmentPartnerGetPartnerConfig",
+      "source": "assessment-partner-api.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_save_partner_config",
+      "operation_id": "savePartnerConfig",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/assessment-api/v202010",
+      "path": "/partner/configuration",
+      "class": "SmartRecruitersAssessmentPartnerSavePartnerConfig",
+      "source": "assessment-partner-api.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_set_up_integration",
+      "operation_id": "setUpIntegration",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/assessment-api/v202010",
+      "path": "/integration/company/{companyId}",
+      "class": "SmartRecruitersAssessmentPartnerSetUpIntegration",
+      "source": "assessment-partner-api.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_package_result_update",
+      "operation_id": "packageResultUpdate",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/assessment-api/v202010",
+      "path": "/orders/{orderId}/results",
+      "class": "SmartRecruitersAssessmentPartnerPackageResultUpdate",
+      "source": "assessment-partner-api.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "result"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_add_attachment_to_order",
+      "operation_id": "addAttachmentToOrder",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/assessment-api/v202010",
+      "path": "/orders/{orderId}/results/attachment",
+      "class": "SmartRecruitersAssessmentPartnerAddAttachmentToOrder",
+      "source": "assessment-partner-api.json",
+      "auth_mode": "either",
+      "body_mode": "multipart",
+      "tags": [
+        "result"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_event_details",
+      "operation_id": "getEventDetails",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}",
+      "class": "SmartRecruitersEventManagementGetEventDetails",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_update_event",
+      "operation_id": "updateEvent",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}",
+      "class": "SmartRecruitersEventManagementUpdateEvent",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_delete_event",
+      "operation_id": "deleteEvent",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}",
+      "class": "SmartRecruitersEventManagementDeleteEvent",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_add_interviewers_to_session",
+      "operation_id": "addInterviewersToSession",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/sessions/{sessionId}/interviewers",
+      "class": "SmartRecruitersEventManagementAddInterviewersToSession",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_remove_interviewers_from_session",
+      "operation_id": "removeInterviewersFromSession",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/sessions/{sessionId}/interviewers",
+      "class": "SmartRecruitersEventManagementRemoveInterviewersFromSession",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_move_applicants_to_session",
+      "operation_id": "moveApplicantsToSession",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/sessions/{sessionId}/applicants",
+      "class": "SmartRecruitersEventManagementMoveApplicantsToSession",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_add_applicants_to_session",
+      "operation_id": "addApplicantsToSession",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/sessions/{sessionId}/applicants",
+      "class": "SmartRecruitersEventManagementAddApplicantsToSession",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_events",
+      "operation_id": "getEvents",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events",
+      "class": "SmartRecruitersEventManagementGetEvents",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_create_event",
+      "operation_id": "createEvent",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events",
+      "class": "SmartRecruitersEventManagementCreateEvent",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_all_applicants",
+      "operation_id": "getAllApplicants",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/applicants",
+      "class": "SmartRecruitersEventManagementGetAllApplicants",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_add_applicants_to_event",
+      "operation_id": "addApplicantsToEvent",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/applicants",
+      "class": "SmartRecruitersEventManagementAddApplicantsToEvent",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_session_details",
+      "operation_id": "getSessionDetails",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/sessions/{sessionId}",
+      "class": "SmartRecruitersEventManagementGetSessionDetails",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_delete_session",
+      "operation_id": "deleteSession",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/sessions/{sessionId}",
+      "class": "SmartRecruitersEventManagementDeleteSession",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_applicants_by_event_id",
+      "operation_id": "getApplicantsByEventId",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/{eventId}/pool-applicants",
+      "class": "SmartRecruitersEventManagementGetApplicantsByEventId",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_events_for_candidate",
+      "operation_id": "getEventsForCandidate",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/candidates/{profileId}",
+      "class": "SmartRecruitersEventManagementGetEventsForCandidate",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_event_management_get_events_for_application",
+      "operation_id": "getEventsForApplication",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/event-management-api",
+      "path": "/events/applications/{applicationId}",
+      "class": "SmartRecruitersEventManagementGetEventsForApplication",
+      "source": "event-management-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_ask_for_consent",
+      "operation_id": "askForConsent",
+      "method": "GET",
+      "base_url": "https://your.domain.com",
+      "path": "/integration",
+      "class": "SmartRecruitersAssessmentPartnerAppAskForConsent",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_delete_integration",
+      "operation_id": "deleteIntegration",
+      "method": "DELETE",
+      "base_url": "https://your.domain.com",
+      "path": "/integrations/companies/{companyId}",
+      "class": "SmartRecruitersAssessmentPartnerAppDeleteIntegration",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_list_packages",
+      "operation_id": "listPackages",
+      "method": "GET",
+      "base_url": "https://your.domain.com",
+      "path": "/packages",
+      "class": "SmartRecruitersAssessmentPartnerAppListPackages",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "packages"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_get_package_by_id",
+      "operation_id": "getPackageById",
+      "method": "GET",
+      "base_url": "https://your.domain.com",
+      "path": "/packages/{assessmentPackageId}",
+      "class": "SmartRecruitersAssessmentPartnerAppGetPackageById",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "packages"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_orders_assessment_package",
+      "operation_id": "ordersAssessmentPackage",
+      "method": "POST",
+      "base_url": "https://your.domain.com",
+      "path": "/packages/orders",
+      "class": "SmartRecruitersAssessmentPartnerAppOrdersAssessmentPackage",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "orders"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_orders_inline_assessment_package",
+      "operation_id": "ordersInlineAssessmentPackage",
+      "method": "POST",
+      "base_url": "https://your.domain.com",
+      "path": "/packages/inline/orders",
+      "class": "SmartRecruitersAssessmentPartnerAppOrdersInlineAssessmentPackage",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "orders"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_assessment_partner_app_get_token",
+      "operation_id": "getToken",
+      "method": "POST",
+      "base_url": "https://your.domain.com",
+      "path": "/oauth/token",
+      "class": "SmartRecruitersAssessmentPartnerAppGetToken",
+      "source": "assessment-partner-app.json",
+      "auth_mode": "either",
+      "body_mode": "form",
+      "tags": [
+        "token"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_apps_integrations_enable_integration",
+      "operation_id": "enableIntegration",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/apps-integrations",
+      "path": "/partner-api/integrations",
+      "class": "SmartRecruitersAppsIntegrationsEnableIntegration",
+      "source": "apps-integrations.json",
+      "auth_mode": "bearer",
+      "body_mode": "json",
+      "tags": [
+        "partner-api"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_candidate_status_get_status",
+      "operation_id": "getStatus",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/candidate-status-api",
+      "path": "/status/{applicationUuid}",
+      "class": "SmartRecruitersCandidateStatusGetStatus",
+      "source": "candidate-status-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "candidate-status"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_feed_find_posting_using_json",
+      "operation_id": "findPostingUsingJson",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/feed",
+      "path": "/publications/{postingId}",
+      "class": "SmartRecruitersFeedFindPostingUsingJson",
+      "source": "feed-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "feed"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_feed_update_posting_using_json",
+      "operation_id": "updatePostingUsingJson",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/feed",
+      "path": "/publications/{postingId}",
+      "class": "SmartRecruitersFeedUpdatePostingUsingJson",
+      "source": "feed-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "feed"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_feed_postings_json_stream",
+      "operation_id": "postingsJSONStream",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/feed",
+      "path": "/publications",
+      "class": "SmartRecruitersFeedPostingsJsonStream",
+      "source": "feed-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "feed"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_template_by_id",
+      "operation_id": "getTemplateById",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/templates/{id}",
+      "class": "SmartRecruitersInterviewTemplatesGetTemplateById",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_update_template",
+      "operation_id": "updateTemplate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/templates/{id}",
+      "class": "SmartRecruitersInterviewTemplatesUpdateTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_delete_template",
+      "operation_id": "deleteTemplate",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/templates/{id}",
+      "class": "SmartRecruitersInterviewTemplatesDeleteTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_job_managed_steps",
+      "operation_id": "getJobManagedSteps",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/managed-steps/jobs/{jobId}",
+      "class": "SmartRecruitersInterviewTemplatesGetJobManagedSteps",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_update_job_managed_steps",
+      "operation_id": "updateJobManagedSteps",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/managed-steps/jobs/{jobId}",
+      "class": "SmartRecruitersInterviewTemplatesUpdateJobManagedSteps",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_update_job_template",
+      "operation_id": "updateJobTemplate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/{jobInterviewTemplateId}",
+      "class": "SmartRecruitersInterviewTemplatesUpdateJobTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_patch_job_template_interviewers",
+      "operation_id": "patchJobTemplateInterviewers",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/{jobInterviewTemplateId}",
+      "class": "SmartRecruitersInterviewTemplatesPatchJobTemplateInterviewers",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_find_job_template_by_hiring_state",
+      "operation_id": "findJobTemplateByHiringState",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/jobs/{jobId}/hiringStages/{hiringStage}",
+      "class": "SmartRecruitersInterviewTemplatesFindJobTemplateByHiringState",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_upsert_job_template",
+      "operation_id": "upsertJobTemplate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/jobs/{jobId}/hiringStages/{hiringStage}",
+      "class": "SmartRecruitersInterviewTemplatesUpsertJobTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_interview_template_by_id",
+      "operation_id": "getInterviewTemplateById",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/{id}",
+      "class": "SmartRecruitersInterviewTemplatesGetInterviewTemplateById",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_update_interview_template",
+      "operation_id": "updateInterviewTemplate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/{id}",
+      "class": "SmartRecruitersInterviewTemplatesUpdateInterviewTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_delete_interview_template",
+      "operation_id": "deleteInterviewTemplate",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/{id}",
+      "class": "SmartRecruitersInterviewTemplatesDeleteInterviewTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_update_job_interview_template",
+      "operation_id": "updateJobInterviewTemplate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/job/{jobInterviewTemplateId}",
+      "class": "SmartRecruitersInterviewTemplatesUpdateJobInterviewTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_update_job_interview_template_interviewers",
+      "operation_id": "updateJobInterviewTemplateInterviewers",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/job/{jobInterviewTemplateId}",
+      "class": "SmartRecruitersInterviewTemplatesUpdateJobInterviewTemplateInterviewers",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_templates",
+      "operation_id": "getTemplates",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/templates",
+      "class": "SmartRecruitersInterviewTemplatesGetTemplates",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_create_template",
+      "operation_id": "createTemplate",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/templates",
+      "class": "SmartRecruitersInterviewTemplatesCreateTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_search_job_template_by_job_application_ids",
+      "operation_id": "searchJobTemplateByJobApplicationIds",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/jobs/{jobId}/search",
+      "class": "SmartRecruitersInterviewTemplatesSearchJobTemplateByJobApplicationIds",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_search_interview_templates",
+      "operation_id": "searchInterviewTemplates",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates",
+      "class": "SmartRecruitersInterviewTemplatesSearchInterviewTemplates",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_create_interview_template",
+      "operation_id": "createInterviewTemplate",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates",
+      "class": "SmartRecruitersInterviewTemplatesCreateInterviewTemplate",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_schedule_preferences",
+      "operation_id": "getSchedulePreferences",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/schedule/preferences/users/{userId}",
+      "class": "SmartRecruitersInterviewTemplatesGetSchedulePreferences",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "schedule-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_find_job_templates_by_job_id",
+      "operation_id": "findJobTemplatesByJobId",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/jobs/{jobId}",
+      "class": "SmartRecruitersInterviewTemplatesFindJobTemplatesByJobId",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_find_job_template_by_application_id",
+      "operation_id": "findJobTemplateByApplicationId",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/job-templates/job-applications/{applicationId}",
+      "class": "SmartRecruitersInterviewTemplatesFindJobTemplateByApplicationId",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "job-level-interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_job_interview_templates",
+      "operation_id": "getJobInterviewTemplates",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/jobs/{jobId}",
+      "class": "SmartRecruitersInterviewTemplatesGetJobInterviewTemplates",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_interview_templates_get_job_application_interview_templates",
+      "operation_id": "getJobApplicationInterviewTemplates",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/interview-templates",
+      "path": "/interview/templates/job-applications/{applicationId}",
+      "class": "SmartRecruitersInterviewTemplatesGetJobApplicationInterviewTemplates",
+      "source": "interview-templates.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "interview-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_offers_candidates_offers_all",
+      "operation_id": "candidates.offers.all",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/offers",
+      "class": "SmartRecruitersOffersCandidatesOffersAll",
+      "source": "offers-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_offers_candidates_offers_get",
+      "operation_id": "candidates.offers.get",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/offers/{offerId}",
+      "class": "SmartRecruitersOffersCandidatesOffersGet",
+      "source": "offers-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_offers_candidates_offers_approvals_latest",
+      "operation_id": "candidates.offers.approvals.latest",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/candidates/{id}/jobs/{jobId}/offers/{offerId}/approvals/latest",
+      "class": "SmartRecruitersOffersCandidatesOffersApprovalsLatest",
+      "source": "offers-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_offers_candidates_offers_find",
+      "operation_id": "candidates.offers.find",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/offers",
+      "class": "SmartRecruitersOffersCandidatesOffersFind",
+      "source": "offers-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_offers_offers_documents_get_documents_list",
+      "operation_id": "offers.documents.getDocumentsList",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/offers/{offerId}/documents",
+      "class": "SmartRecruitersOffersOffersDocumentsGetDocumentsList",
+      "source": "offers-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_offers_offers_documents_get_document",
+      "operation_id": "offers.documents.getDocument",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/offers/{offerId}/documents/{documentId}",
+      "class": "SmartRecruitersOffersOffersDocumentsGetDocument",
+      "source": "offers-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_partners_public_get_configs",
+      "operation_id": "getConfigs",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/v1",
+      "path": "/configs",
+      "class": "SmartRecruitersPartnersPublicGetConfigs",
+      "source": "partners-public-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_partners_public_add_config",
+      "operation_id": "addConfig",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/v1",
+      "path": "/configs",
+      "class": "SmartRecruitersPartnersPublicAddConfig",
+      "source": "partners-public-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_partners_public_get_config",
+      "operation_id": "getConfig",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/v1",
+      "path": "/configs/{configId}",
+      "class": "SmartRecruitersPartnersPublicGetConfig",
+      "source": "partners-public-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_partners_public_update_config",
+      "operation_id": "updateConfig",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/v1",
+      "path": "/configs/{configId}",
+      "class": "SmartRecruitersPartnersPublicUpdateConfig",
+      "source": "partners-public-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "configs"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_partners_public_search_offers",
+      "operation_id": "searchOffers",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/v1",
+      "path": "/offers",
+      "class": "SmartRecruitersPartnersPublicSearchOffers",
+      "source": "partners-public-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "offers"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_posting_v1_list_postings",
+      "operation_id": "v1.listPostings",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/v1/companies/{companyIdentifier}/postings",
+      "class": "SmartRecruitersPostingV1ListPostings",
+      "source": "posting-api.json",
+      "auth_mode": "public",
+      "body_mode": "json",
+      "tags": [
+        "postings"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_posting_v1_get_posting",
+      "operation_id": "v1.getPosting",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/v1/companies/{companyIdentifier}/postings/{postingId}",
+      "class": "SmartRecruitersPostingV1GetPosting",
+      "source": "posting-api.json",
+      "auth_mode": "public",
+      "body_mode": "json",
+      "tags": [
+        "postings"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_posting_v1_list_departments",
+      "operation_id": "v1.listDepartments",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com",
+      "path": "/v1/companies/{companyIdentifier}/departments",
+      "class": "SmartRecruitersPostingV1ListDepartments",
+      "source": "posting-api.json",
+      "auth_mode": "public",
+      "body_mode": "json",
+      "tags": [
+        "postings"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_get_self_scheduled_interview",
+      "operation_id": "getSelfScheduledInterview",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}/application/{applicationUuid}/interview",
+      "class": "SmartRecruitersSelfSchedulingGetSelfScheduledInterview",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_update_self_schedule_interview",
+      "operation_id": "updateSelfScheduleInterview",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}/application/{applicationUuid}/interview",
+      "class": "SmartRecruitersSelfSchedulingUpdateSelfScheduleInterview",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_create_self_schedule_interview",
+      "operation_id": "createSelfScheduleInterview",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}/application/{applicationUuid}/interview",
+      "class": "SmartRecruitersSelfSchedulingCreateSelfScheduleInterview",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_automated_self_scheduling",
+      "operation_id": "automatedSelfScheduling",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/automated-self-schedules",
+      "class": "SmartRecruitersSelfSchedulingAutomatedSelfScheduling",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_get_automated_schedules_available_slots_count_by_interviewer_with_roles",
+      "operation_id": "getAutomatedSchedulesAvailableSlotsCountByInterviewerWithRoles",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/automated-self-schedules/{scheduleType}/application/{applicationUuid}/slots/count/by-role",
+      "class": "SmartRecruitersSelfSchedulingGetAutomatedSchedulesAvailableSlotsCountByInterviewerWithRoles",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_update_self_schedule_invite",
+      "operation_id": "updateSelfScheduleInvite",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/automated-self-schedules/update-invite",
+      "class": "SmartRecruitersSelfSchedulingUpdateSelfScheduleInvite",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_request_self_reschedule",
+      "operation_id": "requestSelfReschedule",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/automated-self-schedules/reschedule",
+      "class": "SmartRecruitersSelfSchedulingRequestSelfReschedule",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_search_self_schedules",
+      "operation_id": "searchSelfSchedules",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules",
+      "class": "SmartRecruitersSelfSchedulingSearchSelfSchedules",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_get_self_schedule",
+      "operation_id": "getSelfSchedule",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}",
+      "class": "SmartRecruitersSelfSchedulingGetSelfSchedule",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_cancel_self_schedule",
+      "operation_id": "cancelSelfSchedule",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}",
+      "class": "SmartRecruitersSelfSchedulingCancelSelfSchedule",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_get_application_self_schedule",
+      "operation_id": "getApplicationSelfSchedule",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}/application/{applicationUuid}",
+      "class": "SmartRecruitersSelfSchedulingGetApplicationSelfSchedule",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_self_scheduling_available_slots_for_application",
+      "operation_id": "availableSlotsForApplication",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/self-scheduling",
+      "path": "/self-schedules/{id}/application/{applicationUuid}/slots",
+      "class": "SmartRecruitersSelfSchedulingAvailableSlotsForApplication",
+      "source": "self-scheduling.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "self-schedules"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_url_shortener_public_shorten",
+      "operation_id": "publicShorten",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/url-shortener",
+      "path": "/shorten",
+      "class": "SmartRecruitersUrlShortenerPublicShorten",
+      "source": "url-shortener.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "shortener"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_get_employee_preferences",
+      "operation_id": "getEmployeePreferences",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/employee-preferences",
+      "class": "SmartRecruitersNotificationsGetEmployeePreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_save_employee_preferences",
+      "operation_id": "saveEmployeePreferences",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/employee-preferences",
+      "class": "SmartRecruitersNotificationsSaveEmployeePreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_upsert_employee_preferences",
+      "operation_id": "upsertEmployeePreferences",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/employee-preferences",
+      "class": "SmartRecruitersNotificationsUpsertEmployeePreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_find_global_preferences",
+      "operation_id": "findGlobalPreferences",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/global-preferences",
+      "class": "SmartRecruitersNotificationsFindGlobalPreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_upsert_global_preferences",
+      "operation_id": "upsertGlobalPreferences",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/global-preferences",
+      "class": "SmartRecruitersNotificationsUpsertGlobalPreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_update_employee_preferences",
+      "operation_id": "updateEmployeePreferences",
+      "method": "PATCH",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/employee-preferences/preferences/{preferenceId}",
+      "class": "SmartRecruitersNotificationsUpdateEmployeePreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_find_all_notification_types",
+      "operation_id": "findAllNotificationTypes",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/notification-types",
+      "class": "SmartRecruitersNotificationsFindAllNotificationTypes",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-types"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_notifications_get_all_employee_preferences",
+      "operation_id": "getAllEmployeePreferences",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/notification-preferences",
+      "path": "/employee-preferences/all",
+      "class": "SmartRecruitersNotificationsGetAllEmployeePreferences",
+      "source": "notifications-api.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "notification-preferences"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_email_company_get_message_template",
+      "operation_id": "getMessageTemplate",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/message-templates-api",
+      "path": "/message-templates/{messageTemplateId}",
+      "class": "SmartRecruitersEmailCompanyGetMessageTemplate",
+      "source": "email-company.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "message-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_email_company_update_message_template",
+      "operation_id": "updateMessageTemplate",
+      "method": "PUT",
+      "base_url": "https://api.smartrecruiters.com/message-templates-api",
+      "path": "/message-templates/{messageTemplateId}",
+      "class": "SmartRecruitersEmailCompanyUpdateMessageTemplate",
+      "source": "email-company.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "message-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_email_company_remove_message_template",
+      "operation_id": "removeMessageTemplate",
+      "method": "DELETE",
+      "base_url": "https://api.smartrecruiters.com/message-templates-api",
+      "path": "/message-templates/{messageTemplateId}",
+      "class": "SmartRecruitersEmailCompanyRemoveMessageTemplate",
+      "source": "email-company.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "message-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_email_company_get_message_templates",
+      "operation_id": "getMessageTemplates",
+      "method": "GET",
+      "base_url": "https://api.smartrecruiters.com/message-templates-api",
+      "path": "/message-templates",
+      "class": "SmartRecruitersEmailCompanyGetMessageTemplates",
+      "source": "email-company.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "message-templates"
+      ]
+    },
+    {
+      "tool": "smartrecruiters_email_company_create_message_template",
+      "operation_id": "createMessageTemplate",
+      "method": "POST",
+      "base_url": "https://api.smartrecruiters.com/message-templates-api",
+      "path": "/message-templates",
+      "class": "SmartRecruitersEmailCompanyCreateMessageTemplate",
+      "source": "email-company.json",
+      "auth_mode": "either",
+      "body_mode": "json",
+      "tags": [
+        "message-templates"
+      ]
+    }
+  ]
+}

@@ -1,251 +1,119 @@
-# Cloudflare — Lua API Reference
+# Cloudflare
 
-## list_zones
+Cloudflare tools are exposed under `app.integrations.cloudflare`. Use them to manage common Cloudflare account, zone, DNS, cache, ruleset, page-rule, and Workers KV namespace workflows.
 
-List all Cloudflare zones (domains).
+The package includes first-class tools for frequent operations and raw API helpers for Cloudflare's much larger v4 API surface:
 
-### Parameters
+- `cloudflare_api_get`
+- `cloudflare_api_post`
+- `cloudflare_api_patch`
+- `cloudflare_api_put`
+- `cloudflare_api_delete`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | no | Filter by zone name (e.g., "example.com") |
-| `status` | string | no | Filter by status: active, pending, initializing, moved, deleted, deactivated |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `per_page` | integer | no | Number of zones per page (default: 20, max: 50) |
+Raw API helpers take a path relative to `https://api.cloudflare.com/client/v4`, for example `/zones/{zone_id}/settings`. Use first-class tools when one exists because they validate required identifiers and document the expected body shape.
 
-### Examples
+## Discovery
 
-```lua
--- List all zones
-local result = app.integrations.cloudflare.list_zones({})
-
-for _, zone in ipairs(result.zones) do
-  print(zone.name .. " (" .. zone.status .. ") - " .. zone.id)
-end
-```
+Start with accounts and zones:
 
 ```lua
--- Filter by name
-local result = app.integrations.cloudflare.list_zones({
-  name = "example.com"
+local token = app.integrations.cloudflare.cloudflare_verify_token({})
+
+local accounts = app.integrations.cloudflare.cloudflare_list_accounts({
+  per_page = 20
+})
+
+local zones = app.integrations.cloudflare.cloudflare_list_zones({
+  name = "example.com",
+  per_page = 20
 })
 ```
 
----
+Use `cloudflare_get_account`, `cloudflare_list_account_members`, and `cloudflare_list_account_roles` for account access audits.
 
-## get_zone
+## DNS
 
-Get detailed information about a specific Cloudflare zone.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `zone_id` | string | yes | The zone identifier |
-
-### Examples
+DNS tools use `zone_id` and Cloudflare DNS record IDs. Use list first when only a hostname is known.
 
 ```lua
-local result = app.integrations.cloudflare.get_zone({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353"
+local records = app.integrations.cloudflare.cloudflare_list_dns_records({
+  zone_id = "zone_123",
+  type = "A",
+  name = "www.example.com"
 })
 
-print("Zone: " .. result.name)
-print("Status: " .. result.status)
-print("Plan: " .. result.plan)
-```
-
----
-
-## list_dns_records
-
-List DNS records for a Cloudflare zone.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `zone_id` | string | yes | The zone identifier |
-| `type` | string | no | Filter by record type: A, AAAA, CNAME, MX, TXT, NS, SRV, etc. |
-| `name` | string | no | Filter by record name |
-| `content` | string | no | Filter by record content |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `per_page` | integer | no | Number of records per page (default: 20, max: 100) |
-
-### Examples
-
-```lua
--- List all DNS records
-local result = app.integrations.cloudflare.list_dns_records({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353"
-})
-
-for _, record in ipairs(result.records) do
-  print(record.type .. " " .. record.name .. " -> " .. record.content)
-end
-```
-
-```lua
--- Filter A records only
-local result = app.integrations.cloudflare.list_dns_records({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353",
-  type = "A"
-})
-```
-
----
-
-## create_dns_record
-
-Create a new DNS record in a Cloudflare zone.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `zone_id` | string | yes | The zone identifier |
-| `type` | string | yes | DNS record type: A, AAAA, CNAME, MX, TXT, NS, SRV, etc. |
-| `name` | string | yes | DNS record name (e.g., "www.example.com" or "@") |
-| `content` | string | yes | DNS record content (e.g., "192.0.2.1") |
-| `ttl` | integer | no | Time to live in seconds (1 = Auto, default: 1) |
-| `proxied` | boolean | no | Whether proxied through Cloudflare (default: false) |
-
-### Examples
-
-```lua
--- Create an A record proxied through Cloudflare
-local result = app.integrations.cloudflare.create_dns_record({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353",
+local created = app.integrations.cloudflare.cloudflare_create_dns_record({
+  zone_id = "zone_123",
   type = "A",
   name = "www.example.com",
-  content = "192.0.2.1",
+  content = "192.0.2.10",
   ttl = 1,
   proxied = true
 })
-
-print(result.message)
 ```
 
+Use `cloudflare_get_dns_record`, `cloudflare_update_dns_record`, `cloudflare_patch_dns_record`, and `cloudflare_delete_dns_record` for single-record lifecycle work. `update` uses Cloudflare's PUT replacement endpoint; `patch` sends partial changes.
+
+Zone DNS support also includes:
+
+- `cloudflare_export_dns_records`
+- `cloudflare_import_dns_records`
+- `cloudflare_scan_dns_records`
+- `cloudflare_review_dns_record_scan`
+- `cloudflare_get_dns_settings`
+- `cloudflare_update_dns_settings`
+
+## Zones, Cache, And Settings
+
+Use `cloudflare_create_zone`, `cloudflare_get_zone`, `cloudflare_edit_zone`, and `cloudflare_delete_zone` for zone lifecycle operations.
+
 ```lua
--- Create a CNAME record
-local result = app.integrations.cloudflare.create_dns_record({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353",
-  type = "CNAME",
-  name = "blog.example.com",
-  content = "example.github.io",
-  ttl = 3600,
-  proxied = false
+local ssl = app.integrations.cloudflare.cloudflare_get_zone_setting({
+  zone_id = "zone_123",
+  setting_id = "ssl"
+})
+
+local purge = app.integrations.cloudflare.cloudflare_purge_cache({
+  zone_id = "zone_123",
+  files = {
+    "https://www.example.com/app.css"
+  }
 })
 ```
 
----
+For settings with non-string payloads, pass `body` using Cloudflare's exact API schema.
 
-## list_page_rules
+## Rules
 
-List page rules for a Cloudflare zone.
+Legacy page-rule tools are still available:
 
-### Parameters
+- `cloudflare_list_page_rules`
+- `cloudflare_create_page_rule`
+- `cloudflare_update_page_rule`
+- `cloudflare_delete_page_rule`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `zone_id` | string | yes | The zone identifier |
-| `status` | string | no | Filter by status: active, disabled |
-| `page` | integer | no | Page number for pagination |
-| `per_page` | integer | no | Number of rules per page |
+For modern Cloudflare Ruleset Engine workflows, use:
 
-### Examples
+- `cloudflare_list_zone_rulesets`
+- `cloudflare_get_zone_ruleset`
+- `cloudflare_create_zone_ruleset`
+- `cloudflare_update_zone_ruleset`
+- `cloudflare_delete_zone_ruleset`
+- `cloudflare_list_account_rulesets`
 
-```lua
-local result = app.integrations.cloudflare.list_page_rules({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353"
-})
+Ruleset bodies are passed using Cloudflare's documented `name`, `kind`, `phase`, `description`, and `rules` fields, or as a raw `body`.
 
-for _, rule in ipairs(result.rules) do
-  print("Priority " .. rule.priority .. ": " .. rule.status)
-  for _, target in ipairs(rule.targets) do
-    print("  Target: " .. target.target)
-  end
-end
-```
+## Workers KV
 
----
+This package includes namespace and key-list management:
 
-## get_analytics
+- `cloudflare_list_kv_namespaces`
+- `cloudflare_create_kv_namespace`
+- `cloudflare_delete_kv_namespace`
+- `cloudflare_list_kv_keys`
 
-Get analytics dashboard data for a Cloudflare zone.
+Workers KV value read/write endpoints can return or require non-JSON payloads, so use the raw API helpers only when the host can handle the needed body and response format.
 
-### Parameters
+## Output Shape
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `zone_id` | string | yes | The zone identifier |
-| `since` | string | no | Start time: ISO 8601 or relative like "-30d", "-7d", "-24h" (default: "-30d") |
-| `until` | string | no | End time: ISO 8601 or "now" (default: "now") |
-| `continuous` | string | no | Include continuous data: "true" or "false" (default: "true") |
-
-### Examples
-
-```lua
--- Last 30 days
-local result = app.integrations.cloudflare.get_analytics({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353"
-})
-
-print("Total requests: " .. (result.totals.requests or 0))
-print("Total bandwidth: " .. (result.totals.bandwidth or 0))
-print("Total threats: " .. (result.totals.threats or 0))
-print("Total pageviews: " .. (result.totals.pageviews or 0))
-```
-
-```lua
--- Last 7 days
-local result = app.integrations.cloudflare.get_analytics({
-  zone_id = "023e105f4ecef8ad9ca31a8372d0c353",
-  since = "-7d",
-  until = "now"
-})
-
--- Timeseries data
-for _, entry in ipairs(result.timeseries or {}) do
-  print(entry.until .. ": " .. (entry.requests or 0) .. " requests")
-end
-```
-
----
-
-## get_current_user
-
-Get details of the currently authenticated Cloudflare user.
-
-### Parameters
-
-None.
-
-### Examples
-
-```lua
-local result = app.integrations.cloudflare.get_current_user({})
-
-print("User: " .. result.username .. " (" .. result.email .. ")")
-print("2FA enabled: " .. tostring(result.two_factor_authentication))
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Cloudflare accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.cloudflare.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.cloudflare.default.function_name({...})
-
--- Named accounts
-app.integrations.cloudflare.production.function_name({...})
-app.integrations.cloudflare.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Most first-class tools return Cloudflare's parsed API envelope with `success`, `result`, `errors`, and `messages`. Older compact tools such as `cloudflare_list_zones`, `cloudflare_list_dns_records`, and `cloudflare_get_analytics` preserve their normalized response shape for compatibility.

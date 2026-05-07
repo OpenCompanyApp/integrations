@@ -1,14 +1,14 @@
 # Integration: Mattermost
 
-> Mattermost integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list channels, posts, teams, send messages, and manage workspace communication. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Mattermost integration for the [Laravel AI SDK](https://github.com/laravel/ai) - list channels, posts, teams, send messages, and manage workspace communication. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to team messaging and communication. List channels and posts, send messages, discover teams, and retrieve user profiles — all through the [Mattermost API v4](https://developers.mattermost.com/api-documentation/).
+Give your AI agents access to team messaging and communication. List channels and posts, send messages, discover teams, and retrieve user profiles - all through the [Mattermost API v4](https://developers.mattermost.com/api-documentation/).
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Mattermost tool lets AI agents interact with team channels, read and send messages, and navigate team structures — enabling agents to participate in communication workflows.
+This Mattermost tool lets AI agents interact with team channels, read and send messages, and navigate team structures - enabling agents to participate in communication workflows.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -130,4 +130,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

@@ -2,75 +2,56 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Create a new mailing list in Mailgun.
- *
- * Requires an address. Optionally include a name and description.
+ * Create a mailing list.
  */
-class MailgunCreateMailingList implements Tool
+class MailgunCreateMailingList extends AbstractMailgunEndpointTool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_create_mailing_list';
 
-    public function name(): string
-    {
-        return 'mailgun_create_mailing_list';
-    }
+    protected string $toolDescription = 'Create a mailing list.';
 
-    public function description(): string
-    {
-        return 'Create a new mailing list in Mailgun. Requires an address. Optionally include a name and description.';
-    }
+    protected string $method = 'POST';
 
-    public function parameters(): array
-    {
-        return [
-            'address'     => ['type' => 'string', 'required' => true, 'description' => 'Email address for the mailing list (e.g. newsletter@mg.example.com).'],
-            'name'        => ['type' => 'string', 'description' => 'Display name for the mailing list.'],
-            'description' => ['type' => 'string', 'description' => 'Description of the mailing list.'],
-        ];
-    }
+    protected string $path = '/lists';
 
-    /**
-     * Create a new mailing list in Mailgun.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (address, name, description)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'address' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Mailing list address.',
+    ],
+    'name' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Display name.',
+    ],
+    'description' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Description.',
+    ],
+    'access_level' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Access level.',
+    ],
+];
 
-            $address = $args['address'] ?? '';
+    /** @var list<string> */
+    protected array $required = [
+    'address',
+];
 
-            if (empty($address)) {
-                return ToolResult::error('address is required.');
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            $data = ['address' => $address];
-
-            if (! empty($args['name'])) {
-                $data['name'] = $args['name'];
-            }
-            if (! empty($args['description'])) {
-                $data['description'] = $args['description'];
-            }
-
-            $result = $this->service->createMailingList($data);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+    'address',
+    'name',
+    'description',
+    'access_level',
+];
 }

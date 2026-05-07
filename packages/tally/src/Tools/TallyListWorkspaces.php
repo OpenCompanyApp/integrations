@@ -4,20 +4,12 @@ namespace OpenCompany\Integrations\Tally\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Tally\TallyService;
 
 /**
  * List all workspaces accessible to the authenticated Tally user.
  */
-class TallyListWorkspaces implements Tool
+class TallyListWorkspaces extends AbstractTallyTool implements Tool
 {
-    /**
-     * @param  TallyService  $service  The Tally API service instance.
-     */
-    public function __construct(
-        private TallyService $service,
-    ) {}
-
     public function name(): string
     {
         return 'tally_list_workspaces';
@@ -30,7 +22,12 @@ class TallyListWorkspaces implements Tool
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'page' => [
+                'type' => 'integer',
+                'description' => 'Page number for pagination.',
+            ],
+        ];
     }
 
     /**
@@ -40,16 +37,8 @@ class TallyListWorkspaces implements Tool
      */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Tally integration is not configured.');
-            }
-
-            $result = $this->service->listWorkspaces();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->listWorkspaces(
+            $this->params($args, ['page']),
+        ));
     }
 }

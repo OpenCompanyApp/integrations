@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-missive",
-    "description": "Missive email and team chat integration for Laravel — manage conversations, comments, and tasks.",
+    "description": "Missive REST API integration for Laravel — conversations, drafts, tasks, contacts, teams, responses, analytics, and webhooks.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "missive", "email", "chat", "communication", "opencompany"],
+    "keywords": ["tools", "missive", "email", "chat", "conversations", "tasks", "contacts", "analytics", "webhooks", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

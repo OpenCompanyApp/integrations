@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to get a single Wufoo entry by its identifier.
+ * Tool to find a single Wufoo entry by form and entry identifier.
  *
- * Calls GET /entries/{id}.json on the Wufoo API and returns the full
- * entry data including all field values and metadata.
+ * Uses the documented form entries endpoint with an EntryId filter.
  */
 class WufooGetEntry implements Tool
 {
@@ -36,7 +35,7 @@ class WufooGetEntry implements Tool
      */
     public function description(): string
     {
-        return 'Get a single Wufoo form entry by its identifier. Returns all field values and submission metadata for the entry.';
+        return 'Find a single Wufoo form entry by form ID and entry ID using the documented form entries endpoint.';
     }
 
     /**
@@ -47,6 +46,7 @@ class WufooGetEntry implements Tool
     public function parameters(): array
     {
         return [
+            'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or title identifier.'],
             'entry_id' => ['type' => 'string', 'required' => true, 'description' => 'The entry identifier to retrieve.'],
         ];
     }
@@ -54,7 +54,7 @@ class WufooGetEntry implements Tool
     /**
      * Execute the get entry operation.
      *
-     * @param  array<string, mixed>  $args  The tool arguments. Must contain 'entry_id'.
+     * @param  array<string, mixed>  $args  The tool arguments. Must contain form_id and entry_id.
      * @return ToolResult The result containing the entry data or an error message.
      */
     public function execute(array $args): ToolResult
@@ -64,13 +64,17 @@ class WufooGetEntry implements Tool
                 return ToolResult::error('Wufoo integration is not configured.');
             }
 
-            $entryId = $args['entry_id'] ?? '';
+            $formId = trim((string) ($args['form_id'] ?? ''));
+            $entryId = trim((string) ($args['entry_id'] ?? ''));
 
+            if ($formId === '') {
+                return ToolResult::error('form_id is required.');
+            }
             if (empty($entryId)) {
                 return ToolResult::error('entry_id is required.');
             }
 
-            $result = $this->service->getEntry($entryId);
+            $result = $this->service->getEntry($formId, $entryId);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

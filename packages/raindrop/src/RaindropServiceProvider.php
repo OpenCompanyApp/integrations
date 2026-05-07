@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Raindrop.io integration with Laravel's service container.
+ *
+ * Binds RaindropService using the host credential resolver and registers the
+ * Raindrop.io tool provider with the shared provider registry.
+ */
 class RaindropServiceProvider extends ServiceProvider
 {
     public function register(): void

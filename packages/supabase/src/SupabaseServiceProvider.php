@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Supabase integration with Laravel.
+ *
+ * Binds the Supabase Management API client from configured credentials and
+ * registers the tool provider with the shared registry.
+ */
 class SupabaseServiceProvider extends ServiceProvider
 {
     /**

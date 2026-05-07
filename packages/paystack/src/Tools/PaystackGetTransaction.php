@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a Paystack transaction by numeric transaction ID.
+ *
+ * Use PaystackVerifyTransaction when the caller has a transaction reference.
+ */
 class PaystackGetTransaction implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -19,16 +27,21 @@ class PaystackGetTransaction implements Tool
 
     public function description(): string
     {
-        return 'Get details of a specific Paystack transaction by its ID or reference.';
+        return 'Get details of a specific Paystack transaction by its numeric ID. Use paystack_verify_transaction when you have a reference.';
     }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'Transaction ID or reference.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'Numeric transaction ID. Use paystack_verify_transaction for transaction references.'],
         ];
     }
 
+    /**
+     * Fetch a transaction by numeric ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -38,7 +51,7 @@ class PaystackGetTransaction implements Tool
 
             $id = $args['id'] ?? '';
             if (empty($id)) {
-                return ToolResult::error('Transaction ID or reference is required.');
+                return ToolResult::error('Transaction ID is required.');
             }
 
             $result = $this->service->getTransaction($id);

@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-open-library",
+    "description": "Open Library integration for Laravel AI agents - book, work, edition, author, subject, cover, and recent-change metadata.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\OpenLibrary\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\OpenLibrary\\OpenLibraryServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "open-library",
+        "books",
+        "authors",
+        "isbn",
+        "metadata",
+        "opencompany"
+    ]
+}

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-eleven-labs",
-    "description": "ElevenLabs integration for Laravel — text-to-speech, sound generation, voice and model management.",
+    "description": "Legacy compatibility wrapper for opencompanyapp/integration-elevenlabs.",
     "license": "MIT",
     "authors": [
         {
@@ -16,6 +16,7 @@
     "replace": {
         "opencompanyapp/ai-tool-eleven-labs": "self.version"
     },
+    "abandoned": "opencompanyapp/integration-elevenlabs",
     "autoload": {
         "psr-4": {
             "OpenCompany\\Integrations\\ElevenLabs\\": "src/"

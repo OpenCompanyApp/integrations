@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-braze",
-    "description": "Braze integration for Laravel — manage campaigns, canvases, and user data.",
+    "description": "Braze integration for Laravel - manage campaigns, Canvases, messaging, users, catalogs, templates, subscriptions, SCIM, and analytics.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "braze", "marketing", "opencompany"],
+    "keywords": [
+        "tools",
+        "braze",
+        "customer-engagement",
+        "messaging",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

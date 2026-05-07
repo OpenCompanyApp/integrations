@@ -21,10 +21,20 @@ class CalServiceProvider extends ServiceProvider
     {
         $this->app->singleton(CalService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $accessToken = (string) $creds->get('cal', 'access_token', '');
+            $baseUrl = (string) $creds->get('cal', 'url', '');
+
+            if ($accessToken === '') {
+                $accessToken = (string) $creds->get('cal-com', 'access_token', '');
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('cal-com', 'url', 'https://api.cal.com/v2');
+            }
 
             return new CalService(
-                accessToken: $creds->get('cal', 'access_token', ''),
-                baseUrl: $creds->get('cal', 'url', 'https://api.cal.com/v1'),
+                accessToken: $accessToken,
+                baseUrl: $baseUrl,
             );
         });
     }

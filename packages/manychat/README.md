@@ -1,16 +1,8 @@
-# Integration: ManyChat
+# Integration: Manychat
 
-> ManyChat integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage flows, tags, send messages, and get user info. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Manychat Account Public API integration for Laravel agents. Manage page info, flows, tags, custom fields, bot fields, sending, and subscribers.
 
-Give your AI agents access to chat marketing automation. List and inspect flows, send messages on Instagram, Messenger, WhatsApp and SMS, manage tags, and retrieve account info — all through the [ManyChat](https://manychat.com) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This ManyChat tool lets AI agents manage chat automations, send targeted messages, and organize subscribers through tags — enabling conversational marketing workflows driven by AI.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+This package exposes first-class tools for the documented Manychat `/fb/page`, `/fb/sending`, and `/fb/subscriber` endpoints, plus guarded generic helpers for less common documented API calls.
 
 ## Installation
 
@@ -18,113 +10,108 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-manychat
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
 
-This tool requires a ManyChat API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Manychat Account Public API keys are used as bearer tokens.
 
 ```php
 return [
     'manychat' => [
         'api_key' => env('MANYCHAT_API_KEY'),
-        'url'     => env('MANYCHAT_URL', 'https://api.manychat.com'),
+        'profile_api_key' => env('MANYCHAT_PROFILE_API_KEY'),
+        'url' => env('MANYCHAT_URL', 'https://api.manychat.com'),
     ],
 ];
 ```
+
+`profile_api_key` is optional and only needed for Profile API/template endpoints.
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `manychat_list_flows` | read | List all flows (pages) in your ManyChat account |
-| `manychat_get_flow` | read | Get details of a specific flow by ID |
-| `manychat_send_message` | write | Send a message to a subscriber via Instagram, Messenger, WhatsApp, or SMS |
-| `manychat_list_tags` | read | List all tags in your ManyChat account |
-| `manychat_create_tag` | write | Create a new tag for subscriber segmentation |
-| `manychat_get_current_user` | read | Get the authenticated ManyChat user profile |
+| `manychat_get_page_info` | read | Get page/account information. |
+| `manychat_get_current_user` | read | Compatibility alias for page/account information. |
+| `manychat_list_flows` | read | List flows from `/fb/page/getFlows`. |
+| `manychat_get_flow` | read | Find one flow client-side from the documented getFlows response. |
+| `manychat_list_tags` | read | List tags. |
+| `manychat_create_tag` | write | Create a tag. |
+| `manychat_remove_tag` | write | Remove a tag by ID. |
+| `manychat_remove_tag_by_name` | write | Remove a tag by name. |
+| `manychat_list_growth_tools` | read | List growth tools. |
+| `manychat_list_custom_fields` | read | List custom user fields. |
+| `manychat_create_custom_field` | write | Create a custom user field. |
+| `manychat_list_bot_fields` | read | List bot fields. |
+| `manychat_set_bot_field` | write | Set a bot field by ID. |
+| `manychat_send_message` | write | Compatibility alias for sendContent. |
+| `manychat_send_content` | write | Send content to a subscriber. |
+| `manychat_send_flow` | write | Send a flow to a subscriber. |
+| `manychat_get_subscriber_info` | read | Get subscriber information by ID. |
+| `manychat_find_subscriber_by_name` | read | Find subscribers by name. |
+| `manychat_add_subscriber_tag` | write | Add a tag to a subscriber. |
+| `manychat_remove_subscriber_tag` | write | Remove a tag from a subscriber. |
+| `manychat_set_subscriber_custom_field` | write | Set one subscriber custom field. |
+| `manychat_create_subscriber` | write | Create a subscriber. |
+| `manychat_update_subscriber` | write | Update a subscriber. |
+| `manychat_api_get` | read | Call a documented Manychat GET endpoint. |
+| `manychat_api_post` | write | Call a documented Manychat POST endpoint. |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\ManyChat\ManyChatService;
-use OpenCompany\Integrations\ManyChat\Tools\ManyChatListFlows;
-use OpenCompany\Integrations\ManyChat\Tools\ManyChatSendMessage;
-
-// Create tools
-$service = app(ManyChatService::class);
-$tools = [
-    new ManyChatListFlows($service),
-    new ManyChatSendMessage($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List all my ManyChat flows and send a welcome message to subscriber 12345');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('manychat');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\ManyChat\Tools\ManyChatListFlows::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\ManyChat\ManyChatService;
 
 $service = app(ManyChatService::class);
 
-// List flows
+$page = $service->getPageInfo();
 $flows = $service->listFlows();
+$tags = $service->listTags();
+$fields = $service->listCustomFields();
 
-// Get a specific flow
-$flow = $service->getFlow('flow_id_here');
-
-// Send a message
-$service->sendMessage([
-    'subscriber_id' => '12345',
-    'message' => ['text' => 'Hello from ManyChat!'],
+$service->sendContent([
+    'subscriber_id' => 123456,
+    'data' => [
+        'version' => 'v2',
+        'content' => [
+            'type' => 'text',
+            'messages' => [
+                ['type' => 'text', 'text' => 'Hello from an agent'],
+            ],
+        ],
+    ],
 ]);
 
-// Manage tags
-$tags = $service->listTags();
-$service->createTag('VIP Customer');
-
-// Get current user
-$user = $service->getCurrentUser();
+$service->addSubscriberTag(123456, 111);
+$service->setSubscriberCustomField(123456, 222, 'qualified');
 ```
 
-## Dependencies
+## Generic Helpers
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+Use generic helpers only for documented Manychat endpoints that do not yet have a named wrapper:
+
+```php
+$topics = $service->apiGet('/fb/page/getOtnTopics');
+$result = $service->apiPost('/fb/subscriber/addTagByName', [
+    'subscriber_id' => 123456,
+    'tag_name' => 'VIP',
+]);
+```
+
+Absolute URLs are rejected so agents cannot bypass the configured Manychat API host.
+
+## Notes
+
+Manychat does not document a single-flow read endpoint. `manychat_get_flow` uses the documented `getFlows` endpoint and performs a client-side lookup by common flow namespace or ID fields.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [ManyChat](https://manychat.com) account with API access
+- `opencompanyapp/integration-core`
+- A Manychat paid plan with API access
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE).

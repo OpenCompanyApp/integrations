@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-launchdarkly",
-    "description": "LaunchDarkly feature flags integration for Laravel — list and toggle flags, manage projects and environments.",
+    "description": "LaunchDarkly feature-management integration for Laravel - manage projects, environments, flags, segments, members, teams, and raw REST API calls.",
     "license": "MIT",
     "authors": [
         {

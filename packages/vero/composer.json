@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-vero",
-    "description": "Vero email marketing integration for Laravel — identify users, track events, manage subscriptions.",
+    "description": "Vero email marketing integration for Laravel: identify users, track events, manage subscriptions.",
     "license": "MIT",
     "authors": [
         {

@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Fly.io integration with Laravel.
+ *
+ * Binds the Fly.io Machines API client from host credentials and registers the
+ * provider with the shared discovery registry when available.
+ */
 class FlyIoServiceProvider extends ServiceProvider
 {
     public function register(): void

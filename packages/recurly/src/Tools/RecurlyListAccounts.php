@@ -6,6 +6,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * List Recurly billing accounts.
+ *
+ * Supports cursor pagination plus email and account-state filters.
+ */
 class RecurlyListAccounts implements Tool
 {
     /**

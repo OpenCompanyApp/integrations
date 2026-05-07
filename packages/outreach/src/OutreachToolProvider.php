@@ -108,7 +108,7 @@ class OutreachToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Outreach sales engagement platform integration for Laravel — manage prospects, sequences, and accounts.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

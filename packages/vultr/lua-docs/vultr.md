@@ -1,156 +1,61 @@
-# Vultr — Lua API Reference
+# Vultr - Lua API Reference
 
-## list_instances
+Namespace: `app.integrations.vultr`
 
-List all compute instances in the account.
+This package exposes 522 generated tools from Vultr's official API reference at `https://www.vultr.com/api/`. Requests use the configured Vultr API key as a bearer token against `https://api.vultr.com/v2` by default.
 
-### Parameters
-
-None.
-
-### Example
+## Common Operations
 
 ```lua
-local result = app.integrations.vultr.list_instances({})
+local account = app.integrations.vultr.get_current_user({})
+print(account.account.email)
 
-for _, instance in ipairs(result.instances) do
-  print(instance.label .. " (" .. instance.status .. ") - " .. instance.plan .. " - " .. instance.main_ip)
+local instances = app.integrations.vultr.list_instances({ per_page = 50 })
+for _, instance in ipairs(instances.instances or {}) do
+  print(instance.id .. " " .. instance.label .. " " .. instance.status)
 end
+
+local instance = app.integrations.vultr.get_instance({ id = "11111111-2222-3333-4444-555555555555" })
+print(instance.instance.main_ip)
+
+local plans = app.integrations.vultr.list_plans({ type = "vc2" })
+local regions = app.integrations.vultr.list_regions({})
 ```
 
----
+## Generated Tool Shape
 
-## get_instance
+Tool names follow the upstream operation name, normalized to snake_case with a `vultr_` prefix in metadata and exposed without the prefix in Lua. For example, the upstream `create-instance` operation is available as `app.integrations.vultr.create_instance(...)`.
 
-Get details for a specific compute instance.
+Path parameters with a single resource id accept `id` for compatibility with the earlier hand-written tools. More specific generated names such as `instance_id`, `ssh_key_id`, `registry_id`, or `policy_id` are also accepted when the upstream path needs them.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The instance ID |
-
-### Example
+Request bodies can be passed as `body = { ... }`. For convenience, generated tools also collect loose arguments that are not path, query, or header parameters into the JSON body.
 
 ```lua
-local result = app.integrations.vultr.get_instance({ id = "abc12345-6789-def0-1234-567890abcdef" })
-local i = result.instance
-print(i.label .. " - " .. i.region .. " - " .. i.main_ip .. " - " .. i.os)
+local created = app.integrations.vultr.create_instance({
+  region = "ewr",
+  plan = "vc2-1c-1gb",
+  os_id = 1743,
+  label = "example-agent-node"
+})
+
+app.integrations.vultr.update_instance({
+  id = created.instance.id,
+  label = "renamed-agent-node"
+})
 ```
 
----
+## Coverage Notes
 
-## list_plans
+The generated catalog includes compute instances, bare metal, Kubernetes, managed databases, block storage, snapshots, backups, ISOs, plans, regions, VPCs, load balancers, firewalls, DNS, object storage, CDN, container registry, storage gateways, serverless inference, IAM, organizations, users, API keys, billing, and support tickets.
 
-List all available hosting plans.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.vultr.list_plans({})
-
-for _, plan in ipairs(result.plans) do
-  print(plan.id .. " - " .. plan.vcpu_count .. " vCPU / " .. plan.ram .. " MB - $" .. plan.monthly_cost .. "/mo")
-end
-```
-
----
-
-## list_regions
-
-List all available data center regions.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.vultr.list_regions({})
-
-for _, region in ipairs(result.regions) do
-  print(region.id .. " - " .. region.city .. ", " .. region.country .. " (" .. region.continent .. ")")
-end
-```
-
----
-
-## list_snapshots
-
-List all snapshots in the account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.vultr.list_snapshots({})
-
-for _, snap in ipairs(result.snapshots) do
-  print(snap.id .. " - " .. snap.description .. " (" .. snap.size .. " MB) - " .. snap.status)
-end
-```
-
----
-
-## list_ssh_keys
-
-List all SSH keys in the account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.vultr.list_ssh_keys({})
-
-for _, key in ipairs(result.ssh_keys) do
-  print(key.id .. " - " .. key.name .. " - " .. key.date_created)
-end
-```
-
----
-
-## get_current_user
-
-Get the current authenticated account information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.vultr.get_current_user({})
-print("Account: " .. result.account.email .. " - Balance: $" .. result.account.balance)
-```
-
----
+Vultr's Redoc spec includes newer IAM and organization paths displayed with `/v2/...` paths while the server URL is already `/v2`; the client normalizes that duplicate version segment when building URLs so generated calls match the curl examples in the official docs.
 
 ## Multi-Account Usage
 
-If you have multiple Vultr accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.vultr.list_instances({})
-
--- Explicit default (portable across setups)
-app.integrations.vultr.default.list_instances({})
-
--- Named accounts
 app.integrations.vultr.production.list_instances({})
 app.integrations.vultr.staging.list_instances({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts; only the resolved credentials differ.

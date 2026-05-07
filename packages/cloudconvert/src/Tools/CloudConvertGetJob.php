@@ -2,46 +2,49 @@
 
 namespace OpenCompany\Integrations\CloudConvert\Tools;
 
-use OpenCompany\Integrations\CloudConvert\CloudConvertService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class CloudConvertGetJob implements Tool
+/**
+ * Get details and status for a CloudConvert job.
+ */
+class CloudConvertGetJob extends AbstractCloudConvertTool
 {
-    public function __construct(
-        private CloudConvertService $service,
-    ) {}
+    protected string $toolName = 'cloudconvert_get_job';
 
-    public function name(): string
-    {
-        return 'cloudconvert_get_job';
-    }
+    protected string $toolDescription = 'Get details and status for a CloudConvert job.';
 
-    public function description(): string
-    {
-        return 'Get details and status of a CloudConvert job by ID, including all associated tasks and their results.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'job_id' => ['type' => 'string', 'required' => true, 'description' => 'The CloudConvert job ID.'],
-        ];
-    }
+    protected string $path = '/jobs/{job_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CloudConvert integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'job_id' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'CloudConvert job ID.',
+    ],
+    'redirect' => [
+        'type' => 'boolean',
+        'required' => false,
+        'description' => 'Redirect to export URL when available.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented CloudConvert query parameters to pass through.',
+    ],
+];
 
-            $result = $this->service->getJob($args['job_id']);
-            $data = $result['data'] ?? $result;
+    /** @var list<string> */
+    protected array $required = [
+    'job_id',
+];
 
-            return ToolResult::success($data);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'redirect',
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

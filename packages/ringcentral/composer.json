@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-ringcentral",
-    "description": "RingCentral integration for Laravel — send SMS, list messages, view call logs, and manage contacts.",
+    "description": "RingCentral integration for Laravel. Manage SMS, messages, call logs, contacts, extensions, phone numbers, and presence.",
     "license": "MIT",
     "authors": [
         {

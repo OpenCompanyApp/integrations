@@ -95,7 +95,7 @@ class HunterToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Find and verify professional email addresses, search domains, and manage leads.',
             'icon' => 'ph:at',
             'logo' => 'simple-icons:hunter',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://hunter.io/api-documentation',
         ];

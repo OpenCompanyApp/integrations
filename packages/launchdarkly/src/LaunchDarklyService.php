@@ -5,8 +5,19 @@ namespace OpenCompany\Integrations\LaunchDarkly;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the LaunchDarkly REST API.
+ *
+ * Handles API token authentication, path normalization, JSON request dispatch,
+ * and focused helpers used by LaunchDarkly tools.
+ */
 class LaunchDarklyService
 {
+    /**
+     * @param  string  $accessToken  LaunchDarkly API access token.
+     * @param  string  $projectKey  Default LaunchDarkly project key.
+     * @param  string  $baseUrl  LaunchDarkly REST API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $projectKey = '',
@@ -17,7 +28,7 @@ class LaunchDarklyService
 
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken) && !empty($this->projectKey);
+        return $this->accessToken !== '';
     }
 
     /**
@@ -29,17 +40,71 @@ class LaunchDarklyService
     }
 
     /**
-     * List feature flags for a project (paginated).
+     * Execute a raw GET request against the LaunchDarkly API.
      *
-     * @param  string|null  $projectKey  Override the default project key
-     * @param  int  $limit  Maximum number of flags to return (default: 20, max: 100)
-     * @param  int  $offset  Offset for pagination (default: 0)
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $query);
+    }
+
+    /**
+     * Execute a raw POST request against the LaunchDarkly API.
+     *
+     * @param  array<int|string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PATCH request against the LaunchDarkly API.
+     *
+     * @param  array<int|string, mixed>  $payload  JSON Patch, merge patch, or semantic patch body.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $payload = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PUT request against the LaunchDarkly API.
+     *
+     * @param  array<int|string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $payload = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw DELETE request against the LaunchDarkly API.
+     *
+     * @param  array<int|string, mixed>  $payload  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * List feature flags for a project.
+     *
+     * @param  string|null  $projectKey  Override the default project key.
+     * @param  int  $limit  Maximum number of flags to return.
+     * @param  int  $offset  Offset for pagination.
+     * @param  string|null  $env  Environment key filter.
      * @return array<string, mixed>
      */
     public function listFlags(?string $projectKey = null, int $limit = 20, int $offset = 0, ?string $env = null): array
     {
-        $project = $projectKey ?? $this->projectKey;
-
         $params = [
             'limit' => $limit,
             'offset' => $offset,
@@ -49,42 +114,42 @@ class LaunchDarklyService
             $params['env'] = $env;
         }
 
-        return $this->request('GET', "/flags/{$project}", $params);
+        return $this->request('GET', '/flags/' . rawurlencode($this->resolveProject($projectKey)), $params);
     }
 
     /**
      * Get a single feature flag.
      *
-     * @param  string  $featureFlagKey  The feature flag key
-     * @param  string|null  $projectKey  Override the default project key
-     * @param  string|null  $env  Environment key to filter by
+     * @param  string  $featureFlagKey  The feature flag key.
+     * @param  string|null  $projectKey  Override the default project key.
+     * @param  string|null  $env  Environment key to filter by.
      * @return array<string, mixed>
      */
     public function getFlag(string $featureFlagKey, ?string $projectKey = null, ?string $env = null): array
     {
-        $project = $projectKey ?? $this->projectKey;
-
         $params = [];
         if ($env !== null) {
             $params['env'] = $env;
         }
 
-        return $this->request('GET', "/flags/{$project}/{$featureFlagKey}", $params);
+        return $this->request(
+            'GET',
+            '/flags/' . rawurlencode($this->resolveProject($projectKey)) . '/' . rawurlencode($featureFlagKey),
+            $params,
+        );
     }
 
     /**
      * Toggle a feature flag on or off for a specific environment.
      *
-     * @param  string  $featureFlagKey  The feature flag key
-     * @param  bool  $enabled  Whether to turn the flag on or off
-     * @param  string  $environmentKey  The environment key (e.g., "production", "staging")
-     * @param  string|null  $projectKey  Override the default project key
+     * @param  string  $featureFlagKey  The feature flag key.
+     * @param  bool  $enabled  Whether to turn the flag on or off.
+     * @param  string  $environmentKey  The environment key.
+     * @param  string|null  $projectKey  Override the default project key.
      * @return array<string, mixed>
      */
     public function toggleFlag(string $featureFlagKey, bool $enabled, string $environmentKey, ?string $projectKey = null): array
     {
-        $project = $projectKey ?? $this->projectKey;
-
         $patch = [
             [
                 'op' => 'replace',
@@ -93,20 +158,22 @@ class LaunchDarklyService
             ],
         ];
 
-        return $this->request('PATCH', "/flags/{$project}/{$featureFlagKey}", $patch, true);
+        return $this->request(
+            'PATCH',
+            '/flags/' . rawurlencode($this->resolveProject($projectKey)) . '/' . rawurlencode($featureFlagKey),
+            $patch,
+        );
     }
 
     /**
      * List environments for a project.
      *
-     * @param  string|null  $projectKey  Override the default project key
+     * @param  string|null  $projectKey  Override the default project key.
      * @return array<string, mixed>
      */
     public function listEnvironments(?string $projectKey = null): array
     {
-        $project = $projectKey ?? $this->projectKey;
-
-        return $this->request('GET', "/projects/{$project}/environments");
+        return $this->request('GET', '/projects/' . rawurlencode($this->resolveProject($projectKey)) . '/environments');
     }
 
     /**
@@ -122,16 +189,16 @@ class LaunchDarklyService
     /**
      * Get a single project by key.
      *
-     * @param  string  $projectKey  The project key
+     * @param  string  $projectKey  The project key.
      * @return array<string, mixed>
      */
     public function getProject(string $projectKey): array
     {
-        return $this->request('GET', "/projects/{$projectKey}");
+        return $this->request('GET', '/projects/' . rawurlencode($projectKey));
     }
 
     /**
-     * Get the currently authenticated user.
+     * Get the currently authenticated member.
      *
      * @return array<string, mixed>
      */
@@ -143,31 +210,70 @@ class LaunchDarklyService
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API path (relative to base URL)
-     * @param  array<int|string, mixed>  $data  Query params or request body
-     * @param  bool  $isBody  If true, send $data as JSON body; otherwise as query params
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API endpoint path.
+     * @param  array<int|string, mixed>  $data  Request data.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = [], bool $isBody = false): array
+    private function request(string $method, string $path, array $data = []): array
     {
-        $response = $this->rawRequest($method, $path, $data, $isBody);
+        $response = $this->rawRequest($method, $path, $data);
+        $json = $response->json();
 
-        return $response->json() ?? [];
+        if (!is_array($json)) {
+            return [];
+        }
+
+        return $json;
+    }
+
+    /**
+     * Resolve an explicit or configured project key.
+     */
+    private function resolveProject(?string $projectKey = null): string
+    {
+        $project = $projectKey ?: $this->projectKey;
+
+        if ($project === '') {
+            throw new \RuntimeException('LaunchDarkly project key is required for this operation.');
+        }
+
+        return $project;
+    }
+
+    /**
+     * Normalize a user-supplied API path to a relative LaunchDarkly v2 path.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '') {
+            throw new \RuntimeException('LaunchDarkly API path is required.');
+        }
+
+        if (str_starts_with($path, $this->baseUrl)) {
+            $path = substr($path, strlen($this->baseUrl));
+        }
+
+        if (str_starts_with($path, '/api/v2/')) {
+            $path = substr($path, strlen('/api/v2'));
+        }
+
+        return '/' . ltrim($path, '/');
     }
 
     /**
      * Make a raw HTTP request to the LaunchDarkly API.
      *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API path
-     * @param  array<int|string, mixed>  $data  Request data
-     * @param  bool  $isBody  Send as JSON body instead of query params
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API endpoint path.
+     * @param  array<int|string, mixed>  $data  Request data.
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = [], bool $isBody = false): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
         if (!$this->accessToken) {
             throw new \RuntimeException('LaunchDarkly access token is not configured.');
@@ -184,14 +290,14 @@ class LaunchDarklyService
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
-                'PATCH' => $http->withBody(json_encode($data), 'application/json')->patch($url),
+                'PATCH' => $http->withBody(json_encode($data, JSON_THROW_ON_ERROR), 'application/json')->patch($url),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
+                $contentType = $response->header('Content-Type') ?? '';
                 $body = $response->body();
 
                 if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
@@ -201,7 +307,9 @@ class LaunchDarklyService
                     throw new \RuntimeException("LaunchDarkly API endpoint not available (HTTP {$response->status()}). Check your base URL and access token.");
                 }
 
-                $error = $response->json('message') ?? $response->body();
+                $json = $response->json();
+                $error = is_array($json) ? ($json['message'] ?? $json['error'] ?? $body) : $body;
+
                 Log::error("LaunchDarkly API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
@@ -215,6 +323,8 @@ class LaunchDarklyService
                 'error' => $e->getMessage(),
             ]);
             throw new \RuntimeException("Failed to connect to LaunchDarkly API: {$e->getMessage()}");
+        } catch (\JsonException $e) {
+            throw new \RuntimeException("Failed to encode LaunchDarkly API payload: {$e->getMessage()}");
         }
     }
 }

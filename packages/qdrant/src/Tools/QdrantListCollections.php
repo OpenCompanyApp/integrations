@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Qdrant\QdrantService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Qdrant collections.
+ */
 class QdrantListCollections implements Tool
 {
+    /**
+     * @param  QdrantService  $service  The Qdrant REST API client.
+     */
     public function __construct(
         private QdrantService $service,
     ) {}
@@ -27,10 +33,15 @@ class QdrantListCollections implements Tool
         return [];
     }
 
+    /**
+     * List collections.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Qdrant integration is not configured.');
             }
 

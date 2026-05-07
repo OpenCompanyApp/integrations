@@ -91,7 +91,7 @@ class QualifyingToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'AI-powered sales CRM — manage accounts, contacts, and deals',
             'icon' => 'ph:handshake',
             'logo' => 'ph:handshake',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.qualifying.ai',
         ];

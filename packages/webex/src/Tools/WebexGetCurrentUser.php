@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Webex\Tools;
 
-use OpenCompany\Integrations\Webex\WebexService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class WebexGetCurrentUser implements Tool
+/**
+ * Get the authenticated Webex user's profile.
+ */
+class WebexGetCurrentUser extends AbstractWebexTool implements Tool
 {
-    public function __construct(
-        private WebexService $service,
-    ) {}
-
     public function name(): string
     {
         return 'webex_get_current_user';
@@ -27,11 +25,16 @@ class WebexGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the current user profile.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Webex integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
             $result = $this->service->getCurrentUser();

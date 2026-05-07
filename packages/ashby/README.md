@@ -1,14 +1,14 @@
 # Integration: Ashby
 
-> Ashby ATS integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage jobs, applications, and interviews. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Ashby ATS integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage candidates, applications, jobs, interviews, offers, webhooks, and raw Ashby API calls. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to your applicant tracking system. Browse job postings, review applications, and check interview schedules — all through the [Ashby](https://ashbyhq.com) API.
+Give your AI agents access to Ashby recruiting workflows. Browse jobs, sync candidates, review applications, check interviews, inspect offers, and configure webhook settings through the [Ashby developer API](https://developers.ashbyhq.com/reference).
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Ashby tool lets AI agents manage recruiting workflows — browsing open positions, reviewing candidate applications, and tracking interview schedules.
+This Ashby package lets AI agents manage recruiting workflows - browsing open positions, reviewing candidate applications, tracking interview schedules, syncing offers, and using raw endpoint calls when Ashby adds new API resources.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This tool requires an Ashby API access token.
+This tool requires an Ashby API key. Ashby's API uses HTTP Basic auth with the API key as the username and an empty password.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -39,15 +39,18 @@ return [
 
 ## Available Tools
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `ashby_list_applications` | read | List job applications with optional filters (job, status) |
-| `ashby_get_application` | read | Get details for a specific application |
-| `ashby_list_jobs` | read | List job postings with optional status filter |
-| `ashby_get_job` | read | Get details for a specific job |
-| `ashby_list_interviews` | read | List interviews with optional application filter |
-| `ashby_get_interview` | read | Get details for a specific interview |
-| `ashby_get_current_user` | read | Get the authenticated user's profile |
+This package exposes 44 tools:
+
+| Area | Tools |
+|------|-------|
+| Raw API | `ashby_api_post` |
+| Account | `ashby_get_current_user`, `ashby_list_users` |
+| Candidates | `ashby_list_candidates`, `ashby_search_candidates`, `ashby_get_candidate`, `ashby_create_candidate`, `ashby_update_candidate`, `ashby_create_note`, `ashby_list_candidate_notes` |
+| Applications | `ashby_list_applications`, `ashby_get_application`, `ashby_create_application`, `ashby_update_application`, `ashby_list_criteria_evaluations` |
+| Jobs | `ashby_list_jobs`, `ashby_search_jobs`, `ashby_get_job`, `ashby_create_job`, `ashby_update_job`, `ashby_list_job_postings`, `ashby_get_job_posting`, `ashby_list_openings`, `ashby_create_opening`, `ashby_list_departments`, `ashby_list_locations`, `ashby_list_sources` |
+| Interviews | `ashby_list_interviews`, `ashby_get_interview`, `ashby_list_interview_plans`, `ashby_list_interview_schedules`, `ashby_update_interview_schedule`, `ashby_list_interview_events` |
+| Offers | `ashby_list_offers`, `ashby_get_offer`, `ashby_create_offer`, `ashby_update_offer`, `ashby_approve_offer` |
+| Files and configuration | `ashby_get_file`, `ashby_set_custom_field_value`, `ashby_list_webhooks`, `ashby_get_webhook`, `ashby_create_webhook`, `ashby_update_assessment` |
 
 ## Quick Start
 
@@ -71,7 +74,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -127,4 +130,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

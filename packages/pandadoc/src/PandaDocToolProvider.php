@@ -95,7 +95,7 @@ class PandaDocToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Document management and e-signature platform',
             'icon' => 'ph:file-text',
             'logo' => 'simple-icons:pandadoc',
-            'category' => 'documents',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.pandadoc.com',
         ];

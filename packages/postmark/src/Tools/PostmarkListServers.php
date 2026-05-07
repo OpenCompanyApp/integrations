@@ -10,7 +10,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * List servers in the Postmark account.
  *
  * Supports pagination via count and offset parameters and filtering by name.
- * Note: This requires a Server API token with appropriate permissions.
+ * Note: This requires a Postmark Account API token, not a Server API token.
  */
 class PostmarkListServers implements Tool
 {
@@ -28,7 +28,7 @@ class PostmarkListServers implements Tool
 
     public function description(): string
     {
-        return 'List servers in the Postmark account. Supports filtering by name and pagination.';
+        return 'List servers in the Postmark account using an account API token. Supports filtering by name and pagination.';
     }
 
     public function parameters(): array

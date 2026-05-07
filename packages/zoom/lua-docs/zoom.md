@@ -275,6 +275,41 @@ print("Logged in as: " .. user.first_name .. " " .. user.last_name .. " (" .. us
 
 ---
 
+## Additional Tools
+
+The integration also exposes these Zoom API operations:
+
+| Tool | Purpose |
+|------|---------|
+| `create_user` | Create a user in the Zoom account with an action and user_info payload. |
+| `create_webinar` | Create a webinar for a user with topic, start time, duration, timezone, and agenda. |
+| `delete_meeting` | Delete a meeting by `meeting_id`. |
+| `get_account` | Get the current Zoom account information. |
+| `get_user_settings` | Get settings for a user by `user_id`. |
+| `get_webinar` | Get webinar details by `webinar_id`. |
+| `list_past_meetings` | List past instances for a meeting by `meeting_id`. |
+| `list_webinars` | List webinars for a user with optional `page_size`. |
+| `update_meeting` | Update topic, start time, duration, or agenda for an existing meeting. |
+
+Examples:
+
+```lua
+local webinar = app.integrations.zoom.create_webinar({
+  user_id = "me",
+  topic = "Customer onboarding",
+  type = 5,
+  start_time = "2026-06-15T10:00:00Z",
+  duration = 60,
+  timezone = "UTC"
+})
+
+local settings = app.integrations.zoom.get_user_settings({
+  user_id = "me"
+})
+```
+
+---
+
 ## Multi-Account Usage
 
 If you have multiple Zoom accounts configured, use account-specific namespaces:

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Netlify site by ID or name.
+ */
 class NetlifyGetSite implements Tool
 {
+    /**
+     * @param  NetlifyService  $service  The Netlify REST API client.
+     */
     public function __construct(
         private NetlifyService $service,
     ) {}
@@ -29,6 +35,11 @@ class NetlifyGetSite implements Tool
         ];
     }
 
+    /**
+     * Fetch and normalize a site.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (site_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

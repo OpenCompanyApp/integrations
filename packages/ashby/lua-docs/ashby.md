@@ -1,187 +1,183 @@
-# Ashby ATS — Lua API Reference
+# Ashby ATS Lua API Reference
 
-## list_applications
+Namespace: `app.integrations.ashby`
 
-List job applications with optional filters.
+Ashby's public API uses RPC-style POST endpoints such as `/candidate.list` and `/application.info`. This integration exposes first-class tools for common recruiting workflows plus `api_post` for newer or less common endpoints.
 
-### Parameters
+Ashby uses cursor pagination and `syncToken` for incremental syncs on many `.list` endpoints. Prefer those fields over offset pagination when the endpoint supports them.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of applications to return (default: 100) |
-| `offset` | integer | no | Number of results to skip for pagination |
-| `job_id` | string | no | Filter applications by job ID |
-| `status` | string | no | Filter by application status (e.g., "hired", "rejected", "active") |
-
-### Examples
+## Raw API
 
 ```lua
--- List all applications
-local result = app.integrations.ashby.list_applications({})
-
--- List applications for a specific job
-local result = app.integrations.ashby.list_applications({
-  job_id = "job_abc123"
-})
-
--- Paginate through applications
-local result = app.integrations.ashby.list_applications({
-  limit = 50,
-  offset = 100
+local result = app.integrations.ashby.api_post({
+  endpoint = "/candidate.list",
+  body = { limit = 100 }
 })
 ```
 
----
+## Candidates
 
-## get_application
+Tools:
 
-Get detailed information about a specific application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The application ID |
-
-### Examples
+- `list_candidates`
+- `search_candidates`
+- `get_candidate`
+- `create_candidate`
+- `update_candidate`
+- `create_note`
+- `list_candidate_notes`
 
 ```lua
-local result = app.integrations.ashby.get_application({
-  id = "app_xyz789"
+local page = app.integrations.ashby.list_candidates({
+  limit = 100,
+  cursor = "opaque-cursor"
+})
+
+local matches = app.integrations.ashby.search_candidates({
+  email = "person@example.test"
+})
+
+local note = app.integrations.ashby.create_note({
+  candidateId = "e9ed20fd-d45f-4aad-8a00-a19bfba0083e",
+  content = "Screen completed.",
+  contentType = "text/plain"
 })
 ```
 
----
+## Applications
 
-## list_jobs
+Tools:
 
-List job postings with optional status filter.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of jobs to return (default: 100) |
-| `offset` | integer | no | Number of results to skip for pagination |
-| `status` | string | no | Filter by job status (e.g., "open", "closed", "draft") |
-
-### Examples
+- `list_applications`
+- `get_application`
+- `create_application`
+- `update_application`
+- `list_criteria_evaluations`
 
 ```lua
--- List all jobs
-local result = app.integrations.ashby.list_jobs({})
-
--- List only open positions
-local result = app.integrations.ashby.list_jobs({
-  status = "open"
+local app = app.integrations.ashby.get_application({
+  id = "e9ed20fd-d45f-4aad-8a00-a19bfba0083e"
 })
 
--- Paginate
-local result = app.integrations.ashby.list_jobs({
-  limit = 50,
-  offset = 50
+local created = app.integrations.ashby.create_application({
+  candidateId = "candidate-id",
+  jobId = "job-id",
+  sourceId = "source-id"
 })
 ```
 
----
+## Jobs And Openings
 
-## get_job
+Tools:
 
-Get detailed information about a specific job.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The job ID |
-
-### Examples
+- `list_jobs`
+- `search_jobs`
+- `get_job`
+- `create_job`
+- `update_job`
+- `list_job_postings`
+- `get_job_posting`
+- `list_openings`
+- `create_opening`
+- `list_departments`
+- `list_locations`
+- `list_sources`
 
 ```lua
-local result = app.integrations.ashby.get_job({
-  id = "job_abc123"
+local postings = app.integrations.ashby.list_job_postings({
+  listedOnly = true
+})
+
+local jobs = app.integrations.ashby.search_jobs({
+  requisitionId = "REQ-123"
 })
 ```
 
----
+Set `listedOnly = true` before using job postings on a public career page, because Ashby's API can return unlisted postings.
 
-## list_interviews
+## Interviews
 
-List scheduled interviews with optional application filter.
+Tools:
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of interviews to return (default: 100) |
-| `offset` | integer | no | Number of results to skip for pagination |
-| `application_id` | string | no | Filter interviews by application ID |
-
-### Examples
+- `list_interviews`
+- `get_interview`
+- `list_interview_plans`
+- `list_interview_schedules`
+- `update_interview_schedule`
+- `list_interview_events`
 
 ```lua
--- List all interviews
-local result = app.integrations.ashby.list_interviews({})
+local schedules = app.integrations.ashby.list_interview_schedules({
+  applicationId = "application-id",
+  limit = 25
+})
 
--- List interviews for a specific application
-local result = app.integrations.ashby.list_interviews({
-  application_id = "app_xyz789"
+local events = app.integrations.ashby.list_interview_events({
+  interviewScheduleId = "schedule-id"
 })
 ```
 
----
+## Offers
 
-## get_interview
+Tools:
 
-Get detailed information about a specific interview.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The interview ID |
-
-### Examples
+- `list_offers`
+- `get_offer`
+- `create_offer`
+- `update_offer`
+- `approve_offer`
 
 ```lua
-local result = app.integrations.ashby.get_interview({
-  id = "interview_def456"
+local offers = app.integrations.ashby.list_offers({
+  applicationId = "application-id"
+})
+
+local approved = app.integrations.ashby.approve_offer({
+  offerVersionId = "offer-version-id"
 })
 ```
 
----
+## Users, Files, Custom Fields, Webhooks, And Assessments
 
-## get_current_user
+Tools:
 
-Get the profile of the currently authenticated Ashby user.
-
-### Parameters
-
-None.
-
-### Examples
+- `get_current_user`
+- `list_users`
+- `get_file`
+- `set_custom_field_value`
+- `list_webhooks`
+- `get_webhook`
+- `create_webhook`
+- `update_assessment`
 
 ```lua
-local result = app.integrations.ashby.get_current_user({})
-print(result.email)
-```
+local me = app.integrations.ashby.get_current_user({})
 
----
+local file = app.integrations.ashby.get_file({
+  fileId = "file-id"
+})
+
+local changed = app.integrations.ashby.set_custom_field_value({
+  body = {
+    objectType = "Candidate",
+    objectId = "candidate-id",
+    fieldId = "field-id",
+    value = "Example value"
+  }
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple Ashby accounts configured, use account-specific namespaces:
+If multiple Ashby accounts are configured, use account-specific namespaces:
 
 ```lua
--- Default account (always works)
-app.integrations.ashby.list_jobs({})
-
--- Explicit default (portable across setups)
-app.integrations.ashby.default.list_jobs({})
-
--- Named accounts
 app.integrations.ashby.production.list_jobs({})
-app.integrations.ashby.staging.list_jobs({})
+app.integrations.ashby.staging.list_candidates({ limit = 50 })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Safety Notes
+
+- Ashby API keys are sent using HTTP Basic auth with the key as username and an empty password.
+- Candidate, job, opening, offer, webhook, and assessment write tools may require specific Ashby API permissions.
+- Use `example.test` and dummy UUIDs in generated examples and tests.

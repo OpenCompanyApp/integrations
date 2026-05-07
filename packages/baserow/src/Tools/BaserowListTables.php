@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class BaserowListTables implements Tool
 {
+    /**
+     * @param  BaserowService  $service  The Baserow API client.
+     */
     public function __construct(
         private BaserowService $service,
     ) {}
@@ -38,6 +41,11 @@ class BaserowListTables implements Tool
         ];
     }
 
+    /**
+     * List rows through the legacy list_tables slug.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

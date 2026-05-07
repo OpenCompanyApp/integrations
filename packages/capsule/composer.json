@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-capsule",
-    "description": "Capsule CRM integration for Laravel — manage contacts, opportunities, and tasks.",
+    "description": "Capsule CRM integration for Laravel: manage contacts, opportunities, cases, tasks, tracks, tags, and custom fields.",
     "license": "MIT",
     "authors": [
         {

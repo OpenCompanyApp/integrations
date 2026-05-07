@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ElasticEmail\ElasticEmailService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Send a transactional email through Elastic Email.
+ */
 class ElasticEmailSendEmail implements Tool
 {
+    /**
+     * @param  ElasticEmailService  $service  Elastic Email API client.
+     */
     public function __construct(
         private ElasticEmailService $service,
     ) {}
@@ -36,6 +42,11 @@ class ElasticEmailSendEmail implements Tool
         ];
     }
 
+    /**
+     * Execute the transactional email send.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -24,7 +24,7 @@ class ZohoMailServiceProvider extends ServiceProvider
 
             return new ZohoMailService(
                 accessToken: $creds->get('zoho-mail', 'access_token', ''),
-                baseUrl: $creds->get('zoho-mail', 'url', 'https://mail.zoho.com/api/v1'),
+                baseUrl: $creds->get('zoho-mail', 'url', 'https://mail.zoho.com/api'),
             );
         });
     }

@@ -1,0 +1,35 @@
+<?php
+
+namespace OpenCompany\Integrations\Ramp\Tools;
+
+/**
+ * Create a physical card.
+ *
+ * Maps to the official Ramp endpoint post /developer/v1/cards/deferred/physical.
+ */
+class RampPostPhysicalCard extends AbstractRampTool
+{
+    protected const NAME = 'ramp_post_physical_card';
+    protected const DESCRIPTION = 'Create a physical card
+
+Official Ramp endpoint: POST /developer/v1/cards/deferred/physical
+
+Call this endpoint to create an async task to request for new physical card.';
+    protected const PARAMETERS = array (
+  'body' =>
+  array (
+    'type' => 'object',
+    'required' => true,
+    'description' => 'JSON request body matching the official Ramp OpenAPI request schema for this operation.',
+  ),
+);
+    protected const METHOD = 'post';
+    protected const PATH = '/developer/v1/cards/deferred/physical';
+    protected const PATH_PARAMS = array (
+);
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = true;
+}

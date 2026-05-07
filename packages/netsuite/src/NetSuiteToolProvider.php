@@ -106,7 +106,7 @@ class NetSuiteToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'NetSuite ERP integration for Laravel — manage customers, invoices, sales orders, and items.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

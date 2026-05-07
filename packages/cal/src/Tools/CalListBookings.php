@@ -12,10 +12,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Returns bookings with optional filtering by status, event type,
  * and pagination support.
  *
- * @see https://developer.cal.com/api/endpoints/bookings
+ * @see https://cal.com/docs/api-reference/v2/bookings/list-bookings
  */
 class CalListBookings implements Tool
 {
+    /**
+     * @param  CalService  $service  Cal.com API client.
+     */
     public function __construct(
         private CalService $service,
     ) {}
@@ -41,7 +44,7 @@ class CalListBookings implements Tool
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of bookings to return per page.'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (starts at 1).'],
             'status' => ['type' => 'string', 'description' => 'Filter by booking status: "confirmed", "pending", "cancelled", or "rejected".'],
-            'eventTypeId' => ['type' => 'integer', 'description' => 'Filter bookings for a specific event type by its ID.'],
+            'event_type_id' => ['type' => 'integer', 'description' => 'Filter bookings for a specific event type by its ID.'],
         ];
     }
 
@@ -60,7 +63,9 @@ class CalListBookings implements Tool
             $limit = isset($args['limit']) ? (int) $args['limit'] : null;
             $page = isset($args['page']) ? (int) $args['page'] : null;
             $status = $args['status'] ?? null;
-            $eventTypeId = isset($args['eventTypeId']) ? (int) $args['eventTypeId'] : null;
+            $eventTypeId = isset($args['event_type_id'])
+                ? (int) $args['event_type_id']
+                : (isset($args['eventTypeId']) ? (int) $args['eventTypeId'] : null);
 
             $result = $this->service->listBookings($limit, $page, $status, $eventTypeId);
 

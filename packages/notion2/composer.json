@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-notion2",
-    "description": "Notion integration for OpenCompany — pages, databases, and users.",
+    "description": "Legacy Notion package. Use opencompanyapp/integration-notion.",
+    "abandoned": "opencompanyapp/integration-notion",
     "license": "MIT",
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
     "keywords": ["tools", "notion", "productivity", "workspace", "opencompany"],

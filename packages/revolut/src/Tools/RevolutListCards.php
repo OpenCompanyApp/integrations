@@ -35,7 +35,10 @@ class RevolutListCards implements Tool
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of cards to return per page. Revolut allows 1-100.'],
+            'created_before' => ['type' => 'string', 'description' => 'Return cards created before this ISO 8601 date/time for pagination.'],
+        ];
     }
 
     /**
@@ -50,14 +53,23 @@ class RevolutListCards implements Tool
                 return ToolResult::error('Revolut integration is not configured.');
             }
 
-            $result = $this->service->listCards();
+            $params = [];
+
+            if (isset($args['limit'])) {
+                $params['limit'] = max(1, min(100, (int) $args['limit']));
+            }
+            if (isset($args['created_before'])) {
+                $params['created_before'] = $args['created_before'];
+            }
+
+            $result = $this->service->listCards($params);
 
             $cards = array_map(function (array $c) {
                 return [
                     'id' => $c['id'] ?? '',
                     'last_four_digits' => $c['last_four_digits'] ?? '',
-                    'status' => $c['status'] ?? '',
-                    'cardholder_name' => $c['cardholder_name'] ?? '',
+                    'state' => $c['state'] ?? $c['status'] ?? '',
+                    'cardholder_name' => $c['cardholder_name'] ?? $c['holder_name'] ?? '',
                     'currency' => $c['currency'] ?? '',
                     'type' => $c['type'] ?? '',
                     'label' => $c['label'] ?? null,

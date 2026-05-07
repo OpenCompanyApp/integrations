@@ -92,7 +92,7 @@ class HeyGenToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'AI-powered video generation with talking avatars',
             'icon' => 'ph:video',
             'logo' => 'simple-icons:heygen',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.heygen.com/reference/api-reference',
         ];

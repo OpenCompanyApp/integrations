@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class BeamerCreatePost implements Tool
 {
+    /**
+     * @param  BeamerService  $service  Beamer API client.
+     */
     public function __construct(
         private BeamerService $service,
     ) {}
@@ -38,6 +41,11 @@ class BeamerCreatePost implements Tool
         ];
     }
 
+    /**
+     * Create a Beamer changelog post or announcement.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -45,10 +53,18 @@ class BeamerCreatePost implements Tool
                 return ToolResult::error('Beamer integration is not configured.');
             }
 
-            $title = $args['title'];
-            $content = $args['content'];
+            $title = (string) ($args['title'] ?? '');
+            $content = (string) ($args['content'] ?? '');
             $category = $args['category'] ?? null;
             $date = $args['date'] ?? null;
+
+            if ($title === '') {
+                return ToolResult::error('title is required.');
+            }
+
+            if ($content === '') {
+                return ToolResult::error('content is required.');
+            }
 
             $result = $this->service->createPost($title, $content, $category, $date);
 

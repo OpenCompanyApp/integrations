@@ -1,222 +1,113 @@
-# Bubble — Lua API Reference
+# Bubble - Lua API Reference
 
-## list_records
+Namespace: `app.integrations.bubble`
 
-List records from a Bubble data type with optional filtering and pagination.
+This integration wraps Bubble's built-in API. The normal production API root is `/api/1.1`; use `/version-test/api/1.1` for development mode. Bubble exposes two API surfaces: the Data API for database records and the Workflow API for exposed backend workflows. Privacy rules and API settings still apply.
 
-### Parameters
+## Discovery
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Bubble data type name (case-sensitive), e.g. `"User"`, `"Product"` |
-| `constraints` | string | no | JSON-encoded array of constraint objects for filtering |
-| `limit` | integer | no | Max records to return (1–100, default: 100) |
-| `cursor` | integer | no | Offset for pagination (0-based) |
-
-### Constraint Format
-
-Each constraint is an object with three fields:
-
-```json
-[
-  {"key": "field_name", "constraint_type": "equals", "value": "some_value"},
-  {"key": "age", "constraint_type": "greater than", "value": 18}
-]
-```
-
-### Constraint Types
-
-| Type | Description |
-|------|-------------|
-| `equals` | Exact match |
-| `not equal` | Does not match |
-| `contains` | String contains substring |
-| `not contains` | String does not contain |
-| `is empty` | Field is empty (no value needed) |
-| `is not empty` | Field has a value (no value needed) |
-| `greater than` | Numeric greater than |
-| `less than` | Numeric less than |
-| `greater than or equal` | Numeric ≥ |
-| `less than or equal` | Numeric ≤ |
-| `begins with` | String starts with |
-| `ends with` | String ends with |
-
-### Response
-
-```json
-{
-  "response": [
-    {"_id": "abc123", "name": "John", "email": "john@example.com"}
-  ],
-  "remaining": 42
-}
-```
-
-`remaining` is the count of additional records available after this page.
-
-### Examples
-
-#### List all users
+Use the Swagger specification to discover the exact Data API data types and Workflow API paths enabled for the app:
 
 ```lua
-local result = app.integrations.bubble.list_records({
-  type = "User"
-})
-
-for _, record in ipairs(result.response) do
-  print(record.name .. " <" .. record.email .. ">")
-end
+local swagger = app.integrations.bubble.get_swagger({})
 ```
 
-#### Filter users by email domain
+## Data API
+
+List records with Bubble constraints, pagination, and sorting:
 
 ```lua
 local result = app.integrations.bubble.list_records({
   type = "User",
-  constraints = '[{"key": "email", "constraint_type": "contains", "value": "@company.com"}]'
+  constraints = {
+    { key = "email", constraint_type = "contains", value = "@example.test" }
+  },
+  limit = 50,
+  cursor = 0,
+  sort_field = "Created Date",
+  descending = true
 })
-
-for _, record in ipairs(result.response) do
-  print(record.name)
-end
 ```
 
-#### Paginate through records
-
-```lua
-local page_size = 50
-local cursor = 0
-local all_records = {}
-
-repeat
-  local result = app.integrations.bubble.list_records({
-    type = "Product",
-    limit = page_size,
-    cursor = cursor
-  })
-
-  for _, record in ipairs(result.response) do
-    table.insert(all_records, record)
-  end
-
-  cursor = cursor + page_size
-until result.remaining == 0
-```
-
----
-
-## get_record
-
-Get a single record by its unique Bubble ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Bubble data type name |
-| `id` | string | yes | The unique identifier (UUID) of the record |
-
-### Example
+Record operations:
 
 ```lua
 local record = app.integrations.bubble.get_record({
-  type = "User",
+  type = "Product",
   id = "1704982345123x456789"
 })
 
-print("Name: " .. record.name)
-print("Email: " .. record.email)
-print("Created: " .. record["Created Date"])
-```
-
----
-
-## create_record
-
-Create a new record in a Bubble data type.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Bubble data type name |
-| `fields` | string | yes | JSON object of field names and values |
-
-### Example
-
-```lua
-local result = app.integrations.bubble.create_record({
-  type = "User",
-  fields = '{"name": "Jane Doe", "email": "jane@example.com", "role": "admin"}'
+local created = app.integrations.bubble.create_record({
+  type = "Product",
+  fields = { name = "Example", price = 100 }
 })
 
-print("Created record with ID: " .. result.id)
-```
-
----
-
-## update_record
-
-Update an existing record. Only the provided fields are changed.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Bubble data type name |
-| `id` | string | yes | The unique identifier of the record |
-| `fields` | string | yes | JSON object of field names and values to update |
-
-### Example
-
-```lua
-local result = app.integrations.bubble.update_record({
-  type = "User",
+local patched = app.integrations.bubble.update_record({
+  type = "Product",
   id = "1704982345123x456789",
-  fields = '{"name": "Jane Smith", "role": "editor"}'
+  fields = { price = 120 }
 })
 
-print("Updated: " .. result.name)
-```
+local replaced = app.integrations.bubble.replace_record({
+  type = "Product",
+  id = "1704982345123x456789",
+  fields = { name = "Example", price = 120 }
+})
 
----
-
-## delete_record
-
-Delete a record permanently by its unique ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Bubble data type name |
-| `id` | string | yes | The unique identifier of the record |
-
-### Example
-
-```lua
 app.integrations.bubble.delete_record({
-  type = "User",
+  type = "Product",
   id = "1704982345123x456789"
 })
 ```
 
----
+`update_record` uses PATCH and changes only supplied fields. `replace_record` uses PUT and should be treated as a full replacement payload.
+
+## Workflow API
+
+Trigger a Bubble backend API workflow with POST:
+
+```lua
+local response = app.integrations.bubble.trigger_workflow({
+  workflow = "sync_order",
+  payload = {
+    order_id = "ord_123",
+    status = "paid"
+  }
+})
+```
+
+Initialize a POST workflow while Bubble's Detect data popup is open:
+
+```lua
+app.integrations.bubble.trigger_workflow({
+  workflow = "sync_order",
+  initialize = true,
+  payload = {
+    order_id = "ord_123",
+    status = "paid"
+  }
+})
+```
+
+Trigger a workflow configured for GET/querystring parameters:
+
+```lua
+local response = app.integrations.bubble.trigger_workflow_get({
+  workflow = "status_check",
+  params = {
+    order_id = "ord_123"
+  }
+})
+```
+
+Workflow API endpoint names and parameters are app-specific. Use `get_swagger` or the Bubble editor's backend workflow settings to confirm the endpoint name before calling it.
 
 ## Multi-Account Usage
 
-If you have multiple Bubble apps configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.bubble.list_records({ type = "User" })
-
--- Explicit default (portable across setups)
 app.integrations.bubble.default.list_records({ type = "User" })
-
--- Named accounts
-app.integrations.bubble.main_app.list_records({ type = "User" })
-app.integrations.bubble.staging.list_records({ type = "User" })
+app.integrations.bubble.production.trigger_workflow({ workflow = "sync_order", payload = {} })
 ```
 
-All functions are identical across accounts — only the credentials (API key and hostname) differ.
+Named account namespaces use the same tools with different stored credentials.

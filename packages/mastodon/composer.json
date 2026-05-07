@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mastodon",
-    "description": "Mastodon integration for Laravel — list statuses, create posts, manage accounts.",
+    "description": "Mastodon integration for Laravel agents with statuses, accounts, timelines, and generic REST API tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "mastodon", "social", "opencompany"],
+    "keywords": ["tools", "mastodon", "fediverse", "rest-api", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Sendy integration with Laravel's service container.
+ *
+ * Binds the Sendy API client and registers the tool provider for discovery.
+ */
 class SendyServiceProvider extends ServiceProvider
 {
     /**

@@ -47,6 +47,11 @@ class ElevenLabsTextToSpeech implements Tool
         ];
     }
 
+    /**
+     * Generate speech audio from text.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (voice_id, text, model_id, voice settings).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -54,8 +59,16 @@ class ElevenLabsTextToSpeech implements Tool
                 return ToolResult::error('ElevenLabs integration is not configured.');
             }
 
-            $voiceId  = $args['voice_id'];
-            $text     = $args['text'];
+            $voiceId = trim((string) ($args['voice_id'] ?? ''));
+            if ($voiceId === '') {
+                return ToolResult::error('voice_id is required.');
+            }
+
+            $text = trim((string) ($args['text'] ?? ''));
+            if ($text === '') {
+                return ToolResult::error('text is required.');
+            }
+
             $modelId  = $args['model_id'] ?? 'eleven_multilingual_v2';
 
             $voiceSettings = [];

@@ -1,0 +1,25 @@
+{
+    "name": "opencompanyapp/integration-miniflux",
+    "description": "Miniflux integration for Laravel AI agents - feeds, categories, entries, users, API keys, OPML, health probes, and raw API calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Miniflux\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Miniflux\\MinifluxServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

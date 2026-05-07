@@ -6,6 +6,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * List Recurly billing plans.
+ *
+ * Supports cursor pagination for plan catalog discovery.
+ */
 class RecurlyListPlans implements Tool
 {
     /**

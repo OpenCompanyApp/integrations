@@ -2,71 +2,65 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List members of a Mailgun mailing list.
- *
- * Requires the mailing list address. Supports pagination via limit.
+ * List members of a mailing list.
  */
-class MailgunListMembers implements Tool
+class MailgunListMembers extends AbstractMailgunEndpointTool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_list_members';
 
-    public function name(): string
-    {
-        return 'mailgun_list_members';
-    }
+    protected string $toolDescription = 'List members of a mailing list.';
 
-    public function description(): string
-    {
-        return 'List members of a Mailgun mailing list. Requires the list address.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'list_address' => ['type' => 'string', 'required' => true, 'description' => 'Mailing list address (e.g. newsletter@mg.example.com).'],
-            'limit'        => ['type' => 'integer', 'description' => 'Maximum number of members to return (default 100).'],
-        ];
-    }
+    protected string $path = '/lists/{list_address}/members';
 
-    /**
-     * List members of a Mailgun mailing list.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (list_address, limit)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'list_address' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Mailing list address.',
+    ],
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum number of records to return.',
+    ],
+    'skip' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of records to skip.',
+    ],
+    'page' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Pagination cursor or page URL/token.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Mailgun query parameters to pass through.',
+    ],
+    'subscribed' => [
+        'type' => 'boolean',
+        'required' => false,
+        'description' => 'Filter subscribed members.',
+    ],
+];
 
-            $listAddress = $args['list_address'] ?? '';
+    /** @var list<string> */
+    protected array $required = [
+    'list_address',
+];
 
-            if (empty($listAddress)) {
-                return ToolResult::error('list_address is required.');
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'page',
+    'subscribed',
+];
 
-            $params = [];
-
-            if (! empty($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-
-            $result = $this->service->listMembers($listAddress, $params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

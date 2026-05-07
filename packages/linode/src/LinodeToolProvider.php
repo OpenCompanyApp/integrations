@@ -4,21 +4,27 @@ namespace OpenCompany\Integrations\Linode;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Linode\Tools\LinodeListInstances;
-use OpenCompany\Integrations\Linode\Tools\LinodeGetInstance;
-use OpenCompany\Integrations\Linode\Tools\LinodeListVolumes;
-use OpenCompany\Integrations\Linode\Tools\LinodeListDomains;
-use OpenCompany\Integrations\Linode\Tools\LinodeGetDomain;
-use OpenCompany\Integrations\Linode\Tools\LinodeListStackscripts;
 use OpenCompany\Integrations\Linode\Tools\LinodeGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\Linode\Tools\LinodeGetDomain;
+use OpenCompany\Integrations\Linode\Tools\LinodeGetInstance;
+use OpenCompany\Integrations\Linode\Tools\LinodeListDomains;
+use OpenCompany\Integrations\Linode\Tools\LinodeListInstances;
+use OpenCompany\Integrations\Linode\Tools\LinodeListStackscripts;
+use OpenCompany\Integrations\Linode\Tools\LinodeListVolumes;
 
 /**
+ * Exposes Linode cloud-management tools to host applications.
+ *
+ * Handles catalog metadata, credential setup, connection checks, and
+ * multi-account service resolution for the Linode API v4.
+ */
+class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -92,11 +98,14 @@ class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Akamai cloud computing — Linode instances, volumes, domains, and StackScripts',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:linode',
-            'category' => 'productivity',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://techdocs.akamai.com/linode-api/reference/api',
+            'source_url' => 'https://github.com/linode/linode-api-docs',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -118,6 +127,12 @@ class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
+    /**
+     * Verify Linode credentials with a lightweight profile request.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -227,7 +242,9 @@ class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/linode.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -245,7 +262,7 @@ class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new LinodeService(
                 accessToken: $creds->get('linode', 'access_token', '', $account),

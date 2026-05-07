@@ -2,46 +2,18 @@
 
 namespace OpenCompany\Integrations\CampaignMonitor\Tools;
 
-use OpenCompany\Integrations\CampaignMonitor\CampaignMonitorService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List all subscriber lists in the Campaign Monitor account.
+ * List subscriber lists for a client.
  */
-class CampaignMonitorListLists implements Tool
+class CampaignMonitorListLists extends AbstractCampaignMonitorEndpointTool
 {
-    public function __construct(
-        private CampaignMonitorService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'campaignmonitor_list_lists';
-    }
-
-    public function description(): string
-    {
-        return 'List all subscriber lists in your Campaign Monitor account. Returns list IDs and names.';
-    }
-
-    public function parameters(): array
-    {
-        return [];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Campaign Monitor integration is not configured.');
-            }
-
-            $result = $this->service->listLists();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'campaignmonitor_list_lists';
+    protected const TOOL_DESCRIPTION = 'List subscriber lists for a client.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/clients/{client_id}/lists.json';
+    protected const PATH_KEYS = array (  0 => 'client_id',);
+    protected const QUERY_KEYS = array ();
+    protected const BODY_KEYS = array ();
+    protected const PARAMETERS = array (  'client_id' =>   array (    'type' => 'string',    'required' => true,    'description' => 'Campaign Monitor resource ID for client id.',  ),  'params' =>   array (    'type' => 'object',    'description' => 'Query parameters.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

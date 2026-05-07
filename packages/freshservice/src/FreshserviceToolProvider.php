@@ -107,7 +107,7 @@ class FreshserviceToolProvider implements ToolProvider, ConfigurableIntegration,
             'description' => 'Freshservice ITSM integration for Laravel — manage tickets, agents, and assets.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\LaunchDarkly\LaunchDarklyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the currently authenticated LaunchDarkly member.
+ */
 class LaunchDarklyGetCurrentUser implements Tool
 {
+    /**
+     * @param  LaunchDarklyService  $service  LaunchDarkly API client.
+     */
     public function __construct(
         private LaunchDarklyService $service,
     ) {}
@@ -27,6 +33,11 @@ class LaunchDarklyGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get current member details from LaunchDarkly.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-voyage-ai",
+    "description": "Voyage AI integration for Laravel — embeddings, reranking, multimodal embeddings, files, and batch inference.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "voyage", "voyage-ai", "embeddings", "rerank", "rag", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\VoyageAi\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\VoyageAi\\VoyageAiServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

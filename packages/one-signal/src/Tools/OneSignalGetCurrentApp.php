@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class OneSignalGetCurrentApp implements Tool
 {
+    /**
+     * @param  OneSignalService  $service  OneSignal API client.
+     */
     public function __construct(
         private OneSignalService $service,
     ) {}

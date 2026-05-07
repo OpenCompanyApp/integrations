@@ -4,20 +4,12 @@ namespace OpenCompany\Integrations\Tally\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Tally\TallyService;
 
 /**
  * Get details of a specific Tally form by its ID.
  */
-class TallyGetForm implements Tool
+class TallyGetForm extends AbstractTallyTool implements Tool
 {
-    /**
-     * @param  TallyService  $service  The Tally API service instance.
-     */
-    public function __construct(
-        private TallyService $service,
-    ) {}
-
     public function name(): string
     {
         return 'tally_get_form';
@@ -46,21 +38,8 @@ class TallyGetForm implements Tool
      */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Tally integration is not configured.');
-            }
-
-            $formId = $args['form_id'] ?? '';
-            if (empty($formId)) {
-                return ToolResult::error('Form ID is required.');
-            }
-
-            $result = $this->service->getForm($formId);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->getForm(
+            $this->requiredString($args, 'form_id', 'Form ID'),
+        ));
     }
 }

@@ -7,17 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: Retrieve the currently authenticated user profile / perform a health check.
+ * Tool: Perform an Auth0 Management API health check.
  *
- * Calls <code>GET /api/v2/users/me</code> to verify the access token and
- * return information about the authenticated entity. Useful as a connection
- * health check — if the token is valid the response includes the caller's
- * profile.
- *
- * @see https://auth0.com/docs/api/management/v2#!/Users/get_me
+ * Uses tenant settings because Management API access tokens are often issued to
+ * machine-to-machine clients rather than Auth0 users.
  */
 class AuthZeroGetCurrentUser implements Tool
 {
+    /**
+     * @param  AuthZeroService  $service  The Auth0 Management API client.
+     */
     public function __construct(
         private AuthZeroService $service,
     ) {}
@@ -29,7 +28,7 @@ class AuthZeroGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Retrieve the profile of the currently authenticated user. Also serves as a health check for the Auth0 connection.';
+        return 'Run a lightweight Auth0 Management API health check by retrieving tenant settings.';
     }
 
     public function parameters(): array
@@ -37,6 +36,11 @@ class AuthZeroGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Run the Auth0 Management API health check.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -44,15 +48,8 @@ class AuthZeroGetCurrentUser implements Tool
                 return ToolResult::error('Auth0 integration is not configured.');
             }
 
-            // The /users/me endpoint is not available on all plans.
-            // Fall back to tenant settings as a health check.
-            try {
-                $result = $this->service->getUser('me');
-            } catch (\Throwable $e) {
-                // Fallback: use tenant settings as the health check
-                $result = $this->service->getTenantSettings();
-                $result['_health_check'] = 'Retrieved tenant settings — access token is valid.';
-            }
+            $result = $this->service->healthCheck();
+            $result['_health_check'] = 'Retrieved tenant settings; Management API token is valid for this tenant.';
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

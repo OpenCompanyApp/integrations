@@ -1,16 +1,8 @@
 # Integration: Retell AI
 
-> Retell AI integration for the [Laravel AI SDK](https://github.com/laravel/ai) — create and manage AI-powered phone calls and voice agents. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Retell AI API integration for Laravel agents. Manage calls, voice agents, phone numbers, Retell LLMs, voices, and documented API endpoints.
 
-Give your AI agents access to voice calling capabilities. Create phone calls using AI voice agents, retrieve call details and transcripts, and manage voice agent configurations — all through the [Retell AI](https://retellai.com) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Retell AI tool lets AI agents initiate phone calls, monitor call progress, and manage voice agents — enabling conversational AI workflows that reach beyond text-based interactions.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+This package uses the official Retell API base URL `https://api.retellai.com`. Call operations remain under `/v2/...`, while agents, phone numbers, LLMs, and voices use root API paths such as `/create-agent` and `/list-voices`.
 
 ## Installation
 
@@ -18,112 +10,91 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-retell-ai
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
-
-This tool requires a Retell AI API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
 
 ```php
 return [
     'retell-ai' => [
         'api_key' => env('RETELL_AI_API_KEY'),
-        'url'     => env('RETELL_AI_URL', 'https://api.retellai.com/v2'),
+        'url' => env('RETELL_AI_URL', 'https://api.retellai.com'),
     ],
 ];
 ```
+
+Older configs using `https://api.retellai.com/v2` are normalized to the API root internally.
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `retell_ai_create_call` | write | Create a new AI-powered phone call |
-| `retell_ai_get_call` | read | Retrieve details for a specific call |
-| `retell_ai_list_calls` | read | List phone calls with optional filters |
-| `retell_ai_list_agents` | read | List all configured voice agents |
-| `retell_ai_create_agent` | write | Create a new voice AI agent |
-| `retell_ai_get_current_user` | read | Retrieve current account information |
+| `retell_ai_create_call` | write | Create a phone call. |
+| `retell_ai_create_web_call` | write | Create a web call. |
+| `retell_ai_get_call` | read | Get a call by ID. |
+| `retell_ai_list_calls` | read | List calls. |
+| `retell_ai_update_call` | write | Update call metadata. |
+| `retell_ai_stop_call` | write | Stop an in-progress call. |
+| `retell_ai_delete_call` | write | Delete a call record. |
+| `retell_ai_list_agents` | read | List voice agents. |
+| `retell_ai_get_agent` | read | Get a voice agent. |
+| `retell_ai_create_agent` | write | Create a voice agent. |
+| `retell_ai_update_agent` | write | Update a voice agent. |
+| `retell_ai_delete_agent` | write | Delete a voice agent. |
+| `retell_ai_list_phone_numbers` | read | List phone numbers. |
+| `retell_ai_get_phone_number` | read | Get a phone number. |
+| `retell_ai_update_phone_number` | write | Update phone number routing. |
+| `retell_ai_list_retell_llms` | read | List Retell LLMs. |
+| `retell_ai_get_retell_llm` | read | Get a Retell LLM. |
+| `retell_ai_list_voices` | read | List voices. |
+| `retell_ai_get_voice` | read | Get a voice. |
+| `retell_ai_get_current_user` | read | Compatibility connectivity check using list agents. |
+| `retell_ai_api_get` | read | Call a documented GET endpoint. |
+| `retell_ai_api_post` | write | Call a documented POST endpoint. |
+| `retell_ai_api_patch` | write | Call a documented PATCH endpoint. |
+| `retell_ai_api_delete` | write | Call a documented DELETE endpoint. |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\RetellAI\RetellAIService;
-use OpenCompany\Integrations\RetellAI\Tools\RetellAICreateCall;
-use OpenCompany\Integrations\RetellAI\Tools\RetellAIListAgents;
-
-// Create tools
-$service = app(RetellAIService::class);
-$tools = [
-    new RetellAICreateCall($service),
-    new RetellAIListAgents($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List our voice agents and start an onboarding call for customer #12345');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('retell-ai');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\RetellAI\Tools\RetellAICreateCall::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\RetellAI\RetellAIService;
 
 $service = app(RetellAIService::class);
 
-// List agents
 $agents = $service->listAgents();
+$voices = $service->listVoices();
+$numbers = $service->listPhoneNumbers();
 
-// Create a call
-$call = $service->createCall('agent_17a9b81c3c0', [
-    'customer_id' => '12345',
-    'campaign' => 'onboarding',
+$call = $service->createCall('agent_123', ['customer_id' => 'cus_123'], [
+    'from_number' => '+14155550100',
+    'to_number' => '+14155550199',
 ]);
 
-// Get call details
-$details = $service->getCall('call_17a9b81c3c0');
-
-// List calls
-$calls = $service->listCalls(['agent_id' => 'agent_17a9b81c3c0']);
-
-// Create an agent
-$agent = $service->createAgent('11labs_Alice', 'You are a helpful support agent.');
+$service->updateCall($call['call_id'], [
+    'metadata' => ['status' => 'reviewed'],
+]);
 ```
 
-## Dependencies
+## Generic Helpers
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+Use generic helpers for documented Retell endpoints that are not yet first-class tools:
+
+```php
+$flows = $service->apiGet('/list-conversation-flows');
+$llm = $service->apiPost('/create-retell-llm', [
+    'general_prompt' => 'You are a helpful support agent.',
+]);
+```
+
+Absolute URLs are rejected so agents cannot bypass the configured Retell API host.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Retell AI](https://retellai.com) account with API access
+- `opencompanyapp/integration-core`
+- Retell AI API key
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE).

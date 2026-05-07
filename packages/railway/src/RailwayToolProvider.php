@@ -3,22 +3,28 @@
 namespace OpenCompany\Integrations\Railway;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Railway\Tools\RailwayListProjects;
-use OpenCompany\Integrations\Railway\Tools\RailwayGetProject;
+use OpenCompany\Integrations\Railway\Tools\RailwayGetCurrentUser;
 use OpenCompany\Integrations\Railway\Tools\RailwayCreateProject;
-use OpenCompany\Integrations\Railway\Tools\RailwayListServices;
+use OpenCompany\Integrations\Railway\Tools\RailwayGetProject;
 use OpenCompany\Integrations\Railway\Tools\RailwayGetService;
 use OpenCompany\Integrations\Railway\Tools\RailwayListDeployments;
-use OpenCompany\Integrations\Railway\Tools\RailwayGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\Railway\Tools\RailwayListProjects;
+use OpenCompany\Integrations\Railway\Tools\RailwayListServices;
 
 /**
+ * Tool provider for the Railway integration.
+ *
+ * Exposes project, service, deployment, and current-user GraphQL tools with
+ * bearer-token configuration and multi-account credential resolution.
+ */
+class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -92,11 +98,14 @@ class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Deploy and manage cloud projects, services, and deployments on Railway',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:railway',
-            'category' => 'productivity',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://railway.app/docs',
+            'docs_url' => 'https://docs.railway.com/reference/public-api/',
+            'source_url' => 'https://docs.railway.com/reference/public-api/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -118,6 +127,12 @@ class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
+    /**
+     * Verify that the supplied Railway credentials can query the current user.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -228,7 +243,9 @@ class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/railway.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -246,7 +263,7 @@ class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new RailwayService(
                 accessToken: $creds->get('railway', 'access_token', '', $account),

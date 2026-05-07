@@ -2,49 +2,25 @@
 
 namespace OpenCompany\Integrations\Droplr\Tools;
 
-use OpenCompany\Integrations\Droplr\DroplrService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class DroplrGetDrop implements Tool
+/**
+ * Get one Droplr drop.
+ */
+class DroplrGetDrop extends AbstractDroplrTool
 {
-    public function __construct(
-        private DroplrService $service,
-    ) {}
+    public const NAME = 'droplr_get_drop';
+    public const DESCRIPTION = 'Get details for a specific Droplr drop by ID or short code.';
+    public const PARAMETERS = [
+        'id' => ['type' => 'string', 'required' => true, 'description' => 'Drop ID or short code.'],
+    ];
 
-    public function name(): string
+    /**
+     * Get one drop.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    protected function call(array $args): array
     {
-        return 'droplr_get_drop';
-    }
-
-    public function description(): string
-    {
-        return 'Get details of a specific drop (short link, file, image, or note) by its ID.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The drop ID (the short code, e.g., "abc123").'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Droplr integration is not configured.');
-            }
-
-            if (empty($args['id'])) {
-                return ToolResult::error('Drop ID is required.');
-            }
-
-            $result = $this->service->getDrop($args['id']);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->getDrop($this->requiredString($args, 'id', 'drop ID'));
     }
 }

@@ -2,173 +2,135 @@
 
 namespace OpenCompany\Integrations\GoogleDrive;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * Google Drive API service.
+ * HTTP client for the Google Drive API v3.
  *
- * Handles authenticated requests to the Google Drive v3 REST API
- * using a Bearer access token.
+ * Handles OAuth bearer authentication, Discovery path expansion, JSON request
+ * dispatch, multipart uploads, response parsing, and API error handling.
  */
 class GoogleDriveService
 {
-    public function __construct(
-        private string $accessToken = '',
-        private string $baseUrl = 'https://www.googleapis.com',
-    ) {
+    /**
+     * @param  string  $accessToken  Google OAuth 2.0 access token with Drive scopes.
+     * @param  string  $baseUrl  Google APIs base URL.
+     */
+    public function __construct(private string $accessToken = '', private string $baseUrl = 'https://www.googleapis.com')
+    {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service has an access token configured.
-     */
-    public function isConfigured(): bool
-    {
-        return !empty($this->accessToken);
-    }
+    public function isConfigured(): bool { return $this->accessToken !== ''; }
 
     /**
-     * List files in the user's Google Drive.
+     * Execute a Google Drive REST method.
      *
-     * @param  array<string, mixed>  $params  Query parameters (pageSize, pageToken, q, spaces, trashed, corpora, etc.)
-     * @return array<string, mixed>
-     */
-    public function listFiles(array $params = []): array
-    {
-        return $this->request('GET', '/drive/v3/files', $params);
-    }
-
-    /**
-     * Get metadata for a single file by ID.
-     *
-     * @param  string  $fileId  The Google Drive file ID.
-     * @param  array<string, mixed>  $params  Query parameters (fields, etc.)
-     * @return array<string, mixed>
-     */
-    public function getFile(string $fileId, array $params = []): array
-    {
-        return $this->request('GET', '/drive/v3/files/' . urlencode($fileId), $params);
-    }
-
-    /**
-     * Create a new file in Google Drive.
-     *
-     * @param  array<string, mixed>  $body  Request body (name, mimeType, parents, etc.)
-     * @return array<string, mixed>
-     */
-    public function createFile(array $body = []): array
-    {
-        return $this->request('POST', '/drive/v3/files', [], $body);
-    }
-
-    /**
-     * Create a new folder in Google Drive.
-     *
-     * Sets the mimeType to `application/vnd.google-apps.folder`.
-     *
-     * @param  string  $name  The folder name.
-     * @param  string|null  $parentId  Optional parent folder ID.
-     * @return array<string, mixed>
-     */
-    public function createFolder(string $name, ?string $parentId = null): array
-    {
-        $body = [
-            'name' => $name,
-            'mimeType' => 'application/vnd.google-apps.folder',
-        ];
-
-        if ($parentId !== null) {
-            $body['parents'] = [$parentId];
-        }
-
-        return $this->request('POST', '/drive/v3/files', [], $body);
-    }
-
-    /**
-     * List changes to files in Google Drive.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (pageSize, pageToken, etc.)
-     * @return array<string, mixed>
-     */
-    public function listChanges(array $params = []): array
-    {
-        return $this->request('GET', '/drive/v3/changes', $params);
-    }
-
-    /**
-     * Get information about the current user and Drive settings.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/drive/v3/about', ['fields' => 'user,storageQuota']);
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g. /drive/v3/files).
-     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $pathParams  Path parameter values keyed by Discovery parameter name.
+     * @param  string[]  $reservedPathParams  Path parameters using `{+param}` reserved expansion.
+     * @param  array<string, mixed>  $query  Query string parameters.
      * @param  array<string, mixed>  $body  JSON request body.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $query = [], array $body = []): array
+    public function request(string $method, string $pathTemplate, array $pathParams = [], array $reservedPathParams = [], array $query = [], array $body = []): array
     {
-        $response = $this->rawRequest($method, $path, $query, $body);
-        return $response->json() ?? [];
+        $response = $this->rawRequest($method, $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, $body);
+        if ($response->body() === '') return ['success' => true, 'status' => $response->status()];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
     }
 
     /**
-     * Make a raw HTTP request to the Google Drive API.
+     * Upload media to a Google Drive multipart upload endpoint.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $query  Query parameters.
-     * @param  array<string, mixed>  $body  JSON request body.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException  On connection failure or API error.
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Reserved path parameters.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $metadata  Drive file metadata.
+     * @return array<string, mixed>
      */
-    private function rawRequest(string $method, string $path, array $query = [], array $body = []): \Illuminate\Http\Client\Response
+    public function upload(string $pathTemplate, array $pathParams, array $reservedPathParams, array $query, array $metadata, string $filePath, string $mimeType = 'application/octet-stream'): array
     {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Google Drive access token is not configured.');
-        }
+        if (!$this->isConfigured()) throw new RuntimeException('Google Drive access token is not configured.');
+        if (!is_file($filePath) || !is_readable($filePath)) throw new RuntimeException('file_path must point to a readable local file.');
+        $boundary = 'opencompany-drive-'.bin2hex(random_bytes(8));
+        $metadataJson = json_encode($metadata === [] ? new \stdClass : $metadata, JSON_UNESCAPED_SLASHES);
+        $body = "--{$boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n";
+        $body .= "--{$boundary}\r\nContent-Type: {$mimeType}\r\n\r\n".file_get_contents($filePath)."\r\n--{$boundary}--\r\n";
+        $query['uploadType'] = 'multipart';
+        $response = $this->rawRequest('POST', $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, [], 'multipart/related; boundary='.$boundary, $body);
+        if ($response->body() === '') return ['success' => true, 'status' => $response->status()];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
+    }
 
-        $url = $this->baseUrl . $path;
-
+    /**
+     * Perform a raw HTTP request against Google Drive.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|string  $body  JSON request body or raw multipart body.
+     */
+    private function rawRequest(string $method, string $path, array $query = [], array|string $body = [], ?string $contentType = null, ?string $rawBody = null): Response
+    {
+        if (!$this->isConfigured()) throw new RuntimeException('Google Drive access token is not configured.');
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $query),
-                'POST' => $http->withQueryParameters($query)->post($url, $body),
-                'PUT' => $http->withQueryParameters($query)->put($url, $body),
-                'DELETE' => $http->delete($url, $body),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            $method = strtoupper($method);
+            $url = $this->urlWithQuery($this->baseUrl.$path, $query);
+            $http = Http::withHeaders(['Authorization' => 'Bearer '.$this->accessToken, 'Content-Type' => $contentType ?? 'application/json', 'Accept' => 'application/json'])->timeout(120);
+            if ($rawBody !== null) $http = $http->withBody($rawBody, $contentType ?? 'application/octet-stream');
+            $response = match ($method) {
+                'GET' => $http->get($url),
+                'POST' => $rawBody !== null ? $http->post($url) : $http->post($url, is_array($body) ? $body : []),
+                'PUT' => $http->put($url, is_array($body) ? $body : []),
+                'PATCH' => $http->patch($url, is_array($body) ? $body : []),
+                'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
-
             if (!$response->successful()) {
-                $error = $response->json('error.message') ?? $response->body();
-                Log::error("Google Drive API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Google Drive API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->body();
+                Log::error("Google Drive API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
+                throw new RuntimeException('Google Drive API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
-
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Google Drive API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Google Drive API: {$e->getMessage()}");
+            Log::error("Google Drive API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            throw new RuntimeException("Failed to connect to Google Drive API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Expand Discovery path templates.
+     *
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Parameters using reserved expansion.
+     */
+    private function expandPath(string $template, array $pathParams, array $reservedPathParams): string
+    {
+        return (string) preg_replace_callback('/\{(\+?)([A-Za-z0-9_]+)(?:=[^}]*)?\}/', function (array $matches) use ($pathParams, $reservedPathParams): string {
+            $key = $matches[2];
+            if (!array_key_exists($key, $pathParams) || $pathParams[$key] === null || $pathParams[$key] === '') throw new RuntimeException($key.' must be a non-empty path parameter.');
+            $reserved = $matches[1] === '+' || in_array($key, $reservedPathParams, true);
+            return $reserved ? str_replace('%2F', '/', rawurlencode((string) $pathParams[$key])) : rawurlencode((string) $pathParams[$key]);
+        }, $template);
+    }
+
+    /**
+     * Append query parameters while preserving repeated keys.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') continue;
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item === null || $item === '') continue;
+                $encodedValue = is_bool($item) ? ($item ? '1' : '0') : (string) $item;
+                $parts[] = rawurlencode((string) $key).'='.rawurlencode($encodedValue);
+            }
+        }
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

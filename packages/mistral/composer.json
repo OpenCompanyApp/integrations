@@ -1,0 +1,29 @@
+{
+    "name": "opencompanyapp/integration-mistral",
+    "description": "Mistral AI integration for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Mistral\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Mistral\\MistralServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "replace": {
+        "opencompanyapp/integration-mistralai": "self.version",
+        "opencompanyapp/ai-tool-mistralai": "self.version"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

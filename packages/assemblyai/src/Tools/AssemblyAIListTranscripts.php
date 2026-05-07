@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List transcripts with optional filtering and pagination.
+ * List transcripts with pagination.
  *
- * Sends a GET request to /transcripts with query parameters for filtering
- * by status, date, and more. Returns a paginated list of transcript resources.
+ * Sends a GET request to /transcript with pagination query parameters.
  *
  * @see https://www.assemblyai.com/docs/assemblyai-api#list-transcripts
  */
@@ -36,7 +35,7 @@ class AssemblyAIListTranscripts implements Tool
      */
     public function description(): string
     {
-        return 'List transcripts with optional filtering by status, date range, and pagination. Returns transcript IDs, statuses, and metadata.';
+        return 'List transcripts with pagination. Returns transcript IDs, statuses, and metadata.';
     }
 
     /**
@@ -48,11 +47,8 @@ class AssemblyAIListTranscripts implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of transcripts to return per page (default: 20, max: 200).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by status: "queued", "processing", "completed", or "error".'],
-            'created_on' => ['type' => 'string', 'description' => 'Filter by creation date. Accepts a date string or operator (e.g., "gte:2025-01-01").'],
             'before_id' => ['type' => 'string', 'description' => 'Return transcripts created before this transcript ID (for pagination).'],
             'after_id' => ['type' => 'string', 'description' => 'Return transcripts created after this transcript ID (for pagination).'],
-            'throttled_only' => ['type' => 'boolean', 'description' => 'Only return throttled transcripts.'],
         ];
     }
 
@@ -65,12 +61,12 @@ class AssemblyAIListTranscripts implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('AssemblyAI integration is not configured.');
             }
 
             $params = [];
-            $forwardKeys = ['limit', 'status', 'created_on', 'before_id', 'after_id', 'throttled_only'];
+            $forwardKeys = ['limit', 'before_id', 'after_id'];
 
             foreach ($forwardKeys as $key) {
                 if (isset($args[$key])) {

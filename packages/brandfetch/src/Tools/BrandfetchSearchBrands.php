@@ -2,54 +2,23 @@
 
 namespace OpenCompany\Integrations\Brandfetch\Tools;
 
-use OpenCompany\Integrations\Brandfetch\BrandfetchService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
  * Search for brands by name or domain.
- *
- * Returns a list of matching brands with basic information such as name,
- * domain, and logo URL. Use the brand ID from results to fetch detailed
- * assets (logos, colors, fonts).
  */
-class BrandfetchSearchBrands implements Tool
+class BrandfetchSearchBrands extends AbstractBrandfetchTool
 {
-    public function __construct(
-        private BrandfetchService $service,
-    ) {}
+    protected const TOOL_NAME = 'brandfetch_search_brands';
+    protected const TOOL_DESCRIPTION = 'Search for brands by name or domain using Brand Search API.';
+    protected const PARAMETERS = [
+        'query' => ['type' => 'string', 'required' => true, 'description' => 'Brand name or domain to search for.'],
+        'client_id' => ['type' => 'string', 'description' => 'Optional Brand Search client ID override.'],
+    ];
 
-    public function name(): string
+    protected function run(array $args): array
     {
-        return 'brandfetch_search_brands';
-    }
-
-    public function description(): string
-    {
-        return 'Search for brands by name or domain. Returns a list of matching brands with basic info. Use the brand ID from results to fetch detailed assets like logos, colors, and fonts.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'query' => ['type' => 'string', 'required' => true, 'description' => 'Search term — brand name or domain (e.g., "Nike", "spotify.com").'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of results to return.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brandfetch integration is not configured.');
-            }
-
-            $limit = isset($args['limit']) ? (int) $args['limit'] : null;
-            $result = $this->service->searchBrands($args['query'], $limit);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->searchBrands(
+            (string) $this->required($args, 'query'),
+            isset($args['client_id']) ? (string) $args['client_id'] : null,
+        );
     }
 }

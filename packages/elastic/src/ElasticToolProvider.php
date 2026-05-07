@@ -104,7 +104,7 @@ class ElasticToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Elasticsearch integration for Laravel — search, index, and manage documents and indices.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

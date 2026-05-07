@@ -1,0 +1,177 @@
+{
+    "source": "https://cloudfunctions.googleapis.com/$discovery/rest?version=v2",
+    "docs": "https://cloud.google.com/functions/docs/reference/rest/v2",
+    "version": "v2",
+    "method_count": 21,
+    "generated_at": "2026-05-06",
+    "methods": [
+        {
+            "tool": "google_cloud_functions_projects_locations_list",
+            "class": "GoogleCloudFunctionsProjectsLocationsList",
+            "method": "GET",
+            "path": "/v2/{+name}/locations",
+            "discovery_id": "projects.locations.list",
+            "summary": "Projects Locations List"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_operations_get",
+            "class": "GoogleCloudFunctionsProjectsLocationsOperationsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.operations.get",
+            "summary": "Projects Locations Operations Get"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_operations_list",
+            "class": "GoogleCloudFunctionsProjectsLocationsOperationsList",
+            "method": "GET",
+            "path": "/v2/{+name}/operations",
+            "discovery_id": "projects.locations.operations.list",
+            "summary": "Projects Locations Operations List"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_set_iam_policy",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsSetIamPolicy",
+            "method": "POST",
+            "path": "/v2/{+resource}:setIamPolicy",
+            "discovery_id": "projects.locations.functions.setIamPolicy",
+            "summary": "Projects Locations Functions Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_abort_function_upgrade",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsAbortFunctionUpgrade",
+            "method": "POST",
+            "path": "/v2/{+name}:abortFunctionUpgrade",
+            "discovery_id": "projects.locations.functions.abortFunctionUpgrade",
+            "summary": "Projects Locations Functions Abort Function Upgrade"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_commit_function_upgrade_as_gen2",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsCommitFunctionUpgradeAsGen2",
+            "method": "POST",
+            "path": "/v2/{+name}:commitFunctionUpgradeAsGen2",
+            "discovery_id": "projects.locations.functions.commitFunctionUpgradeAsGen2",
+            "summary": "Projects Locations Functions Commit Function Upgrade As Gen2"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_generate_download_url",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsGenerateDownloadUrl",
+            "method": "POST",
+            "path": "/v2/{+name}:generateDownloadUrl",
+            "discovery_id": "projects.locations.functions.generateDownloadUrl",
+            "summary": "Projects Locations Functions Generate Download Url"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_setup_function_upgrade_config",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsSetupFunctionUpgradeConfig",
+            "method": "POST",
+            "path": "/v2/{+name}:setupFunctionUpgradeConfig",
+            "discovery_id": "projects.locations.functions.setupFunctionUpgradeConfig",
+            "summary": "Projects Locations Functions Setup Function Upgrade Config"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_list",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsList",
+            "method": "GET",
+            "path": "/v2/{+parent}/functions",
+            "discovery_id": "projects.locations.functions.list",
+            "summary": "Projects Locations Functions List"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_get",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsGet",
+            "method": "GET",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.functions.get",
+            "summary": "Projects Locations Functions Get"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_create",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsCreate",
+            "method": "POST",
+            "path": "/v2/{+parent}/functions",
+            "discovery_id": "projects.locations.functions.create",
+            "summary": "Projects Locations Functions Create"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_generate_upload_url",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsGenerateUploadUrl",
+            "method": "POST",
+            "path": "/v2/{+parent}/functions:generateUploadUrl",
+            "discovery_id": "projects.locations.functions.generateUploadUrl",
+            "summary": "Projects Locations Functions Generate Upload Url"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_detach_function",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsDetachFunction",
+            "method": "POST",
+            "path": "/v2/{+name}:detachFunction",
+            "discovery_id": "projects.locations.functions.detachFunction",
+            "summary": "Projects Locations Functions Detach Function"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_test_iam_permissions",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsTestIamPermissions",
+            "method": "POST",
+            "path": "/v2/{+resource}:testIamPermissions",
+            "discovery_id": "projects.locations.functions.testIamPermissions",
+            "summary": "Projects Locations Functions Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_commit_function_upgrade",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsCommitFunctionUpgrade",
+            "method": "POST",
+            "path": "/v2/{+name}:commitFunctionUpgrade",
+            "discovery_id": "projects.locations.functions.commitFunctionUpgrade",
+            "summary": "Projects Locations Functions Commit Function Upgrade"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_patch",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsPatch",
+            "method": "PATCH",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.functions.patch",
+            "summary": "Projects Locations Functions Patch"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_rollback_function_upgrade_traffic",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsRollbackFunctionUpgradeTraffic",
+            "method": "POST",
+            "path": "/v2/{+name}:rollbackFunctionUpgradeTraffic",
+            "discovery_id": "projects.locations.functions.rollbackFunctionUpgradeTraffic",
+            "summary": "Projects Locations Functions Rollback Function Upgrade Traffic"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_get_iam_policy",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsGetIamPolicy",
+            "method": "GET",
+            "path": "/v2/{+resource}:getIamPolicy",
+            "discovery_id": "projects.locations.functions.getIamPolicy",
+            "summary": "Projects Locations Functions Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_delete",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsDelete",
+            "method": "DELETE",
+            "path": "/v2/{+name}",
+            "discovery_id": "projects.locations.functions.delete",
+            "summary": "Projects Locations Functions Delete"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_functions_redirect_function_upgrade_traffic",
+            "class": "GoogleCloudFunctionsProjectsLocationsFunctionsRedirectFunctionUpgradeTraffic",
+            "method": "POST",
+            "path": "/v2/{+name}:redirectFunctionUpgradeTraffic",
+            "discovery_id": "projects.locations.functions.redirectFunctionUpgradeTraffic",
+            "summary": "Projects Locations Functions Redirect Function Upgrade Traffic"
+        },
+        {
+            "tool": "google_cloud_functions_projects_locations_runtimes_list",
+            "class": "GoogleCloudFunctionsProjectsLocationsRuntimesList",
+            "method": "GET",
+            "path": "/v2/{+parent}/runtimes",
+            "discovery_id": "projects.locations.runtimes.list",
+            "summary": "Projects Locations Runtimes List"
+        }
+    ]
+}

@@ -2,11 +2,25 @@
 
 namespace OpenCompany\Integrations\Copper;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Copper Developer API.
+ *
+ * Handles Copper API-key headers, request dispatch, response parsing, and
+ * endpoint-specific helpers used by Copper tools.
+ */
 class CopperService
 {
+    /**
+     * @param  string  $apiKey  Copper API key.
+     * @param  string  $email  Email address of the Copper API token owner.
+     * @param  string  $baseUrl  Copper Developer API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $email = '',
@@ -17,69 +31,69 @@ class CopperService
 
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->email);
+        return $this->apiKey !== '' && $this->email !== '';
     }
 
     /**
-     * Search/list contacts.
+     * Search/list Copper people. Existing contact tools delegate here for compatibility.
      *
-     * @param  array<string, mixed>  $params  Search parameters (page_size, sort_by, etc.)
+     * @param  array<string, mixed>  $params  Search parameters.
      * @return array<string, mixed>
      */
     public function listContacts(array $params = []): array
     {
-        return $this->request('POST', '/contacts/search', $params);
+        return $this->apiPost('/people/search', $params);
     }
 
     /**
-     * Get a single contact by ID.
+     * Get a single Copper person by ID.
      *
      * @return array<string, mixed>
      */
     public function getContact(int $id): array
     {
-        return $this->request('GET', '/contacts/' . $id);
+        return $this->apiGet('/people/' . $id);
     }
 
     /**
-     * Create a new contact.
+     * Create a new Copper person.
      *
-     * @param  array<string, mixed>  $data  Contact data (name, email, etc.)
+     * @param  array<string, mixed>  $data  Person data.
      * @return array<string, mixed>
      */
     public function createContact(array $data): array
     {
-        return $this->request('POST', '/contacts', $data);
+        return $this->apiPost('/people', $data);
     }
 
     /**
-     * Update an existing contact.
+     * Update an existing Copper person.
      *
-     * @param  array<string, mixed>  $data  Fields to update
+     * @param  array<string, mixed>  $data  Fields to update.
      * @return array<string, mixed>
      */
     public function updateContact(int $id, array $data): array
     {
-        return $this->request('PUT', '/contacts/' . $id, $data);
+        return $this->apiPut('/people/' . $id, $data);
     }
 
     /**
-     * Delete a contact.
+     * Delete a Copper person.
      */
     public function deleteContact(int $id): void
     {
-        $this->request('DELETE', '/contacts/' . $id);
+        $this->apiDelete('/people/' . $id);
     }
 
     /**
      * Search/list companies.
      *
-     * @param  array<string, mixed>  $params  Search parameters (page_size, sort_by, etc.)
+     * @param  array<string, mixed>  $params  Search parameters.
      * @return array<string, mixed>
      */
     public function listCompanies(array $params = []): array
     {
-        return $this->request('POST', '/companies/search', $params);
+        return $this->apiPost('/companies/search', $params);
     }
 
     /**
@@ -89,29 +103,29 @@ class CopperService
      */
     public function getCompany(int $id): array
     {
-        return $this->request('GET', '/companies/' . $id);
+        return $this->apiGet('/companies/' . $id);
     }
 
     /**
      * Create a new company.
      *
-     * @param  array<string, mixed>  $data  Company data (name, etc.)
+     * @param  array<string, mixed>  $data  Company data.
      * @return array<string, mixed>
      */
     public function createCompany(array $data): array
     {
-        return $this->request('POST', '/companies', $data);
+        return $this->apiPost('/companies', $data);
     }
 
     /**
      * Search/list opportunities.
      *
-     * @param  array<string, mixed>  $params  Search parameters (page_size, sort_by, etc.)
+     * @param  array<string, mixed>  $params  Search parameters.
      * @return array<string, mixed>
      */
     public function listOpportunities(array $params = []): array
     {
-        return $this->request('POST', '/opportunities/search', $params);
+        return $this->apiPost('/opportunities/search', $params);
     }
 
     /**
@@ -121,18 +135,18 @@ class CopperService
      */
     public function getOpportunity(int $id): array
     {
-        return $this->request('GET', '/opportunities/' . $id);
+        return $this->apiGet('/opportunities/' . $id);
     }
 
     /**
      * Create a new opportunity.
      *
-     * @param  array<string, mixed>  $data  Opportunity data (name, pipeline_id, etc.)
+     * @param  array<string, mixed>  $data  Opportunity data.
      * @return array<string, mixed>
      */
     public function createOpportunity(array $data): array
     {
-        return $this->request('POST', '/opportunities', $data);
+        return $this->apiPost('/opportunities', $data);
     }
 
     /**
@@ -142,31 +156,83 @@ class CopperService
      */
     public function listPipelines(): array
     {
-        return $this->request('GET', '/pipelines');
+        return $this->apiGet('/pipelines');
     }
 
     /**
-     * Get the current authenticated user.
+     * Get the current authenticated API user.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users');
+        return $this->apiGet('/users/me');
+    }
+
+    /**
+     * Run a GET request against a Copper API path.
+     *
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Run a POST request against a Copper API path.
+     *
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $query, $body);
+    }
+
+    /**
+     * Run a PUT request against a Copper API path.
+     *
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $query, $body);
+    }
+
+    /**
+     * Run a DELETE request against a Copper API path.
+     *
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON body.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $query = [], array $body = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $query, $body);
 
-        // DELETE endpoints may return empty body
-        $body = $response->body();
-        if (empty($body) || trim($body) === '') {
+        if ($response->status() === 204 || trim($response->body()) === '') {
             return [];
         }
 
@@ -175,14 +241,21 @@ class CopperService
 
     /**
      * Make a raw HTTP request to the Copper API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON body.
+     *
+     * @throws RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
         if (!$this->apiKey || !$this->email) {
-            throw new \RuntimeException('Copper API key and email are not configured.');
+            throw new RuntimeException('Copper API key and email are not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->buildUrl($path, $query);
 
         try {
             $http = Http::withHeaders([
@@ -193,28 +266,46 @@ class CopperService
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'DELETE' => $http->delete($url),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $error = $response->json('message') ?? $response->body();
+                $error = $response->json('message') ?? $response->json('error') ?? $response->body();
                 Log::error("Copper API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Copper API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException("Copper API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Copper API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Copper API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Copper API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a Copper request URL with query parameters.
+     *
+     * @param  string  $path  Endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function buildUrl(string $path, array $query = []): string
+    {
+        $url = $this->baseUrl . '/' . ltrim($path, '/');
+        $query = array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        if ($query === []) {
+            return $url;
+        }
+
+        return $url . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
     }
 }

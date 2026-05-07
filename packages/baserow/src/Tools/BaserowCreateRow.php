@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class BaserowCreateRow implements Tool
 {
+    /**
+     * @param  BaserowService  $service  The Baserow API client.
+     */
     public function __construct(
         private BaserowService $service,
     ) {}
@@ -36,6 +39,11 @@ class BaserowCreateRow implements Tool
         ];
     }
 
+    /**
+     * Create a row in a Baserow table.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

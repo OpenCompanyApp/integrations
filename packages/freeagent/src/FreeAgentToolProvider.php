@@ -108,7 +108,7 @@ class FreeAgentToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'FreeAgent accounting integration for Laravel — manage invoices, contacts, projects and expenses.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

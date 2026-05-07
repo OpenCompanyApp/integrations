@@ -24,7 +24,7 @@ class ApiTemplateIOServiceProvider extends ServiceProvider
 
             return new ApiTemplateIOService(
                 apiKey: $creds->get('apitemplateio', 'api_key', ''),
-                baseUrl: $creds->get('apitemplateio', 'url', 'https://api.apitemplate.io/v1'),
+                baseUrl: $creds->get('apitemplateio', 'url', 'https://rest.apitemplate.io'),
             );
         });
     }

@@ -94,7 +94,7 @@ class StripeConnectToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Manage Stripe Connect accounts, payouts, balance transactions, and capabilities',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:stripe',
-            'category' => 'payments',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.stripe.com/connect',
         ];

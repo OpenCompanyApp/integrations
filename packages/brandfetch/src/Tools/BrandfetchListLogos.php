@@ -2,53 +2,20 @@
 
 namespace OpenCompany\Integrations\Brandfetch\Tools;
 
-use OpenCompany\Integrations\Brandfetch\BrandfetchService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List logos available for a specific brand.
- *
- * Returns all logo variants for the given brand, including different formats
- * (SVG, PNG), sizes, and themes (light, dark, icon).
+ * Return logos from a brand profile.
  */
-class BrandfetchListLogos implements Tool
+class BrandfetchListLogos extends AbstractBrandfetchTool
 {
-    public function __construct(
-        private BrandfetchService $service,
-    ) {}
+    protected const TOOL_NAME = 'brandfetch_list_logos';
+    protected const TOOL_DESCRIPTION = 'Fetch a brand and return its logos array.';
+    protected const PARAMETERS = [
+        'identifier' => ['type' => 'string', 'required' => true, 'description' => 'Domain, Brand ID, ticker, ISIN, or crypto symbol.'],
+        'brand_id' => ['type' => 'string', 'description' => 'Legacy alias for identifier.'],
+    ];
 
-    public function name(): string
+    protected function run(array $args): array
     {
-        return 'brandfetch_list_logos';
-    }
-
-    public function description(): string
-    {
-        return 'List all logo variants available for a brand. Returns logos in different formats (SVG, PNG), sizes, and themes (light, dark, icon).';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'brand_id' => ['type' => 'string', 'required' => true, 'description' => 'The brand identifier obtained from a brand search or lookup.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of logos to return.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brandfetch integration is not configured.');
-            }
-
-            $limit = isset($args['limit']) ? (int) $args['limit'] : null;
-            $result = $this->service->listLogos($args['brand_id'], $limit);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->listLogos((string) ($args['identifier'] ?? $this->required($args, 'brand_id')));
     }
 }

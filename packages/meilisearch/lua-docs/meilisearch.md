@@ -1,239 +1,89 @@
-# Meilisearch — Lua API Reference
+# Meilisearch Lua Reference
 
-## list_indexes
+Namespace: `meilisearch`
 
-List all indexes in the Meilisearch instance.
+This integration covers Meilisearch's official HTTP API from the v1.43.0 OpenAPI release asset. Tools map directly to documented operations for indexes, documents, search, settings, tasks, API keys, dumps, snapshots, webhooks, network topology, metrics, logs, and experimental chat or AI-search surfaces.
 
-### Parameters
+Meilisearch API keys are optional for unsecured local instances. Protected instances use `Authorization: Bearer <api_key>`. All JSON responses are returned as decoded tables. Non-JSON responses, such as metrics or streamed text payloads, return `{ body, content_type }`.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of indexes to return (default: 20) |
-| `offset` | integer | no | Number of indexes to skip for pagination |
+## Common Patterns
 
-### Examples
+List indexes:
 
 ```lua
-local result = app.integrations.meilisearch.list_indexes({})
-
-for _, index in ipairs(result.results) do
-  print(index.uid .. " (primary key: " .. (index.primaryKey or "none") .. ")")
-end
-```
-
----
-
-## get_index
-
-Get detailed information about a specific Meilisearch index.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `uid` | string | yes | The index unique identifier (e.g., `"movies"`) |
-
-### Examples
-
-```lua
-local result = app.integrations.meilisearch.get_index({
-  uid = "movies"
-})
-
-print("Index: " .. result.uid)
-print("Primary key: " .. (result.primaryKey or "not set"))
-```
-
----
-
-## create_index
-
-Create a new index in Meilisearch. Returns a task object that can be used to track the creation progress.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `uid` | string | yes | The unique identifier for the new index |
-| `primary_key` | string | no | The primary key field (e.g., `"id"`) |
-
-### Examples
-
-```lua
-local result = app.integrations.meilisearch.create_index({
-  uid = "products",
-  primary_key = "product_id"
-})
-
-print("Task UID: " .. result.taskUid)
-print("Status: " .. result.status)
-```
-
----
-
-## search_documents
-
-Search for documents in a Meilisearch index. Supports full-text search with filters, sorting, and pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `index_uid` | string | yes | The index unique identifier to search in |
-| `q` | string | no | The search query string. Use `""` to return all documents |
-| `limit` | integer | no | Maximum number of documents to return (default: 20) |
-| `offset` | integer | no | Number of documents to skip for pagination |
-| `filter` | string | no | Filter expression as a JSON string, e.g., `'[["genre = Comedy"]]'` |
-| `sort` | array | no | Sort criteria, e.g., `{"price:asc"}`. Requires a sortable attribute |
-
-### Filter Syntax
-
-Filters are JSON strings containing filter expressions:
-
-```
-[["field = value"]]
-[["field > 10"]]
-[["field IN [\"a\", \"b\"]"]]
-```
-
-### Sort Syntax
-
-An array of attribute-direction pairs:
-
-```lua
-sort = {"price:asc", "name:desc"}
-```
-
-### Examples
-
-```lua
--- Basic search
-local result = app.integrations.meilisearch.search_documents({
-  index_uid = "movies",
-  q = "avengers",
-  limit = 10
-})
-
-for _, hit in ipairs(result.hits) do
-  print(hit.title .. " (" .. hit.year .. ")")
-end
-```
-
-```lua
--- Search with filter
-local result = app.integrations.meilisearch.search_documents({
-  index_uid = "movies",
-  q = "action",
-  filter = '[["genre = Action"]]',
-  sort = {"rating:desc"},
-  limit = 5
-})
-
-for _, hit in ipairs(result.hits) do
-  print(hit.title .. " — rating: " .. hit.rating)
-end
-```
-
-```lua
--- Return all documents with pagination
-local result = app.integrations.meilisearch.search_documents({
-  index_uid = "movies",
-  q = "",
-  limit = 50,
+local indexes = app.integrations.meilisearch.list_indexes({
+  limit = 20,
   offset = 0
 })
-
-print("Total: " .. result.estimatedTotalHits .. " documents")
 ```
 
----
-
-## add_documents
-
-Add or replace documents in a Meilisearch index. Returns a task object to track indexing progress.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `index_uid` | string | yes | The index unique identifier |
-| `documents` | array | yes | An array of document objects to add |
-| `primary_key` | string | no | The primary key field name (only needed if not set on the index) |
-
-### Examples
+Create an index:
 
 ```lua
-local result = app.integrations.meilisearch.add_documents({
-  index_uid = "movies",
-  documents = {
-    { id = 1, title = "Inception", year = 2010, genre = "Sci-Fi" },
-    { id = 2, title = "The Dark Knight", year = 2008, genre = "Action" }
+local task = app.integrations.meilisearch.create_index({
+  uid = "books",
+  primaryKey = "id"
+})
+```
+
+Add or replace documents:
+
+```lua
+local task = app.integrations.meilisearch.add_documents({
+  index_uid = "books",
+  body = {
+    { id = 1, title = "Search Basics", author = "Example Author" },
+    { id = 2, title = "Ranking Rules", author = "Example Author" }
   }
 })
-
-print("Task UID: " .. result.taskUid)
-print("Status: " .. result.status)
 ```
 
----
-
-## get_document
-
-Retrieve a single document from an index by its primary key value.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `index_uid` | string | yes | The index unique identifier |
-| `doc_id` | string | yes | The document primary key value |
-
-### Examples
+Search with POST:
 
 ```lua
-local result = app.integrations.meilisearch.get_document({
-  index_uid = "movies",
-  doc_id = "1"
+local results = app.integrations.meilisearch.search_documents({
+  index_uid = "books",
+  q = "ranking",
+  limit = 10,
+  filter = "author = 'Example Author'"
 })
-
-print(result.title .. " (" .. result.year .. ")")
 ```
 
----
-
-## get_health
-
-Check the health status of the Meilisearch instance.
-
-### Parameters
-
-This tool takes no parameters.
-
-### Examples
+Update index settings:
 
 ```lua
-local result = app.integrations.meilisearch.get_health({})
-
-print("Status: " .. result.status)
--- Expected: { status = "available" }
+local task = app.integrations.meilisearch.update_all({
+  index_uid = "books",
+  body = {
+    searchableAttributes = { "title", "author" },
+    filterableAttributes = { "author" },
+    sortableAttributes = { "title" }
+  }
+})
 ```
 
----
-
-## Multi-Account Usage
-
-If you have multiple Meilisearch instances configured, use account-specific namespaces:
+Inspect tasks:
 
 ```lua
--- Default account (always works)
-app.integrations.meilisearch.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.meilisearch.default.function_name({...})
-
--- Named accounts
-app.integrations.meilisearch.production.function_name({...})
-app.integrations.meilisearch.staging.function_name({...})
+local tasks = app.integrations.meilisearch.get_tasks({
+  indexUids = { "books" },
+  statuses = { "enqueued", "processing", "succeeded" },
+  limit = 10
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Tool Families
+
+- Indexes: `list_indexes`, `create_index`, `get_index`, `delete_index`, `swap_indexes`, `compact`
+- Documents: `add_documents`, `update_documents`, `get_documents`, `documents_by_query_post`, `get_document`, `delete_document`, `delete_documents_batch`, `delete_documents_by_filter`, `clear_all_documents`, `edit_documents_by_function`
+- Search: `search_documents`, `search_with_url_query`, `multi_search_with_post`, `search`, `similar_get`, `similar_post`
+- Settings: `get_all`, `update_all`, `delete_all`, and per-setting get/update/reset tools for displayed attributes, searchable attributes, filterable attributes, sortable attributes, synonyms, stop words, ranking rules, typo tolerance, faceting, pagination, embedders, chat, and related settings
+- Tasks and batches: `get_tasks`, `get_task`, `cancel_tasks`, `delete_tasks`, `compact_task_queue`, `get_batches`, `get_batch`, `get_task_documents_file`
+- API keys: `list_api_keys`, `create_api_key`, `get_api_key`, `patch_api_key`, `delete_api_key`
+- Operations and diagnostics: `get_health`, `get_version`, `get_stats`, `get_index_stats`, `get_metrics`, `get_logs`, `cancel_logs`
+- Dumps and snapshots: `create_dump`, `create_snapshot`
+- Webhooks: `get_webhooks`, `post_webhook`, `get_webhook`, `patch_webhook`, `delete_webhook`
+- Network: `get_network`, `patch_network`, `post_network_change`
+- Experimental AI and chat: `list_workspaces`, `chat`, `get_chat`, `delete_chat`, `get_settings`, `patch_settings`, `reset_settings`
+
+For operations with a request body, pass `body = { ... }` or pass body fields directly when there is no ambiguity. Path and query parameters preserve Meilisearch's documented names, but snake_case aliases work for camelCase parameters, such as `primary_key` for `primaryKey`.

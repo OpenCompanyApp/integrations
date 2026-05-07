@@ -1,14 +1,14 @@
 # Integration: Attio
 
-> Attio CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage records, objects, workspaces and more. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Attio CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage records, objects, attributes, lists, entries, notes, tasks, webhooks, and raw REST API calls. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents full access to your Attio CRM. Manage contacts, companies, deals, and custom objects — list, get, and create records, browse objects and workspaces — all through the [Attio API](https://developers.attio.com/).
+Give your AI agents broad access to Attio CRM. Manage contacts, companies, deals, custom objects, list entries, notes, and tasks through the [Attio API](https://docs.attio.com/rest-api/endpoint-reference).
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Attio integration lets AI agents interact with CRM data — looking up contacts, creating companies, querying deals, and more — giving agents real-time access to your customer relationships.
+This Attio integration lets AI agents interact with CRM data - looking up contacts, creating companies, querying deals, and more - giving agents real-time access to your customer relationships.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -39,15 +39,17 @@ return [
 
 ## Available Tools
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `attio_list_records` | read | List records for an object type with filtering, sorting, and pagination |
-| `attio_get_record` | read | Get a single record by ID |
-| `attio_create_record` | write | Create a new record |
-| `attio_list_objects` | read | List all object types in the workspace |
-| `attio_get_object` | read | Get details for a specific object type |
-| `attio_list_workspaces` | read | List all workspaces accessible to the authenticated user |
-| `attio_get_current_user` | read | Get the authenticated user profile |
+This package exposes 34 tools:
+
+| Area | Tools |
+|------|-------|
+| Raw API | `attio_api_get`, `attio_api_post`, `attio_api_patch`, `attio_api_put`, `attio_api_delete` |
+| Account and objects | `attio_list_workspaces`, `attio_get_current_user`, `attio_list_objects`, `attio_get_object` |
+| Attributes | `attio_list_attributes`, `attio_get_attribute`, `attio_create_attribute` |
+| Records | `attio_list_records`, `attio_get_record`, `attio_create_record`, `attio_update_record`, `attio_delete_record`, `attio_list_record_entries` |
+| Lists and entries | `attio_list_lists`, `attio_get_list`, `attio_create_list`, `attio_update_list`, `attio_list_entries`, `attio_create_entry`, `attio_get_entry`, `attio_update_entry`, `attio_delete_entry` |
+| Notes and tasks | `attio_list_notes`, `attio_create_note`, `attio_list_tasks`, `attio_create_task`, `attio_update_task`, `attio_delete_task` |
+| Webhooks | `attio_list_webhooks` |
 
 ## Quick Start
 
@@ -71,7 +73,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -139,4 +141,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

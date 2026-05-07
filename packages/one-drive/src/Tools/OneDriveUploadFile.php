@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class OneDriveUploadFile implements Tool
 {
+    /**
+     * @param  OneDriveService  $service  Microsoft Graph OneDrive API client.
+     */
     public function __construct(
         private OneDriveService $service,
     ) {}
@@ -37,6 +40,11 @@ class OneDriveUploadFile implements Tool
         ];
     }
 
+    /**
+     * Upload file content by OneDrive path.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (path, content, content_type)
+     */
     public function execute(array $args): ToolResult
     {
         try {

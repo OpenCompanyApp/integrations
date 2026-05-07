@@ -13,7 +13,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Enrichment API (Person API). Returns social profiles, employment info,
  * location, and other demographic data when available.
  *
- * Endpoint: GET /people/find?email=…
+ * Endpoint: GET https://person.clearbit.com/v2/people/find?email=…
  */
 class ClearbitEnrichPerson implements Tool
 {
@@ -48,7 +48,7 @@ class ClearbitEnrichPerson implements Tool
     public function parameters(): array
     {
         return [
-            'email' => ['type' => 'string', 'required' => true, 'description' => 'The email address of the person to look up (e.g., "alex@stripe.com").'],
+            'email' => ['type' => 'string', 'required' => true, 'description' => 'The email address of the person to look up (e.g., "person@example.test").'],
         ];
     }
 

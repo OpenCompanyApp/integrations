@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-svix",
-    "description": "Svix webhook service integration for Laravel — manage applications, endpoints, and messages.",
+    "description": "Svix webhook service integration for Laravel covering the official application, message, endpoint, event type, stream, ingest, connector, and operational webhook APIs.",
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,7 @@
     "keywords": ["tools", "svix", "webhooks", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "opencompanyapp/integration-core": "^2.0"
     },
     "replace": {
         "opencompanyapp/ai-tool-svix": "self.version"

@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-brave-search",
+    "description": "Brave Search integration for Laravel AI agents - web, LLM context, image, video, news, place, local, suggest, spellcheck, answers, and summarizer APIs.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\BraveSearch\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\BraveSearch\\BraveSearchServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "brave-search",
+        "web-search",
+        "llm-context",
+        "answers",
+        "opencompany",
+        "ai-agents"
+    ]
+}

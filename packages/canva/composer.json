@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-canva",
-    "description": "Canva integration for Laravel — list and create designs, manage folders, upload assets, and get user info.",
+    "description": "Canva Connect API integration for Laravel agents.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "canva", "design", "opencompany"],
+    "keywords": ["tools", "canva", "connect", "design", "assets", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

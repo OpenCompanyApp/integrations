@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-airtop",
-    "description": "Airtop browser automation integration for Laravel — create sessions, manage windows, navigate pages, and extract content.",
+    "description": "Airtop integration for Laravel with generated tools from the official Airtop OpenAPI specification.",
     "license": "MIT",
     "authors": [
         {

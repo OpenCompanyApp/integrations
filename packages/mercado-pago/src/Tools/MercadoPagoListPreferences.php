@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MercadoPago\MercadoPagoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Mercado Pago checkout preferences.
+ *
+ * Supports limit, offset, and sponsor filters.
+ */
 class MercadoPagoListPreferences implements Tool
 {
+    /**
+     * @param  MercadoPagoService  $service  The Mercado Pago API service.
+     */
     public function __construct(
         private MercadoPagoService $service,
     ) {}
@@ -31,6 +39,11 @@ class MercadoPagoListPreferences implements Tool
         ];
     }
 
+    /**
+     * Execute the preference list request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

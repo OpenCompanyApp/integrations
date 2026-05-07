@@ -7,13 +7,15 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: accelo_list_projects
+ * List Accelo jobs, exposed as projects for agent ergonomics.
  *
- * Lists projects from Accelo with optional filtering by status
- * and pagination support via limit/page parameters.
+ * Accelo's API resource for projects is `/jobs`.
  */
 class AcceloListProjects implements Tool
 {
+    /**
+     * @param  AcceloService  $service  The Accelo API client.
+     */
     public function __construct(
         private AcceloService $service,
     ) {}
@@ -25,7 +27,7 @@ class AcceloListProjects implements Tool
 
     public function description(): string
     {
-        return 'List projects in Accelo. Returns a paginated list of projects, optionally filtered by status.';
+        return 'List projects in Accelo. Accelo exposes these records through the jobs API resource.';
     }
 
     public function parameters(): array
@@ -33,10 +35,15 @@ class AcceloListProjects implements Tool
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of projects to return per page (default: 25, max: 100).'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based).'],
-            'status' => ['type' => 'string', 'description' => 'Filter projects by status (e.g. "open", "completed", "in_progress").'],
+            'status' => ['type' => 'string', 'description' => 'Filter jobs by standing (e.g. "active", "inactive", "completed").'],
         ];
     }
 
+    /**
+     * List Accelo jobs.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

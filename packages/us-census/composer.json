@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-us-census",
+    "description": "US Census integration for Laravel AI agents - dataset discovery, metadata, geography, variable, group, and data queries.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\UsCensus\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\UsCensus\\UsCensusServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "us-census",
+        "census",
+        "acs",
+        "demographics",
+        "opencompany",
+        "ai-agents"
+    ]
+}

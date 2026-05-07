@@ -1,0 +1,10 @@
+{
+  "source": "official_greenhouse_harvest_v3_readme_api_registry",
+  "source_url": "https://harvestdocs.greenhouse.io/reference",
+  "schema_url": "https://dash.readme.com/api/v1/api-registry/ko7u23mfr7e7n5",
+  "openapi": "3.1.0",
+  "version": "v3",
+  "method_count": 151,
+  "path_count": 112,
+  "auth": "oauth_client_credentials_or_bearer"
+}

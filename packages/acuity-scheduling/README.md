@@ -1,143 +1,58 @@
-# Integration: Acuity Scheduling
+# Acuity Scheduling Integration
 
-> Acuity Scheduling integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage appointments, clients, calendars, and availability. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Acuity Scheduling API v1 tools for OpenCompany and KosmoKrator agents.
 
-Give your AI agents access to online appointment scheduling. List and manage appointments, search clients, check calendar availability, and cancel bookings — all through the [Acuity Scheduling](https://acuityscheduling.com) API.
+The package supports Acuity's documented Basic Auth mode (`user_id` + `api_key`)
+and OAuth bearer tokens for multi-user applications.
 
-## About OpenCompany
+## Tools
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Acuity Scheduling tool lets AI agents view appointments, check availability, manage clients, and handle cancellations — giving agents full scheduling awareness and control.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-acuity-scheduling
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+| Tool | Type | Notes |
+|------|------|-------|
+| `acuity_list_appointments` | read | List appointments with filters. |
+| `acuity_get_appointment` | read | Get appointment details. |
+| `acuity_create_appointment` | write | Create appointment. |
+| `acuity_update_appointment` | write | Update editable appointment fields. |
+| `acuity_reschedule_appointment` | write | Reschedule appointment. |
+| `acuity_cancel_appointment` | write | Cancel appointment. |
+| `acuity_list_appointment_payments` | read | List appointment payments. |
+| `acuity_list_clients` | read | List/search clients. |
+| `acuity_create_client` | write | Create client. |
+| `acuity_update_client` | write | Update client by lookup parameters. |
+| `acuity_list_calendars` | read | List calendars. |
+| `acuity_list_appointment_types` | read | List appointment types. |
+| `acuity_get_availability` | read | List available times. |
+| `acuity_get_availability_dates` | read | List dates with availability. |
+| `acuity_get_availability_classes` | read | List class availability. |
+| `acuity_list_forms` | read | List intake forms. |
+| `acuity_list_products` | read | List products and packages. |
+| `acuity_list_orders` | read | List orders. |
+| `acuity_get_order` | read | Get order details. |
+| `acuity_create_certificate` | write | Create package/coupon certificate. |
+| `acuity_list_blocks` | read | List blocked-off times. |
+| `acuity_create_block` | write | Create blocked-off time. |
+| `acuity_delete_block` | write | Delete blocked-off time. |
+| `acuity_list_webhooks` | read | List dynamic webhooks. |
+| `acuity_create_webhook` | write | Create dynamic webhook. |
+| `acuity_delete_webhook` | write | Delete dynamic webhook. |
+| `acuity_get_current_user` | read | `GET /me`. |
+| `acuity_api_get` | read | Generic API v1 GET. |
+| `acuity_api_post` | write | Generic API v1 POST. |
+| `acuity_api_put` | write | Generic API v1 PUT. |
+| `acuity_api_delete` | write | Generic API v1 DELETE. |
 
 ## Configuration
-
-This tool requires an Acuity Scheduling access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
 
 ```php
 return [
     'acuity-scheduling' => [
+        'user_id' => env('ACUITY_USER_ID'),
+        'api_key' => env('ACUITY_API_KEY'),
         'access_token' => env('ACUITY_ACCESS_TOKEN'),
-        'url'          => env('ACUITY_URL', 'https://acuityscheduling.com/api/v1'),
+        'url' => env('ACUITY_URL', 'https://acuityscheduling.com/api/v1'),
     ],
 ];
 ```
 
-## Available Tools
-
-| Tool | Type | Description |
-|------|------|-------------|
-| `acuity_list_appointments` | read | List upcoming and past appointments with filters |
-| `acuity_get_appointment` | read | Get full details of a specific appointment |
-| `acuity_list_clients` | read | List and search clients |
-| `acuity_list_calendars` | read | List all calendars |
-| `acuity_list_appointment_types` | read | List all appointment types / services |
-| `acuity_cancel_appointment` | write | Cancel an existing appointment |
-| `acuity_get_availability` | read | Get available time slots for booking |
-| `acuity_get_current_user` | read | Get the authenticated user profile |
-
-## Quick Start
-
-```php
-use OpenCompany\Integrations\AcuityScheduling\AcuitySchedulingService;
-use OpenCompany\Integrations\AcuityScheduling\Tools\AcuityListAppointments;
-use OpenCompany\Integrations\AcuityScheduling\Tools\AcuityGetAvailability;
-
-// Create tools
-$service = app(AcuitySchedulingService::class);
-$tools = [
-    new AcuityListAppointments($service),
-    new AcuityGetAvailability($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('What appointments do I have this week?');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 8 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('acuity-scheduling');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\AcuityScheduling\Tools\AcuityListAppointments::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\AcuityScheduling\AcuitySchedulingService;
-
-$service = app(AcuitySchedulingService::class);
-
-// List appointments
-$appointments = $service->listAppointments([
-    'minDate' => '2026-04-01',
-    'maxDate' => '2026-04-30',
-]);
-
-// Get a specific appointment
-$appointment = $service->getAppointment(12345);
-
-// List clients
-$clients = $service->listClients(['search' => 'john']);
-
-// List calendars
-$calendars = $service->listCalendars();
-
-// List appointment types
-$types = $service->listAppointmentTypes();
-
-// Check availability
-$slots = $service->getAvailability([
-    'appointmentTypeID' => 1,
-    'date' => '2026-04-10',
-]);
-
-// Cancel an appointment
-$service->cancelAppointment(12345);
-
-// Get current user
-$user = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- An [Acuity Scheduling](https://acuityscheduling.com) account with API access
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+Use `user_id` + `api_key` for one Acuity account. Use `access_token` when the
+host manages OAuth for multiple Acuity users.

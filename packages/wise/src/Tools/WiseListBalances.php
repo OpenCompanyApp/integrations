@@ -52,6 +52,7 @@ class WiseListBalances implements Tool
     {
         return [
             'profile_id' => ['type' => 'integer', 'description' => 'The Wise profile ID to list balances for.', 'required' => true],
+            'types' => ['type' => 'string', 'description' => 'Comma-separated balance types to return. Defaults to STANDARD,SAVINGS.'],
         ];
     }
 
@@ -74,7 +75,7 @@ class WiseListBalances implements Tool
                 return ToolResult::error('Parameter "profile_id" is required.');
             }
 
-            $balances = $this->service->listBalances($profileId);
+            $balances = $this->service->listBalances($profileId, (string) ($args['types'] ?? 'STANDARD,SAVINGS'));
 
             return ToolResult::success($balances);
         } catch (\Throwable $e) {

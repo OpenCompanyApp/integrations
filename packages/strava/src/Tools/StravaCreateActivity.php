@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Strava\StravaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a manual Strava activity.
+ */
 class StravaCreateActivity implements Tool
 {
     /**

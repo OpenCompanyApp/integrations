@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class OneDriveGetCurrentUser implements Tool
 {
+    /**
+     * @param  OneDriveService  $service  Microsoft Graph OneDrive API client.
+     */
     public function __construct(
         private OneDriveService $service,
     ) {}
@@ -33,6 +36,11 @@ class OneDriveGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch signed-in user profile details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

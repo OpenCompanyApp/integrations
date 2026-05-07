@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-grafana",
-    "description": "Grafana integration for Laravel — manage dashboards, datasources, teams, and alerts.",
+    "description": "Grafana integration for Laravel agents with generated HTTP API coverage.",
     "license": "MIT",
     "authors": [
         {

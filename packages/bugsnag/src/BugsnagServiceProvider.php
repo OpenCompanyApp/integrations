@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Bugsnag integration with Laravel's service container.
+ *
+ * Binds the Bugsnag API client from stored credentials and registers the tool
+ * provider with the shared integration registry during application boot.
+ */
 class BugsnagServiceProvider extends ServiceProvider
 {
     public function register(): void

@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Square\SquareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a Square payment.
+ *
+ * Builds a CreatePayment payload with source, idempotency key, amount, and
+ * optional reference, note, customer, and location details.
+ */
 class SquareCreatePayment implements Tool
 {
     /**

@@ -92,7 +92,7 @@ class TelegramToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Cloud-based messaging and communication platform with Bot API support',
             'icon' => 'ph:paper-plane-tilt',
             'logo' => 'simple-icons:telegram',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://core.telegram.org/bots/api',
         ];

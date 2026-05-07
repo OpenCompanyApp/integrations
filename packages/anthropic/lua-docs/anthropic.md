@@ -1,222 +1,184 @@
-# Anthropic (Claude) — Lua API Reference
+# Anthropic (Claude) - Lua API Reference
 
-## list_messages
+Namespace: `app.integrations["anthropic"]`
 
-List messages in the Anthropic conversation history.
+This integration covers the public Anthropic Messages, token counting, models,
+Message Batches, and beta Files APIs. Organization, user, workspace, and API-key
+administration tools require the optional `admin_key` credential.
 
-### Parameters
+## Messages
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model` | string | no | Filter messages by model ID (e.g., "claude-sonnet-4-20250514") |
-| `limit` | integer | no | Max messages per page (default: 20, max: 1000) |
-| `before_id` | string | no | Return messages before this message ID |
-| `after_id` | string | no | Return messages after this message ID |
+### create_message
 
-### Example
+Create a Claude message with the same JSON payload shape as `POST /v1/messages`.
 
-```lua
-local result = app.integrations["anthropic"].list_messages({
-  limit = 10
-})
+Required: `model`, `messages`
 
-for _, msg in ipairs(result.data) do
-  print(msg.id .. " — " .. msg.model .. " — " .. msg.role)
-end
-```
-
----
-
-## create_message
-
-Send a prompt to Claude and receive an AI-generated response.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model` | string | yes | The model to use (e.g., "claude-sonnet-4-20250514") |
-| `messages` | array | yes | Array of message objects with `role` and `content` |
-| `max_tokens` | integer | no | Maximum tokens to generate (default: 4096) |
-| `system` | string | no | System prompt to set behavior and context |
-| `temperature` | number | no | Randomness control (0.0–1.0) |
-| `top_p` | number | no | Nucleus sampling parameter (0.0–1.0) |
-| `stop_sequences` | array | no | Strings that stop generation when encountered |
-| `stream` | boolean | no | Stream response incrementally (default: false) |
-
-### Message Format
-
-The `messages` array contains message objects:
-
-```lua
-{
-  { role = "user", content = "Your prompt here" }
-}
-```
-
-For multi-turn conversations:
-
-```lua
-{
-  { role = "user", content = "Hello!" },
-  { role = "assistant", content = "Hi there!" },
-  { role = "user", content = "Tell me more." }
-}
-```
-
-### Example
+Common optional fields: `max_tokens`, `system`, `temperature`, `top_p`,
+`stop_sequences`, `tools`, `tool_choice`, `thinking`, `metadata`, `stream`.
 
 ```lua
 local result = app.integrations["anthropic"].create_message({
   model = "claude-sonnet-4-20250514",
+  max_tokens = 256,
   messages = {
-    { role = "user", content = "Write a haiku about programming." }
-  },
-  max_tokens = 100,
-  temperature = 0.7
+    { role = "user", content = "Summarize prompt caching in one paragraph." }
+  }
 })
 
-for _, block in ipairs(result.content) do
-  if block.type == "text" then
-    print(block.text)
-  end
-end
-
-print("Stop reason: " .. result.stop_reason)
-print("Usage input: " .. result.usage.input_tokens .. ", output: " .. result.usage.output_tokens)
+print(result.id)
+print(result.usage.input_tokens)
 ```
 
----
+### count_message_tokens
 
-## list_models
-
-List available Anthropic AI models.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max models per page (default: 20, max: 1000) |
-| `before_id` | string | no | Return models before this ID |
-| `after_id` | string | no | Return models after this ID |
-
-### Example
+Count input tokens for a Messages API payload without creating a message.
 
 ```lua
-local result = app.integrations["anthropic"].list_models({
-  limit = 10
+local result = app.integrations["anthropic"].count_message_tokens({
+  payload = {
+    model = "claude-sonnet-4-20250514",
+    messages = {
+      { role = "user", content = "Hello, Claude" }
+    }
+  }
 })
 
-for _, model in ipairs(result.data) do
-  print(model.id .. " — " .. model.display_name)
-end
+print(result.input_tokens)
 ```
 
----
+### list_messages
 
-## get_model
+Deprecated compatibility alias. Anthropic does not expose a message-history
+listing endpoint. This tool returns an explicit unsupported-capability error;
+use `list_message_batches` for batch job history.
 
-Get detailed information about a specific Anthropic model.
+## Message Batches
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Model identifier, e.g. `"claude-sonnet-4-20250514"` |
-
-### Example
+Message Batch results are JSONL and are returned as `{ content_type, body }`.
+Rows are not guaranteed to be in request order; match them by `custom_id`.
 
 ```lua
-local result = app.integrations["anthropic"].get_model({
+local batch = app.integrations["anthropic"].create_message_batch({
+  payload = {
+    requests = {
+      {
+        custom_id = "example-1",
+        params = {
+          model = "claude-sonnet-4-20250514",
+          max_tokens = 128,
+          messages = {
+            { role = "user", content = "Write one sentence about CI." }
+          }
+        }
+      }
+    }
+  }
+})
+
+local current = app.integrations["anthropic"].get_message_batch({
+  id = batch.id
+})
+
+print(current.processing_status)
+```
+
+Available batch tools:
+
+- `create_message_batch({ payload = { requests = ... } })`
+- `list_message_batches({ query = { limit = 20 } })`
+- `get_message_batch({ id = "msgbatch_..." })`
+- `cancel_message_batch({ id = "msgbatch_..." })`
+- `delete_message_batch({ id = "msgbatch_..." })`
+- `get_message_batch_results({ id = "msgbatch_..." })`
+
+## Models
+
+```lua
+local models = app.integrations["anthropic"].list_models({
+  limit = 20
+})
+
+for _, model in ipairs(models.data or {}) do
+  print(model.id .. " - " .. model.display_name)
+end
+
+local sonnet = app.integrations["anthropic"].get_model({
   id = "claude-sonnet-4-20250514"
 })
-
-print("Model: " .. result.display_name)
-print("Created: " .. result.created_at)
 ```
 
----
+## Files API
 
-## list_workspaces
+Files API operations use the required beta header internally:
+`anthropic-beta: files-api-2025-04-14`.
 
-List Anthropic workspaces.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max workspaces per page (default: 20, max: 1000) |
-| `before_id` | string | no | Return workspaces before this ID |
-| `after_id` | string | no | Return workspaces after this ID |
-
-### Example
+Uploaded files can be referenced from Messages payloads using content block
+sources with `{ type = "file", file_id = "file_..." }`. Downloading is only
+available for files Anthropic marks as downloadable, such as code-execution
+outputs.
 
 ```lua
-local result = app.integrations["anthropic"].list_workspaces({
-  limit = 10
+local files = app.integrations["anthropic"].list_files({
+  query = { limit = 20 }
 })
 
-for _, ws in ipairs(result.data) do
-  print(ws.id .. " — " .. ws.name)
-end
-```
-
----
-
-## get_workspace
-
-Get details for a specific Anthropic workspace.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The workspace identifier |
-
-### Example
-
-```lua
-local result = app.integrations["anthropic"].get_workspace({
-  id = "wrksp_01ABC123"
+local file = app.integrations["anthropic"].get_file({
+  id = "file_011example"
 })
 
-print("Workspace: " .. result.name)
+local content = app.integrations["anthropic"].download_file({
+  id = "file_011downloadable"
+})
+
+print(content.content_type)
 ```
 
----
+Available file tools:
 
-## get_current_user
+- `list_files({ query = { limit = 20 } })`
+- `get_file({ id = "file_..." })`
+- `delete_file({ id = "file_..." })`
+- `download_file({ id = "file_..." })`
 
-Get the authenticated user's profile and account information.
+## Admin API
 
-### Parameters
-
-None.
-
-### Example
+The following tools require `admin_key`, not a normal workspace API key.
+Admin API is unavailable for individual accounts.
 
 ```lua
-local result = app.integrations["anthropic"].get_current_user({})
+local org = app.integrations["anthropic"].get_organization({})
 
-print("User: " .. (result.name or "unknown"))
+local users = app.integrations["anthropic"].list_users({
+  query = { limit = 20 }
+})
+
+local keys = app.integrations["anthropic"].list_api_keys({
+  query = { limit = 20, status = "active" }
+})
 ```
 
----
+Available Admin API tools:
+
+- `get_organization({})`
+- `list_workspaces({ limit = 20, include_archived = false })`
+- `get_workspace({ id = "wrkspc_..." })`
+- `list_users({ query = { limit = 20 } })`
+- `get_user({ id = "user_..." })`
+- `update_user({ id = "user_...", payload = { role = "developer" } })`
+- `remove_user({ id = "user_..." })`
+- `list_api_keys({ query = { limit = 20 } })`
+- `get_api_key({ id = "apikey_..." })`
+
+`get_current_user({})` is kept as a backward-compatible alias for
+`get_organization({})`; Anthropic does not expose a `/users/me` endpoint.
 
 ## Multi-Account Usage
 
-If you have multiple Anthropic accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["anthropic"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["anthropic"].default.function_name({...})
-
--- Named accounts
-app.integrations["anthropic"].work.function_name({...})
-app.integrations["anthropic"].personal.function_name({...})
+app.integrations["anthropic"].create_message({...})
+app.integrations["anthropic"].default.create_message({...})
+app.integrations["anthropic"].work.create_message({...})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts. Only the credentials differ.

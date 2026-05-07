@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-gemini",
-    "description": "Google Gemini AI integration for Laravel — list models, generate content, manage files and tuned models.",
+    "description": "Google Gemini API integration for Laravel AI agents - generated Gemini API v1beta coverage for models, files, batches, caches, corpora, tuned models, generated files, and file search stores.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google", "gemini", "ai", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-gemini": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,12 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "gemini",
+        "ai",
+        "generative-language",
+        "opencompany"
+    ]
 }

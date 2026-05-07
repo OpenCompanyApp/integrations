@@ -3,8 +3,10 @@
 namespace OpenCompany\Integrations\AuthZero;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\AuthZero\Tools\AuthZeroCreateUser;
 use OpenCompany\Integrations\AuthZero\Tools\AuthZeroGetCurrentUser;
@@ -14,16 +16,15 @@ use OpenCompany\Integrations\AuthZero\Tools\AuthZeroListConnections;
 use OpenCompany\Integrations\AuthZero\Tools\AuthZeroListRoles;
 use OpenCompany\Integrations\AuthZero\Tools\AuthZeroListUsers;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Tool provider for the Auth0 identity platform integration.
  *
  * Implements {@see ToolProvider} for tool registration and
  * {@see ConfigurableIntegration} for connection testing and config schema.
  */
-class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
-
-/**
+class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -125,10 +126,16 @@ class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
+    /**
+     * Verify the configured Auth0 Management API token against tenant settings.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $domain = rtrim($config['domain'] ?? '', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $domain = $this->normalizeDomain((string) ($config['domain'] ?? ''));
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided'];
@@ -218,8 +225,8 @@ class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'auth_zero_get_current_user' => [
                 'class' => AuthZeroGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Retrieve the profile of the currently authenticated user / health check.',
+                'name' => 'Health Check',
+                'description' => 'Verify the Auth0 Management API token by retrieving tenant settings.',
                 'icon' => 'ph:identification-badge',
             ],
         ];
@@ -228,7 +235,9 @@ class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/auth-zero.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -246,7 +255,7 @@ class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, Has
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new AuthZeroService(
                 accessToken: $creds->get('auth-zero', 'access_token', '', $account),
@@ -257,5 +266,24 @@ class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, Has
         }
 
         return new $class(app(AuthZeroService::class));
+    }
+
+    /**
+     * Normalize configured tenant domains to host-only form.
+     */
+    private function normalizeDomain(string $domain): string
+    {
+        $domain = trim($domain);
+        if ($domain === '') {
+            return '';
+        }
+
+        if (str_contains($domain, '://')) {
+            $host = parse_url($domain, PHP_URL_HOST);
+
+            return is_string($host) ? rtrim($host, '/') : '';
+        }
+
+        return rtrim(explode('/', $domain, 2)[0], '/');
     }
 }

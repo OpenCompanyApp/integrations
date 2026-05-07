@@ -2,73 +2,18 @@
 
 namespace OpenCompany\Integrations\CampaignMonitor\Tools;
 
-use OpenCompany\Integrations\CampaignMonitor\CampaignMonitorService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Add a subscriber to a Campaign Monitor subscriber list.
+ * Add or update a subscriber on a list.
  */
-class CampaignMonitorAddSubscriber implements Tool
+class CampaignMonitorAddSubscriber extends AbstractCampaignMonitorEndpointTool
 {
-    public function __construct(
-        private CampaignMonitorService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'campaignmonitor_add_subscriber';
-    }
-
-    public function description(): string
-    {
-        return 'Add a new subscriber to a Campaign Monitor list. The subscriber will receive a confirmation email if double opt-in is enabled.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'list_id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber list ID.'],
-            'email' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber\'s email address.'],
-            'name' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber\'s full name.'],
-            'resubscribe' => ['type' => 'boolean', 'description' => 'Re-subscribe if previously unsubscribed (default: true).'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Campaign Monitor integration is not configured.');
-            }
-
-            if (empty($args['list_id'])) {
-                return ToolResult::error('list_id is required.');
-            }
-
-            if (empty($args['email'])) {
-                return ToolResult::error('email is required.');
-            }
-
-            if (empty($args['name'])) {
-                return ToolResult::error('name is required.');
-            }
-
-            $resubscribe = $args['resubscribe'] ?? true;
-
-            $result = $this->service->addSubscriber(
-                $args['list_id'],
-                $args['email'],
-                $args['name'],
-                (bool) $resubscribe,
-            );
-
-            return ToolResult::success([
-                'message' => "Subscriber {$args['email']} added to list.",
-                'details' => $result,
-            ]);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'campaignmonitor_add_subscriber';
+    protected const TOOL_DESCRIPTION = 'Add or update a subscriber on a list.';
+    protected const METHOD = 'POST';
+    protected const PATH = '/subscribers/{list_id}.json';
+    protected const PATH_KEYS = array (  0 => 'list_id',);
+    protected const QUERY_KEYS = array ();
+    protected const BODY_KEYS = array (  0 => 'EmailAddress',  1 => 'Name',  2 => 'MobileNumber',  3 => 'CustomFields',  4 => 'Resubscribe',  5 => 'RestartSubscriptionBasedAutoresponders',  6 => 'ConsentToTrack',  7 => 'ConsentToSendSms',);
+    protected const PARAMETERS = array (  'list_id' =>   array (    'type' => 'string',    'required' => true,    'description' => 'Campaign Monitor resource ID for list id.',  ),  'payload' =>   array (    'type' => 'object',    'description' => 'Full JSON request body. If provided, it overrides individual body fields.',  ),  'EmailAddress' =>   array (    'type' => 'string',    'description' => 'Body field: EmailAddress.',  ),  'Name' =>   array (    'type' => 'string',    'description' => 'Body field: Name.',  ),  'MobileNumber' =>   array (    'type' => 'string',    'description' => 'Body field: MobileNumber.',  ),  'CustomFields' =>   array (    'type' => 'array',    'description' => 'Body field: CustomFields.',  ),  'Resubscribe' =>   array (    'type' => 'string',    'description' => 'Body field: Resubscribe.',  ),  'RestartSubscriptionBasedAutoresponders' =>   array (    'type' => 'string',    'description' => 'Body field: RestartSubscriptionBasedAutoresponders.',  ),  'ConsentToTrack' =>   array (    'type' => 'string',    'description' => 'Body field: ConsentToTrack.',  ),  'ConsentToSendSms' =>   array (    'type' => 'string',    'description' => 'Body field: ConsentToSendSms.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

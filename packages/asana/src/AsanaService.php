@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Log;
  * sections, workspaces, teams, users, tags, and stories (comments).
  *
  * Authentication uses a Personal Access Token (or OAuth token) sent as
- * a Bearer header.  Responses are wrapped in a top-level `data` key.
- * Pagination is cursor-based via the `offset` parameter.
+ * a Bearer header. Responses preserve Asana's top-level `data` and
+ * pagination metadata such as `next_page`.
  */
 class AsanaService
 {
@@ -342,7 +342,7 @@ class AsanaService
                 throw new \RuntimeException("Asana API error ({$response->status()}): {$response->body()}");
             }
 
-            return $response->json('data') ?? [];
+            return $response->json() ?? [];
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Asana API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AhrefsListAnchors implements Tool
 {
+    /**
+     * @param  AhrefsService  $service  Ahrefs API client.
+     */
     public function __construct(
         private AhrefsService $service,
     ) {}
@@ -37,6 +40,11 @@ class AhrefsListAnchors implements Tool
         ];
     }
 
+    /**
+     * Execute the tool.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

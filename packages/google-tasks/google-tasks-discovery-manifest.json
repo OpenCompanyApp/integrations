@@ -1,0 +1,121 @@
+{
+    "source": "https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest",
+    "service": "Google Tasks API",
+    "version": "v1",
+    "method_count": 14,
+    "generated_package": "google-tasks",
+    "methods": [
+        {
+            "discovery_id": "tasks.update",
+            "tool": "google_tasks_tasks_update",
+            "class": "GoogleTasksTasksUpdate",
+            "http_method": "PUT",
+            "path": "/tasks/v1/lists/{tasklist}/tasks/{task}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasks.move",
+            "tool": "google_tasks_tasks_move",
+            "class": "GoogleTasksTasksMove",
+            "http_method": "POST",
+            "path": "/tasks/v1/lists/{tasklist}/tasks/{task}/move",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasks.delete",
+            "tool": "google_tasks_tasks_delete",
+            "class": "GoogleTasksTasksDelete",
+            "http_method": "DELETE",
+            "path": "/tasks/v1/lists/{tasklist}/tasks/{task}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasks.clear",
+            "tool": "google_tasks_tasks_clear",
+            "class": "GoogleTasksTasksClear",
+            "http_method": "POST",
+            "path": "/tasks/v1/lists/{tasklist}/clear",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasks.get",
+            "tool": "google_tasks_tasks_get",
+            "class": "GoogleTasksTasksGet",
+            "http_method": "GET",
+            "path": "/tasks/v1/lists/{tasklist}/tasks/{task}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "tasks.insert",
+            "tool": "google_tasks_tasks_insert",
+            "class": "GoogleTasksTasksInsert",
+            "http_method": "POST",
+            "path": "/tasks/v1/lists/{tasklist}/tasks",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasks.list",
+            "tool": "google_tasks_tasks_list",
+            "class": "GoogleTasksTasksList",
+            "http_method": "GET",
+            "path": "/tasks/v1/lists/{tasklist}/tasks",
+            "type": "read"
+        },
+        {
+            "discovery_id": "tasks.patch",
+            "tool": "google_tasks_tasks_patch",
+            "class": "GoogleTasksTasksPatch",
+            "http_method": "PATCH",
+            "path": "/tasks/v1/lists/{tasklist}/tasks/{task}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasklists.delete",
+            "tool": "google_tasks_tasklists_delete",
+            "class": "GoogleTasksTasklistsDelete",
+            "http_method": "DELETE",
+            "path": "/tasks/v1/users/@me/lists/{tasklist}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasklists.get",
+            "tool": "google_tasks_tasklists_get",
+            "class": "GoogleTasksTasklistsGet",
+            "http_method": "GET",
+            "path": "/tasks/v1/users/@me/lists/{tasklist}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "tasklists.insert",
+            "tool": "google_tasks_tasklists_insert",
+            "class": "GoogleTasksTasklistsInsert",
+            "http_method": "POST",
+            "path": "/tasks/v1/users/@me/lists",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasklists.list",
+            "tool": "google_tasks_tasklists_list",
+            "class": "GoogleTasksTasklistsList",
+            "http_method": "GET",
+            "path": "/tasks/v1/users/@me/lists",
+            "type": "read"
+        },
+        {
+            "discovery_id": "tasklists.patch",
+            "tool": "google_tasks_tasklists_patch",
+            "class": "GoogleTasksTasklistsPatch",
+            "http_method": "PATCH",
+            "path": "/tasks/v1/users/@me/lists/{tasklist}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tasklists.update",
+            "tool": "google_tasks_tasklists_update",
+            "class": "GoogleTasksTasklistsUpdate",
+            "http_method": "PUT",
+            "path": "/tasks/v1/users/@me/lists/{tasklist}",
+            "type": "write"
+        }
+    ]
+}

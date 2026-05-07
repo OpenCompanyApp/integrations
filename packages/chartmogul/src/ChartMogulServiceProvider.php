@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the ChartMogul integration with Laravel's service container.
+ *
+ * Binds ChartMogulService from stored credentials and registers the provider
+ * with the shared ToolProviderRegistry.
+ */
 class ChartMogulServiceProvider extends ServiceProvider
 {
     public function register(): void

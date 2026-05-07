@@ -1,0 +1,11 @@
+{
+  "source_url": "https://raw.githubusercontent.com/miroapp/api-clients/main/packages/generator/spec.json",
+  "docs_url": "https://developers.miro.com/reference/api-reference",
+  "openapi": "3.0.1",
+  "version": "v2.0",
+  "path_count": 114,
+  "method_count": 197,
+  "read_count": 85,
+  "write_count": 112,
+  "multipart_count": 5
+}

@@ -32,7 +32,7 @@ This tool requires a PayPal API access token.
 return [
     'paypal' => [
         'access_token' => env('PAYPAL_ACCESS_TOKEN'),
-        'url'          => env('PAYPAL_API_URL', 'https://api-m.paypal.com/v1'),
+        'url'          => env('PAYPAL_API_URL', 'https://api-m.paypal.com'),
     ],
 ];
 ```
@@ -41,9 +41,9 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `paypal_list_orders` | read | List PayPal checkout orders with optional filters |
 | `paypal_get_order` | read | Get details of a specific PayPal order |
 | `paypal_create_order` | write | Create a new PayPal checkout order |
+| `paypal_capture_order` | write | Capture a previously approved PayPal checkout order |
 | `paypal_list_payments` | read | List PayPal payments with optional filters |
 | `paypal_get_payment` | read | Get details of a specific PayPal payment |
 | `paypal_list_invoices` | read | List PayPal invoices |
@@ -53,20 +53,20 @@ return [
 
 ```php
 use OpenCompany\Integrations\PayPal\PayPalService;
-use OpenCompany\Integrations\PayPal\Tools\PayPalListOrders;
+use OpenCompany\Integrations\PayPal\Tools\PayPalGetOrder;
 use OpenCompany\Integrations\PayPal\Tools\PayPalCreateOrder;
 
 // Create tools
 $service = app(PayPalService::class);
 $tools = [
-    new PayPalListOrders($service),
+    new PayPalGetOrder($service),
     new PayPalCreateOrder($service),
 ];
 
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('Show me my recent PayPal orders');
+    ->prompt('Create a PayPal order and then retrieve its status');
 ```
 
 ### Via ToolProvider (recommended)
@@ -81,7 +81,7 @@ $provider = $registry->get('paypal');
 
 // Create any tool via the provider
 $tool = $provider->createTool(
-    \OpenCompany\Integrations\PayPal\Tools\PayPalListOrders::class
+    \OpenCompany\Integrations\PayPal\Tools\PayPalGetOrder::class
 );
 ```
 
@@ -91,9 +91,6 @@ $tool = $provider->createTool(
 use OpenCompany\Integrations\PayPal\PayPalService;
 
 $service = app(PayPalService::class);
-
-// List orders
-$orders = $service->listOrders(['page_size' => 10]);
 
 // Get a specific order
 $order = $service->getOrder('5O190127TN364715T');
@@ -110,6 +107,9 @@ $order = $service->createOrder([
         ],
     ],
 ]);
+
+// Capture an approved order
+$capture = $service->captureOrder('5O190127TN364715T');
 
 // List payments
 $payments = $service->listPayments(['count' => 10]);

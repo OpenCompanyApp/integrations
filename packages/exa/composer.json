@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-exa",
-    "description": "Exa AI search integration for Laravel — neural search, find similar links, retrieve page contents.",
+    "description": "Exa AI search integration for Laravel — web search, contents, similar links, and grounded answers.",
     "license": "MIT",
     "authors": [
         {

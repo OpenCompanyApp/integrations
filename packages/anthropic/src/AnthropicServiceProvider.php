@@ -25,6 +25,7 @@ class AnthropicServiceProvider extends ServiceProvider
             return new AnthropicService(
                 apiKey: $creds->get('anthropic', 'api_key', ''),
                 baseUrl: $creds->get('anthropic', 'url', 'https://api.anthropic.com/v1'),
+                adminKey: $creds->get('anthropic', 'admin_key', ''),
             );
         });
     }

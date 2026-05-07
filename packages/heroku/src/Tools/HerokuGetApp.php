@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Heroku\HerokuService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Heroku app by ID or name.
+ */
 class HerokuGetApp implements Tool
 {
+    /**
+     * @param  HerokuService  $service  The Heroku Platform API client.
+     */
     public function __construct(
         private HerokuService $service,
     ) {}
@@ -29,6 +35,11 @@ class HerokuGetApp implements Tool
         ];
     }
 
+    /**
+     * Fetch an app using a Heroku app ID, UUID, or app name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (app_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

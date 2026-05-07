@@ -6,6 +6,9 @@ use OpenCompany\Integrations\SignNow\SignNowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get details for one SignNow document.
+ */
 class SignNowGetDocument implements Tool
 {
     /**

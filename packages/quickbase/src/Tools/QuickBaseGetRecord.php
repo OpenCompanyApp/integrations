@@ -6,8 +6,14 @@ use OpenCompany\Integrations\QuickBase\QuickBaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a single Quickbase record by record ID.
+ */
 class QuickBaseGetRecord implements Tool
 {
+    /**
+     * @param  QuickBaseService  $service  The Quickbase REST API client.
+     */
     public function __construct(
         private QuickBaseService $service,
     ) {}

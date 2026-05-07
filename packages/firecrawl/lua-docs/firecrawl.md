@@ -1,217 +1,129 @@
 # Firecrawl — Lua API Reference
 
-## scrape
+Namespace: `app.integrations.firecrawl`
 
-Scrape a single URL and extract its content in the requested format.
+This integration targets Firecrawl v2 JSON endpoints under `https://api.firecrawl.dev/v2`.
 
-### Parameters
+Covered endpoints include scrape, crawl, map, search, batch scrape, extract status, agent jobs, browser sessions, team usage, queue status, and activity. File upload parsing is intentionally not exposed by this JSON-only package slice.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `url` | string | yes | The URL to scrape (e.g., `"https://example.com"`) |
-| `formats` | array | no | Output formats: `"markdown"`, `"html"`, `"rawHtml"`, `"content"`, `"links"`, `"screenshot"`. Default: `["markdown"]` |
-| `onlyMainContent` | boolean | no | Extract only main content, remove nav/footers. Default: `true` |
-| `includeTags` | array | no | CSS selectors to include |
-| `excludeTags` | array | no | CSS selectors to exclude |
-| `waitFor` | integer | no | Milliseconds to wait for dynamic content |
-| `timeout` | integer | no | Timeout in ms (default: 30000) |
-| `actions` | array | no | Actions before scraping (click, scroll, wait, screenshot) |
-
-### Example
+## Core Content Tools
 
 ```lua
-local result = app.integrations.firecrawl.scrape({
-  url = "https://example.com",
-  formats = {"markdown", "links"},
+local page = app.integrations.firecrawl.scrape({
+  url = "https://example.test",
+  formats = { "markdown", "links" },
   onlyMainContent = true
 })
 
-print(result.data.markdown)
+local results = app.integrations.firecrawl.search({
+  query = "Firecrawl v2 batch scrape",
+  limit = 5,
+  scrapeOptions = { formats = { "markdown" } }
+})
+
+local links = app.integrations.firecrawl.map({
+  url = "https://example.test",
+  limit = 100
+})
 ```
 
----
-
-## crawl
-
-Start an asynchronous crawl job to scrape all pages from a website. Returns a job ID for status checking.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `url` | string | yes | Root URL to crawl from |
-| `limit` | integer | no | Max pages to crawl. Default: 10 |
-| `maxDepth` | integer | no | Max depth from root URL |
-| `formats` | array | no | Output formats per page. Default: `["markdown"]` |
-| `excludePaths` | array | no | URL path patterns to exclude |
-| `includePaths` | array | no | Only crawl URLs matching these patterns |
-| `allowBackwardLinks` | boolean | no | Allow crawling parent page links. Default: `false` |
-| `allowExternalLinks` | boolean | no | Allow crawling external domains. Default: `false` |
-| `onlyMainContent` | boolean | no | Extract only main content per page. Default: `true` |
-
-### Example
+## Crawl Jobs
 
 ```lua
-local job = app.integrations.firecrawl.crawl({
-  url = "https://example.com",
+local crawl = app.integrations.firecrawl.crawl({
+  url = "https://example.test/docs",
   limit = 50,
-  formats = {"markdown"}
+  formats = { "markdown" }
 })
 
-print("Crawl started with ID: " .. job.id)
+local status = app.integrations.firecrawl.get_crawl_status({ id = crawl.id })
+local errors = app.integrations.firecrawl.get_crawl_errors({ id = crawl.id })
+local active = app.integrations.firecrawl.get_active_crawls({})
 
--- Poll for results
-local status = app.integrations.firecrawl.get_crawl_status({
-  id = job.id
-})
-
-if status.status == "completed" then
-  for _, page in ipairs(status.data) do
-    print(page.metadata.sourceURL .. ": " .. #page.markdown .. " chars")
-  end
-end
+app.integrations.firecrawl.cancel_crawl({ id = crawl.id })
 ```
 
----
-
-## get_crawl_status
-
-Check the status and retrieve results of a crawl job.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The crawl job ID returned by `crawl` |
-
-### Status Values
-
-`scraping`, `completed`, `failed`, `cancelled`
-
-### Example
+Use `preview_crawl_params` to turn a plain-English crawl intent into a candidate crawl config before running an expensive crawl.
 
 ```lua
-local result = app.integrations.firecrawl.get_crawl_status({
-  id = "crawl_abc123"
-})
-
-print("Status: " .. result.status)
-print("Pages scraped: " .. #result.data)
-```
-
----
-
-## map
-
-Discover all URLs on a website without scraping content.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `url` | string | yes | Root URL to map |
-| `limit` | integer | no | Max URLs to return |
-| `includeSubdomains` | boolean | no | Include subdomain URLs. Default: `false` |
-| `search` | string | no | Filter URLs matching this term |
-| `ignoreSitemap` | boolean | no | Skip sitemap.xml. Default: `false` |
-| `includePaths` | array | no | Only include URLs matching these patterns |
-| `excludePaths` | array | no | Exclude URLs matching these patterns |
-
-### Example
-
-```lua
-local result = app.integrations.firecrawl.map({
-  url = "https://example.com",
-  limit = 100,
-  includePaths = {"/docs/*"}
-})
-
-for _, url in ipairs(result.links) do
-  print(url)
-end
-```
-
----
-
-## extract
-
-Extract structured data from one or more URLs using AI.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `urls` | array | yes | List of URLs to extract from |
-| `prompt` | string | no | Natural language description of what to extract |
-| `schema` | object | no | JSON schema for expected output structure |
-| `systemPrompt` | string | no | System prompt to guide AI behavior |
-| `allowExternalLinks` | boolean | no | Follow external domain links. Default: `false` |
-| `enableWebSearch` | boolean | no | Supplement with web search. Default: `false` |
-| `includeSubdomains` | boolean | no | Include subdomains. Default: `false` |
-
-### Example
-
-```lua
-local result = app.integrations.firecrawl.extract({
-  urls = {"https://example.com/product/1"},
-  prompt = "Extract the product name, price, and description"
-})
-
-print(result.data.product_name)
-print(result.data.price)
-```
-
-### With JSON schema
-
-```lua
-local result = app.integrations.firecrawl.extract({
-  urls = {"https://example.com/product/1"},
-  schema = {
-    type = "object",
-    properties = {
-      name = {type = "string"},
-      price = {type = "number"},
-      description = {type = "string"},
-      inStock = {type = "boolean"}
-    }
-  }
+local preview = app.integrations.firecrawl.preview_crawl_params({
+  url = "https://example.test",
+  prompt = "Crawl only the developer docs and ignore changelog pages."
 })
 ```
 
----
-
-## get_current_user
-
-Get the authenticated user's account information and usage stats.
-
-### Parameters
-
-None.
-
-### Example
+## Batch Scrape
 
 ```lua
-local user = app.integrations.firecrawl.get_current_user({})
-print("Account: " .. user.email)
-print("Plan: " .. user.plan)
+local batch = app.integrations.firecrawl.batch_scrape({
+  urls = {
+    "https://example.test/a",
+    "https://example.test/b"
+  },
+  formats = { "markdown" },
+  ignoreInvalidURLs = true
+})
+
+local status = app.integrations.firecrawl.get_batch_scrape_status({ id = batch.id })
+local errors = app.integrations.firecrawl.get_batch_scrape_errors({ id = batch.id })
+app.integrations.firecrawl.cancel_batch_scrape({ id = batch.id })
 ```
 
----
+## Extract And Agent Jobs
+
+```lua
+local extract = app.integrations.firecrawl.extract({
+  urls = { "https://example.test/product/1" },
+  prompt = "Extract product name, price, and availability."
+})
+
+local extract_status = app.integrations.firecrawl.get_extract_status({
+  id = extract.id
+})
+
+local agent = app.integrations.firecrawl.agent({
+  url = "https://example.test",
+  prompt = "Find the pricing page and extract all plan names."
+})
+
+local agent_status = app.integrations.firecrawl.get_agent_status({
+  job_id = agent.id
+})
+
+app.integrations.firecrawl.cancel_agent({ job_id = agent.id })
+```
+
+## Browser Sessions
+
+```lua
+local browser = app.integrations.firecrawl.create_browser({
+  url = "https://example.test"
+})
+
+local result = app.integrations.firecrawl.execute_browser({
+  session_id = browser.sessionId,
+  prompt = "Click the pricing link and return the page title."
+})
+
+local sessions = app.integrations.firecrawl.list_browsers({})
+app.integrations.firecrawl.delete_browser({ session_id = browser.sessionId })
+```
+
+## Team Usage And Activity
+
+```lua
+local credits = app.integrations.firecrawl.credit_usage({})
+local credit_history = app.integrations.firecrawl.historical_credit_usage({})
+local tokens = app.integrations.firecrawl.token_usage({})
+local token_history = app.integrations.firecrawl.historical_token_usage({})
+local queue = app.integrations.firecrawl.queue_status({})
+local activity = app.integrations.firecrawl.activity({ limit = 20 })
+```
 
 ## Multi-Account Usage
 
-If you have multiple Firecrawl accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.firecrawl.scrape({url = "https://example.com"})
-
--- Explicit default (portable across setups)
-app.integrations.firecrawl.default.scrape({url = "https://example.com"})
-
--- Named accounts
-app.integrations.firecrawl.production.scrape({url = "https://example.com"})
-app.integrations.firecrawl.staging.scrape({url = "https://staging.example.com"})
+app.integrations.firecrawl.scrape({ url = "https://example.test" })
+app.integrations.firecrawl.default.scrape({ url = "https://example.test" })
+app.integrations.firecrawl.production.scrape({ url = "https://example.test" })
 ```
-
-All functions are identical across accounts — only the credentials differ.

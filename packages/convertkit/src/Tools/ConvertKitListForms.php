@@ -2,68 +2,18 @@
 
 namespace OpenCompany\Integrations\ConvertKit\Tools;
 
-use OpenCompany\Integrations\ConvertKit\ConvertKitService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List all forms in the ConvertKit account.
- *
- * Returns all forms with their IDs, names, and embedded HTML.
- * Use form IDs with the subscribe-to-form tool.
+ * List forms and landing pages.
  */
-class ConvertKitListForms implements Tool
+class ConvertKitListForms extends AbstractConvertKitEndpointTool
 {
-    /**
-     * Create a new ConvertKitListForms tool instance.
-     */
-    public function __construct(
-        private ConvertKitService $service,
-    ) {}
-
-    /**
-     * Return the tool name used for routing.
-     */
-    public function name(): string
-    {
-        return 'convertkit_list_forms';
-    }
-
-    /**
-     * Return a human-readable description of what this tool does.
-     */
-    public function description(): string
-    {
-        return 'List all forms in your ConvertKit account. Returns form IDs and names.';
-    }
-
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array<string, mixed>> Parameter definitions
-     */
-    public function parameters(): array
-    {
-        return [];
-    }
-
-    /**
-     * Execute the tool: list all forms from ConvertKit.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (unused)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('ConvertKit integration is not configured.');
-            }
-
-            $result = $this->service->listForms();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'convertkit_list_forms';
+    protected const TOOL_DESCRIPTION = 'List forms and landing pages.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/forms';
+    protected const PATH_KEYS = array ();
+    protected const QUERY_KEYS = array (  0 => 'status',  1 => 'type',  2 => 'after',  3 => 'before',  4 => 'per_page',  5 => 'include_total_count',);
+    protected const BODY_KEYS = array ();
+    protected const PARAMETERS = array (  'params' =>   array (    'type' => 'object',    'description' => 'Query parameters such as after, before, per_page, or include_total_count.',  ),  'status' =>   array (    'type' => 'string',    'description' => 'Query parameter: status.',  ),  'type' =>   array (    'type' => 'string',    'description' => 'Query parameter: type.',  ),  'after' =>   array (    'type' => 'string',    'description' => 'Query parameter: after.',  ),  'before' =>   array (    'type' => 'string',    'description' => 'Query parameter: before.',  ),  'per_page' =>   array (    'type' => 'string',    'description' => 'Query parameter: per page.',  ),  'include_total_count' =>   array (    'type' => 'string',    'description' => 'Query parameter: include total count.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

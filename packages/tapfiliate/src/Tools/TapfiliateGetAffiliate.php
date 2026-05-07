@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Tapfiliate\TapfiliateService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Tapfiliate affiliate.
+ *
+ * Fetches one affiliate by the documented affiliate id path parameter.
+ */
 class TapfiliateGetAffiliate implements Tool
 {
+    /**
+     * @param  TapfiliateService  $service  The Tapfiliate API client
+     */
     public function __construct(
         private TapfiliateService $service,
     ) {}
@@ -29,6 +37,11 @@ class TapfiliateGetAffiliate implements Tool
         ];
     }
 
+    /**
+     * Get an affiliate.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

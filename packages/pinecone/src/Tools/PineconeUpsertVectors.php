@@ -41,6 +41,7 @@ class PineconeUpsertVectors implements Tool
                 'description' => 'Vector records with id, values, and optional metadata.',
                 'items' => ['type' => 'object'],
             ],
+            'namespace' => ['type' => 'string', 'description' => 'Optional namespace where vectors are upserted.'],
         ];
     }
 
@@ -65,6 +66,7 @@ class PineconeUpsertVectors implements Tool
             return ToolResult::success($this->service->upsertVectors(
                 (string) $args['index_host'],
                 $args['vectors'],
+                isset($args['namespace']) ? (string) $args['namespace'] : null,
             ));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

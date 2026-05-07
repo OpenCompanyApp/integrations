@@ -43,6 +43,11 @@ class ElevenLabsCreateVoice implements Tool
         ];
     }
 
+    /**
+     * Create a cloned voice.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (name, files, description).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -50,7 +55,11 @@ class ElevenLabsCreateVoice implements Tool
                 return ToolResult::error('ElevenLabs integration is not configured.');
             }
 
-            $name        = $args['name'];
+            $name = trim((string) ($args['name'] ?? ''));
+            if ($name === '') {
+                return ToolResult::error('name is required.');
+            }
+
             $files       = $args['files'] ?? [];
             $description = $args['description'] ?? '';
 

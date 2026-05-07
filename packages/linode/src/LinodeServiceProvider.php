@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Linode integration with Laravel.
+ *
+ * Binds the Linode API client from host credentials and registers the provider
+ * with the shared tool registry when available.
+ */
 class LinodeServiceProvider extends ServiceProvider
 {
     public function register(): void

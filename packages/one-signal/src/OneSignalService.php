@@ -2,81 +2,93 @@
 
 namespace OpenCompany\Integrations\OneSignal;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * OneSignal API service for sending push notifications and managing devices.
+ * HTTP client for the current OneSignal REST API.
  *
- * Handles authentication via Bearer token and provides methods for all
- * OneSignal REST API v1 endpoints used by this integration.
+ * Handles app-key authentication and exposes messaging, user, subscription,
+ * segment, template, analytics, and app operations for tool classes.
  */
 class OneSignalService
 {
+    /**
+     * @param  string  $apiKey  OneSignal App API key or Organization API key.
+     * @param  string  $appId  Default OneSignal App ID.
+     * @param  string  $baseUrl  Base URL for the OneSignal REST API.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $appId = '',
-        private string $baseUrl = 'https://onesignal.com/api/v1',
+        private string $baseUrl = 'https://api.onesignal.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service is configured with an API key.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
-    /**
-     * Get the configured OneSignal app ID.
-     */
     public function getAppId(): string
     {
         return $this->appId;
     }
 
     /**
-     * List notifications for an app.
+     * List messages for an app.
      *
-     * @param  string  $appId  The OneSignal app ID.
-     * @param  int  $limit  Maximum number of notifications to return (default 50).
-     * @param  int  $offset  Offset for pagination (default 0).
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>|int  $params  Query parameters, or legacy limit.
+     * @param  int  $offset  Legacy offset argument.
      * @return array<string, mixed>
      */
-    public function listNotifications(string $appId, int $limit = 50, int $offset = 0): array
+    public function listNotifications(?string $appId = null, array|int $params = [], int $offset = 0): array
     {
-        return $this->request('GET', '/notifications', [
-            'app_id' => $appId,
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
+        if (is_int($params)) {
+            $params = ['limit' => $params, 'offset' => $offset];
+        }
+
+        return $this->request('GET', '/notifications', ['app_id' => $this->resolveAppId($appId)] + $params);
     }
 
     /**
-     * Get a single notification by ID.
+     * Get a message and optional outcome details.
      *
-     * @param  string  $id  The notification ID.
-     * @param  string  $appId  The OneSignal app ID.
+     * @param  string  $id  Message ID.
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
      */
-    public function getNotification(string $id, string $appId): array
+    public function getNotification(string $id, ?string $appId = null, array $params = []): array
     {
-        return $this->request('GET', '/notifications/' . urlencode($id), [
-            'app_id' => $appId,
-        ]);
+        return $this->request('GET', '/notifications/' . rawurlencode($id), ['app_id' => $this->resolveAppId($appId)] + $params);
     }
 
     /**
-     * Create and send a new push notification.
+     * Create a push, email, or SMS message.
      *
-     * @param  string  $appId  The OneSignal app ID.
-     * @param  array<string, string>  $contents  Notification body per language, e.g. {"en": "Hello!"}.
-     * @param  array<string, string>|null  $headings  Notification title per language, e.g. {"en": "Update"}.
-     * @param  array<string>|null  $includedSegments  Target segments, e.g. ["All", "Active Users"].
-     * @param  string|null  $url  URL to open when the notification is clicked.
-     * @param  array<string, mixed>|null  $data  Custom data payload delivered to the app.
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $payload  Message payload.
+     * @return array<string, mixed>
+     */
+    public function createMessage(?string $appId, array $payload): array
+    {
+        return $this->request('POST', '/notifications', ['app_id' => $this->resolveAppId($appId)] + $payload);
+    }
+
+    /**
+     * Legacy-compatible create notification wrapper.
+     *
+     * @param  string  $appId  OneSignal app ID.
+     * @param  array<string, string>  $contents  Localized message body.
+     * @param  array<string, string>|null  $headings  Localized title.
+     * @param  array<int, string>|null  $includedSegments  Target segments.
+     * @param  string|null  $url  Click URL.
+     * @param  array<string, mixed>|null  $data  Custom data.
      * @return array<string, mixed>
      */
     public function createNotification(
@@ -87,63 +99,74 @@ class OneSignalService
         ?string $url = null,
         ?array $data = null,
     ): array {
-        $body = [
-            'app_id' => $appId,
-            'contents' => $contents,
-        ];
+        $payload = ['contents' => $contents];
 
         if ($headings !== null) {
-            $body['headings'] = $headings;
+            $payload['headings'] = $headings;
         }
 
         if ($includedSegments !== null) {
-            $body['included_segments'] = $includedSegments;
+            $payload['included_segments'] = $includedSegments;
         }
 
         if ($url !== null) {
-            $body['url'] = $url;
+            $payload['url'] = $url;
         }
 
         if ($data !== null) {
-            $body['data'] = $data;
+            $payload['data'] = $data;
         }
 
-        return $this->request('POST', '/notifications', $body);
+        return $this->createMessage($appId, $payload);
     }
 
     /**
-     * List devices (players) registered for an app.
+     * Cancel a scheduled or currently outgoing message.
      *
-     * @param  string  $appId  The OneSignal app ID.
-     * @param  int  $limit  Maximum number of devices to return (default 50).
-     * @param  int  $offset  Offset for pagination (default 0).
+     * @param  string  $messageId  Message ID.
+     * @param  string|null  $appId  OneSignal app ID.
      * @return array<string, mixed>
      */
-    public function listDevices(string $appId, int $limit = 50, int $offset = 0): array
+    public function cancelNotification(string $messageId, ?string $appId = null): array
+    {
+        return $this->request('DELETE', '/notifications/' . rawurlencode($messageId), [
+            'app_id' => $this->resolveAppId($appId),
+        ]);
+    }
+
+    /**
+     * List legacy device/player records.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  int  $limit  Maximum rows.
+     * @param  int  $offset  Offset.
+     * @return array<string, mixed>
+     */
+    public function listDevices(?string $appId = null, int $limit = 50, int $offset = 0): array
     {
         return $this->request('GET', '/players', [
-            'app_id' => $appId,
+            'app_id' => $this->resolveAppId($appId),
             'limit' => $limit,
             'offset' => $offset,
         ]);
     }
 
     /**
-     * Get a single device (player) by ID.
+     * Fetch a legacy device/player record.
      *
-     * @param  string  $id  The device/player ID.
-     * @param  string  $appId  The OneSignal app ID.
+     * @param  string  $id  Player ID.
+     * @param  string|null  $appId  OneSignal app ID.
      * @return array<string, mixed>
      */
-    public function getDevice(string $id, string $appId): array
+    public function getDevice(string $id, ?string $appId = null): array
     {
-        return $this->request('GET', '/players/' . urlencode($id), [
-            'app_id' => $appId,
+        return $this->request('GET', '/players/' . rawurlencode($id), [
+            'app_id' => $this->resolveAppId($appId),
         ]);
     }
 
     /**
-     * List all apps accessible with the configured API key.
+     * List apps accessible with the configured organization key.
      *
      * @return array<string, mixed>
      */
@@ -153,20 +176,383 @@ class OneSignalService
     }
 
     /**
-     * Get the current app by its ID (returns app details).
+     * Get app details.
      *
-     * @param  string  $appId  The OneSignal app ID.
+     * @param  string|null  $appId  OneSignal app ID.
      * @return array<string, mixed>
      */
-    public function getCurrentApp(string $appId): array
+    public function getCurrentApp(?string $appId = null): array
     {
-        return $this->request('GET', '/apps/' . urlencode($appId));
+        return $this->request('GET', '/apps/' . rawurlencode($this->resolveAppId($appId)));
+    }
+
+    /**
+     * Update app configuration.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $payload  App update payload.
+     * @return array<string, mixed>
+     */
+    public function updateApp(?string $appId, array $payload): array
+    {
+        return $this->request('PATCH', '/apps/' . rawurlencode($this->resolveAppId($appId)), $payload);
+    }
+
+    /**
+     * Create a user with optional aliases, properties, and subscriptions.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $payload  User payload.
+     * @return array<string, mixed>
+     */
+    public function createUser(?string $appId, array $payload): array
+    {
+        return $this->request('POST', '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/users', $payload);
+    }
+
+    /**
+     * View a user by alias.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @return array<string, mixed>
+     */
+    public function getUser(?string $appId, string $aliasLabel, string $aliasId): array
+    {
+        return $this->request('GET', $this->userPath($appId, $aliasLabel, $aliasId));
+    }
+
+    /**
+     * Update a user by alias.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @param  array<string, mixed>  $payload  User payload.
+     * @return array<string, mixed>
+     */
+    public function updateUser(?string $appId, string $aliasLabel, string $aliasId, array $payload): array
+    {
+        return $this->request('PATCH', $this->userPath($appId, $aliasLabel, $aliasId), $payload);
+    }
+
+    /**
+     * Delete a user and its subscriptions by alias.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @return array<string, mixed>
+     */
+    public function deleteUser(?string $appId, string $aliasLabel, string $aliasId): array
+    {
+        return $this->request('DELETE', $this->userPath($appId, $aliasLabel, $aliasId));
+    }
+
+    /**
+     * Fetch all aliases for a user.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @return array<string, mixed>
+     */
+    public function getUserIdentity(?string $appId, string $aliasLabel, string $aliasId): array
+    {
+        return $this->request('GET', $this->userPath($appId, $aliasLabel, $aliasId) . '/identity');
+    }
+
+    /**
+     * Create or update aliases for a user.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @param  array<string, mixed>  $identity  Identity aliases.
+     * @return array<string, mixed>
+     */
+    public function createOrUpdateAlias(?string $appId, string $aliasLabel, string $aliasId, array $identity): array
+    {
+        return $this->request('PATCH', $this->userPath($appId, $aliasLabel, $aliasId) . '/identity', [
+            'identity' => $identity,
+        ]);
+    }
+
+    /**
+     * Remove an alias from a user.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @param  string  $aliasLabelToDelete  Alias label to remove.
+     * @return array<string, mixed>
+     */
+    public function deleteAlias(?string $appId, string $aliasLabel, string $aliasId, string $aliasLabelToDelete): array
+    {
+        return $this->request('DELETE', $this->userPath($appId, $aliasLabel, $aliasId) . '/identity/' . rawurlencode($aliasLabelToDelete));
+    }
+
+    /**
+     * Fetch user identity by subscription ID.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $subscriptionId  Subscription ID.
+     * @return array<string, mixed>
+     */
+    public function getIdentityBySubscription(?string $appId, string $subscriptionId): array
+    {
+        return $this->request('GET', $this->subscriptionPath($appId, $subscriptionId) . '/user/identity');
+    }
+
+    /**
+     * Create or update aliases using a subscription ID.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $subscriptionId  Subscription ID.
+     * @param  array<string, mixed>  $identity  Identity aliases.
+     * @return array<string, mixed>
+     */
+    public function createAliasBySubscription(?string $appId, string $subscriptionId, array $identity): array
+    {
+        return $this->request('PATCH', $this->subscriptionPath($appId, $subscriptionId) . '/user/identity', [
+            'identity' => $identity,
+        ]);
+    }
+
+    /**
+     * Create a subscription for a user identified by alias.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $aliasLabel  Alias label.
+     * @param  string  $aliasId  Alias value.
+     * @param  array<string, mixed>  $payload  Subscription payload.
+     * @return array<string, mixed>
+     */
+    public function createSubscription(?string $appId, string $aliasLabel, string $aliasId, array $payload): array
+    {
+        return $this->request('POST', $this->userPath($appId, $aliasLabel, $aliasId) . '/subscriptions', $payload);
+    }
+
+    /**
+     * Update a subscription by ID.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $subscriptionId  Subscription ID.
+     * @param  array<string, mixed>  $payload  Subscription payload.
+     * @return array<string, mixed>
+     */
+    public function updateSubscription(?string $appId, string $subscriptionId, array $payload): array
+    {
+        return $this->request('PATCH', $this->subscriptionPath($appId, $subscriptionId), $payload);
+    }
+
+    /**
+     * Transfer a subscription to a different user identity.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $subscriptionId  Subscription ID.
+     * @param  array<string, mixed>  $identity  Destination identity.
+     * @return array<string, mixed>
+     */
+    public function transferSubscription(?string $appId, string $subscriptionId, array $identity): array
+    {
+        return $this->request('PATCH', $this->subscriptionPath($appId, $subscriptionId) . '/owner', [
+            'identity' => $identity,
+        ]);
+    }
+
+    /**
+     * List segments for an app.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listSegments(?string $appId, array $params = []): array
+    {
+        return $this->request('GET', '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/segments', $params);
+    }
+
+    /**
+     * Get a segment, optionally including filters.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $segmentId  Segment ID.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function getSegment(?string $appId, string $segmentId, array $params = []): array
+    {
+        return $this->request('GET', $this->segmentPath($appId, $segmentId), $params);
+    }
+
+    /**
+     * Create a segment.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $payload  Segment payload.
+     * @return array<string, mixed>
+     */
+    public function createSegment(?string $appId, array $payload): array
+    {
+        return $this->request('POST', '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/segments', $payload);
+    }
+
+    /**
+     * Update a segment.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $segmentId  Segment ID.
+     * @param  array<string, mixed>  $payload  Segment payload.
+     * @return array<string, mixed>
+     */
+    public function updateSegment(?string $appId, string $segmentId, array $payload): array
+    {
+        return $this->request('PATCH', $this->segmentPath($appId, $segmentId), $payload);
+    }
+
+    /**
+     * Delete a segment.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $segmentId  Segment ID.
+     * @return array<string, mixed>
+     */
+    public function deleteSegment(?string $appId, string $segmentId): array
+    {
+        return $this->request('DELETE', $this->segmentPath($appId, $segmentId));
+    }
+
+    /**
+     * List message templates.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function listTemplates(?string $appId, array $params = []): array
+    {
+        return $this->request('GET', '/templates', ['app_id' => $this->resolveAppId($appId)] + $params);
+    }
+
+    /**
+     * Get a template.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $templateId  Template ID.
+     * @return array<string, mixed>
+     */
+    public function getTemplate(?string $appId, string $templateId): array
+    {
+        return $this->request('GET', '/templates/' . rawurlencode($templateId), [
+            'app_id' => $this->resolveAppId($appId),
+        ]);
+    }
+
+    /**
+     * Create a template.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $payload  Template payload.
+     * @return array<string, mixed>
+     */
+    public function createTemplate(?string $appId, array $payload): array
+    {
+        return $this->request('POST', '/templates', ['app_id' => $this->resolveAppId($appId)] + $payload);
+    }
+
+    /**
+     * Update a template.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $templateId  Template ID.
+     * @param  array<string, mixed>  $payload  Template payload.
+     * @return array<string, mixed>
+     */
+    public function updateTemplate(?string $appId, string $templateId, array $payload): array
+    {
+        return $this->request('PATCH', '/templates/' . rawurlencode($templateId), ['app_id' => $this->resolveAppId($appId)] + $payload);
+    }
+
+    /**
+     * Delete a template.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  string  $templateId  Template ID.
+     * @return array<string, mixed>
+     */
+    public function deleteTemplate(?string $appId, string $templateId): array
+    {
+        return $this->request('DELETE', '/templates/' . rawurlencode($templateId), [
+            'app_id' => $this->resolveAppId($appId),
+        ]);
+    }
+
+    /**
+     * View outcome analytics.
+     *
+     * @param  string|null  $appId  OneSignal app ID.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function viewOutcomes(?string $appId, array $params): array
+    {
+        return $this->request('GET', '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/outcomes', $params);
+    }
+
+    /**
+     * Execute a safe raw GET request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Execute a safe raw POST request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $payload  JSON payload.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a safe raw PATCH request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $payload  JSON payload.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $payload = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a safe raw DELETE request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $payload  JSON payload.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method.
      * @param  string  $path  API endpoint path.
      * @param  array<string, mixed>  $data  Query parameters or JSON body.
      * @return array<string, mixed>
@@ -175,58 +561,64 @@ class OneSignalService
     {
         $response = $this->rawRequest($method, $path, $data);
 
+        if ($response->status() === 204 || trim($response->body()) === '') {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the OneSignal API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method.
      * @param  string  $path  API endpoint path.
      * @param  array<string, mixed>  $data  Query parameters or JSON body.
-     * @return \Illuminate\Http\Client\Response
+     * @return Response
      *
-     * @throws \RuntimeException On authentication, connection, or API errors.
+     * @throws RuntimeException On authentication, connection, or API errors.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
         if (!$this->apiKey) {
-            throw new \RuntimeException('OneSignal API key is not configured.');
+            throw new RuntimeException('OneSignal API key is not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Basic ' . $this->apiKey,
+                'Authorization' => 'Key ' . $this->apiKey,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'DELETE' => $http->withOptions(['query' => $data])->delete($url),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
+                $contentType = (string) $response->header('Content-Type');
                 $body = $response->body();
 
                 if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("OneSignal API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("OneSignal API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service is down.");
+                    throw new RuntimeException("OneSignal API endpoint not available (HTTP {$response->status()}).");
                 }
 
-                $error = $response->json('errors') ?? $response->json('error') ?? $body;
+                $error = $response->json('errors') ?? $response->json('error') ?? $response->json('message') ?? $body;
                 Log::error("OneSignal API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("OneSignal API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException("OneSignal API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
@@ -234,7 +626,59 @@ class OneSignalService
             Log::error("OneSignal API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to OneSignal API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to OneSignal API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Resolve an explicit app ID or the configured default.
+     */
+    private function resolveAppId(?string $appId): string
+    {
+        $resolved = $appId ?: $this->appId;
+
+        if ($resolved === '') {
+            throw new RuntimeException('OneSignal app ID is required.');
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * Build a user-by-alias path.
+     */
+    private function userPath(?string $appId, string $aliasLabel, string $aliasId): string
+    {
+        return '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/users/by/' . rawurlencode($aliasLabel) . '/' . rawurlencode($aliasId);
+    }
+
+    /**
+     * Build a subscription path.
+     */
+    private function subscriptionPath(?string $appId, string $subscriptionId): string
+    {
+        return '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/subscriptions/' . rawurlencode($subscriptionId);
+    }
+
+    /**
+     * Build a segment path.
+     */
+    private function segmentPath(?string $appId, string $segmentId): string
+    {
+        return '/apps/' . rawurlencode($this->resolveAppId($appId)) . '/segments/' . rawurlencode($segmentId);
+    }
+
+    /**
+     * Normalize raw helper paths to safe relative API paths.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = '/' . ltrim(trim($path), '/');
+
+        if ($path === '/' || str_contains($path, '://') || str_contains($path, '//')) {
+            throw new RuntimeException('Path must be a non-empty relative OneSignal API path.');
+        }
+
+        return $path;
     }
 }

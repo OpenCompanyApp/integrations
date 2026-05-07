@@ -1,146 +1,47 @@
-# Integration: Copper CRM
+# Copper CRM Integration
 
-> Copper CRM integration for Laravel — manage contacts, companies, opportunities, and pipelines. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Copper CRM integration for OpenCompany agents. It exposes Copper people, companies, opportunities, leads, projects, tasks, activities, users, pipelines, statuses, tags, custom field definitions, and webhooks through one tool per API operation.
 
-Give your AI agents access to your Copper CRM data. Search contacts and companies, manage deals, and explore pipelines — all through the [Copper](https://www.copper.com/) API.
+## Install
 
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Copper integration lets AI agents manage CRM data, look up contact details, track deals through pipelines, and keep customer information up to date — all from within the OpenCompany workspace.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
+```bash
 composer require opencompanyapp/integration-copper
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
-
 ## Configuration
 
-This integration requires a Copper API key and the email address associated with your Copper account.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Copper requires all API calls to include the API key, the `developer_api` application header, and the Copper account email.
 
 ```php
-return [
-    'copper' => [
-        'api_key' => env('COPPER_API_KEY'),
-        'email'   => env('COPPER_EMAIL'),
-    ],
-];
+'copper' => [
+    'api_key' => env('COPPER_API_KEY'),
+    'email' => env('COPPER_ACCOUNT_EMAIL'),
+    'url' => env('COPPER_API_URL', 'https://api.copper.com/developer_api/v1'),
+],
 ```
 
-### Generating an API Key
+## Tool Coverage
 
-1. Log in to Copper CRM
-2. Navigate to **Settings** → **Integrations** → **API Keys**
-3. Generate a new API key
-4. Copy the key and your account email into your configuration
+| Area | Tools |
+| --- | --- |
+| People / contacts | `copper_list_contacts`, `copper_get_contact`, `copper_get_contact_by_email`, `copper_create_contact`, `copper_update_contact`, `copper_delete_contact` |
+| Companies | `copper_list_companies`, `copper_get_company`, `copper_create_company`, `copper_update_company`, `copper_delete_company` |
+| Opportunities | `copper_list_opportunities`, `copper_get_opportunity`, `copper_create_opportunity`, `copper_update_opportunity`, `copper_delete_opportunity` |
+| Leads | `copper_list_leads`, `copper_get_lead`, `copper_create_lead`, `copper_update_lead`, `copper_delete_lead` |
+| Projects | `copper_list_projects`, `copper_get_project`, `copper_create_project`, `copper_update_project`, `copper_delete_project` |
+| Tasks | `copper_list_tasks`, `copper_get_task`, `copper_create_task`, `copper_update_task`, `copper_delete_task` |
+| Activities | `copper_list_activities`, `copper_get_activity`, `copper_create_activity`, `copper_update_activity`, `copper_delete_activity`, `copper_list_activity_types` |
+| Users and account | `copper_get_current_user`, `copper_list_users`, `copper_get_user`, `copper_get_account_details` |
+| Configuration | `copper_list_pipelines`, `copper_list_pipeline_stages`, `copper_list_pipeline_stages_in_pipeline`, `copper_list_lead_statuses`, `copper_list_customer_sources`, `copper_list_loss_reasons`, `copper_list_contact_types`, `copper_list_tags`, `copper_list_custom_field_definitions` |
+| Webhooks | `copper_list_webhooks`, `copper_get_webhook`, `copper_create_webhook`, `copper_update_webhook`, `copper_delete_webhook` |
 
-## Available Tools
+## Notes
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `copper_list_contacts` | read | Search and list contacts |
-| `copper_get_contact` | read | Get contact details by ID |
-| `copper_create_contact` | write | Create a new contact |
-| `copper_update_contact` | write | Update an existing contact |
-| `copper_delete_contact` | write | Delete a contact |
-| `copper_list_companies` | read | Search and list companies |
-| `copper_get_company` | read | Get company details by ID |
-| `copper_create_company` | write | Create a new company |
-| `copper_list_opportunities` | read | Search and list opportunities (deals) |
-| `copper_get_opportunity` | read | Get opportunity details by ID |
-| `copper_create_opportunity` | write | Create a new opportunity |
-| `copper_list_pipelines` | read | List all sales pipelines and stages |
-| `copper_get_current_user` | read | Get the authenticated user |
-
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Copper\CopperService;
-use OpenCompany\Integrations\Copper\Tools\CopperListContacts;
-use OpenCompany\Integrations\Copper\Tools\CopperGetContact;
-
-// Create tools
-$service = app(CopperService::class);
-$tools = [
-    new CopperListContacts($service),
-    new CopperGetContact($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List my recent contacts');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 13 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('copper');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Copper\Tools\CopperListContacts::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Copper\CopperService;
-
-$service = app(CopperService::class);
-
-// List contacts
-$contacts = $service->listContacts(['page_size' => 25]);
-
-// Get a contact
-$contact = $service->getContact(12345);
-
-// Create a contact
-$contact = $service->createContact([
-    'name' => 'Jane Smith',
-    'emails' => [['email' => 'jane@example.com', 'category' => 'work']],
-]);
-
-// List pipelines
-$pipelines = $service->listPipelines();
-
-// Create an opportunity
-$opp = $service->createOpportunity([
-    'name' => 'New Deal',
-    'pipeline_id' => $pipelines[0]['id'],
-]);
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Copper CRM](https://www.copper.com/) account with API access
+- Copper's official API calls contact records "people". Existing contact-named tools are kept for compatibility and map to `/people` endpoints.
+- Search endpoints use POST bodies and support Copper pagination fields such as `page_size` and `page_number`.
+- The default API base URL is `https://api.copper.com/developer_api/v1`.
+- Lua usage examples live in `lua-docs/copper.md`.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

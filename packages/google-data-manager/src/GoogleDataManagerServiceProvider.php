@@ -18,14 +18,21 @@ class GoogleDataManagerServiceProvider extends ServiceProvider
     {
         $this->app->singleton(GoogleDataManagerService::class, function ($app) {
             $creds = $app->bound(CredentialResolver::class) ? $app->make(CredentialResolver::class) : null;
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds?->get('google-data-manager', $key, null);
 
-            $expiresAt = $creds?->get('google_data_manager', 'expires_at', null);
+                return $value !== null && $value !== ''
+                    ? $value
+                    : ($creds?->get('google_data_manager', $key, $default) ?? $default);
+            };
+
+            $expiresAt = $get('expires_at', null);
 
             return new GoogleDataManagerService(
-                clientId: $creds?->get('google_data_manager', 'client_id', '') ?? '',
-                clientSecret: $creds?->get('google_data_manager', 'client_secret', '') ?? '',
-                accessToken: $creds?->get('google_data_manager', 'access_token', '') ?? '',
-                refreshToken: $creds?->get('google_data_manager', 'refresh_token', '') ?? '',
+                clientId: $get('client_id'),
+                clientSecret: $get('client_secret'),
+                accessToken: $get('access_token'),
+                refreshToken: $get('refresh_token'),
                 expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
             );
         });

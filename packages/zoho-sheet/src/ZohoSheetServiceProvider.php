@@ -21,10 +21,17 @@ class ZohoSheetServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZohoSheetService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $credential = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('zoho-sheet', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_sheet', $key, $default);
+            };
 
             return new ZohoSheetService(
-                accessToken: $creds->get('zoho_sheet', 'access_token', ''),
-                baseUrl: $creds->get('zoho_sheet', 'url', 'https://sheet.zoho.com'),
+                accessToken: $credential('access_token'),
+                baseUrl: $credential('url', 'https://sheet.zoho.com'),
             );
         });
     }

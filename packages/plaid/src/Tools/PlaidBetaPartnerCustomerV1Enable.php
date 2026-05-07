@@ -1,0 +1,31 @@
+<?php
+
+namespace OpenCompany\Integrations\Plaid\Tools;
+
+/**
+ * Enables a Plaid reseller's end customer in the Production environment..
+ *
+ * Maps to the official Plaid endpoint post /beta/partner/customer/v1/enable.
+ */
+class PlaidBetaPartnerCustomerV1Enable extends AbstractPlaidTool
+{
+    protected const NAME = 'plaid_beta_partner_customer_v1_enable';
+    protected const DESCRIPTION = 'Enables a Plaid reseller\'s end customer in the Production environment.
+
+Official Plaid endpoint: POST /beta/partner/customer/v1/enable
+
+The `/beta/partner/customer/v1/enable` endpoint is used by reseller partners to enable an end customer in the full Production environment.';
+    protected const PARAMETERS = array (
+  'body' =>
+  array (
+    'type' => 'object',
+    'required' => true,
+    'description' => 'JSON request body matching the official Plaid OpenAPI request schema for this operation.',
+  ),
+);
+    protected const METHOD = 'post';
+    protected const PATH = '/beta/partner/customer/v1/enable';
+    protected const PATH_PARAMS = array (
+);
+    protected const BODY_REQUIRED = true;
+}

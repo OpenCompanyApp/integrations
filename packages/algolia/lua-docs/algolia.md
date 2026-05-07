@@ -1,294 +1,164 @@
-# Algolia — Lua API Reference
+# Algolia Lua API Reference
 
-## search
+Namespace: `app.integrations.algolia`
 
-Search an Algolia index with full-text search, filters, and pagination.
+Use Algolia tools to search indices, manage objects and index settings, maintain synonyms and query rules, inspect tasks and logs, and manage API keys. Full write coverage needs an Admin API key. Search-only keys can use search and read tools only.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index to search |
-| `query` | string | yes | The search query string. Use `""` to retrieve all records |
-| `filters` | string | no | Filter expression (e.g., `"category:electronics AND price<100"`) |
-| `hitsPerPage` | integer | no | Results per page (default: 20, max: 1000) |
-| `page` | integer | no | Page number, 0-based (default: 0) |
-| `attributesToRetrieve` | array | no | Attributes to include in results |
-| `facets` | array | no | Facet attributes to compute |
-| `facetFilters` | array | no | Filter by facet values |
-| `numericFilters` | array | no | Numeric filters (e.g., `{"price>50", "price<200"}`) |
-
-### Examples
+## Search
 
 ```lua
 local result = app.integrations.algolia.search({
   indexName = "products",
   query = "wireless headphones",
+  filters = "category:electronics",
   hitsPerPage = 10
 })
 
-for _, hit in ipairs(result.hits) do
-  print(hit.objectID .. ": " .. hit.name)
-end
-```
+local multi = app.integrations.algolia.search_multiple({
+  requests = {
+    { indexName = "products", params = "query=headphones&hitsPerPage=5" },
+    { indexName = "articles", params = "query=headphones&hitsPerPage=5" }
+  }
+})
 
-```lua
--- Filtered search
-local result = app.integrations.algolia.search({
+local facets = app.integrations.algolia.search_facet_values({
   indexName = "products",
-  query = "",
-  filters = "category:electronics AND price<100",
-  hitsPerPage = 50
+  facetName = "brand",
+  params = { facetQuery = "sony" }
 })
 ```
 
----
+Use `browse` when the agent needs to export or scan an index. Continue with the returned cursor until the response has no cursor.
 
-## get_object
-
-Retrieve a single record by its objectID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index |
-| `objectID` | string | yes | The unique identifier of the record |
-| `attributesToRetrieve` | array | no | Attributes to include in the response |
-
-### Example
+## Objects
 
 ```lua
-local result = app.integrations.algolia.get_object({
+local object = app.integrations.algolia.get_object({
   indexName = "products",
   objectID = "prod-123"
 })
-print(result.name)
-```
 
----
-
-## save_object
-
-Create or replace a record in an index.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index |
-| `objectID` | string | yes | The unique identifier for the record |
-| `body` | object | yes | The complete record data |
-
-### Example
-
-```lua
-local result = app.integrations.algolia.save_object({
+app.integrations.algolia.save_object({
   indexName = "products",
   objectID = "prod-123",
   body = {
     name = "Wireless Headphones",
-    price = 79.99,
-    category = "electronics"
+    price = 79.99
   }
 })
-```
 
----
-
-## delete_object
-
-Delete a record from an index.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index |
-| `objectID` | string | yes | The unique identifier of the record |
-
-### Example
-
-```lua
-local result = app.integrations.algolia.delete_object({
-  indexName = "products",
-  objectID = "prod-123"
-})
-```
-
----
-
-## partial_update
-
-Update specific attributes without replacing the entire object.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index |
-| `objectID` | string | yes | The unique identifier of the record |
-| `attributes` | object | yes | Key-value pairs to update |
-
-### Example
-
-```lua
-local result = app.integrations.algolia.partial_update({
+app.integrations.algolia.partial_update({
   indexName = "products",
   objectID = "prod-123",
   attributes = {
-    price = 89.99,
-    inStock = true
+    price = 69.99
   }
 })
 ```
 
-### Atomic Operations
-
-Use special `_operation` values for atomic updates:
+Batch writes use Algolia batch request objects:
 
 ```lua
--- Increment a numeric field
-local result = app.integrations.algolia.partial_update({
-  indexName = "products",
-  objectID = "prod-123",
-  attributes = {
-    viewCount = { _operation = "Increment", value = 1 }
-  }
-})
-```
-
----
-
-## list_indices
-
-List all indices in the Algolia application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (0-based) |
-| `hitsPerPage` | integer | no | Indices per page (default: 100) |
-
-### Example
-
-```lua
-local result = app.integrations.algolia.list_indices({})
-for _, idx in ipairs(result.indices) do
-  print(idx.name .. " (" .. idx.entries .. " records)")
-end
-```
-
----
-
-## get_settings
-
-Get the configuration settings of an index.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index |
-
-### Example
-
-```lua
-local result = app.integrations.algolia.get_settings({
-  indexName = "products"
-})
--- result contains searchableAttributes, ranking, customRanking, etc.
-```
-
----
-
-## clear_index
-
-Remove all records from an index (settings are preserved).
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index to clear |
-
-### Example
-
-```lua
-local result = app.integrations.algolia.clear_index({
-  indexName = "products"
-})
-```
-
----
-
-## batch
-
-Perform multiple write operations in a single request.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indexName` | string | yes | The name of the index |
-| `requests` | array | yes | Array of `{action, body}` operations |
-
-### Actions
-
-- `addObject` — Add a new record (objectID auto-generated if not provided)
-- `updateObject` — Update a record (body must include objectID)
-- `partialUpdateObject` — Partial update (body must include objectID)
-- `deleteObject` — Delete a record (body must include objectID)
-
-### Example
-
-```lua
-local result = app.integrations.algolia.batch({
+app.integrations.algolia.batch({
   indexName = "products",
   requests = {
-    { action = "addObject", body = { name = "New Product", price = 29.99 } },
-    { action = "updateObject", body = { objectID = "prod-1", name = "Updated Name" } },
+    { action = "addObject", body = { objectID = "prod-1", name = "A" } },
     { action = "deleteObject", body = { objectID = "prod-2" } }
   }
 })
-print("Processed " .. result.operationCount .. " operations")
 ```
 
----
-
-## get_current_user
-
-List API keys to verify authentication.
-
-### Parameters
-
-None.
-
-### Example
+## Indices And Settings
 
 ```lua
-local result = app.integrations.algolia.get_current_user({})
-print("Connected to app: " .. result.applicationId)
-print("Found " .. result.keyCount .. " API keys")
+local indices = app.integrations.algolia.list_indices({})
+local settings = app.integrations.algolia.get_settings({ indexName = "products" })
+
+app.integrations.algolia.set_settings({
+  indexName = "products",
+  settings = {
+    searchableAttributes = { "name", "description" },
+    attributesForFaceting = { "brand", "category" }
+  },
+  query = { forwardToReplicas = true }
+})
 ```
 
----
+`clear_index` removes records but preserves settings. `delete_index` removes the index. `index_operation` can copy or move an index to a destination index.
 
-## Multi-Account Usage
-
-If you have multiple Algolia accounts configured, use account-specific namespaces:
+## Synonyms
 
 ```lua
--- Default account (always works)
-app.integrations.algolia.search({...})
+app.integrations.algolia.save_synonym({
+  indexName = "products",
+  objectID = "phone-mobile",
+  payload = {
+    objectID = "phone-mobile",
+    type = "synonym",
+    synonyms = { "phone", "mobile" }
+  }
+})
 
--- Explicit default (portable across setups)
-app.integrations.algolia.default.search({...})
-
--- Named accounts
-app.integrations.algolia.production.search({...})
-app.integrations.algolia.staging.search({...})
+local found = app.integrations.algolia.search_synonyms({
+  indexName = "products",
+  params = { query = "phone" }
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+Use `batch_synonyms` for bulk replacement and `clear_synonyms` only when the agent is explicitly asked to remove all synonyms.
+
+## Rules
+
+```lua
+app.integrations.algolia.save_rule({
+  indexName = "products",
+  objectID = "boost-headphones",
+  payload = {
+    objectID = "boost-headphones",
+    condition = { pattern = "headphones", anchoring = "contains" },
+    consequence = {
+      params = {
+        filters = "category:audio"
+      }
+    }
+  }
+})
+
+local rules = app.integrations.algolia.search_rules({
+  indexName = "products",
+  params = { query = "headphones" }
+})
+```
+
+## Keys, Logs, And Tasks
+
+```lua
+local keys = app.integrations.algolia.list_api_keys({})
+local logs = app.integrations.algolia.list_logs({
+  query = { length = 10, type = "all" }
+})
+
+local task = app.integrations.algolia.get_task({
+  indexName = "products",
+  taskID = "123456"
+})
+```
+
+The legacy `get_current_user` slug lists API keys. New agents should use `list_api_keys`.
+
+## Raw API Helpers
+
+Use `api_get`, `api_post`, `api_put`, and `api_delete` for relative paths below the Algolia `/1` API root when no dedicated tool exists. Full URLs and parent-directory paths are rejected.
+
+```lua
+local response = app.integrations.algolia.api_get({
+  path = "/indexes/products/settings"
+})
+```
+
+## Multi-Account
+
+```lua
+app.integrations.algolia.production.search({ indexName = "products", query = "headphones" })
+app.integrations.algolia.staging.search({ indexName = "products", query = "headphones" })
+```

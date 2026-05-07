@@ -92,7 +92,7 @@ class MatrixToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Decentralized, open-source communication protocol',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:matrix',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://spec.matrix.org/v1.13/client-server-api/',
         ];

@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Nasa\NasaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch NASA Near Earth Object feed results for a date range.
+ */
 class NasaGetAsteroids implements Tool
 {
     /**

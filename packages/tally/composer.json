@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-tally",
-    "description": "Tally forms integration for Laravel — list forms, get submissions, manage workspaces.",
+    "description": "Tally integration for Laravel — forms, submissions, workspaces, organization invites, and webhooks.",
     "license": "MIT",
     "authors": [
         {

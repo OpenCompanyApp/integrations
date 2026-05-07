@@ -1,0 +1,51 @@
+<?php
+
+namespace OpenCompany\Integrations\Cloudsmith\Tools;
+
+/**
+ * List evaluation requests for this policy..
+ *
+ * Maps to the official Cloudsmith endpoint get /orgs/{org}/license-policy/{policy_slug_perm}/evaluation/.
+ */
+class CloudsmithOrgsLicensePolicyEvaluationList extends AbstractCloudsmithTool
+{
+    protected const NAME = 'cloudsmith_orgs_license_policy_evaluation_list';
+    protected const DESCRIPTION = 'List evaluation requests for this policy.
+
+Official Cloudsmith endpoint: GET /orgs/{org}/license-policy/{policy_slug_perm}/evaluation/
+
+List evaluation requests for this policy.';
+    protected const PARAMETERS = array (
+  'org' => array (
+  'type' => 'string',
+  'description' => 'org parameter.',
+  'required' => true,
+),
+  'policy_slug_perm' => array (
+  'type' => 'string',
+  'description' => 'policy_slug_perm parameter.',
+  'required' => true,
+),
+  'page' => array (
+  'type' => 'string',
+  'description' => 'A page number within the paginated result set.',
+),
+  'page_size' => array (
+  'type' => 'string',
+  'description' => 'Number of results to return per page.',
+),
+);
+    protected const METHOD = 'get';
+    protected const PATH = '/orgs/{org}/license-policy/{policy_slug_perm}/evaluation/';
+    protected const PATH_PARAMS = array (
+  'org' => 'org',
+  'policy_slug_perm' => 'policy_slug_perm',
+);
+    protected const QUERY_PARAMS = array (
+  'page' => 'page',
+  'page_size' => 'page_size',
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = false;
+}

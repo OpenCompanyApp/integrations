@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-pocket",
+    "description": "Pocket integration for Laravel AI agents - OAuth setup, saves, retrieval, archive, favorites, deletion, and tag actions.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Pocket\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Pocket\\PocketServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

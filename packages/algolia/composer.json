@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-algolia",
-    "description": "Algolia search integration for Laravel — search, index, manage objects and settings.",
+    "description": "Algolia search integration for Laravel: search, index, manage objects, settings, synonyms, rules, keys, logs, and tasks.",
     "license": "MIT",
     "authors": [
         {

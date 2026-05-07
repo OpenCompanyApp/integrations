@@ -6,19 +6,29 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for Cloudinary Upload and Admin APIs.
+ *
+ * Routes signed upload calls and authenticated Admin API requests for assets,
+ * folders, tags, transformations, upload presets, search, and usage data.
+ */
 class CloudinaryService
 {
     /**
      * Create a new CloudinaryService instance.
      *
-     * @param  string  $accessToken  OAuth access token for the Cloudinary API.
+     * @param  string  $accessToken  Backward-compatible OAuth access token for the Cloudinary API.
      * @param  string  $cloudName    Cloud name (subdomain in API URLs).
      * @param  string  $baseUrl      Base URL for the Cloudinary Admin API.
+     * @param  string  $apiKey       Cloudinary API key for Basic Auth and signed uploads.
+     * @param  string  $apiSecret    Cloudinary API secret for Basic Auth and signed uploads.
      */
     public function __construct(
         private string $accessToken = '',
         private string $cloudName = '',
         private string $baseUrl = 'https://api.cloudinary.com/v1_1',
+        private string $apiKey = '',
+        private string $apiSecret = '',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -28,7 +38,7 @@ class CloudinaryService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken) && !empty($this->cloudName);
+        return ! empty($this->cloudName) && ((! empty($this->apiKey) && ! empty($this->apiSecret)) || ! empty($this->accessToken));
     }
 
     /**
@@ -51,9 +61,9 @@ class CloudinaryService
      *
      * @throws \RuntimeException
      */
-    public function upload(string $file, ?string $publicId = null, ?string $folder = null): array
+    public function upload(string $file, ?string $publicId = null, ?string $folder = null, string $resourceType = 'image', array $options = []): array
     {
-        $data = ['file' => $file];
+        $data = array_merge($options, ['file' => $file]);
 
         if ($publicId !== null) {
             $data['public_id'] = $publicId;
@@ -62,7 +72,7 @@ class CloudinaryService
             $data['folder'] = $folder;
         }
 
-        return $this->request('POST', '/resources/image/upload', $data);
+        return $this->uploadRequest('POST', '/' . $this->segment($resourceType) . '/upload', $data);
     }
 
     /**
@@ -76,7 +86,7 @@ class CloudinaryService
      *
      * @throws \RuntimeException
      */
-    public function listResources(string $type = 'image', ?int $maxResults = null, ?string $nextCursor = null, ?string $prefix = null): array
+    public function listResources(string $type = 'image', ?int $maxResults = null, ?string $nextCursor = null, ?string $prefix = null, string $deliveryType = 'upload'): array
     {
         $params = [];
         if ($maxResults !== null) {
@@ -89,7 +99,7 @@ class CloudinaryService
             $params['prefix'] = $prefix;
         }
 
-        return $this->request('GET', '/resources/' . urlencode($type), $params);
+        return $this->request('GET', '/resources/' . $this->segment($type) . '/' . $this->segment($deliveryType), $params);
     }
 
     /**
@@ -101,9 +111,9 @@ class CloudinaryService
      *
      * @throws \RuntimeException
      */
-    public function getResource(string $type, string $publicId): array
+    public function getResource(string $type, string $publicId, string $deliveryType = 'upload'): array
     {
-        return $this->request('GET', '/resources/' . urlencode($type) . '/' . urlencode($publicId));
+        return $this->request('GET', '/resources/' . $this->segment($type) . '/' . $this->segment($deliveryType) . '/' . $this->segment($publicId));
     }
 
     /**
@@ -115,9 +125,11 @@ class CloudinaryService
      *
      * @throws \RuntimeException
      */
-    public function deleteResource(string $type, string $publicId): array
+    public function deleteResource(string $type, string $publicId, string $deliveryType = 'upload', array $options = []): array
     {
-        return $this->request('DELETE', '/resources/' . urlencode($type) . '/' . urlencode($publicId));
+        return $this->request('DELETE', '/resources/' . $this->segment($type) . '/' . $this->segment($deliveryType), array_merge($options, [
+            'public_ids' => [$publicId],
+        ]));
     }
 
     /**
@@ -143,15 +155,140 @@ class CloudinaryService
     }
 
     /**
-     * Get the currently authenticated Cloudinary user.
+     * List subfolders of a parent folder.
+     *
+     * @param  array<string, mixed>  $params  Optional max_results and next_cursor.
      *
      * @return array<string, mixed>
-     *
-     * @throws \RuntimeException
      */
-    public function getCurrentUser(): array
+    public function listSubfolders(string $folder, array $params = []): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/folders/' . $this->segment($folder), $params);
+    }
+
+    /**
+     * Search folders by expression.
+     *
+     * @param  array<string, mixed>  $params  Optional expression, sort_by, max_results, next_cursor.
+     * @return array<string, mixed>
+     */
+    public function searchFolders(array $params = []): array
+    {
+        return $this->request('GET', '/folders/search', $params);
+    }
+
+    /**
+     * Create a new Cloudinary asset folder.
+     *
+     * @return array<string, mixed>
+     */
+    public function createFolder(string $folder): array
+    {
+        return $this->request('POST', '/folders/' . $this->segment($folder));
+    }
+
+    /**
+     * Delete an empty Cloudinary asset folder.
+     *
+     * @param  array<string, mixed>  $params  Optional skip_backup.
+     * @return array<string, mixed>
+     */
+    public function deleteFolder(string $folder, array $params = []): array
+    {
+        return $this->request('DELETE', '/folders/' . $this->segment($folder), $params);
+    }
+
+    /**
+     * Search assets using the Admin API search expression language.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as expression, sort_by, max_results, next_cursor.
+     * @return array<string, mixed>
+     */
+    public function searchResources(array $params = []): array
+    {
+        return $this->request('GET', '/resources/search', $params);
+    }
+
+    /**
+     * List assets with a specified tag.
+     *
+     * @param  array<string, mixed>  $params  Optional max_results, next_cursor, direction.
+     * @return array<string, mixed>
+     */
+    public function listResourcesByTag(string $tag, string $resourceType = 'image', array $params = []): array
+    {
+        return $this->request('GET', '/resources/' . $this->segment($resourceType) . '/tags/' . $this->segment($tag), $params);
+    }
+
+    /**
+     * List tags used for a resource type.
+     *
+     * @param  array<string, mixed>  $params  Optional prefix, max_results, next_cursor.
+     * @return array<string, mixed>
+     */
+    public function listTags(string $resourceType = 'image', array $params = []): array
+    {
+        return $this->request('GET', '/tags/' . $this->segment($resourceType), $params);
+    }
+
+    /**
+     * List named transformations.
+     *
+     * @param  array<string, mixed>  $params  Optional max_results and next_cursor.
+     * @return array<string, mixed>
+     */
+    public function listTransformations(array $params = []): array
+    {
+        return $this->request('GET', '/transformations', $params);
+    }
+
+    /**
+     * List upload presets.
+     *
+     * @param  array<string, mixed>  $params  Optional max_results and next_cursor.
+     * @return array<string, mixed>
+     */
+    public function listUploadPresets(array $params = []): array
+    {
+        return $this->request('GET', '/upload_presets', $params);
+    }
+
+    /**
+     * Get product environment usage details.
+     *
+     * @param  array<string, mixed>  $params  Optional date in yyyy-mm-dd.
+     * @return array<string, mixed>
+     */
+    public function getUsage(array $params = []): array
+    {
+        return $this->request('GET', '/usage', $params);
+    }
+
+    /**
+     * Ping Cloudinary servers.
+     *
+     * @return array<string, mixed>
+     */
+    public function ping(): array
+    {
+        return $this->request('GET', '/ping');
+    }
+
+    /**
+     * Call any Cloudinary Admin API GET endpoint.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        $path = '/' . ltrim($path, '/');
+
+        if (str_starts_with($path, '//') || str_contains($path, '://')) {
+            throw new \RuntimeException('path must be a Cloudinary Admin API path such as /resources/search.');
+        }
+
+        return $this->request('GET', $path, $params);
     }
 
     /**
@@ -190,17 +327,25 @@ class CloudinaryService
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->accessToken || !$this->cloudName) {
-            throw new \RuntimeException('Cloudinary access token and cloud name are required.');
+        if (! $this->isConfigured()) {
+            throw new \RuntimeException('Cloudinary cloud name and API credentials are required.');
         }
 
         $url = $this->baseUrl . '/' . $this->cloudName . $path;
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+            $headers = [
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+                'Accept' => 'application/json',
+            ];
+
+            if ($this->apiKey !== '' && $this->apiSecret !== '') {
+                $headers['Authorization'] = 'Basic ' . base64_encode($this->apiKey . ':' . $this->apiSecret);
+            } else {
+                $headers['Authorization'] = 'Bearer ' . $this->accessToken;
+            }
+
+            $http = Http::withHeaders($headers)->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
@@ -236,5 +381,76 @@ class CloudinaryService
             ]);
             throw new \RuntimeException("Failed to connect to Cloudinary API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Make a signed Upload API request.
+     *
+     * @param  array<string, mixed>  $data  Upload parameters.
+     * @return array<string, mixed>
+     */
+    private function uploadRequest(string $method, string $path, array $data = []): array
+    {
+        if (! $this->isConfigured()) {
+            throw new \RuntimeException('Cloudinary cloud name and API credentials are required.');
+        }
+
+        if ($this->apiKey !== '' && $this->apiSecret !== '') {
+            $data['api_key'] = $this->apiKey;
+            $data['timestamp'] = $data['timestamp'] ?? time();
+            $data['signature'] = $this->signature($data);
+        }
+
+        $url = $this->baseUrl . '/' . $this->cloudName . $path;
+
+        $headers = ['Accept' => 'application/json'];
+        if ($this->accessToken !== '' && ($this->apiKey === '' || $this->apiSecret === '')) {
+            $headers['Authorization'] = 'Bearer ' . $this->accessToken;
+        }
+
+        $response = Http::withHeaders($headers)
+            ->asForm()
+            ->timeout(60)
+            ->send(strtoupper($method), $url, ['form_params' => array_filter($data, static fn ($value) => $value !== null && $value !== '')]);
+
+        if (! $response->successful()) {
+            $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+            throw new \RuntimeException("Cloudinary API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+        }
+
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Create a Cloudinary Upload API SHA-1 signature.
+     *
+     * @param  array<string, mixed>  $params  Upload parameters.
+     */
+    private function signature(array $params): string
+    {
+        unset($params['file'], $params['resource_type'], $params['api_key'], $params['signature']);
+
+        $params = array_filter($params, static fn ($value) => $value !== null && $value !== '' && $value !== []);
+        ksort($params);
+
+        $parts = [];
+        foreach ($params as $key => $value) {
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            } elseif (is_array($value)) {
+                $value = implode(',', $value);
+            }
+            $parts[] = $key . '=' . $value;
+        }
+
+        return sha1(implode('&', $parts) . $this->apiSecret);
+    }
+
+    /**
+     * Encode a single URL path segment while preserving folder slashes.
+     */
+    private function segment(string $value): string
+    {
+        return str_replace('%2F', '/', rawurlencode($value));
     }
 }

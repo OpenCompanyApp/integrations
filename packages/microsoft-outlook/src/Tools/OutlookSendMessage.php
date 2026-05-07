@@ -90,7 +90,21 @@ class OutlookSendMessage implements Tool
                 return ToolResult::error('Microsoft Outlook integration is not configured.');
             }
 
+            foreach (['to', 'subject', 'body'] as $field) {
+                if (empty($args[$field])) {
+                    return ToolResult::error("{$field} is required.");
+                }
+            }
+
+            if (!is_array($args['to'])) {
+                return ToolResult::error('to must be an array of email addresses.');
+            }
+
             $contentType = $args['content_type'] ?? 'HTML';
+
+            if (!in_array($contentType, ['HTML', 'Text'], true)) {
+                return ToolResult::error('content_type must be "HTML" or "Text".');
+            }
 
             /** @var array<int, string> $toAddresses */
             $toAddresses = $args['to'];
@@ -105,18 +119,30 @@ class OutlookSendMessage implements Tool
             ];
 
             if (isset($args['cc'])) {
+                if (!is_array($args['cc'])) {
+                    return ToolResult::error('cc must be an array of email addresses.');
+                }
+
                 /** @var array<int, string> $ccAddresses */
                 $ccAddresses = $args['cc'];
                 $message['ccRecipients'] = $this->formatAddresses($ccAddresses);
             }
 
             if (isset($args['bcc'])) {
+                if (!is_array($args['bcc'])) {
+                    return ToolResult::error('bcc must be an array of email addresses.');
+                }
+
                 /** @var array<int, string> $bccAddresses */
                 $bccAddresses = $args['bcc'];
                 $message['bccRecipients'] = $this->formatAddresses($bccAddresses);
             }
 
             if (isset($args['reply_to'])) {
+                if (!is_array($args['reply_to'])) {
+                    return ToolResult::error('reply_to must be an array of email addresses.');
+                }
+
                 /** @var array<int, string> $replyToAddresses */
                 $replyToAddresses = $args['reply_to'];
                 $message['replyTo'] = $this->formatAddresses($replyToAddresses);

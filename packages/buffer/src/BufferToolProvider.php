@@ -5,16 +5,36 @@ namespace OpenCompany\Integrations\Buffer;
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Buffer\Tools\BufferListProfiles;
-use OpenCompany\Integrations\Buffer\Tools\BufferGetProfile;
-use OpenCompany\Integrations\Buffer\Tools\BufferListPendingUpdates;
 use OpenCompany\Integrations\Buffer\Tools\BufferCreateUpdate;
-use OpenCompany\Integrations\Buffer\Tools\BufferListSentUpdates;
-use OpenCompany\Integrations\Buffer\Tools\BufferGetUpdate;
+use OpenCompany\Integrations\Buffer\Tools\BufferDeauthorizeUser;
+use OpenCompany\Integrations\Buffer\Tools\BufferDestroyUpdate;
 use OpenCompany\Integrations\Buffer\Tools\BufferGetCurrentUser;
+use OpenCompany\Integrations\Buffer\Tools\BufferGetInfoConfiguration;
+use OpenCompany\Integrations\Buffer\Tools\BufferGetLinkShares;
+use OpenCompany\Integrations\Buffer\Tools\BufferGetProfile;
+use OpenCompany\Integrations\Buffer\Tools\BufferGetUpdate;
+use OpenCompany\Integrations\Buffer\Tools\BufferGraphql;
+use OpenCompany\Integrations\Buffer\Tools\BufferListPendingUpdates;
+use OpenCompany\Integrations\Buffer\Tools\BufferListProfileSchedules;
+use OpenCompany\Integrations\Buffer\Tools\BufferListProfiles;
+use OpenCompany\Integrations\Buffer\Tools\BufferListSentUpdates;
+use OpenCompany\Integrations\Buffer\Tools\BufferMoveUpdateToTop;
+use OpenCompany\Integrations\Buffer\Tools\BufferReorderUpdates;
+use OpenCompany\Integrations\Buffer\Tools\BufferShareUpdate;
+use OpenCompany\Integrations\Buffer\Tools\BufferShuffleUpdates;
+use OpenCompany\Integrations\Buffer\Tools\BufferUpdateProfileSchedules;
+use OpenCompany\Integrations\Buffer\Tools\BufferUpdateUpdate;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
+/**
+ * Tool catalog and configuration metadata for Buffer.
+ *
+ * Exposes documented Buffer REST operations and a GraphQL operation surface
+ * for the current beta API.
+ */
 class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -90,12 +110,12 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'name' => 'Buffer',
-            'description' => 'Social media management platform — schedule posts, manage social profiles, and review published content across multiple accounts.',
+            'description' => 'Social media management platform - schedule posts, manage social profiles, review content, and call the current GraphQL API.',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:buffer',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://buffer.com/developers/api',
+            'docs_url' => 'https://developers.buffer.com/',
         ];
     }    public function configSchema(): array
     {
@@ -115,6 +135,14 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'placeholder' => 'https://api.bufferapp.com/1',
                 'hint' => 'Use <code>https://api.bufferapp.com/1</code> for the standard API, or a custom URL if applicable',
                 'default' => 'https://api.bufferapp.com/1',
+            ],
+            [
+                'key' => 'graphql_url',
+                'type' => 'url',
+                'label' => 'GraphQL API URL',
+                'placeholder' => 'https://api.buffer.com',
+                'hint' => 'Use <code>https://api.buffer.com</code> for the current Buffer GraphQL API.',
+                'default' => 'https://api.buffer.com',
             ],
         ];
     }
@@ -167,6 +195,7 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return [
             'access_token' => 'nullable|string',
             'url' => 'nullable|url',
+            'graphql_url' => 'nullable|url',
         ];
     }
 
@@ -186,6 +215,20 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'name' => 'Get Profile',
                 'description' => 'Get details of a specific social profile.',
                 'icon' => 'ph:user',
+            ],
+            'buffer_list_profile_schedules' => [
+                'class' => BufferListProfileSchedules::class,
+                'type' => 'read',
+                'name' => 'List Profile Schedules',
+                'description' => 'List posting schedules for a social profile.',
+                'icon' => 'ph:calendar',
+            ],
+            'buffer_update_profile_schedules' => [
+                'class' => BufferUpdateProfileSchedules::class,
+                'type' => 'write',
+                'name' => 'Update Profile Schedules',
+                'description' => 'Replace posting schedules for a social profile.',
+                'icon' => 'ph:calendar-check',
             ],
             'buffer_list_pending_updates' => [
                 'class' => BufferListPendingUpdates::class,
@@ -215,6 +258,76 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'Get details of a specific update.',
                 'icon' => 'ph:article',
             ],
+            'buffer_reorder_updates' => [
+                'class' => BufferReorderUpdates::class,
+                'type' => 'write',
+                'name' => 'Reorder Updates',
+                'description' => 'Reorder pending updates for a profile.',
+                'icon' => 'ph:sort-ascending',
+            ],
+            'buffer_shuffle_updates' => [
+                'class' => BufferShuffleUpdates::class,
+                'type' => 'write',
+                'name' => 'Shuffle Updates',
+                'description' => 'Randomize pending updates for a profile.',
+                'icon' => 'ph:shuffle',
+            ],
+            'buffer_update_update' => [
+                'class' => BufferUpdateUpdate::class,
+                'type' => 'write',
+                'name' => 'Update Update',
+                'description' => 'Edit an existing pending update.',
+                'icon' => 'ph:pencil',
+            ],
+            'buffer_share_update' => [
+                'class' => BufferShareUpdate::class,
+                'type' => 'write',
+                'name' => 'Share Update',
+                'description' => 'Immediately share a pending update.',
+                'icon' => 'ph:paper-plane-tilt',
+            ],
+            'buffer_destroy_update' => [
+                'class' => BufferDestroyUpdate::class,
+                'type' => 'write',
+                'name' => 'Destroy Update',
+                'description' => 'Permanently delete a pending update.',
+                'icon' => 'ph:trash',
+            ],
+            'buffer_move_update_to_top' => [
+                'class' => BufferMoveUpdateToTop::class,
+                'type' => 'write',
+                'name' => 'Move Update To Top',
+                'description' => 'Move a pending update to the top of the queue.',
+                'icon' => 'ph:arrow-up',
+            ],
+            'buffer_get_link_shares' => [
+                'class' => BufferGetLinkShares::class,
+                'type' => 'read',
+                'name' => 'Get Link Shares',
+                'description' => 'Get Buffer share count for a URL.',
+                'icon' => 'ph:link',
+            ],
+            'buffer_get_info_configuration' => [
+                'class' => BufferGetInfoConfiguration::class,
+                'type' => 'read',
+                'name' => 'Get Info Configuration',
+                'description' => 'Get Buffer API service, limit, media, and analytics metadata.',
+                'icon' => 'ph:gear',
+            ],
+            'buffer_deauthorize_user' => [
+                'class' => BufferDeauthorizeUser::class,
+                'type' => 'write',
+                'name' => 'Deauthorize User',
+                'description' => 'Deauthorize the current Buffer API token.',
+                'icon' => 'ph:sign-out',
+            ],
+            'buffer_graphql' => [
+                'class' => BufferGraphql::class,
+                'type' => 'write',
+                'name' => 'GraphQL Operation',
+                'description' => 'Execute a current Buffer GraphQL API query or mutation.',
+                'icon' => 'ph:graph',
+            ],
             'buffer_get_current_user' => [
                 'class' => BufferGetCurrentUser::class,
                 'type' => 'read',
@@ -233,6 +346,7 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
             ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.bufferapp.com/1'],
+            ['key' => 'graphql_url', 'type' => 'url', 'label' => 'GraphQL API URL', 'required' => false, 'default' => 'https://api.buffer.com'],
         ];
     }
 
@@ -246,11 +360,12 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new BufferService(
                 accessToken: $creds->get('buffer', 'access_token', '', $account),
                 baseUrl: $creds->get('buffer', 'url', 'https://api.bufferapp.com/1', $account),
+                graphqlUrl: $creds->get('buffer', 'graphql_url', 'https://api.buffer.com', $account),
             );
 
             return new $class($service);

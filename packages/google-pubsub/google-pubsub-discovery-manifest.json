@@ -1,0 +1,377 @@
+{
+    "source": "https://pubsub.googleapis.com/$discovery/rest?version=v1",
+    "docs": "https://cloud.google.com/pubsub/docs/reference/rest",
+    "version": "v1",
+    "method_count": 46,
+    "generated_at": "2026-05-06",
+    "methods": [
+        {
+            "tool": "google_pubsub_projects_topics_publish",
+            "class": "GooglePubSubProjectsTopicsPublish",
+            "method": "POST",
+            "path": "/v1/{+topic}:publish",
+            "discovery_id": "projects.topics.publish",
+            "summary": "Projects Topics Publish"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_delete",
+            "class": "GooglePubSubProjectsTopicsDelete",
+            "method": "DELETE",
+            "path": "/v1/{+topic}",
+            "discovery_id": "projects.topics.delete",
+            "summary": "Projects Topics Delete"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_set_iam_policy",
+            "class": "GooglePubSubProjectsTopicsSetIamPolicy",
+            "method": "POST",
+            "path": "/v1/{+resource}:setIamPolicy",
+            "discovery_id": "projects.topics.setIamPolicy",
+            "summary": "Projects Topics Set Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_get_iam_policy",
+            "class": "GooglePubSubProjectsTopicsGetIamPolicy",
+            "method": "GET",
+            "path": "/v1/{+resource}:getIamPolicy",
+            "discovery_id": "projects.topics.getIamPolicy",
+            "summary": "Projects Topics Get Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_test_iam_permissions",
+            "class": "GooglePubSubProjectsTopicsTestIamPermissions",
+            "method": "POST",
+            "path": "/v1/{+resource}:testIamPermissions",
+            "discovery_id": "projects.topics.testIamPermissions",
+            "summary": "Projects Topics Test Iam Permissions"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_create",
+            "class": "GooglePubSubProjectsTopicsCreate",
+            "method": "PUT",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.topics.create",
+            "summary": "Projects Topics Create"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_list",
+            "class": "GooglePubSubProjectsTopicsList",
+            "method": "GET",
+            "path": "/v1/{+project}/topics",
+            "discovery_id": "projects.topics.list",
+            "summary": "Projects Topics List"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_patch",
+            "class": "GooglePubSubProjectsTopicsPatch",
+            "method": "PATCH",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.topics.patch",
+            "summary": "Projects Topics Patch"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_get",
+            "class": "GooglePubSubProjectsTopicsGet",
+            "method": "GET",
+            "path": "/v1/{+topic}",
+            "discovery_id": "projects.topics.get",
+            "summary": "Projects Topics Get"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_subscriptions_list",
+            "class": "GooglePubSubProjectsTopicsSubscriptionsList",
+            "method": "GET",
+            "path": "/v1/{+topic}/subscriptions",
+            "discovery_id": "projects.topics.subscriptions.list",
+            "summary": "Projects Topics Subscriptions List"
+        },
+        {
+            "tool": "google_pubsub_projects_topics_snapshots_list",
+            "class": "GooglePubSubProjectsTopicsSnapshotsList",
+            "method": "GET",
+            "path": "/v1/{+topic}/snapshots",
+            "discovery_id": "projects.topics.snapshots.list",
+            "summary": "Projects Topics Snapshots List"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_acknowledge",
+            "class": "GooglePubSubProjectsSubscriptionsAcknowledge",
+            "method": "POST",
+            "path": "/v1/{+subscription}:acknowledge",
+            "discovery_id": "projects.subscriptions.acknowledge",
+            "summary": "Projects Subscriptions Acknowledge"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_test_iam_permissions",
+            "class": "GooglePubSubProjectsSubscriptionsTestIamPermissions",
+            "method": "POST",
+            "path": "/v1/{+resource}:testIamPermissions",
+            "discovery_id": "projects.subscriptions.testIamPermissions",
+            "summary": "Projects Subscriptions Test Iam Permissions"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_get",
+            "class": "GooglePubSubProjectsSubscriptionsGet",
+            "method": "GET",
+            "path": "/v1/{+subscription}",
+            "discovery_id": "projects.subscriptions.get",
+            "summary": "Projects Subscriptions Get"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_patch",
+            "class": "GooglePubSubProjectsSubscriptionsPatch",
+            "method": "PATCH",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.subscriptions.patch",
+            "summary": "Projects Subscriptions Patch"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_set_iam_policy",
+            "class": "GooglePubSubProjectsSubscriptionsSetIamPolicy",
+            "method": "POST",
+            "path": "/v1/{+resource}:setIamPolicy",
+            "discovery_id": "projects.subscriptions.setIamPolicy",
+            "summary": "Projects Subscriptions Set Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_detach",
+            "class": "GooglePubSubProjectsSubscriptionsDetach",
+            "method": "POST",
+            "path": "/v1/{+subscription}:detach",
+            "discovery_id": "projects.subscriptions.detach",
+            "summary": "Projects Subscriptions Detach"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_pull",
+            "class": "GooglePubSubProjectsSubscriptionsPull",
+            "method": "POST",
+            "path": "/v1/{+subscription}:pull",
+            "discovery_id": "projects.subscriptions.pull",
+            "summary": "Projects Subscriptions Pull"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_list",
+            "class": "GooglePubSubProjectsSubscriptionsList",
+            "method": "GET",
+            "path": "/v1/{+project}/subscriptions",
+            "discovery_id": "projects.subscriptions.list",
+            "summary": "Projects Subscriptions List"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_create",
+            "class": "GooglePubSubProjectsSubscriptionsCreate",
+            "method": "PUT",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.subscriptions.create",
+            "summary": "Projects Subscriptions Create"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_modify_push_config",
+            "class": "GooglePubSubProjectsSubscriptionsModifyPushConfig",
+            "method": "POST",
+            "path": "/v1/{+subscription}:modifyPushConfig",
+            "discovery_id": "projects.subscriptions.modifyPushConfig",
+            "summary": "Projects Subscriptions Modify Push Config"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_modify_ack_deadline",
+            "class": "GooglePubSubProjectsSubscriptionsModifyAckDeadline",
+            "method": "POST",
+            "path": "/v1/{+subscription}:modifyAckDeadline",
+            "discovery_id": "projects.subscriptions.modifyAckDeadline",
+            "summary": "Projects Subscriptions Modify Ack Deadline"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_delete",
+            "class": "GooglePubSubProjectsSubscriptionsDelete",
+            "method": "DELETE",
+            "path": "/v1/{+subscription}",
+            "discovery_id": "projects.subscriptions.delete",
+            "summary": "Projects Subscriptions Delete"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_get_iam_policy",
+            "class": "GooglePubSubProjectsSubscriptionsGetIamPolicy",
+            "method": "GET",
+            "path": "/v1/{+resource}:getIamPolicy",
+            "discovery_id": "projects.subscriptions.getIamPolicy",
+            "summary": "Projects Subscriptions Get Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_subscriptions_seek",
+            "class": "GooglePubSubProjectsSubscriptionsSeek",
+            "method": "POST",
+            "path": "/v1/{+subscription}:seek",
+            "discovery_id": "projects.subscriptions.seek",
+            "summary": "Projects Subscriptions Seek"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_set_iam_policy",
+            "class": "GooglePubSubProjectsSnapshotsSetIamPolicy",
+            "method": "POST",
+            "path": "/v1/{+resource}:setIamPolicy",
+            "discovery_id": "projects.snapshots.setIamPolicy",
+            "summary": "Projects Snapshots Set Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_get_iam_policy",
+            "class": "GooglePubSubProjectsSnapshotsGetIamPolicy",
+            "method": "GET",
+            "path": "/v1/{+resource}:getIamPolicy",
+            "discovery_id": "projects.snapshots.getIamPolicy",
+            "summary": "Projects Snapshots Get Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_get",
+            "class": "GooglePubSubProjectsSnapshotsGet",
+            "method": "GET",
+            "path": "/v1/{+snapshot}",
+            "discovery_id": "projects.snapshots.get",
+            "summary": "Projects Snapshots Get"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_patch",
+            "class": "GooglePubSubProjectsSnapshotsPatch",
+            "method": "PATCH",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.snapshots.patch",
+            "summary": "Projects Snapshots Patch"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_test_iam_permissions",
+            "class": "GooglePubSubProjectsSnapshotsTestIamPermissions",
+            "method": "POST",
+            "path": "/v1/{+resource}:testIamPermissions",
+            "discovery_id": "projects.snapshots.testIamPermissions",
+            "summary": "Projects Snapshots Test Iam Permissions"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_create",
+            "class": "GooglePubSubProjectsSnapshotsCreate",
+            "method": "PUT",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.snapshots.create",
+            "summary": "Projects Snapshots Create"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_list",
+            "class": "GooglePubSubProjectsSnapshotsList",
+            "method": "GET",
+            "path": "/v1/{+project}/snapshots",
+            "discovery_id": "projects.snapshots.list",
+            "summary": "Projects Snapshots List"
+        },
+        {
+            "tool": "google_pubsub_projects_snapshots_delete",
+            "class": "GooglePubSubProjectsSnapshotsDelete",
+            "method": "DELETE",
+            "path": "/v1/{+snapshot}",
+            "discovery_id": "projects.snapshots.delete",
+            "summary": "Projects Snapshots Delete"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_test_iam_permissions",
+            "class": "GooglePubSubProjectsSchemasTestIamPermissions",
+            "method": "POST",
+            "path": "/v1/{+resource}:testIamPermissions",
+            "discovery_id": "projects.schemas.testIamPermissions",
+            "summary": "Projects Schemas Test Iam Permissions"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_validate",
+            "class": "GooglePubSubProjectsSchemasValidate",
+            "method": "POST",
+            "path": "/v1/{+parent}/schemas:validate",
+            "discovery_id": "projects.schemas.validate",
+            "summary": "Projects Schemas Validate"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_rollback",
+            "class": "GooglePubSubProjectsSchemasRollback",
+            "method": "POST",
+            "path": "/v1/{+name}:rollback",
+            "discovery_id": "projects.schemas.rollback",
+            "summary": "Projects Schemas Rollback"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_get",
+            "class": "GooglePubSubProjectsSchemasGet",
+            "method": "GET",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.schemas.get",
+            "summary": "Projects Schemas Get"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_set_iam_policy",
+            "class": "GooglePubSubProjectsSchemasSetIamPolicy",
+            "method": "POST",
+            "path": "/v1/{+resource}:setIamPolicy",
+            "discovery_id": "projects.schemas.setIamPolicy",
+            "summary": "Projects Schemas Set Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_create",
+            "class": "GooglePubSubProjectsSchemasCreate",
+            "method": "POST",
+            "path": "/v1/{+parent}/schemas",
+            "discovery_id": "projects.schemas.create",
+            "summary": "Projects Schemas Create"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_list",
+            "class": "GooglePubSubProjectsSchemasList",
+            "method": "GET",
+            "path": "/v1/{+parent}/schemas",
+            "discovery_id": "projects.schemas.list",
+            "summary": "Projects Schemas List"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_validate_message",
+            "class": "GooglePubSubProjectsSchemasValidateMessage",
+            "method": "POST",
+            "path": "/v1/{+parent}/schemas:validateMessage",
+            "discovery_id": "projects.schemas.validateMessage",
+            "summary": "Projects Schemas Validate Message"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_commit",
+            "class": "GooglePubSubProjectsSchemasCommit",
+            "method": "POST",
+            "path": "/v1/{+name}:commit",
+            "discovery_id": "projects.schemas.commit",
+            "summary": "Projects Schemas Commit"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_delete",
+            "class": "GooglePubSubProjectsSchemasDelete",
+            "method": "DELETE",
+            "path": "/v1/{+name}",
+            "discovery_id": "projects.schemas.delete",
+            "summary": "Projects Schemas Delete"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_get_iam_policy",
+            "class": "GooglePubSubProjectsSchemasGetIamPolicy",
+            "method": "GET",
+            "path": "/v1/{+resource}:getIamPolicy",
+            "discovery_id": "projects.schemas.getIamPolicy",
+            "summary": "Projects Schemas Get Iam Policy"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_list_revisions",
+            "class": "GooglePubSubProjectsSchemasListRevisions",
+            "method": "GET",
+            "path": "/v1/{+name}:listRevisions",
+            "discovery_id": "projects.schemas.listRevisions",
+            "summary": "Projects Schemas List Revisions"
+        },
+        {
+            "tool": "google_pubsub_projects_schemas_delete_revision",
+            "class": "GooglePubSubProjectsSchemasDeleteRevision",
+            "method": "DELETE",
+            "path": "/v1/{+name}:deleteRevision",
+            "discovery_id": "projects.schemas.deleteRevision",
+            "summary": "Projects Schemas Delete Revision"
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-bluesky",
-    "description": "Bluesky social integration for Laravel — post, search, manage followers and profiles via the AT Protocol API.",
+    "description": "Bluesky and AT Protocol integration for Laravel agents with feed, actor, record, notification, and generic XRPC tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "bluesky", "social", "atproto", "opencompany"],
+    "keywords": ["tools", "bluesky", "atproto", "xrpc", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

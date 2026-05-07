@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Ashby\AshbyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a note on an Ashby candidate.
+ */
 class AshbyCreateNote implements Tool
 {
     public function __construct(
@@ -25,13 +28,17 @@ class AshbyCreateNote implements Tool
     public function parameters(): array
     {
         return [
-            'subject_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the entity to attach the note to (candidate, application, or job ID).'],
-            'subject_type' => ['type' => 'string', 'required' => true, 'description' => 'The type of entity: "candidate", "application", or "job".'],
+            'candidateId' => ['type' => 'string', 'required' => true, 'description' => 'The candidate UUID.'],
             'content' => ['type' => 'string', 'required' => true, 'description' => 'The note content (supports plain text).'],
-            'visibility' => ['type' => 'string', 'description' => 'Note visibility: "team" (default) or "private".'],
+            'contentType' => ['type' => 'string', 'description' => 'Content type, such as text/plain or text/html.'],
         ];
     }
 
+    /**
+     * Create a candidate note.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -40,13 +47,12 @@ class AshbyCreateNote implements Tool
             }
 
             $body = [
-                'subjectId' => $args['subject_id'],
-                'subjectType' => $args['subject_type'],
+                'candidateId' => $args['candidateId'],
                 'content' => $args['content'],
             ];
 
-            if (isset($args['visibility'])) {
-                $body['visibility'] = $args['visibility'];
+            if (isset($args['contentType'])) {
+                $body['contentType'] = $args['contentType'];
             }
 
             $result = $this->service->createNote($body);

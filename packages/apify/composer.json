@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-apify",
-    "description": "Apify integration for Laravel — run actors, manage datasets, key-value stores, and more.",
+    "description": "Apify integration for Laravel with generated tools from the official Apify OpenAPI specification.",
     "license": "MIT",
     "authors": [
         {

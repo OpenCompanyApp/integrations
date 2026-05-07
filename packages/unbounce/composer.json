@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-unbounce",
-    "description": "Unbounce integration for Laravel — list pages, manage leads, sub accounts, and more.",
+    "description": "Unbounce integration for Laravel: accounts, sub-accounts, pages, domains, page groups, form fields, and leads.",
     "license": "MIT",
     "authors": [
         {

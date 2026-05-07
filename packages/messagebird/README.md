@@ -1,14 +1,14 @@
 # Integration: MessageBird
 
-> MessageBird integration for the [Laravel AI SDK](https://github.com/laravel/ai) — send SMS, retrieve messages, check balance, and manage numbers. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> MessageBird REST API integration for the [Laravel AI SDK](https://github.com/laravel/ai) — SMS, voice messages, contacts, groups, lookup, HLR, Verify, balance, and numbers. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to the [MessageBird](https://messagebird.com) messaging platform. Send SMS messages, track delivery status, check account balance, and manage purchased phone numbers — all through the MessageBird REST API.
+Give your AI agents access to the [MessageBird](https://messagebird.com) REST API. Send SMS and voice messages, track delivery status, manage contacts and groups, validate numbers, run HLR checks, send verification tokens, check account balance, and manage purchased phone numbers.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This MessageBird tool lets AI agents send SMS notifications, check message delivery status, and manage messaging resources — enabling agent-driven communication workflows.
+This MessageBird tool lets AI agents operate communication workflows while keeping every external API operation explicit and auditable.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -32,7 +32,7 @@ This tool requires a MessageBird API key.
 return [
     'messagebird' => [
         'api_key' => env('MESSAGEBIRD_API_KEY'),
-        'url'     => env('MESSAGEBIRD_URL', 'https://api.messagebird.com'),
+        'url'     => env('MESSAGEBIRD_URL', 'https://rest.messagebird.com'),
     ],
 ];
 ```
@@ -41,12 +41,13 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `messagebird_send_sms` | write | Send an SMS message to one or more recipients |
-| `messagebird_get_message` | read | Retrieve details of a specific message |
-| `messagebird_list_messages` | read | List sent and received messages with filters |
-| `messagebird_list_balance` | read | Check your account balance |
-| `messagebird_list_numbers` | read | List purchased phone numbers |
-| `messagebird_get_current_user` | read | Get current account information and balance |
+| `messagebird_send_sms`, `messagebird_list_messages`, `messagebird_get_message`, `messagebird_delete_message` | read/write | SMS send, list, detail, and scheduled-message delete |
+| `messagebird_send_voice_message`, `messagebird_list_voice_messages`, `messagebird_get_voice_message`, `messagebird_delete_voice_message` | read/write | Voice message send, list, detail, and scheduled-message delete |
+| `messagebird_list_contacts`, `messagebird_create_contact`, `messagebird_get_contact`, `messagebird_update_contact`, `messagebird_delete_contact`, `messagebird_list_contact_groups`, `messagebird_list_contact_messages` | read/write | Contact management and contact-related lists |
+| `messagebird_list_groups`, `messagebird_create_group`, `messagebird_get_group`, `messagebird_update_group`, `messagebird_delete_group`, `messagebird_list_group_contacts`, `messagebird_add_contact_to_group`, `messagebird_remove_contact_from_group` | read/write | Group management and contact membership |
+| `messagebird_lookup_phone_number`, `messagebird_get_hlr_lookup`, `messagebird_request_hlr_lookup` | read/write | Number lookup and HLR checks |
+| `messagebird_create_verify`, `messagebird_get_verify`, `messagebird_verify_token`, `messagebird_delete_verify` | read/write | Verification lifecycle |
+| `messagebird_list_balance`, `messagebird_list_numbers`, `messagebird_get_number`, `messagebird_update_number`, `messagebird_get_current_user` | read/write | Balance and purchased number operations |
 
 ## Quick Start
 
@@ -70,7 +71,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, the tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -98,13 +99,17 @@ $message = $service->sendSms('OpenCompany', ['+31612345678'], 'Hello World');
 $message = $service->getMessage('a6e89f50c0d25b35a212345678901234');
 
 // List messages
-$messages = $service->listMessages(20, 0, 'delivered');
+$messages = $service->listMessages(['status' => 'delivered']);
 
 // Check balance
 $balance = $service->listBalance();
 
 // List numbers
-$numbers = $service->listNumbers(20, 0, 'NL', 'mobile');
+$numbers = $service->listNumbers(['country_code' => 'NL', 'number_type' => 'mobile']);
+
+// Create a contact and group
+$contact = $service->createContact(['msisdn' => 31612345678, 'firstName' => 'Ada']);
+$group = $service->createGroup('Customers');
 
 // Get account info
 $account = $service->getCurrentUser();

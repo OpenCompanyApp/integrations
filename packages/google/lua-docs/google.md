@@ -1,13 +1,13 @@
 # Google Integration — Lua API Supplement
 
-Google services are registered as separate namespaces: `integrations.gmail`, `integrations.google_sheets`, `integrations.google_calendar`, `integrations.google_drive`, etc. All share the same OAuth credentials.
+Google services are registered as separate namespaces: `integrations.gmail`, `integrations["google-sheets"]`, `integrations["google-calendar"]`, `integrations["google-drive"]`, etc. All share the same OAuth credentials.
 
 ## Gmail
 
 Send email with CC/BCC:
 
 ```lua
-app.integrations.gmail.send_email({
+app.integrations.gmail.gmail_send_email({
     to = "alice@example.com",
     subject = "Q1 Report",
     body = "Please find the report attached.",
@@ -20,16 +20,16 @@ Search, read, then reply workflow:
 
 ```lua
 -- Step 1: Search for messages
-local results = app.integrations.gmail.search_emails({
+local results = app.integrations.gmail.gmail_search_emails({
     query = "from:alice subject:meeting is:unread",
     max_results = 5,
 })
 
 -- Step 2: Read the full message
-local msg = app.integrations.gmail.read_email({ message_id = results.messages[1].id })
+local msg = app.integrations.gmail.gmail_read({ message_id = results.messages[1].id })
 
 -- Step 3: Reply in the same thread
-app.integrations.gmail.reply({
+app.integrations.gmail.gmail_reply({
     message_id = msg.id,
     thread_id = msg.threadId,
     body = "Thanks, I'll be there.",
@@ -41,14 +41,14 @@ Draft vs direct send -- use `create_draft` to stage an email without sending, th
 
 ```lua
 -- Create a draft (not sent)
-local draft = app.integrations.gmail.create_draft({
+local draft = app.integrations.gmail.gmail_create_draft({
     to = "client@example.com",
     subject = "Proposal",
     body = "Draft content here...",
 })
 
 -- Send it later using the draft ID
-app.integrations.gmail.send_draft({ draft_id = draft.draftId })
+app.integrations.gmail.gmail_send_draft({ draft_id = draft.draftId })
 ```
 
 ## Google Sheets
@@ -76,17 +76,17 @@ Create a spreadsheet, add a sheet, write data:
 
 ```lua
 -- Create a new spreadsheet
-local ss = app.integrations.google_sheets.create_spreadsheet({ title = "Q1 Sales" })
+local ss = app.integrations["google-sheets"].google_sheets_create({ title = "Q1 Sales" })
 local id = ss.spreadsheetId
 
 -- Add a second sheet/tab
-app.integrations.google_sheets.add({
+app.integrations["google-sheets"].google_sheets_add_sheet({
     spreadsheet_id = id,
     title = "By Region",
 })
 
 -- Write data with headers
-app.integrations.google_sheets.write_range({
+app.integrations["google-sheets"].google_sheets_write_range({
     spreadsheet_id = id,
     range = "Sheet1!A1:C3",
     values = {
@@ -101,7 +101,7 @@ app.integrations.google_sheets.write_range({
 Read data back:
 
 ```lua
-local data = app.integrations.google_sheets.read_range({
+local data = app.integrations["google-sheets"].google_sheets_read_range({
     spreadsheet_id = id,
     range = "Sheet1!A1:C3",
     render = "formatted",  -- "formatted" (default), "unformatted", or "formula"
@@ -112,7 +112,7 @@ local data = app.integrations.google_sheets.read_range({
 Append vs write -- `append_rows` auto-detects the last row and adds below it:
 
 ```lua
-app.integrations.google_sheets.append_rows({
+app.integrations["google-sheets"].google_sheets_append({
     spreadsheet_id = id,
     range = "Sheet1",
     values = {
@@ -127,7 +127,7 @@ app.integrations.google_sheets.append_rows({
 Create a timed event with attendees:
 
 ```lua
-app.integrations.google_calendar.create_event({
+app.integrations["google-calendar"].google_calendar_create_event({
     summary = "Sprint Planning",
     description = "Bi-weekly sprint planning session",
     location = "Conference Room B",
@@ -142,7 +142,7 @@ app.integrations.google_calendar.create_event({
 Create an all-day event:
 
 ```lua
-app.integrations.google_calendar.create_event({
+app.integrations["google-calendar"].google_calendar_create_event({
     summary = "Company Holiday",
     start_date = "2026-07-04",
     end_date = "2026-07-05",
@@ -157,14 +157,14 @@ Search for files, then get details:
 
 ```lua
 -- Search by name and type
-local results = app.integrations.google_drive.search({
+local results = app.integrations["google-drive"].google_drive_search_files({
     query = "name contains 'report' and mimeType = 'application/vnd.google-apps.spreadsheet'",
     max_results = 10,
     order_by = "modifiedTime desc",
 })
 
 -- Get full file info (and optionally export content)
-local file = app.integrations.google_drive.get_file({
+local file = app.integrations["google-drive"].google_drive_get_file({
     file_id = results.files[1].id,
     export_as = "csv",  -- "text", "csv", or "markdown" (Google Workspace files only)
 })
@@ -184,7 +184,7 @@ Share a file:
 
 ```lua
 -- Share with a specific user
-app.integrations.google_drive.share_file({
+app.integrations["google-drive"].google_drive_share_file({
     file_id = "abc123",
     role = "writer",       -- "reader", "writer", or "commenter"
     email = "alice@example.com",
@@ -192,10 +192,68 @@ app.integrations.google_drive.share_file({
 })
 
 -- Share with anyone via link
-app.integrations.google_drive.share_file({
+app.integrations["google-drive"].google_drive_share_file({
     file_id = "abc123",
     role = "reader",
     type = "anyone",
+})
+```
+
+## Google Analytics
+
+The GA4 namespace is `app.integrations["google-analytics"]`. Start with property discovery, then run metadata or report tools against the numeric property ID.
+
+```lua
+local properties = app.integrations["google-analytics"].google_analytics_list_properties({})
+```
+
+Run a standard report:
+
+```lua
+local report = app.integrations["google-analytics"].google_analytics_report({
+    property_id = "123456789",
+    metrics = {"sessions", "totalUsers"},
+    dimensions = {"sessionDefaultChannelGroup"},
+    start_date = "28daysAgo",
+    end_date = "yesterday",
+    order_by = "sessions",
+    order_direction = "desc",
+    limit = 20,
+})
+```
+
+Check compatibility before combining unfamiliar dimensions and metrics:
+
+```lua
+local compatibility = app.integrations["google-analytics"].google_analytics_check_compatibility({
+    property_id = "123456789",
+    metrics = {"sessions"},
+    dimensions = {"country", "deviceCategory"},
+})
+```
+
+Run pivot and batch reports when you need the exact Google Analytics Data API response shape:
+
+```lua
+local pivot = app.integrations["google-analytics"].google_analytics_pivot_report({
+    property_id = "123456789",
+    metrics = {"sessions"},
+    dimensions = {"country", "deviceCategory"},
+    pivots = {
+        { fieldNames = {"country"}, limit = 10 },
+        { fieldNames = {"deviceCategory"}, limit = 5 },
+    },
+})
+
+local batch = app.integrations["google-analytics"].google_analytics_batch_run_reports({
+    property_id = "123456789",
+    requests = {
+        {
+            metrics = {{ name = "sessions" }},
+            dimensions = {{ name = "country" }},
+            dateRanges = {{ startDate = "7daysAgo", endDate = "yesterday" }},
+        },
+    },
 })
 ```
 
@@ -212,18 +270,18 @@ app.integrations.google_drive.share_file({
 
 ## Multi-Account Usage
 
-If you have multiple google accounts configured, use account-specific namespaces:
+If you have multiple Google service accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.google.function_name({...})
+app.integrations["google-sheets"].function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.google.default.function_name({...})
+app.integrations["google-sheets"].default.function_name({...})
 
 -- Named accounts
-app.integrations.google.work.function_name({...})
-app.integrations.google.personal.function_name({...})
+app.integrations["google-sheets"].work.function_name({...})
+app.integrations["google-sheets"].personal.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

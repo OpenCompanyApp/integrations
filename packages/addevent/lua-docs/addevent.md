@@ -1,201 +1,122 @@
-# AddEvent — Lua API Reference
+# AddEvent Lua API Reference
+
+This package uses AddEvent Calendar and Events API v2 at `https://api.addevent.com/calevent/v2`. AddEvent authenticates with an API key sent as `Authorization: Bearer <apiKey>`.
 
 ## list_events
 
-List calendar events with optional pagination and category filtering.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of events per page (default: 50, max: 100) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-| `category` | integer | no | Filter events by category ID |
-
-### Examples
+Search events you have created.
 
 ```lua
--- List recent events
 local result = app.integrations.addevent.list_events({
-  limit = 10,
-  page = 1
-})
-
-for _, event in ipairs(result.events) do
-  print(event.title .. " (" .. event.start_date .. " - " .. event.end_date .. ")")
-end
-```
-
-```lua
--- Filter by category
-local result = app.integrations.addevent.list_events({
-  category = 5,
-  limit = 20
+  page = 1,
+  page_size = 10,
+  calendar_id = "cal_123",
+  sort_order = "desc"
 })
 ```
-
----
 
 ## get_event
 
-Get details for a specific calendar event.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The event ID |
-
-### Examples
+Retrieve one event by ID.
 
 ```lua
-local result = app.integrations.addevent.get_event({ id = 12345 })
-print(result.title)
-print(result.description)
-print(result.location)
-print(result.start_date .. " to " .. result.end_date)
+local event = app.integrations.addevent.get_event({
+  id = "evt_123"
+})
 ```
-
----
 
 ## create_event
 
-Create a new calendar event.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | string | yes | Event title |
-| `start_date` | string | yes | Start date/time (e.g., "2026-04-10T09:00:00") |
-| `end_date` | string | yes | End date/time (e.g., "2026-04-10T10:00:00") |
-| `location` | string | no | Event location |
-| `description` | string | no | Event description |
-| `category_id` | integer | no | Category ID to assign the event to |
-
-### Examples
+Create an event. `title` and `datetime_start` are required. `datetime_end` defaults to one hour after the start when omitted by AddEvent.
 
 ```lua
--- Create a simple event
-local result = app.integrations.addevent.create_event({
-  title = "Team Standup",
-  start_date = "2026-04-10T09:00:00",
-  end_date = "2026-04-10T09:30:00"
-})
-print("Created event with ID: " .. result.id)
-```
-
-```lua
--- Create a full event with all options
-local result = app.integrations.addevent.create_event({
-  title = "Quarterly Planning",
-  start_date = "2026-04-15T10:00:00",
-  end_date = "2026-04-15T12:00:00",
-  location = "Conference Room A, 123 Main St",
-  description = "Q2 planning session to review goals and priorities",
-  category_id = 3
+local event = app.integrations.addevent.create_event({
+  calendar_id = "cal_123",
+  title = "Demo event",
+  datetime_start = "2026-04-10 09:00:00",
+  datetime_end = "2026-04-10 10:00:00",
+  timezone = "America/New_York",
+  location = "Conference Room A",
+  description = "Planning session"
 })
 ```
 
----
+## update_event
 
-## list_categories
-
-List all event categories.
-
-### Parameters
-
-None.
-
-### Examples
+Patch an event. Only fields in `attributes` are changed.
 
 ```lua
-local result = app.integrations.addevent.list_categories({})
-
-for _, cat in ipairs(result.categories) do
-  print(cat.id .. ": " .. cat.name)
-end
-```
-
----
-
-## list_groups
-
-List event groups with optional pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of groups per page (default: 50, max: 100) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-
-### Examples
-
-```lua
-local result = app.integrations.addevent.list_groups({
-  limit = 10,
-  page = 1
+app.integrations.addevent.update_event({
+  id = "evt_123",
+  attributes = {
+    title = "Updated title",
+    location = "Zoom"
+  }
 })
-
-for _, group in ipairs(result.groups) do
-  print(group.id .. ": " .. group.name)
-end
 ```
 
----
+## delete_event
 
-## get_group
-
-Get details for a specific event group.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The group ID |
-
-### Examples
+Delete an event permanently.
 
 ```lua
-local result = app.integrations.addevent.get_group({ id = 42 })
-print(result.name)
-print(result.description)
+app.integrations.addevent.delete_event({
+  id = "evt_123"
+})
 ```
 
----
+## list_calendars
 
-## get_current_user
-
-Get the profile of the currently authenticated user.
-
-### Parameters
-
-None.
-
-### Examples
+Search calendars.
 
 ```lua
-local result = app.integrations.addevent.get_current_user({})
-print("Logged in as: " .. result.name .. " (" .. result.email .. ")")
+local result = app.integrations.addevent.list_calendars({
+  page = 1,
+  page_size = 10,
+  sort_by = "created",
+  sort_order = "desc"
+})
 ```
 
----
+## get_calendar
+
+Retrieve a calendar by ID.
+
+```lua
+local calendar = app.integrations.addevent.get_calendar({
+  id = "cal_123"
+})
+```
+
+## create_calendar
+
+Create a calendar.
+
+```lua
+local calendar = app.integrations.addevent.create_calendar({
+  title = "Product webinars",
+  timezone = "America/Los_Angeles",
+  weekday_begin = "monday",
+  description = "Public webinar calendar"
+})
+```
+
+## list_timezones
+
+List supported timezone values for event and calendar creation.
+
+```lua
+local timezones = app.integrations.addevent.list_timezones({})
+```
+
+## Notes
+
+Use AddEvent field names from the v2 API, such as `datetime_start`, `datetime_end`, `calendar_id`, and `custom_data`. Page size is capped at 20 by AddEvent for search endpoints.
 
 ## Multi-Account Usage
 
-If you have multiple AddEvent accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.addevent.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.addevent.default.function_name({...})
-
--- Named accounts
-app.integrations.addevent.work.function_name({...})
-app.integrations.addevent.personal.function_name({...})
+app.integrations.addevent.list_events({...})
+app.integrations.addevent.default.list_events({...})
+app.integrations.addevent.work.create_event({...})
 ```
-
-All functions are identical across accounts — only the credentials differ.

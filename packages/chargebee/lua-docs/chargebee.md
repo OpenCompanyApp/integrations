@@ -1,197 +1,105 @@
-# Chargebee — Lua API Reference
+# Chargebee Lua API Reference
 
-## list_subscriptions
+Namespace: `app.integrations.chargebee`
 
-List subscriptions from Chargebee with optional filtering and pagination.
+Use this integration to inspect and manage Chargebee API v2 billing records. Configure a Chargebee API key and site name before use.
 
-### Parameters
+## Return Shape
+
+Tools return the decoded Chargebee JSON response. List endpoints usually return a `list` array and may include `next_offset`. Retrieve and write endpoints return resource objects such as `customer`, `subscription`, `invoice`, `transaction`, `hosted_page`, `estimate`, or `event`.
+
+## Common Parameters
+
+Read tools commonly accept:
 
 | Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of subscriptions per page (max 100, default 10) |
-| `page` | string | no | Pagination cursor from a previous response |
-| `state` | string | no | Filter by state: `active`, `cancelled`, `non_renewing`, `paused`, `in_trial`, `future` |
+| --- | --- | --- | --- |
+| `limit` | integer | no | Maximum records to return. |
+| `offset` | string | no | Pagination offset from `next_offset`. |
+| `id[is]` | string | no | Exact ID filter where supported. |
+| `status[is]` | string | no | Exact status filter where supported. |
+| `customer_id[is]` | string | no | Exact customer filter where supported. |
+| `subscription_id[is]` | string | no | Exact subscription filter where supported. |
+| `updated_at[after]` | integer | no | Unix timestamp filter. |
+| `created_at[after]` | integer | no | Unix timestamp filter. |
 
-### Example
+## Resource Coverage
+
+The namespace includes list/get/create/update/delete style tools for customers, items, item prices and coupons, plus read tools for subscriptions, invoices, credit notes, transactions, events, hosted pages, orders, business entities and attached items.
+
+Important workflow tools include:
+
+| Tool | Purpose |
+| --- | --- |
+| `create_subscription_for_items` | Create an item-price subscription. |
+| `create_subscription_for_customer` | Create a subscription under an existing customer. |
+| `update_subscription_for_items` | Update a Product Catalog 2.0 subscription. |
+| `cancel_subscription_for_items` | Cancel a subscription. |
+| `close_invoice` | Finalize a pending invoice. |
+| `collect_invoice_payment` | Collect payment for an invoice. |
+| `record_invoice_payment` | Record an offline invoice payment. |
+| `create_invoice_for_charge_items_and_charges` | Create a non-recurring invoice. |
+| `record_refund_for_transaction` | Record an offline refund. |
+| `checkout_new_for_items` | Create a hosted checkout page for a new subscription. |
+| `checkout_existing_for_items` | Create a hosted checkout page for an existing subscription. |
+| `estimate_create_subscription_for_items` | Preview a subscription create operation. |
+| `estimate_update_subscription_for_items` | Preview a subscription update operation. |
+
+## Payload Tools
+
+Chargebee write endpoints use form-encoded parameter names. Pass those exact names inside `payload`, including bracketed array keys from the API docs.
 
 ```lua
-local result = app.integrations.chargebee.list_subscriptions({
-  state = "active",
-  limit = 25
+local result = app.integrations.chargebee.create_subscription_for_customer({
+  customer_id = "customer_123",
+  payload = {
+    ["subscription_items[item_price_id][0]"] = "basic-USD",
+    ["subscription_items[quantity][0]"] = 3,
+    invoice_immediately = true
+  }
 })
+```
 
-for _, sub in ipairs(result.subscriptions) do
-  print(sub.id .. " — " .. sub.plan_id .. " — " .. sub.status)
-end
+```lua
+local page = app.integrations.chargebee.checkout_new_for_items({
+  payload = {
+    ["subscription_items[item_price_id][0]"] = "basic-USD",
+    redirect_url = "https://example.test/billing/success",
+    cancel_url = "https://example.test/billing/cancel"
+  }
+})
+```
 
--- Paginate with next_page
-if result.next_page then
-  local page2 = app.integrations.chargebee.list_subscriptions({
-    state = "active",
-    limit = 25,
-    page = result.next_page
+```lua
+local payment = app.integrations.chargebee.record_invoice_payment({
+  id = "inv_123",
+  payload = {
+    ["transaction[payment_method]"] = "bank_transfer",
+    ["transaction[amount]"] = 5000,
+    comment = "Wire received"
+  }
+})
+```
+
+## Pagination
+
+```lua
+local first = app.integrations.chargebee.list_customers({ limit = 50 })
+
+if first.next_offset then
+  local second = app.integrations.chargebee.list_customers({
+    limit = 50,
+    offset = first.next_offset
   })
 end
 ```
 
----
-
-## get_subscription
-
-Retrieve details of a single subscription.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The subscription ID |
-
-### Example
-
-```lua
-local result = app.integrations.chargebee.get_subscription({
-  id = "AzI6dGl0bGU9IkpvaG4gRG9lIgtleSI6IkRvZS"
-})
-
-local sub = result.subscription
-print("Plan: " .. sub.plan_id)
-print("Status: " .. sub.status)
-print("Customer: " .. (result.customer and result.customer.email or "N/A"))
-```
-
----
-
-## list_customers
-
-List customers with pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of customers per page (max 100, default 10) |
-| `page` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.chargebee.list_customers({
-  limit = 50
-})
-
-for _, cust in ipairs(result.customers) do
-  print(cust.id .. " — " .. (cust.email or "no email") .. " — " .. (cust.first_name or ""))
-end
-```
-
----
-
-## get_customer
-
-Retrieve details of a single customer.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The customer ID |
-
-### Example
-
-```lua
-local result = app.integrations.chargebee.get_customer({
-  id = "customer_xyz"
-})
-
-local cust = result.customer
-print(cust.email .. " — " .. (cust.company or "no company"))
-```
-
----
-
-## list_invoices
-
-List invoices with optional filtering and pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of invoices per page (max 100, default 10) |
-| `page` | string | no | Pagination cursor from a previous response |
-| `status` | string | no | Filter by status: `paid`, `posted`, `payment_due`, `not_paid`, `voided`, `pending` |
-
-### Example
-
-```lua
-local result = app.integrations.chargebee.list_invoices({
-  status = "paid",
-  limit = 50
-})
-
-for _, inv in ipairs(result.invoices) do
-  print(inv.id .. " — " .. inv.total .. " " .. inv.currency_code .. " — " .. inv.status)
-end
-```
-
----
-
-## get_invoice
-
-Retrieve details of a single invoice.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The invoice ID |
-
-### Example
-
-```lua
-local result = app.integrations.chargebee.get_invoice({
-  id = "INV-123"
-})
-
-local inv = result.invoice
-print("Total: " .. inv.total .. " " .. inv.currency_code)
-print("Line items: " .. #inv.line_items)
-```
-
----
-
-## get_current_user
-
-Retrieve the current authenticated user information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.chargebee.get_current_user({})
-
-print("User: " .. (result.user and result.user.email or "N/A"))
-```
-
----
-
 ## Multi-Account Usage
 
-If you have multiple Chargebee sites configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.chargebee.list_subscriptions({state = "active"})
-
--- Explicit default (portable across setups)
-app.integrations.chargebee.default.list_subscriptions({state = "active"})
-
--- Named accounts
-app.integrations.chargebee.production.list_subscriptions({state = "active"})
-app.integrations.chargebee.staging.list_subscriptions({state = "active"})
+app.integrations.chargebee.list_subscriptions({ limit = 25 })
+app.integrations.chargebee.default.list_subscriptions({ limit = 25 })
+app.integrations.chargebee.production.list_subscriptions({ limit = 25 })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only credentials differ.

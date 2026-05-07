@@ -2,12 +2,18 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
 
+/**
+ * List Vercel projects under the authenticated account or team.
+ */
 class VercelListProjects implements Tool
 {
+    /**
+     * @param  VercelService  $service  The Vercel REST API client.
+     */
     public function __construct(private VercelService $service)
     {
     }
@@ -35,9 +41,19 @@ class VercelListProjects implements Tool
                 'required' => false,
                 'description' => 'Optional team ID to scope projects to a specific team.',
             ],
+            'slug' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team slug to scope projects to a specific team.',
+            ],
         ];
     }
 
+    /**
+     * List projects using optional pagination and team scope.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (limit, team_id, slug).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -48,6 +64,7 @@ class VercelListProjects implements Tool
             $params = array_filter([
                 'limit' => $args['limit'] ?? null,
                 'teamId' => $args['team_id'] ?? null,
+                'slug' => $args['slug'] ?? null,
             ], fn ($v) => $v !== null);
 
             $result = $this->service->listProjects($params);

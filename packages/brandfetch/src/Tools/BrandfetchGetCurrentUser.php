@@ -2,50 +2,17 @@
 
 namespace OpenCompany\Integrations\Brandfetch\Tools;
 
-use OpenCompany\Integrations\Brandfetch\BrandfetchService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get the currently authenticated user's account details.
- *
- * Returns user profile information including name, email, plan,
- * and usage details for the Brandfetch account associated with
- * the configured access token.
+ * Verify Brand API credentials with the free Brandfetch test brand.
  */
-class BrandfetchGetCurrentUser implements Tool
+class BrandfetchGetCurrentUser extends AbstractBrandfetchTool
 {
-    public function __construct(
-        private BrandfetchService $service,
-    ) {}
+    protected const TOOL_NAME = 'brandfetch_get_current_user';
+    protected const TOOL_DESCRIPTION = 'Verify Brandfetch Brand API credentials by fetching the Brandfetch test brand.';
+    protected const PARAMETERS = [];
 
-    public function name(): string
+    protected function run(array $args): array
     {
-        return 'brandfetch_get_current_user';
-    }
-
-    public function description(): string
-    {
-        return 'Get the authenticated user\'s Brandfetch account details, including name, email, plan, and usage information.';
-    }
-
-    public function parameters(): array
-    {
-        return [];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brandfetch integration is not configured.');
-            }
-
-            $result = $this->service->getCurrentUser();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->getCurrentUser();
     }
 }

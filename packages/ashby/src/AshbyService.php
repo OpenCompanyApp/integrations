@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Log;
  * Ashby ATS API service.
  *
  * Handles authenticated requests to the Ashby HQ REST API.
- * All endpoints use POST with JSON bodies. Authentication is via
- * Bearer token passed in the Authorization header.
+ * Public endpoints use POST with JSON bodies and RPC-style paths such as
+ * /candidate.list. Authentication is HTTP Basic with the API key as username.
  *
  * @see https://developers.ashbyhq.com
  */
@@ -29,6 +29,17 @@ class AshbyService
     public function isConfigured(): bool
     {
         return !empty($this->accessToken);
+    }
+
+    /**
+     * Execute a raw POST request against an Ashby API endpoint.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $endpoint, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($endpoint), $payload);
     }
 
     /**
@@ -56,7 +67,7 @@ class AshbyService
             $body['status'] = $status;
         }
 
-        return $this->request('POST', '/api/v1/application.list', $body);
+        return $this->apiPost('/application.list', $body);
     }
 
     /**
@@ -67,8 +78,8 @@ class AshbyService
      */
     public function getApplication(string $id): array
     {
-        return $this->request('POST', '/api/v1/application.get', [
-            'id' => $id,
+        return $this->apiPost('/application.info', [
+            'applicationId' => $id,
         ]);
     }
 
@@ -93,7 +104,7 @@ class AshbyService
             $body['status'] = $status;
         }
 
-        return $this->request('POST', '/api/v1/job.list', $body);
+        return $this->apiPost('/job.list', $body);
     }
 
     /**
@@ -104,8 +115,8 @@ class AshbyService
      */
     public function getJob(string $id): array
     {
-        return $this->request('POST', '/api/v1/job.get', [
-            'id' => $id,
+        return $this->apiPost('/job.info', [
+            'jobId' => $id,
         ]);
     }
 
@@ -130,7 +141,7 @@ class AshbyService
             $body['applicationId'] = $applicationId;
         }
 
-        return $this->request('POST', '/api/v1/interview.list', $body);
+        return $this->apiPost('/interview.list', $body);
     }
 
     /**
@@ -141,9 +152,31 @@ class AshbyService
      */
     public function getInterview(string $id): array
     {
-        return $this->request('POST', '/api/v1/interview.get', [
-            'id' => $id,
+        return $this->apiPost('/interview.info', [
+            'interviewId' => $id,
         ]);
+    }
+
+    /**
+     * List candidates.
+     *
+     * @param  array<string, mixed>  $params  Candidate list body parameters.
+     * @return array<string, mixed>
+     */
+    public function listCandidates(array $params = []): array
+    {
+        return $this->apiPost('/candidate.list', $params);
+    }
+
+    /**
+     * Create a note on a candidate.
+     *
+     * @param  array<string, mixed>  $params  Candidate note body parameters.
+     * @return array<string, mixed>
+     */
+    public function createNote(array $params): array
+    {
+        return $this->apiPost('/candidate.createNote', $params);
     }
 
     /**
@@ -153,7 +186,7 @@ class AshbyService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('POST', '/api/v1/user.me');
+        return $this->apiPost('/user.me');
     }
 
     /**
@@ -168,7 +201,35 @@ class AshbyService
     {
         $response = $this->rawRequest($method, $path, $data);
 
-        return $response->json() ?? [];
+        $json = $response->json();
+
+        if (!is_array($json)) {
+            return [];
+        }
+
+        return $json;
+    }
+
+    /**
+     * Normalize a user-supplied endpoint to an Ashby root RPC path.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '') {
+            throw new \RuntimeException('Ashby API endpoint is required.');
+        }
+
+        if (str_starts_with($path, $this->baseUrl)) {
+            $path = substr($path, strlen($this->baseUrl));
+        }
+
+        if (str_starts_with($path, '/api/v1/')) {
+            $path = '/' . substr($path, strlen('/api/v1/'));
+        }
+
+        return '/' . ltrim($path, '/');
     }
 
     /**
@@ -191,9 +252,8 @@ class AshbyService
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ])->withBasicAuth($this->accessToken, '')->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'POST' => $http->post($url, $data),

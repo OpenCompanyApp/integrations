@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class PowerBiGetReport implements Tool
 {
+    /**
+     * @param  PowerBiService  $service  The Power BI API client.
+     */
     public function __construct(
         private PowerBiService $service,
     ) {}
@@ -36,11 +39,24 @@ class PowerBiGetReport implements Tool
         ];
     }
 
+    /**
+     * Get a Power BI report from a workspace.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (workspace_id, report_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {
             if (!$this->service->isConfigured()) {
                 return ToolResult::error('Power BI integration is not configured.');
+            }
+
+            if (empty($args['workspace_id'])) {
+                return ToolResult::error('workspace_id is required.');
+            }
+
+            if (empty($args['report_id'])) {
+                return ToolResult::error('report_id is required.');
             }
 
             $result = $this->service->getReport($args['workspace_id'], $args['report_id']);

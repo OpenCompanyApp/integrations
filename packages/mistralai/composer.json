@@ -16,6 +16,7 @@
     "replace": {
         "opencompanyapp/ai-tool-mistralai": "self.version"
     },
+    "abandoned": "opencompanyapp/integration-mistral",
     "autoload": {
         "psr-4": {
             "OpenCompany\\Integrations\\MistralAI\\": "src/"

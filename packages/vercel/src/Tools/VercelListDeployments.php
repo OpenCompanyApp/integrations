@@ -2,12 +2,18 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
 
+/**
+ * List Vercel deployments under the authenticated account or team.
+ */
 class VercelListDeployments implements Tool
 {
+    /**
+     * @param  VercelService  $service  The Vercel REST API client.
+     */
     public function __construct(private VercelService $service)
     {
     }
@@ -50,9 +56,19 @@ class VercelListDeployments implements Tool
                 'required' => false,
                 'description' => 'Optional team ID to scope deployments to a specific team.',
             ],
+            'slug' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team slug to scope deployments to a specific team.',
+            ],
         ];
     }
 
+    /**
+     * List deployments using optional filters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -66,6 +82,7 @@ class VercelListDeployments implements Tool
                 'target' => $args['target'] ?? null,
                 'limit' => $args['limit'] ?? null,
                 'teamId' => $args['team_id'] ?? null,
+                'slug' => $args['slug'] ?? null,
             ], fn ($v) => $v !== null);
 
             $result = $this->service->listDeployments($params);

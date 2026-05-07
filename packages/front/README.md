@@ -1,16 +1,6 @@
 # Integration: Front
 
-> Front (frontapp.com) integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage conversations, messages, and contacts. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to your Front inbox. List and search conversations, read and send messages, and manage contacts — all through the [Front API](https://dev.frontapp.com/).
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Front tool lets AI agents manage customer conversations, reply to messages, and look up contact information — giving agents full communication awareness.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+Front integration for OpenCompany agents. It exposes typed tools for customer conversations, messages, comments, contacts, inboxes, tags, teams, and teammates through the Front Core API, with raw API helpers for newer or less common endpoints.
 
 ## Installation
 
@@ -18,116 +8,60 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-front
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
 
-This tool requires a Front API access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+This package uses a Front API token or OAuth access token.
 
 ```php
 return [
     'front' => [
         'access_token' => env('FRONT_ACCESS_TOKEN'),
-        'url'          => env('FRONT_API_URL', 'https://api2.frontapp.com'),
+        'url' => env('FRONT_API_URL', 'https://api2.frontapp.com'),
     ],
 ];
 ```
 
-## Available Tools
+## Tool Coverage
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `front_list_conversations` | read | List and search conversations with filters |
-| `front_get_conversation` | read | Get details of a specific conversation |
-| `front_list_messages` | read | List messages in a conversation |
-| `front_send_message` | write | Send a reply to a conversation |
-| `front_list_contacts` | read | List and search contacts |
-| `front_get_contact` | read | Get details of a specific contact |
-| `front_get_current_user` | read | Get the authenticated user's profile |
+The provider registers 64 tools, including:
 
-## Quick Start
+- Raw helpers: `front_api_get`, `front_api_post`, `front_api_patch`, `front_api_put`, `front_api_delete`
+- Conversations and comments: list, search, get, create discussion, update, reminders, inboxes, comments, add/remove tags
+- Messages: list, get, reply, create outbound message, import message, create draft
+- Inboxes and channels: list/get inboxes, inbox conversations, channels, access management, team inbox creation
+- Contacts: company/team/teammate contacts, contact conversations, handles, create/update/delete
+- Teams and teammates: list/get/update teammates, assigned conversations, inboxes, rules, teams, team inboxes
+- Tags: global, company, team, and teammate tag listing and creation, update/delete, tagged conversations
 
-```php
-use OpenCompany\Integrations\Front\FrontService;
-use OpenCompany\Integrations\Front\Tools\FrontListConversations;
-use OpenCompany\Integrations\Front\Tools\FrontSendMessage;
+Multipart file upload endpoints are intentionally not wrapped by the JSON helpers. Use host-specific upload handling or raw HTTP support that can send `multipart/form-data` when attachments or avatars are required.
 
-// Create tools
-$service = app(FrontService::class);
-$tools = [
-    new FrontListConversations($service),
-    new FrontSendMessage($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List my open conversations and reply to the most recent one with a thank you note.');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('front');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Front\Tools\FrontListConversations::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\Front\FrontService;
 
-$service = app(FrontService::class);
+$front = new FrontService(accessToken: 'token');
 
-// List open conversations
-$conversations = $service->listConversations(status: 'open', limit: 10);
-
-// Get a specific conversation
-$conversation = $service->getConversation('cnv_123abc');
-
-// List messages
-$messages = $service->listMessages('cnv_123abc');
-
-// Send a reply
-$service->sendMessage(
-    id: 'cnv_123abc',
-    body: '<p>Thanks for reaching out! We\'ll get back to you shortly.</p>',
-);
-
-// Search contacts
-$contacts = $service->listContacts(q: 'john');
-
-// Get current user
-$me = $service->getCurrentUser();
+$conversations = $front->apiGet('/conversations', ['limit' => 10]);
+$contact = $front->apiPost('/contacts', [
+    'handles' => [
+        ['source' => 'email', 'handle' => 'person@example.test'],
+    ],
+]);
 ```
 
-## Dependencies
+## Agent Notes
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+List responses generally use Front's `_results` and `_pagination` shape. Prefer `page_token` pagination for current Front endpoints. Some older compatibility parameters remain available where previous host usage expected them, but new agent scripts should follow the Front Core API docs.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Front](https://frontapp.com) account with API access
+- A Front account with Core API access
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

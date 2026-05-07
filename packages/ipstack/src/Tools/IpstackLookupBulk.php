@@ -12,7 +12,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Looks up geolocation data for multiple IP addresses in a single request
  * using the IPstack bulk lookup endpoint. Supports up to 50 IPs at once.
  *
- * Endpoint: GET /bulk
+ * Endpoint: GET /{ip1},{ip2}
  */
 class IpstackLookupBulk implements Tool
 {
@@ -47,7 +47,10 @@ class IpstackLookupBulk implements Tool
     public function parameters(): array
     {
         return [
-            'ips' => ['type' => 'array', 'required' => true, 'description' => 'Array of IPv4 or IPv6 addresses to look up (max 50, e.g., ["134.201.250.155", "72.229.28.185"]).'],
+            'ips' => ['type' => 'array', 'required' => true, 'description' => 'Array of IPv4 or IPv6 addresses or domains to look up (max 50, e.g., ["134.201.250.155", "72.229.28.185"]).'],
+            'fields' => ['type' => 'array', 'required' => false, 'description' => 'Optional response fields, such as ["main", "location", "timezone", "currency", "connection", "security"].'],
+            'hostname' => ['type' => 'boolean', 'required' => false, 'description' => 'Set true to request hostname lookup.'],
+            'security' => ['type' => 'boolean', 'required' => false, 'description' => 'Set true to request the paid security module.'],
             'language' => ['type' => 'string', 'required' => false, 'description' => 'Response language code (e.g., "en", "de", "fr"). Defaults to English.'],
         ];
     }
@@ -74,9 +77,16 @@ class IpstackLookupBulk implements Tool
                 return ToolResult::error('Maximum 50 IP addresses allowed per bulk request.');
             }
 
-            $language = $args['language'] ?? null;
+            $fields = $args['fields'] ?? [];
+            if (is_string($fields)) {
+                $fields = array_filter(array_map('trim', explode(',', $fields)));
+            }
 
-            $result = $this->service->lookupBulk($ips, [], $language);
+            $result = $this->service->lookupBulk($ips, $fields, [
+                'language' => $args['language'] ?? null,
+                'hostname' => $args['hostname'] ?? false,
+                'security' => $args['security'] ?? false,
+            ]);
 
             if (empty($result)) {
                 return ToolResult::success([

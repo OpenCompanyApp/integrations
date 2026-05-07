@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Phantombuster integration with Laravel.
+ *
+ * Binds the API client and registers the tool provider when the registry exists.
+ */
 class PhantombusterServiceProvider extends ServiceProvider
 {
     public function register(): void

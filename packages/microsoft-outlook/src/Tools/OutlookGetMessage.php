@@ -68,6 +68,10 @@ class OutlookGetMessage implements Tool
                 return ToolResult::error('Microsoft Outlook integration is not configured.');
             }
 
+            if (empty($args['message_id'])) {
+                return ToolResult::error('message_id is required.');
+            }
+
             $params = [];
             if (isset($args['select'])) {
                 $params['$select'] = $args['select'];

@@ -22,6 +22,10 @@ class TogglService
         private string $baseUrl = 'https://api.track.toggl.com/api/v9',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
+
+        if (! str_ends_with($this->baseUrl, '/api/v9')) {
+            $this->baseUrl .= '/api/v9';
+        }
     }
 
     /**
@@ -93,6 +97,21 @@ class TogglService
         return $this->request(
             'GET',
             '/workspaces/' . urlencode($workspaceId) . '/projects/' . urlencode($projectId),
+        );
+    }
+
+    /**
+     * Create a project in a workspace.
+     *
+     * @param  array<string, mixed>  $data  Project payload.
+     * @return array<string, mixed>
+     */
+    public function createProject(string $workspaceId, array $data): array
+    {
+        return $this->request(
+            'POST',
+            '/workspaces/' . urlencode($workspaceId) . '/projects',
+            $data,
         );
     }
 
@@ -176,6 +195,34 @@ class TogglService
             'POST',
             '/workspaces/' . urlencode($workspaceId) . '/time_entries',
             $data,
+        );
+    }
+
+    /**
+     * Update a time entry in a workspace.
+     *
+     * @param  array<string, mixed>  $data  Time-entry fields to update.
+     * @return array<string, mixed>
+     */
+    public function updateTimeEntry(string $workspaceId, string|int $timeEntryId, array $data): array
+    {
+        return $this->request(
+            'PUT',
+            '/workspaces/' . urlencode($workspaceId) . '/time_entries/' . urlencode((string) $timeEntryId),
+            $data,
+        );
+    }
+
+    /**
+     * Delete a time entry from a workspace.
+     *
+     * @return array<string, mixed>
+     */
+    public function deleteTimeEntry(string $workspaceId, string|int $timeEntryId): array
+    {
+        return $this->request(
+            'DELETE',
+            '/workspaces/' . urlencode($workspaceId) . '/time_entries/' . urlencode((string) $timeEntryId),
         );
     }
 

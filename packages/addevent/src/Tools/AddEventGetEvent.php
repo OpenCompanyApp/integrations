@@ -9,11 +9,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Get details for a specific AddEvent calendar event.
  *
- * Retrieves full details for a single event by its ID, including title,
- * description, dates, location, and associated category.
+ * Retrieves full details for a single event by its ID.
  */
 class AddEventGetEvent implements Tool
 {
+    /**
+     * @param  AddEventService  $service  The AddEvent API client.
+     */
     public function __construct(
         private AddEventService $service,
     ) {}
@@ -31,10 +33,15 @@ class AddEventGetEvent implements Tool
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The event ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The AddEvent event ID.'],
         ];
     }
 
+    /**
+     * Retrieve an AddEvent event.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -46,7 +53,7 @@ class AddEventGetEvent implements Tool
                 return ToolResult::error('Event ID is required.');
             }
 
-            $result = $this->service->getEvent((int) $args['id']);
+            $result = $this->service->getEvent((string) $args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

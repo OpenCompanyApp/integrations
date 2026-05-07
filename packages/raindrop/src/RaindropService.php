@@ -2,183 +2,260 @@
 
 namespace OpenCompany\Integrations\Raindrop;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Raindrop.io REST API.
+ *
+ * Handles official operation lookup, bearer authentication, request shaping,
+ * response parsing, and normalized API errors.
+ */
 class RaindropService
 {
+    private const DEFAULT_BASE_URL = 'https://api.raindrop.io/rest/v1';
+
+    /**
+     * @param  string  $accessToken  Raindrop.io OAuth access token.
+     * @param  string  $baseUrl  Raindrop.io REST API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.raindrop.io/rest/v1',
+        private string $baseUrl = self::DEFAULT_BASE_URL,
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl ?: self::DEFAULT_BASE_URL, '/');
     }
 
+    /**
+     * Check whether the service has been configured with an access token.
+     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return trim($this->accessToken) !== '';
     }
 
     /**
-     * Get the currently authenticated user.
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/user');
-    }
-
-    /**
-     * List bookmarks (raindrops) with optional filters.
+     * Return the official Raindrop.io operation map.
      *
-     * @param  int|null  $collectionId  Collection ID to filter by (0 = all, -1 = unsorted, -99 = trash)
-     * @param  string|null  $search  Search query
-     * @param  int  $page  Page number (starts at 1)
-     * @param  int  $perPage  Results per page (max 50)
+     * @return list<array<string, mixed>>
      */
-    public function listBookmarks(?int $collectionId = null, ?string $search = null, int $page = 1, int $perPage = 25): array
+    public static function operations(): array
     {
-        $params = [
-            'page' => $page,
-            'perpage' => min($perPage, 50),
-        ];
-
-        if ($collectionId !== null) {
-            $params['collection_id'] = $collectionId;
-        }
-
-        if ($search !== null) {
-            $params['search'] = $search;
-        }
-
-        return $this->request('GET', '/raindrops', $params);
+        return RaindropOperations::all();
     }
 
     /**
-     * Get a single bookmark by ID.
-     */
-    public function getBookmark(int $id): array
-    {
-        return $this->request('GET', '/raindrop/' . $id);
-    }
-
-    /**
-     * Create a new bookmark.
+     * Return metadata for one Raindrop.io operation by tool slug or operation key.
      *
-     * @param  string  $link  The URL to bookmark
-     * @param  string|null  $title  Optional title override
-     * @param  array  $tags  Optional tags
-     * @param  int|null  $collectionId  Target collection ID (0 = unsorted)
-     * @param  string|null  $excerpt  Optional description/excerpt
+     * @return array<string, mixed>
      */
-    public function createBookmark(string $link, ?string $title = null, array $tags = [], ?int $collectionId = null, ?string $excerpt = null): array
+    public function operation(string $operation): array
     {
-        $data = ['link' => $link];
-
-        if ($title !== null) {
-            $data['title'] = $title;
+        foreach (self::operations() as $definition) {
+            if (($definition['slug'] ?? null) === $operation || ($definition['operation'] ?? null) === $operation) {
+                return $definition;
+            }
         }
 
-        if (!empty($tags)) {
-            $data['tags'] = $tags;
-        }
-
-        if ($collectionId !== null) {
-            $data['collection'] = ['$id' => $collectionId];
-        }
-
-        if ($excerpt !== null) {
-            $data['excerpt'] = $excerpt;
-        }
-
-        return $this->request('POST', '/raindrops', $data);
+        throw new RuntimeException("Unsupported Raindrop.io operation: {$operation}");
     }
 
     /**
-     * Update an existing bookmark.
+     * Execute an official Raindrop.io API operation.
      *
-     * @param  int  $id  The bookmark ID
-     * @param  array  $data  Fields to update (link, title, tags, collection, excerpt, etc.)
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function updateBookmark(int $id, array $data): array
+    public function call(string $operation, array $args = []): array
     {
-        return $this->request('PUT', '/raindrop/' . $id, $data);
+        $definition = $this->operation($operation);
+        [$path, $query, $payload] = $this->shapeRequest($definition, $args);
+
+        return $this->request(
+            method: (string) $definition['method'],
+            path: $path,
+            query: $query,
+            payload: $payload,
+            contentType: $definition['content_type'] ?? null,
+        );
     }
 
     /**
-     * List all collections (root level).
+     * Shape tool arguments into path, query, and body data.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>}
      */
-    public function listCollections(): array
+    private function shapeRequest(array $definition, array $args): array
     {
-        return $this->request('GET', '/collections');
+        $path = (string) $definition['path'];
+        $query = isset($args['query']) && is_array($args['query']) ? $args['query'] : [];
+        $payload = isset($args['payload']) && is_array($args['payload']) ? $args['payload'] : [];
+        $consumed = ['query' => true, 'payload' => true];
+
+        foreach ($definition['parameters'] as $parameter) {
+            $name = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? $args[$name] ?? null;
+            $consumed[$param] = true;
+            $consumed[$name] = true;
+
+            if (($parameter['required'] ?? false) && ($value === null || $value === '')) {
+                throw new RuntimeException($param.' is required.');
+            }
+
+            if ($value !== null && $value !== '') {
+                $path = str_replace('{'.$name.'}', rawurlencode((string) $value), $path);
+            } elseif (($parameter['required'] ?? false) === false) {
+                $path = str_replace('/{'.$name.'}', '', $path);
+                $path = str_replace('{'.$name.'}', '', $path);
+            }
+        }
+
+        if (str_contains($path, '{')) {
+            throw new RuntimeException('Missing required Raindrop.io path parameter.');
+        }
+
+        if (($definition['request_body'] ?? false) === true) {
+            foreach ($args as $key => $value) {
+                if (!isset($consumed[$key])) {
+                    $payload[$key] = $value;
+                }
+            }
+        } else {
+            foreach ($args as $key => $value) {
+                if (!isset($consumed[$key])) {
+                    $query[$key] = $value;
+                }
+            }
+        }
+
+        return [$path, $query, $payload];
     }
 
     /**
-     * Get a single collection by ID.
+     * Dispatch an authenticated Raindrop.io request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON or multipart body fields.
+     * @return array<string, mixed>
      */
-    public function getCollection(int $id): array
+    private function request(string $method, string $path, array $query = [], array $payload = [], ?string $contentType = null): array
     {
-        return $this->request('GET', '/collection/' . $id);
-    }
+        $response = $this->rawRequest($method, $path, $query, $payload, $contentType);
 
-    /**
-     * Make an API request and return parsed JSON.
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+        return $this->decodeResponse($response);
     }
 
     /**
      * Make a raw HTTP request to the Raindrop.io API.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON or multipart body fields.
+     *
+     * @throws RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $payload = [], ?string $contentType = null): Response
     {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Raindrop.io access token is not configured.');
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Raindrop.io access token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $http = Http::withToken($this->accessToken)->acceptJson()->timeout(30);
+        $options = [];
+        if ($query !== []) {
+            $options['query'] = $query;
+        }
+
+        if ($contentType === 'multipart/form-data') {
+            $http = $http->asMultipart();
+            $options['multipart'] = $this->multipartPayload($payload);
+        } elseif ($payload !== []) {
+            $options['json'] = $payload;
+        }
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $response = $http->send(strtoupper($method), $this->baseUrl.$path, $options);
+        } catch (\Throwable $e) {
+            Log::error("Raindrop.io API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            throw new RuntimeException('Failed to connect to Raindrop.io API: '.$e->getMessage());
+        }
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+        if (!$response->successful()) {
+            $this->throwApiError($method, $path, $response);
+        }
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Raindrop API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Raindrop API endpoint not available (HTTP {$response->status()}). The URL may be incorrect.");
+        return $response;
+    }
+
+    /**
+     * Shape payload values for Laravel's multipart request option.
+     *
+     * @param  array<string, mixed>  $payload  Multipart field values.
+     * @return list<array{name: string, contents: mixed, filename?: string}>
+     */
+    private function multipartPayload(array $payload): array
+    {
+        $parts = [];
+        foreach ($payload as $name => $value) {
+            if (is_array($value) && array_key_exists('contents', $value)) {
+                $part = ['name' => (string) $name, 'contents' => $value['contents']];
+                if (isset($value['filename'])) {
+                    $part['filename'] = (string) $value['filename'];
                 }
+                $parts[] = $part;
 
-                $error = $response->json('errorMessage') ?? $response->json('error') ?? $body;
-                Log::error("Raindrop API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Raindrop API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                continue;
             }
 
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Raindrop API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Raindrop API: {$e->getMessage()}");
+            $parts[] = [
+                'name' => (string) $name,
+                'contents' => is_array($value) ? json_encode($value) : $value,
+            ];
         }
+
+        return $parts;
+    }
+
+    /**
+     * Throw a normalized Raindrop.io API error.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $json = $response->json();
+        $message = is_array($json)
+            ? (string) ($json['errorMessage'] ?? $json['error'] ?? $json['message'] ?? '')
+            : trim($response->body());
+
+        Log::error("Raindrop.io API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        throw new RuntimeException('Raindrop.io API error ('.$response->status().'): '.($message !== '' ? $message : 'Unexpected API error.'));
+    }
+
+    /**
+     * Decode JSON, text, or empty Raindrop.io responses.
+     *
+     * @return array<string, mixed>
+     */
+    private function decodeResponse(Response $response): array
+    {
+        $body = trim($response->body());
+        if ($body === '' || $body === 'null') {
+            return ['success' => true, 'status' => $response->status()];
+        }
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['value' => $body, 'status' => $response->status()];
     }
 }

@@ -5,8 +5,19 @@ namespace OpenCompany\Integrations\QuickBase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Quickbase REST API.
+ *
+ * Handles user-token authentication, realm headers, request dispatch, and error
+ * handling for apps, tables, fields, records, reports, and relationships.
+ */
 class QuickBaseService
 {
+    /**
+     * @param  string  $accessToken  Quickbase user token.
+     * @param  string  $realmHostname  Quickbase realm hostname.
+     * @param  string  $baseUrl  Base URL for the Quickbase REST API.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $realmHostname = '',
@@ -27,6 +38,69 @@ class QuickBaseService
     {
         return $this->realmHostname;
     }
+
+    // ── Apps ───────────────────────────────────────────────
+
+    /**
+     * List apps available to the authenticated user.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as name, limit, or offset.
+     * @return array<string, mixed>
+     */
+    public function listApps(array $params = []): array
+    {
+        return $this->request('GET', '/apps', $params);
+    }
+
+    /**
+     * Get details for a specific app.
+     *
+     * @param  string  $appId  The application ID.
+     * @return array<string, mixed>
+     */
+    public function getApp(string $appId): array
+    {
+        return $this->request('GET', '/apps/' . urlencode($appId));
+    }
+
+    /**
+     * Create a new Quickbase app.
+     *
+     * @param  array<string, mixed>  $body  App creation payload.
+     * @return array<string, mixed>
+     */
+    public function createApp(array $body): array
+    {
+        return $this->request('POST', '/apps', $body);
+    }
+
+    /**
+     * Copy an existing Quickbase app.
+     *
+     * @param  string  $appId  The source app ID.
+     * @param  array<string, mixed>  $body  Copy options.
+     * @return array<string, mixed>
+     */
+    public function copyApp(string $appId, array $body = []): array
+    {
+        return $this->request('POST', '/apps/' . urlencode($appId) . '/copy', $body);
+    }
+
+    /**
+     * Delete an app.
+     *
+     * @param  string  $appId  The application ID.
+     * @param  string|null  $name  Optional app name confirmation required by some realms.
+     * @return array<string, mixed>
+     */
+    public function deleteApp(string $appId, ?string $name = null): array
+    {
+        $body = $name !== null && $name !== '' ? ['name' => $name] : [];
+
+        return $this->request('DELETE', '/apps/' . urlencode($appId), $body);
+    }
+
+    // ── Tables ─────────────────────────────────────────────
 
     /**
      * List all tables in an application.
@@ -51,6 +125,106 @@ class QuickBaseService
     {
         return $this->request('GET', '/tables/' . urlencode($tableId));
     }
+
+    /**
+     * Create a table in an app.
+     *
+     * @param  string  $appId  The application ID.
+     * @param  array<string, mixed>  $body  Table creation payload.
+     * @return array<string, mixed>
+     */
+    public function createTable(string $appId, array $body): array
+    {
+        return $this->request('POST', '/tables', $body, ['appId' => $appId]);
+    }
+
+    /**
+     * Update table metadata.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  array<string, mixed>  $body  Table attributes to update.
+     * @return array<string, mixed>
+     */
+    public function updateTable(string $tableId, array $body): array
+    {
+        return $this->request('POST', '/tables/' . urlencode($tableId), $body);
+    }
+
+    /**
+     * Delete a table.
+     *
+     * @param  string  $tableId  The table ID.
+     * @return array<string, mixed>
+     */
+    public function deleteTable(string $tableId): array
+    {
+        return $this->request('DELETE', '/tables/' . urlencode($tableId));
+    }
+
+    // ── Fields ─────────────────────────────────────────────
+
+    /**
+     * List fields in a table.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  array<string, mixed>  $params  Query parameters such as includeFieldPerms.
+     * @return array<string, mixed>
+     */
+    public function listFields(string $tableId, array $params = []): array
+    {
+        return $this->request('GET', '/fields', $params, ['tableId' => $tableId]);
+    }
+
+    /**
+     * Get field details.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  int  $fieldId  The field ID.
+     * @return array<string, mixed>
+     */
+    public function getField(string $tableId, int $fieldId): array
+    {
+        return $this->request('GET', '/fields/' . $fieldId, [], ['tableId' => $tableId]);
+    }
+
+    /**
+     * Create a field in a table.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  array<string, mixed>  $body  Field creation payload.
+     * @return array<string, mixed>
+     */
+    public function createField(string $tableId, array $body): array
+    {
+        return $this->request('POST', '/fields', $body, ['tableId' => $tableId]);
+    }
+
+    /**
+     * Update field properties.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  int  $fieldId  The field ID.
+     * @param  array<string, mixed>  $body  Field properties to update.
+     * @return array<string, mixed>
+     */
+    public function updateField(string $tableId, int $fieldId, array $body): array
+    {
+        return $this->request('POST', '/fields/' . $fieldId, $body, ['tableId' => $tableId]);
+    }
+
+    /**
+     * Delete a field.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  int  $fieldId  The field ID.
+     * @return array<string, mixed>
+     */
+    public function deleteField(string $tableId, int $fieldId): array
+    {
+        return $this->request('DELETE', '/fields/' . $fieldId, [], ['tableId' => $tableId]);
+    }
+
+    // ── Records ────────────────────────────────────────────
 
     /**
      * Query records from a table.
@@ -122,6 +296,121 @@ class QuickBaseService
     }
 
     /**
+     * Upsert one or more records.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  array<int, array<string, mixed>>  $data  Record data array.
+     * @param  int|null  $mergeFieldId  Optional merge field ID.
+     * @param  array<int, int>  $fieldsToReturn  Optional field IDs to return.
+     * @return array<string, mixed>
+     */
+    public function upsertRecords(string $tableId, array $data, ?int $mergeFieldId = null, array $fieldsToReturn = []): array
+    {
+        $body = [
+            'to' => $tableId,
+            'data' => $data,
+        ];
+
+        if ($mergeFieldId !== null) {
+            $body['mergeFieldId'] = $mergeFieldId;
+        }
+
+        if ($fieldsToReturn !== []) {
+            $body['fieldsToReturn'] = $fieldsToReturn;
+        }
+
+        return $this->request('POST', '/records', $body);
+    }
+
+    /**
+     * Delete records matching a Quickbase where clause.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  string  $where  Quickbase query expression.
+     * @return array<string, mixed>
+     */
+    public function deleteRecords(string $tableId, string $where): array
+    {
+        return $this->request('DELETE', '/records', [
+            'from' => $tableId,
+            'where' => $where,
+        ]);
+    }
+
+    // ── Reports and relationships ─────────────────────────
+
+    /**
+     * List reports for a table.
+     *
+     * @param  string  $tableId  The table ID.
+     * @return array<string, mixed>
+     */
+    public function listReports(string $tableId): array
+    {
+        return $this->request('GET', '/reports', [], ['tableId' => $tableId]);
+    }
+
+    /**
+     * Get report metadata.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  string  $reportId  The report ID.
+     * @return array<string, mixed>
+     */
+    public function getReport(string $tableId, string $reportId): array
+    {
+        return $this->request('GET', '/reports/' . urlencode($reportId), [], ['tableId' => $tableId]);
+    }
+
+    /**
+     * Run a report.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  string  $reportId  The report ID.
+     * @param  array<string, mixed>  $body  Report run options.
+     * @return array<string, mixed>
+     */
+    public function runReport(string $tableId, string $reportId, array $body = []): array
+    {
+        return $this->request('POST', '/reports/' . urlencode($reportId) . '/run', $body, ['tableId' => $tableId]);
+    }
+
+    /**
+     * List relationships for a table.
+     *
+     * @param  string  $tableId  The table ID.
+     * @return array<string, mixed>
+     */
+    public function listRelationships(string $tableId): array
+    {
+        return $this->request('GET', '/tables/' . urlencode($tableId) . '/relationships');
+    }
+
+    /**
+     * Create a table relationship.
+     *
+     * @param  string  $tableId  The parent table ID.
+     * @param  array<string, mixed>  $body  Relationship creation payload.
+     * @return array<string, mixed>
+     */
+    public function createRelationship(string $tableId, array $body): array
+    {
+        return $this->request('POST', '/tables/' . urlencode($tableId) . '/relationships', $body);
+    }
+
+    /**
+     * Delete a table relationship.
+     *
+     * @param  string  $tableId  The table ID.
+     * @param  int  $relationshipId  The relationship ID.
+     * @return array<string, mixed>
+     */
+    public function deleteRelationship(string $tableId, int $relationshipId): array
+    {
+        return $this->request('DELETE', '/tables/' . urlencode($tableId) . '/relationships/' . $relationshipId);
+    }
+
+    /**
      * Get the currently authenticated user.
      *
      * @return array<string, mixed>
@@ -129,6 +418,46 @@ class QuickBaseService
     public function getCurrentUser(): array
     {
         return $this->request('GET', '/user');
+    }
+
+    // ── Generic API ────────────────────────────────────────
+
+    /**
+     * Call a documented Quickbase REST API GET endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /v1.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Call a documented Quickbase REST API POST endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /v1.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $body, $query);
+    }
+
+    /**
+     * Call a documented Quickbase REST API DELETE endpoint.
+     *
+     * @param  string  $path  Endpoint path relative to /v1.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $body, $query);
     }
 
     /**
@@ -203,5 +532,22 @@ class QuickBaseService
             ]);
             throw new \RuntimeException("Failed to connect to QuickBase API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a user-supplied path for generic REST helpers.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+        $path = preg_replace('#^https?://[^/]+/v1#', '', $path) ?? $path;
+        $path = preg_replace('#^/v1#', '', $path) ?? $path;
+        $path = '/' . ltrim($path, '/');
+
+        if ($path === '/') {
+            throw new \InvalidArgumentException('A Quickbase API path is required.');
+        }
+
+        return $path;
     }
 }

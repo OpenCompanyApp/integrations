@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: accelo_create_ticket
+ * Create an Accelo issue, also known as a ticket.
  *
- * Creates a new support ticket in Accelo with a title and body,
+ * Creates a support issue in Accelo with a title and description,
  * optionally associated with a contract and priority level.
  */
 class AcceloCreateTicket implements Tool
 {
+    /**
+     * @param  AcceloService  $service  The Accelo API client.
+     */
     public function __construct(
         private AcceloService $service,
     ) {}
@@ -25,7 +28,7 @@ class AcceloCreateTicket implements Tool
 
     public function description(): string
     {
-        return 'Create a new support ticket in Accelo. Requires a title and body. Optionally associate with a contract and set priority.';
+        return 'Create a new support issue, also known as a ticket, in Accelo. Requires a title and body. Optionally associate with a contract and set priority.';
     }
 
     public function parameters(): array
@@ -34,10 +37,15 @@ class AcceloCreateTicket implements Tool
             'title' => ['type' => 'string', 'required' => true, 'description' => 'The ticket title or subject.'],
             'body' => ['type' => 'string', 'required' => true, 'description' => 'The ticket description or body content.'],
             'contract_id' => ['type' => 'integer', 'description' => 'Optional contract ID to associate with the ticket.'],
-            'priority' => ['type' => 'integer', 'description' => 'Priority level (e.g. 1–5, where 1 is highest).'],
+            'priority' => ['type' => 'integer', 'description' => 'Issue priority ID.'],
         ];
     }
 
+    /**
+     * Create an Accelo issue.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -1,0 +1,3897 @@
+{
+  "source": "https://docs.confluent.io/cloud/current/openapi.yaml",
+  "service": "Confluent Cloud APIs",
+  "version": "",
+  "operation_count": 486,
+  "generated_package": "confluent",
+  "operations": [
+    {
+      "operation_id": "listIamV2ApiKeys",
+      "tool": "confluent_list_iam_v2_api_keys",
+      "class": "ConfluentListIAMV2APIKeys",
+      "http_method": "GET",
+      "path": "/iam/v2/api-keys",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2ApiKey",
+      "tool": "confluent_create_iam_v2_api_key",
+      "class": "ConfluentCreateIAMV2APIKey",
+      "http_method": "POST",
+      "path": "/iam/v2/api-keys",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2ApiKey",
+      "tool": "confluent_get_iam_v2_api_key",
+      "class": "ConfluentGetIAMV2APIKey",
+      "http_method": "GET",
+      "path": "/iam/v2/api-keys/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2ApiKey",
+      "tool": "confluent_update_iam_v2_api_key",
+      "class": "ConfluentUpdateIAMV2APIKey",
+      "http_method": "PATCH",
+      "path": "/iam/v2/api-keys/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2ApiKey",
+      "tool": "confluent_delete_iam_v2_api_key",
+      "class": "ConfluentDeleteIAMV2APIKey",
+      "http_method": "DELETE",
+      "path": "/iam/v2/api-keys/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listOrgV2Environments",
+      "tool": "confluent_list_environments",
+      "class": "ConfluentListEnvironments",
+      "http_method": "GET",
+      "path": "/org/v2/environments",
+      "type": "read"
+    },
+    {
+      "operation_id": "createOrgV2Environment",
+      "tool": "confluent_create_org_v2_environment",
+      "class": "ConfluentCreateOrgV2Environment",
+      "http_method": "POST",
+      "path": "/org/v2/environments",
+      "type": "write"
+    },
+    {
+      "operation_id": "getOrgV2Environment",
+      "tool": "confluent_get_org_v2_environment",
+      "class": "ConfluentGetOrgV2Environment",
+      "http_method": "GET",
+      "path": "/org/v2/environments/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateOrgV2Environment",
+      "tool": "confluent_update_org_v2_environment",
+      "class": "ConfluentUpdateOrgV2Environment",
+      "http_method": "PATCH",
+      "path": "/org/v2/environments/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteOrgV2Environment",
+      "tool": "confluent_delete_org_v2_environment",
+      "class": "ConfluentDeleteOrgV2Environment",
+      "http_method": "DELETE",
+      "path": "/org/v2/environments/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listOrgV2Organizations",
+      "tool": "confluent_list_org_v2_organizations",
+      "class": "ConfluentListOrgV2Organizations",
+      "http_method": "GET",
+      "path": "/org/v2/organizations",
+      "type": "read"
+    },
+    {
+      "operation_id": "getOrgV2Organization",
+      "tool": "confluent_get_org_v2_organization",
+      "class": "ConfluentGetOrgV2Organization",
+      "http_method": "GET",
+      "path": "/org/v2/organizations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateOrgV2Organization",
+      "tool": "confluent_update_org_v2_organization",
+      "class": "ConfluentUpdateOrgV2Organization",
+      "http_method": "PATCH",
+      "path": "/org/v2/organizations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2Users",
+      "tool": "confluent_list_iam_v2_users",
+      "class": "ConfluentListIAMV2Users",
+      "http_method": "GET",
+      "path": "/iam/v2/users",
+      "type": "read"
+    },
+    {
+      "operation_id": "getIamV2User",
+      "tool": "confluent_get_iam_v2_user",
+      "class": "ConfluentGetIAMV2User",
+      "http_method": "GET",
+      "path": "/iam/v2/users/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2User",
+      "tool": "confluent_update_iam_v2_user",
+      "class": "ConfluentUpdateIAMV2User",
+      "http_method": "PATCH",
+      "path": "/iam/v2/users/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2User",
+      "tool": "confluent_delete_iam_v2_user",
+      "class": "ConfluentDeleteIAMV2User",
+      "http_method": "DELETE",
+      "path": "/iam/v2/users/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "update_auth_typeIamV2User",
+      "tool": "confluent_update_auth_type_iam_v2_user",
+      "class": "ConfluentUpdateAuthTypeIAMV2User",
+      "http_method": "PATCH",
+      "path": "/iam/v2/users/{id}/auth",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2ServiceAccounts",
+      "tool": "confluent_list_iam_v2_service_accounts",
+      "class": "ConfluentListIAMV2ServiceAccounts",
+      "http_method": "GET",
+      "path": "/iam/v2/service-accounts",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2ServiceAccount",
+      "tool": "confluent_create_iam_v2_service_account",
+      "class": "ConfluentCreateIAMV2ServiceAccount",
+      "http_method": "POST",
+      "path": "/iam/v2/service-accounts",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2ServiceAccount",
+      "tool": "confluent_get_iam_v2_service_account",
+      "class": "ConfluentGetIAMV2ServiceAccount",
+      "http_method": "GET",
+      "path": "/iam/v2/service-accounts/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2ServiceAccount",
+      "tool": "confluent_update_iam_v2_service_account",
+      "class": "ConfluentUpdateIAMV2ServiceAccount",
+      "http_method": "PATCH",
+      "path": "/iam/v2/service-accounts/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2ServiceAccount",
+      "tool": "confluent_delete_iam_v2_service_account",
+      "class": "ConfluentDeleteIAMV2ServiceAccount",
+      "http_method": "DELETE",
+      "path": "/iam/v2/service-accounts/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2Invitations",
+      "tool": "confluent_list_iam_v2_invitations",
+      "class": "ConfluentListIAMV2Invitations",
+      "http_method": "GET",
+      "path": "/iam/v2/invitations",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2Invitation",
+      "tool": "confluent_create_iam_v2_invitation",
+      "class": "ConfluentCreateIAMV2Invitation",
+      "http_method": "POST",
+      "path": "/iam/v2/invitations",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2Invitation",
+      "tool": "confluent_get_iam_v2_invitation",
+      "class": "ConfluentGetIAMV2Invitation",
+      "http_method": "GET",
+      "path": "/iam/v2/invitations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteIamV2Invitation",
+      "tool": "confluent_delete_iam_v2_invitation",
+      "class": "ConfluentDeleteIAMV2Invitation",
+      "http_method": "DELETE",
+      "path": "/iam/v2/invitations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2IpGroups",
+      "tool": "confluent_list_iam_v2_ip_groups",
+      "class": "ConfluentListIAMV2IPGroups",
+      "http_method": "GET",
+      "path": "/iam/v2/ip-groups",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2IpGroup",
+      "tool": "confluent_create_iam_v2_ip_group",
+      "class": "ConfluentCreateIAMV2IPGroup",
+      "http_method": "POST",
+      "path": "/iam/v2/ip-groups",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2IpGroup",
+      "tool": "confluent_get_iam_v2_ip_group",
+      "class": "ConfluentGetIAMV2IPGroup",
+      "http_method": "GET",
+      "path": "/iam/v2/ip-groups/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2IpGroup",
+      "tool": "confluent_update_iam_v2_ip_group",
+      "class": "ConfluentUpdateIAMV2IPGroup",
+      "http_method": "PATCH",
+      "path": "/iam/v2/ip-groups/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2IpGroup",
+      "tool": "confluent_delete_iam_v2_ip_group",
+      "class": "ConfluentDeleteIAMV2IPGroup",
+      "http_method": "DELETE",
+      "path": "/iam/v2/ip-groups/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2IpFilters",
+      "tool": "confluent_list_iam_v2_ip_filters",
+      "class": "ConfluentListIAMV2IPFilters",
+      "http_method": "GET",
+      "path": "/iam/v2/ip-filters",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2IpFilter",
+      "tool": "confluent_create_iam_v2_ip_filter",
+      "class": "ConfluentCreateIAMV2IPFilter",
+      "http_method": "POST",
+      "path": "/iam/v2/ip-filters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2IpFilter",
+      "tool": "confluent_get_iam_v2_ip_filter",
+      "class": "ConfluentGetIAMV2IPFilter",
+      "http_method": "GET",
+      "path": "/iam/v2/ip-filters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2IpFilter",
+      "tool": "confluent_update_iam_v2_ip_filter",
+      "class": "ConfluentUpdateIAMV2IPFilter",
+      "http_method": "PATCH",
+      "path": "/iam/v2/ip-filters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2IpFilter",
+      "tool": "confluent_delete_iam_v2_ip_filter",
+      "class": "ConfluentDeleteIAMV2IPFilter",
+      "http_method": "DELETE",
+      "path": "/iam/v2/ip-filters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2IpFilterSummary",
+      "tool": "confluent_get_iam_v2_ip_filter_summary",
+      "class": "ConfluentGetIAMV2IPFilterSummary",
+      "http_method": "GET",
+      "path": "/iam/v2/ip-filter-summary",
+      "type": "read"
+    },
+    {
+      "operation_id": "listIamV2RoleBindings",
+      "tool": "confluent_list_iam_v2_role_bindings",
+      "class": "ConfluentListIAMV2RoleBindings",
+      "http_method": "GET",
+      "path": "/iam/v2/role-bindings",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2RoleBinding",
+      "tool": "confluent_create_iam_v2_role_binding",
+      "class": "ConfluentCreateIAMV2RoleBinding",
+      "http_method": "POST",
+      "path": "/iam/v2/role-bindings",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2RoleBinding",
+      "tool": "confluent_get_iam_v2_role_binding",
+      "class": "ConfluentGetIAMV2RoleBinding",
+      "http_method": "GET",
+      "path": "/iam/v2/role-bindings/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteIamV2RoleBinding",
+      "tool": "confluent_delete_iam_v2_role_binding",
+      "class": "ConfluentDeleteIAMV2RoleBinding",
+      "http_method": "DELETE",
+      "path": "/iam/v2/role-bindings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNotificationsV1Subscriptions",
+      "tool": "confluent_list_notifications_v1_subscriptions",
+      "class": "ConfluentListNotificationsV1Subscriptions",
+      "http_method": "GET",
+      "path": "/notifications/v1/subscriptions",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNotificationsV1Subscription",
+      "tool": "confluent_create_notifications_v1_subscription",
+      "class": "ConfluentCreateNotificationsV1Subscription",
+      "http_method": "POST",
+      "path": "/notifications/v1/subscriptions",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNotificationsV1Subscription",
+      "tool": "confluent_get_notifications_v1_subscription",
+      "class": "ConfluentGetNotificationsV1Subscription",
+      "http_method": "GET",
+      "path": "/notifications/v1/subscriptions/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNotificationsV1Subscription",
+      "tool": "confluent_update_notifications_v1_subscription",
+      "class": "ConfluentUpdateNotificationsV1Subscription",
+      "http_method": "PATCH",
+      "path": "/notifications/v1/subscriptions/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNotificationsV1Subscription",
+      "tool": "confluent_delete_notifications_v1_subscription",
+      "class": "ConfluentDeleteNotificationsV1Subscription",
+      "http_method": "DELETE",
+      "path": "/notifications/v1/subscriptions/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNotificationsV1Integrations",
+      "tool": "confluent_list_notifications_v1_integrations",
+      "class": "ConfluentListNotificationsV1Integrations",
+      "http_method": "GET",
+      "path": "/notifications/v1/integrations",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNotificationsV1Integration",
+      "tool": "confluent_create_notifications_v1_integration",
+      "class": "ConfluentCreateNotificationsV1Integration",
+      "http_method": "POST",
+      "path": "/notifications/v1/integrations",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNotificationsV1Integration",
+      "tool": "confluent_get_notifications_v1_integration",
+      "class": "ConfluentGetNotificationsV1Integration",
+      "http_method": "GET",
+      "path": "/notifications/v1/integrations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNotificationsV1Integration",
+      "tool": "confluent_update_notifications_v1_integration",
+      "class": "ConfluentUpdateNotificationsV1Integration",
+      "http_method": "PATCH",
+      "path": "/notifications/v1/integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNotificationsV1Integration",
+      "tool": "confluent_delete_notifications_v1_integration",
+      "class": "ConfluentDeleteNotificationsV1Integration",
+      "http_method": "DELETE",
+      "path": "/notifications/v1/integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "testNotificationsV1Integration",
+      "tool": "confluent_test_notifications_v1_integration",
+      "class": "ConfluentTestNotificationsV1Integration",
+      "http_method": "POST",
+      "path": "/notifications/v1/integrations:test",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNotificationsV1NotificationType",
+      "tool": "confluent_get_notifications_v1_notification_type",
+      "class": "ConfluentGetNotificationsV1NotificationType",
+      "http_method": "GET",
+      "path": "/notifications/v1/notification-types/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listNotificationsV1NotificationTypes",
+      "tool": "confluent_list_notifications_v1_notification_types",
+      "class": "ConfluentListNotificationsV1NotificationTypes",
+      "http_method": "GET",
+      "path": "/notifications/v1/notification-types",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNotificationsV1ResourcePreference",
+      "tool": "confluent_create_notifications_v1_resource_preference",
+      "class": "ConfluentCreateNotificationsV1ResourcePreference",
+      "http_method": "POST",
+      "path": "/notifications/v1/resource-preferences",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNotificationsV1ResourcePreference",
+      "tool": "confluent_get_notifications_v1_resource_preference",
+      "class": "ConfluentGetNotificationsV1ResourcePreference",
+      "http_method": "GET",
+      "path": "/notifications/v1/resource-preferences/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNotificationsV1ResourcePreference",
+      "tool": "confluent_update_notifications_v1_resource_preference",
+      "class": "ConfluentUpdateNotificationsV1ResourcePreference",
+      "http_method": "PATCH",
+      "path": "/notifications/v1/resource-preferences/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNotificationsV1ResourcePreference",
+      "tool": "confluent_delete_notifications_v1_resource_preference",
+      "class": "ConfluentDeleteNotificationsV1ResourcePreference",
+      "http_method": "DELETE",
+      "path": "/notifications/v1/resource-preferences/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNotificationsV1ResourcePreferenceByFilter",
+      "tool": "confluent_get_notifications_v1_resource_preference_by_filter",
+      "class": "ConfluentGetNotificationsV1ResourcePreferenceByFilter",
+      "http_method": "GET",
+      "path": "/notifications/v1/resource-preferences:lookup",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNotificationsV1ResourceSubscription",
+      "tool": "confluent_create_notifications_v1_resource_subscription",
+      "class": "ConfluentCreateNotificationsV1ResourceSubscription",
+      "http_method": "POST",
+      "path": "/notifications/v1/resource-subscriptions",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNotificationsV1ResourceSubscription",
+      "tool": "confluent_get_notifications_v1_resource_subscription",
+      "class": "ConfluentGetNotificationsV1ResourceSubscription",
+      "http_method": "GET",
+      "path": "/notifications/v1/resource-subscriptions/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNotificationsV1ResourceSubscription",
+      "tool": "confluent_update_notifications_v1_resource_subscription",
+      "class": "ConfluentUpdateNotificationsV1ResourceSubscription",
+      "http_method": "PATCH",
+      "path": "/notifications/v1/resource-subscriptions/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNotificationsV1ResourceSubscription",
+      "tool": "confluent_delete_notifications_v1_resource_subscription",
+      "class": "ConfluentDeleteNotificationsV1ResourceSubscription",
+      "http_method": "DELETE",
+      "path": "/notifications/v1/resource-subscriptions/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNotificationsV1ResourceSubscriptionsByFilter",
+      "tool": "confluent_list_notifications_v1_resource_subscriptions_by_filter",
+      "class": "ConfluentListNotificationsV1ResourceSubscriptionsByFilter",
+      "http_method": "GET",
+      "path": "/notifications/v1/resource-subscriptions:lookup",
+      "type": "read"
+    },
+    {
+      "operation_id": "listCmkV2Clusters",
+      "tool": "confluent_list_clusters",
+      "class": "ConfluentListClusters",
+      "http_method": "GET",
+      "path": "/cmk/v2/clusters",
+      "type": "read"
+    },
+    {
+      "operation_id": "createCmkV2Cluster",
+      "tool": "confluent_create_cmk_v2_cluster",
+      "class": "ConfluentCreateCMKV2Cluster",
+      "http_method": "POST",
+      "path": "/cmk/v2/clusters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getCmkV2Cluster",
+      "tool": "confluent_get_cmk_v2_cluster",
+      "class": "ConfluentGetCMKV2Cluster",
+      "http_method": "GET",
+      "path": "/cmk/v2/clusters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateCmkV2Cluster",
+      "tool": "confluent_update_cmk_v2_cluster",
+      "class": "ConfluentUpdateCMKV2Cluster",
+      "http_method": "PATCH",
+      "path": "/cmk/v2/clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteCmkV2Cluster",
+      "tool": "confluent_delete_cmk_v2_cluster",
+      "class": "ConfluentDeleteCMKV2Cluster",
+      "http_method": "DELETE",
+      "path": "/cmk/v2/clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKsqldbcmV2Clusters",
+      "tool": "confluent_list_ksqldbcm_v2_clusters",
+      "class": "ConfluentListKsqldbcmV2Clusters",
+      "http_method": "GET",
+      "path": "/ksqldbcm/v2/clusters",
+      "type": "read"
+    },
+    {
+      "operation_id": "createKsqldbcmV2Cluster",
+      "tool": "confluent_create_ksqldbcm_v2_cluster",
+      "class": "ConfluentCreateKsqldbcmV2Cluster",
+      "http_method": "POST",
+      "path": "/ksqldbcm/v2/clusters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKsqldbcmV2Cluster",
+      "tool": "confluent_get_ksqldbcm_v2_cluster",
+      "class": "ConfluentGetKsqldbcmV2Cluster",
+      "http_method": "GET",
+      "path": "/ksqldbcm/v2/clusters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteKsqldbcmV2Cluster",
+      "tool": "confluent_delete_ksqldbcm_v2_cluster",
+      "class": "ConfluentDeleteKsqldbcmV2Cluster",
+      "http_method": "DELETE",
+      "path": "/ksqldbcm/v2/clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listConnectv1Connectors",
+      "tool": "confluent_list_connectv1_connectors",
+      "class": "ConfluentListConnectv1Connectors",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors",
+      "type": "read"
+    },
+    {
+      "operation_id": "createConnectv1Connector",
+      "tool": "confluent_create_connectv1_connector",
+      "class": "ConfluentCreateConnectv1Connector",
+      "http_method": "POST",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors",
+      "type": "write"
+    },
+    {
+      "operation_id": "listConnectv1ConnectorsWithExpansions",
+      "tool": "confluent_list_connectv1_connectors_with_expansions",
+      "class": "ConfluentListConnectv1ConnectorsWithExpansions",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors?expand=info,status,id",
+      "type": "read"
+    },
+    {
+      "operation_id": "getConnectv1ConnectorConfig",
+      "tool": "confluent_get_connectv1_connector_config",
+      "class": "ConfluentGetConnectv1ConnectorConfig",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/config",
+      "type": "read"
+    },
+    {
+      "operation_id": "createOrUpdateConnectv1ConnectorConfig",
+      "tool": "confluent_create_or_update_connectv1_connector_config",
+      "class": "ConfluentCreateOrUpdateConnectv1ConnectorConfig",
+      "http_method": "PUT",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/config",
+      "type": "write"
+    },
+    {
+      "operation_id": "readConnectv1Connector",
+      "tool": "confluent_read_connectv1_connector",
+      "class": "ConfluentReadConnectv1Connector",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteConnectv1Connector",
+      "tool": "confluent_delete_connectv1_connector",
+      "class": "ConfluentDeleteConnectv1Connector",
+      "http_method": "DELETE",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "pauseConnectv1Connector",
+      "tool": "confluent_pause_connectv1_connector",
+      "class": "ConfluentPauseConnectv1Connector",
+      "http_method": "PUT",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "resumeConnectv1Connector",
+      "tool": "confluent_resume_connectv1_connector",
+      "class": "ConfluentResumeConnectv1Connector",
+      "http_method": "PUT",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/resume",
+      "type": "write"
+    },
+    {
+      "operation_id": "restartConnectv1Connector",
+      "tool": "confluent_restart_connectv1_connector",
+      "class": "ConfluentRestartConnectv1Connector",
+      "http_method": "POST",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/restart",
+      "type": "write"
+    },
+    {
+      "operation_id": "readConnectv1ConnectorStatus",
+      "tool": "confluent_read_connectv1_connector_status",
+      "class": "ConfluentReadConnectv1ConnectorStatus",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/status",
+      "type": "read"
+    },
+    {
+      "operation_id": "listConnectv1ConnectorTasks",
+      "tool": "confluent_list_connectv1_connector_tasks",
+      "class": "ConfluentListConnectv1ConnectorTasks",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/tasks",
+      "type": "read"
+    },
+    {
+      "operation_id": "listConnectv1ConnectorPlugins",
+      "tool": "confluent_list_connectv1_connector_plugins",
+      "class": "ConfluentListConnectv1ConnectorPlugins",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connector-plugins",
+      "type": "read"
+    },
+    {
+      "operation_id": "validateConnectv1ConnectorPlugin",
+      "tool": "confluent_validate_connectv1_connector_plugin",
+      "class": "ConfluentValidateConnectv1ConnectorPlugin",
+      "http_method": "PUT",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connector-plugins/{plugin_name}/config/validate",
+      "type": "write"
+    },
+    {
+      "operation_id": "translateConnectv1ConnectorPlugin",
+      "tool": "confluent_translate_connectv1_connector_plugin",
+      "class": "ConfluentTranslateConnectv1ConnectorPlugin",
+      "http_method": "PUT",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connector-plugins/{plugin_name}/config/translate?mask_sensitive=true",
+      "type": "write"
+    },
+    {
+      "operation_id": "getConnectv1ConnectorOffsets",
+      "tool": "confluent_get_connectv1_connector_offsets",
+      "class": "ConfluentGetConnectv1ConnectorOffsets",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/offsets",
+      "type": "read"
+    },
+    {
+      "operation_id": "alterConnectv1ConnectorOffsetsRequest",
+      "tool": "confluent_alter_connectv1_connector_offsets_request",
+      "class": "ConfluentAlterConnectv1ConnectorOffsetsRequest",
+      "http_method": "POST",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/offsets/request",
+      "type": "write"
+    },
+    {
+      "operation_id": "getConnectv1ConnectorOffsetsRequestStatus",
+      "tool": "confluent_get_connectv1_connector_offsets_request_status",
+      "class": "ConfluentGetConnectv1ConnectorOffsetsRequestStatus",
+      "http_method": "GET",
+      "path": "/connect/v1/environments/{environment_id}/clusters/{kafka_cluster_id}/connectors/{connector_name}/offsets/request/status",
+      "type": "read"
+    },
+    {
+      "operation_id": "listConnectV1CustomConnectorPlugins",
+      "tool": "confluent_list_connect_v1_custom_connector_plugins",
+      "class": "ConfluentListConnectV1CustomConnectorPlugins",
+      "http_method": "GET",
+      "path": "/connect/v1/custom-connector-plugins",
+      "type": "read"
+    },
+    {
+      "operation_id": "createConnectV1CustomConnectorPlugin",
+      "tool": "confluent_create_connect_v1_custom_connector_plugin",
+      "class": "ConfluentCreateConnectV1CustomConnectorPlugin",
+      "http_method": "POST",
+      "path": "/connect/v1/custom-connector-plugins",
+      "type": "write"
+    },
+    {
+      "operation_id": "getConnectV1CustomConnectorPlugin",
+      "tool": "confluent_get_connect_v1_custom_connector_plugin",
+      "class": "ConfluentGetConnectV1CustomConnectorPlugin",
+      "http_method": "GET",
+      "path": "/connect/v1/custom-connector-plugins/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateConnectV1CustomConnectorPlugin",
+      "tool": "confluent_update_connect_v1_custom_connector_plugin",
+      "class": "ConfluentUpdateConnectV1CustomConnectorPlugin",
+      "http_method": "PATCH",
+      "path": "/connect/v1/custom-connector-plugins/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteConnectV1CustomConnectorPlugin",
+      "tool": "confluent_delete_connect_v1_custom_connector_plugin",
+      "class": "ConfluentDeleteConnectV1CustomConnectorPlugin",
+      "http_method": "DELETE",
+      "path": "/connect/v1/custom-connector-plugins/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "presigned-upload-urlConnectV1PresignedUrl",
+      "tool": "confluent_presigned_upload_url_connect_v1_presigned_url",
+      "class": "ConfluentPresignedUploadUrlConnectV1PresignedUrl",
+      "http_method": "POST",
+      "path": "/connect/v1/presigned-upload-url",
+      "type": "write"
+    },
+    {
+      "operation_id": "listConnectV1CustomConnectorRuntimes",
+      "tool": "confluent_list_connect_v1_custom_connector_runtimes",
+      "class": "ConfluentListConnectV1CustomConnectorRuntimes",
+      "http_method": "GET",
+      "path": "/connect/v1/custom-connector-runtimes",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaCluster",
+      "tool": "confluent_get_cluster",
+      "class": "ConfluentGetCluster",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "batchCreateKafkaAcls",
+      "tool": "confluent_batch_create_kafka_acls",
+      "class": "ConfluentBatchCreateKafkaAcls",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/acls:batch",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKafkaAcls",
+      "tool": "confluent_get_kafka_acls",
+      "class": "ConfluentGetKafkaAcls",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/acls",
+      "type": "read"
+    },
+    {
+      "operation_id": "createKafkaAcls",
+      "tool": "confluent_create_kafka_acls",
+      "class": "ConfluentCreateKafkaAcls",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/acls",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaAcls",
+      "tool": "confluent_delete_kafka_acls",
+      "class": "ConfluentDeleteKafkaAcls",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/acls",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaClusterConfigs",
+      "tool": "confluent_list_kafka_cluster_configs",
+      "class": "ConfluentListKafkaClusterConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/broker-configs",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaClusterConfigs",
+      "tool": "confluent_update_kafka_cluster_configs",
+      "class": "ConfluentUpdateKafkaClusterConfigs",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/broker-configs:alter",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKafkaClusterConfig",
+      "tool": "confluent_get_kafka_cluster_config",
+      "class": "ConfluentGetKafkaClusterConfig",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/broker-configs/{name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaClusterConfig",
+      "tool": "confluent_update_kafka_cluster_config",
+      "class": "ConfluentUpdateKafkaClusterConfig",
+      "http_method": "PUT",
+      "path": "/kafka/v3/clusters/{cluster_id}/broker-configs/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaClusterConfig",
+      "tool": "confluent_delete_kafka_cluster_config",
+      "class": "ConfluentDeleteKafkaClusterConfig",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/broker-configs/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaConsumerGroups",
+      "tool": "confluent_list_kafka_consumer_groups",
+      "class": "ConfluentListKafkaConsumerGroups",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaConsumerGroup",
+      "tool": "confluent_get_kafka_consumer_group",
+      "class": "ConfluentGetKafkaConsumerGroup",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups/{consumer_group_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaConsumers",
+      "tool": "confluent_list_kafka_consumers",
+      "class": "ConfluentListKafkaConsumers",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups/{consumer_group_id}/consumers",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaConsumerGroupLagSummary",
+      "tool": "confluent_get_kafka_consumer_group_lag_summary",
+      "class": "ConfluentGetKafkaConsumerGroupLagSummary",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups/{consumer_group_id}/lag-summary",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaConsumerLags",
+      "tool": "confluent_list_kafka_consumer_lags",
+      "class": "ConfluentListKafkaConsumerLags",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups/{consumer_group_id}/lags",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaConsumerLag",
+      "tool": "confluent_get_kafka_consumer_lag",
+      "class": "ConfluentGetKafkaConsumerLag",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups/{consumer_group_id}/lags/{topic_name}/partitions/{partition_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaConsumer",
+      "tool": "confluent_get_kafka_consumer",
+      "class": "ConfluentGetKafkaConsumer",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/consumer-groups/{consumer_group_id}/consumers/{consumer_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaTopics",
+      "tool": "confluent_list_topics",
+      "class": "ConfluentListTopics",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics",
+      "type": "read"
+    },
+    {
+      "operation_id": "createKafkaTopic",
+      "tool": "confluent_create_topic",
+      "class": "ConfluentCreateTopic",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKafkaTopic",
+      "tool": "confluent_get_topic",
+      "class": "ConfluentGetTopic",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updatePartitionCountKafkaTopic",
+      "tool": "confluent_update_partition_count_kafka_topic",
+      "class": "ConfluentUpdatePartitionCountKafkaTopic",
+      "http_method": "PATCH",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaTopic",
+      "tool": "confluent_delete_kafka_topic",
+      "class": "ConfluentDeleteKafkaTopic",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaTopicConfigs",
+      "tool": "confluent_list_kafka_topic_configs",
+      "class": "ConfluentListKafkaTopicConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/configs",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaTopicConfigBatch",
+      "tool": "confluent_update_kafka_topic_config_batch",
+      "class": "ConfluentUpdateKafkaTopicConfigBatch",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/configs:alter",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKafkaTopicConfig",
+      "tool": "confluent_get_kafka_topic_config",
+      "class": "ConfluentGetKafkaTopicConfig",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/configs/{name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaTopicConfig",
+      "tool": "confluent_update_kafka_topic_config",
+      "class": "ConfluentUpdateKafkaTopicConfig",
+      "http_method": "PUT",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/configs/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaTopicConfig",
+      "tool": "confluent_delete_kafka_topic_config",
+      "class": "ConfluentDeleteKafkaTopicConfig",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/configs/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaPartitions",
+      "tool": "confluent_list_kafka_partitions",
+      "class": "ConfluentListKafkaPartitions",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/partitions",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaPartition",
+      "tool": "confluent_get_kafka_partition",
+      "class": "ConfluentGetKafkaPartition",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/partitions/{partition_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaAllTopicConfigs",
+      "tool": "confluent_list_kafka_all_topic_configs",
+      "class": "ConfluentListKafkaAllTopicConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/-/configs",
+      "type": "read"
+    },
+    {
+      "operation_id": "produceRecord",
+      "tool": "confluent_produce_record",
+      "class": "ConfluentProduceRecord",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/records",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaLinks",
+      "tool": "confluent_list_kafka_links",
+      "class": "ConfluentListKafkaLinks",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links",
+      "type": "read"
+    },
+    {
+      "operation_id": "createKafkaLink",
+      "tool": "confluent_create_kafka_link",
+      "class": "ConfluentCreateKafkaLink",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKafkaLink",
+      "tool": "confluent_get_kafka_link",
+      "class": "ConfluentGetKafkaLink",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteKafkaLink",
+      "tool": "confluent_delete_kafka_link",
+      "class": "ConfluentDeleteKafkaLink",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaDefaultTopicConfigs",
+      "tool": "confluent_list_kafka_default_topic_configs",
+      "class": "ConfluentListKafkaDefaultTopicConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/topics/{topic_name}/default-configs",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaLinkConfigs",
+      "tool": "confluent_list_kafka_link_configs",
+      "class": "ConfluentListKafkaLinkConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/configs",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaLinkConfigs",
+      "tool": "confluent_get_kafka_link_configs",
+      "class": "ConfluentGetKafkaLinkConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/configs/{config_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaLinkConfig",
+      "tool": "confluent_update_kafka_link_config",
+      "class": "ConfluentUpdateKafkaLinkConfig",
+      "http_method": "PUT",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/configs/{config_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaLinkConfig",
+      "tool": "confluent_delete_kafka_link_config",
+      "class": "ConfluentDeleteKafkaLinkConfig",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/configs/{config_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaLinkConfigBatch",
+      "tool": "confluent_update_kafka_link_config_batch",
+      "class": "ConfluentUpdateKafkaLinkConfigBatch",
+      "http_method": "PUT",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/configs:alter",
+      "type": "write"
+    },
+    {
+      "operation_id": "createKafkaMirrorTopic",
+      "tool": "confluent_create_kafka_mirror_topic",
+      "class": "ConfluentCreateKafkaMirrorTopic",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaMirrorTopicsUnderLink",
+      "tool": "confluent_list_kafka_mirror_topics_under_link",
+      "class": "ConfluentListKafkaMirrorTopicsUnderLink",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaMirrorTopics",
+      "tool": "confluent_list_kafka_mirror_topics",
+      "class": "ConfluentListKafkaMirrorTopics",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/-/mirrors",
+      "type": "read"
+    },
+    {
+      "operation_id": "readKafkaMirrorTopic",
+      "tool": "confluent_read_kafka_mirror_topic",
+      "class": "ConfluentReadKafkaMirrorTopic",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors/{mirror_topic_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsPromote",
+      "tool": "confluent_update_kafka_mirror_topics_promote",
+      "class": "ConfluentUpdateKafkaMirrorTopicsPromote",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:promote",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsFailover",
+      "tool": "confluent_update_kafka_mirror_topics_failover",
+      "class": "ConfluentUpdateKafkaMirrorTopicsFailover",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:failover",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsPause",
+      "tool": "confluent_update_kafka_mirror_topics_pause",
+      "class": "ConfluentUpdateKafkaMirrorTopicsPause",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsResume",
+      "tool": "confluent_update_kafka_mirror_topics_resume",
+      "class": "ConfluentUpdateKafkaMirrorTopicsResume",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:resume",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsReverseAndStartMirror",
+      "tool": "confluent_update_kafka_mirror_topics_reverse_and_start_mirror",
+      "class": "ConfluentUpdateKafkaMirrorTopicsReverseAndStartMirror",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:reverse-and-start-mirror",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsReverseAndPauseMirror",
+      "tool": "confluent_update_kafka_mirror_topics_reverse_and_pause_mirror",
+      "class": "ConfluentUpdateKafkaMirrorTopicsReverseAndPauseMirror",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:reverse-and-pause-mirror",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaMirrorTopicsTruncateAndRestoreMirror",
+      "tool": "confluent_update_kafka_mirror_topics_truncate_and_restore_mirror",
+      "class": "ConfluentUpdateKafkaMirrorTopicsTruncateAndRestoreMirror",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/links/{link_name}/mirrors:truncate-and-restore",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaShareGroups",
+      "tool": "confluent_list_kafka_share_groups",
+      "class": "ConfluentListKafkaShareGroups",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/share-groups",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaShareGroup",
+      "tool": "confluent_get_kafka_share_group",
+      "class": "ConfluentGetKafkaShareGroup",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/share-groups/{group_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteKafkaShareGroup",
+      "tool": "confluent_delete_kafka_share_group",
+      "class": "ConfluentDeleteKafkaShareGroup",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/share-groups/{group_id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaShareGroupConsumers",
+      "tool": "confluent_list_kafka_share_group_consumers",
+      "class": "ConfluentListKafkaShareGroupConsumers",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/share-groups/{group_id}/consumers",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaShareGroupConsumer",
+      "tool": "confluent_get_kafka_share_group_consumer",
+      "class": "ConfluentGetKafkaShareGroupConsumer",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/share-groups/{group_id}/consumers/{consumer_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaShareGroupConsumerAssignments",
+      "tool": "confluent_list_kafka_share_group_consumer_assignments",
+      "class": "ConfluentListKafkaShareGroupConsumerAssignments",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/share-groups/{group_id}/consumers/{consumer_id}/assignments",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaGroupConfigs",
+      "tool": "confluent_list_kafka_group_configs",
+      "class": "ConfluentListKafkaGroupConfigs",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/groups/{group_id}/configs",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaGroupConfig",
+      "tool": "confluent_get_kafka_group_config",
+      "class": "ConfluentGetKafkaGroupConfig",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/groups/{group_id}/configs/{name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaGroupConfig",
+      "tool": "confluent_update_kafka_group_config",
+      "class": "ConfluentUpdateKafkaGroupConfig",
+      "http_method": "PUT",
+      "path": "/kafka/v3/clusters/{cluster_id}/groups/{group_id}/configs/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaGroupConfig",
+      "tool": "confluent_delete_kafka_group_config",
+      "class": "ConfluentDeleteKafkaGroupConfig",
+      "http_method": "DELETE",
+      "path": "/kafka/v3/clusters/{cluster_id}/groups/{group_id}/configs/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateKafkaGroupConfigBatch",
+      "tool": "confluent_update_kafka_group_config_batch",
+      "class": "ConfluentUpdateKafkaGroupConfigBatch",
+      "http_method": "POST",
+      "path": "/kafka/v3/clusters/{cluster_id}/groups/{group_id}/configs:alter",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaStreamsGroups",
+      "tool": "confluent_list_kafka_streams_groups",
+      "class": "ConfluentListKafkaStreamsGroups",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroup",
+      "tool": "confluent_get_kafka_streams_group",
+      "class": "ConfluentGetKafkaStreamsGroup",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaStreamsGroupSubtopologies",
+      "tool": "confluent_list_kafka_streams_group_subtopologies",
+      "class": "ConfluentListKafkaStreamsGroupSubtopologies",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/subtopologies",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroupSubtopology",
+      "tool": "confluent_get_kafka_streams_group_subtopology",
+      "class": "ConfluentGetKafkaStreamsGroupSubtopology",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/subtopologies/{subtopology_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaStreamsGroupMembers",
+      "tool": "confluent_list_kafka_streams_group_members",
+      "class": "ConfluentListKafkaStreamsGroupMembers",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroupMember",
+      "tool": "confluent_get_kafka_streams_group_member",
+      "class": "ConfluentGetKafkaStreamsGroupMember",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroupMemberAssignments",
+      "tool": "confluent_get_kafka_streams_group_member_assignments",
+      "class": "ConfluentGetKafkaStreamsGroupMemberAssignments",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}/assignments",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroupMemberTargetAssignments",
+      "tool": "confluent_get_kafka_streams_group_member_target_assignments",
+      "class": "ConfluentGetKafkaStreamsGroupMemberTargetAssignments",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}/target-assignments",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaStreamsGroupMemberAssignmentTasks",
+      "tool": "confluent_list_kafka_streams_group_member_assignment_tasks",
+      "class": "ConfluentListKafkaStreamsGroupMemberAssignmentTasks",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}/assignments/{assignments_type}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listKafkaStreamsGroupMemberTargetAssignmentTasks",
+      "tool": "confluent_list_kafka_streams_group_member_target_assignment_tasks",
+      "class": "ConfluentListKafkaStreamsGroupMemberTargetAssignmentTasks",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}/target-assignments/{assignments_type}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroupMemberAssignmentTaskPartitions",
+      "tool": "confluent_get_kafka_streams_group_member_assignment_task_partitions",
+      "class": "ConfluentGetKafkaStreamsGroupMemberAssignmentTaskPartitions",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}/assignments/{assignments_type}/subtopologies/{subtopology_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKafkaStreamsGroupMemberTargetAssignmentTaskPartitions",
+      "tool": "confluent_get_kafka_streams_group_member_target_assignment_task_partitions",
+      "class": "ConfluentGetKafkaStreamsGroupMemberTargetAssignmentTaskPartitions",
+      "http_method": "GET",
+      "path": "/kafka/v3/clusters/{cluster_id}/streams-groups/{group_id}/members/{member_id}/target-assignments/{assignments_type}/subtopologies/{subtopology_id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listServiceQuotaV1AppliedQuotas",
+      "tool": "confluent_list_service_quota_v1_applied_quotas",
+      "class": "ConfluentListServiceQuotaV1AppliedQuotas",
+      "http_method": "GET",
+      "path": "/service-quota/v1/applied-quotas",
+      "type": "read"
+    },
+    {
+      "operation_id": "getServiceQuotaV1AppliedQuota",
+      "tool": "confluent_get_service_quota_v1_applied_quota",
+      "class": "ConfluentGetServiceQuotaV1AppliedQuota",
+      "http_method": "GET",
+      "path": "/service-quota/v1/applied-quotas/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listServiceQuotaV1Scopes",
+      "tool": "confluent_list_service_quota_v1_scopes",
+      "class": "ConfluentListServiceQuotaV1Scopes",
+      "http_method": "GET",
+      "path": "/service-quota/v1/scopes",
+      "type": "read"
+    },
+    {
+      "operation_id": "getServiceQuotaV1Scope",
+      "tool": "confluent_get_service_quota_v1_scope",
+      "class": "ConfluentGetServiceQuotaV1Scope",
+      "http_method": "GET",
+      "path": "/service-quota/v1/scopes/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listPartnerV2Entitlements",
+      "tool": "confluent_list_partner_v2_entitlements",
+      "class": "ConfluentListPartnerV2Entitlements",
+      "http_method": "GET",
+      "path": "/partner/v2/entitlements",
+      "type": "read"
+    },
+    {
+      "operation_id": "createPartnerV2Entitlement",
+      "tool": "confluent_create_partner_v2_entitlement",
+      "class": "ConfluentCreatePartnerV2Entitlement",
+      "http_method": "POST",
+      "path": "/partner/v2/entitlements",
+      "type": "write"
+    },
+    {
+      "operation_id": "getPartnerV2Entitlement",
+      "tool": "confluent_get_partner_v2_entitlement",
+      "class": "ConfluentGetPartnerV2Entitlement",
+      "http_method": "GET",
+      "path": "/partner/v2/entitlements/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listSrcmV2Regions",
+      "tool": "confluent_list_srcm_v2_regions",
+      "class": "ConfluentListSRCMV2Regions",
+      "http_method": "GET",
+      "path": "/srcm/v2/regions",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSrcmV2Region",
+      "tool": "confluent_get_srcm_v2_region",
+      "class": "ConfluentGetSRCMV2Region",
+      "http_method": "GET",
+      "path": "/srcm/v2/regions/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listSrcmV2Clusters",
+      "tool": "confluent_list_srcm_v2_clusters",
+      "class": "ConfluentListSRCMV2Clusters",
+      "http_method": "GET",
+      "path": "/srcm/v2/clusters",
+      "type": "read"
+    },
+    {
+      "operation_id": "createSrcmV2Cluster",
+      "tool": "confluent_create_srcm_v2_cluster",
+      "class": "ConfluentCreateSRCMV2Cluster",
+      "http_method": "POST",
+      "path": "/srcm/v2/clusters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSrcmV2Cluster",
+      "tool": "confluent_get_srcm_v2_cluster",
+      "class": "ConfluentGetSRCMV2Cluster",
+      "http_method": "GET",
+      "path": "/srcm/v2/clusters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateSrcmV2Cluster",
+      "tool": "confluent_update_srcm_v2_cluster",
+      "class": "ConfluentUpdateSRCMV2Cluster",
+      "http_method": "PATCH",
+      "path": "/srcm/v2/clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteSrcmV2Cluster",
+      "tool": "confluent_delete_srcm_v2_cluster",
+      "class": "ConfluentDeleteSRCMV2Cluster",
+      "http_method": "DELETE",
+      "path": "/srcm/v2/clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listSrcmV3Clusters",
+      "tool": "confluent_list_srcm_v3_clusters",
+      "class": "ConfluentListSRCMV3Clusters",
+      "http_method": "GET",
+      "path": "/srcm/v3/clusters",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSrcmV3Cluster",
+      "tool": "confluent_get_srcm_v3_cluster",
+      "class": "ConfluentGetSRCMV3Cluster",
+      "http_method": "GET",
+      "path": "/srcm/v3/clusters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getClusterConfig",
+      "tool": "confluent_get_cluster_config",
+      "class": "ConfluentGetClusterConfig",
+      "http_method": "GET",
+      "path": "/clusterconfig",
+      "type": "read"
+    },
+    {
+      "operation_id": "testCompatibilityBySubjectName",
+      "tool": "confluent_test_compatibility_by_subject_name",
+      "class": "ConfluentTestCompatibilityBySubjectName",
+      "http_method": "POST",
+      "path": "/compatibility/subjects/{subject}/versions/{version}",
+      "type": "write"
+    },
+    {
+      "operation_id": "testCompatibilityForSubject",
+      "tool": "confluent_test_compatibility_for_subject",
+      "class": "ConfluentTestCompatibilityForSubject",
+      "http_method": "POST",
+      "path": "/compatibility/subjects/{subject}/versions",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSubjectLevelConfig",
+      "tool": "confluent_get_subject_level_config",
+      "class": "ConfluentGetSubjectLevelConfig",
+      "http_method": "GET",
+      "path": "/config/{subject}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateSubjectLevelConfig",
+      "tool": "confluent_update_subject_level_config",
+      "class": "ConfluentUpdateSubjectLevelConfig",
+      "http_method": "PUT",
+      "path": "/config/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteSubjectConfig",
+      "tool": "confluent_delete_subject_config",
+      "class": "ConfluentDeleteSubjectConfig",
+      "http_method": "DELETE",
+      "path": "/config/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getTopLevelConfig",
+      "tool": "confluent_get_top_level_config",
+      "class": "ConfluentGetTopLevelConfig",
+      "http_method": "GET",
+      "path": "/config",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateTopLevelConfig",
+      "tool": "confluent_update_top_level_config",
+      "class": "ConfluentUpdateTopLevelConfig",
+      "http_method": "PUT",
+      "path": "/config",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteTopLevelConfig",
+      "tool": "confluent_delete_top_level_config",
+      "class": "ConfluentDeleteTopLevelConfig",
+      "http_method": "DELETE",
+      "path": "/config",
+      "type": "write"
+    },
+    {
+      "operation_id": "listExporters",
+      "tool": "confluent_list_exporters",
+      "class": "ConfluentListExporters",
+      "http_method": "GET",
+      "path": "/exporters",
+      "type": "read"
+    },
+    {
+      "operation_id": "registerExporter",
+      "tool": "confluent_register_exporter",
+      "class": "ConfluentRegisterExporter",
+      "http_method": "POST",
+      "path": "/exporters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getExporterInfoByName",
+      "tool": "confluent_get_exporter_info_by_name",
+      "class": "ConfluentGetExporterInfoByName",
+      "http_method": "GET",
+      "path": "/exporters/{name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateExporterInfo",
+      "tool": "confluent_update_exporter_info",
+      "class": "ConfluentUpdateExporterInfo",
+      "http_method": "PUT",
+      "path": "/exporters/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteExporter",
+      "tool": "confluent_delete_exporter",
+      "class": "ConfluentDeleteExporter",
+      "http_method": "DELETE",
+      "path": "/exporters/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getExporterStatusByName",
+      "tool": "confluent_get_exporter_status_by_name",
+      "class": "ConfluentGetExporterStatusByName",
+      "http_method": "GET",
+      "path": "/exporters/{name}/status",
+      "type": "read"
+    },
+    {
+      "operation_id": "getExporterConfigByName",
+      "tool": "confluent_get_exporter_config_by_name",
+      "class": "ConfluentGetExporterConfigByName",
+      "http_method": "GET",
+      "path": "/exporters/{name}/config",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateExporterConfigByName",
+      "tool": "confluent_update_exporter_config_by_name",
+      "class": "ConfluentUpdateExporterConfigByName",
+      "http_method": "PUT",
+      "path": "/exporters/{name}/config",
+      "type": "write"
+    },
+    {
+      "operation_id": "pauseExporterByName",
+      "tool": "confluent_pause_exporter_by_name",
+      "class": "ConfluentPauseExporterByName",
+      "http_method": "PUT",
+      "path": "/exporters/{name}/pause",
+      "type": "write"
+    },
+    {
+      "operation_id": "resetExporterByName",
+      "tool": "confluent_reset_exporter_by_name",
+      "class": "ConfluentResetExporterByName",
+      "http_method": "PUT",
+      "path": "/exporters/{name}/reset",
+      "type": "write"
+    },
+    {
+      "operation_id": "resumeExporterByName",
+      "tool": "confluent_resume_exporter_by_name",
+      "class": "ConfluentResumeExporterByName",
+      "http_method": "PUT",
+      "path": "/exporters/{name}/resume",
+      "type": "write"
+    },
+    {
+      "operation_id": "listContexts",
+      "tool": "confluent_list_contexts",
+      "class": "ConfluentListContexts",
+      "http_method": "GET",
+      "path": "/contexts",
+      "type": "read"
+    },
+    {
+      "operation_id": "getMode",
+      "tool": "confluent_get_mode",
+      "class": "ConfluentGetMode",
+      "http_method": "GET",
+      "path": "/mode/{subject}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateMode",
+      "tool": "confluent_update_mode",
+      "class": "ConfluentUpdateMode",
+      "http_method": "PUT",
+      "path": "/mode/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteSubjectMode",
+      "tool": "confluent_delete_subject_mode",
+      "class": "ConfluentDeleteSubjectMode",
+      "http_method": "DELETE",
+      "path": "/mode/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getTopLevelMode",
+      "tool": "confluent_get_top_level_mode",
+      "class": "ConfluentGetTopLevelMode",
+      "http_method": "GET",
+      "path": "/mode",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateTopLevelMode",
+      "tool": "confluent_update_top_level_mode",
+      "class": "ConfluentUpdateTopLevelMode",
+      "http_method": "PUT",
+      "path": "/mode",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSchema",
+      "tool": "confluent_get_schema",
+      "class": "ConfluentGetSchema",
+      "http_method": "GET",
+      "path": "/schemas/ids/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSchemaOnly",
+      "tool": "confluent_get_schema_only",
+      "class": "ConfluentGetSchemaOnly",
+      "http_method": "GET",
+      "path": "/schemas/ids/{id}/schema",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSchemaTypes",
+      "tool": "confluent_get_schema_types",
+      "class": "ConfluentGetSchemaTypes",
+      "http_method": "GET",
+      "path": "/schemas/types",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSchemas",
+      "tool": "confluent_get_schemas",
+      "class": "ConfluentGetSchemas",
+      "http_method": "GET",
+      "path": "/schemas",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSubjects",
+      "tool": "confluent_get_subjects",
+      "class": "ConfluentGetSubjects",
+      "http_method": "GET",
+      "path": "/schemas/ids/{id}/subjects",
+      "type": "read"
+    },
+    {
+      "operation_id": "getVersions",
+      "tool": "confluent_get_versions",
+      "class": "ConfluentGetVersions",
+      "http_method": "GET",
+      "path": "/schemas/ids/{id}/versions",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSchemaByVersion",
+      "tool": "confluent_get_schema_by_version",
+      "class": "ConfluentGetSchemaByVersion",
+      "http_method": "GET",
+      "path": "/subjects/{subject}/versions/{version}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteSchemaVersion",
+      "tool": "confluent_delete_schema_version",
+      "class": "ConfluentDeleteSchemaVersion",
+      "http_method": "DELETE",
+      "path": "/subjects/{subject}/versions/{version}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getReferencedBy",
+      "tool": "confluent_get_referenced_by",
+      "class": "ConfluentGetReferencedBy",
+      "http_method": "GET",
+      "path": "/subjects/{subject}/versions/{version}/referencedby",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSchemaOnly_1",
+      "tool": "confluent_get_schema_only_1",
+      "class": "ConfluentGetSchemaOnly1",
+      "http_method": "GET",
+      "path": "/subjects/{subject}/versions/{version}/schema",
+      "type": "read"
+    },
+    {
+      "operation_id": "listVersions",
+      "tool": "confluent_list_versions",
+      "class": "ConfluentListVersions",
+      "http_method": "GET",
+      "path": "/subjects/{subject}/versions",
+      "type": "read"
+    },
+    {
+      "operation_id": "register",
+      "tool": "confluent_register",
+      "class": "ConfluentRegister",
+      "http_method": "POST",
+      "path": "/subjects/{subject}/versions",
+      "type": "write"
+    },
+    {
+      "operation_id": "lookUpSchemaUnderSubject",
+      "tool": "confluent_look_up_schema_under_subject",
+      "class": "ConfluentLookUpSchemaUnderSubject",
+      "http_method": "POST",
+      "path": "/subjects/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteSubject",
+      "tool": "confluent_delete_subject",
+      "class": "ConfluentDeleteSubject",
+      "http_method": "DELETE",
+      "path": "/subjects/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "list",
+      "tool": "confluent_list",
+      "class": "ConfluentList",
+      "http_method": "GET",
+      "path": "/subjects",
+      "type": "read"
+    },
+    {
+      "operation_id": "getLatestWithMetadata",
+      "tool": "confluent_get_latest_with_metadata",
+      "class": "ConfluentGetLatestWithMetadata",
+      "http_method": "GET",
+      "path": "/subjects/{subject}/metadata",
+      "type": "read"
+    },
+    {
+      "operation_id": "getKekNames",
+      "tool": "confluent_get_kek_names",
+      "class": "ConfluentGetKekNames",
+      "http_method": "GET",
+      "path": "/dek-registry/v1/keks",
+      "type": "read"
+    },
+    {
+      "operation_id": "createKek",
+      "tool": "confluent_create_kek",
+      "class": "ConfluentCreateKek",
+      "http_method": "POST",
+      "path": "/dek-registry/v1/keks",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKek",
+      "tool": "confluent_delete_kek",
+      "class": "ConfluentDeleteKek",
+      "http_method": "DELETE",
+      "path": "/dek-registry/v1/keks/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKek",
+      "tool": "confluent_get_kek",
+      "class": "ConfluentGetKek",
+      "http_method": "GET",
+      "path": "/dek-registry/v1/keks/{name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "putKek",
+      "tool": "confluent_put_kek",
+      "class": "ConfluentPutKek",
+      "http_method": "PUT",
+      "path": "/dek-registry/v1/keks/{name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "undeleteKek",
+      "tool": "confluent_undelete_kek",
+      "class": "ConfluentUndeleteKek",
+      "http_method": "POST",
+      "path": "/dek-registry/v1/keks/{name}/undelete",
+      "type": "write"
+    },
+    {
+      "operation_id": "testKek",
+      "tool": "confluent_test_kek",
+      "class": "ConfluentTestKek",
+      "http_method": "POST",
+      "path": "/dek-registry/v1/keks/{name}/test",
+      "type": "write"
+    },
+    {
+      "operation_id": "getDekSubjects",
+      "tool": "confluent_get_dek_subjects",
+      "class": "ConfluentGetDekSubjects",
+      "http_method": "GET",
+      "path": "/dek-registry/v1/keks/{name}/deks",
+      "type": "read"
+    },
+    {
+      "operation_id": "createDek",
+      "tool": "confluent_create_dek",
+      "class": "ConfluentCreateDek",
+      "http_method": "POST",
+      "path": "/dek-registry/v1/keks/{name}/deks",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteDekVersions",
+      "tool": "confluent_delete_dek_versions",
+      "class": "ConfluentDeleteDekVersions",
+      "http_method": "DELETE",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getDek",
+      "tool": "confluent_get_dek",
+      "class": "ConfluentGetDek",
+      "http_method": "GET",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteDekVersion",
+      "tool": "confluent_delete_dek_version",
+      "class": "ConfluentDeleteDekVersion",
+      "http_method": "DELETE",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}/versions/{version}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getDekByVersion",
+      "tool": "confluent_get_dek_by_version",
+      "class": "ConfluentGetDekByVersion",
+      "http_method": "GET",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}/versions/{version}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getDekVersions",
+      "tool": "confluent_get_dek_versions",
+      "class": "ConfluentGetDekVersions",
+      "http_method": "GET",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}/versions",
+      "type": "read"
+    },
+    {
+      "operation_id": "undeleteDekVersion",
+      "tool": "confluent_undelete_dek_version",
+      "class": "ConfluentUndeleteDekVersion",
+      "http_method": "POST",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}/versions/{version}/undelete",
+      "type": "write"
+    },
+    {
+      "operation_id": "undeleteDekVersions",
+      "tool": "confluent_undelete_dek_versions",
+      "class": "ConfluentUndeleteDekVersions",
+      "http_method": "POST",
+      "path": "/dek-registry/v1/keks/{name}/deks/{subject}/undelete",
+      "type": "write"
+    },
+    {
+      "operation_id": "getAllBusinessMetadataDefs",
+      "tool": "confluent_get_all_business_metadata_defs",
+      "class": "ConfluentGetAllBusinessMetadataDefs",
+      "http_method": "GET",
+      "path": "/catalog/v1/types/businessmetadatadefs",
+      "type": "read"
+    },
+    {
+      "operation_id": "createBusinessMetadataDefs",
+      "tool": "confluent_create_business_metadata_defs",
+      "class": "ConfluentCreateBusinessMetadataDefs",
+      "http_method": "POST",
+      "path": "/catalog/v1/types/businessmetadatadefs",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateBusinessMetadataDefs",
+      "tool": "confluent_update_business_metadata_defs",
+      "class": "ConfluentUpdateBusinessMetadataDefs",
+      "http_method": "PUT",
+      "path": "/catalog/v1/types/businessmetadatadefs",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteBusinessMetadataDef",
+      "tool": "confluent_delete_business_metadata_def",
+      "class": "ConfluentDeleteBusinessMetadataDef",
+      "http_method": "DELETE",
+      "path": "/catalog/v1/types/businessmetadatadefs/{bmName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getBusinessMetadataDefByName",
+      "tool": "confluent_get_business_metadata_def_by_name",
+      "class": "ConfluentGetBusinessMetadataDefByName",
+      "http_method": "GET",
+      "path": "/catalog/v1/types/businessmetadatadefs/{bmName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "createBusinessMetadata",
+      "tool": "confluent_create_business_metadata",
+      "class": "ConfluentCreateBusinessMetadata",
+      "http_method": "POST",
+      "path": "/catalog/v1/entity/businessmetadata",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateBusinessMetadata",
+      "tool": "confluent_update_business_metadata",
+      "class": "ConfluentUpdateBusinessMetadata",
+      "http_method": "PUT",
+      "path": "/catalog/v1/entity/businessmetadata",
+      "type": "write"
+    },
+    {
+      "operation_id": "getBusinessMetadata",
+      "tool": "confluent_get_business_metadata",
+      "class": "ConfluentGetBusinessMetadata",
+      "http_method": "GET",
+      "path": "/catalog/v1/entity/type/{typeName}/name/{qualifiedName}/businessmetadata",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteBusinessMetadata",
+      "tool": "confluent_delete_business_metadata",
+      "class": "ConfluentDeleteBusinessMetadata",
+      "http_method": "DELETE",
+      "path": "/catalog/v1/entity/type/{typeName}/name/{qualifiedName}/businessmetadata/{bmName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateTags",
+      "tool": "confluent_update_tags",
+      "class": "ConfluentUpdateTags",
+      "http_method": "PUT",
+      "path": "/catalog/v1/entity/tags",
+      "type": "write"
+    },
+    {
+      "operation_id": "createTags",
+      "tool": "confluent_create_tags",
+      "class": "ConfluentCreateTags",
+      "http_method": "POST",
+      "path": "/catalog/v1/entity/tags",
+      "type": "write"
+    },
+    {
+      "operation_id": "getByUniqueAttributes",
+      "tool": "confluent_get_by_unique_attributes",
+      "class": "ConfluentGetByUniqueAttributes",
+      "http_method": "GET",
+      "path": "/catalog/v1/entity/type/{typeName}/name/{qualifiedName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "getTags",
+      "tool": "confluent_get_tags",
+      "class": "ConfluentGetTags",
+      "http_method": "GET",
+      "path": "/catalog/v1/entity/type/{typeName}/name/{qualifiedName}/tags",
+      "type": "read"
+    },
+    {
+      "operation_id": "partialEntityUpdate",
+      "tool": "confluent_partial_entity_update",
+      "class": "ConfluentPartialEntityUpdate",
+      "http_method": "PUT",
+      "path": "/catalog/v1/entity",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteTag",
+      "tool": "confluent_delete_tag",
+      "class": "ConfluentDeleteTag",
+      "http_method": "DELETE",
+      "path": "/catalog/v1/entity/type/{typeName}/name/{qualifiedName}/tags/{tagName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "searchUsingAttribute",
+      "tool": "confluent_search_using_attribute",
+      "class": "ConfluentSearchUsingAttribute",
+      "http_method": "GET",
+      "path": "/catalog/v1/search/attribute",
+      "type": "read"
+    },
+    {
+      "operation_id": "searchUsingBasic",
+      "tool": "confluent_search_using_basic",
+      "class": "ConfluentSearchUsingBasic",
+      "http_method": "GET",
+      "path": "/catalog/v1/search/basic",
+      "type": "read"
+    },
+    {
+      "operation_id": "getAllTagDefs",
+      "tool": "confluent_get_all_tag_defs",
+      "class": "ConfluentGetAllTagDefs",
+      "http_method": "GET",
+      "path": "/catalog/v1/types/tagdefs",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateTagDefs",
+      "tool": "confluent_update_tag_defs",
+      "class": "ConfluentUpdateTagDefs",
+      "http_method": "PUT",
+      "path": "/catalog/v1/types/tagdefs",
+      "type": "write"
+    },
+    {
+      "operation_id": "createTagDefs",
+      "tool": "confluent_create_tag_defs",
+      "class": "ConfluentCreateTagDefs",
+      "http_method": "POST",
+      "path": "/catalog/v1/types/tagdefs",
+      "type": "write"
+    },
+    {
+      "operation_id": "getTagDefByName",
+      "tool": "confluent_get_tag_def_by_name",
+      "class": "ConfluentGetTagDefByName",
+      "http_method": "GET",
+      "path": "/catalog/v1/types/tagdefs/{tagName}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteTagDef",
+      "tool": "confluent_delete_tag_def",
+      "class": "ConfluentDeleteTagDef",
+      "http_method": "DELETE",
+      "path": "/catalog/v1/types/tagdefs/{tagName}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listCdxV1ProviderSharedResources",
+      "tool": "confluent_list_cdx_v1_provider_shared_resources",
+      "class": "ConfluentListCdxV1ProviderSharedResources",
+      "http_method": "GET",
+      "path": "/cdx/v1/provider-shared-resources",
+      "type": "read"
+    },
+    {
+      "operation_id": "getCdxV1ProviderSharedResource",
+      "tool": "confluent_get_cdx_v1_provider_shared_resource",
+      "class": "ConfluentGetCdxV1ProviderSharedResource",
+      "http_method": "GET",
+      "path": "/cdx/v1/provider-shared-resources/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateCdxV1ProviderSharedResource",
+      "tool": "confluent_update_cdx_v1_provider_shared_resource",
+      "class": "ConfluentUpdateCdxV1ProviderSharedResource",
+      "http_method": "PATCH",
+      "path": "/cdx/v1/provider-shared-resources/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "upload_imageCdxV1ProviderSharedResource",
+      "tool": "confluent_upload_image_cdx_v1_provider_shared_resource",
+      "class": "ConfluentUploadImageCdxV1ProviderSharedResource",
+      "http_method": "POST",
+      "path": "/cdx/v1/provider-shared-resources/{id}/images/{file_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "view_imageCdxV1ProviderSharedResource",
+      "tool": "confluent_view_image_cdx_v1_provider_shared_resource",
+      "class": "ConfluentViewImageCdxV1ProviderSharedResource",
+      "http_method": "GET",
+      "path": "/cdx/v1/provider-shared-resources/{id}/images/{file_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "delete_imageCdxV1ProviderSharedResource",
+      "tool": "confluent_delete_image_cdx_v1_provider_shared_resource",
+      "class": "ConfluentDeleteImageCdxV1ProviderSharedResource",
+      "http_method": "DELETE",
+      "path": "/cdx/v1/provider-shared-resources/{id}/images/{file_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listCdxV1ProviderShares",
+      "tool": "confluent_list_cdx_v1_provider_shares",
+      "class": "ConfluentListCdxV1ProviderShares",
+      "http_method": "GET",
+      "path": "/cdx/v1/provider-shares",
+      "type": "read"
+    },
+    {
+      "operation_id": "createCdxV1ProviderShare",
+      "tool": "confluent_create_cdx_v1_provider_share",
+      "class": "ConfluentCreateCdxV1ProviderShare",
+      "http_method": "POST",
+      "path": "/cdx/v1/provider-shares",
+      "type": "write"
+    },
+    {
+      "operation_id": "getCdxV1ProviderShare",
+      "tool": "confluent_get_cdx_v1_provider_share",
+      "class": "ConfluentGetCdxV1ProviderShare",
+      "http_method": "GET",
+      "path": "/cdx/v1/provider-shares/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteCdxV1ProviderShare",
+      "tool": "confluent_delete_cdx_v1_provider_share",
+      "class": "ConfluentDeleteCdxV1ProviderShare",
+      "http_method": "DELETE",
+      "path": "/cdx/v1/provider-shares/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "resendCdxV1ProviderShare",
+      "tool": "confluent_resend_cdx_v1_provider_share",
+      "class": "ConfluentResendCdxV1ProviderShare",
+      "http_method": "POST",
+      "path": "/cdx/v1/provider-shares/{id}:resend",
+      "type": "write"
+    },
+    {
+      "operation_id": "listCdxV1ConsumerSharedResources",
+      "tool": "confluent_list_cdx_v1_consumer_shared_resources",
+      "class": "ConfluentListCdxV1ConsumerSharedResources",
+      "http_method": "GET",
+      "path": "/cdx/v1/consumer-shared-resources",
+      "type": "read"
+    },
+    {
+      "operation_id": "getCdxV1ConsumerSharedResource",
+      "tool": "confluent_get_cdx_v1_consumer_shared_resource",
+      "class": "ConfluentGetCdxV1ConsumerSharedResource",
+      "http_method": "GET",
+      "path": "/cdx/v1/consumer-shared-resources/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "imageCdxV1ConsumerSharedResource",
+      "tool": "confluent_image_cdx_v1_consumer_shared_resource",
+      "class": "ConfluentImageCdxV1ConsumerSharedResource",
+      "http_method": "GET",
+      "path": "/cdx/v1/consumer-shared-resources/{id}/images/{file_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "networkCdxV1ConsumerSharedResource",
+      "tool": "confluent_network_cdx_v1_consumer_shared_resource",
+      "class": "ConfluentNetworkCdxV1ConsumerSharedResource",
+      "http_method": "GET",
+      "path": "/cdx/v1/consumer-shared-resources/{id}:network",
+      "type": "read"
+    },
+    {
+      "operation_id": "listCdxV1ConsumerShares",
+      "tool": "confluent_list_cdx_v1_consumer_shares",
+      "class": "ConfluentListCdxV1ConsumerShares",
+      "http_method": "GET",
+      "path": "/cdx/v1/consumer-shares",
+      "type": "read"
+    },
+    {
+      "operation_id": "getCdxV1ConsumerShare",
+      "tool": "confluent_get_cdx_v1_consumer_share",
+      "class": "ConfluentGetCdxV1ConsumerShare",
+      "http_method": "GET",
+      "path": "/cdx/v1/consumer-shares/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteCdxV1ConsumerShare",
+      "tool": "confluent_delete_cdx_v1_consumer_share",
+      "class": "ConfluentDeleteCdxV1ConsumerShare",
+      "http_method": "DELETE",
+      "path": "/cdx/v1/consumer-shares/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "resourcesCdxV1SharedToken",
+      "tool": "confluent_resources_cdx_v1_shared_token",
+      "class": "ConfluentResourcesCdxV1SharedToken",
+      "http_method": "POST",
+      "path": "/cdx/v1/shared-tokens:resources",
+      "type": "write"
+    },
+    {
+      "operation_id": "redeemCdxV1SharedToken",
+      "tool": "confluent_redeem_cdx_v1_shared_token",
+      "class": "ConfluentRedeemCdxV1SharedToken",
+      "http_method": "POST",
+      "path": "/cdx/v1/shared-tokens:redeem",
+      "type": "write"
+    },
+    {
+      "operation_id": "getCdxV1OptIn",
+      "tool": "confluent_get_cdx_v1_opt_in",
+      "class": "ConfluentGetCdxV1OptIn",
+      "http_method": "GET",
+      "path": "/cdx/v1/opt-in",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateCdxV1OptIn",
+      "tool": "confluent_update_cdx_v1_opt_in",
+      "class": "ConfluentUpdateCdxV1OptIn",
+      "http_method": "PATCH",
+      "path": "/cdx/v1/opt-in",
+      "type": "write"
+    },
+    {
+      "operation_id": "getPartnerV2Organization",
+      "tool": "confluent_get_partner_v2_organization",
+      "class": "ConfluentGetPartnerV2Organization",
+      "http_method": "GET",
+      "path": "/partner/v2/organizations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listPartnerV2Organizations",
+      "tool": "confluent_list_partner_v2_organizations",
+      "class": "ConfluentListPartnerV2Organizations",
+      "http_method": "GET",
+      "path": "/partner/v2/organizations",
+      "type": "read"
+    },
+    {
+      "operation_id": "signup",
+      "tool": "confluent_signup",
+      "class": "ConfluentSignup",
+      "http_method": "POST",
+      "path": "/partner/v2/signup",
+      "type": "write"
+    },
+    {
+      "operation_id": "activateSignup",
+      "tool": "confluent_activate_signup",
+      "class": "ConfluentActivateSignup",
+      "http_method": "POST",
+      "path": "/partner/v2/signup/activate",
+      "type": "write"
+    },
+    {
+      "operation_id": "signupPartnerV2Link",
+      "tool": "confluent_signup_partner_v2_link",
+      "class": "ConfluentSignupPartnerV2Link",
+      "http_method": "POST",
+      "path": "/partner/v2/signup/link",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1Networks",
+      "tool": "confluent_list_networking_v1_networks",
+      "class": "ConfluentListNetworkingV1Networks",
+      "http_method": "GET",
+      "path": "/networking/v1/networks",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1Network",
+      "tool": "confluent_create_networking_v1_network",
+      "class": "ConfluentCreateNetworkingV1Network",
+      "http_method": "POST",
+      "path": "/networking/v1/networks",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1Network",
+      "tool": "confluent_get_networking_v1_network",
+      "class": "ConfluentGetNetworkingV1Network",
+      "http_method": "GET",
+      "path": "/networking/v1/networks/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1Network",
+      "tool": "confluent_update_networking_v1_network",
+      "class": "ConfluentUpdateNetworkingV1Network",
+      "http_method": "PATCH",
+      "path": "/networking/v1/networks/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1Network",
+      "tool": "confluent_delete_networking_v1_network",
+      "class": "ConfluentDeleteNetworkingV1Network",
+      "http_method": "DELETE",
+      "path": "/networking/v1/networks/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1Peerings",
+      "tool": "confluent_list_networking_v1_peerings",
+      "class": "ConfluentListNetworkingV1Peerings",
+      "http_method": "GET",
+      "path": "/networking/v1/peerings",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1Peering",
+      "tool": "confluent_create_networking_v1_peering",
+      "class": "ConfluentCreateNetworkingV1Peering",
+      "http_method": "POST",
+      "path": "/networking/v1/peerings",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1Peering",
+      "tool": "confluent_get_networking_v1_peering",
+      "class": "ConfluentGetNetworkingV1Peering",
+      "http_method": "GET",
+      "path": "/networking/v1/peerings/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1Peering",
+      "tool": "confluent_update_networking_v1_peering",
+      "class": "ConfluentUpdateNetworkingV1Peering",
+      "http_method": "PATCH",
+      "path": "/networking/v1/peerings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1Peering",
+      "tool": "confluent_delete_networking_v1_peering",
+      "class": "ConfluentDeleteNetworkingV1Peering",
+      "http_method": "DELETE",
+      "path": "/networking/v1/peerings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1TransitGatewayAttachments",
+      "tool": "confluent_list_networking_v1_transit_gateway_attachments",
+      "class": "ConfluentListNetworkingV1TransitGatewayAttachments",
+      "http_method": "GET",
+      "path": "/networking/v1/transit-gateway-attachments",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1TransitGatewayAttachment",
+      "tool": "confluent_create_networking_v1_transit_gateway_attachment",
+      "class": "ConfluentCreateNetworkingV1TransitGatewayAttachment",
+      "http_method": "POST",
+      "path": "/networking/v1/transit-gateway-attachments",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1TransitGatewayAttachment",
+      "tool": "confluent_get_networking_v1_transit_gateway_attachment",
+      "class": "ConfluentGetNetworkingV1TransitGatewayAttachment",
+      "http_method": "GET",
+      "path": "/networking/v1/transit-gateway-attachments/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1TransitGatewayAttachment",
+      "tool": "confluent_update_networking_v1_transit_gateway_attachment",
+      "class": "ConfluentUpdateNetworkingV1TransitGatewayAttachment",
+      "http_method": "PATCH",
+      "path": "/networking/v1/transit-gateway-attachments/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1TransitGatewayAttachment",
+      "tool": "confluent_delete_networking_v1_transit_gateway_attachment",
+      "class": "ConfluentDeleteNetworkingV1TransitGatewayAttachment",
+      "http_method": "DELETE",
+      "path": "/networking/v1/transit-gateway-attachments/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1PrivateLinkAccesses",
+      "tool": "confluent_list_networking_v1_private_link_accesses",
+      "class": "ConfluentListNetworkingV1PrivateLinkAccesses",
+      "http_method": "GET",
+      "path": "/networking/v1/private-link-accesses",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1PrivateLinkAccess",
+      "tool": "confluent_create_networking_v1_private_link_access",
+      "class": "ConfluentCreateNetworkingV1PrivateLinkAccess",
+      "http_method": "POST",
+      "path": "/networking/v1/private-link-accesses",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1PrivateLinkAccess",
+      "tool": "confluent_get_networking_v1_private_link_access",
+      "class": "ConfluentGetNetworkingV1PrivateLinkAccess",
+      "http_method": "GET",
+      "path": "/networking/v1/private-link-accesses/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1PrivateLinkAccess",
+      "tool": "confluent_update_networking_v1_private_link_access",
+      "class": "ConfluentUpdateNetworkingV1PrivateLinkAccess",
+      "http_method": "PATCH",
+      "path": "/networking/v1/private-link-accesses/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1PrivateLinkAccess",
+      "tool": "confluent_delete_networking_v1_private_link_access",
+      "class": "ConfluentDeleteNetworkingV1PrivateLinkAccess",
+      "http_method": "DELETE",
+      "path": "/networking/v1/private-link-accesses/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1NetworkLinkServices",
+      "tool": "confluent_list_networking_v1_network_link_services",
+      "class": "ConfluentListNetworkingV1NetworkLinkServices",
+      "http_method": "GET",
+      "path": "/networking/v1/network-link-services",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1NetworkLinkService",
+      "tool": "confluent_create_networking_v1_network_link_service",
+      "class": "ConfluentCreateNetworkingV1NetworkLinkService",
+      "http_method": "POST",
+      "path": "/networking/v1/network-link-services",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1NetworkLinkService",
+      "tool": "confluent_get_networking_v1_network_link_service",
+      "class": "ConfluentGetNetworkingV1NetworkLinkService",
+      "http_method": "GET",
+      "path": "/networking/v1/network-link-services/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1NetworkLinkService",
+      "tool": "confluent_update_networking_v1_network_link_service",
+      "class": "ConfluentUpdateNetworkingV1NetworkLinkService",
+      "http_method": "PATCH",
+      "path": "/networking/v1/network-link-services/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1NetworkLinkService",
+      "tool": "confluent_delete_networking_v1_network_link_service",
+      "class": "ConfluentDeleteNetworkingV1NetworkLinkService",
+      "http_method": "DELETE",
+      "path": "/networking/v1/network-link-services/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1NetworkLinkEndpoints",
+      "tool": "confluent_list_networking_v1_network_link_endpoints",
+      "class": "ConfluentListNetworkingV1NetworkLinkEndpoints",
+      "http_method": "GET",
+      "path": "/networking/v1/network-link-endpoints",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1NetworkLinkEndpoint",
+      "tool": "confluent_create_networking_v1_network_link_endpoint",
+      "class": "ConfluentCreateNetworkingV1NetworkLinkEndpoint",
+      "http_method": "POST",
+      "path": "/networking/v1/network-link-endpoints",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1NetworkLinkEndpoint",
+      "tool": "confluent_get_networking_v1_network_link_endpoint",
+      "class": "ConfluentGetNetworkingV1NetworkLinkEndpoint",
+      "http_method": "GET",
+      "path": "/networking/v1/network-link-endpoints/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1NetworkLinkEndpoint",
+      "tool": "confluent_update_networking_v1_network_link_endpoint",
+      "class": "ConfluentUpdateNetworkingV1NetworkLinkEndpoint",
+      "http_method": "PATCH",
+      "path": "/networking/v1/network-link-endpoints/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1NetworkLinkEndpoint",
+      "tool": "confluent_delete_networking_v1_network_link_endpoint",
+      "class": "ConfluentDeleteNetworkingV1NetworkLinkEndpoint",
+      "http_method": "DELETE",
+      "path": "/networking/v1/network-link-endpoints/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1NetworkLinkServiceAssociations",
+      "tool": "confluent_list_networking_v1_network_link_service_associations",
+      "class": "ConfluentListNetworkingV1NetworkLinkServiceAssociations",
+      "http_method": "GET",
+      "path": "/networking/v1/network-link-service-associations",
+      "type": "read"
+    },
+    {
+      "operation_id": "getNetworkingV1NetworkLinkServiceAssociation",
+      "tool": "confluent_get_networking_v1_network_link_service_association",
+      "class": "ConfluentGetNetworkingV1NetworkLinkServiceAssociation",
+      "http_method": "GET",
+      "path": "/networking/v1/network-link-service-associations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listNetworkingV1IpAddresses",
+      "tool": "confluent_list_networking_v1_ip_addresses",
+      "class": "ConfluentListNetworkingV1IPAddresses",
+      "http_method": "GET",
+      "path": "/networking/v1/ip-addresses",
+      "type": "read"
+    },
+    {
+      "operation_id": "listNetworkingV1PrivateLinkAttachments",
+      "tool": "confluent_list_networking_v1_private_link_attachments",
+      "class": "ConfluentListNetworkingV1PrivateLinkAttachments",
+      "http_method": "GET",
+      "path": "/networking/v1/private-link-attachments",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1PrivateLinkAttachment",
+      "tool": "confluent_create_networking_v1_private_link_attachment",
+      "class": "ConfluentCreateNetworkingV1PrivateLinkAttachment",
+      "http_method": "POST",
+      "path": "/networking/v1/private-link-attachments",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1PrivateLinkAttachment",
+      "tool": "confluent_get_networking_v1_private_link_attachment",
+      "class": "ConfluentGetNetworkingV1PrivateLinkAttachment",
+      "http_method": "GET",
+      "path": "/networking/v1/private-link-attachments/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1PrivateLinkAttachment",
+      "tool": "confluent_update_networking_v1_private_link_attachment",
+      "class": "ConfluentUpdateNetworkingV1PrivateLinkAttachment",
+      "http_method": "PATCH",
+      "path": "/networking/v1/private-link-attachments/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1PrivateLinkAttachment",
+      "tool": "confluent_delete_networking_v1_private_link_attachment",
+      "class": "ConfluentDeleteNetworkingV1PrivateLinkAttachment",
+      "http_method": "DELETE",
+      "path": "/networking/v1/private-link-attachments/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1PrivateLinkAttachmentConnections",
+      "tool": "confluent_list_networking_v1_private_link_attachment_connections",
+      "class": "ConfluentListNetworkingV1PrivateLinkAttachmentConnections",
+      "http_method": "GET",
+      "path": "/networking/v1/private-link-attachment-connections",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1PrivateLinkAttachmentConnection",
+      "tool": "confluent_create_networking_v1_private_link_attachment_connection",
+      "class": "ConfluentCreateNetworkingV1PrivateLinkAttachmentConnection",
+      "http_method": "POST",
+      "path": "/networking/v1/private-link-attachment-connections",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1PrivateLinkAttachmentConnection",
+      "tool": "confluent_get_networking_v1_private_link_attachment_connection",
+      "class": "ConfluentGetNetworkingV1PrivateLinkAttachmentConnection",
+      "http_method": "GET",
+      "path": "/networking/v1/private-link-attachment-connections/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1PrivateLinkAttachmentConnection",
+      "tool": "confluent_update_networking_v1_private_link_attachment_connection",
+      "class": "ConfluentUpdateNetworkingV1PrivateLinkAttachmentConnection",
+      "http_method": "PATCH",
+      "path": "/networking/v1/private-link-attachment-connections/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1PrivateLinkAttachmentConnection",
+      "tool": "confluent_delete_networking_v1_private_link_attachment_connection",
+      "class": "ConfluentDeleteNetworkingV1PrivateLinkAttachmentConnection",
+      "http_method": "DELETE",
+      "path": "/networking/v1/private-link-attachment-connections/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2IdentityProviders",
+      "tool": "confluent_list_iam_v2_identity_providers",
+      "class": "ConfluentListIAMV2IdentityProviders",
+      "http_method": "GET",
+      "path": "/iam/v2/identity-providers",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2IdentityProvider",
+      "tool": "confluent_create_iam_v2_identity_provider",
+      "class": "ConfluentCreateIAMV2IdentityProvider",
+      "http_method": "POST",
+      "path": "/iam/v2/identity-providers",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2IdentityProvider",
+      "tool": "confluent_get_iam_v2_identity_provider",
+      "class": "ConfluentGetIAMV2IdentityProvider",
+      "http_method": "GET",
+      "path": "/iam/v2/identity-providers/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2IdentityProvider",
+      "tool": "confluent_update_iam_v2_identity_provider",
+      "class": "ConfluentUpdateIAMV2IdentityProvider",
+      "http_method": "PATCH",
+      "path": "/iam/v2/identity-providers/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2IdentityProvider",
+      "tool": "confluent_delete_iam_v2_identity_provider",
+      "class": "ConfluentDeleteIAMV2IdentityProvider",
+      "http_method": "DELETE",
+      "path": "/iam/v2/identity-providers/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "refreshIamV2JsonWebKeySet",
+      "tool": "confluent_refresh_iam_v2_json_web_key_set",
+      "class": "ConfluentRefreshIAMV2JsonWebKeySet",
+      "http_method": "PATCH",
+      "path": "/iam/v2/identity-providers/{provider_id}/jwks",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2IdentityPools",
+      "tool": "confluent_list_iam_v2_identity_pools",
+      "class": "ConfluentListIAMV2IdentityPools",
+      "http_method": "GET",
+      "path": "/iam/v2/identity-providers/{provider_id}/identity-pools",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2IdentityPool",
+      "tool": "confluent_create_iam_v2_identity_pool",
+      "class": "ConfluentCreateIAMV2IdentityPool",
+      "http_method": "POST",
+      "path": "/iam/v2/identity-providers/{provider_id}/identity-pools",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2IdentityPool",
+      "tool": "confluent_get_iam_v2_identity_pool",
+      "class": "ConfluentGetIAMV2IdentityPool",
+      "http_method": "GET",
+      "path": "/iam/v2/identity-providers/{provider_id}/identity-pools/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2IdentityPool",
+      "tool": "confluent_update_iam_v2_identity_pool",
+      "class": "ConfluentUpdateIAMV2IdentityPool",
+      "http_method": "PATCH",
+      "path": "/iam/v2/identity-providers/{provider_id}/identity-pools/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2IdentityPool",
+      "tool": "confluent_delete_iam_v2_identity_pool",
+      "class": "ConfluentDeleteIAMV2IdentityPool",
+      "http_method": "DELETE",
+      "path": "/iam/v2/identity-providers/{provider_id}/identity-pools/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "exchangeStsV1OauthToken",
+      "tool": "confluent_exchange_sts_v1_oauth_token",
+      "class": "ConfluentExchangeSTSV1OauthToken",
+      "http_method": "POST",
+      "path": "/sts/v1/oauth2/token",
+      "type": "write"
+    },
+    {
+      "operation_id": "listKafkaQuotasV1ClientQuotas",
+      "tool": "confluent_list_kafka_quotas_v1_client_quotas",
+      "class": "ConfluentListKafkaQuotasV1ClientQuotas",
+      "http_method": "GET",
+      "path": "/kafka-quotas/v1/client-quotas",
+      "type": "read"
+    },
+    {
+      "operation_id": "createKafkaQuotasV1ClientQuota",
+      "tool": "confluent_create_kafka_quotas_v1_client_quota",
+      "class": "ConfluentCreateKafkaQuotasV1ClientQuota",
+      "http_method": "POST",
+      "path": "/kafka-quotas/v1/client-quotas",
+      "type": "write"
+    },
+    {
+      "operation_id": "getKafkaQuotasV1ClientQuota",
+      "tool": "confluent_get_kafka_quotas_v1_client_quota",
+      "class": "ConfluentGetKafkaQuotasV1ClientQuota",
+      "http_method": "GET",
+      "path": "/kafka-quotas/v1/client-quotas/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateKafkaQuotasV1ClientQuota",
+      "tool": "confluent_update_kafka_quotas_v1_client_quota",
+      "class": "ConfluentUpdateKafkaQuotasV1ClientQuota",
+      "http_method": "PATCH",
+      "path": "/kafka-quotas/v1/client-quotas/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteKafkaQuotasV1ClientQuota",
+      "tool": "confluent_delete_kafka_quotas_v1_client_quota",
+      "class": "ConfluentDeleteKafkaQuotasV1ClientQuota",
+      "http_method": "DELETE",
+      "path": "/kafka-quotas/v1/client-quotas/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listByokV1Keys",
+      "tool": "confluent_list_byok_v1_keys",
+      "class": "ConfluentListBYOKV1Keys",
+      "http_method": "GET",
+      "path": "/byok/v1/keys",
+      "type": "read"
+    },
+    {
+      "operation_id": "createByokV1Key",
+      "tool": "confluent_create_byok_v1_key",
+      "class": "ConfluentCreateBYOKV1Key",
+      "http_method": "POST",
+      "path": "/byok/v1/keys",
+      "type": "write"
+    },
+    {
+      "operation_id": "getByokV1Key",
+      "tool": "confluent_get_byok_v1_key",
+      "class": "ConfluentGetBYOKV1Key",
+      "http_method": "GET",
+      "path": "/byok/v1/keys/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateByokV1Key",
+      "tool": "confluent_update_byok_v1_key",
+      "class": "ConfluentUpdateBYOKV1Key",
+      "http_method": "PATCH",
+      "path": "/byok/v1/keys/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteByokV1Key",
+      "tool": "confluent_delete_byok_v1_key",
+      "class": "ConfluentDeleteBYOKV1Key",
+      "http_method": "DELETE",
+      "path": "/byok/v1/keys/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listBillingV1Costs",
+      "tool": "confluent_list_billing_v1_costs",
+      "class": "ConfluentListBillingV1Costs",
+      "http_method": "GET",
+      "path": "/billing/v1/costs",
+      "type": "read"
+    },
+    {
+      "operation_id": "listIamV2SsoGroupMappings",
+      "tool": "confluent_list_iam_v2_sso_group_mappings",
+      "class": "ConfluentListIAMV2SsoGroupMappings",
+      "http_method": "GET",
+      "path": "/iam/v2/sso/group-mappings",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2SsoGroupMapping",
+      "tool": "confluent_create_iam_v2_sso_group_mapping",
+      "class": "ConfluentCreateIAMV2SsoGroupMapping",
+      "http_method": "POST",
+      "path": "/iam/v2/sso/group-mappings",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2SsoGroupMapping",
+      "tool": "confluent_get_iam_v2_sso_group_mapping",
+      "class": "ConfluentGetIAMV2SsoGroupMapping",
+      "http_method": "GET",
+      "path": "/iam/v2/sso/group-mappings/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2SsoGroupMapping",
+      "tool": "confluent_update_iam_v2_sso_group_mapping",
+      "class": "ConfluentUpdateIAMV2SsoGroupMapping",
+      "http_method": "PATCH",
+      "path": "/iam/v2/sso/group-mappings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2SsoGroupMapping",
+      "tool": "confluent_delete_iam_v2_sso_group_mapping",
+      "class": "ConfluentDeleteIAMV2SsoGroupMapping",
+      "http_method": "DELETE",
+      "path": "/iam/v2/sso/group-mappings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listFcpmV2ComputePools",
+      "tool": "confluent_list_fcpm_v2_compute_pools",
+      "class": "ConfluentListFcpmV2ComputePools",
+      "http_method": "GET",
+      "path": "/fcpm/v2/compute-pools",
+      "type": "read"
+    },
+    {
+      "operation_id": "createFcpmV2ComputePool",
+      "tool": "confluent_create_fcpm_v2_compute_pool",
+      "class": "ConfluentCreateFcpmV2ComputePool",
+      "http_method": "POST",
+      "path": "/fcpm/v2/compute-pools",
+      "type": "write"
+    },
+    {
+      "operation_id": "getFcpmV2ComputePool",
+      "tool": "confluent_get_fcpm_v2_compute_pool",
+      "class": "ConfluentGetFcpmV2ComputePool",
+      "http_method": "GET",
+      "path": "/fcpm/v2/compute-pools/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateFcpmV2ComputePool",
+      "tool": "confluent_update_fcpm_v2_compute_pool",
+      "class": "ConfluentUpdateFcpmV2ComputePool",
+      "http_method": "PATCH",
+      "path": "/fcpm/v2/compute-pools/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteFcpmV2ComputePool",
+      "tool": "confluent_delete_fcpm_v2_compute_pool",
+      "class": "ConfluentDeleteFcpmV2ComputePool",
+      "http_method": "DELETE",
+      "path": "/fcpm/v2/compute-pools/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listFcpmV2Regions",
+      "tool": "confluent_list_fcpm_v2_regions",
+      "class": "ConfluentListFcpmV2Regions",
+      "http_method": "GET",
+      "path": "/fcpm/v2/regions",
+      "type": "read"
+    },
+    {
+      "operation_id": "getFcpmV2OrgComputePoolConfig",
+      "tool": "confluent_get_fcpm_v2_org_compute_pool_config",
+      "class": "ConfluentGetFcpmV2OrgComputePoolConfig",
+      "http_method": "GET",
+      "path": "/fcpm/v2/compute-pool-config",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateFcpmV2OrgComputePoolConfig",
+      "tool": "confluent_update_fcpm_v2_org_compute_pool_config",
+      "class": "ConfluentUpdateFcpmV2OrgComputePoolConfig",
+      "http_method": "PATCH",
+      "path": "/fcpm/v2/compute-pool-config",
+      "type": "write"
+    },
+    {
+      "operation_id": "listSqlv1Connections",
+      "tool": "confluent_list_sqlv1_connections",
+      "class": "ConfluentListSqlv1Connections",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/connections",
+      "type": "read"
+    },
+    {
+      "operation_id": "createSqlv1Connection",
+      "tool": "confluent_create_sqlv1_connection",
+      "class": "ConfluentCreateSqlv1Connection",
+      "http_method": "POST",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/connections",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSqlv1Connection",
+      "tool": "confluent_get_sqlv1_connection",
+      "class": "ConfluentGetSqlv1Connection",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/connections/{connection_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteSqlv1Connection",
+      "tool": "confluent_delete_sqlv1_connection",
+      "class": "ConfluentDeleteSqlv1Connection",
+      "http_method": "DELETE",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/connections/{connection_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateSqlv1Connection",
+      "tool": "confluent_update_sqlv1_connection",
+      "class": "ConfluentUpdateSqlv1Connection",
+      "http_method": "PUT",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/connections/{connection_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSqlv1StatementResult",
+      "tool": "confluent_get_sqlv1_statement_result",
+      "class": "ConfluentGetSqlv1StatementResult",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements/{name}/results",
+      "type": "read"
+    },
+    {
+      "operation_id": "listSqlv1Statements",
+      "tool": "confluent_list_sqlv1_statements",
+      "class": "ConfluentListSqlv1Statements",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements",
+      "type": "read"
+    },
+    {
+      "operation_id": "createSqlv1Statement",
+      "tool": "confluent_create_sqlv1_statement",
+      "class": "ConfluentCreateSqlv1Statement",
+      "http_method": "POST",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSqlv1Statement",
+      "tool": "confluent_get_sqlv1_statement",
+      "class": "ConfluentGetSqlv1Statement",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements/{statement_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteSqlv1Statement",
+      "tool": "confluent_delete_sqlv1_statement",
+      "class": "ConfluentDeleteSqlv1Statement",
+      "http_method": "DELETE",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements/{statement_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "updateSqlv1Statement",
+      "tool": "confluent_update_sqlv1_statement",
+      "class": "ConfluentUpdateSqlv1Statement",
+      "http_method": "PUT",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements/{statement_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "patchSqlv1Statement",
+      "tool": "confluent_patch_sqlv1_statement",
+      "class": "ConfluentPatchSqlv1Statement",
+      "http_method": "PATCH",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements/{statement_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSqlv1StatementExceptions",
+      "tool": "confluent_get_sqlv1_statement_exceptions",
+      "class": "ConfluentGetSqlv1StatementExceptions",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/statements/{statement_name}/exceptions",
+      "type": "read"
+    },
+    {
+      "operation_id": "listSqlv1MaterializedTables",
+      "tool": "confluent_list_sqlv1_materialized_tables",
+      "class": "ConfluentListSqlv1MaterializedTables",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/materialized-tables",
+      "type": "read"
+    },
+    {
+      "operation_id": "createSqlv1MaterializedTable",
+      "tool": "confluent_create_sqlv1_materialized_table",
+      "class": "ConfluentCreateSqlv1MaterializedTable",
+      "http_method": "POST",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/materialized-tables",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSqlv1MaterializedTable",
+      "tool": "confluent_get_sqlv1_materialized_table",
+      "class": "ConfluentGetSqlv1MaterializedTable",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/materialized-tables/{table_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateSqlv1MaterializedTable",
+      "tool": "confluent_update_sqlv1_materialized_table",
+      "class": "ConfluentUpdateSqlv1MaterializedTable",
+      "http_method": "PUT",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/materialized-tables/{table_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteSqlv1MaterializedTable",
+      "tool": "confluent_delete_sqlv1_materialized_table",
+      "class": "ConfluentDeleteSqlv1MaterializedTable",
+      "http_method": "DELETE",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/materialized-tables/{table_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listSqlv1MaterializedTableVersions",
+      "tool": "confluent_list_sqlv1_materialized_table_versions",
+      "class": "ConfluentListSqlv1MaterializedTableVersions",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/materialized-tables/{table_name}/versions",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSqlv1MaterializedTableVersion",
+      "tool": "confluent_get_sqlv1_materialized_table_version",
+      "class": "ConfluentGetSqlv1MaterializedTableVersion",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/materialized-tables/{table_name}/versions/{version}",
+      "type": "read"
+    },
+    {
+      "operation_id": "listSqlv1Agents",
+      "tool": "confluent_list_sqlv1_agents",
+      "class": "ConfluentListSqlv1Agents",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/agents",
+      "type": "read"
+    },
+    {
+      "operation_id": "createSqlv1Agent",
+      "tool": "confluent_create_sqlv1_agent",
+      "class": "ConfluentCreateSqlv1Agent",
+      "http_method": "POST",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/agents",
+      "type": "write"
+    },
+    {
+      "operation_id": "getSqlv1Agent",
+      "tool": "confluent_get_sqlv1_agent",
+      "class": "ConfluentGetSqlv1Agent",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/agents/{agent_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateSqlv1Agent",
+      "tool": "confluent_update_sqlv1_agent",
+      "class": "ConfluentUpdateSqlv1Agent",
+      "http_method": "PUT",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/agents/{agent_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteSqlv1Agent",
+      "tool": "confluent_delete_sqlv1_agent",
+      "class": "ConfluentDeleteSqlv1Agent",
+      "http_method": "DELETE",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{kafka_cluster_id}/agents/{agent_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "createSqlv1Tool",
+      "tool": "confluent_create_sqlv1_tool",
+      "class": "ConfluentCreateSqlv1Tool",
+      "http_method": "POST",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{database_name}/tools",
+      "type": "write"
+    },
+    {
+      "operation_id": "listSqlv1Tools",
+      "tool": "confluent_list_sqlv1_tools",
+      "class": "ConfluentListSqlv1Tools",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{database_name}/tools",
+      "type": "read"
+    },
+    {
+      "operation_id": "getSqlv1Tool",
+      "tool": "confluent_get_sqlv1_tool",
+      "class": "ConfluentGetSqlv1Tool",
+      "http_method": "GET",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{database_name}/tools/{tool_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteSqlv1Tool",
+      "tool": "confluent_delete_sqlv1_tool",
+      "class": "ConfluentDeleteSqlv1Tool",
+      "http_method": "DELETE",
+      "path": "/sql/v1/organizations/{organization_id}/environments/{environment_id}/databases/{database_name}/tools/{tool_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1DnsForwarders",
+      "tool": "confluent_list_networking_v1_dns_forwarders",
+      "class": "ConfluentListNetworkingV1DNSForwarders",
+      "http_method": "GET",
+      "path": "/networking/v1/dns-forwarders",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1DnsForwarder",
+      "tool": "confluent_create_networking_v1_dns_forwarder",
+      "class": "ConfluentCreateNetworkingV1DNSForwarder",
+      "http_method": "POST",
+      "path": "/networking/v1/dns-forwarders",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1DnsForwarder",
+      "tool": "confluent_get_networking_v1_dns_forwarder",
+      "class": "ConfluentGetNetworkingV1DNSForwarder",
+      "http_method": "GET",
+      "path": "/networking/v1/dns-forwarders/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1DnsForwarder",
+      "tool": "confluent_update_networking_v1_dns_forwarder",
+      "class": "ConfluentUpdateNetworkingV1DNSForwarder",
+      "http_method": "PATCH",
+      "path": "/networking/v1/dns-forwarders/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1DnsForwarder",
+      "tool": "confluent_delete_networking_v1_dns_forwarder",
+      "class": "ConfluentDeleteNetworkingV1DNSForwarder",
+      "http_method": "DELETE",
+      "path": "/networking/v1/dns-forwarders/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1AccessPoints",
+      "tool": "confluent_list_networking_v1_access_points",
+      "class": "ConfluentListNetworkingV1AccessPoints",
+      "http_method": "GET",
+      "path": "/networking/v1/access-points",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1AccessPoint",
+      "tool": "confluent_create_networking_v1_access_point",
+      "class": "ConfluentCreateNetworkingV1AccessPoint",
+      "http_method": "POST",
+      "path": "/networking/v1/access-points",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1AccessPoint",
+      "tool": "confluent_get_networking_v1_access_point",
+      "class": "ConfluentGetNetworkingV1AccessPoint",
+      "http_method": "GET",
+      "path": "/networking/v1/access-points/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1AccessPoint",
+      "tool": "confluent_update_networking_v1_access_point",
+      "class": "ConfluentUpdateNetworkingV1AccessPoint",
+      "http_method": "PATCH",
+      "path": "/networking/v1/access-points/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1AccessPoint",
+      "tool": "confluent_delete_networking_v1_access_point",
+      "class": "ConfluentDeleteNetworkingV1AccessPoint",
+      "http_method": "DELETE",
+      "path": "/networking/v1/access-points/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1DnsRecords",
+      "tool": "confluent_list_networking_v1_dns_records",
+      "class": "ConfluentListNetworkingV1DNSRecords",
+      "http_method": "GET",
+      "path": "/networking/v1/dns-records",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1DnsRecord",
+      "tool": "confluent_create_networking_v1_dns_record",
+      "class": "ConfluentCreateNetworkingV1DNSRecord",
+      "http_method": "POST",
+      "path": "/networking/v1/dns-records",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1DnsRecord",
+      "tool": "confluent_get_networking_v1_dns_record",
+      "class": "ConfluentGetNetworkingV1DNSRecord",
+      "http_method": "GET",
+      "path": "/networking/v1/dns-records/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1DnsRecord",
+      "tool": "confluent_update_networking_v1_dns_record",
+      "class": "ConfluentUpdateNetworkingV1DNSRecord",
+      "http_method": "PATCH",
+      "path": "/networking/v1/dns-records/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1DnsRecord",
+      "tool": "confluent_delete_networking_v1_dns_record",
+      "class": "ConfluentDeleteNetworkingV1DNSRecord",
+      "http_method": "DELETE",
+      "path": "/networking/v1/dns-records/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2CertificateAuthorities",
+      "tool": "confluent_list_iam_v2_certificate_authorities",
+      "class": "ConfluentListIAMV2CertificateAuthorities",
+      "http_method": "GET",
+      "path": "/iam/v2/certificate-authorities",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2CertificateAuthority",
+      "tool": "confluent_create_iam_v2_certificate_authority",
+      "class": "ConfluentCreateIAMV2CertificateAuthority",
+      "http_method": "POST",
+      "path": "/iam/v2/certificate-authorities",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2CertificateAuthority",
+      "tool": "confluent_get_iam_v2_certificate_authority",
+      "class": "ConfluentGetIAMV2CertificateAuthority",
+      "http_method": "GET",
+      "path": "/iam/v2/certificate-authorities/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2CertificateAuthority",
+      "tool": "confluent_update_iam_v2_certificate_authority",
+      "class": "ConfluentUpdateIAMV2CertificateAuthority",
+      "http_method": "PUT",
+      "path": "/iam/v2/certificate-authorities/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2CertificateAuthority",
+      "tool": "confluent_delete_iam_v2_certificate_authority",
+      "class": "ConfluentDeleteIAMV2CertificateAuthority",
+      "http_method": "DELETE",
+      "path": "/iam/v2/certificate-authorities/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listIamV2CertificateIdentityPools",
+      "tool": "confluent_list_iam_v2_certificate_identity_pools",
+      "class": "ConfluentListIAMV2CertificateIdentityPools",
+      "http_method": "GET",
+      "path": "/iam/v2/certificate-authorities/{certificate_authority_id}/identity-pools",
+      "type": "read"
+    },
+    {
+      "operation_id": "createIamV2CertificateIdentityPool",
+      "tool": "confluent_create_iam_v2_certificate_identity_pool",
+      "class": "ConfluentCreateIAMV2CertificateIdentityPool",
+      "http_method": "POST",
+      "path": "/iam/v2/certificate-authorities/{certificate_authority_id}/identity-pools",
+      "type": "write"
+    },
+    {
+      "operation_id": "getIamV2CertificateIdentityPool",
+      "tool": "confluent_get_iam_v2_certificate_identity_pool",
+      "class": "ConfluentGetIAMV2CertificateIdentityPool",
+      "http_method": "GET",
+      "path": "/iam/v2/certificate-authorities/{certificate_authority_id}/identity-pools/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateIamV2CertificateIdentityPool",
+      "tool": "confluent_update_iam_v2_certificate_identity_pool",
+      "class": "ConfluentUpdateIAMV2CertificateIdentityPool",
+      "http_method": "PUT",
+      "path": "/iam/v2/certificate-authorities/{certificate_authority_id}/identity-pools/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteIamV2CertificateIdentityPool",
+      "tool": "confluent_delete_iam_v2_certificate_identity_pool",
+      "class": "ConfluentDeleteIAMV2CertificateIdentityPool",
+      "http_method": "DELETE",
+      "path": "/iam/v2/certificate-authorities/{certificate_authority_id}/identity-pools/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listPimV1Integrations",
+      "tool": "confluent_list_pim_v1_integrations",
+      "class": "ConfluentListPimV1Integrations",
+      "http_method": "GET",
+      "path": "/pim/v1/integrations",
+      "type": "read"
+    },
+    {
+      "operation_id": "createPimV1Integration",
+      "tool": "confluent_create_pim_v1_integration",
+      "class": "ConfluentCreatePimV1Integration",
+      "http_method": "POST",
+      "path": "/pim/v1/integrations",
+      "type": "write"
+    },
+    {
+      "operation_id": "getPimV1Integration",
+      "tool": "confluent_get_pim_v1_integration",
+      "class": "ConfluentGetPimV1Integration",
+      "http_method": "GET",
+      "path": "/pim/v1/integrations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deletePimV1Integration",
+      "tool": "confluent_delete_pim_v1_integration",
+      "class": "ConfluentDeletePimV1Integration",
+      "http_method": "DELETE",
+      "path": "/pim/v1/integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listPimV2Integrations",
+      "tool": "confluent_list_pim_v2_integrations",
+      "class": "ConfluentListPimV2Integrations",
+      "http_method": "GET",
+      "path": "/pim/v2/integrations",
+      "type": "read"
+    },
+    {
+      "operation_id": "createPimV2Integration",
+      "tool": "confluent_create_pim_v2_integration",
+      "class": "ConfluentCreatePimV2Integration",
+      "http_method": "POST",
+      "path": "/pim/v2/integrations",
+      "type": "write"
+    },
+    {
+      "operation_id": "getPimV2Integration",
+      "tool": "confluent_get_pim_v2_integration",
+      "class": "ConfluentGetPimV2Integration",
+      "http_method": "GET",
+      "path": "/pim/v2/integrations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updatePimV2Integration",
+      "tool": "confluent_update_pim_v2_integration",
+      "class": "ConfluentUpdatePimV2Integration",
+      "http_method": "PATCH",
+      "path": "/pim/v2/integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deletePimV2Integration",
+      "tool": "confluent_delete_pim_v2_integration",
+      "class": "ConfluentDeletePimV2Integration",
+      "http_method": "DELETE",
+      "path": "/pim/v2/integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "validatePimV2Integration",
+      "tool": "confluent_validate_pim_v2_integration",
+      "class": "ConfluentValidatePimV2Integration",
+      "http_method": "POST",
+      "path": "/pim/v2/integrations:validate",
+      "type": "write"
+    },
+    {
+      "operation_id": "listArtifactV1FlinkArtifacts",
+      "tool": "confluent_list_artifact_v1_flink_artifacts",
+      "class": "ConfluentListArtifactV1FlinkArtifacts",
+      "http_method": "GET",
+      "path": "/artifact/v1/flink-artifacts",
+      "type": "read"
+    },
+    {
+      "operation_id": "createArtifactV1FlinkArtifact",
+      "tool": "confluent_create_artifact_v1_flink_artifact",
+      "class": "ConfluentCreateArtifactV1FlinkArtifact",
+      "http_method": "POST",
+      "path": "/artifact/v1/flink-artifacts",
+      "type": "write"
+    },
+    {
+      "operation_id": "getArtifactV1FlinkArtifact",
+      "tool": "confluent_get_artifact_v1_flink_artifact",
+      "class": "ConfluentGetArtifactV1FlinkArtifact",
+      "http_method": "GET",
+      "path": "/artifact/v1/flink-artifacts/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateArtifactV1FlinkArtifact",
+      "tool": "confluent_update_artifact_v1_flink_artifact",
+      "class": "ConfluentUpdateArtifactV1FlinkArtifact",
+      "http_method": "PATCH",
+      "path": "/artifact/v1/flink-artifacts/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteArtifactV1FlinkArtifact",
+      "tool": "confluent_delete_artifact_v1_flink_artifact",
+      "class": "ConfluentDeleteArtifactV1FlinkArtifact",
+      "http_method": "DELETE",
+      "path": "/artifact/v1/flink-artifacts/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "presigned-upload-urlArtifactV1PresignedUrl",
+      "tool": "confluent_presigned_upload_url_artifact_v1_presigned_url",
+      "class": "ConfluentPresignedUploadUrlArtifactV1PresignedUrl",
+      "http_method": "POST",
+      "path": "/artifact/v1/presigned-upload-url",
+      "type": "write"
+    },
+    {
+      "operation_id": "listNetworkingV1Gateways",
+      "tool": "confluent_list_networking_v1_gateways",
+      "class": "ConfluentListNetworkingV1Gateways",
+      "http_method": "GET",
+      "path": "/networking/v1/gateways",
+      "type": "read"
+    },
+    {
+      "operation_id": "createNetworkingV1Gateway",
+      "tool": "confluent_create_networking_v1_gateway",
+      "class": "ConfluentCreateNetworkingV1Gateway",
+      "http_method": "POST",
+      "path": "/networking/v1/gateways",
+      "type": "write"
+    },
+    {
+      "operation_id": "getNetworkingV1Gateway",
+      "tool": "confluent_get_networking_v1_gateway",
+      "class": "ConfluentGetNetworkingV1Gateway",
+      "http_method": "GET",
+      "path": "/networking/v1/gateways/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateNetworkingV1Gateway",
+      "tool": "confluent_update_networking_v1_gateway",
+      "class": "ConfluentUpdateNetworkingV1Gateway",
+      "http_method": "PATCH",
+      "path": "/networking/v1/gateways/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteNetworkingV1Gateway",
+      "tool": "confluent_delete_networking_v1_gateway",
+      "class": "ConfluentDeleteNetworkingV1Gateway",
+      "http_method": "DELETE",
+      "path": "/networking/v1/gateways/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listCclV1CustomCodeLoggings",
+      "tool": "confluent_list_ccl_v1_custom_code_loggings",
+      "class": "ConfluentListCclV1CustomCodeLoggings",
+      "http_method": "GET",
+      "path": "/ccl/v1/custom-code-loggings",
+      "type": "read"
+    },
+    {
+      "operation_id": "createCclV1CustomCodeLogging",
+      "tool": "confluent_create_ccl_v1_custom_code_logging",
+      "class": "ConfluentCreateCclV1CustomCodeLogging",
+      "http_method": "POST",
+      "path": "/ccl/v1/custom-code-loggings",
+      "type": "write"
+    },
+    {
+      "operation_id": "getCclV1CustomCodeLogging",
+      "tool": "confluent_get_ccl_v1_custom_code_logging",
+      "class": "ConfluentGetCclV1CustomCodeLogging",
+      "http_method": "GET",
+      "path": "/ccl/v1/custom-code-loggings/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateCclV1CustomCodeLogging",
+      "tool": "confluent_update_ccl_v1_custom_code_logging",
+      "class": "ConfluentUpdateCclV1CustomCodeLogging",
+      "http_method": "PATCH",
+      "path": "/ccl/v1/custom-code-loggings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteCclV1CustomCodeLogging",
+      "tool": "confluent_delete_ccl_v1_custom_code_logging",
+      "class": "ConfluentDeleteCclV1CustomCodeLogging",
+      "http_method": "DELETE",
+      "path": "/ccl/v1/custom-code-loggings/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listTableflowV1Regions",
+      "tool": "confluent_list_tableflow_v1_regions",
+      "class": "ConfluentListTableflowV1Regions",
+      "http_method": "GET",
+      "path": "/tableflow/v1/regions",
+      "type": "read"
+    },
+    {
+      "operation_id": "listTableflowV1TableflowTopics",
+      "tool": "confluent_list_tableflow_v1_tableflow_topics",
+      "class": "ConfluentListTableflowV1TableflowTopics",
+      "http_method": "GET",
+      "path": "/tableflow/v1/tableflow-topics",
+      "type": "read"
+    },
+    {
+      "operation_id": "createTableflowV1TableflowTopic",
+      "tool": "confluent_create_tableflow_v1_tableflow_topic",
+      "class": "ConfluentCreateTableflowV1TableflowTopic",
+      "http_method": "POST",
+      "path": "/tableflow/v1/tableflow-topics",
+      "type": "write"
+    },
+    {
+      "operation_id": "getTableflowV1TableflowTopic",
+      "tool": "confluent_get_tableflow_v1_tableflow_topic",
+      "class": "ConfluentGetTableflowV1TableflowTopic",
+      "http_method": "GET",
+      "path": "/tableflow/v1/tableflow-topics/{display_name}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateTableflowV1TableflowTopic",
+      "tool": "confluent_update_tableflow_v1_tableflow_topic",
+      "class": "ConfluentUpdateTableflowV1TableflowTopic",
+      "http_method": "PATCH",
+      "path": "/tableflow/v1/tableflow-topics/{display_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteTableflowV1TableflowTopic",
+      "tool": "confluent_delete_tableflow_v1_tableflow_topic",
+      "class": "ConfluentDeleteTableflowV1TableflowTopic",
+      "http_method": "DELETE",
+      "path": "/tableflow/v1/tableflow-topics/{display_name}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listTableflowV1CatalogIntegrations",
+      "tool": "confluent_list_tableflow_v1_catalog_integrations",
+      "class": "ConfluentListTableflowV1CatalogIntegrations",
+      "http_method": "GET",
+      "path": "/tableflow/v1/catalog-integrations",
+      "type": "read"
+    },
+    {
+      "operation_id": "createTableflowV1CatalogIntegration",
+      "tool": "confluent_create_tableflow_v1_catalog_integration",
+      "class": "ConfluentCreateTableflowV1CatalogIntegration",
+      "http_method": "POST",
+      "path": "/tableflow/v1/catalog-integrations",
+      "type": "write"
+    },
+    {
+      "operation_id": "getTableflowV1CatalogIntegration",
+      "tool": "confluent_get_tableflow_v1_catalog_integration",
+      "class": "ConfluentGetTableflowV1CatalogIntegration",
+      "http_method": "GET",
+      "path": "/tableflow/v1/catalog-integrations/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateTableflowV1CatalogIntegration",
+      "tool": "confluent_update_tableflow_v1_catalog_integration",
+      "class": "ConfluentUpdateTableflowV1CatalogIntegration",
+      "http_method": "PATCH",
+      "path": "/tableflow/v1/catalog-integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteTableflowV1CatalogIntegration",
+      "tool": "confluent_delete_tableflow_v1_catalog_integration",
+      "class": "ConfluentDeleteTableflowV1CatalogIntegration",
+      "http_method": "DELETE",
+      "path": "/tableflow/v1/catalog-integrations/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listCcpmV1CustomConnectPlugins",
+      "tool": "confluent_list_ccpm_v1_custom_connect_plugins",
+      "class": "ConfluentListCcpmV1CustomConnectPlugins",
+      "http_method": "GET",
+      "path": "/ccpm/v1/plugins",
+      "type": "read"
+    },
+    {
+      "operation_id": "createCcpmV1CustomConnectPlugin",
+      "tool": "confluent_create_ccpm_v1_custom_connect_plugin",
+      "class": "ConfluentCreateCcpmV1CustomConnectPlugin",
+      "http_method": "POST",
+      "path": "/ccpm/v1/plugins",
+      "type": "write"
+    },
+    {
+      "operation_id": "getCcpmV1CustomConnectPlugin",
+      "tool": "confluent_get_ccpm_v1_custom_connect_plugin",
+      "class": "ConfluentGetCcpmV1CustomConnectPlugin",
+      "http_method": "GET",
+      "path": "/ccpm/v1/plugins/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "updateCcpmV1CustomConnectPlugin",
+      "tool": "confluent_update_ccpm_v1_custom_connect_plugin",
+      "class": "ConfluentUpdateCcpmV1CustomConnectPlugin",
+      "http_method": "PATCH",
+      "path": "/ccpm/v1/plugins/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "deleteCcpmV1CustomConnectPlugin",
+      "tool": "confluent_delete_ccpm_v1_custom_connect_plugin",
+      "class": "ConfluentDeleteCcpmV1CustomConnectPlugin",
+      "http_method": "DELETE",
+      "path": "/ccpm/v1/plugins/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "createCcpmV1PresignedUrl",
+      "tool": "confluent_create_ccpm_v1_presigned_url",
+      "class": "ConfluentCreateCcpmV1PresignedUrl",
+      "http_method": "POST",
+      "path": "/ccpm/v1/presigned-upload-url",
+      "type": "write"
+    },
+    {
+      "operation_id": "listCcpmV1CustomConnectPluginVersions",
+      "tool": "confluent_list_ccpm_v1_custom_connect_plugin_versions",
+      "class": "ConfluentListCcpmV1CustomConnectPluginVersions",
+      "http_method": "GET",
+      "path": "/ccpm/v1/plugins/{plugin_id}/versions",
+      "type": "read"
+    },
+    {
+      "operation_id": "createCcpmV1CustomConnectPluginVersion",
+      "tool": "confluent_create_ccpm_v1_custom_connect_plugin_version",
+      "class": "ConfluentCreateCcpmV1CustomConnectPluginVersion",
+      "http_method": "POST",
+      "path": "/ccpm/v1/plugins/{plugin_id}/versions",
+      "type": "write"
+    },
+    {
+      "operation_id": "getCcpmV1CustomConnectPluginVersion",
+      "tool": "confluent_get_ccpm_v1_custom_connect_plugin_version",
+      "class": "ConfluentGetCcpmV1CustomConnectPluginVersion",
+      "http_method": "GET",
+      "path": "/ccpm/v1/plugins/{plugin_id}/versions/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteCcpmV1CustomConnectPluginVersion",
+      "tool": "confluent_delete_ccpm_v1_custom_connect_plugin_version",
+      "class": "ConfluentDeleteCcpmV1CustomConnectPluginVersion",
+      "http_method": "DELETE",
+      "path": "/ccpm/v1/plugins/{plugin_id}/versions/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listUsmV1KafkaClusters",
+      "tool": "confluent_list_usm_v1_kafka_clusters",
+      "class": "ConfluentListUSMV1KafkaClusters",
+      "http_method": "GET",
+      "path": "/usm/v1/kafka-clusters",
+      "type": "read"
+    },
+    {
+      "operation_id": "createUsmV1KafkaCluster",
+      "tool": "confluent_create_usm_v1_kafka_cluster",
+      "class": "ConfluentCreateUSMV1KafkaCluster",
+      "http_method": "POST",
+      "path": "/usm/v1/kafka-clusters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getUsmV1KafkaCluster",
+      "tool": "confluent_get_usm_v1_kafka_cluster",
+      "class": "ConfluentGetUSMV1KafkaCluster",
+      "http_method": "GET",
+      "path": "/usm/v1/kafka-clusters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteUsmV1KafkaCluster",
+      "tool": "confluent_delete_usm_v1_kafka_cluster",
+      "class": "ConfluentDeleteUSMV1KafkaCluster",
+      "http_method": "DELETE",
+      "path": "/usm/v1/kafka-clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listUsmV1ConnectClusters",
+      "tool": "confluent_list_usm_v1_connect_clusters",
+      "class": "ConfluentListUSMV1ConnectClusters",
+      "http_method": "GET",
+      "path": "/usm/v1/connect-clusters",
+      "type": "read"
+    },
+    {
+      "operation_id": "createUsmV1ConnectCluster",
+      "tool": "confluent_create_usm_v1_connect_cluster",
+      "class": "ConfluentCreateUSMV1ConnectCluster",
+      "http_method": "POST",
+      "path": "/usm/v1/connect-clusters",
+      "type": "write"
+    },
+    {
+      "operation_id": "getUsmV1ConnectCluster",
+      "tool": "confluent_get_usm_v1_connect_cluster",
+      "class": "ConfluentGetUSMV1ConnectCluster",
+      "http_method": "GET",
+      "path": "/usm/v1/connect-clusters/{id}",
+      "type": "read"
+    },
+    {
+      "operation_id": "deleteUsmV1ConnectCluster",
+      "tool": "confluent_delete_usm_v1_connect_cluster",
+      "class": "ConfluentDeleteUSMV1ConnectCluster",
+      "http_method": "DELETE",
+      "path": "/usm/v1/connect-clusters/{id}",
+      "type": "write"
+    },
+    {
+      "operation_id": "listEndpointV1Endpoints",
+      "tool": "confluent_list_endpoint_v1_endpoints",
+      "class": "ConfluentListEndpointV1Endpoints",
+      "http_method": "GET",
+      "path": "/endpoint/v1/endpoints",
+      "type": "read"
+    }
+  ]
+}

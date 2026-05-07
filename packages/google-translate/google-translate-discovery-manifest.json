@@ -1,0 +1,417 @@
+{
+    "source": "https://translate.googleapis.com/$discovery/rest?version=v3",
+    "service": "Cloud Translation API",
+    "version": "v3",
+    "method_count": 51,
+    "generated_package": "google-translate",
+    "methods": [
+        {
+            "discovery_id": "projects.getSupportedLanguages",
+            "tool": "google_translate_projects_get_supported_languages",
+            "class": "GoogleTranslateProjectsGetSupportedLanguages",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/supportedLanguages",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.detectLanguage",
+            "tool": "google_translate_projects_detect_language",
+            "class": "GoogleTranslateProjectsDetectLanguage",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:detectLanguage",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.translateText",
+            "tool": "google_translate_projects_translate_text",
+            "class": "GoogleTranslateProjectsTranslateText",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:translateText",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.romanizeText",
+            "tool": "google_translate_projects_romanize_text",
+            "class": "GoogleTranslateProjectsRomanizeText",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:romanizeText",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.refineText",
+            "tool": "google_translate_projects_locations_refine_text",
+            "class": "GoogleTranslateProjectsLocationsRefineText",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:refineText",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.get",
+            "tool": "google_translate_projects_locations_get",
+            "class": "GoogleTranslateProjectsLocationsGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.translateText",
+            "tool": "google_translate_projects_locations_translate_text",
+            "class": "GoogleTranslateProjectsLocationsTranslateText",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:translateText",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtTranslate",
+            "tool": "google_translate_projects_locations_adaptive_mt_translate",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtTranslate",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:adaptiveMtTranslate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.list",
+            "tool": "google_translate_projects_locations_list",
+            "class": "GoogleTranslateProjectsLocationsList",
+            "http_method": "GET",
+            "path": "/v3/{+name}/locations",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.translateDocument",
+            "tool": "google_translate_projects_locations_translate_document",
+            "class": "GoogleTranslateProjectsLocationsTranslateDocument",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:translateDocument",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.getSupportedLanguages",
+            "tool": "google_translate_projects_locations_get_supported_languages",
+            "class": "GoogleTranslateProjectsLocationsGetSupportedLanguages",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/supportedLanguages",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.batchTranslateText",
+            "tool": "google_translate_projects_locations_batch_translate_text",
+            "class": "GoogleTranslateProjectsLocationsBatchTranslateText",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:batchTranslateText",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.detectLanguage",
+            "tool": "google_translate_projects_locations_detect_language",
+            "class": "GoogleTranslateProjectsLocationsDetectLanguage",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:detectLanguage",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.batchTranslateDocument",
+            "tool": "google_translate_projects_locations_batch_translate_document",
+            "class": "GoogleTranslateProjectsLocationsBatchTranslateDocument",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:batchTranslateDocument",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.romanizeText",
+            "tool": "google_translate_projects_locations_romanize_text",
+            "class": "GoogleTranslateProjectsLocationsRomanizeText",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:romanizeText",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.models.delete",
+            "tool": "google_translate_projects_locations_models_delete",
+            "class": "GoogleTranslateProjectsLocationsModelsDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.models.list",
+            "tool": "google_translate_projects_locations_models_list",
+            "class": "GoogleTranslateProjectsLocationsModelsList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/models",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.models.get",
+            "tool": "google_translate_projects_locations_models_get",
+            "class": "GoogleTranslateProjectsLocationsModelsGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.models.create",
+            "tool": "google_translate_projects_locations_models_create",
+            "class": "GoogleTranslateProjectsLocationsModelsCreate",
+            "http_method": "POST",
+            "path": "/v3/{+parent}/models",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.operations.get",
+            "tool": "google_translate_projects_locations_operations_get",
+            "class": "GoogleTranslateProjectsLocationsOperationsGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.operations.delete",
+            "tool": "google_translate_projects_locations_operations_delete",
+            "class": "GoogleTranslateProjectsLocationsOperationsDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.operations.cancel",
+            "tool": "google_translate_projects_locations_operations_cancel",
+            "class": "GoogleTranslateProjectsLocationsOperationsCancel",
+            "http_method": "POST",
+            "path": "/v3/{+name}:cancel",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.operations.list",
+            "tool": "google_translate_projects_locations_operations_list",
+            "class": "GoogleTranslateProjectsLocationsOperationsList",
+            "http_method": "GET",
+            "path": "/v3/{+name}/operations",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.operations.wait",
+            "tool": "google_translate_projects_locations_operations_wait",
+            "class": "GoogleTranslateProjectsLocationsOperationsWait",
+            "http_method": "POST",
+            "path": "/v3/{+name}:wait",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.importData",
+            "tool": "google_translate_projects_locations_datasets_import_data",
+            "class": "GoogleTranslateProjectsLocationsDatasetsImportData",
+            "http_method": "POST",
+            "path": "/v3/{+dataset}:importData",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.create",
+            "tool": "google_translate_projects_locations_datasets_create",
+            "class": "GoogleTranslateProjectsLocationsDatasetsCreate",
+            "http_method": "POST",
+            "path": "/v3/{+parent}/datasets",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.delete",
+            "tool": "google_translate_projects_locations_datasets_delete",
+            "class": "GoogleTranslateProjectsLocationsDatasetsDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.get",
+            "tool": "google_translate_projects_locations_datasets_get",
+            "class": "GoogleTranslateProjectsLocationsDatasetsGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.exportData",
+            "tool": "google_translate_projects_locations_datasets_export_data",
+            "class": "GoogleTranslateProjectsLocationsDatasetsExportData",
+            "http_method": "POST",
+            "path": "/v3/{+dataset}:exportData",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.list",
+            "tool": "google_translate_projects_locations_datasets_list",
+            "class": "GoogleTranslateProjectsLocationsDatasetsList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/datasets",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.datasets.examples.list",
+            "tool": "google_translate_projects_locations_datasets_examples_list",
+            "class": "GoogleTranslateProjectsLocationsDatasetsExamplesList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/examples",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.patch",
+            "tool": "google_translate_projects_locations_glossaries_patch",
+            "class": "GoogleTranslateProjectsLocationsGlossariesPatch",
+            "http_method": "PATCH",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.list",
+            "tool": "google_translate_projects_locations_glossaries_list",
+            "class": "GoogleTranslateProjectsLocationsGlossariesList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/glossaries",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.create",
+            "tool": "google_translate_projects_locations_glossaries_create",
+            "class": "GoogleTranslateProjectsLocationsGlossariesCreate",
+            "http_method": "POST",
+            "path": "/v3/{+parent}/glossaries",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.get",
+            "tool": "google_translate_projects_locations_glossaries_get",
+            "class": "GoogleTranslateProjectsLocationsGlossariesGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.delete",
+            "tool": "google_translate_projects_locations_glossaries_delete",
+            "class": "GoogleTranslateProjectsLocationsGlossariesDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.glossaryEntries.get",
+            "tool": "google_translate_projects_locations_glossaries_glossary_entries_get",
+            "class": "GoogleTranslateProjectsLocationsGlossariesGlossaryEntriesGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.glossaryEntries.delete",
+            "tool": "google_translate_projects_locations_glossaries_glossary_entries_delete",
+            "class": "GoogleTranslateProjectsLocationsGlossariesGlossaryEntriesDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.glossaryEntries.create",
+            "tool": "google_translate_projects_locations_glossaries_glossary_entries_create",
+            "class": "GoogleTranslateProjectsLocationsGlossariesGlossaryEntriesCreate",
+            "http_method": "POST",
+            "path": "/v3/{+parent}/glossaryEntries",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.glossaryEntries.list",
+            "tool": "google_translate_projects_locations_glossaries_glossary_entries_list",
+            "class": "GoogleTranslateProjectsLocationsGlossariesGlossaryEntriesList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/glossaryEntries",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.glossaries.glossaryEntries.patch",
+            "tool": "google_translate_projects_locations_glossaries_glossary_entries_patch",
+            "class": "GoogleTranslateProjectsLocationsGlossariesGlossaryEntriesPatch",
+            "http_method": "PATCH",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.list",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_list",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/adaptiveMtDatasets",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.importAdaptiveMtFile",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_import_adaptive_mt_file",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsImportAdaptiveMtFile",
+            "http_method": "POST",
+            "path": "/v3/{+parent}:importAdaptiveMtFile",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.create",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_create",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsCreate",
+            "http_method": "POST",
+            "path": "/v3/{+parent}/adaptiveMtDatasets",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.delete",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_delete",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.get",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_get",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.adaptiveMtSentences.list",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_adaptive_mt_sentences_list",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsAdaptiveMtSentencesList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/adaptiveMtSentences",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.adaptiveMtFiles.delete",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_adaptive_mt_files_delete",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsAdaptiveMtFilesDelete",
+            "http_method": "DELETE",
+            "path": "/v3/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.adaptiveMtFiles.get",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_adaptive_mt_files_get",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsAdaptiveMtFilesGet",
+            "http_method": "GET",
+            "path": "/v3/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.adaptiveMtFiles.list",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_adaptive_mt_files_list",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsAdaptiveMtFilesList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/adaptiveMtFiles",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.locations.adaptiveMtDatasets.adaptiveMtFiles.adaptiveMtSentences.list",
+            "tool": "google_translate_projects_locations_adaptive_mt_datasets_adaptive_mt_files_adaptive_mt_sentences_list",
+            "class": "GoogleTranslateProjectsLocationsAdaptiveMtDatasetsAdaptiveMtFilesAdaptiveMtSentencesList",
+            "http_method": "GET",
+            "path": "/v3/{+parent}/adaptiveMtSentences",
+            "type": "read"
+        }
+    ]
+}

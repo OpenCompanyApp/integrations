@@ -1,6 +1,6 @@
 # Integration: Microsoft Power BI
 
-> Microsoft Power BI integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list workspaces, datasets, reports, and get user profile. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Microsoft Power BI integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list workspaces, datasets, and reports. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
 Give your AI agents access to Power BI business intelligence. Browse workspaces, inspect datasets, and retrieve report details — all through the [Microsoft Power BI REST API](https://learn.microsoft.com/en-us/rest/api/power-bi/).
 
@@ -47,7 +47,6 @@ return [
 | `powerbi_get_dataset` | read | Get details for a specific dataset |
 | `powerbi_list_reports` | read | List reports within a workspace |
 | `powerbi_get_report` | read | Get details for a specific report |
-| `powerbi_get_current_user` | read | Get the authenticated user's Power BI profile |
 
 ## Quick Start
 
@@ -71,7 +70,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -109,9 +108,6 @@ $reports = $service->listReports('workspace-guid-here');
 
 // Get a specific report
 $report = $service->getReport('workspace-guid-here', 'report-guid-here');
-
-// Get current user profile
-$profile = $service->getCurrentUser();
 ```
 
 ## Dependencies

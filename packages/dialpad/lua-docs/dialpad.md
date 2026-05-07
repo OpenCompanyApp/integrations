@@ -1,189 +1,115 @@
-# Dialpad — Lua API Reference
+# Dialpad Lua Tools
 
-## list_calls
+Namespace: `dialpad`
 
-List call history records from Dialpad.
+The Dialpad integration exposes 193 operations from the official Dialpad API spec shipped with `dialpad-python-sdk`. Use these tools for users, calls, SMS, numbers, offices, departments, rooms, call centers, channels, contacts, webhooks, websocket subscriptions, stats jobs, transcripts, and access-control policies.
 
-### Parameters
+## Auth
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `startTime` | integer | no | Unix timestamp for the start of the date range |
-| `endTime` | integer | no | Unix timestamp for the end of the date range |
-| `limit` | integer | no | Maximum number of records to return (default: 50) |
-| `cursor` | string | no | Pagination cursor from a previous response |
+Configure `access_token`. Use `url = "https://sandbox.dialpad.com"` for sandbox calls. The default `auth_mode` is `bearer`; use `query` only if the target host expects the documented `apikey` query parameter.
 
-### Examples
+## Examples
 
 ```lua
--- List recent calls
-local result = app.integrations.dialpad.list_calls({
-  limit = 20
+local company = app.integrations.dialpad.company_get({})
+
+local users = app.integrations.dialpad.users_list({
+  state = "active",
+  email = "user@example.test"
 })
 
-for _, call in ipairs(result.items or {}) do
-  print(call.direction .. " call from " .. (call.from_number or "unknown"))
-end
-```
-
-```lua
--- List calls from the last 24 hours
-local now = os.time()
-local result = app.integrations.dialpad.list_calls({
-  startTime = now - 86400,
-  endTime = now,
-  limit = 100
+local message = app.integrations.dialpad.sms_send({
+  body = {
+    text = "Hello from an agent",
+    to_numbers = { "+14155550100" },
+    user_id = "123456789"
+  }
 })
 ```
 
----
+## Common Tools
 
-## get_call
+| Tool | Endpoint | Area |
+|------|----------|------|
+| `dialpad_accesscontrolpolicies_assign` | POST `/api/v2/accesscontrolpolicies/{id}/assign` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_assignments` | GET `/api/v2/accesscontrolpolicies/{id}/assignments` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_create` | POST `/api/v2/accesscontrolpolicies` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_delete` | DELETE `/api/v2/accesscontrolpolicies/{id}` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_get` | GET `/api/v2/accesscontrolpolicies/{id}` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_list` | GET `/api/v2/accesscontrolpolicies` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_unassign` | POST `/api/v2/accesscontrolpolicies/{id}/unassign` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_update` | PATCH `/api/v2/accesscontrolpolicies/{id}` | accesscontrolpolicies |
+| `dialpad_app_settings_get` | GET `/api/v2/app/settings` | app |
+| `dialpad_blockednumbers_add` | POST `/api/v2/blockednumbers/add` | blockednumbers |
+| `dialpad_blockednumbers_get` | GET `/api/v2/blockednumbers/{number}` | blockednumbers |
+| `dialpad_blockednumbers_list` | GET `/api/v2/blockednumbers` | blockednumbers |
+| `dialpad_blockednumbers_remove` | POST `/api/v2/blockednumbers/remove` | blockednumbers |
+| `dialpad_call_actions_hangup` | PUT `/api/v2/call/{id}/actions/hangup` | call |
+| `dialpad_call_call` | POST `/api/v2/call` | call |
+| `dialpad_call_get_call_info` | GET `/api/v2/call/{id}` | call |
+| `dialpad_call_initiate_ivr_call` | POST `/api/v2/call/initiate_ivr_call` | call |
+| `dialpad_call_list` | GET `/api/v2/call` | call |
+| `dialpad_call_participants_add` | POST `/api/v2/call/{id}/participants/add` | call |
+| `dialpad_call_put_call_labels` | PUT `/api/v2/call/{id}/labels` | call |
+| `dialpad_call_transfer_call` | POST `/api/v2/call/{id}/transfer` | call |
+| `dialpad_call_unpark` | POST `/api/v2/call/{id}/unpark` | call |
+| `dialpad_call_callback` | POST `/api/v2/callback` | callback |
+| `dialpad_call_validate_callback` | POST `/api/v2/callback/validate` | callback |
+| `dialpad_callcenters_create` | POST `/api/v2/callcenters` | callcenters |
+| `dialpad_callcenters_delete` | DELETE `/api/v2/callcenters/{id}` | callcenters |
+| `dialpad_callcenters_get` | GET `/api/v2/callcenters/{id}` | callcenters |
+| `dialpad_callcenters_listall` | GET `/api/v2/callcenters` | callcenters |
+| `dialpad_callcenters_operators_delete` | DELETE `/api/v2/callcenters/{id}/operators` | callcenters |
+| `dialpad_callcenters_operators_dutystatus` | PATCH `/api/v2/callcenters/operators/{id}/dutystatus` | callcenters |
+| `dialpad_callcenters_operators_get` | GET `/api/v2/callcenters/{id}/operators` | callcenters |
+| `dialpad_callcenters_operators_get_dutystatus` | GET `/api/v2/callcenters/operators/{id}/dutystatus` | callcenters |
+| `dialpad_callcenters_operators_get_skilllevel` | GET `/api/v2/callcenters/{call_center_id}/operators/{user_id}/skill` | callcenters |
+| `dialpad_callcenters_operators_post` | POST `/api/v2/callcenters/{id}/operators` | callcenters |
+| `dialpad_callcenters_operators_skilllevel` | PATCH `/api/v2/callcenters/{call_center_id}/operators/{user_id}/skill` | callcenters |
+| `dialpad_callcenters_status` | GET `/api/v2/callcenters/{id}/status` | callcenters |
+| `dialpad_callcenters_update` | PATCH `/api/v2/callcenters/{id}` | callcenters |
+| `dialpad_calllabel_list` | GET `/api/v2/calllabels` | calllabels |
+| `dialpad_call_review_share_link_create` | POST `/api/v2/callreviewsharelink` | callreviewsharelink |
+| `dialpad_call_review_share_link_delete` | DELETE `/api/v2/callreviewsharelink/{id}` | callreviewsharelink |
+| `dialpad_call_review_share_link_get` | GET `/api/v2/callreviewsharelink/{id}` | callreviewsharelink |
+| `dialpad_call_review_share_link_update` | PUT `/api/v2/callreviewsharelink/{id}` | callreviewsharelink |
+| `dialpad_callrouters_create` | POST `/api/v2/callrouters` | callrouters |
+| `dialpad_callrouters_delete` | DELETE `/api/v2/callrouters/{id}` | callrouters |
+| `dialpad_callrouters_get` | GET `/api/v2/callrouters/{id}` | callrouters |
+| `dialpad_callrouters_list` | GET `/api/v2/callrouters` | callrouters |
+| `dialpad_callrouters_update` | PATCH `/api/v2/callrouters/{id}` | callrouters |
+| `dialpad_numbers_assign_call_router_number_post` | POST `/api/v2/callrouters/{id}/assign_number` | callrouters |
+| `dialpad_channels_delete` | DELETE `/api/v2/channels/{id}` | channels |
+| `dialpad_channels_get` | GET `/api/v2/channels/{id}` | channels |
+| `dialpad_channels_list` | GET `/api/v2/channels` | channels |
+| `dialpad_channels_members_delete` | DELETE `/api/v2/channels/{id}/members` | channels |
+| `dialpad_channels_members_list` | GET `/api/v2/channels/{id}/members` | channels |
+| `dialpad_channels_members_post` | POST `/api/v2/channels/{id}/members` | channels |
+| `dialpad_channels_post` | POST `/api/v2/channels` | channels |
+| `dialpad_coaching_team_get` | GET `/api/v2/coachingteams/{id}` | coachingteams |
+| `dialpad_coaching_team_listall` | GET `/api/v2/coachingteams` | coachingteams |
+| `dialpad_coaching_team_members_add` | POST `/api/v2/coachingteams/{id}/members` | coachingteams |
+| `dialpad_coaching_team_members_get` | GET `/api/v2/coachingteams/{id}/members` | coachingteams |
+| `dialpad_company_get` | GET `/api/v2/company` | company |
+| `dialpad_company_sms_opt_out` | GET `/api/v2/company/{id}/smsoptout` | company |
+| `dialpad_conference_meetings_list` | GET `/api/v2/conference/meetings` | conference |
+| `dialpad_conference_rooms_list` | GET `/api/v2/conference/rooms` | conference |
+| `dialpad_contacts_create` | POST `/api/v2/contacts` | contacts |
+| `dialpad_contacts_create_with_uid` | PUT `/api/v2/contacts` | contacts |
+| `dialpad_contacts_delete` | DELETE `/api/v2/contacts/{id}` | contacts |
+| `dialpad_contacts_get` | GET `/api/v2/contacts/{id}` | contacts |
+| `dialpad_contacts_list` | GET `/api/v2/contacts` | contacts |
+| `dialpad_contacts_update` | PATCH `/api/v2/contacts/{id}` | contacts |
+| `dialpad_custom_ivrs_get` | GET `/api/v2/customivrs` | customivrs |
+| `dialpad_ivr_create` | POST `/api/v2/customivrs` | customivrs |
+| `dialpad_ivr_delete` | DELETE `/api/v2/customivrs/{target_type}/{target_id}/{ivr_type}` | customivrs |
+| `dialpad_ivr_update` | PATCH `/api/v2/customivrs/{target_type}/{target_id}/{ivr_type}` | customivrs |
+| `dialpad_ivr_details_update` | PATCH `/api/v2/customivrs/{ivr_id}` | customivrs |
+| `dialpad_departments_create` | POST `/api/v2/departments` | departments |
+| `dialpad_departments_delete` | DELETE `/api/v2/departments/{id}` | departments |
+| `dialpad_departments_get` | GET `/api/v2/departments/{id}` | departments |
+| `dialpad_departments_listall` | GET `/api/v2/departments` | departments |
+| `dialpad_departments_operators_delete` | DELETE `/api/v2/departments/{id}/operators` | departments |
+| `dialpad_departments_operators_get` | GET `/api/v2/departments/{id}/operators` | departments |
 
-Get details of a specific call record by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The call history record ID |
-
-### Example
-
-```lua
-local result = app.integrations.dialpad.get_call({ id = "call_abc123" })
-print("Duration: " .. (result.duration or 0) .. " seconds")
-```
-
----
-
-## list_sms
-
-List SMS messages from Dialpad.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `startTime` | integer | no | Unix timestamp for the start of the date range |
-| `endTime` | integer | no | Unix timestamp for the end of the date range |
-| `limit` | integer | no | Maximum number of messages to return (default: 50) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.dialpad.list_sms({
-  limit = 25
-})
-
-for _, msg in ipairs(result.items or {}) do
-  print(msg.from .. " -> " .. msg.to .. ": " .. msg.text)
-end
-```
-
----
-
-## send_sms
-
-Send an SMS message via Dialpad.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | string | yes | Recipient phone number in E.164 format (e.g., "+14155551234") |
-| `from` | string | yes | Sender phone number or department ID in E.164 format |
-| `text` | string | yes | The SMS message body |
-
-### Example
-
-```lua
-local result = app.integrations.dialpad.send_sms({
-  to = "+14155551234",
-  from = "+14155559876",
-  text = "Hello from Dialpad!"
-})
-print("Message sent, ID: " .. (result.id or "unknown"))
-```
-
----
-
-## list_users
-
-List users in the Dialpad organization.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of users to return (default: 50) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.dialpad.list_users({ limit = 100 })
-
-for _, user in ipairs(result.items or {}) do
-  print(user.first_name .. " " .. user.last_name .. " - " .. (user.email or ""))
-end
-```
-
----
-
-## get_user
-
-Get details of a specific Dialpad user by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Dialpad user ID |
-
-### Example
-
-```lua
-local result = app.integrations.dialpad.get_user({ id = "user_abc123" })
-print(result.first_name .. " " .. result.last_name)
-print("Email: " .. (result.email or "N/A"))
-```
-
----
-
-## get_current_user
-
-Get the profile of the currently authenticated Dialpad user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.dialpad.get_current_user({})
-print("Connected as: " .. result.first_name .. " " .. result.last_name)
-print("Email: " .. result.email)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Dialpad accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.dialpad.list_calls({ limit = 10 })
-
--- Explicit default (portable across setups)
-app.integrations.dialpad.default.list_calls({ limit = 10 })
-
--- Named accounts
-app.integrations.dialpad.work.list_calls({ limit = 10 })
-app.integrations.dialpad.support.list_calls({ limit = 10 })
-```
-
-All functions are identical across accounts — only the credentials differ.
+The full generated catalog contains all operations from the official Dialpad spec.

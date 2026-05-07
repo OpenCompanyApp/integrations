@@ -47,6 +47,7 @@ class CloudinaryGetResource implements Tool
         return [
             'type' => ['type' => 'string', 'required' => true, 'description' => 'Resource type: "image", "video", or "raw".'],
             'public_id' => ['type' => 'string', 'required' => true, 'description' => 'The public ID of the resource (e.g. "blog/hero-image").'],
+            'delivery_type' => ['type' => 'string', 'description' => 'Delivery type such as upload, private, or authenticated. Default: upload.'],
         ];
     }
 
@@ -64,8 +65,9 @@ class CloudinaryGetResource implements Tool
 
             $type = $args['type'];
             $publicId = $args['public_id'];
+            $deliveryType = $args['delivery_type'] ?? 'upload';
 
-            $result = $this->service->getResource($type, $publicId);
+            $result = $this->service->getResource($type, $publicId, $deliveryType);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

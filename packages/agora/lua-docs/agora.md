@@ -1,230 +1,171 @@
-# Agora — Lua API Reference
+# Agora Cloud Recording — Lua API Supplement
 
-## list_projects
+The Agora integration exposes the documented Cloud Recording RESTful API. Use it to acquire a recording resource, start a recording session, query status, update subscriptions or layouts, stop the session, and maintain notification-service firewall allowlists.
 
-List all Agora projects.
+Agora uses Basic REST authentication with a customer ID and customer secret plus an App ID with Cloud Recording enabled.
 
-### Parameters
+## Recording Workflow
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| — | — | — | No parameters required |
+Cloud Recording is a stateful workflow:
 
-### Example
+1. `acquire_recording_resource`
+2. `start_recording`
+3. `query_recording` while active
+4. `update_recording` or `update_recording_layout` when needed
+5. `stop_recording`
 
-```lua
-local result = app.integrations["agora"].list_projects({})
+The `resource_id` from acquire is single-use. The `sid` from start identifies the active recording session.
 
-for _, project in ipairs(result.data) do
-  print(project.id .. ": " .. project.name .. " (" .. project.status .. ")")
-end
-```
+## acquire_recording_resource
 
----
-
-## get_project
-
-Get details of a specific project by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | string | yes | The project ID |
-
-### Example
+Request a resource ID for one recording session.
 
 ```lua
-local result = app.integrations["agora"].get_project({
-  project_id = "abc123"
+local acquired = app.integrations.agora.acquire_recording_resource({
+  cname = "team-standup",
+  uid = "527841",
+  scene = 0,
+  resource_expired_hour = 24,
 })
 
-print("Project: " .. result.name)
-print("App ID: " .. result.app_id)
-print("Status: " .. result.status)
+local resource_id = acquired.resourceId
 ```
 
----
-
-## create_project
-
-Create a new Agora project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | A unique name for the project |
-| `recording_config` | object | no | Recording configuration (e.g., max_idle_time, stream_types) |
-| `sign_key` | boolean | no | Whether to enable a signaling key (default: false) |
-
-### Example
-
-```lua
-local result = app.integrations["agora"].create_project({
-  name = "my-video-app",
-  sign_key = true
-})
-
-print("Created project: " .. result.name)
-print("App ID: " .. result.app_id)
-```
-
----
-
-## list_recordings
-
-List cloud recordings with optional filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cname` | string | no | Filter by channel name |
-| `resource_id` | string | no | Filter by resource ID |
-| `limit` | integer | no | Maximum results (default: 20) |
-| `start_ts` | integer | no | Unix timestamp to filter recordings starting after this time |
-| `end_ts` | integer | no | Unix timestamp to filter recordings ending before this time |
-
-### Example
-
-```lua
-local result = app.integrations["agora"].list_recordings({
-  cname = "meeting-room",
-  limit = 10
-})
-
-for _, rec in ipairs(result.data) do
-  print(rec.sid .. ": " .. rec.cname .. " (" .. rec.status .. ")")
-end
-```
-
----
-
-## get_recording
-
-Get details of a specific recording by session ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `recording_id` | string | yes | The recording session ID (sid) |
-
-### Example
-
-```lua
-local result = app.integrations["agora"].get_recording({
-  recording_id = "sid-abc123"
-})
-
-print("SID: " .. result.sid)
-print("Channel: " .. result.cname)
-print("Status: " .. result.status)
-if result.file_list then
-  for _, file in ipairs(result.file_list) do
-    print("  File: " .. file.filename .. " -> " .. file.download_url)
-  end
-end
-```
-
----
+The `uid` must be unique inside the channel and must be reused in start and stop calls.
 
 ## start_recording
 
-Start a cloud recording for a channel.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cname` | string | yes | The channel name to record |
-| `uid` | string | yes | User ID of the recording client in the channel |
-| `clientRequest` | object | no | Recording and storage configuration |
-
-### clientRequest Syntax
+Start individual, composite, or web page recording. `mode` is `individual`, `mix`, or `web`.
 
 ```lua
-clientRequest = {
-  recordingConfig = {
-    maxIdleTime = 30,
+local started = app.integrations.agora.start_recording({
+  resource_id = resource_id,
+  mode = "mix",
+  cname = "team-standup",
+  uid = "527841",
+  recording_config = {
+    channelType = 1,
     streamTypes = 2,
-    channelType = 0
+    maxIdleTime = 30,
   },
-  storageConfig = {
+  recording_file_config = {
+    avFileType = { "hls" },
+  },
+  storage_config = {
     vendor = 1,
     region = 0,
-    bucket = "my-bucket",
-    accessKey = "...",
-    secretKey = "...",
-    fileNamePrefix = { "recording" }
-  }
-}
-```
-
-### Example
-
-```lua
-local result = app.integrations["agora"].start_recording({
-  cname = "meeting-room",
-  uid = "527841",
-  clientRequest = {
-    recordingConfig = {
-      maxIdleTime = 30,
-      streamTypes = 2
-    },
-    storageConfig = {
-      vendor = 1,
-      region = 0,
-      bucket = "my-recordings",
-      accessKey = "AKIA...",
-      secretKey = "secret...",
-      fileNamePrefix = { "agora", "rec" }
-    }
-  }
+    bucket = "recordings-example",
+    accessKey = "fake-access-key",
+    secretKey = "fake-secret-key",
+    fileNamePrefix = { "agora", "team-standup" },
+  },
 })
 
-print("Recording started: " .. result.sid)
-print("Resource ID: " .. result.resourceId)
+local sid = started.sid
 ```
 
----
+Storage credentials are sent directly to Agora. Use fake values in tests and docs, never real bucket credentials.
 
-## get_current_user
+## query_recording
 
-Get information about the current authenticated Agora user.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| — | — | — | No parameters required |
-
-### Example
+Check whether a session is active and inspect file or extension service state.
 
 ```lua
-local result = app.integrations["agora"].get_current_user({})
+local status = app.integrations.agora.query_recording({
+  resource_id = resource_id,
+  sid = sid,
+  mode = "mix",
+})
 
-print("User: " .. result.user.name)
-print("Email: " .. result.user.email)
+print(status.serverResponse.status)
 ```
 
----
+Agora's `serverResponse` differs by mode and configuration. Composite recordings can return `fileListMode`, `fileList`, and `uploadingStatus`; web recordings can return extension service state.
+
+## update_recording
+
+Update subscription lists or web recording extension state while a session is active.
+
+```lua
+app.integrations.agora.update_recording({
+  resource_id = resource_id,
+  sid = sid,
+  mode = "mix",
+  cname = "team-standup",
+  uid = "527841",
+  stream_subscribe = {
+    audioUidList = {
+      subscribeAudioUids = { "123", "456" },
+    },
+    videoUidList = {
+      subscribeVideoUids = { "123" },
+    },
+  },
+})
+```
+
+For newer Agora fields not yet promoted to first-class parameters, pass the documented `client_request` object directly. The tool still adds credentials and wraps it correctly.
+
+## update_recording_layout
+
+Update the mixed video layout for composite recordings.
+
+```lua
+app.integrations.agora.update_recording_layout({
+  resource_id = resource_id,
+  sid = sid,
+  cname = "team-standup",
+  uid = "527841",
+  mixed_video_layout = 3,
+  background_color = "#000000",
+  layout_config = {
+    { uid = "123", x_axis = 0, y_axis = 0, width = 0.5, height = 1, alpha = 1 },
+    { uid = "456", x_axis = 0.5, y_axis = 0, width = 0.5, height = 1, alpha = 1 },
+  },
+})
+```
+
+This tool always calls Agora's `mode/mix/updateLayout` endpoint.
+
+## stop_recording
+
+Stop the active session. After stop, acquire a new resource before recording again.
+
+```lua
+local stopped = app.integrations.agora.stop_recording({
+  resource_id = resource_id,
+  sid = sid,
+  mode = "mix",
+  cname = "team-standup",
+  uid = "527841",
+  async_stop = false,
+})
+
+print(stopped.serverResponse.uploadingStatus)
+```
+
+If `async_stop` is true, Agora returns before all files finish uploading.
+
+## get_notification_ips
+
+Fetch message notification service IP addresses for firewall allowlists.
+
+```lua
+local ips = app.integrations.agora.get_notification_ips({})
+
+for _, host in ipairs(ips.data.service.hosts) do
+  print(host.primaryIP)
+end
+```
+
+Agora recommends keeping this allowlist current because the notification service IPs can change.
 
 ## Multi-Account Usage
 
-If you have multiple Agora accounts configured, use account-specific namespaces:
+If multiple Agora accounts are configured, use account-specific namespaces:
 
 ```lua
--- Default account (always works)
-app.integrations["agora"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["agora"].default.function_name({...})
-
--- Named accounts
-app.integrations["agora"].production.function_name({...})
-app.integrations["agora"].staging.function_name({...})
+app.integrations.agora.acquire_recording_resource({...})
+app.integrations.agora.default.acquire_recording_resource({...})
+app.integrations.agora.production.acquire_recording_resource({...})
 ```
-
-All functions are identical across accounts — only the credentials differ.

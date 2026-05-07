@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-confluent",
-    "description": "Confluent Cloud Kafka integration for Laravel — manage topics, clusters, environments, and user info.",
+    "description": "Confluent Cloud integration for Laravel - generated coverage of the official Confluent Cloud REST APIs.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,15 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "confluent", "kafka", "messaging", "opencompany"],
+    "keywords": [
+        "tools",
+        "confluent",
+        "kafka",
+        "schema-registry",
+        "flink",
+        "streaming",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

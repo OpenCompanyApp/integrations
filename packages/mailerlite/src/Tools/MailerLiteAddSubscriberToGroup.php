@@ -13,6 +13,8 @@ class MailerLiteAddSubscriberToGroup implements Tool
 {
     /**
      * Create a new add subscriber to group tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -44,7 +46,7 @@ class MailerLiteAddSubscriberToGroup implements Tool
         return [
             'group_id' => ['type' => 'string', 'required' => true, 'description' => 'The group ID to add the subscriber to.'],
             'email' => ['type' => 'string', 'required' => true, 'description' => 'Subscriber email address.'],
-            'name' => ['type' => 'string', 'description' => 'Subscriber name (used if creating a new subscriber).'],
+            'name' => ['type' => 'string', 'description' => 'Subscriber name stored in the name field when creating or updating the subscriber.'],
         ];
     }
 

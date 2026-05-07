@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-contacts",
-    "description": "Google Contacts (People API) integration for Laravel — list connections, manage contacts and contact groups, access other contacts.",
+    "description": "Google Contacts integration for Laravel AI agents - generated People API v1 coverage for people, connections, other contacts, contact groups, members, and photos.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google", "contacts", "people-api", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-contacts": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,12 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "contacts",
+        "people",
+        "workspace",
+        "opencompany"
+    ]
 }

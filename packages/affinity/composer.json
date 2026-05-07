@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-affinity",
-    "description": "Affinity CRM integration for Laravel — manage contacts, organizations, and lists.",
+    "description": "Affinity CRM integration for Laravel - manage persons, companies, opportunities, lists, notes, fields, and interactions.",
     "license": "MIT",
     "authors": [
         {

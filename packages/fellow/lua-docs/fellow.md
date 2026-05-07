@@ -1,168 +1,130 @@
-# Fellow — Lua API Reference
+# Fellow Lua API Reference
 
-## list_meetings
+Namespace: `app.integrations.fellow`
 
-List meetings from Fellow with optional date filters and pagination.
+Fellow tools use the official Developer API at `https://{subdomain}.fellow.app/api/v1`. The integration sends credentials in the `X-API-KEY` header automatically.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `date_from` | string | no | Start date for filtering (ISO 8601, e.g., `"2026-01-01"`) |
-| `date_to` | string | no | End date for filtering (ISO 8601, e.g., `"2026-01-31"`) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-| `limit` | integer | no | Max meetings per page (default: 25) |
-
-### Examples
+## User
 
 ```lua
--- List all upcoming meetings
-local result = app.integrations.fellow.list_meetings({})
+local me = app.integrations.fellow.get_current_user({})
+```
 
--- List meetings in a date range
-local result = app.integrations.fellow.list_meetings({
-  date_from = "2026-04-01",
-  date_to = "2026-04-30"
+Returns the authenticated user and workspace context.
+
+## Notes
+
+```lua
+local notes = app.integrations.fellow.list_notes({
+  pagination = { page_size = 25 },
+  include = { transcript = true },
+  filters = { updated_at_start = "2026-05-01" }
 })
 
--- Paginate through results
-local page1 = app.integrations.fellow.list_meetings({ limit = 10 })
-local page2 = app.integrations.fellow.list_meetings({
-  cursor = page1.next_cursor,
-  limit = 10
+local note = app.integrations.fellow.get_note({
+  note_id = "note_123"
 })
 ```
 
----
-
-## get_meeting
-
-Get full details of a specific Fellow meeting.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `meeting_id` | string | yes | The Fellow meeting UUID |
-
-### Example
+`delete_note` exists for privileged API keys only:
 
 ```lua
-local result = app.integrations.fellow.get_meeting({
-  meeting_id = "abc123-def456-..."
-})
-
-print(result.title)
-print(result.date)
-for _, attendee in ipairs(result.attendees) do
-  print(attendee.name)
-end
+app.integrations.fellow.delete_note({ note_id = "note_123" })
 ```
 
----
-
-## create_note
-
-Create a note for a specific Fellow meeting.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `meeting_id` | string | yes | The Fellow meeting UUID |
-| `content` | string | yes | Note content (plain text or markdown) |
-| `title` | string | no | Optional title for the note |
-
-### Example
+## Action Items
 
 ```lua
-local result = app.integrations.fellow.create_note({
-  meeting_id = "abc123-def456-...",
-  content = "## Key Decisions\n- Approved Q2 budget\n- Hired new engineer",
-  title = "Meeting Summary"
+local items = app.integrations.fellow.list_action_items({
+  order_by = "due_date",
+  filters = { scope = "assigned_to_me" }
+})
+
+local item = app.integrations.fellow.get_action_item({
+  action_item_id = "action_123"
+})
+
+app.integrations.fellow.mark_action_item_complete({
+  action_item_id = "action_123",
+  completed = true
+})
+
+app.integrations.fellow.archive_action_item({
+  action_item_id = "action_123"
 })
 ```
 
----
+Supported `scope` filter values in Fellow docs include `assigned_to_me` and `assigned_to_others`.
 
-## list_action_items
-
-List action items from Fellow with pagination and optional status filter.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cursor` | string | no | Pagination cursor from a previous response |
-| `limit` | integer | no | Max action items per page (default: 25) |
-| `status` | string | no | Filter by status: `"open"`, `"completed"` |
-
-### Examples
+## Recordings
 
 ```lua
--- List all open action items
-local result = app.integrations.fellow.list_action_items({
-  status = "open"
+local recordings = app.integrations.fellow.list_recordings({
+  pagination = { page_size = 10 },
+  media_url = { expires_in = 3600 }
 })
 
--- List all action items
-local result = app.integrations.fellow.list_action_items({})
+local recording = app.integrations.fellow.get_recording({
+  recording_id = "rec_123"
+})
 ```
 
----
+`delete_recording` requires privileged API access.
 
-## list_goals
-
-List goals from Fellow.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cursor` | string | no | Pagination cursor from a previous response |
-| `limit` | integer | no | Max goals per page (default: 25) |
-
-### Example
+## Webhooks
 
 ```lua
-local result = app.integrations.fellow.list_goals({})
+local hooks = app.integrations.fellow.list_webhooks({
+  page_size = 20
+})
 
-for _, goal in ipairs(result.goals) do
-  print(goal.title .. " - " .. (goal.progress or "0") .. "% complete")
-end
+local hook = app.integrations.fellow.create_webhook({
+  url = "https://example.test/webhooks/fellow",
+  enabled_events = {
+    "ai_note.shared_to_channel",
+    "ai_note.generated",
+    "action_item.assigned",
+    "action_item.completed"
+  },
+  description = "Agent workflow webhook",
+  status = "active"
+})
+
+app.integrations.fellow.update_webhook({
+  webhook_id = "webhook_123",
+  status = "inactive"
+})
+
+app.integrations.fellow.delete_webhook({
+  webhook_id = "webhook_123"
+})
 ```
 
----
+## Generic API
 
-## get_current_user
-
-Get the profile of the currently authenticated Fellow user. Takes no parameters.
-
-### Example
+Use generic tools only for documented endpoints that do not yet have a first-class tool. Paths must be relative.
 
 ```lua
-local result = app.integrations.fellow.get_current_user({})
+local data = app.integrations.fellow.api_get({
+  path = "/me"
+})
 
-print("Logged in as: " .. result.first_name .. " " .. result.last_name)
-print("Email: " .. result.email)
+app.integrations.fellow.api_post({
+  path = "/action_items",
+  payload = {
+    filters = { scope = "assigned_to_me" }
+  }
+})
 ```
 
----
+Absolute URLs are rejected.
 
 ## Multi-Account Usage
 
-If you have multiple Fellow accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.fellow.list_meetings({})
-
--- Explicit default (portable across setups)
-app.integrations.fellow.default.list_meetings({})
-
--- Named accounts
-app.integrations.fellow.work.list_meetings({})
-app.integrations.fellow.personal.list_meetings({})
+app.integrations.fellow.get_current_user({})
+app.integrations.fellow.default.get_current_user({})
+app.integrations.fellow.leadership.list_notes({
+  pagination = { page_size = 10 }
+})
 ```
-
-All functions are identical across accounts — only the credentials differ.

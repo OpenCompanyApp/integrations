@@ -6,8 +6,16 @@ use OpenCompany\Integrations\LemonSqueezy\LemonSqueezyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch the authenticated Lemon Squeezy user profile.
+ *
+ * Useful for credential checks and account discovery.
+ */
 class LemonSqueezyGetCurrentUser implements Tool
 {
+    /**
+     * @param  LemonSqueezyService  $service  The Lemon Squeezy API client
+     */
     public function __construct(
         private LemonSqueezyService $service,
     ) {}
@@ -27,6 +35,11 @@ class LemonSqueezyGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get the current user for the configured Lemon Squeezy API key.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

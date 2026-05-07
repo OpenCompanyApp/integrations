@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a Flutterwave hosted payment link.
+ *
+ * Calls the Standard payments endpoint with transaction, amount, currency,
+ * customer, and optional redirect information.
+ */
 class FlutterwaveInitiatePayment implements Tool
 {
     /**
@@ -52,8 +58,7 @@ class FlutterwaveInitiatePayment implements Tool
     /**
      * Execute the tool: initiate a payment on Flutterwave.
      *
-     * @param  array  $args  The tool arguments (tx_ref, amount, currency, customer required).
-     * @return ToolResult The result containing the payment initiation response or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {
@@ -76,6 +81,10 @@ class FlutterwaveInitiatePayment implements Tool
 
             if (empty($args['customer']) || !is_array($args['customer'])) {
                 return ToolResult::error('The "customer" parameter is required and must be an object with at least an "email" field.');
+            }
+
+            if (empty($args['customer']['email'])) {
+                return ToolResult::error('The "customer.email" field is required.');
             }
 
             $data = [

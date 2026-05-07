@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Pushover\PushoverService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Validate the configured Pushover user key and return device/license metadata.
+ */
 class PushoverGetCurrentUser implements Tool
 {
+    /**
+     * @param  PushoverService  $service  The Pushover API client.
+     */
     public function __construct(
         private PushoverService $service,
     ) {}
@@ -19,7 +25,7 @@ class PushoverGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Validate the Pushover user credentials and retrieve account information.';
+        return 'Validate the configured Pushover user or group key and return active devices and licenses.';
     }
 
     public function parameters(): array
@@ -27,6 +33,11 @@ class PushoverGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Validate the configured Pushover user key.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -46,7 +57,7 @@ class PushoverGetCurrentUser implements Tool
             return ToolResult::success([
                 'valid' => true,
                 'devices' => $result['devices'] ?? [],
-                'license' => $result['license'] ?? null,
+                'licenses' => $result['licenses'] ?? ($result['license'] ?? []),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

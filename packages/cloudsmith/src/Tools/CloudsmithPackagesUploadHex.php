@@ -1,0 +1,45 @@
+<?php
+
+namespace OpenCompany\Integrations\Cloudsmith\Tools;
+
+/**
+ * Create a new Hex package.
+ *
+ * Maps to the official Cloudsmith endpoint post /packages/{owner}/{repo}/upload/hex/.
+ */
+class CloudsmithPackagesUploadHex extends AbstractCloudsmithTool
+{
+    protected const NAME = 'cloudsmith_packages_upload_hex';
+    protected const DESCRIPTION = 'Create a new Hex package
+
+Official Cloudsmith endpoint: POST /packages/{owner}/{repo}/upload/hex/
+
+Create a new Hex package';
+    protected const PARAMETERS = array (
+  'owner' => array (
+  'type' => 'string',
+  'description' => 'owner parameter.',
+  'required' => true,
+),
+  'repo' => array (
+  'type' => 'string',
+  'description' => 'repo parameter.',
+  'required' => true,
+),
+  'body' => array (
+  'type' => 'object',
+  'description' => 'JSON request body matching the Cloudsmith API schema.',
+),
+);
+    protected const METHOD = 'post';
+    protected const PATH = '/packages/{owner}/{repo}/upload/hex/';
+    protected const PATH_PARAMS = array (
+  'owner' => 'owner',
+  'repo' => 'repo',
+);
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = false;
+}

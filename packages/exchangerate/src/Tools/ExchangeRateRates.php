@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ExchangeRate\ExchangeRateService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch all exchange rates for one base currency.
+ */
 class ExchangeRateRates implements Tool
 {
+    /**
+     * @param  ExchangeRateService  $service  The exchange-rate API client.
+     */
     public function __construct(
         private ExchangeRateService $service,
     ) {}
@@ -31,6 +37,11 @@ class ExchangeRateRates implements Tool
         ];
     }
 
+    /**
+     * Fetch and optionally filter base-currency rates.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (base, date, currencies).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -45,17 +56,14 @@ class ExchangeRateRates implements Tool
 
             $rates = $result['rates'];
 
-            // Filter to specific currencies if requested
             $filter = $args['currencies'] ?? null;
             if ($filter) {
                 $codes = array_map('trim', array_map('strtolower', explode(',', $filter)));
                 $rates = array_intersect_key($rates, array_flip($codes));
             }
 
-            // Limit to 50 rates if no filter
             $total = count($rates);
             if (! $filter && $total > 50) {
-                // Show popular currencies first
                 $popular = array_intersect_key($rates, ExchangeRateService::POPULAR_CURRENCIES);
                 $rates = $popular;
             }

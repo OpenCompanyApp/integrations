@@ -82,7 +82,7 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
 
     public function appName(): string
     {
-        return 'google_search_console';
+        return 'google-search-console';
     }
 
     public function appMeta(): array
@@ -105,6 +105,8 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
             'category' => 'analytics',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/searchconsole.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-search-console',
         ];
     }    public function configSchema(): array
     {
@@ -268,7 +270,10 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleSearchConsoleService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleSearchConsoleService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleSearchConsoleService::class);
 
         return new $class($service);
     }

@@ -13,6 +13,8 @@ class MailerLiteUpdateSubscriber implements Tool
 {
     /**
      * Create a new update subscriber tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -42,9 +44,12 @@ class MailerLiteUpdateSubscriber implements Tool
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber ID or email address.'],
             'name' => ['type' => 'string', 'description' => 'Updated subscriber name.'],
             'fields' => ['type' => 'object', 'description' => 'Updated custom fields as key-value pairs.'],
+            'groups' => ['type' => 'array', 'description' => 'Complete group ID list for the subscriber. Omitted groups are removed by the API.'],
+            'status' => ['type' => 'string', 'enum' => ['active', 'unsubscribed', 'unconfirmed', 'bounced', 'junk'], 'description' => 'Subscriber status.'],
+            'subscribed_at' => ['type' => 'string', 'description' => 'Subscription date as yyyy-MM-dd HH:mm:ss.'],
         ];
     }
 
@@ -61,10 +66,23 @@ class MailerLiteUpdateSubscriber implements Tool
             }
 
             $id = $args['id'];
-            $name = $args['name'] ?? null;
-            $fields = $args['fields'] ?? [];
+            $payload = [];
 
-            $result = $this->service->updateSubscriber($id, $name, $fields);
+            if (($args['name'] ?? null) !== null) {
+                $payload['fields']['name'] = $args['name'];
+            }
+
+            if (isset($args['fields']) && is_array($args['fields'])) {
+                $payload['fields'] = array_merge($payload['fields'] ?? [], $args['fields']);
+            }
+
+            foreach (['groups', 'status', 'subscribed_at'] as $key) {
+                if (array_key_exists($key, $args)) {
+                    $payload[$key] = $args[$key];
+                }
+            }
+
+            $result = $this->service->updateSubscriber($id, $payload);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

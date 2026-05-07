@@ -1,16 +1,6 @@
 # Integration: Clearbit
 
-> Clearbit enrichment integration for the [Laravel AI SDK](https://github.com/laravel/ai) — enrich people and companies, reveal visitor identity, prospect by role. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to powerful data enrichment. Look up person and company data, identify website visitors by IP, and find prospects by job title — all through the [Clearbit](https://clearbit.com) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Clearbit tool lets AI agents enrich contact data, identify anonymous website visitors, and find potential prospects — giving agents data-driven context for sales, marketing, and research workflows.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+Clearbit data enrichment for AI agents: person enrichment, company enrichment, combined person/company enrichment, Reveal IP-to-company lookup, Prospector, Discovery, company autocomplete, legacy name-to-domain, legacy risk, and a read-only endpoint escape hatch.
 
 ## Installation
 
@@ -18,112 +8,75 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-clearbit
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
 
-This tool requires a Clearbit API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Most Clearbit endpoints require an API key from an existing Clearbit customer account. Company autocomplete is public and does not require authentication. Clearbit's Name to Domain and Risk APIs are legacy unsupported APIs for existing customers.
 
 ```php
 return [
     'clearbit' => [
         'api_key' => env('CLEARBIT_API_KEY'),
-        'url'     => env('CLEARBIT_URL', 'https://person.clearbit.com/v2'),
+        'url' => env('CLEARBIT_PERSON_URL', 'https://person.clearbit.com/v2'),
     ],
 ];
 ```
+
+The optional `url` field only overrides the Person API host. Other API families use their canonical Clearbit hosts:
+
+- `person.clearbit.com`
+- `company.clearbit.com`
+- `autocomplete.clearbit.com`
+- `prospector.clearbit.com`
+- `reveal.clearbit.com`
+- `discovery.clearbit.com`
+- `risk.clearbit.com`
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `clearbit_enrich_person` | read | Enrich a person by email — social profiles, employment, demographics |
-| `clearbit_enrich_company` | read | Enrich a company by domain — metrics, categorization, social profiles |
-| `clearbit_reveal` | read | Identify the company/person behind an IP address |
-| `clearbit_prospect` | read | Find people by job title and/or company name |
-| `clearbit_list_autocomplete` | read | Search for companies by name (autocomplete) |
-| `clearbit_get_current_user` | read | Get authenticated user's Clearbit account info |
+| `clearbit_enrich_person` | read | Enrich a person by email |
+| `clearbit_enrich_combined` | read | Enrich a person and associated company by email |
+| `clearbit_enrich_company` | read | Enrich a company by domain |
+| `clearbit_reveal` | read | Identify the company behind an IP address |
+| `clearbit_prospect` | read | Find people by domain, role, seniority, title, or company |
+| `clearbit_list_autocomplete` | read | Search public company autocomplete by name |
+| `clearbit_name_to_domain` | read | Resolve a company name to domain and logo |
+| `clearbit_discovery_search` | read | Search Clearbit Discovery companies |
+| `clearbit_calculate_risk` | read | Calculate a legacy Clearbit Risk score |
+| `clearbit_api_get` | read | Call a read-only endpoint on a named Clearbit API host |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Clearbit\ClearbitService;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichPerson;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichCompany;
-
-// Create tools
-$service = app(ClearbitService::class);
-$tools = [
-    new ClearbitEnrichPerson($service),
-    new ClearbitEnrichCompany($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Look up alex@stripe.com and tell me about their company.');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('clearbit');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichPerson::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\Clearbit\ClearbitService;
 
 $service = app(ClearbitService::class);
 
-// Enrich a person
-$person = $service->enrichPerson('alex@stripe.com');
-
-// Enrich a company
-$company = $service->enrichCompany('stripe.com');
-
-// Reveal visitor identity from IP
-$reveal = $service->reveal('104.193.168.24');
-
-// Prospect for people
-$prospects = $service->prospect(title: 'CEO', company: 'Stripe');
-
-// Autocomplete companies
-$suggestions = $service->autocomplete('Strip');
-
-// Get current user
-$user = $service->getCurrentUser();
+$person = $service->enrichPerson('person@example.test');
+$combined = $service->enrichCombined('person@example.test');
+$company = $service->enrichCompany('example.test');
+$reveal = $service->reveal('203.0.113.10');
+$prospects = $service->prospect(['domain' => 'example.test', 'roles' => 'sales,engineering']);
+$suggestions = $service->autocomplete('Example');
+$domain = $service->nameToDomain('Example');
 ```
+
+## Notes
+
+- Clearbit APIs use separate hosts per product family. This package routes requests to the correct host instead of using one global base URL.
+- `clearbit_list_autocomplete` works without an API key.
+- `clearbit_name_to_domain` and `clearbit_calculate_risk` are marked in docs as legacy unsupported APIs for existing customers.
+- The former current-user account check was removed from the provider because current Clearbit docs and official clients do not expose a user/account endpoint.
 
 ## Dependencies
 
 | Package | Purpose |
 |---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Clearbit](https://clearbit.com) account with API access
+| `opencompanyapp/integration-core` | ToolProvider contract and registry |
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

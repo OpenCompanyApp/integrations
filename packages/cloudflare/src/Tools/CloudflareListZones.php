@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Cloudflare\CloudflareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Cloudflare zones.
+ *
+ * Applies common zone filters and returns compact zone summaries.
+ */
 class CloudflareListZones implements Tool
 {
+    /**
+     * @param  CloudflareService  $service  Cloudflare API client.
+     */
     public function __construct(
         private CloudflareService $service,
     ) {}
@@ -32,6 +40,11 @@ class CloudflareListZones implements Tool
         ];
     }
 
+    /**
+     * List zones visible to the API token.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

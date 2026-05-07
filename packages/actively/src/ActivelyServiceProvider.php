@@ -30,7 +30,7 @@ class ActivelyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the service provider — register the tool provider with the registry.
+     * Boot the service provider - register the tool provider with the registry.
      */
     public function boot(): void
     {

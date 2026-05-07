@@ -3,258 +3,145 @@
 namespace OpenCompany\Integrations\GoogleForms;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsListForms;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsGetForm;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsCreateForm;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsListResponses;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsGetResponse;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsCreateResponse;
-use OpenCompany\Integrations\GoogleForms\Tools\GFormsGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Google Forms.
+ *
+ * Exposes generated coverage for the official Google Forms API v1 Discovery
+ * document, including forms, responses, publish settings, and watches.
+ */
+class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
      */
     public function integrationCapabilities(): array
     {
-        return [
-          'auth' => [
-            'strategy' => 'oauth2_manual_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
-            ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
-            ],
-            'notes' =>
-            [
-              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
-            ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
-        ];
+        return ['auth'=>['strategy'=>'oauth2_manual_token','legacy_auth_type'=>'oauth','credential_mode'=>'stored_token','setup_flows'=>['manual_token'],'requires_browser_for_setup'=>false,'refreshable'=>false,'token_keys'=>['access_token'],'notes'=>['Requires a Google OAuth access token with Forms API scopes.']],'host_availability'=>['web'=>['setup_supported'=>true,'runtime_supported'=>true,'setup_mode'=>'manual_token'],'cli'=>['setup_supported'=>true,'runtime_supported'=>true,'setup_mode'=>'manual_token','runtime_mode'=>'normal']],'runtime_requirements'=>[],'compatibility'=>['web_setup_supported'=>true,'web_runtime_supported'=>true,'cli_setup_supported'=>true,'cli_runtime_supported'=>true]];
     }
 
-    public function appName(): string
-    {
-        return 'google-forms';
-    }
+    public function appName(): string { return 'google-forms'; }
+    public function appMeta(): array { return ['label'=>'Google Forms','description'=>'Forms, responses, batch updates, publish settings, and watches','icon'=>'ph:clipboard-text','logo'=>'logos:google-icon']; }
+    public function integrationMeta(): array { return ['name'=>'Google Forms','description'=>'Generated coverage for the Google Forms API v1: forms, responses, batch updates, publish settings, and watches.','icon'=>'ph:clipboard-text','logo'=>'logos:google-icon','category'=>'productivity','badge'=>'verified','docs_url'=>'https://developers.google.com/workspace/forms/api/reference/rest']; }
+    public function configSchema(): array { return [['key'=>'access_token','type'=>'secret','label'=>'Access Token','placeholder'=>'Google OAuth access token','hint'=>'Use a Google OAuth 2.0 token with Forms API scopes.','required'=>true], ['key'=>'url','type'=>'url','label'=>'API Base URL','placeholder'=>'https://forms.googleapis.com','hint'=>'Override only for a proxy or compatible endpoint.','default'=>'https://forms.googleapis.com']]; }
 
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'Google Forms',
-            'description' => 'Create forms and collect responses',
-            'icon' => 'ph:clipboard-text',
-            'logo' => 'logos:google-forms',
-        ];
-    }
-
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Google Forms',
-            'description' => 'Create surveys, quizzes, and forms. Collect and manage responses.',
-            'icon' => 'ph:clipboard-text',
-            'logo' => 'logos:google-forms',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.google.com/forms/api',
-        ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Google OAuth access token',
-                'hint' => 'Use a Google OAuth 2.0 access token with Forms API scope (<code>https://www.googleapis.com/auth/forms</code>)',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://forms.googleapis.com',
-                'hint' => 'Override only if using a proxy or custom endpoint',
-                'default' => 'https://forms.googleapis.com',
-            ],
-        ];
-    }
-
+    /**
+     * Verify Google Forms credentials with token-presence only.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://forms.googleapis.com', '/');
-
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
-        }
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/v1/users/me');
-
-            $json = $response->json();
-
-            if ($response->successful() && isset($json['email'])) {
-                return [
-                    'success' => true,
-                    'message' => "Connected to Google Forms as {$json['email']}.",
-                ];
-            }
-
-            if ($response->successful()) {
-                return [
-                    'success' => true,
-                    'message' => "Connected to Google Forms API at {$baseUrl}.",
-                ];
-            }
-
-            $error = $json['error']['message'] ?? $response->body();
-
-            return [
-                'success' => false,
-                'error' => "Authentication failed: {$error}",
-            ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
+        $accessToken=(string)($config['access_token']??'');
+        return $accessToken==='' ? ['success'=>false,'error'=>'No access token provided.'] : ['success'=>true,'message'=>'Google Forms token is present. Use a form-specific read tool for a live check.'];
     }
 
-    public function validationRules(): array
-    {
-        return [
-            'access_token' => 'nullable|string',
-            'url' => 'nullable|url',
-        ];
-    }
+    public function validationRules(): array { return ['access_token'=>'nullable|string','url'=>'nullable|url']; }
 
     public function tools(): array
     {
         return [
-            'gforms_list_forms' => [
-                'class' => GFormsListForms::class,
-                'type' => 'read',
-                'name' => 'List Forms',
-                'description' => 'List Google Forms owned by the authenticated user.',
-                'icon' => 'ph:list',
-            ],
-            'gforms_get_form' => [
-                'class' => GFormsGetForm::class,
-                'type' => 'read',
-                'name' => 'Get Form',
-                'description' => 'Get details of a specific Google Form.',
-                'icon' => 'ph:clipboard-text',
-            ],
-            'gforms_create_form' => [
-                'class' => GFormsCreateForm::class,
-                'type' => 'write',
-                'name' => 'Create Form',
-                'description' => 'Create a new Google Form.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'gforms_list_responses' => [
-                'class' => GFormsListResponses::class,
-                'type' => 'read',
-                'name' => 'List Responses',
-                'description' => 'List responses submitted to a Google Form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'gforms_get_response' => [
-                'class' => GFormsGetResponse::class,
-                'type' => 'read',
-                'name' => 'Get Response',
-                'description' => 'Get a specific form response.',
-                'icon' => 'ph:file-text',
-            ],
-            'gforms_create_response' => [
-                'class' => GFormsCreateResponse::class,
-                'type' => 'write',
-                'name' => 'Submit Response',
-                'description' => 'Submit a response to a Google Form.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'gforms_get_current_user' => [
-                'class' => GFormsGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:user',
-            ],
+            'google_forms_forms_create' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsCreate',
+  'type' => 'write',
+  'name' => 'Forms Create',
+  'description' => 'Forms Create (POST /v1/forms).',
+  'icon' => 'ph:clipboard-text',
+),
+            'google_forms_forms_get' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsGet',
+  'type' => 'read',
+  'name' => 'Forms Get',
+  'description' => 'Forms Get (GET /v1/forms/{formId}).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_forms_forms_set_publish_settings' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsSetPublishSettings',
+  'type' => 'write',
+  'name' => 'Forms Set Publish Settings',
+  'description' => 'Forms Set Publish Settings (POST /v1/forms/{formId}:setPublishSettings).',
+  'icon' => 'ph:clipboard-text',
+),
+            'google_forms_forms_batch_update' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsBatchUpdate',
+  'type' => 'write',
+  'name' => 'Forms Batch Update',
+  'description' => 'Forms Batch Update (POST /v1/forms/{formId}:batchUpdate).',
+  'icon' => 'ph:clipboard-text',
+),
+            'google_forms_forms_responses_list' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsResponsesList',
+  'type' => 'read',
+  'name' => 'Forms Responses List',
+  'description' => 'Forms Responses List (GET /v1/forms/{formId}/responses).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_forms_forms_responses_get' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsResponsesGet',
+  'type' => 'read',
+  'name' => 'Forms Responses Get',
+  'description' => 'Forms Responses Get (GET /v1/forms/{formId}/responses/{responseId}).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_forms_forms_watches_renew' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsWatchesRenew',
+  'type' => 'write',
+  'name' => 'Forms Watches Renew',
+  'description' => 'Forms Watches Renew (POST /v1/forms/{formId}/watches/{watchId}:renew).',
+  'icon' => 'ph:clipboard-text',
+),
+            'google_forms_forms_watches_create' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsWatchesCreate',
+  'type' => 'write',
+  'name' => 'Forms Watches Create',
+  'description' => 'Forms Watches Create (POST /v1/forms/{formId}/watches).',
+  'icon' => 'ph:clipboard-text',
+),
+            'google_forms_forms_watches_list' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsWatchesList',
+  'type' => 'read',
+  'name' => 'Forms Watches List',
+  'description' => 'Forms Watches List (GET /v1/forms/{formId}/watches).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_forms_forms_watches_delete' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleForms\\Tools\\GoogleFormsFormsWatchesDelete',
+  'type' => 'write',
+  'name' => 'Forms Watches Delete',
+  'description' => 'Forms Watches Delete (DELETE /v1/forms/{formId}/watches/{watchId}).',
+  'icon' => 'ph:clipboard-text',
+),
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function credentialFields(): array { return $this->configSchema(); }
+    public function isIntegration(): bool { return true; }
+
+    /**
+     * Create a Google Forms tool from the catalog class name.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
+    public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): GoogleFormsService
     {
-        return __DIR__ . '/../lua-docs/google-forms.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://forms.googleapis.com'],
-        ];
+        $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleFormsService(accessToken: $creds->get('google-forms','access_token','',$account), baseUrl: $creds->get('google-forms','url','https://forms.googleapis.com',$account));}
+        return app(GoogleFormsService::class);
     }
 
-    public function isIntegration(): bool
-    {
-        return true;
-    }
-
-    public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
-
-        if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
-
-            $service = new GoogleFormsService(
-                accessToken: $creds->get('google-forms', 'access_token', '', $account),
-                baseUrl: $creds->get('google-forms', 'url', 'https://forms.googleapis.com', $account),
-            );
-
-            return new $class($service);
-        }
-
-        return new $class(app(GoogleFormsService::class));
-    }
+    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-forms.md'; }
 }

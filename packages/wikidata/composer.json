@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-wikidata",
+    "description": "Wikidata integration for Laravel AI agents - entity search, entity data, claims, SPARQL, and stable entity URLs.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Wikidata\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Wikidata\\WikidataServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "wikidata",
+        "wikibase",
+        "sparql",
+        "knowledge-graph",
+        "entities",
+        "opencompany"
+    ]
+}

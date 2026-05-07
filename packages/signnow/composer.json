@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-signnow",
-    "description": "SignNow integration for Laravel — manage documents, templates, and signing invites.",
+    "description": "SignNow integration for Laravel: documents, templates, invites, downloads, and API helpers.",
     "license": "MIT",
     "authors": [
         {

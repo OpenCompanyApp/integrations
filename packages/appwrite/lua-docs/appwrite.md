@@ -1,203 +1,146 @@
-# Appwrite — Lua API Reference
+# Appwrite - Lua API Reference
 
-## list_databases
+Namespace: `app.integrations.appwrite`
 
-List all databases in the Appwrite project.
+This integration uses the Appwrite server REST API with `X-Appwrite-Key` and `X-Appwrite-Project` headers. Configure the Appwrite Cloud endpoint, for example `https://cloud.appwrite.io/v1`, or a self-hosted `/v1` endpoint.
 
-### Parameters
+## Coverage
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of databases to return (default: 25) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-| `search` | string | no | Search term to filter databases by name |
+Tools cover the main server-side Appwrite surfaces:
 
-### Example
+- Databases: list, create, get, update, delete databases.
+- Collections: list, create, get, update, delete collections.
+- Documents: list, create, get, update, delete documents.
+- Users: list, create, get, enable or block, delete users.
+- Teams: list, create, get, delete teams, and list memberships.
+- Storage: list, create, get, update, delete buckets; list, get, delete files.
+- Functions: list and get functions; create, list, and get executions.
+- Messaging: list providers, topics, and messages; create or delete topics; create email and push messages.
+
+## Query Parameters
+
+Appwrite's REST API accepts `queries` arrays generated with Appwrite's Query helpers. Pass those query strings directly:
 
 ```lua
-local result = app.integrations.appwrite.list_databases({
-  limit = 50
+local users = app.integrations.appwrite.list_users({
+  queries = {'limit(25)', 'orderDesc("$createdAt")'},
+  search = "ada"
 })
-
-for _, db in ipairs(result.databases) do
-  print(db["$id"] .. ": " .. db.name)
-end
 ```
 
----
-
-## get_database
-
-Get details of a specific database.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The database ID |
-
-### Example
+## Databases
 
 ```lua
-local result = app.integrations.appwrite.get_database({
-  id = "my_database_id"
+local database = app.integrations.appwrite.create_database({
+  database_id = "crm",
+  name = "CRM"
 })
 
-print("Database: " .. result.name)
-```
-
----
-
-## list_collections
-
-List all collections in a database.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `database_id` | string | yes | The database ID |
-| `limit` | integer | no | Maximum number of collections to return (default: 25) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.appwrite.list_collections({
-  database_id = "my_database_id",
-  limit = 50
+local collection = app.integrations.appwrite.create_collection({
+  database_id = "crm",
+  collection_id = "contacts",
+  name = "Contacts",
+  permissions = {"read(\"any\")"},
+  document_security = true
 })
 
-for _, col in ipairs(result.collections) do
-  print(col["$id"] .. ": " .. col.name)
-end
-```
-
----
-
-## list_documents
-
-List documents in a collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `database_id` | string | yes | The database ID |
-| `collection_id` | string | yes | The collection ID |
-| `limit` | integer | no | Maximum number of documents to return (default: 25) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.appwrite.list_documents({
-  database_id = "my_database_id",
-  collection_id = "my_collection_id",
-  limit = 10
-})
-
-for _, doc in ipairs(result.documents) do
-  print(doc["$id"] .. ": " .. (doc.name or "unnamed"))
-end
-```
-
----
-
-## get_document
-
-Get a single document by its ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `database_id` | string | yes | The database ID |
-| `collection_id` | string | yes | The collection ID |
-| `doc_id` | string | yes | The document ID |
-
-### Example
-
-```lua
-local result = app.integrations.appwrite.get_document({
-  database_id = "my_database_id",
-  collection_id = "my_collection_id",
-  doc_id = "my_document_id"
-})
-
-print("Document: " .. result["$id"])
-for key, value in pairs(result) do
-  print("  " .. key .. " = " .. tostring(value))
-end
-```
-
----
-
-## create_document
-
-Create a new document in a collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `database_id` | string | yes | The database ID |
-| `collection_id` | string | yes | The collection ID |
-| `document_id` | string | yes | Unique ID for the document (use `"unique()"` to auto-generate) |
-| `data` | object | yes | Document data as key-value pairs matching collection attributes |
-
-### Example
-
-```lua
-local result = app.integrations.appwrite.create_document({
-  database_id = "my_database_id",
-  collection_id = "my_collection_id",
+local document = app.integrations.appwrite.create_document({
+  database_id = "crm",
+  collection_id = "contacts",
   document_id = "unique()",
   data = {
-    title = "My Document",
-    content = "Hello, world!",
-    status = "active"
+    name = "Ada Example",
+    email = "ada@example.test"
   }
 })
-
-print("Created document: " .. result["$id"])
 ```
 
----
+Existing database/document tools use snake_case arguments such as `database_id`, `collection_id`, and `document_id`. New tools keep the same convention and map to Appwrite's camelCase REST fields internally.
 
-## get_current_user
-
-Get the currently authenticated Appwrite user account.
-
-### Parameters
-
-None.
-
-### Example
+## Users And Teams
 
 ```lua
-local result = app.integrations.appwrite.get_current_user({})
+local user = app.integrations.appwrite.create_user({
+  user_id = "unique()",
+  email = "ada@example.test",
+  password = "replace-with-generated-secret",
+  name = "Ada Example"
+})
 
-print("User: " .. result.name)
-print("Email: " .. result.email)
+app.integrations.appwrite.update_user_status({
+  user_id = user["$id"],
+  status = false
+})
+
+local team = app.integrations.appwrite.create_team({
+  team_id = "ops",
+  name = "Operations",
+  roles = {"owner"}
+})
 ```
 
----
+## Storage
+
+```lua
+local bucket = app.integrations.appwrite.create_bucket({
+  bucket_id = "imports",
+  name = "Imports",
+  file_security = true,
+  maximum_file_size = 10485760,
+  allowed_file_extensions = {"csv", "json"}
+})
+
+local files = app.integrations.appwrite.list_files({
+  bucket_id = "imports",
+  queries = {'limit(10)'}
+})
+```
+
+File upload/download endpoints are intentionally not wrapped here because they need multipart or binary response handling. Use storage metadata tools to inspect and clean up files from agents.
+
+## Functions
+
+```lua
+local execution = app.integrations.appwrite.create_execution({
+  function_id = "sync_contacts",
+  body = '{"dry_run":true}',
+  async = false,
+  method = "POST"
+})
+```
+
+Function execution `body` is a string because Appwrite passes it to the function runtime as request body content.
+
+## Messaging
+
+```lua
+local topic = app.integrations.appwrite.create_topic({
+  topic_id = "product_updates",
+  name = "Product updates",
+  subscribe = {"user:example"}
+})
+
+local email = app.integrations.appwrite.create_email({
+  message_id = "unique()",
+  subject = "Status update",
+  content = "Deployment completed.",
+  users = {"user_123"},
+  draft = true
+})
+```
+
+Messaging provider setup is provider-specific, so the integration exposes list operations for providers and message/topic operations that are safe to drive from agents.
+
+## Return Shapes
+
+Responses are the normalized Appwrite REST JSON payloads. Collection list endpoints usually return `total` plus an array named for the resource, such as `databases`, `collections`, `documents`, `users`, `teams`, `buckets`, `files`, `functions`, `executions`, `topics`, or `messages`.
 
 ## Multi-Account Usage
 
-If you have multiple Appwrite accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.appwrite.list_databases({...})
-
--- Explicit default (portable across setups)
-app.integrations.appwrite.default.list_databases({...})
-
--- Named accounts
-app.integrations.appwrite.production.list_databases({...})
-app.integrations.appwrite.staging.list_databases({...})
+app.integrations.appwrite.list_databases({})
+app.integrations.appwrite.default.list_databases({})
+app.integrations.appwrite.production.list_databases({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only credentials differ.

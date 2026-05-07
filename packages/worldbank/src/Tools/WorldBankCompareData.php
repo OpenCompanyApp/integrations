@@ -6,8 +6,14 @@ use OpenCompany\Integrations\WorldBank\WorldBankService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Compare one World Bank indicator across multiple countries.
+ */
 class WorldBankCompareData implements Tool
 {
+    /**
+     * @param  WorldBankService  $service  The World Bank API client.
+     */
     public function __construct(
         private WorldBankService $service,
     ) {}
@@ -31,6 +37,11 @@ class WorldBankCompareData implements Tool
         ];
     }
 
+    /**
+     * Compare indicator observations by country.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (indicator, countries, date_range).
+     */
     public function execute(array $args): ToolResult
     {
         try {

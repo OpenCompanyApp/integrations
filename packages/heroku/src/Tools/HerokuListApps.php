@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Heroku\HerokuService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Heroku apps visible to the authenticated account.
+ */
 class HerokuListApps implements Tool
 {
+    /**
+     * @param  HerokuService  $service  The Heroku Platform API client.
+     */
     public function __construct(
         private HerokuService $service,
     ) {}
@@ -27,6 +33,11 @@ class HerokuListApps implements Tool
         return [];
     }
 
+    /**
+     * List apps available to the authenticated Heroku account.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -1,131 +1,61 @@
 # Integration: Fellow
 
-> Fellow meeting management integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list meetings, manage notes, action items, and goals. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to meeting management. List upcoming and past meetings, create notes, track action items, and monitor goals — all through the [Fellow](https://fellow.app) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Fellow tool lets AI agents access meeting data, create notes, and track action items — giving agents context-aware meeting intelligence.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-fellow
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Fellow Developer API integration for OpenCompany agents. It wraps the official v1 API for authenticated workspace user data, notes, action items, recordings, webhooks, and controlled generic API calls.
 
 ## Configuration
 
-This tool requires a Fellow API access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Fellow uses a workspace subdomain and an API key sent in the `X-API-KEY` header.
 
 ```php
 return [
     'fellow' => [
-        'access_token' => env('FELLOW_ACCESS_TOKEN'),
-        'url'          => env('FELLOW_URL', 'https://api.fellow.app/v2'),
+        'api_key' => env('FELLOW_API_KEY'),
+        'subdomain' => env('FELLOW_SUBDOMAIN'),
+        'url' => env('FELLOW_URL'), // optional override
     ],
 ];
 ```
+
+If `url` is omitted, the integration builds `https://{subdomain}.fellow.app/api/v1`.
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `fellow_list_meetings` | read | List meetings with date filters and pagination |
-| `fellow_get_meeting` | read | Get details of a specific meeting |
-| `fellow_create_note` | write | Create a note for a meeting |
-| `fellow_list_action_items` | read | List action items with pagination |
-| `fellow_list_goals` | read | List goals |
-| `fellow_get_current_user` | read | Get the authenticated user profile |
+| `fellow_get_current_user` | read | Get the authenticated Fellow user and workspace. |
+| `fellow_list_notes` | read | List notes with optional filters, includes, and pagination. |
+| `fellow_get_note` | read | Retrieve a note by ID. |
+| `fellow_delete_note` | write | Delete a note by ID. Requires privileged API access. |
+| `fellow_list_action_items` | read | List action items with optional filters and pagination. |
+| `fellow_get_action_item` | read | Retrieve an action item by ID. |
+| `fellow_mark_action_item_complete` | write | Mark an action item complete or incomplete. |
+| `fellow_archive_action_item` | write | Archive an action item as won't do. |
+| `fellow_list_recordings` | read | List recordings with optional filters and pagination. |
+| `fellow_get_recording` | read | Retrieve a recording by ID. |
+| `fellow_delete_recording` | write | Delete a recording by ID. Requires privileged API access. |
+| `fellow_list_webhooks` | read | List configured webhooks. |
+| `fellow_create_webhook` | write | Create a webhook endpoint. |
+| `fellow_get_webhook` | read | Retrieve a webhook by ID. |
+| `fellow_update_webhook` | write | Update a webhook endpoint. |
+| `fellow_delete_webhook` | write | Delete a webhook endpoint. |
+| `fellow_api_get` | read | Call a documented relative GET path. |
+| `fellow_api_post` | write | Call a documented relative POST path. |
+| `fellow_api_patch` | write | Call a documented relative PATCH path. |
+| `fellow_api_delete` | write | Call a documented relative DELETE path. |
 
-## Quick Start
+## Notes
 
-```php
-use OpenCompany\Integrations\Fellow\FellowService;
-use OpenCompany\Integrations\Fellow\Tools\FellowListMeetings;
-use OpenCompany\Integrations\Fellow\Tools\FellowCreateNote;
-
-// Create tools
-$service = app(FellowService::class);
-$tools = [
-    new FellowListMeetings($service),
-    new FellowCreateNote($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('What meetings do I have today?');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('fellow');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Fellow\Tools\FellowListMeetings::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Fellow\FellowService;
-
-$service = app(FellowService::class);
-
-// List meetings
-$meetings = $service->listMeetings(['date_from' => '2026-04-01', 'date_to' => '2026-04-30']);
-
-// Get a specific meeting
-$meeting = $service->getMeeting('meeting-uuid-here');
-
-// Create a note
-$note = $service->createNote('meeting-uuid-here', [
-    'content' => 'Key decisions from the meeting...',
-]);
-
-// List action items
-$actionItems = $service->listActionItems(['status' => 'open']);
-
-// List goals
-$goals = $service->listGoals();
-
-// Get current user
-$user = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+- The package targets the official `https://{subdomain}.fellow.app/api/v1` Developer API.
+- Older meeting, goal, and create-note wrappers were removed from discovery because they are not documented in the current Developer API reference.
+- Generic API tools accept only relative paths and reject absolute URLs.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Fellow](https://fellow.app) account with API access
+- `opencompanyapp/integration-core`
+- A Fellow workspace with Developer API access
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT. See [LICENSE](LICENSE).

@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Statuspage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Atlassian Statuspage Manage API.
+ *
+ * Handles page-scoped incident and component operations with Statuspage API token authentication.
+ */
 class StatuspageService
 {
+    /**
+     * @param  string  $apiKey  Statuspage API key.
+     * @param  string  $pageId  Default Statuspage page id.
+     * @param  string  $baseUrl  Statuspage API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $pageId = '',
@@ -21,6 +31,14 @@ class StatuspageService
     public function isConfigured(): bool
     {
         return !empty($this->apiKey) && !empty($this->pageId);
+    }
+
+    /**
+     * Check whether the service has an API key for non-page-scoped requests.
+     */
+    public function hasApiKey(): bool
+    {
+        return !empty($this->apiKey);
     }
 
     /**
@@ -42,6 +60,28 @@ class StatuspageService
     }
 
     /**
+     * List pages visible to the authenticated API key.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<int, array<string, mixed>>
+     */
+    public function listPages(array $params = []): array
+    {
+        return $this->request('GET', '/pages', $params);
+    }
+
+    /**
+     * Get details for the configured or supplied page.
+     *
+     * @param  string|null  $pageId  Page id; defaults to the configured page.
+     * @return array<string, mixed>
+     */
+    public function getPage(?string $pageId = null): array
+    {
+        return $this->request('GET', '/pages/' . ($pageId ?: $this->pageId));
+    }
+
+    /**
      * List all incidents for the configured page.
      *
      * @param  array<string, mixed>  $params  Query parameters (e.g. filter, limit).
@@ -52,6 +92,28 @@ class StatuspageService
     public function listIncidents(array $params = []): array
     {
         return $this->request('GET', "/pages/{$this->pageId}/incidents", $params);
+    }
+
+    /**
+     * List unresolved incidents for the configured page.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<int, array<string, mixed>>
+     */
+    public function listUnresolvedIncidents(array $params = []): array
+    {
+        return $this->request('GET', "/pages/{$this->pageId}/incidents/unresolved", $params);
+    }
+
+    /**
+     * List upcoming scheduled incidents for the configured page.
+     *
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<int, array<string, mixed>>
+     */
+    public function listUpcomingIncidents(array $params = []): array
+    {
+        return $this->request('GET', "/pages/{$this->pageId}/incidents/upcoming", $params);
     }
 
     /**
@@ -86,15 +148,74 @@ class StatuspageService
     }
 
     /**
+     * Delete an incident from the configured page.
+     *
+     * @param  string  $incidentId  The incident ID to delete.
+     */
+    public function deleteIncident(string $incidentId): void
+    {
+        $this->request('DELETE', "/pages/{$this->pageId}/incidents/{$incidentId}");
+    }
+
+    /**
      * List all components for the configured page.
      *
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<int, array<string, mixed>>
      *
      * @see https://developer.statuspage.io/#operation/getPagesPageIdComponents
      */
-    public function listComponents(): array
+    public function listComponents(array $params = []): array
     {
-        return $this->request('GET', "/pages/{$this->pageId}/components");
+        return $this->request('GET', "/pages/{$this->pageId}/components", $params);
+    }
+
+    /**
+     * Get a single component by id.
+     *
+     * @param  string  $componentId  Component id.
+     * @return array<string, mixed>
+     */
+    public function getComponent(string $componentId): array
+    {
+        return $this->request('GET', "/pages/{$this->pageId}/components/{$componentId}");
+    }
+
+    /**
+     * Create a component for the configured page.
+     *
+     * @param  array<string, mixed>  $component  Component payload.
+     * @return array<string, mixed>
+     */
+    public function createComponent(array $component): array
+    {
+        return $this->request('POST', "/pages/{$this->pageId}/components", [
+            'component' => $component,
+        ]);
+    }
+
+    /**
+     * Update an existing component.
+     *
+     * @param  string  $componentId  Component id.
+     * @param  array<string, mixed>  $updates  Component fields to update.
+     * @return array<string, mixed>
+     */
+    public function updateComponent(string $componentId, array $updates): array
+    {
+        return $this->request('PATCH', "/pages/{$this->pageId}/components/{$componentId}", [
+            'component' => $updates,
+        ]);
+    }
+
+    /**
+     * Delete a component from the configured page.
+     *
+     * @param  string  $componentId  Component id.
+     */
+    public function deleteComponent(string $componentId): void
+    {
+        $this->request('DELETE', "/pages/{$this->pageId}/components/{$componentId}");
     }
 
     /**
@@ -108,6 +229,10 @@ class StatuspageService
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+
+        if ($response->status() === 204 || $response->body() === '') {
+            return [];
+        }
 
         return $response->json() ?? [];
     }
@@ -132,7 +257,7 @@ class StatuspageService
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'OAuth ' . $this->apiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 

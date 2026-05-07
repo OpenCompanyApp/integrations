@@ -1,0 +1,57 @@
+{
+    "source": "https://admin.googleapis.com/$discovery/rest?version=reports_v1",
+    "service": "Admin SDK Reports API",
+    "version": "reports_v1",
+    "method_count": 6,
+    "generated_package": "google-admin-reports",
+    "methods": [
+        {
+            "discovery_id": "userUsageReport.get",
+            "tool": "google_admin_reports_user_usage_report_get",
+            "class": "GoogleAdminReportsUserUsageReportGet",
+            "http_method": "GET",
+            "path": "/admin/reports/v1/usage/users/{userKey}/dates/{date}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customerUsageReports.get",
+            "tool": "google_admin_reports_customer_usage_reports_get",
+            "class": "GoogleAdminReportsCustomerUsageReportsGet",
+            "http_method": "GET",
+            "path": "/admin/reports/v1/usage/dates/{date}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "entityUsageReports.get",
+            "tool": "google_admin_reports_entity_usage_reports_get",
+            "class": "GoogleAdminReportsEntityUsageReportsGet",
+            "http_method": "GET",
+            "path": "/admin/reports/v1/usage/{entityType}/{entityKey}/dates/{date}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "channels.stop",
+            "tool": "google_admin_reports_channels_stop",
+            "class": "GoogleAdminReportsChannelsStop",
+            "http_method": "POST",
+            "path": "/admin/reports_v1/channels/stop",
+            "type": "write"
+        },
+        {
+            "discovery_id": "activities.list",
+            "tool": "google_admin_reports_activities_list",
+            "class": "GoogleAdminReportsActivitiesList",
+            "http_method": "GET",
+            "path": "/admin/reports/v1/activity/users/{userKey}/applications/{applicationName}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "activities.watch",
+            "tool": "google_admin_reports_activities_watch",
+            "class": "GoogleAdminReportsActivitiesWatch",
+            "http_method": "POST",
+            "path": "/admin/reports/v1/activity/users/{userKey}/applications/{applicationName}/watch",
+            "type": "write"
+        }
+    ]
+}

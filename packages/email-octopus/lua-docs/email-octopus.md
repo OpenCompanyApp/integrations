@@ -1,145 +1,123 @@
-# EmailOctopus Lua API Reference
+# EmailOctopus - Lua API Reference
 
-## Overview
+Namespace: `app.integrations["email-octopus"]`
 
-The EmailOctopus integration provides tools for managing contacts, viewing campaigns, and accessing account information via the EmailOctopus API.
+This integration targets the public EmailOctopus v1.6 API documentation. API v2
+exists in EmailOctopus dashboards, but public method-level docs currently expose
+the v1.6 routes.
 
-All tools are available under the `emailoctopus_` namespace.
-
----
-
-## Tools
-
-### `emailoctopus_list_contacts`
-
-List contacts in an EmailOctopus mailing list.
-
-**Parameters:**
-
-| Parameter  | Type    | Required | Description                                          |
-|------------|---------|----------|------------------------------------------------------|
-| `list_id`  | string  | No       | List ID to query. Uses default configured list if omitted. |
-| `limit`    | integer | No       | Max contacts to return (default: 100, max: 100).     |
-| `before`   | string  | No       | Pagination cursor — contact ID to paginate before.   |
-| `after`    | string  | No       | Pagination cursor — contact ID to paginate after.    |
-
-**Example:**
+## Lists, Tags, And Fields
 
 ```lua
-app.integrations["email-octopus"].work.emailoctopus_list_contacts({
-    limit = 25,
+local lists = app.integrations["email-octopus"].emailoctopus_list_lists({
+  limit = 25,
+  page = 1
+})
+
+local list = app.integrations["email-octopus"].emailoctopus_get_list({
+  list_id = "list_123"
+})
+
+app.integrations["email-octopus"].emailoctopus_create_tag({
+  list_id = "list_123",
+  tag = "vip"
+})
+
+app.integrations["email-octopus"].emailoctopus_create_field({
+  list_id = "list_123",
+  tag = "Birthday",
+  type = "DATE",
+  label = "Birthday"
 })
 ```
 
----
+List-scoped tools use the configured default list ID when `list_id` is omitted.
 
-### `emailoctopus_get_contact`
-
-Get details of a specific contact.
-
-**Parameters:**
-
-| Parameter     | Type   | Required | Description                                          |
-|---------------|--------|----------|------------------------------------------------------|
-| `contact_id`  | string | Yes      | The contact ID to retrieve.                          |
-| `list_id`     | string | No       | The list ID. Uses default configured list if omitted.|
-
-**Example:**
+## Contacts
 
 ```lua
-app.integrations["email-octopus"].work.emailoctopus_get_contact({
-    contact_id = "cntg_abc123",
+app.integrations["email-octopus"].emailoctopus_create_contact({
+  list_id = "list_123",
+  email_address = "reader@example.test",
+  fields = {
+    FirstName = "Ada"
+  },
+  tags = { "vip" },
+  status = "SUBSCRIBED"
+})
+
+local contact = app.integrations["email-octopus"].emailoctopus_get_contact({
+  list_id = "list_123",
+  member_id = "member_123"
+})
+
+app.integrations["email-octopus"].emailoctopus_update_contact({
+  list_id = "list_123",
+  member_id = "member_123",
+  tags = {
+    vip = true,
+    oldTag = false
+  }
 })
 ```
 
----
+For `member_id`, EmailOctopus accepts either the list contact ID or the MD5 hash
+of the lowercase email address.
 
-### `emailoctopus_create_contact`
-
-Add a new contact to a mailing list.
-
-**Parameters:**
-
-| Parameter       | Type   | Required | Description                                          |
-|-----------------|--------|----------|------------------------------------------------------|
-| `email_address` | string | Yes      | The contact's email address.                         |
-| `list_id`       | string | No       | List ID. Uses default configured list if omitted.    |
-| `first_name`    | string | No       | The contact's first name.                            |
-| `last_name`     | string | No       | The contact's last name.                             |
-
-**Example:**
+Bulk update accepts up to 100 contact objects:
 
 ```lua
-app.integrations["email-octopus"].work.emailoctopus_create_contact({
-    email_address = "user@example.com",
-    first_name = "Jane",
-    last_name = "Doe",
+app.integrations["email-octopus"].emailoctopus_update_contacts_bulk({
+  list_id = "list_123",
+  data = {
+    {
+      id = "member_123",
+      status = "UNSUBSCRIBED"
+    }
+  }
 })
 ```
 
----
-
-### `emailoctopus_list_campaigns`
-
-List all email campaigns.
-
-**Parameters:**
-
-| Parameter | Type    | Required | Description                                       |
-|-----------|---------|----------|---------------------------------------------------|
-| `limit`   | integer | No       | Max campaigns to return (default: 100, max: 100). |
-| `before`  | string  | No       | Pagination cursor.                                |
-| `after`   | string  | No       | Pagination cursor.                                |
-
-**Example:**
+## Campaigns And Reports
 
 ```lua
-app.integrations["email-octopus"].work.emailoctopus_list_campaigns({})
-```
+local campaigns = app.integrations["email-octopus"].emailoctopus_list_campaigns({
+  limit = 50,
+  page = 1
+})
 
----
+local summary = app.integrations["email-octopus"].emailoctopus_get_campaign_report_summary({
+  campaign_id = "campaign_123",
+})
 
-### `emailoctopus_get_campaign`
-
-Get details of a specific campaign.
-
-**Parameters:**
-
-| Parameter      | Type   | Required | Description              |
-|----------------|--------|----------|--------------------------|
-| `campaign_id`  | string | Yes      | The campaign ID.         |
-
-**Example:**
-
-```lua
-app.integrations["email-octopus"].work.emailoctopus_get_campaign({
-    campaign_id = "cmpn_abc123",
+local opened = app.integrations["email-octopus"].emailoctopus_get_campaign_report_opened({
+  campaign_id = "campaign_123",
+  limit = 100,
+  page = 1
 })
 ```
 
----
+Report tools exist for `summary`, `links`, `bounced`, `clicked`, `complained`,
+`opened`, `sent`, `unsubscribed`, `not-clicked`, and `not-opened`.
 
-### `emailoctopus_get_current_user`
-
-Get the authenticated account details.
-
-**Parameters:** None
-
-**Example:**
+## Automations
 
 ```lua
-app.integrations["email-octopus"].work.emailoctopus_get_current_user({})
+app.integrations["email-octopus"].emailoctopus_start_automation({
+  automation_id = "automation_123",
+  list_member_id = "member_123"
+})
 ```
 
----
+The automation must use EmailOctopus's "Started via API" trigger.
 
 ## Multi-Account Usage
 
-When multiple EmailOctopus accounts are configured, specify the account namespace:
-
 ```lua
-app.integrations["email-octopus"].marketing.emailoctopus_list_contacts({})
-app.integrations["email-octopus"].newsletter.emailoctopus_create_contact({
-    email_address = "new@example.com",
-})
+app.integrations["email-octopus"].emailoctopus_list_lists({})
+app.integrations["email-octopus"].default.emailoctopus_list_lists({})
+app.integrations["email-octopus"].newsletter.emailoctopus_list_lists({})
 ```
+
+All account namespaces expose the same tools; only credentials and default list
+ID differ.

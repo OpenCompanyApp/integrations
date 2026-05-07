@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Strava\StravaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the authenticated Strava user profile.
+ */
 class StravaGetCurrentUser implements Tool
 {
     /**
@@ -28,7 +31,7 @@ class StravaGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the current authenticated user\'s Strava profile. This is an alias for strava_get_athlete — returns name, location, follower/following counts, and stats.';
+        return 'Get the current authenticated user\'s Strava profile. This is an alias for strava_get_athlete and returns name, location, follower/following counts, and stats.';
     }
 
     /**

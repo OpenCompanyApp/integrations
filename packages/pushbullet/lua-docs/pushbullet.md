@@ -1,161 +1,249 @@
-# Pushbullet — Lua API Reference
+# Pushbullet
 
-## list_pushes
+Lua API reference for the `pushbullet` integration package. The integration uses Pushbullet access tokens and the official `Access-Token` header.
 
-List recent pushes (notifications) from Pushbullet.
+Most list tools accept `limit`, `cursor`, `active`, and `modified_after`, matching Pushbullet's list-object pagination and sync model.
 
-### Parameters
+## User
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of pushes to return (default: 10, max: 500) |
-| `cursor` | string | no | Pagination cursor from a previous response to get the next page |
-
-### Example
+### `pushbullet_get_current_user`
 
 ```lua
-local result = app.integrations.pushbullet.list_pushes({
-  limit = 20
-})
+local user = pushbullet_get_current_user()
+print(user.name, user.email)
+```
 
+## Pushes
+
+### `pushbullet_list_pushes`
+
+```lua
+local result = pushbullet_list_pushes({ limit = 25, active = true })
 for _, push in ipairs(result.pushes) do
-  print(push.title .. ": " .. (push.body or ""))
+  print(push.iden, push.type, push.title)
 end
 ```
 
-### Paginated Example
+### `pushbullet_create_push`
+
+Create a note, link, or file push.
 
 ```lua
-local result = app.integrations.pushbullet.list_pushes({
-  limit = 10,
-  cursor = previous_cursor
-})
-```
-
----
-
-## create_push
-
-Send a push notification via Pushbullet. Supports "note" (text) and "link" (URL) types.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Push type: `"note"` or `"link"` |
-| `title` | string | yes | Title of the push notification |
-| `body` | string | yes | Body text of the push notification |
-| `url` | string | no | Required for `"link"` type — the URL to include |
-| `device_iden` | string | no | Target a specific device by its iden. Omit to send to all devices. |
-
-### Examples
-
-#### Send a note
-
-```lua
-local result = app.integrations.pushbullet.create_push({
+local note = pushbullet_create_push({
   type = "note",
-  title = "Build Complete",
-  body = "The deployment finished successfully."
+  title = "Build complete",
+  body = "The deployment finished.",
 })
-```
 
-#### Send a link
-
-```lua
-local result = app.integrations.pushbullet.create_push({
+local link = pushbullet_create_push({
   type = "link",
-  title = "New Report Available",
-  body = "Monthly analytics report is ready.",
-  url = "https://example.com/reports/monthly"
+  title = "Report",
+  body = "Monthly report is ready.",
+  url = "https://example.test/reports/monthly",
 })
 ```
 
-#### Send to a specific device
+For file pushes, first call `pushbullet_request_upload`, upload the file to the returned `upload_url`, then send a file push using the returned `file_name`, `file_type`, and `file_url`.
 
 ```lua
-local result = app.integrations.pushbullet.create_push({
-  type = "note",
-  title = "Alert",
-  body = "Server CPU usage exceeded 90%.",
-  device_iden = "ujpah71o0"
+local upload = pushbullet_request_upload({
+  file_name = "report.pdf",
+  file_type = "application/pdf",
+})
+
+local file_push = pushbullet_create_push({
+  type = "file",
+  title = "Report",
+  body = "PDF attached.",
+  file_name = upload.file_name,
+  file_type = upload.file_type,
+  file_url = upload.file_url,
 })
 ```
 
----
-
-## delete_push
-
-Delete a push notification by its unique identifier.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `push_iden` | string | yes | The unique identifier (iden) of the push to delete |
-
-### Example
+### `pushbullet_update_push`
 
 ```lua
-app.integrations.pushbullet.delete_push({
-  push_iden = "ujpah71o0sjpoPriAz"
+local push = pushbullet_update_push({
+  push_iden = "push-test",
+  dismissed = true,
 })
 ```
 
----
-
-## list_devices
-
-List all devices registered with the current user's Pushbullet account.
-
-### Parameters
-
-None.
-
-### Example
+### `pushbullet_delete_push`
 
 ```lua
-local result = app.integrations.pushbullet.list_devices({})
+local result = pushbullet_delete_push({ push_iden = "push-test" })
+print(result.deleted)
+```
 
+### `pushbullet_delete_all_pushes`
+
+Deletes all pushes asynchronously.
+
+```lua
+local result = pushbullet_delete_all_pushes()
+```
+
+## Devices
+
+### `pushbullet_list_devices`
+
+```lua
+local result = pushbullet_list_devices({ active = true })
 for _, device in ipairs(result.devices) do
-  print(device.nickname .. " (" .. device.kind .. ") - " .. device.iden)
+  print(device.iden, device.nickname, device.icon)
 end
 ```
 
----
-
-## get_current_user
-
-Get the authenticated Pushbullet user's profile information.
-
-### Parameters
-
-None.
-
-### Example
+### `pushbullet_create_device`
 
 ```lua
-local result = app.integrations.pushbullet.get_current_user({})
-print("User: " .. result.name)
-print("Email: " .. result.email)
+local device = pushbullet_create_device({
+  nickname = "Ops Console",
+  icon = "desktop",
+  model = "Example Terminal",
+})
 ```
 
----
+### `pushbullet_update_device`
+
+```lua
+local device = pushbullet_update_device({
+  device_iden = "device-test",
+  nickname = "Ops Console 2",
+})
+```
+
+### `pushbullet_delete_device`
+
+```lua
+local result = pushbullet_delete_device({ device_iden = "device-test" })
+```
+
+## Chats
+
+### `pushbullet_list_chats`
+
+```lua
+local chats = pushbullet_list_chats({ limit = 10 })
+```
+
+### `pushbullet_create_chat`
+
+```lua
+local chat = pushbullet_create_chat({ email = "person@example.test" })
+```
+
+### `pushbullet_update_chat`
+
+```lua
+local chat = pushbullet_update_chat({
+  chat_iden = "chat-test",
+  muted = true,
+})
+```
+
+### `pushbullet_delete_chat`
+
+```lua
+local result = pushbullet_delete_chat({ chat_iden = "chat-test" })
+```
+
+## Subscriptions and Channels
+
+### `pushbullet_list_subscriptions`
+
+```lua
+local subscriptions = pushbullet_list_subscriptions({ active = true })
+```
+
+### `pushbullet_create_subscription`
+
+```lua
+local subscription = pushbullet_create_subscription({
+  channel_tag = "example-channel",
+})
+```
+
+### `pushbullet_update_subscription`
+
+```lua
+local subscription = pushbullet_update_subscription({
+  subscription_iden = "subscription-test",
+  muted = true,
+})
+```
+
+### `pushbullet_delete_subscription`
+
+```lua
+local result = pushbullet_delete_subscription({
+  subscription_iden = "subscription-test",
+})
+```
+
+### `pushbullet_get_channel_info`
+
+```lua
+local channel = pushbullet_get_channel_info({
+  tag = "example-channel",
+  no_recent_pushes = true,
+})
+```
+
+### `pushbullet_create_channel`
+
+```lua
+local channel = pushbullet_create_channel({
+  tag = "example-channel",
+  name = "Example Channel",
+  description = "Example alerts.",
+  website_url = "https://example.test",
+})
+```
+
+## Ephemerals
+
+### `pushbullet_push_ephemeral`
+
+Use ephemerals for realtime events such as clipboard updates or notification dismissals.
+
+```lua
+local result = pushbullet_push_ephemeral({
+  type = "push",
+  push = {
+    type = "clip",
+    body = "https://example.test",
+    source_user_iden = "user-test",
+  },
+})
+```
+
+## Uploads
+
+### `pushbullet_request_upload`
+
+```lua
+local upload = pushbullet_request_upload({
+  file_name = "report.pdf",
+  file_type = "application/pdf",
+})
+print(upload.upload_url, upload.file_url)
+```
+
+## Return Shapes
+
+Pushbullet returns top-level collections such as `pushes`, `devices`, `chats`, and `subscriptions`. Delete tools return compact confirmation objects:
+
+```lua
+{ deleted = true, push_iden = "push-test" }
+```
 
 ## Multi-Account Usage
 
-If you have multiple Pushbullet accounts configured, use account-specific namespaces:
+Use the namespace prefix assigned by the host:
 
 ```lua
--- Default account (always works)
-app.integrations.pushbullet.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.pushbullet.default.function_name({...})
-
--- Named accounts
-app.integrations.pushbullet.work.function_name({...})
-app.integrations.pushbullet.personal.function_name({...})
+local pushes = ns_pushbullet_ops.pushbullet_list_pushes({ limit = 5 })
 ```
-
-All functions are identical across accounts — only the credentials differ.

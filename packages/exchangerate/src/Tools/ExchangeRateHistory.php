@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ExchangeRate\ExchangeRateService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Compare a currency pair across multiple historical dates.
+ */
 class ExchangeRateHistory implements Tool
 {
+    /**
+     * @param  ExchangeRateService  $service  The exchange-rate API client.
+     */
     public function __construct(
         private ExchangeRateService $service,
     ) {}
@@ -31,6 +37,11 @@ class ExchangeRateHistory implements Tool
         ];
     }
 
+    /**
+     * Fetch rate history for a comma-separated date list.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (from, to, dates).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -67,7 +78,6 @@ class ExchangeRateHistory implements Tool
                 }
             }
 
-            // Compute change if we have at least 2 valid rates
             $validRates = array_filter(array_column($history, 'rate'));
             $change = null;
             if (count($validRates) >= 2) {

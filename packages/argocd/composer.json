@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-argocd",
-    "description": "Argo CD integration for OpenCompany — GitOps application management, projects, and repositories.",
+    "description": "Argo CD integration for OpenCompany - GitOps application management, projects, and repositories.",
     "license": "MIT",
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
     "keywords": ["tools", "argocd", "gitops", "kubernetes", "opencompany"],

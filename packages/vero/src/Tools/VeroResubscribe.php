@@ -60,7 +60,8 @@ class VeroResubscribe implements Tool
 
             return ToolResult::success([
                 'id' => $id,
-                'status' => $result['status'] ?? 'resubscribed',
+                'status' => $result['status'] ?? 200,
+                'message' => $result['message'] ?? 'resubscribed',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

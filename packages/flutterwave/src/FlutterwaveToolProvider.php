@@ -4,6 +4,8 @@ namespace OpenCompany\Integrations\Flutterwave;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveCreateCustomer;
@@ -14,11 +16,15 @@ use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveListCustomers;
 use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveListTransactions;
 use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveVerifyTransaction;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Registers Flutterwave tools and metadata for integration discovery.
+ *
+ * Exposes transactions, hosted payments, customers, bank lookup, and
+ * verification operations for the Flutterwave v3 REST API.
+ */
 class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,46 +32,36 @@ class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['secret_key'],
+                'notes' => ['Flutterwave secret keys are sent as Authorization: Bearer <secret_key>.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -104,11 +100,13 @@ class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'Flutterwave payments integration for Laravel — manage transactions, customers, and bank lookups.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
+            'docs_url' => 'https://developer.flutterwave.com/v3.0/reference',
         ];
     }
-/**
+
+    /**
      * Configuration schema for the Flutterwave integration.
      *
      * Defines the `secret_key` credential that the user must provide.
@@ -130,8 +128,8 @@ class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, 
     /**
      * Test the connection to Flutterwave by fetching Nigerian banks.
      *
-     * @param  array  $config  The resolved configuration containing `secret_key`.
-     * @return array `{ success: bool, message?: string, error?: string }`
+     * @param  array<string, mixed>  $config  The resolved configuration containing secret_key.
+     * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
@@ -275,14 +273,14 @@ class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, 
      * otherwise the singleton service from the container is used.
      *
      * @param  class-string<Tool>  $class   The tool class to instantiate.
-     * @param  array               $context Optional context containing an `account` key.
+     * @param  array<string, mixed>  $context Optional context containing an `account` key.
      */
     public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new FlutterwaveService(
                 secretKey: $creds->get('flutterwave', 'secret_key', '', $account),

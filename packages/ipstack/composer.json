@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-ipstack",
-    "description": "IPstack geolocation integration for Laravel — lookup IP addresses, check location, timezone, currency, and connection data.",
+    "description": "IPstack geolocation integration for Laravel: standard, bulk, and requester IP lookups.",
     "license": "MIT",
     "authors": [
         {

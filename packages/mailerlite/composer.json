@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mailerlite",
-    "description": "MailerLite integration for Laravel — manage subscribers, groups, and audience.",
+    "description": "MailerLite integration for Laravel: subscribers, groups, segments, fields, campaigns, automations, forms, webhooks, and batch requests.",
     "license": "MIT",
     "authors": [
         {

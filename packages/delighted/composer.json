@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-delighted",
+    "description": "Delighted integration for Laravel AI agents - survey sends, responses, metrics, people, unsubscribes, bounces, and Autopilot memberships.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Delighted\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Delighted\\DelightedServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

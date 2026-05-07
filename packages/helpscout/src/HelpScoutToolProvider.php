@@ -108,7 +108,7 @@ class HelpScoutToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'HelpScout integration for Laravel — manage conversations, customers, and mailboxes.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

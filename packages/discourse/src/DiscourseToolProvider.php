@@ -108,7 +108,7 @@ class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Forum and community platform integration',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:discourse',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.discourse.org/',
         ];

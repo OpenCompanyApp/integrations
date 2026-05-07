@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-customerio",
-    "description": "Customer.io integration for Laravel — identify customers, track events, manage segments, campaigns, and newsletters.",
+    "description": "Customer.io integration for Laravel covering App, Track, and Pipelines API operations.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "customerio", "email", "marketing", "opencompany"],
+    "keywords": ["tools", "customerio", "engagement", "cdp", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

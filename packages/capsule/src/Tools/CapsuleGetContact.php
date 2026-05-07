@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * CapsuleGetContact — retrieve a single contact (party) by ID.
+ * Retrieve a single contact (party) by ID.
  *
  * Returns full contact details including email addresses, phone numbers,
  * and custom field data.
  */
 class CapsuleGetContact implements Tool
 {
+    /**
+     * @param  CapsuleService  $service  The Capsule CRM API client.
+     */
     public function __construct(
         private CapsuleService $service,
     ) {}
@@ -35,6 +38,11 @@ class CapsuleGetContact implements Tool
         ];
     }
 
+    /**
+     * Get a Capsule CRM party.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

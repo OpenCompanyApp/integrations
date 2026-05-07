@@ -61,7 +61,7 @@ class NotionService
      */
     public function getPage(string $pageId): array
     {
-        return $this->request('GET', "/pages/{$pageId}");
+        return $this->request('GET', '/pages/' . rawurlencode($pageId));
     }
 
     /**
@@ -72,7 +72,7 @@ class NotionService
      */
     public function updatePage(string $pageId, array $body): array
     {
-        return $this->request('PATCH', "/pages/{$pageId}", $body);
+        return $this->request('PATCH', '/pages/' . rawurlencode($pageId), $body);
     }
 
     // ── Databases ──────────────────────────────────────────
@@ -95,7 +95,7 @@ class NotionService
      */
     public function getDatabase(string $databaseId): array
     {
-        return $this->request('GET', "/databases/{$databaseId}");
+        return $this->request('GET', '/databases/' . rawurlencode($databaseId));
     }
 
     /**
@@ -106,7 +106,7 @@ class NotionService
      */
     public function updateDatabase(string $databaseId, array $body): array
     {
-        return $this->request('PATCH', "/databases/{$databaseId}", $body);
+        return $this->request('PATCH', '/databases/' . rawurlencode($databaseId), $body);
     }
 
     /**
@@ -117,7 +117,7 @@ class NotionService
      */
     public function queryDatabase(string $databaseId, array $body = []): array
     {
-        return $this->request('POST', "/databases/{$databaseId}/query", $body);
+        return $this->request('POST', '/databases/' . rawurlencode($databaseId) . '/query', $body);
     }
 
     // ── Blocks ─────────────────────────────────────────────
@@ -130,7 +130,7 @@ class NotionService
      */
     public function getBlockChildren(string $blockId, array $params = []): array
     {
-        return $this->request('GET', "/blocks/{$blockId}/children", $params);
+        return $this->request('GET', '/blocks/' . rawurlencode($blockId) . '/children', $params);
     }
 
     /**
@@ -141,7 +141,7 @@ class NotionService
      */
     public function appendBlockChildren(string $blockId, array $body): array
     {
-        return $this->request('PATCH', "/blocks/{$blockId}/children", $body);
+        return $this->request('PATCH', '/blocks/' . rawurlencode($blockId) . '/children', $body);
     }
 
     /**
@@ -151,7 +151,7 @@ class NotionService
      */
     public function getBlock(string $blockId): array
     {
-        return $this->request('GET', "/blocks/{$blockId}");
+        return $this->request('GET', '/blocks/' . rawurlencode($blockId));
     }
 
     /**
@@ -162,7 +162,7 @@ class NotionService
      */
     public function updateBlock(string $blockId, array $body): array
     {
-        return $this->request('PATCH', "/blocks/{$blockId}", $body);
+        return $this->request('PATCH', '/blocks/' . rawurlencode($blockId), $body);
     }
 
     /**
@@ -172,7 +172,7 @@ class NotionService
      */
     public function deleteBlock(string $blockId): array
     {
-        return $this->request('DELETE', "/blocks/{$blockId}");
+        return $this->request('DELETE', '/blocks/' . rawurlencode($blockId));
     }
 
     // ── Users ──────────────────────────────────────────────
@@ -205,7 +205,7 @@ class NotionService
      */
     public function getUser(string $userId): array
     {
-        return $this->request('GET', "/users/{$userId}");
+        return $this->request('GET', '/users/' . rawurlencode($userId));
     }
 
     // ── Comments ───────────────────────────────────────────

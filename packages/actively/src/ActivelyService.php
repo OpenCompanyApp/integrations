@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Actively API service — handles authentication and HTTP communication with the Actively CRM API.
+ * Actively API service - handles authentication and HTTP communication with the Actively CRM API.
  *
  * Supports Bearer token authentication and configurable base URL for self-hosted instances.
  * All methods return parsed JSON arrays unless otherwise noted.

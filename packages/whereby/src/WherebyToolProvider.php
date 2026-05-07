@@ -92,7 +92,7 @@ class WherebyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Video meeting platform for teams — create rooms, host meetings, and manage participants',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:whereby',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.whereby.dev/reference',
         ];

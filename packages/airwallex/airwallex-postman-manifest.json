@@ -1,0 +1,9 @@
+{
+  "source": "official_airwallex_public_postman_collection",
+  "source_url": "https://www.postman.com/collections/17660841-46716209-3806-4ea0-ac05-e8c3840ff055",
+  "collection_name": "Airwallex Public API v2025-11-11",
+  "version": "v2025-11-11",
+  "request_count": 216,
+  "method_count": 201,
+  "deduped_duplicate_endpoints": 15
+}

@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Render integration with Laravel's service container.
+ *
+ * Binds the Render API client from configured credentials and registers the
+ * Render tool provider with the shared integration registry.
+ */
 class RenderServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,8 +20,8 @@ class RenderServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new RenderService(
-                apiKey: $creds->get('render2', 'api_key', ''),
-                baseUrl: $creds->get('render2', 'url', 'https://api.render.com/v1'),
+                apiKey: $creds->get('render', 'api_key', '') ?: $creds->get('render2', 'api_key', ''),
+                baseUrl: $creds->get('render', 'url', '') ?: $creds->get('render2', 'url', 'https://api.render.com/v1'),
             );
         });
     }

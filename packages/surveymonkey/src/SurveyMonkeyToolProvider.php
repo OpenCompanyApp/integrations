@@ -94,7 +94,7 @@ class SurveyMonkeyToolProvider implements ToolProvider, ConfigurableIntegration,
             'description' => 'Create and manage surveys, collect responses, and manage survey collectors.',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:surveymonkey',
-            'category' => 'surveys',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.surveymonkey.com/api/v3/',
         ];

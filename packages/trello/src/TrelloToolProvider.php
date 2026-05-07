@@ -15,6 +15,10 @@ use OpenCompany\Integrations\Trello\Tools\TrelloCreateCard;
 use OpenCompany\Integrations\Trello\Tools\TrelloGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
+/**
+ * Tool catalog and configuration metadata for the Trello integration.
+ */
 class TrelloToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -139,6 +143,15 @@ class TrelloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 return [
                     'success' => false,
                     'error' => "Could not reach Trello API at {$baseUrl}. Check the URL.",
+                ];
+            }
+
+            if (! $response->successful()) {
+                $error = $json['message'] ?? $json['error'] ?? $response->body();
+
+                return [
+                    'success' => false,
+                    'error' => 'Trello API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
                 ];
             }
 

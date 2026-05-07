@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-cursor",
-    "description": "Cursor IDE integration for Laravel — list workspaces, members, and extensions.",
+    "description": "Cursor Admin API integration for Laravel - team members, usage, spending, limits, and repo blocklists.",
     "license": "MIT",
     "authors": [
         {

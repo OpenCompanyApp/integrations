@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mongodb",
-    "description": "MongoDB Atlas Data API integration for Laravel — find, insert, update, delete documents, run aggregations, and list collections.",
+    "description": "MongoDB Atlas Data API integration for Laravel: find, insert, update, delete, and aggregate documents.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "mongodb", "atlas", "database", "nosql", "opencompany"],
+    "keywords": ["tools", "mongodb", "atlas", "data-api", "nosql", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

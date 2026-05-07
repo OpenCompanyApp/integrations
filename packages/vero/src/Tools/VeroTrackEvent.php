@@ -9,7 +9,7 @@ use OpenCompany\Integrations\Vero\VeroService;
 /**
  * Track a behavioral event for a user in Vero.
  *
- * Records an event (e.g., "Logged in", "Purchased item") for a user,
+ * Records an event (for example, "Logged in" or "Purchased item") for a user,
  * which can trigger automated email campaigns in Vero.
  */
 class VeroTrackEvent implements Tool
@@ -28,15 +28,16 @@ class VeroTrackEvent implements Tool
 
     public function description(): string
     {
-        return 'Track a behavioral event for a user in Vero. Events can trigger automated email campaigns. Pass a user identity (ID or email), event name, and optional event data.';
+        return 'Track a behavioral event for a user in Vero. Pass an identity object with id and/or email, an event name, optional event data, and optional extras such as source or created_at.';
     }
 
     public function parameters(): array
     {
         return [
-            'identity' => ['type' => 'string', 'required' => true, 'description' => 'User ID or email address identifying the user.'],
+            'identity' => ['type' => ['object', 'string'], 'required' => true, 'description' => 'Identity object with id and/or email. A string is accepted for legacy calls and sent as id.'],
             'event_name' => ['type' => 'string', 'required' => true, 'description' => 'Name of the event to track (e.g., "Logged in", "Added to cart", "Purchased").'],
             'data' => ['type' => 'object', 'description' => 'Event-specific data as key-value pairs (e.g., {"product": "Widget", "price": 29.99}).'],
+            'extras' => ['type' => 'object', 'description' => 'Optional Vero-specific extras such as source, created_at, or conversion data.'],
         ];
     }
 
@@ -64,13 +65,15 @@ class VeroTrackEvent implements Tool
             }
 
             $data = $args['data'] ?? [];
+            $extras = $args['extras'] ?? [];
 
-            $result = $this->service->trackEvent($identity, $eventName, $data);
+            $result = $this->service->trackEvent($identity, $eventName, $data, $extras);
 
             return ToolResult::success([
                 'identity' => $identity,
                 'event_name' => $eventName,
-                'status' => $result['status'] ?? 'tracked',
+                'status' => $result['status'] ?? 200,
+                'message' => $result['message'] ?? 'tracked',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

@@ -1,0 +1,40 @@
+{
+    "name": "opencompanyapp/integration-europe-pmc",
+    "description": "Europe PMC integration for Laravel AI agents - literature, full text, annotations, and grants APIs.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\EuropePmc\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\EuropePmc\\EuropePmcServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "europe-pmc",
+        "europepmc",
+        "pubmed",
+        "biomedical",
+        "annotations",
+        "grants",
+        "opencompany"
+    ]
+}

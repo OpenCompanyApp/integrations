@@ -1,0 +1,11 @@
+{
+  "source": "official_binance_api_swagger",
+  "source_url": "https://github.com/binance/binance-api-swagger",
+  "schema_url": "https://raw.githubusercontent.com/binance/binance-api-swagger/master/spot_api.yaml",
+  "openapi": "3.0.2",
+  "version": "1.0",
+  "method_count": 340,
+  "signed_method_count": 298,
+  "api_key_method_count": 24,
+  "public_method_count": 18
+}

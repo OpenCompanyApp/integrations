@@ -2,28 +2,22 @@
 
 namespace OpenCompany\Integrations\Confluent;
 
-use OpenCompany\Integrations\Confluent\Tools\ConfluentListTopics;
-use OpenCompany\Integrations\Confluent\Tools\ConfluentGetTopic;
-use OpenCompany\Integrations\Confluent\Tools\ConfluentCreateTopic;
-use OpenCompany\Integrations\Confluent\Tools\ConfluentListClusters;
-use OpenCompany\Integrations\Confluent\Tools\ConfluentGetCluster;
-use OpenCompany\Integrations\Confluent\Tools\ConfluentListEnvironments;
-use OpenCompany\Integrations\Confluent\Tools\ConfluentGetCurrentUser;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use Illuminate\Support\Facades\Http;
-
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool catalog and configuration metadata for Confluent Cloud.
+ *
+ * Exposes generated coverage for Confluent's official Cloud API OpenAPI
+ * document and resolves account-specific credentials for host applications.
  */
 class ConfluentToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -31,276 +25,210 @@ class ConfluentToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_token',
-            'legacy_auth_type' => 'api_token',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key_basic_or_bearer_token',
+                'legacy_auth_type' => 'api_token',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret', 'manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Cloud API keys use HTTP Basic auth with api_key and api_secret. Resource/OAuth tokens can be supplied as access_token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-
-
-
-/**
-     * Get the application name identifier.
-     */
     public function appName(): string
     {
         return 'confluent';
     }
 
-/**
-     * Get metadata for the app listing.
-     *
-     * @return array<string, mixed>
-     */
     public function appMeta(): array
     {
         return [
             'label' => 'Confluent Cloud',
-            'description' => 'Confluent Cloud Kafka managed streaming',
+            'description' => 'Kafka, Schema Registry, Flink, networking, IAM, billing, and streaming platform APIs',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:confluent',
         ];
     }
 
-/**
-     * Get metadata for the integration catalog.
-     *
-     * @return array<string, mixed>
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Confluent Cloud',
-            'description' => 'Fully managed Apache Kafka service by Confluent',
+            'description' => 'Manage Confluent Cloud Kafka, Schema Registry, Connect, Flink, networking, IAM, API keys, billing, catalog, stream sharing, provider integrations, Tableflow, and related Cloud resources through the official REST APIs.',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:confluent',
             'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.confluent.io/platform/current/rest.html',
+            'docs_url' => 'https://docs.confluent.io/cloud/current/api.html',
+            'source_url' => 'https://docs.confluent.io/cloud/current/openapi.yaml',
         ];
-    }/**
-     * Get the configuration schema for Confluent credentials.
-     *
-     * @return array<int, array<string, mixed>>
-     */
+    }
+
     public function configSchema(): array
     {
         return [
-            [
-                'key' => 'api_token',
-                'type' => 'secret',
-                'label' => 'API Token',
-                'placeholder' => 'Enter your Confluent Cloud API token',
-                'hint' => 'Generate an API token in Confluent Cloud under <strong>Administration → API Keys</strong>',
-                'required' => true,
-            ],
-            [
-                'key' => 'cluster_id',
-                'type' => 'text',
-                'label' => 'Cluster ID',
-                'placeholder' => 'Enter your Kafka cluster ID',
-                'hint' => 'Find your cluster ID in Confluent Cloud under <strong>Cluster → Settings</strong>',
-                'required' => true,
-            ],
+            ['key' => 'api_key', 'type' => 'text', 'label' => 'Cloud API Key', 'placeholder' => 'Enter your Confluent Cloud API key id', 'hint' => 'Used with API Secret for HTTP Basic auth to Confluent Cloud APIs.', 'required' => false],
+            ['key' => 'api_secret', 'type' => 'secret', 'label' => 'Cloud API Secret', 'placeholder' => 'Enter your Confluent Cloud API secret', 'hint' => 'Used with Cloud API Key for HTTP Basic auth.', 'required' => false],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'placeholder' => 'OAuth, STS, external, or partner bearer token', 'required' => false],
+            ['key' => 'api_token', 'type' => 'secret', 'label' => 'Legacy API Token', 'placeholder' => 'Legacy bearer token value', 'required' => false],
+            ['key' => 'cluster_id', 'type' => 'text', 'label' => 'Default Kafka Cluster ID', 'placeholder' => 'lkc-abc123', 'required' => false],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'placeholder' => 'https://api.confluent.cloud', 'default' => 'https://api.confluent.cloud', 'required' => false],
         ];
     }
 
     /**
-     * Test the connection to Confluent Cloud using the /users/me endpoint.
+     * Test the configured Confluent Cloud credentials with the environments endpoint.
      *
-     * @param  array<string, mixed>  $config  Configuration containing api_token and cluster_id
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $apiSecret = (string) ($config['api_secret'] ?? '');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $apiToken = (string) ($config['api_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.confluent.cloud'), '/');
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided'];
+        if (($apiKey === '' || $apiSecret === '') && $accessToken === '' && $apiToken === '') {
+            return ['success' => false, 'error' => 'Provide a Confluent api_key/api_secret pair or an access token.'];
+        }
+
+        $headers = ['Accept' => 'application/json'];
+        if ($apiKey !== '' && $apiSecret !== '') {
+            $headers['Authorization'] = 'Basic ' . base64_encode($apiKey . ':' . $apiSecret);
+        } else {
+            $headers['Authorization'] = 'Bearer ' . ($accessToken !== '' ? $accessToken : $apiToken);
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.confluent.cloud/v1/users/me');
+            $response = Http::withHeaders($headers)->timeout(10)->get($baseUrl . '/org/v2/environments', ['page_size' => 1]);
 
-            if ($response->successful()) {
-                return [
-                    'success' => true,
-                    'message' => 'Connected to Confluent Cloud. API token validated.',
-                ];
+            if (!$response->successful()) {
+                $message = $response->json('errors') ?? $response->json('message') ?? $response->body();
+
+                return ['success' => false, 'error' => 'Confluent Cloud API returned HTTP ' . $response->status() . ': ' . (is_string($message) ? $message : json_encode($message))];
             }
 
-            return [
-                'success' => false,
-                'error' => 'Confluent Cloud API token validation failed. Check your credentials.',
-            ];
-        } catch (\Exception $e) {
+            return ['success' => true, 'message' => 'Connected to Confluent Cloud at ' . $baseUrl . '.'];
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get the validation rules for configuration fields.
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function validationRules(): array
     {
-        return [
-            'api_token' => 'nullable|string',
-            'cluster_id' => 'nullable|string',
-        ];
+        return ['api_key' => 'nullable|string', 'api_secret' => 'nullable|string', 'access_token' => 'nullable|string', 'api_token' => 'nullable|string', 'cluster_id' => 'nullable|string', 'url' => 'nullable|url'];
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
     }
 
     /**
-     * Get the list of tools provided by this integration.
+     * Register generated Confluent Cloud OpenAPI tools.
      *
      * @return array<string, array<string, mixed>>
      */
     public function tools(): array
     {
-        return [
-            'confluent_list_topics' => [
-                'class' => ConfluentListTopics::class,
-                'type' => 'read',
-                'name' => 'List Topics',
-                'description' => 'List Kafka topics in a Confluent cluster.',
-                'icon' => 'ph:list',
-            ],
-            'confluent_get_topic' => [
-                'class' => ConfluentGetTopic::class,
-                'type' => 'read',
-                'name' => 'Get Topic',
-                'description' => 'Get details of a specific Kafka topic.',
-                'icon' => 'ph:info',
-            ],
-            'confluent_create_topic' => [
-                'class' => ConfluentCreateTopic::class,
-                'type' => 'write',
-                'name' => 'Create Topic',
-                'description' => 'Create a new Kafka topic in a Confluent cluster.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'confluent_list_clusters' => [
-                'class' => ConfluentListClusters::class,
-                'type' => 'read',
-                'name' => 'List Clusters',
-                'description' => 'List Kafka clusters in your Confluent Cloud environment.',
-                'icon' => 'ph:cube',
-            ],
-            'confluent_get_cluster' => [
-                'class' => ConfluentGetCluster::class,
-                'type' => 'read',
-                'name' => 'Get Cluster',
-                'description' => 'Get details of a specific Kafka cluster.',
-                'icon' => 'ph:cube-focus',
-            ],
-            'confluent_list_environments' => [
-                'class' => ConfluentListEnvironments::class,
-                'type' => 'read',
-                'name' => 'List Environments',
-                'description' => 'List Confluent Cloud environments.',
-                'icon' => 'ph:tree-structure',
-            ],
-            'confluent_get_current_user' => [
-                'class' => ConfluentGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Confluent Cloud user. Useful for verifying credentials.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (ConfluentService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
-    /**
-     * Get the path to the Lua documentation file.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/confluent.md';
     }
 
-    /**
-     * Get the credential fields for Confluent authentication.
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-            ['key' => 'cluster_id', 'type' => 'text', 'label' => 'Cluster ID', 'required' => false],
-        ];
-    }
-
-    /**
-     * Confirm this class is an integration provider.
-     */
     public function isIntegration(): bool
-    {        return true;
+    {
+        return true;
     }
 
     /**
      * Create a tool instance, optionally resolving credentials for a specific account.
      *
-     * @param  class-string<Tool>  $class  The tool class to instantiate
-     * @param  array<string, mixed>  $context  Context containing optional 'account' key
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): ConfluentService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);
 
-            $service = new ConfluentService(
-                apiToken: $creds->get('confluent', 'api_token', '', $account),
-                clusterId: $creds->get('confluent', 'cluster_id', '', $account),
+            return new ConfluentService(
+                apiKey: (string) $creds->get('confluent', 'api_key', '', (string) $account),
+                apiSecret: (string) $creds->get('confluent', 'api_secret', '', (string) $account),
+                accessToken: (string) $creds->get('confluent', 'access_token', '', (string) $account),
+                apiToken: (string) $creds->get('confluent', 'api_token', '', (string) $account),
+                clusterId: (string) $creds->get('confluent', 'cluster_id', '', (string) $account),
+                baseUrl: (string) $creds->get('confluent', 'url', 'https://api.confluent.cloud', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(ConfluentService::class));
+        return app(ConfluentService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/kafka/') => 'ph:queue',
+            str_contains($path, '/iam/') => 'ph:users-three',
+            str_contains($path, '/org/') => 'ph:tree-structure',
+            str_contains($path, '/networking/') => 'ph:globe',
+            str_contains($path, '/billing/') => 'ph:receipt',
+            str_contains($path, '/srcm/') || str_contains($path, '/schemas') || str_contains($path, '/catalog') => 'ph:database',
+            str_contains($path, '/connect') => 'ph:plugs-connected',
+            str_contains($path, '/flink') || str_contains($path, '/sql') => 'ph:terminal-window',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

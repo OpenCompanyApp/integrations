@@ -1,184 +1,159 @@
-# Buffer — Lua API Reference
+# Buffer - Lua API Reference
 
-## list_profiles
+Namespace: `app.integrations.buffer`
 
-List all social media profiles connected to the Buffer account.
+This package covers Buffer's documented legacy REST API for profiles, schedules,
+updates, links, user, and configuration metadata. It also includes
+`graphql()` for the current Buffer GraphQL API beta at `https://api.buffer.com`.
 
-### Parameters
-
-None.
-
-### Example
+## Profiles And Schedules
 
 ```lua
-local result = app.integrations.buffer.list_profiles()
+local profiles = app.integrations.buffer.list_profiles()
 
-for _, profile in ipairs(result) do
-  print(profile.id .. ": " .. profile.service .. " (" .. profile.service_username .. ")")
-end
-```
-
----
-
-## get_profile
-
-Get details of a specific social profile.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `profileId` | string | yes | The social profile ID |
-
-### Example
-
-```lua
-local result = app.integrations.buffer.get_profile({
-  profileId = "4eb8572a512f7f621800004e"
-})
-print(result.service)
-print(result.service_username)
-```
-
----
-
-## list_pending_updates
-
-List scheduled (pending) updates for a profile.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `profileId` | string | yes | The social profile ID |
-| `count` | integer | no | Number of updates to return per page |
-| `page` | integer | no | Page number for pagination |
-
-### Example
-
-```lua
-local result = app.integrations.buffer.list_pending_updates({
-  profileId = "4eb8572a512f7f621800004e",
-  count = 20,
-  page = 1
+local profile = app.integrations.buffer.get_profile({
+  profileId = "profile_123"
 })
 
-for _, update in ipairs(result.updates) do
-  print(update.id .. ": " .. update.text .. " @ " .. update.scheduled_at)
-end
+local schedules = app.integrations.buffer.list_profile_schedules({
+  profileId = "profile_123"
+})
 ```
 
----
+Replace a profile's posting schedules:
 
-## create_update
+```lua
+local result = app.integrations.buffer.update_profile_schedules({
+  profileId = "profile_123",
+  payload = {
+    schedules = {
+      { days = { "mon", "wed", "fri" }, times = { "09:00", "15:30" } }
+    }
+  }
+})
+```
 
-Create and schedule a new social media update.
+## Updates
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `text` | string | yes | The text content of the update |
-| `profileIds` | array | yes | Profile IDs to publish to |
-| `shorten` | boolean | no | Auto-shorten links (default true) |
-| `now` | boolean | no | Post immediately instead of scheduling (default false) |
-| `scheduledAt` | string | no | ISO 8601 timestamp (e.g., `"2025-02-01T09:00:00Z"`) |
-| `media` | object | no | Media attachments (photo, link, etc.) |
-
-### Example
+Create or immediately publish an update:
 
 ```lua
 local result = app.integrations.buffer.create_update({
-  text = "Check out our latest blog post! https://example.com/blog",
-  profileIds = {"4eb8572a512f7f621800004e", "4eb8572a512f7f6218000050"},
-  scheduledAt = "2025-02-01T09:00:00Z"
+  text = "New post from our site https://example.test/post",
+  profileIds = { "profile_123", "profile_456" },
+  scheduledAt = "2026-06-01T09:00:00Z",
+  media = {
+    link = "https://example.test/post",
+    title = "Example post",
+    description = "Short summary"
+  }
 })
-print("Created update: " .. result.updates[1].id)
 ```
 
----
-
-## list_sent_updates
-
-List already posted (sent) updates for a profile.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `profileId` | string | yes | The social profile ID |
-| `count` | integer | no | Number of updates to return per page |
-| `page` | integer | no | Page number for pagination |
-
-### Example
+List pending and sent updates:
 
 ```lua
-local result = app.integrations.buffer.list_sent_updates({
-  profileId = "4eb8572a512f7f621800004e",
+local pending = app.integrations.buffer.list_pending_updates({
+  profileId = "profile_123",
+  count = 20,
+  page = 1,
+  utc = true
+})
+
+local sent = app.integrations.buffer.list_sent_updates({
+  profileId = "profile_123",
+  filter = "all"
+})
+```
+
+Manage pending updates:
+
+```lua
+app.integrations.buffer.reorder_updates({
+  profileId = "profile_123",
+  order = { "update_1", "update_2" },
+  offset = 0
+})
+
+app.integrations.buffer.shuffle_updates({
+  profileId = "profile_123",
   count = 10
 })
 
-for _, update in ipairs(result.updates) do
-  print(update.id .. ": " .. update.text)
-end
-```
-
----
-
-## get_update
-
-Get details of a specific update by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `updateId` | string | yes | The update ID to retrieve |
-
-### Example
-
-```lua
-local result = app.integrations.buffer.get_update({
-  updateId = "4eb8586e512f7f621800005d"
+app.integrations.buffer.update_update({
+  updateId = "update_123",
+  payload = {
+    text = "Edited post text",
+    scheduled_at = "2026-06-01T10:00:00Z"
+  }
 })
-print(result.text)
-print(result.scheduled_at or result.sent_at)
+
+app.integrations.buffer.share_update({ updateId = "update_123" })
+app.integrations.buffer.move_update_to_top({ updateId = "update_123" })
+app.integrations.buffer.destroy_update({ updateId = "update_123" })
 ```
 
----
-
-## get_current_user
-
-Get the currently authenticated Buffer user profile.
-
-### Parameters
-
-None.
-
-### Example
+## Links, Info, And User
 
 ```lua
-local result = app.integrations.buffer.get_current_user()
-print("Logged in as: " .. (result.name or ""))
-print("Email: " .. (result.email or ""))
+local shares = app.integrations.buffer.get_link_shares({
+  url = "https://example.test/post"
+})
+
+local config = app.integrations.buffer.get_info_configuration()
+local user = app.integrations.buffer.get_current_user()
 ```
 
----
+`deauthorize_user()` revokes the current token. Treat it as destructive:
+
+```lua
+-- app.integrations.buffer.deauthorize_user()
+```
+
+## GraphQL Beta
+
+The current Buffer API is GraphQL and supports post creation/deletion/retrieval,
+idea creation, account retrieval, organization retrieval, and channel retrieval.
+Use `graphql()` when an operation belongs to the beta GraphQL API rather than
+the legacy REST surface.
+
+```lua
+local result = app.integrations.buffer.graphql({
+  query = [[
+    query GetOrganizations {
+      account {
+        organizations {
+          id
+        }
+      }
+    }
+  ]]
+})
+```
+
+For mutations, pass variables explicitly:
+
+```lua
+local result = app.integrations.buffer.graphql({
+  query = [[
+    mutation Example($text: String) {
+      createPost(text: $text) {
+        id
+      }
+    }
+  ]],
+  variables = {
+    text = "Draft from an integration"
+  }
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple Buffer accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.buffer.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.buffer.default.function_name({...})
-
--- Named accounts
-app.integrations.buffer.client_acct.function_name({...})
-app.integrations.buffer.agency.function_name({...})
+app.integrations.buffer.list_profiles()
+app.integrations.buffer.default.list_profiles()
+app.integrations.buffer.client_acct.list_profiles()
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts. Only the credentials differ.

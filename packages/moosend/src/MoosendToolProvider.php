@@ -106,7 +106,7 @@ class MoosendToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Moosend integration for Laravel — manage mailing lists, subscribers, and campaigns.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

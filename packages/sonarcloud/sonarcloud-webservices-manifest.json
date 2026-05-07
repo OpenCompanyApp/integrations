@@ -1,0 +1,8 @@
+{
+  "source_url": "https://sonarcloud.io/api/webservices/list",
+  "docs_url": "https://docs.sonarsource.com/sonarqube-cloud/advanced-setup/web-api",
+  "service_count": 33,
+  "method_count": 156,
+  "read_count": 69,
+  "write_count": 87
+}

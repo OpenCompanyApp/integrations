@@ -1,0 +1,227 @@
+{
+    "source_url": "https://semgrep.dev/api/v1/public_v1.openapi.yaml",
+    "openapi": "3.0.3",
+    "title": "Semgrep Web App",
+    "version": "1.0.0",
+    "base_url": "https://semgrep.dev",
+    "auth": "bearer",
+    "method_count": 27,
+    "operations": [
+        {
+            "operation_id": "MiscService_GetBootstrapSmsVpc",
+            "class": "SemgrepMiscServiceGetBootstrapSmsVpc",
+            "slug": "semgrep_misc_service_get_bootstrap_sms_vpc",
+            "method": "get",
+            "path": "/api/v1/bootstrap-sms-vpc",
+            "type": "read"
+        },
+        {
+            "operation_id": "DeploymentsService_ListDeployments",
+            "class": "SemgrepDeploymentsServiceListDeployments",
+            "slug": "semgrep_deployments_service_list_deployments",
+            "method": "get",
+            "path": "/api/v1/deployments",
+            "type": "read"
+        },
+        {
+            "operation_id": "SupplyChainService_ListDependencies",
+            "class": "SemgrepSupplyChainServiceListDependencies",
+            "slug": "semgrep_supply_chain_service_list_dependencies",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/dependencies",
+            "type": "write"
+        },
+        {
+            "operation_id": "SupplyChainService_ListRepositoriesForDependencies",
+            "class": "SemgrepSupplyChainServiceListRepositoriesForDependencies",
+            "slug": "semgrep_supply_chain_service_list_repositories_for_dependencies",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/dependencies/repositories",
+            "type": "write"
+        },
+        {
+            "operation_id": "SupplyChainService_ListLockfilesForDependencies",
+            "class": "SemgrepSupplyChainServiceListLockfilesForDependencies",
+            "slug": "semgrep_supply_chain_service_list_lockfiles_for_dependencies",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/dependencies/repositories/{repositoryId}/lockfiles",
+            "type": "write"
+        },
+        {
+            "operation_id": "PoliciesService_ListPolicies",
+            "class": "SemgrepPoliciesServiceListPolicies",
+            "slug": "semgrep_policies_service_list_policies",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentId}/policies",
+            "type": "read"
+        },
+        {
+            "operation_id": "PoliciesService_ListPolicyRules",
+            "class": "SemgrepPoliciesServiceListPolicyRules",
+            "slug": "semgrep_policies_service_list_policy_rules",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentId}/policies/{policyId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "PoliciesService_UpdatePolicy",
+            "class": "SemgrepPoliciesServiceUpdatePolicy",
+            "slug": "semgrep_policies_service_update_policy",
+            "method": "put",
+            "path": "/api/v1/deployments/{deploymentId}/policies/{policyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "SupplyChainService_CreateSbomExport",
+            "class": "SemgrepSupplyChainServiceCreateSbomExport",
+            "slug": "semgrep_supply_chain_service_create_sbom_export",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/sbom/export",
+            "type": "write"
+        },
+        {
+            "operation_id": "SupplyChainService_GetSbomExport",
+            "class": "SemgrepSupplyChainServiceGetSbomExport",
+            "slug": "semgrep_supply_chain_service_get_sbom_export",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentId}/sbom/export/{taskToken}",
+            "type": "read"
+        },
+        {
+            "operation_id": "ScansService_GetScan",
+            "class": "SemgrepScansServiceGetScan",
+            "slug": "semgrep_scans_service_get_scan",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentId}/scan/{scanId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "ScansService_SearchScans",
+            "class": "SemgrepScansServiceSearchScans",
+            "slug": "semgrep_scans_service_search_scans",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/scans/search",
+            "type": "write"
+        },
+        {
+            "operation_id": "SecretsService_ListSecretsPath",
+            "class": "SemgrepSecretsServiceListSecretsPath",
+            "slug": "semgrep_secrets_service_list_secrets_path",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentId}/secrets",
+            "type": "read"
+        },
+        {
+            "operation_id": "TicketingService_DeleteTicket",
+            "class": "SemgrepTicketingServiceDeleteTicket",
+            "slug": "semgrep_ticketing_service_delete_ticket",
+            "method": "delete",
+            "path": "/api/v1/deployments/{deploymentId}/ticketing/v2/tickets/{externalTicketId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "TicketingService_LinkTicket",
+            "class": "SemgrepTicketingServiceLinkTicket",
+            "slug": "semgrep_ticketing_service_link_ticket",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/tickets/link",
+            "type": "write"
+        },
+        {
+            "operation_id": "TicketingService_UnlinkTicket",
+            "class": "SemgrepTicketingServiceUnlinkTicket",
+            "slug": "semgrep_ticketing_service_unlink_ticket",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentId}/tickets/unlink",
+            "type": "write"
+        },
+        {
+            "operation_id": "FindingsService_ListFindings",
+            "class": "SemgrepFindingsServiceListFindings",
+            "slug": "semgrep_findings_service_list_findings",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentSlug}/findings",
+            "type": "read"
+        },
+        {
+            "operation_id": "ProjectsService_ListProjects",
+            "class": "SemgrepProjectsServiceListProjects",
+            "slug": "semgrep_projects_service_list_projects",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "ProjectsService_GetProject",
+            "class": "SemgrepProjectsServiceGetProject",
+            "slug": "semgrep_projects_service_get_project",
+            "method": "get",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects/{projectName}",
+            "type": "read"
+        },
+        {
+            "operation_id": "ProjectsService_UpdateProject",
+            "class": "SemgrepProjectsServiceUpdateProject",
+            "slug": "semgrep_projects_service_update_project",
+            "method": "patch",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects/{projectName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "ProjectsService_DeleteProject",
+            "class": "SemgrepProjectsServiceDeleteProject",
+            "slug": "semgrep_projects_service_delete_project",
+            "method": "delete",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects/{projectName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "ProjectsService_ToggleProjectManagedScan",
+            "class": "SemgrepProjectsServiceToggleProjectManagedScan",
+            "slug": "semgrep_projects_service_toggle_project_managed_scan",
+            "method": "patch",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects/{projectName}/managed-scan",
+            "type": "write"
+        },
+        {
+            "operation_id": "ProjectsService_AddProjectTags",
+            "class": "SemgrepProjectsServiceAddProjectTags",
+            "slug": "semgrep_projects_service_add_project_tags",
+            "method": "put",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects/{projectName}/tags",
+            "type": "write"
+        },
+        {
+            "operation_id": "ProjectsService_DeleteProjectTags",
+            "class": "SemgrepProjectsServiceDeleteProjectTags",
+            "slug": "semgrep_projects_service_delete_project_tags",
+            "method": "delete",
+            "path": "/api/v1/deployments/{deploymentSlug}/projects/{projectName}/tags",
+            "type": "write"
+        },
+        {
+            "operation_id": "TicketingService_CreateTicket",
+            "class": "SemgrepTicketingServiceCreateTicket",
+            "slug": "semgrep_ticketing_service_create_ticket",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentSlug}/tickets",
+            "type": "write"
+        },
+        {
+            "operation_id": "TriageService_BulkTriage",
+            "class": "SemgrepTriageServiceBulkTriage",
+            "slug": "semgrep_triage_service_bulk_triage",
+            "method": "post",
+            "path": "/api/v1/deployments/{deploymentSlug}/triage",
+            "type": "write"
+        },
+        {
+            "operation_id": "MiscService_Ping",
+            "class": "SemgrepMiscServicePing",
+            "slug": "semgrep_misc_service_ping",
+            "method": "get",
+            "path": "/api/v1/ping",
+            "type": "read"
+        }
+    ]
+}

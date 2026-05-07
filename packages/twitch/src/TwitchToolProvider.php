@@ -94,7 +94,7 @@ class TwitchToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Live streaming platform for gamers and creators',
             'icon' => 'ph:tv',
             'logo' => 'simple-icons:twitch',
-            'category' => 'streaming',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://dev.twitch.tv/docs/api/',
         ];

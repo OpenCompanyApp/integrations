@@ -3,26 +3,25 @@
 namespace OpenCompany\Integrations\PayPal;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\PayPal\Tools\PayPalListOrders;
-use OpenCompany\Integrations\PayPal\Tools\PayPalGetOrder;
+use OpenCompany\Integrations\PayPal\Tools\PayPalCaptureOrder;
 use OpenCompany\Integrations\PayPal\Tools\PayPalCreateOrder;
-use OpenCompany\Integrations\PayPal\Tools\PayPalListPayments;
+use OpenCompany\Integrations\PayPal\Tools\PayPalGetCurrentUser;
+use OpenCompany\Integrations\PayPal\Tools\PayPalGetOrder;
 use OpenCompany\Integrations\PayPal\Tools\PayPalGetPayment;
 use OpenCompany\Integrations\PayPal\Tools\PayPalListInvoices;
-use OpenCompany\Integrations\PayPal\Tools\PayPalGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\PayPal\Tools\PayPalListPayments;
 
 /**
  * Registers the integration provider and exposes its tools.
  */
 class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -30,54 +29,40 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-
-
-
-/**
+    /**
      * The application name identifier.
      */
     public function appName(): string
@@ -85,7 +70,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return 'paypal';
     }
 
-/**
+    /**
      * Short metadata for the integration UI.
      */
     public function appMeta(): array
@@ -98,7 +83,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-/**
+    /**
      * Full integration metadata for the integration catalog.
      */
     public function integrationMeta(): array
@@ -108,11 +93,13 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Accept payments, manage orders, and generate invoices with PayPal.',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:paypal',
-            'category' => 'payments',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.paypal.com/api/rest/',
         ];
-    }/**
+    }
+
+    /**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -132,9 +119,9 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api-m.paypal.com/v1',
-                'hint' => 'Use <code>https://api-m.paypal.com/v1</code> for production or <code>https://api-m.sandbox.paypal.com/v1</code> for sandbox',
-                'default' => 'https://api-m.paypal.com/v1',
+                'placeholder' => 'https://api-m.paypal.com',
+                'hint' => 'Use <code>https://api-m.paypal.com</code> for production or <code>https://api-m.sandbox.paypal.com</code> for sandbox',
+                'default' => 'https://api-m.paypal.com',
             ],
         ];
     }
@@ -148,7 +135,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api-m.paypal.com/v1', '/');
+        $baseUrl = preg_replace('~/v[12]$~', '', rtrim($config['url'] ?? 'https://api-m.paypal.com', '/')) ?: rtrim($config['url'] ?? 'https://api-m.paypal.com', '/');
 
         if (empty($accessToken)) {
             return ['success' => false, 'error' => 'No access token provided'];
@@ -158,9 +145,18 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/identity/oauth2/userinfo');
+            ])->timeout(10)->get($baseUrl . '/v1/identity/oauth2/userinfo');
 
             $json = $response->json();
+
+            if (!$response->successful()) {
+                $error = $json['message'] ?? $json['error'] ?? $json['name'] ?? "HTTP {$response->status()}";
+
+                return [
+                    'success' => false,
+                    'error' => is_string($error) ? $error : json_encode($error),
+                ];
+            }
 
             if ($json === null) {
                 return [
@@ -201,13 +197,6 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function tools(): array
     {
         return [
-            'paypal_list_orders' => [
-                'class' => PayPalListOrders::class,
-                'type' => 'read',
-                'name' => 'List Orders',
-                'description' => 'List PayPal checkout orders.',
-                'icon' => 'ph:list-bullets',
-            ],
             'paypal_get_order' => [
                 'class' => PayPalGetOrder::class,
                 'type' => 'read',
@@ -221,6 +210,13 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'name' => 'Create Order',
                 'description' => 'Create a new PayPal checkout order.',
                 'icon' => 'ph:plus-circle',
+            ],
+            'paypal_capture_order' => [
+                'class' => PayPalCaptureOrder::class,
+                'type' => 'write',
+                'name' => 'Capture Order',
+                'description' => 'Capture a previously approved PayPal checkout order.',
+                'icon' => 'ph:check-circle',
             ],
             'paypal_list_payments' => [
                 'class' => PayPalListPayments::class,
@@ -270,7 +266,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api-m.paypal.com/v1'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api-m.paypal.com'],
         ];
     }
 
@@ -289,14 +285,15 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      * @param  array<string, mixed>  $context  Context containing optional 'account' key.
      */
     public function createTool(string $class, array $context = []): Tool
-    {        $account = $context['account'] ?? null;
+    {
+        $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new PayPalService(
                 accessToken: $creds->get('paypal', 'access_token', '', $account),
-                baseUrl: $creds->get('paypal', 'url', 'https://api-m.paypal.com/v1', $account),
+                baseUrl: $creds->get('paypal', 'url', 'https://api-m.paypal.com', $account),
             );
 
             return new $class($service);

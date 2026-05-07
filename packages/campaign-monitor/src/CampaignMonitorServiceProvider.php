@@ -6,11 +6,20 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Campaign Monitor integration with Laravel.
+ *
+ * Binds the API service using host credentials and registers the tool provider
+ * when the shared ToolProviderRegistry is available.
+ */
 class CampaignMonitorServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the Campaign Monitor API service.
+     */
     public function register(): void
     {
-        $this->app->singleton(CampaignMonitorService::class, function ($app) {
+        $this->app->singleton(CampaignMonitorService::class, function ($app): CampaignMonitorService {
             $creds = $app->make(CredentialResolver::class);
 
             return new CampaignMonitorService(
@@ -20,6 +29,9 @@ class CampaignMonitorServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the tool provider with the integration registry.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

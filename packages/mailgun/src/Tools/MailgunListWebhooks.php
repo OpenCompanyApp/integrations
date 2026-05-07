@@ -2,47 +2,34 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class MailgunListWebhooks implements Tool
+/**
+ * List webhooks configured for a domain.
+ */
+class MailgunListWebhooks extends AbstractMailgunEndpointTool
 {
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_list_webhooks';
 
-    public function name(): string
-    {
-        return 'mailgun_list_webhooks';
-    }
+    protected string $toolDescription = 'List webhooks configured for a domain.';
 
-    public function description(): string
-    {
-        return 'List all webhooks configured for a Mailgun domain.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'domain' => ['type' => 'string', 'description' => 'The domain name to list webhooks for. Defaults to the configured sending domain.'],
-        ];
-    }
+    protected string $path = '/domains/{domain}/webhooks';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'domain' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Mailgun domain. Defaults to the configured sending domain.',
+    ],
+];
 
-            $domainName = $args['domain'] ?? '';
+    /** @var list<string> */
+    protected array $required = [];
 
-            $result = $this->service->listWebhooks($domainName);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

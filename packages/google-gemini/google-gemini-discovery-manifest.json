@@ -1,0 +1,720 @@
+{
+    "source": "https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta",
+    "service": "Gemini API",
+    "version": "v1beta",
+    "method_count": 79,
+    "generated_package": "google-gemini",
+    "methods": [
+        {
+            "discovery_id": "cachedContents.patch",
+            "tool": "google_gemini_cached_contents_patch",
+            "class": "GeminiCachedContentsPatch",
+            "http_method": "PATCH",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "cachedContents.create",
+            "tool": "google_gemini_cached_contents_create",
+            "class": "GeminiCachedContentsCreate",
+            "http_method": "POST",
+            "path": "/v1beta/cachedContents",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "cachedContents.get",
+            "tool": "google_gemini_cached_contents_get",
+            "class": "GeminiCachedContentsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "cachedContents.list",
+            "tool": "google_gemini_cached_contents_list",
+            "class": "GeminiCachedContentsList",
+            "http_method": "GET",
+            "path": "/v1beta/cachedContents",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "cachedContents.delete",
+            "tool": "google_gemini_cached_contents_delete",
+            "class": "GeminiCachedContentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.create",
+            "tool": "google_gemini_file_search_stores_create",
+            "class": "GeminiFileSearchStoresCreate",
+            "http_method": "POST",
+            "path": "/v1beta/fileSearchStores",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.get",
+            "tool": "google_gemini_file_search_stores_get",
+            "class": "GeminiFileSearchStoresGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.delete",
+            "tool": "google_gemini_file_search_stores_delete",
+            "class": "GeminiFileSearchStoresDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.importFile",
+            "tool": "google_gemini_file_search_stores_import_file",
+            "class": "GeminiFileSearchStoresImportFile",
+            "http_method": "POST",
+            "path": "/v1beta/{+fileSearchStoreName}:importFile",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.list",
+            "tool": "google_gemini_file_search_stores_list",
+            "class": "GeminiFileSearchStoresList",
+            "http_method": "GET",
+            "path": "/v1beta/fileSearchStores",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.operations.get",
+            "tool": "google_gemini_file_search_stores_operations_get",
+            "class": "GeminiFileSearchStoresOperationsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.documents.delete",
+            "tool": "google_gemini_file_search_stores_documents_delete",
+            "class": "GeminiFileSearchStoresDocumentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.documents.get",
+            "tool": "google_gemini_file_search_stores_documents_get",
+            "class": "GeminiFileSearchStoresDocumentsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.documents.list",
+            "tool": "google_gemini_file_search_stores_documents_list",
+            "class": "GeminiFileSearchStoresDocumentsList",
+            "http_method": "GET",
+            "path": "/v1beta/{+parent}/documents",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "fileSearchStores.upload.operations.get",
+            "tool": "google_gemini_file_search_stores_upload_operations_get",
+            "class": "GeminiFileSearchStoresUploadOperationsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "batches.cancel",
+            "tool": "google_gemini_batches_cancel",
+            "class": "GeminiBatchesCancel",
+            "http_method": "POST",
+            "path": "/v1beta/{+name}:cancel",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "batches.get",
+            "tool": "google_gemini_batches_get",
+            "class": "GeminiBatchesGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "batches.list",
+            "tool": "google_gemini_batches_list",
+            "class": "GeminiBatchesList",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "batches.delete",
+            "tool": "google_gemini_batches_delete",
+            "class": "GeminiBatchesDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "batches.updateGenerateContentBatch",
+            "tool": "google_gemini_batches_update_generate_content_batch",
+            "class": "GeminiBatchesUpdateGenerateContentBatch",
+            "http_method": "PATCH",
+            "path": "/v1beta/{+name}:updateGenerateContentBatch",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "batches.updateEmbedContentBatch",
+            "tool": "google_gemini_batches_update_embed_content_batch",
+            "class": "GeminiBatchesUpdateEmbedContentBatch",
+            "http_method": "PATCH",
+            "path": "/v1beta/{+name}:updateEmbedContentBatch",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "dynamic.streamGenerateContent",
+            "tool": "google_gemini_dynamic_stream_generate_content",
+            "class": "GeminiDynamicStreamGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:streamGenerateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "dynamic.generateContent",
+            "tool": "google_gemini_dynamic_generate_content",
+            "class": "GeminiDynamicGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "media.upload",
+            "tool": "google_gemini_media_upload",
+            "class": "GeminiMediaUpload",
+            "http_method": "POST",
+            "path": "/v1beta/files",
+            "type": "write",
+            "media_upload": true
+        },
+        {
+            "discovery_id": "media.uploadToFileSearchStore",
+            "tool": "google_gemini_media_upload_to_file_search_store",
+            "class": "GeminiMediaUploadToFileSearchStore",
+            "http_method": "POST",
+            "path": "/v1beta/{+fileSearchStoreName}:uploadToFileSearchStore",
+            "type": "write",
+            "media_upload": true
+        },
+        {
+            "discovery_id": "corpora.list",
+            "tool": "google_gemini_corpora_list",
+            "class": "GeminiCorporaList",
+            "http_method": "GET",
+            "path": "/v1beta/corpora",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.create",
+            "tool": "google_gemini_corpora_create",
+            "class": "GeminiCorporaCreate",
+            "http_method": "POST",
+            "path": "/v1beta/corpora",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.get",
+            "tool": "google_gemini_corpora_get",
+            "class": "GeminiCorporaGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.delete",
+            "tool": "google_gemini_corpora_delete",
+            "class": "GeminiCorporaDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.operations.get",
+            "tool": "google_gemini_corpora_operations_get",
+            "class": "GeminiCorporaOperationsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.permissions.delete",
+            "tool": "google_gemini_corpora_permissions_delete",
+            "class": "GeminiCorporaPermissionsDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.permissions.list",
+            "tool": "google_gemini_corpora_permissions_list",
+            "class": "GeminiCorporaPermissionsList",
+            "http_method": "GET",
+            "path": "/v1beta/{+parent}/permissions",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.permissions.create",
+            "tool": "google_gemini_corpora_permissions_create",
+            "class": "GeminiCorporaPermissionsCreate",
+            "http_method": "POST",
+            "path": "/v1beta/{+parent}/permissions",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.permissions.get",
+            "tool": "google_gemini_corpora_permissions_get",
+            "class": "GeminiCorporaPermissionsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "corpora.permissions.patch",
+            "tool": "google_gemini_corpora_permissions_patch",
+            "class": "GeminiCorporaPermissionsPatch",
+            "http_method": "PATCH",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "files.register",
+            "tool": "google_gemini_files_register",
+            "class": "GeminiFilesRegister",
+            "http_method": "POST",
+            "path": "/v1beta/files:register",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "files.list",
+            "tool": "google_gemini_files_list",
+            "class": "GeminiFilesList",
+            "http_method": "GET",
+            "path": "/v1beta/files",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "files.get",
+            "tool": "google_gemini_files_get",
+            "class": "GeminiFilesGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "files.delete",
+            "tool": "google_gemini_files_delete",
+            "class": "GeminiFilesDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.streamGenerateContent",
+            "tool": "google_gemini_tuned_models_stream_generate_content",
+            "class": "GeminiTunedModelsStreamGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:streamGenerateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.batchGenerateContent",
+            "tool": "google_gemini_tuned_models_batch_generate_content",
+            "class": "GeminiTunedModelsBatchGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:batchGenerateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.get",
+            "tool": "google_gemini_tuned_models_get",
+            "class": "GeminiTunedModelsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.create",
+            "tool": "google_gemini_tuned_models_create",
+            "class": "GeminiTunedModelsCreate",
+            "http_method": "POST",
+            "path": "/v1beta/tunedModels",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.list",
+            "tool": "google_gemini_tuned_models_list",
+            "class": "GeminiTunedModelsList",
+            "http_method": "GET",
+            "path": "/v1beta/tunedModels",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.generateText",
+            "tool": "google_gemini_tuned_models_generate_text",
+            "class": "GeminiTunedModelsGenerateText",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateText",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.delete",
+            "tool": "google_gemini_tuned_models_delete",
+            "class": "GeminiTunedModelsDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.patch",
+            "tool": "google_gemini_tuned_models_patch",
+            "class": "GeminiTunedModelsPatch",
+            "http_method": "PATCH",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.asyncBatchEmbedContent",
+            "tool": "google_gemini_tuned_models_async_batch_embed_content",
+            "class": "GeminiTunedModelsAsyncBatchEmbedContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:asyncBatchEmbedContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.generateContent",
+            "tool": "google_gemini_tuned_models_generate_content",
+            "class": "GeminiTunedModelsGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.transferOwnership",
+            "tool": "google_gemini_tuned_models_transfer_ownership",
+            "class": "GeminiTunedModelsTransferOwnership",
+            "http_method": "POST",
+            "path": "/v1beta/{+name}:transferOwnership",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.operations.list",
+            "tool": "google_gemini_tuned_models_operations_list",
+            "class": "GeminiTunedModelsOperationsList",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}/operations",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.operations.get",
+            "tool": "google_gemini_tuned_models_operations_get",
+            "class": "GeminiTunedModelsOperationsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.permissions.delete",
+            "tool": "google_gemini_tuned_models_permissions_delete",
+            "class": "GeminiTunedModelsPermissionsDelete",
+            "http_method": "DELETE",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.permissions.list",
+            "tool": "google_gemini_tuned_models_permissions_list",
+            "class": "GeminiTunedModelsPermissionsList",
+            "http_method": "GET",
+            "path": "/v1beta/{+parent}/permissions",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.permissions.create",
+            "tool": "google_gemini_tuned_models_permissions_create",
+            "class": "GeminiTunedModelsPermissionsCreate",
+            "http_method": "POST",
+            "path": "/v1beta/{+parent}/permissions",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.permissions.get",
+            "tool": "google_gemini_tuned_models_permissions_get",
+            "class": "GeminiTunedModelsPermissionsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "tunedModels.permissions.patch",
+            "tool": "google_gemini_tuned_models_permissions_patch",
+            "class": "GeminiTunedModelsPermissionsPatch",
+            "http_method": "PATCH",
+            "path": "/v1beta/{+name}",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.generateContent",
+            "tool": "google_gemini_models_generate_content",
+            "class": "GeminiModelsGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.generateMessage",
+            "tool": "google_gemini_models_generate_message",
+            "class": "GeminiModelsGenerateMessage",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateMessage",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.predict",
+            "tool": "google_gemini_models_predict",
+            "class": "GeminiModelsPredict",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:predict",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.embedContent",
+            "tool": "google_gemini_models_embed_content",
+            "class": "GeminiModelsEmbedContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:embedContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.list",
+            "tool": "google_gemini_models_list",
+            "class": "GeminiModelsList",
+            "http_method": "GET",
+            "path": "/v1beta/models",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.batchEmbedText",
+            "tool": "google_gemini_models_batch_embed_text",
+            "class": "GeminiModelsBatchEmbedText",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:batchEmbedText",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.asyncBatchEmbedContent",
+            "tool": "google_gemini_models_async_batch_embed_content",
+            "class": "GeminiModelsAsyncBatchEmbedContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:asyncBatchEmbedContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.countMessageTokens",
+            "tool": "google_gemini_models_count_message_tokens",
+            "class": "GeminiModelsCountMessageTokens",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:countMessageTokens",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.countTokens",
+            "tool": "google_gemini_models_count_tokens",
+            "class": "GeminiModelsCountTokens",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:countTokens",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.predictLongRunning",
+            "tool": "google_gemini_models_predict_long_running",
+            "class": "GeminiModelsPredictLongRunning",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:predictLongRunning",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.generateText",
+            "tool": "google_gemini_models_generate_text",
+            "class": "GeminiModelsGenerateText",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateText",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.countTextTokens",
+            "tool": "google_gemini_models_count_text_tokens",
+            "class": "GeminiModelsCountTextTokens",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:countTextTokens",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.embedText",
+            "tool": "google_gemini_models_embed_text",
+            "class": "GeminiModelsEmbedText",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:embedText",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.generateAnswer",
+            "tool": "google_gemini_models_generate_answer",
+            "class": "GeminiModelsGenerateAnswer",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:generateAnswer",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.batchEmbedContents",
+            "tool": "google_gemini_models_batch_embed_contents",
+            "class": "GeminiModelsBatchEmbedContents",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:batchEmbedContents",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.streamGenerateContent",
+            "tool": "google_gemini_models_stream_generate_content",
+            "class": "GeminiModelsStreamGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:streamGenerateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.batchGenerateContent",
+            "tool": "google_gemini_models_batch_generate_content",
+            "class": "GeminiModelsBatchGenerateContent",
+            "http_method": "POST",
+            "path": "/v1beta/{+model}:batchGenerateContent",
+            "type": "write",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.get",
+            "tool": "google_gemini_models_get",
+            "class": "GeminiModelsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.operations.get",
+            "tool": "google_gemini_models_operations_get",
+            "class": "GeminiModelsOperationsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "models.operations.list",
+            "tool": "google_gemini_models_operations_list",
+            "class": "GeminiModelsOperationsList",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}/operations",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "generatedFiles.list",
+            "tool": "google_gemini_generated_files_list",
+            "class": "GeminiGeneratedFilesList",
+            "http_method": "GET",
+            "path": "/v1beta/generatedFiles",
+            "type": "read",
+            "media_upload": false
+        },
+        {
+            "discovery_id": "generatedFiles.operations.get",
+            "tool": "google_gemini_generated_files_operations_get",
+            "class": "GeminiGeneratedFilesOperationsGet",
+            "http_method": "GET",
+            "path": "/v1beta/{+name}",
+            "type": "read",
+            "media_upload": false
+        }
+    ]
+}

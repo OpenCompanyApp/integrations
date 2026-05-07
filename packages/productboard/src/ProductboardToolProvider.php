@@ -93,7 +93,7 @@ class ProductboardToolProvider implements ToolProvider, ConfigurableIntegration,
             'description' => 'Product management platform for prioritizing features and capturing customer feedback',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:productboard',
-            'category' => 'product-management',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.productboard.com/',
         ];

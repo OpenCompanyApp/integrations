@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the currently authenticated ServiceM8 user.
+ * List staff visible to the authenticated ServiceM8 token.
  *
- * Returns the user profile of the authenticated account, useful for
- * identifying which ServiceM8 account is connected.
+ * ServiceM8's public API exposes staff records rather than a dedicated /me
+ * endpoint, so this tool returns the staff collection.
  */
 class ServiceM8GetCurrentUser implements Tool
 {
@@ -25,7 +25,7 @@ class ServiceM8GetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the profile of the currently authenticated ServiceM8 user. Returns name, email, role, and account details.';
+        return 'List staff members visible to the authenticated ServiceM8 token. ServiceM8 does not expose a dedicated /me endpoint in the public API.';
     }
 
     public function parameters(): array

@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Perplexity integration with Laravel.
+ *
+ * Binds the API service from configured credentials and registers the tool provider with the shared registry.
+ */
 class PerplexityServiceProvider extends ServiceProvider
 {
     public function register(): void

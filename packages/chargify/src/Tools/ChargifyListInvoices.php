@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ChargifyListInvoices implements Tool
 {
+    /**
+     * @param  ChargifyService  $service  The Chargify API client.
+     */
     public function __construct(
         private ChargifyService $service,
     ) {}
@@ -37,6 +40,11 @@ class ChargifyListInvoices implements Tool
         ];
     }
 
+    /**
+     * List invoices through the Chargify API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page, status).
+     */
     public function execute(array $args): ToolResult
     {
         try {

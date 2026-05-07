@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-forms",
-    "description": "Google Forms integration for Laravel — list forms, manage responses, create forms. Part of the OpenCompany integration ecosystem.",
+    "description": "Google Forms integration for Laravel AI agents - generated Forms API v1 coverage for forms, responses, batch updates, publish settings, and watches.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google-forms", "forms", "surveys", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-forms": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,11 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "forms",
+        "workspace",
+        "opencompany"
+    ]
 }

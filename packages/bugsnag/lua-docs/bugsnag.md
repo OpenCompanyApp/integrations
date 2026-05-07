@@ -1,201 +1,95 @@
-# Bugsnag — Lua API Reference
+# Bugsnag Integration
 
-## bugsnag_list_projects
+Namespace: `app.integrations.bugsnag`
 
-List Bugsnag projects visible to the authenticated user.
+Use this integration to access Bugsnag error-monitoring data, inspect projects and releases, manage error workflow data, report builds and sessions, and create privacy export requests.
 
-### Parameters
+## Common Workflows
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of projects to return (default: 30) |
-| `offset` | integer | no | Number of projects to skip for pagination (default: 0) |
-| `q` | string | no | Search query to filter projects by name |
-
-### Example
+### Find Organizations And Projects
 
 ```lua
-local result = app.integrations.bugsnag.list_projects({
-  limit = 10
+local orgs = app.integrations.bugsnag.list_organizations({})
+
+local projects = app.integrations.bugsnag.list_organization_projects({
+  organization_id = "org_id"
+})
+```
+
+Most Data Access API endpoints use Bugsnag IDs from these responses.
+
+### List And Filter Errors
+
+```lua
+local errors = app.integrations.bugsnag.list_errors({
+  project_id = "project_id",
+  query = {
+    ["filters[error.status][][value]"] = "open",
+    ["filters[error.status][][type]"] = "eq"
+  }
+})
+```
+
+Bugsnag exposes many filters using bracketed query parameter names. Put those filters in the `query` object so the integration sends them unchanged.
+
+### Inspect Trends And Pivots
+
+```lua
+local trend = app.integrations.bugsnag.get_project_trend({
+  project_id = "project_id",
+  resolution = "30m",
+  query = {
+    ["filters[event.since][][value]"] = "1d",
+    ["filters[event.since][][type]"] = "eq"
+  }
 })
 
-for _, project in ipairs(result) do
-  print(project.name .. " (ID: " .. project.id .. ")")
-end
+local users = app.integrations.bugsnag.list_pivot_values({
+  project_id = "project_id",
+  error_id = "error_id",
+  pivot = "user.id"
+})
 ```
 
----
-
-## bugsnag_get_project
-
-Get details for a single Bugsnag project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The project ID |
-
-### Example
+### Create Privacy Event Data Requests
 
 ```lua
-local result = app.integrations.bugsnag.get_project({
-  id = "abc123"
+local request = app.integrations.bugsnag.create_organization_event_data_request({
+  organization_id = "org_id",
+  query = {
+    report_type = "gdpr",
+    ["filters[user.id][][value]"] = "user_123",
+    ["filters[user.id][][type]"] = "eq"
+  }
+})
+```
+
+Poll `get_organization_event_data_request` or `get_project_event_data_request` until Bugsnag returns a completed request URL.
+
+### Build And Session Reporting
+
+```lua
+local build = app.integrations.bugsnag.notify_build({
+  payload = {
+    apiKey = "project_api_key",
+    appVersion = "1.2.3",
+    releaseStage = "production"
+  }
 })
 
-print("Project: " .. result.name)
-print("Type: " .. result.type)
-```
-
----
-
-## bugsnag_list_errors
-
-List errors for a Bugsnag project. Supports filtering by severity and status.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | string | yes | The project ID to list errors for |
-| `limit` | integer | no | Maximum number of errors to return (default: 30) |
-| `offset` | integer | no | Number of errors to skip for pagination (default: 0) |
-| `severity` | string | no | Filter by severity: `"error"`, `"warning"`, or `"info"` |
-| `status` | string | no | Filter by status: `"open"`, `"fixed"`, or `"snoozed"` |
-| `sort` | string | no | Sort order: `"created_at"`, `"updated_at"`, or `"unhandled_occurrence_count"` |
-
-### Example
-
-```lua
-local result = app.integrations.bugsnag.list_errors({
-  project_id = "abc123",
-  severity = "error",
-  status = "open",
-  sort = "unhandled_occurrence_count",
-  limit = 10
+local session = app.integrations.bugsnag.report_session({
+  payload = {
+    apiKey = "project_api_key",
+    notifier = { name = "custom-agent", version = "1.0.0", url = "https://example.test" },
+    sessions = {}
+  }
 })
-
-for _, err in ipairs(result) do
-  print(err.message .. " — " .. err.severity .. " (" .. err.unhandled_occurrence_count .. " unhandled)")
-end
 ```
 
----
+The build, session, and error-reporting APIs use project API keys in their payloads. The configured integration token is still used for this package's HTTP client.
 
-## bugsnag_get_error
+## Coverage Notes
 
-Get details for a specific Bugsnag error.
+Focused tools cover authenticated user lookup, organizations, organization projects, collaborators, teams, projects, errors, events, trends, pivots, releases, GDPR and CCPA event data requests, error reporting, build reporting, session reporting, and raw Data Access API escape hatches.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The error ID |
-
-### Example
-
-```lua
-local result = app.integrations.bugsnag.get_error({
-  id = "err456"
-})
-
-print("Error: " .. result.message)
-print("Severity: " .. result.severity)
-print("Status: " .. result.status)
-print("First seen: " .. result.first_seen)
-print("Last seen: " .. result.last_seen)
-```
-
----
-
-## bugsnag_list_events
-
-List events (individual error occurrences) for a Bugsnag project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | string | yes | The project ID to list events for |
-| `limit` | integer | no | Maximum number of events to return (default: 30) |
-| `offset` | integer | no | Number of events to skip for pagination (default: 0) |
-| `error_id` | string | no | Filter events to a specific error by its ID |
-
-### Example
-
-```lua
-local result = app.integrations.bugsnag.list_events({
-  project_id = "abc123",
-  error_id = "err456",
-  limit = 5
-})
-
-for _, event in ipairs(result) do
-  print(event.received_at .. " — " .. event.exceptions[1].error_class)
-end
-```
-
----
-
-## bugsnag_list_collaborators
-
-List collaborators (team members) for a Bugsnag organization.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `org_id` | string | yes | The organization ID |
-| `limit` | integer | no | Maximum number of collaborators to return (default: 30) |
-| `offset` | integer | no | Number of collaborators to skip for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.bugsnag.list_collaborators({
-  org_id = "org789"
-})
-
-for _, collab in ipairs(result) do
-  print(collab.name .. " <" .. collab.email .. "> — " .. collab.role)
-end
-```
-
----
-
-## bugsnag_get_current_user
-
-Get the currently authenticated Bugsnag user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.bugsnag.get_current_user({})
-
-print("User: " .. result.name)
-print("Email: " .. result.email)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Bugsnag accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.bugsnag.list_projects({})
-
--- Explicit default (portable across setups)
-app.integrations.bugsnag.default.list_projects({})
-
--- Named accounts
-app.integrations.bugsnag.work.list_projects({})
-app.integrations.bugsnag.personal.list_projects({})
-```
-
-All functions are identical across accounts — only the credentials differ.
+The Bugsnag Data Access API v2 requires the `X-Version: 2` header. The integration sends it automatically for Data Access API tools.

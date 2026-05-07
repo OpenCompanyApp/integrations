@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-firecrawl",
-    "description": "Firecrawl integration for Laravel — scrape, crawl, map, and extract web content.",
+    "description": "Firecrawl integration for Laravel — v2 scrape, crawl, search, extract, agent, browser, and usage APIs.",
     "license": "MIT",
     "authors": [
         {

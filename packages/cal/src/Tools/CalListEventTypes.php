@@ -12,10 +12,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Returns available event types (booking link templates) with optional
  * filtering by team and pagination support.
  *
- * @see https://developer.cal.com/api/endpoints/event-types
+ * @see https://cal.com/docs/api-reference/v2/event-types/list-event-types
  */
 class CalListEventTypes implements Tool
 {
+    /**
+     * @param  CalService  $service  Cal.com API client.
+     */
     public function __construct(
         private CalService $service,
     ) {}
@@ -40,7 +43,7 @@ class CalListEventTypes implements Tool
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of event types to return per page.'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (starts at 1).'],
-            'teamId' => ['type' => 'integer', 'description' => 'Filter event types belonging to a specific team by its ID.'],
+            'team_id' => ['type' => 'integer', 'description' => 'Filter event types belonging to a specific team by its ID.'],
         ];
     }
 
@@ -58,7 +61,9 @@ class CalListEventTypes implements Tool
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : null;
             $page = isset($args['page']) ? (int) $args['page'] : null;
-            $teamId = isset($args['teamId']) ? (int) $args['teamId'] : null;
+            $teamId = isset($args['team_id'])
+                ? (int) $args['team_id']
+                : (isset($args['teamId']) ? (int) $args['teamId'] : null);
 
             $result = $this->service->listEventTypes($limit, $page, $teamId);
 

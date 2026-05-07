@@ -15,6 +15,8 @@ class NetlifyDeleteSite implements Tool
 {
     /**
      * Create a new NetlifyDeleteSite tool instance.
+     *
+     * @param  NetlifyService  $service  The Netlify REST API client.
      */
     public function __construct(
         private NetlifyService $service,

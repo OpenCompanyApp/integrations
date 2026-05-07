@@ -5,13 +5,26 @@ namespace OpenCompany\Integrations\MongoDB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the deprecated MongoDB Atlas Data API v1.
+ *
+ * Handles API key authentication, Data API action payloads, and response parsing
+ * for document-level CRUD and aggregation operations.
+ */
 class MongoDBService
 {
+    /**
+     * @param  string  $apiKey  MongoDB Atlas Data API key.
+     * @param  string  $clusterUrl  Full Data API endpoint URL ending in /endpoint/data/v1.
+     * @param  string  $dataSource  Linked Atlas data source name, commonly mongodb-atlas.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $clusterUrl = '',
+        private string $dataSource = 'mongodb-atlas',
     ) {
         $this->clusterUrl = rtrim($this->clusterUrl, '/');
+        $this->dataSource = $this->dataSource !== '' ? $this->dataSource : 'mongodb-atlas';
     }
 
     /**
@@ -27,13 +40,14 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $filter       MongoDB query filter.
-     * @param  array  $options      Optional query options (projection, sort, limit, skip).
+     * @param  array<string, mixed>  $filter  MongoDB query filter.
+     * @param  array<string, mixed>  $options  Optional query options (projection, sort, limit, skip).
      * @return array<string, mixed>
      */
     public function find(string $database, string $collection, array $filter = [], array $options = []): array
     {
         $body = [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'filter' => $filter,
@@ -60,13 +74,14 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $filter       MongoDB query filter.
-     * @param  array  $options      Optional query options (projection).
+     * @param  array<string, mixed>  $filter  MongoDB query filter.
+     * @param  array<string, mixed>  $options  Optional query options (projection).
      * @return array<string, mixed>
      */
     public function findOne(string $database, string $collection, array $filter = [], array $options = []): array
     {
         $body = [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'filter' => $filter,
@@ -84,12 +99,13 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $document     The document to insert.
+     * @param  array<string, mixed>  $document  The document to insert.
      * @return array<string, mixed>
      */
     public function insertOne(string $database, string $collection, array $document): array
     {
         return $this->action('insertOne', [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'document' => $document,
@@ -101,12 +117,13 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $documents    The documents to insert.
+     * @param  array<int, array<string, mixed>>  $documents  The documents to insert.
      * @return array<string, mixed>
      */
     public function insertMany(string $database, string $collection, array $documents): array
     {
         return $this->action('insertMany', [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'documents' => $documents,
@@ -118,13 +135,34 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $filter       MongoDB query filter to match the document.
-     * @param  array  $update       Update operations (e.g., ['$set' => ['field' => 'value']]).
+     * @param  array<string, mixed>  $filter  MongoDB query filter to match the document.
+     * @param  array<string, mixed>  $update  Update operations (e.g., ['$set' => ['field' => 'value']]).
      * @return array<string, mixed>
      */
     public function updateOne(string $database, string $collection, array $filter, array $update): array
     {
         return $this->action('updateOne', [
+            'dataSource' => $this->dataSource,
+            'database' => $database,
+            'collection' => $collection,
+            'filter' => $filter,
+            'update' => $update,
+        ]);
+    }
+
+    /**
+     * Update multiple documents in a collection.
+     *
+     * @param  string  $database  The database name.
+     * @param  string  $collection  The collection name.
+     * @param  array<string, mixed>  $filter  MongoDB query filter to match documents.
+     * @param  array<string, mixed>  $update  Update operations such as $set or $inc.
+     * @return array<string, mixed>
+     */
+    public function updateMany(string $database, string $collection, array $filter, array $update): array
+    {
+        return $this->action('updateMany', [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'filter' => $filter,
@@ -137,12 +175,31 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $filter       MongoDB query filter to match the document.
+     * @param  array<string, mixed>  $filter  MongoDB query filter to match the document.
      * @return array<string, mixed>
      */
     public function deleteOne(string $database, string $collection, array $filter): array
     {
         return $this->action('deleteOne', [
+            'dataSource' => $this->dataSource,
+            'database' => $database,
+            'collection' => $collection,
+            'filter' => $filter,
+        ]);
+    }
+
+    /**
+     * Delete multiple documents from a collection.
+     *
+     * @param  string  $database  The database name.
+     * @param  string  $collection  The collection name.
+     * @param  array<string, mixed>  $filter  MongoDB query filter to match documents.
+     * @return array<string, mixed>
+     */
+    public function deleteMany(string $database, string $collection, array $filter): array
+    {
+        return $this->action('deleteMany', [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'filter' => $filter,
@@ -154,37 +211,17 @@ class MongoDBService
      *
      * @param  string  $database    The database name.
      * @param  string  $collection  The collection name.
-     * @param  array  $pipeline     The aggregation pipeline stages.
+     * @param  array<int, array<string, mixed>>  $pipeline  The aggregation pipeline stages.
      * @return array<string, mixed>
      */
     public function aggregate(string $database, string $collection, array $pipeline): array
     {
         return $this->action('aggregate', [
+            'dataSource' => $this->dataSource,
             'database' => $database,
             'collection' => $collection,
             'pipeline' => $pipeline,
         ]);
-    }
-
-    /**
-     * List collections in a database.
-     *
-     * @param  string  $database  The database name.
-     * @return array<string, mixed>
-     */
-    public function listCollections(string $database): array
-    {
-        return $this->request('GET', "/api/atlas/v2/groups/{$database}/clusters");
-    }
-
-    /**
-     * Get current user / heartbeat check.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/admin/heartbeat');
     }
 
     /**
@@ -196,7 +233,7 @@ class MongoDBService
      */
     private function action(string $action, array $body): array
     {
-        return $this->request('POST', "/api/app/v1/{$action}", $body);
+        return $this->request('POST', "/action/{$action}", $body);
     }
 
     /**
@@ -238,8 +275,8 @@ class MongoDBService
 
         try {
             $http = Http::withHeaders([
-                'api-key' => $this->apiKey,
-                'Content-Type' => 'application/json',
+                'apiKey' => $this->apiKey,
+                'Content-Type' => 'application/ejson',
                 'Accept' => 'application/json',
             ])->timeout(30);
 
@@ -252,7 +289,7 @@ class MongoDBService
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
+                $contentType = (string) $response->header('Content-Type');
                 $body = $response->body();
 
                 if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {

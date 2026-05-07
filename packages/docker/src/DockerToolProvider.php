@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Docker;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Docker\Tools\DockerListRepositories;
-use OpenCompany\Integrations\Docker\Tools\DockerGetRepository;
-use OpenCompany\Integrations\Docker\Tools\DockerListTags;
-use OpenCompany\Integrations\Docker\Tools\DockerGetTag;
-use OpenCompany\Integrations\Docker\Tools\DockerCreateRepository;
-use OpenCompany\Integrations\Docker\Tools\DockerListOrganizations;
-use OpenCompany\Integrations\Docker\Tools\DockerGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and setup metadata for the Docker Hub integration.
+ *
+ * Exposes generated tools for Docker's official Hub OpenAPI document and
+ * resolves account-specific Docker Hub access tokens for host applications.
+ */
+class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +25,27 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Docker Hub requests use Authorization: Bearer with a personal access token or API bearer token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +58,7 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'label' => 'Docker Hub',
-            'description' => 'Container registry management',
+            'description' => 'Repositories, tags, access tokens, organizations, groups, invites, audit logs, and SCIM',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:docker',
         ];
@@ -89,14 +68,17 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'name' => 'Docker Hub',
-            'description' => 'Container image registry for managing repositories, tags, and organizations',
+            'description' => 'Manage Docker Hub repositories, tags, access tokens, organization settings, members, groups, invites, audit logs, and SCIM resources through the official Hub API.',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:docker',
             'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.docker.com/docker-hub/api/latest/',
+            'docs_url' => 'https://docs.docker.com/reference/api/hub/latest/',
+            'source_url' => 'https://docs.docker.com/reference/api/hub/latest.yaml',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -104,53 +86,61 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'secret',
                 'label' => 'Access Token',
                 'placeholder' => 'Enter your Docker Hub access token',
-                'hint' => 'Generate a Personal Access Token from Docker Hub under "Account Settings > Security"',
+                'hint' => 'Generate a personal access token from Docker Hub under Account Settings > Security.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://hub.docker.com/v2',
-                'hint' => 'Use <code>https://hub.docker.com/v2</code> for the default API, or a custom endpoint',
-                'default' => 'https://hub.docker.com/v2',
+                'label' => 'API Root URL',
+                'placeholder' => 'https://hub.docker.com',
+                'hint' => 'Use https://hub.docker.com unless targeting a compatible endpoint. Legacy values ending in /v2 are still accepted.',
+                'default' => 'https://hub.docker.com',
             ],
         ];
     }
 
+    /**
+     * Test the configured Docker Hub token with a lightweight access-token call.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://hub.docker.com/v2', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://hub.docker.com'), '/');
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        if ($accessToken === '') {
+            return ['success' => false, 'error' => 'No access token provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/user/');
+            $url = str_ends_with($baseUrl, '/v2') ? $baseUrl . '/access-tokens' : $baseUrl . '/v2/access-tokens';
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($url);
 
-            $json = $response->json();
+            if (!$response->successful()) {
+                $message = $response->json('detail') ?? $response->json('message') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Docker Hub API at {$baseUrl}. Check the URL.",
+                    'error' => "Docker Hub API error ({$response->status()}): {$message}",
                 ];
             }
 
             return [
                 'success' => true,
-                'message' => "Connected to Docker Hub API as {$json['username']}.",
+                'message' => 'Connected to Docker Hub.',
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
@@ -159,70 +149,37 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    /**
+     * Register generated Docker Hub OpenAPI tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
-        return [
-            'docker_list_repositories' => [
-                'class' => DockerListRepositories::class,
-                'type' => 'read',
-                'name' => 'List Repositories',
-                'description' => 'List Docker Hub repositories for a namespace.',
-                'icon' => 'ph:folders',
-            ],
-            'docker_get_repository' => [
-                'class' => DockerGetRepository::class,
-                'type' => 'read',
-                'name' => 'Get Repository',
-                'description' => 'Get details for a specific Docker Hub repository.',
-                'icon' => 'ph:folder',
-            ],
-            'docker_list_tags' => [
-                'class' => DockerListTags::class,
-                'type' => 'read',
-                'name' => 'List Tags',
-                'description' => 'List tags for a Docker Hub repository.',
-                'icon' => 'ph:tag',
-            ],
-            'docker_get_tag' => [
-                'class' => DockerGetTag::class,
-                'type' => 'read',
-                'name' => 'Get Tag',
-                'description' => 'Get details for a specific tag in a Docker Hub repository.',
-                'icon' => 'ph:tag',
-            ],
-            'docker_create_repository' => [
-                'class' => DockerCreateRepository::class,
-                'type' => 'write',
-                'name' => 'Create Repository',
-                'description' => 'Create a new Docker Hub repository.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'docker_list_organizations' => [
-                'class' => DockerListOrganizations::class,
-                'type' => 'read',
-                'name' => 'List Organizations',
-                'description' => 'List Docker Hub organizations the authenticated user belongs to.',
-                'icon' => 'ph:buildings',
-            ],
-            'docker_get_current_user' => [
-                'class' => DockerGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Docker Hub user profile.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (DockerService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/docker.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://hub.docker.com/v2'],
-        ];
     }
 
     public function isIntegration(): bool
@@ -230,21 +187,56 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return true;
     }
 
+    /**
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): DockerService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new DockerService(
-                accessToken: $creds->get('docker', 'access_token', '', $account),
-                baseUrl: $creds->get('docker', 'url', 'https://hub.docker.com/v2', $account),
+            return new DockerService(
+                accessToken: (string) $creds->get('docker', 'access_token', '', (string) $account),
+                baseUrl: (string) $creds->get('docker', 'url', 'https://hub.docker.com', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(DockerService::class));
+        return app(DockerService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/repositories') => 'ph:package',
+            str_contains($path, '/tags') => 'ph:tag',
+            str_contains($path, '/access-tokens') => 'ph:key',
+            str_contains($path, '/orgs') => 'ph:buildings',
+            str_contains($path, '/members'), str_contains($path, '/groups'), str_contains($path, '/Users') => 'ph:users',
+            str_contains($path, '/auditlogs') => 'ph:list-magnifying-glass',
+            str_contains($path, '/scim') => 'ph:identification-card',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

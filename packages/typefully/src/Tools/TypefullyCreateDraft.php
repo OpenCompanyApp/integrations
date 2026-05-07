@@ -2,12 +2,20 @@
 
 namespace OpenCompany\Integrations\Typefully\Tools;
 
-use OpenCompany\Integrations\Typefully\TypefullyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Typefully\TypefullyService;
 
+/**
+ * Create a Typefully v2 draft for a social set.
+ *
+ * Supports full platforms payloads or a simplified single-platform content shortcut.
+ */
 class TypefullyCreateDraft implements Tool
 {
+    /**
+     * @param  TypefullyService  $service  The Typefully API client.
+     */
     public function __construct(
         private TypefullyService $service,
     ) {}
@@ -19,26 +27,30 @@ class TypefullyCreateDraft implements Tool
 
     public function description(): string
     {
-        return 'Create a new draft in Typefully. Supports tweets, threads, and newsletter drafts. Separate individual tweets in a thread with four newlines (\\\\n\\\\n\\\\n\\\\n).';
+        return 'Create a Typefully v2 draft for a social set. Use platforms for full multi-platform control, or content plus platform for a simple post.';
     }
 
     public function parameters(): array
     {
         return [
-            'content' => ['type' => 'string', 'required' => true, 'description' => 'The content of the draft. For threads, separate tweets with four newlines.'],
-            'type' => ['type' => 'string', 'description' => 'The type of draft: "tweet", "thread", or "mail". Defaults to auto-detected based on content.'],
-            'schedule_date' => ['type' => 'string', 'description' => 'ISO 8601 date to schedule the draft (e.g., "2026-04-10T09:00:00Z"). Omit to save as a draft without scheduling.'],
-            'thread_connector' => ['type' => 'boolean', 'description' => 'Whether to add a "Show more" connector between tweets in a thread (default: true).'],
-            'is_tweet_pin' => ['type' => 'boolean', 'description' => 'Pin the tweet after publishing (default: false).'],
-            'is_tweet_reply' => ['type' => 'boolean', 'description' => 'Publish as a reply (requires reply_to, default: false).'],
-            'reply_to' => ['type' => 'string', 'description' => 'Tweet ID to reply to (required if is_tweet_reply is true).'],
-            'mail_subject' => ['type' => 'string', 'description' => 'Subject line for newsletter drafts (type "mail" only).'],
-            'mail_subtitle' => ['type' => 'string', 'description' => 'Subtitle for newsletter drafts.'],
-            'audience_id' => ['type' => 'string', 'description' => 'Typefully audience ID for newsletter drafts.'],
-            'label_ids' => ['type' => 'array', 'description' => 'Array of label IDs to assign to the draft.'],
+            'social_set_id' => ['type' => 'string', 'required' => true, 'description' => 'Typefully social set ID. Get it from typefully_list_social_sets.'],
+            'platforms' => ['type' => 'object', 'description' => 'Full v2 platforms payload keyed by x, linkedin, threads, bluesky, or mastodon.'],
+            'content' => ['type' => 'string', 'description' => 'Simple content shortcut when platforms is omitted.'],
+            'platform' => ['type' => 'string', 'description' => 'Simple shortcut platform when platforms is omitted. Defaults to x.', 'enum' => ['x', 'linkedin', 'threads', 'bluesky', 'mastodon']],
+            'posts' => ['type' => 'array', 'description' => 'Simple shortcut posts array. Each item may contain text and media_ids.', 'items' => ['type' => 'object']],
+            'publish_at' => ['type' => 'string', 'description' => 'ISO 8601 datetime, "now", or "next-free-slot". Omit to save as draft.'],
+            'title' => ['type' => 'string', 'description' => 'Optional internal draft title.'],
+            'tags' => ['type' => 'array', 'description' => 'Tag slugs to assign to the draft.', 'items' => ['type' => 'string']],
+            'share' => ['type' => 'boolean', 'description' => 'Whether to generate or enable public sharing for the draft.'],
+            'reply_to' => ['type' => 'string', 'description' => 'Optional post URL or platform reference to publish as a reply.'],
         ];
     }
 
+    /**
+     * Create a Typefully v2 draft.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -46,43 +58,40 @@ class TypefullyCreateDraft implements Tool
                 return ToolResult::error('Typefully integration is not configured.');
             }
 
-            $content = $args['content'];
-            $type = $args['type'] ?? null;
-
-            // Build optional parameters
-            $options = [];
-
-            if (isset($args['schedule_date'])) {
-                $options['schedule_date'] = $args['schedule_date'];
-            }
-            if (isset($args['thread_connector'])) {
-                $options['thread_connector'] = (bool) $args['thread_connector'];
-            }
-            if (isset($args['is_tweet_pin'])) {
-                $options['is_tweet_pin'] = (bool) $args['is_tweet_pin'];
-            }
-            if (isset($args['is_tweet_reply'])) {
-                $options['is_tweet_reply'] = (bool) $args['is_tweet_reply'];
-            }
-            if (isset($args['reply_to'])) {
-                $options['reply_to'] = $args['reply_to'];
-            }
-            if (isset($args['mail_subject'])) {
-                $options['mail_subject'] = $args['mail_subject'];
-            }
-            if (isset($args['mail_subtitle'])) {
-                $options['mail_subtitle'] = $args['mail_subtitle'];
-            }
-            if (isset($args['audience_id'])) {
-                $options['audience_id'] = $args['audience_id'];
-            }
-            if (isset($args['label_ids'])) {
-                $options['label_ids'] = $args['label_ids'];
+            $socialSetId = $args['social_set_id'] ?? '';
+            if ($socialSetId === '') {
+                return ToolResult::error('social_set_id is required.');
             }
 
-            $result = $this->service->createDraft($content, $type, $options);
+            $payload = [];
+            if (isset($args['platforms']) && is_array($args['platforms'])) {
+                $payload['platforms'] = $args['platforms'];
+            } else {
+                $posts = $args['posts'] ?? null;
+                if ($posts === null && isset($args['content'])) {
+                    $posts = [['text' => $args['content']]];
+                }
 
-            return ToolResult::success($result);
+                if (!is_array($posts) || $posts === []) {
+                    return ToolResult::error('Provide either platforms, posts, or content.');
+                }
+
+                $platform = $args['platform'] ?? 'x';
+                $payload['platforms'] = [
+                    $platform => [
+                        'enabled' => true,
+                        'posts' => $posts,
+                    ],
+                ];
+            }
+
+            foreach (['publish_at', 'title', 'tags', 'share', 'reply_to'] as $field) {
+                if (array_key_exists($field, $args)) {
+                    $payload[$field] = $args[$field];
+                }
+            }
+
+            return ToolResult::success($this->service->createDraft($socialSetId, $payload));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

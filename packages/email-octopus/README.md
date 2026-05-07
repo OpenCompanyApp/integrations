@@ -1,21 +1,14 @@
 # EmailOctopus Integration
 
-Email marketing integration using the [EmailOctopus API](https://emailoctopus.com/api-documentation).
+EmailOctopus integration for the OpenCompany integration ecosystem. It targets
+the public v1.6 API documentation for list management, contacts, fields, tags,
+campaigns, campaign reports, and automation queueing.
 
-## Tools
-
-| Tool | Type | Description |
-|------|------|-------------|
-| `emailoctopus_list_contacts` | read | List contacts in a mailing list |
-| `emailoctopus_get_contact` | read | Get a specific contact's details |
-| `emailoctopus_create_contact` | write | Add a new contact to a mailing list |
-| `emailoctopus_list_campaigns` | read | List all email campaigns |
-| `emailoctopus_get_campaign` | read | Get a specific campaign's details |
-| `emailoctopus_get_current_user` | read | Get authenticated account details |
+EmailOctopus notes that API v2 is available in dashboards, but public method
+documentation currently exposes the v1.6 endpoint set. This package avoids the
+older generated `/v1.5` paths.
 
 ## Configuration
-
-Add to `config/ai-tools.php`:
 
 ```php
 'email-octopus' => [
@@ -25,39 +18,50 @@ Add to `config/ai-tools.php`:
 ],
 ```
 
+`list_id` is optional, but list-scoped tools need either a configured default or
+a `list_id` argument.
+
+## Available Tools
+
+This package exposes tools for:
+
+- Lists: list, get, create, update, delete
+- Tags: list, create, update, delete
+- Contacts: list all, subscribed, unsubscribed, tagged, get, create, update, delete, bulk update
+- Fields: create, update, delete
+- Campaigns: list, get, report endpoints
+- Automations: start automation for a list contact
+
 ## Standalone Usage
 
 ```php
 use OpenCompany\Integrations\EmailOctopus\EmailOctopusService;
 
 $service = new EmailOctopusService(
-    apiKey: 'your-api-key',
-    baseUrl: 'https://emailoctopus.com/api',
-    listId: 'your-list-id',
+    apiKey: 'emailoctopus_test_key',
+    listId: 'list_123',
 );
 
-// List contacts
-$contacts = $service->listContacts();
+$contacts = $service->listContacts(['limit' => 25]);
 
-// Create a contact
-$contact = $service->createContact('user@example.com', [
-    'first_name' => 'Jane',
-    'last_name' => 'Doe',
+$contact = $service->createContact([
+    'email_address' => 'reader@example.test',
+    'fields' => ['FirstName' => 'Ada'],
+    'tags' => ['vip'],
+    'status' => 'SUBSCRIBED',
 ]);
 
-// List campaigns
-$campaigns = $service->listCampaigns();
+$summary = $service->getCampaignReport([
+    'campaign_id' => 'campaign_123',
+    'report_type' => 'summary',
+]);
 ```
 
-## Via ToolProvider
+## Agent Docs
 
-```php
-use OpenCompany\Integrations\EmailOctopus\EmailOctopusToolProvider;
+See `lua-docs/email-octopus.md` for Lua namespace examples and return-shape
+notes.
 
-$provider = new EmailOctopusToolProvider();
+## License
 
-foreach ($provider->tools() as $key => $meta) {
-    $tool = $provider->createTool($meta['class']);
-    $result = $tool->execute([...]);
-}
-```
+MIT - see [LICENSE](LICENSE)

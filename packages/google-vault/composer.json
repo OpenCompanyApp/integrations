@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-google-vault",
+    "description": "Google Vault integration for Laravel AI agents - matters, permissions, holds, held accounts, saved queries, exports, counts, and operations.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GoogleVault\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GoogleVault\\GoogleVaultServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "google",
+        "vault",
+        "ediscovery",
+        "compliance",
+        "workspace",
+        "opencompany"
+    ]
+}

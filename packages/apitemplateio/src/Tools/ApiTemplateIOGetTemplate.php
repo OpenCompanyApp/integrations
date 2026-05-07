@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for retrieving details of a specific API Template IO template.
+ * Retrieve a specific APITemplate.io PDF template.
  *
- * Sends a GET request to the /templates/{id} endpoint to fetch the full
- * template definition including its schema, layout, and configuration.
+ * Uses the v2 get-template endpoint. APITemplate.io marks this endpoint experimental.
  */
 class ApiTemplateIOGetTemplate implements Tool
 {

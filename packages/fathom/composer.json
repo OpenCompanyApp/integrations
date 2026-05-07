@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-fathom",
-    "description": "Fathom Analytics integration for Laravel — query pageviews, aggregates, events, and manage sites.",
+    "description": "Fathom Analytics integration for Laravel - manage sites, events, milestones, reports, and current visitors.",
     "license": "MIT",
     "authors": [
         {

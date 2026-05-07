@@ -1,0 +1,24 @@
+{
+  "name": "opencompanyapp/integration-shortcut",
+  "description": "Shortcut REST v3 integration for OpenCompany agents.",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "OpenCompany\\Integrations\\Shortcut\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "OpenCompany\\Integrations\\Shortcut\\ShortcutServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^11.0|^12.0",
+    "illuminate/http": "^11.0|^12.0",
+    "opencompanyapp/integration-core": "*"
+  }
+}

@@ -2,43 +2,32 @@
 
 namespace OpenCompany\Integrations\Brevo\Tools;
 
-use OpenCompany\Integrations\Brevo\BrevoService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BrevoGetAccount implements Tool
+/**
+ * Get Brevo account information.
+ */
+class BrevoGetAccount extends AbstractBrevoTool
 {
-    public function __construct(
-        private BrevoService $service,
-    ) {}
+    protected string $toolName = 'brevo_get_account';
 
-    public function name(): string
-    {
-        return 'brevo_get_account';
-    }
+    protected string $toolDescription = 'Get Brevo account information.';
 
-    public function description(): string
-    {
-        return 'Get information about the connected Brevo account, including email, plan details, and account statistics.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/account';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brevo integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+];
 
-            $result = $this->service->getAccount();
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

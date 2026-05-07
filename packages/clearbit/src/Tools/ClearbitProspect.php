@@ -13,7 +13,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Prospecting API. Returns lists of matching people with names, titles,
  * and email addresses when available.
  *
- * Endpoint: GET /people/search?title=…&company=…
+ * Endpoint: GET https://prospector.clearbit.com/v1/people/search
  */
 class ClearbitProspect implements Tool
 {
@@ -48,7 +48,11 @@ class ClearbitProspect implements Tool
     public function parameters(): array
     {
         return [
+            'domain' => ['type' => 'string', 'description' => 'Company domain to search within (e.g., "example.test").'],
             'title' => ['type' => 'string', 'description' => 'Job title to search for (e.g., "CEO", "Software Engineer", "VP of Sales").'],
+            'role' => ['type' => 'string', 'description' => 'Role filter such as sales or engineering.'],
+            'roles' => ['type' => 'string', 'description' => 'Comma-separated role filters.'],
+            'seniority' => ['type' => 'string', 'description' => 'Seniority filter such as executive, manager, or individual_contributor.'],
             'company' => ['type' => 'string', 'description' => 'Company name to filter by (e.g., "Stripe", "Google").'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
         ];
@@ -67,15 +71,21 @@ class ClearbitProspect implements Tool
                 return ToolResult::error('Clearbit integration is not configured.');
             }
 
-            $title = $args['title'] ?? null;
-            $company = $args['company'] ?? null;
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
+            $params = array_filter([
+                'domain' => $args['domain'] ?? null,
+                'title' => $args['title'] ?? null,
+                'role' => $args['role'] ?? null,
+                'roles' => $args['roles'] ?? null,
+                'seniority' => $args['seniority'] ?? null,
+                'company' => $args['company'] ?? null,
+                'page' => isset($args['page']) ? (int) $args['page'] : 1,
+            ], static fn ($value) => $value !== null && $value !== '');
 
-            if (empty($title) && empty($company)) {
-                return ToolResult::error('At least one of "title" or "company" is required.');
+            if (count($params) === 1 && isset($params['page'])) {
+                return ToolResult::error('At least one filter such as domain, title, role, seniority, or company is required.');
             }
 
-            $result = $this->service->prospect($title, $company, $page);
+            $result = $this->service->prospect($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

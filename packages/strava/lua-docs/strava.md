@@ -1,182 +1,99 @@
-# Strava — Lua API Reference
+# Strava Lua API Reference
 
-## list_activities
+Namespace: `app.integrations.strava`
 
-List recent activities for the authenticated Strava athlete. Supports pagination and date filtering.
+Use this integration for Strava athletes, activities, uploads, clubs, routes,
+segments, streams, and relative API calls. Returned values are the parsed Strava
+JSON response. Route exports and other non-JSON responses return `{ body = "..." }`.
 
-### Parameters
+## Athletes
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `per_page` | integer | no | Activities per page (default: 30, max: 200) |
-| `before` | integer | no | Unix timestamp — return activities before this time |
-| `after` | integer | no | Unix timestamp — return activities after this time |
+| Function | Purpose |
+|----------|---------|
+| `get_athlete({})` | Get the authenticated athlete profile. |
+| `get_current_user({})` | Alias for authenticated athlete profile. |
+| `get_athlete_stats({ athlete_id })` | Get all-time, year-to-date, and recent activity totals. |
+| `get_athlete_zones({})` | Get heart rate and power zones for the authenticated athlete. |
 
-### Examples
+## Activities And Uploads
 
-#### List recent activities
+| Function | Purpose |
+|----------|---------|
+| `list_activities({ page?, per_page?, before?, after? })` | List authenticated athlete activities. `per_page` is capped at 200. |
+| `get_activity({ activity_id })` | Get a detailed activity. |
+| `create_activity({ name, type, start_date_local, elapsed_time, description?, distance?, trainer?, commute? })` | Create a manual activity. |
+| `update_activity({ activity_id, payload })` | Update editable activity fields. |
+| `get_activity_streams({ activity_id, keys, resolution?, series_type? })` | Get stream data such as time, distance, latlng, heartrate, cadence, watts, or moving. |
+| `list_activity_laps({ activity_id })` | List laps for an activity. |
+| `get_activity_zones({ activity_id })` | Get zone distribution for an activity. |
+| `upload_activity({ file_path, data_type, name?, description?, trainer?, commute?, external_id? })` | Upload a FIT, TCX, or GPX file for asynchronous processing. |
+| `get_upload({ upload_id })` | Poll upload processing status. |
+
+Example:
 
 ```lua
-local result = app.integrations.strava.list_activities({
-  per_page = 5
-})
+local activities = app.integrations.strava.list_activities({ per_page = 5 })
 
-for _, activity in ipairs(result) do
-  print(activity.name .. " — " .. activity.type .. " — " .. activity.start_date)
+for _, activity in ipairs(activities) do
+  print(activity.name .. " " .. activity.type)
 end
 ```
 
-#### Filter activities by date range
+## Clubs
 
-```lua
-local result = app.integrations.strava.list_activities({
-  after = 1704067200,   -- 2024-01-01
-  before = 1706745600,  -- 2024-02-01
-  per_page = 50
-})
-```
+| Function | Purpose |
+|----------|---------|
+| `list_clubs({ page?, per_page? })` | List clubs the authenticated athlete belongs to. |
+| `get_club({ club_id })` | Get one club. |
+| `list_club_activities({ club_id, page?, per_page? })` | List recent activities for club members. |
+| `list_club_members({ club_id, page?, per_page? })` | List club members. |
 
----
+Club activity and member endpoints require the authenticated athlete to belong
+to the club.
 
-## get_activity
+## Routes
 
-Get detailed information about a specific Strava activity.
+| Function | Purpose |
+|----------|---------|
+| `list_routes({ athlete_id, page?, per_page? })` | List routes created by an athlete. |
+| `get_route({ route_id })` | Get route details. |
+| `export_route({ route_id, format })` | Export route as `gpx` or `tcx`. |
+| `get_route_streams({ route_id })` | Get route coordinate and elevation streams. |
 
-### Parameters
+## Segments
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `activity_id` | integer | yes | The ID of the activity to retrieve |
+| Function | Purpose |
+|----------|---------|
+| `list_starred_segments({ page?, per_page? })` | List starred segments for the authenticated athlete. |
+| `get_segment({ segment_id })` | Get one segment. |
+| `star_segment({ segment_id, starred })` | Star or unstar a segment. |
+| `explore_segments({ bounds, activity_type?, min_cat?, max_cat? })` | Explore top segments in a bounding box. |
+| `list_segment_efforts({ segment_id, start_date_local?, end_date_local?, page?, per_page? })` | List efforts for a segment. |
+| `get_segment_effort({ effort_id })` | Get one segment effort. |
+| `get_segment_streams({ segment_id, keys, resolution?, series_type? })` | Get stream data for a segment. |
 
-### Example
+`bounds` is `[sw_lat, sw_lng, ne_lat, ne_lng]`. Segment streams use the same
+key style as activity streams.
 
-```lua
-local result = app.integrations.strava.get_activity({
-  activity_id = 1234567890
-})
+## Generic API Helpers
 
-print(result.name)
-print("Distance: " .. (result.distance / 1000) .. " km")
-print("Moving time: " .. result.moving_time .. " seconds")
-print("Elevation gain: " .. result.total_elevation_gain .. " m")
-```
+| Function | Purpose |
+|----------|---------|
+| `api_get({ path, params? })` | Send GET to a relative Strava API path. |
+| `api_post({ path, payload? })` | Send POST to a relative Strava API path. |
+| `api_put({ path, payload? })` | Send PUT to a relative Strava API path. |
+| `api_delete({ path, payload? })` | Send DELETE to a relative Strava API path. |
 
----
-
-## create_activity
-
-Create a manual activity on Strava.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name of the activity (e.g., "Morning Run") |
-| `type` | string | yes | Activity type: Run, Ride, Swim, Hike, Walk, Workout, WeightTraining, Yoga, etc. |
-| `start_date_local` | string | yes | ISO 8601 local start date/time (e.g., "2025-01-15T09:30:00") |
-| `elapsed_time` | integer | yes | Elapsed time in seconds |
-| `description` | string | no | Description of the activity |
-| `distance` | number | no | Distance in meters |
-| `trainer` | integer | no | Set to 1 if trainer/trainer ride |
-| `commute` | integer | no | Set to 1 if commute |
-
-### Example
-
-```lua
-local result = app.integrations.strava.create_activity({
-  name = "Morning Run",
-  type = "Run",
-  start_date_local = "2025-01-15T09:30:00",
-  elapsed_time = 1800,
-  distance = 5000,
-  description = "Easy 5K run in the park"
-})
-
-print("Created activity: " .. result.id .. " — " .. result.name)
-```
-
----
-
-## get_athlete
-
-Get the authenticated athlete's Strava profile.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.strava.get_athlete({})
-
-print(result.firstname .. " " .. result.lastname)
-print("Followers: " .. result.follower_count)
-print("Following: " .. result.friend_count)
-print("City: " .. (result.city or "N/A"))
-print("Country: " .. (result.country or "N/A"))
-```
-
----
-
-## list_clubs
-
-List clubs the authenticated athlete belongs to.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `per_page` | integer | no | Clubs per page (default: 30) |
-
-### Example
-
-```lua
-local result = app.integrations.strava.list_clubs({
-  per_page = 10
-})
-
-for _, club in ipairs(result) do
-  print(club.name .. " — " .. club.sport_type .. " — " .. club.member_count .. " members")
-end
-```
-
----
-
-## get_current_user
-
-Get the current authenticated user's Strava profile. This is an alias for `get_athlete`.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.strava.get_current_user({})
-
-print("Logged in as: " .. result.firstname .. " " .. result.lastname)
-```
-
----
+Generic helpers reject absolute URLs. Use relative paths such as `/athlete`,
+`/activities/{id}`, `/segments/starred`, or `/routes/{id}` so the host controls
+credentials and base URL handling.
 
 ## Multi-Account Usage
 
-If you have multiple Strava accounts configured, use account-specific namespaces:
+All functions work under account-specific namespaces:
 
 ```lua
--- Default account (always works)
 app.integrations.strava.list_activities({})
-
--- Explicit default (portable across setups)
 app.integrations.strava.default.list_activities({})
-
--- Named accounts
 app.integrations.strava.personal.list_activities({})
-app.integrations.strava.team.list_activities({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

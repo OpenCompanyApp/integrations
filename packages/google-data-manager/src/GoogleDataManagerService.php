@@ -204,7 +204,7 @@ class GoogleDataManagerService
         $this->accessToken = (string) ($data['access_token'] ?? '');
         $this->expiresAt = time() + (int) ($data['expires_in'] ?? 3600);
 
-        if (class_exists(IntegrationSetting::class)) {
+        if (class_exists(IntegrationSetting::class) && app()->bound('db')) {
             $setting = IntegrationSetting::where('integration_id', 'google_data_manager')->first();
             if ($setting) {
                 $config = $setting->config ?? [];

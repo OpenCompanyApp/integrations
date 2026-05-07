@@ -2,48 +2,34 @@
 
 namespace OpenCompany\Integrations\Gumroad\Tools;
 
-use OpenCompany\Integrations\Gumroad\GumroadService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class GumroadListProducts implements Tool
+/**
+ * List all Gumroad products for the authenticated account.
+ */
+class GumroadListProducts extends AbstractGumroadEndpointTool
 {
-    public function __construct(
-        private GumroadService $service,
-    ) {}
+    protected string $toolName = 'gumroad_list_products';
 
-    public function name(): string
-    {
-        return 'gumroad_list_products';
-    }
+    protected string $toolDescription = 'List all Gumroad products for the authenticated account.';
 
-    public function description(): string
-    {
-        return 'List all digital products in your Gumroad account. Returns product names, IDs, prices, and metadata.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/products';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gumroad integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented query parameters.',
+    ],
+];
 
-            $result = $this->service->listProducts();
+    /** @var list<string> */
+    protected array $required = [];
 
-            $products = $result['products'] ?? [];
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            return ToolResult::success([
-                'products' => $products,
-                'totalCount' => count($products),
-            ]);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-typesense",
-    "description": "Typesense search engine integration for Laravel — manage collections, search and index documents.",
+    "description": "Typesense search engine integration for Laravel - manage collections, documents, search, keys, aliases, synonyms, and operations.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,12 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "typesense", "search", "opencompany"],
+    "keywords": [
+        "tools",
+        "typesense",
+        "search",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

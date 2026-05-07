@@ -2,22 +2,44 @@
 
 namespace OpenCompany\Integrations\Chargify;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Maxio Advanced Billing API, formerly Chargify.
+ *
+ * Handles Basic authentication, endpoint URL normalization, request dispatch,
+ * and API error parsing for all Chargify tools.
+ */
 class ChargifyService
 {
+    /**
+     * Create a new Chargify API service.
+     *
+     * @param  string  $apiKey       Maxio Advanced Billing API key used as the Basic Auth username.
+     * @param  string  $subdomain    Advanced Billing site subdomain.
+     * @param  string  $baseUrl      Optional full base URL override.
+     * @param  string  $apiPassword  Basic Auth password; legacy API-key auth typically uses "x".
+     */
     public function __construct(
         private string $apiKey = '',
         private string $subdomain = '',
         private string $baseUrl = '',
+        private string $apiPassword = 'x',
     ) {
         if ($this->baseUrl === '' && $this->subdomain !== '') {
             $this->baseUrl = 'https://' . $this->subdomain . '.chargify.com';
         }
         $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->apiPassword = $this->apiPassword !== '' ? $this->apiPassword : 'x';
     }
 
+    /**
+     * Determine whether the service has enough credentials for API calls.
+     */
     public function isConfigured(): bool
     {
         return !empty($this->apiKey) && !empty($this->baseUrl);
@@ -97,6 +119,17 @@ class ChargifyService
     }
 
     /**
+     * Get a single invoice by UID or numeric ID.
+     *
+     * @param  string  $invoiceId  The Maxio invoice UID, number, or numeric ID.
+     * @return array<string, mixed>
+     */
+    public function getInvoice(string $invoiceId): array
+    {
+        return $this->request('GET', '/invoices/' . rawurlencode($invoiceId) . '.json');
+    }
+
+    /**
      * List invoices.
      *
      * @param  int  $page     Page number (1-based).
@@ -118,13 +151,13 @@ class ChargifyService
     }
 
     /**
-     * Get the currently authenticated user.
+     * Read the current Advanced Billing site to verify API access.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/site.json');
     }
 
     /**
@@ -147,45 +180,45 @@ class ChargifyService
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path    API endpoint path.
      * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return \Illuminate\Http\Client\Response
+     * @return Response
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
         if (!$this->apiKey) {
-            throw new \RuntimeException('Chargify API key is not configured.');
+            throw new RuntimeException('Chargify API key is not configured.');
         }
 
         if (!$this->baseUrl) {
-            throw new \RuntimeException('Chargify subdomain/base URL is not configured.');
+            throw new RuntimeException('Chargify subdomain/base URL is not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withHeaders([
-                'X-Auth-Token' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $http = Http::acceptJson()
+                ->asJson()
+                ->withBasicAuth($this->apiKey, $this->apiPassword)
+                ->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Chargify API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Chargify API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the subdomain may be wrong.");
+                    throw new RuntimeException("Chargify API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the subdomain may be wrong.");
                 }
 
                 $error = $response->json('error') ?? $response->json('errors') ?? $body;
@@ -193,15 +226,15 @@ class ChargifyService
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Chargify API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException("Chargify API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Chargify API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Chargify API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Chargify API: {$e->getMessage()}");
         }
     }
 }

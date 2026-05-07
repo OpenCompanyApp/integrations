@@ -50,7 +50,7 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
 
     public function appName(): string
     {
-        return 'google_data_manager';
+        return 'google-data-manager';
     }
 
     public function appMeta(): array
@@ -165,13 +165,21 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
 
         $creds = app(CredentialResolver::class);
 
-        $expiresAt = $creds->get('google_data_manager', 'expires_at', null, $account);
+        $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+            $value = $creds->get('google-data-manager', $key, null, $account);
+
+            return $value !== null && $value !== ''
+                ? $value
+                : $creds->get('google_data_manager', $key, $default, $account);
+        };
+
+        $expiresAt = $get('expires_at', null);
 
         return new GoogleDataManagerService(
-            clientId: $creds->get('google_data_manager', 'client_id', '', $account),
-            clientSecret: $creds->get('google_data_manager', 'client_secret', '', $account),
-            accessToken: $creds->get('google_data_manager', 'access_token', '', $account),
-            refreshToken: $creds->get('google_data_manager', 'refresh_token', '', $account),
+            clientId: $get('client_id'),
+            clientSecret: $get('client_secret'),
+            accessToken: $get('access_token'),
+            refreshToken: $get('refresh_token'),
             expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
         );
     }

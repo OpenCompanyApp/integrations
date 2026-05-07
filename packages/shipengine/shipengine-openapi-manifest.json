@@ -1,0 +1,985 @@
+{
+  "source": "https://github.com/ShipEngine/shipengine-openapi",
+  "spec": "https://raw.githubusercontent.com/ShipEngine/shipengine-openapi/master/openapi.json",
+  "docs": "https://www.shipengine.com/docs/",
+  "api_reference": "https://shipengine.github.io/shipengine-openapi/",
+  "openapi": "3.0.0",
+  "api_version": "1.1.202604070904",
+  "base_url": "https://api.shipengine.com",
+  "method_count": 97,
+  "auth": {
+    "api_key": 97
+  },
+  "operations": [
+    {
+      "tool": "shipengine_list_account_settings",
+      "operation_id": "list_account_settings",
+      "method": "GET",
+      "path": "/v1/account/settings",
+      "class": "ShipEngineListAccountSettings",
+      "tags": [
+        "account"
+      ]
+    },
+    {
+      "tool": "shipengine_list_account_images",
+      "operation_id": "list_account_images",
+      "method": "GET",
+      "path": "/v1/account/settings/images",
+      "class": "ShipEngineListAccountImages",
+      "tags": [
+        "account"
+      ]
+    },
+    {
+      "tool": "shipengine_create_account_image",
+      "operation_id": "create_account_image",
+      "method": "POST",
+      "path": "/v1/account/settings/images",
+      "class": "ShipEngineCreateAccountImage",
+      "tags": [
+        "account"
+      ]
+    },
+    {
+      "tool": "shipengine_get_account_settings_images_by_id",
+      "operation_id": "get_account_settings_images_by_id",
+      "method": "GET",
+      "path": "/v1/account/settings/images/{label_image_id}",
+      "class": "ShipEngineGetAccountSettingsImagesById",
+      "tags": [
+        "account"
+      ]
+    },
+    {
+      "tool": "shipengine_update_account_settings_images_by_id",
+      "operation_id": "update_account_settings_images_by_id",
+      "method": "PUT",
+      "path": "/v1/account/settings/images/{label_image_id}",
+      "class": "ShipEngineUpdateAccountSettingsImagesById",
+      "tags": [
+        "account"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_account_image_by_id",
+      "operation_id": "delete_account_image_by_id",
+      "method": "DELETE",
+      "path": "/v1/account/settings/images/{label_image_id}",
+      "class": "ShipEngineDeleteAccountImageById",
+      "tags": [
+        "account"
+      ]
+    },
+    {
+      "tool": "shipengine_parse_address",
+      "operation_id": "parse_address",
+      "method": "PUT",
+      "path": "/v1/addresses/recognize",
+      "class": "ShipEngineParseAddress",
+      "tags": [
+        "addresses"
+      ]
+    },
+    {
+      "tool": "shipengine_validate_address",
+      "operation_id": "validate_address",
+      "method": "POST",
+      "path": "/v1/addresses/validate",
+      "class": "ShipEngineValidateAddress",
+      "tags": [
+        "addresses"
+      ]
+    },
+    {
+      "tool": "shipengine_list_batches",
+      "operation_id": "list_batches",
+      "method": "GET",
+      "path": "/v1/batches",
+      "class": "ShipEngineListBatches",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_create_batch",
+      "operation_id": "create_batch",
+      "method": "POST",
+      "path": "/v1/batches",
+      "class": "ShipEngineCreateBatch",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_get_batch_by_external_id",
+      "operation_id": "get_batch_by_external_id",
+      "method": "GET",
+      "path": "/v1/batches/external_batch_id/{external_batch_id}",
+      "class": "ShipEngineGetBatchByExternalId",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_batch",
+      "operation_id": "delete_batch",
+      "method": "DELETE",
+      "path": "/v1/batches/{batch_id}",
+      "class": "ShipEngineDeleteBatch",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_get_batch_by_id",
+      "operation_id": "get_batch_by_id",
+      "method": "GET",
+      "path": "/v1/batches/{batch_id}",
+      "class": "ShipEngineGetBatchById",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_update_batch",
+      "operation_id": "update_batch",
+      "method": "PUT",
+      "path": "/v1/batches/{batch_id}",
+      "class": "ShipEngineUpdateBatch",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_add_to_batch",
+      "operation_id": "add_to_batch",
+      "method": "POST",
+      "path": "/v1/batches/{batch_id}/add",
+      "class": "ShipEngineAddToBatch",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_list_batch_errors",
+      "operation_id": "list_batch_errors",
+      "method": "GET",
+      "path": "/v1/batches/{batch_id}/errors",
+      "class": "ShipEngineListBatchErrors",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_process_batch",
+      "operation_id": "process_batch",
+      "method": "POST",
+      "path": "/v1/batches/{batch_id}/process/labels",
+      "class": "ShipEngineProcessBatch",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_remove_from_batch",
+      "operation_id": "remove_from_batch",
+      "method": "POST",
+      "path": "/v1/batches/{batch_id}/remove",
+      "class": "ShipEngineRemoveFromBatch",
+      "tags": [
+        "batches"
+      ]
+    },
+    {
+      "tool": "shipengine_list_carriers",
+      "operation_id": "list_carriers",
+      "method": "GET",
+      "path": "/v1/carriers",
+      "class": "ShipEngineListCarriers",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_get_carrier_by_id",
+      "operation_id": "get_carrier_by_id",
+      "method": "GET",
+      "path": "/v1/carriers/{carrier_id}",
+      "class": "ShipEngineGetCarrierById",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_disconnect_carrier_by_id",
+      "operation_id": "disconnect_carrier_by_id",
+      "method": "DELETE",
+      "path": "/v1/carriers/{carrier_id}",
+      "class": "ShipEngineDisconnectCarrierById",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_add_funds_to_carrier",
+      "operation_id": "add_funds_to_carrier",
+      "method": "PUT",
+      "path": "/v1/carriers/{carrier_id}/add_funds",
+      "class": "ShipEngineAddFundsToCarrier",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_get_carrier_options",
+      "operation_id": "get_carrier_options",
+      "method": "GET",
+      "path": "/v1/carriers/{carrier_id}/options",
+      "class": "ShipEngineGetCarrierOptions",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_list_carrier_package_types",
+      "operation_id": "list_carrier_package_types",
+      "method": "GET",
+      "path": "/v1/carriers/{carrier_id}/packages",
+      "class": "ShipEngineListCarrierPackageTypes",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_list_carrier_services",
+      "operation_id": "list_carrier_services",
+      "method": "GET",
+      "path": "/v1/carriers/{carrier_id}/services",
+      "class": "ShipEngineListCarrierServices",
+      "tags": [
+        "carriers"
+      ]
+    },
+    {
+      "tool": "shipengine_connect_carrier",
+      "operation_id": "connect_carrier",
+      "method": "POST",
+      "path": "/v1/connections/carriers/{carrier_name}",
+      "class": "ShipEngineConnectCarrier",
+      "tags": [
+        "carrier_accounts"
+      ]
+    },
+    {
+      "tool": "shipengine_disconnect_carrier",
+      "operation_id": "disconnect_carrier",
+      "method": "DELETE",
+      "path": "/v1/connections/carriers/{carrier_name}/{carrier_id}",
+      "class": "ShipEngineDisconnectCarrier",
+      "tags": [
+        "carrier_accounts"
+      ]
+    },
+    {
+      "tool": "shipengine_get_carrier_settings",
+      "operation_id": "get_carrier_settings",
+      "method": "GET",
+      "path": "/v1/connections/carriers/{carrier_name}/{carrier_id}/settings",
+      "class": "ShipEngineGetCarrierSettings",
+      "tags": [
+        "carrier_accounts"
+      ]
+    },
+    {
+      "tool": "shipengine_update_carrier_settings",
+      "operation_id": "update_carrier_settings",
+      "method": "PUT",
+      "path": "/v1/connections/carriers/{carrier_name}/{carrier_id}/settings",
+      "class": "ShipEngineUpdateCarrierSettings",
+      "tags": [
+        "carrier_accounts"
+      ]
+    },
+    {
+      "tool": "shipengine_disconnect_insurer",
+      "operation_id": "disconnect_insurer",
+      "method": "DELETE",
+      "path": "/v1/connections/insurance/shipsurance",
+      "class": "ShipEngineDisconnectInsurer",
+      "tags": [
+        "insurance"
+      ]
+    },
+    {
+      "tool": "shipengine_connect_insurer",
+      "operation_id": "connect_insurer",
+      "method": "POST",
+      "path": "/v1/connections/insurance/shipsurance",
+      "class": "ShipEngineConnectInsurer",
+      "tags": [
+        "insurance"
+      ]
+    },
+    {
+      "tool": "shipengine_create_combined_label_document",
+      "operation_id": "create_combined_label_document",
+      "method": "POST",
+      "path": "/v1/documents/combined_labels",
+      "class": "ShipEngineCreateCombinedLabelDocument",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_download_file",
+      "operation_id": "download_file",
+      "method": "GET",
+      "path": "/v1/downloads/{dir}/{subdir}/{filename}",
+      "class": "ShipEngineDownloadFile",
+      "tags": [
+        "downloads"
+      ]
+    },
+    {
+      "tool": "shipengine_list_webhooks",
+      "operation_id": "list_webhooks",
+      "method": "GET",
+      "path": "/v1/environment/webhooks",
+      "class": "ShipEngineListWebhooks",
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
+      "tool": "shipengine_create_webhook",
+      "operation_id": "create_webhook",
+      "method": "POST",
+      "path": "/v1/environment/webhooks",
+      "class": "ShipEngineCreateWebhook",
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
+      "tool": "shipengine_get_webhook_by_id",
+      "operation_id": "get_webhook_by_id",
+      "method": "GET",
+      "path": "/v1/environment/webhooks/{webhook_id}",
+      "class": "ShipEngineGetWebhookById",
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
+      "tool": "shipengine_update_webhook",
+      "operation_id": "update_webhook",
+      "method": "PUT",
+      "path": "/v1/environment/webhooks/{webhook_id}",
+      "class": "ShipEngineUpdateWebhook",
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_webhook",
+      "operation_id": "delete_webhook",
+      "method": "DELETE",
+      "path": "/v1/environment/webhooks/{webhook_id}",
+      "class": "ShipEngineDeleteWebhook",
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
+      "tool": "shipengine_add_funds_to_insurance",
+      "operation_id": "add_funds_to_insurance",
+      "method": "PATCH",
+      "path": "/v1/insurance/shipsurance/add_funds",
+      "class": "ShipEngineAddFundsToInsurance",
+      "tags": [
+        "insurance"
+      ]
+    },
+    {
+      "tool": "shipengine_get_insurance_balance",
+      "operation_id": "get_insurance_balance",
+      "method": "GET",
+      "path": "/v1/insurance/shipsurance/balance",
+      "class": "ShipEngineGetInsuranceBalance",
+      "tags": [
+        "insurance"
+      ]
+    },
+    {
+      "tool": "shipengine_list_labels",
+      "operation_id": "list_labels",
+      "method": "GET",
+      "path": "/v1/labels",
+      "class": "ShipEngineListLabels",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_create_label",
+      "operation_id": "create_label",
+      "method": "POST",
+      "path": "/v1/labels",
+      "class": "ShipEngineCreateLabel",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_get_label_by_external_shipment_id",
+      "operation_id": "get_label_by_external_shipment_id",
+      "method": "GET",
+      "path": "/v1/labels/external_shipment_id/{external_shipment_id}",
+      "class": "ShipEngineGetLabelByExternalShipmentId",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_create_label_from_rate",
+      "operation_id": "create_label_from_rate",
+      "method": "POST",
+      "path": "/v1/labels/rates/{rate_id}",
+      "class": "ShipEngineCreateLabelFromRate",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_create_label_from_rate_shopper",
+      "operation_id": "create_label_from_rate_shopper",
+      "method": "POST",
+      "path": "/v1/labels/rate_shopper_id/{rate_shopper_id}",
+      "class": "ShipEngineCreateLabelFromRateShopper",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_create_label_from_shipment",
+      "operation_id": "create_label_from_shipment",
+      "method": "POST",
+      "path": "/v1/labels/shipment/{shipment_id}",
+      "class": "ShipEngineCreateLabelFromShipment",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_get_label_by_id",
+      "operation_id": "get_label_by_id",
+      "method": "GET",
+      "path": "/v1/labels/{label_id}",
+      "class": "ShipEngineGetLabelById",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_create_return_label",
+      "operation_id": "create_return_label",
+      "method": "POST",
+      "path": "/v1/labels/{label_id}/return",
+      "class": "ShipEngineCreateReturnLabel",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_get_tracking_log_from_label",
+      "operation_id": "get_tracking_log_from_label",
+      "method": "GET",
+      "path": "/v1/labels/{label_id}/track",
+      "class": "ShipEngineGetTrackingLogFromLabel",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_void_label",
+      "operation_id": "void_label",
+      "method": "PUT",
+      "path": "/v1/labels/{label_id}/void",
+      "class": "ShipEngineVoidLabel",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_cancel_label_refund",
+      "operation_id": "cancel_label_refund",
+      "method": "POST",
+      "path": "/v1/labels/{label_id}/cancel_refund",
+      "class": "ShipEngineCancelLabelRefund",
+      "tags": [
+        "labels"
+      ]
+    },
+    {
+      "tool": "shipengine_list_manifests",
+      "operation_id": "list_manifests",
+      "method": "GET",
+      "path": "/v1/manifests",
+      "class": "ShipEngineListManifests",
+      "tags": [
+        "manifests"
+      ]
+    },
+    {
+      "tool": "shipengine_create_manifest",
+      "operation_id": "create_manifest",
+      "method": "POST",
+      "path": "/v1/manifests",
+      "class": "ShipEngineCreateManifest",
+      "tags": [
+        "manifests"
+      ]
+    },
+    {
+      "tool": "shipengine_get_manifest_by_id",
+      "operation_id": "get_manifest_by_id",
+      "method": "GET",
+      "path": "/v1/manifests/{manifest_id}",
+      "class": "ShipEngineGetManifestById",
+      "tags": [
+        "manifests"
+      ]
+    },
+    {
+      "tool": "shipengine_get_manifest_request_by_id",
+      "operation_id": "get_manifest_request_by_id",
+      "method": "GET",
+      "path": "/v1/manifests/requests/{manifest_request_id}",
+      "class": "ShipEngineGetManifestRequestById",
+      "tags": [
+        "manifests"
+      ]
+    },
+    {
+      "tool": "shipengine_list_package_types",
+      "operation_id": "list_package_types",
+      "method": "GET",
+      "path": "/v1/packages",
+      "class": "ShipEngineListPackageTypes",
+      "tags": [
+        "package_types"
+      ]
+    },
+    {
+      "tool": "shipengine_create_package_type",
+      "operation_id": "create_package_type",
+      "method": "POST",
+      "path": "/v1/packages",
+      "class": "ShipEngineCreatePackageType",
+      "tags": [
+        "package_types"
+      ]
+    },
+    {
+      "tool": "shipengine_get_package_type_by_id",
+      "operation_id": "get_package_type_by_id",
+      "method": "GET",
+      "path": "/v1/packages/{package_id}",
+      "class": "ShipEngineGetPackageTypeById",
+      "tags": [
+        "package_types"
+      ]
+    },
+    {
+      "tool": "shipengine_update_package_type",
+      "operation_id": "update_package_type",
+      "method": "PUT",
+      "path": "/v1/packages/{package_id}",
+      "class": "ShipEngineUpdatePackageType",
+      "tags": [
+        "package_types"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_package_type",
+      "operation_id": "delete_package_type",
+      "method": "DELETE",
+      "path": "/v1/packages/{package_id}",
+      "class": "ShipEngineDeletePackageType",
+      "tags": [
+        "package_types"
+      ]
+    },
+    {
+      "tool": "shipengine_list_scheduled_pickups",
+      "operation_id": "list_scheduled_pickups",
+      "method": "GET",
+      "path": "/v1/pickups",
+      "class": "ShipEngineListScheduledPickups",
+      "tags": [
+        "package_pickups"
+      ]
+    },
+    {
+      "tool": "shipengine_schedule_pickup",
+      "operation_id": "schedule_pickup",
+      "method": "POST",
+      "path": "/v1/pickups",
+      "class": "ShipEngineSchedulePickup",
+      "tags": [
+        "package_pickups"
+      ]
+    },
+    {
+      "tool": "shipengine_get_pickup_by_id",
+      "operation_id": "get_pickup_by_id",
+      "method": "GET",
+      "path": "/v1/pickups/{pickup_id}",
+      "class": "ShipEngineGetPickupById",
+      "tags": [
+        "package_pickups"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_scheduled_pickup",
+      "operation_id": "delete_scheduled_pickup",
+      "method": "DELETE",
+      "path": "/v1/pickups/{pickup_id}",
+      "class": "ShipEngineDeleteScheduledPickup",
+      "tags": [
+        "package_pickups"
+      ]
+    },
+    {
+      "tool": "shipengine_calculate_rates",
+      "operation_id": "calculate_rates",
+      "method": "POST",
+      "path": "/v1/rates",
+      "class": "ShipEngineCalculateRates",
+      "tags": [
+        "rates"
+      ]
+    },
+    {
+      "tool": "shipengine_compare_bulk_rates",
+      "operation_id": "compare_bulk_rates",
+      "method": "POST",
+      "path": "/v1/rates/bulk",
+      "class": "ShipEngineCompareBulkRates",
+      "tags": [
+        "rates"
+      ]
+    },
+    {
+      "tool": "shipengine_estimate_rates",
+      "operation_id": "estimate_rates",
+      "method": "POST",
+      "path": "/v1/rates/estimate",
+      "class": "ShipEngineEstimateRates",
+      "tags": [
+        "rates"
+      ]
+    },
+    {
+      "tool": "shipengine_get_rate_by_id",
+      "operation_id": "get_rate_by_id",
+      "method": "GET",
+      "path": "/v1/rates/{rate_id}",
+      "class": "ShipEngineGetRateById",
+      "tags": [
+        "rates"
+      ]
+    },
+    {
+      "tool": "shipengine_service_points_list",
+      "operation_id": "service_points_list",
+      "method": "POST",
+      "path": "/v1/service_points/list",
+      "class": "ShipEngineServicePointsList",
+      "tags": [
+        "service_points"
+      ]
+    },
+    {
+      "tool": "shipengine_service_points_get_by_id",
+      "operation_id": "service_points_get_by_id",
+      "method": "GET",
+      "path": "/v1/service_points/{carrier_code}/{country_code}/{service_point_id}",
+      "class": "ShipEngineServicePointsGetById",
+      "tags": [
+        "service_points"
+      ]
+    },
+    {
+      "tool": "shipengine_list_shipments",
+      "operation_id": "list_shipments",
+      "method": "GET",
+      "path": "/v1/shipments",
+      "class": "ShipEngineListShipments",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_create_shipments",
+      "operation_id": "create_shipments",
+      "method": "POST",
+      "path": "/v1/shipments",
+      "class": "ShipEngineCreateShipments",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_get_shipment_by_external_id",
+      "operation_id": "get_shipment_by_external_id",
+      "method": "GET",
+      "path": "/v1/shipments/external_shipment_id/{external_shipment_id}",
+      "class": "ShipEngineGetShipmentByExternalId",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_parse_shipment",
+      "operation_id": "parse_shipment",
+      "method": "PUT",
+      "path": "/v1/shipments/recognize",
+      "class": "ShipEngineParseShipment",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_get_shipment_by_id",
+      "operation_id": "get_shipment_by_id",
+      "method": "GET",
+      "path": "/v1/shipments/{shipment_id}",
+      "class": "ShipEngineGetShipmentById",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_update_shipment",
+      "operation_id": "update_shipment",
+      "method": "PUT",
+      "path": "/v1/shipments/{shipment_id}",
+      "class": "ShipEngineUpdateShipment",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_cancel_shipments",
+      "operation_id": "cancel_shipments",
+      "method": "PUT",
+      "path": "/v1/shipments/{shipment_id}/cancel",
+      "class": "ShipEngineCancelShipments",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_list_shipment_rates",
+      "operation_id": "list_shipment_rates",
+      "method": "GET",
+      "path": "/v1/shipments/{shipment_id}/rates",
+      "class": "ShipEngineListShipmentRates",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_shipments_update_tags",
+      "operation_id": "shipments_update_tags",
+      "method": "PUT",
+      "path": "/v1/shipments/tags",
+      "class": "ShipEngineShipmentsUpdateTags",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_shipments_list_tags",
+      "operation_id": "shipments_list_tags",
+      "method": "GET",
+      "path": "/v1/shipments/{shipment_id}/tags",
+      "class": "ShipEngineShipmentsListTags",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_tag_shipment",
+      "operation_id": "tag_shipment",
+      "method": "POST",
+      "path": "/v1/shipments/{shipment_id}/tags/{tag_name}",
+      "class": "ShipEngineTagShipment",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_untag_shipment",
+      "operation_id": "untag_shipment",
+      "method": "DELETE",
+      "path": "/v1/shipments/{shipment_id}/tags/{tag_name}",
+      "class": "ShipEngineUntagShipment",
+      "tags": [
+        "shipments"
+      ]
+    },
+    {
+      "tool": "shipengine_list_tags",
+      "operation_id": "list_tags",
+      "method": "GET",
+      "path": "/v1/tags",
+      "class": "ShipEngineListTags",
+      "tags": [
+        "tags"
+      ]
+    },
+    {
+      "tool": "shipengine_create_tag",
+      "operation_id": "create_tag",
+      "method": "POST",
+      "path": "/v1/tags",
+      "class": "ShipEngineCreateTag",
+      "tags": [
+        "tags"
+      ]
+    },
+    {
+      "tool": "shipengine_create_tag_2",
+      "operation_id": "create_tag",
+      "method": "POST",
+      "path": "/v1/tags/{tag_name}",
+      "class": "ShipEngineCreateTag2",
+      "tags": [
+        "tags"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_tag",
+      "operation_id": "delete_tag",
+      "method": "DELETE",
+      "path": "/v1/tags/{tag_name}",
+      "class": "ShipEngineDeleteTag",
+      "tags": [
+        "tags"
+      ]
+    },
+    {
+      "tool": "shipengine_rename_tag",
+      "operation_id": "rename_tag",
+      "method": "PUT",
+      "path": "/v1/tags/{tag_name}/{new_tag_name}",
+      "class": "ShipEngineRenameTag",
+      "tags": [
+        "tags"
+      ]
+    },
+    {
+      "tool": "shipengine_tokens_get_ephemeral_token",
+      "operation_id": "tokens_get_ephemeral_token",
+      "method": "POST",
+      "path": "/v1/tokens/ephemeral",
+      "class": "ShipEngineTokensGetEphemeralToken",
+      "tags": [
+        "tokens"
+      ]
+    },
+    {
+      "tool": "shipengine_get_tracking_log",
+      "operation_id": "get_tracking_log",
+      "method": "GET",
+      "path": "/v1/tracking",
+      "class": "ShipEngineGetTrackingLog",
+      "tags": [
+        "tracking"
+      ]
+    },
+    {
+      "tool": "shipengine_start_tracking",
+      "operation_id": "start_tracking",
+      "method": "POST",
+      "path": "/v1/tracking/start",
+      "class": "ShipEngineStartTracking",
+      "tags": [
+        "tracking"
+      ]
+    },
+    {
+      "tool": "shipengine_stop_tracking",
+      "operation_id": "stop_tracking",
+      "method": "POST",
+      "path": "/v1/tracking/stop",
+      "class": "ShipEngineStopTracking",
+      "tags": [
+        "tracking"
+      ]
+    },
+    {
+      "tool": "shipengine_list_warehouses",
+      "operation_id": "list_warehouses",
+      "method": "GET",
+      "path": "/v1/warehouses",
+      "class": "ShipEngineListWarehouses",
+      "tags": [
+        "warehouses"
+      ]
+    },
+    {
+      "tool": "shipengine_create_warehouse",
+      "operation_id": "create_warehouse",
+      "method": "POST",
+      "path": "/v1/warehouses",
+      "class": "ShipEngineCreateWarehouse",
+      "tags": [
+        "warehouses"
+      ]
+    },
+    {
+      "tool": "shipengine_get_warehouse_by_id",
+      "operation_id": "get_warehouse_by_id",
+      "method": "GET",
+      "path": "/v1/warehouses/{warehouse_id}",
+      "class": "ShipEngineGetWarehouseById",
+      "tags": [
+        "warehouses"
+      ]
+    },
+    {
+      "tool": "shipengine_update_warehouse",
+      "operation_id": "update_warehouse",
+      "method": "PUT",
+      "path": "/v1/warehouses/{warehouse_id}",
+      "class": "ShipEngineUpdateWarehouse",
+      "tags": [
+        "warehouses"
+      ]
+    },
+    {
+      "tool": "shipengine_delete_warehouse",
+      "operation_id": "delete_warehouse",
+      "method": "DELETE",
+      "path": "/v1/warehouses/{warehouse_id}",
+      "class": "ShipEngineDeleteWarehouse",
+      "tags": [
+        "warehouses"
+      ]
+    },
+    {
+      "tool": "shipengine_update_warehouse_settings",
+      "operation_id": "update_warehouse_settings",
+      "method": "PUT",
+      "path": "/v1/warehouses/{warehouse_id}/settings",
+      "class": "ShipEngineUpdateWarehouseSettings",
+      "tags": [
+        "warehouses"
+      ]
+    }
+  ]
+}

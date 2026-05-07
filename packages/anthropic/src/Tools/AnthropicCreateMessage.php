@@ -52,8 +52,8 @@ class AnthropicCreateMessage implements Tool
             'messages' => ['type' => 'array', 'required' => true, 'description' => 'Array of message objects with "role" ("user" or "assistant") and "content" (string or array of content blocks).'],
             'max_tokens' => ['type' => 'integer', 'description' => 'Maximum number of tokens to generate in the response (default: 4096).'],
             'system' => ['type' => 'string', 'description' => 'System prompt to set the behavior and context for Claude.'],
-            'temperature' => ['type' => 'number', 'description' => 'Controls randomness in generation (0.0–1.0). Lower values are more deterministic.'],
-            'top_p' => ['type' => 'number', 'description' => 'Nucleus sampling parameter (0.0–1.0). Limits cumulative probability of tokens considered.'],
+            'temperature' => ['type' => 'number', 'description' => 'Controls randomness in generation (0.0-1.0). Lower values are more deterministic.'],
+            'top_p' => ['type' => 'number', 'description' => 'Nucleus sampling parameter (0.0-1.0). Limits cumulative probability of tokens considered.'],
             'stop_sequences' => ['type' => 'array', 'description' => 'Array of strings that will cause the model to stop generating if encountered.'],
             'stream' => ['type' => 'boolean', 'description' => 'Whether to stream the response incrementally (default: false).'],
         ];

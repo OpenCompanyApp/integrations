@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Chroma\ChromaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a new Chroma collection in the configured tenant/database.
+ */
 class ChromaCreateCollection implements Tool
 {
+    /**
+     * @param  ChromaService  $service  Chroma API client.
+     */
     public function __construct(
         private ChromaService $service,
     ) {}
@@ -26,11 +32,16 @@ class ChromaCreateCollection implements Tool
     {
         return [
             'name' => ['type' => 'string', 'required' => true, 'description' => 'The name of the collection to create.'],
-            'description' => ['type' => 'string', 'description' => 'An optional description of the collection.'],
             'metadata' => ['type' => 'object', 'description' => 'Optional metadata to attach to the collection (JSON object with string values).'],
+            'configuration' => ['type' => 'object', 'description' => 'Optional Chroma index configuration.'],
         ];
     }
 
+    /**
+     * Create the collection.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (name, metadata, configuration).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -45,8 +56,8 @@ class ChromaCreateCollection implements Tool
 
             $result = $this->service->createCollection(
                 name: $name,
-                description: $args['description'] ?? null,
                 metadata: $args['metadata'] ?? null,
+                configuration: $args['configuration'] ?? null,
             );
 
             return ToolResult::success($result);

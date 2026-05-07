@@ -52,12 +52,14 @@ List multi-currency account balances for a Wise profile.
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `profile_id` | integer | yes | The Wise profile ID to list balances for. |
+| `types` | string | no | Comma-separated balance types. Defaults to `STANDARD,SAVINGS`. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wise.list_balances({
-  profile_id = 123456
+  profile_id = 123456,
+  types = "STANDARD,SAVINGS"
 })
 
 for _, account in ipairs(result) do
@@ -79,7 +81,7 @@ List Wise transfers with optional filtering by profile, status, and pagination.
 |------|------|----------|-------------|
 | `limit` | integer | no | Maximum number of transfers to return. |
 | `offset` | integer | no | Number of transfers to skip for pagination. |
-| `profile_id` | integer | no | Filter transfers by profile ID. |
+| `profile_id` | integer | no | Filter transfers by profile ID. Sent to Wise as `profile`. |
 | `status` | string | no | Filter by transfer status (e.g. `incoming_payment_waiting`, `processing`, `funds_converted`, `funds_refunded`, `outgoing_payment_sent`). |
 
 ### Example
@@ -137,18 +139,20 @@ Create a new money transfer on Wise.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `source_account` | integer | yes | Source account ID (borderless account balance to debit from). |
 | `target_account` | integer | yes | Target account ID (recipient account to credit). |
-| `amount` | number | yes | Amount to transfer in the source currency. |
+| `quote_uuid` | string | yes | V2 quote UUID for this transfer. |
+| `customer_transaction_id` | string | yes | UUID used by Wise for idempotency. Reuse it when retrying the same create request. |
+| `source_account` | integer | no | Optional refund recipient source account ID. |
 | `reference` | string | no | Payment reference or description for the transfer. |
+| `details` | object | no | Additional transfer details returned by Wise transfer-requirements. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wise.create_transfer({
-  source_account = 111111,
   target_account = 222222,
-  amount = 100.00,
+  quote_uuid = "11111111-2222-3333-4444-555555555555",
+  customer_transaction_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   reference = "Invoice #1234"
 })
 

@@ -4,21 +4,26 @@ namespace OpenCompany\Integrations\FlyIo;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\FlyIo\Tools\FlyIoListApps;
-use OpenCompany\Integrations\FlyIo\Tools\FlyIoGetApp;
 use OpenCompany\Integrations\FlyIo\Tools\FlyIoCreateApp;
-use OpenCompany\Integrations\FlyIo\Tools\FlyIoListMachines;
+use OpenCompany\Integrations\FlyIo\Tools\FlyIoGetApp;
 use OpenCompany\Integrations\FlyIo\Tools\FlyIoGetMachine;
+use OpenCompany\Integrations\FlyIo\Tools\FlyIoListApps;
+use OpenCompany\Integrations\FlyIo\Tools\FlyIoListMachines;
 use OpenCompany\Integrations\FlyIo\Tools\FlyIoListVolumes;
-use OpenCompany\Integrations\FlyIo\Tools\FlyIoGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
 
 /**
+ * Exposes Fly.io Machines API tools to host applications.
+ *
+ * Handles catalog metadata, credential setup, connection checks, and
+ * multi-account service resolution for Fly.io.
+ */
+class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -70,7 +75,10 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function appName(): string { return 'fly-io'; }
+    public function appName(): string
+    {
+        return 'fly-io';
+    }
 
     public function appMeta(): array
     {
@@ -89,11 +97,14 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Cloud platform — deploy apps, manage machines, and persistent volumes',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:flyio',
-            'category' => 'productivity',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.machines.dev/',
+            'docs_url' => 'https://fly.io/docs/machines/api/',
+            'source_url' => 'https://fly.io/docs/machines/api/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -115,6 +126,12 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
+    /**
+     * Verify Fly.io credentials with a lightweight apps request.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -128,7 +145,7 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/user');
+            ])->timeout(10)->get($baseUrl . '/apps');
 
             $json = $response->json();
 
@@ -141,9 +158,7 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 return ['success' => false, 'error' => "Fly.io API error ({$response->status()}): {$message}"];
             }
 
-            $email = $json['email'] ?? 'unknown';
-
-            return ['success' => true, 'message' => "Connected to Fly.io as {$email}."];
+            return ['success' => true, 'message' => 'Connected to Fly.io Machines API.'];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -202,20 +217,15 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'List all persistent volumes for a Fly.io app.',
                 'icon' => 'ph:hard-drives',
             ],
-            'fly_io_get_current_user' => [
-                'class' => FlyIoGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the current authenticated Fly.io user information.',
-                'icon' => 'ph:user',
-            ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/fly-io.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -223,14 +233,17 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function isIntegration(): bool { return true; }
+    public function isIntegration(): bool
+    {
+        return true;
+    }
 
     public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new FlyIoService(
                 accessToken: $creds->get('fly-io', 'access_token', '', $account),

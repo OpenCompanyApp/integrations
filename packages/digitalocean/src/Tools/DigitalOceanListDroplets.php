@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List DigitalOcean Droplets in the account.
+ */
 class DigitalOceanListDroplets implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -30,6 +36,11 @@ class DigitalOceanListDroplets implements Tool
         ];
     }
 
+    /**
+     * List Droplets using optional DigitalOcean pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

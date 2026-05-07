@@ -1,14 +1,14 @@
 # Integration: Wufoo
 
-> Wufoo forms integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list forms, retrieve entries, manage reports. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Wufoo API v3 integration for the [Laravel AI SDK](https://github.com/laravel/ai) — forms, fields, entries, reports, users, comments, and webhooks. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to online form data. List forms, retrieve entries with pagination and filters, view reports, and get user profile information — all through the [Wufoo](https://wufoo.com) API.
+Give your AI agents access to online form data. List forms, inspect fields, submit and count entries, view reports and widgets, manage webhooks, and get user information through the [Wufoo](https://wufoo.com) API.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Wufoo tool lets AI agents query form structures, retrieve submitted entries, and manage reports — giving agents data-driven awareness of form submissions and responses.
+This Wufoo integration lets AI agents query form structures, retrieve and submit entries, inspect report output, and manage webhook callbacks.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -50,10 +50,24 @@ return [
 |------|------|-------------|
 | `wufoo_list_forms` | read | List all forms in your Wufoo account |
 | `wufoo_get_form` | read | Get details for a specific form by ID |
+| `wufoo_list_fields` | read | List field definitions for a form |
 | `wufoo_list_entries` | read | List entries for a form (paginated, filterable) |
-| `wufoo_get_entry` | read | Get a single entry by its ID |
+| `wufoo_count_entries` | read | Count entries for a form |
+| `wufoo_get_entry` | read | Find a single entry by form ID and entry ID |
+| `wufoo_submit_entry` | write | Submit a new form entry |
+| `wufoo_list_form_comments` | read | List comments on form entries |
+| `wufoo_count_form_comments` | read | Count comments on form entries |
 | `wufoo_list_reports` | read | List all reports in your Wufoo account |
+| `wufoo_get_report` | read | Get details for a report |
+| `wufoo_list_report_entries` | read | List entries exposed by a report |
+| `wufoo_count_report_entries` | read | Count entries exposed by a report |
+| `wufoo_list_report_fields` | read | List fields used by a report |
+| `wufoo_list_report_widgets` | read | List widgets configured on a report |
+| `wufoo_list_users` | read | List account users |
 | `wufoo_get_current_user` | read | Get the authenticated user's profile |
+| `wufoo_add_webhook` | write | Add a webhook to a form |
+| `wufoo_delete_webhook` | write | Delete a webhook from a form |
+| `wufoo_api_get` / `wufoo_api_post` / `wufoo_api_put` / `wufoo_api_delete` | read/write | Call documented Wufoo API v3 endpoints not yet wrapped directly |
 
 ## Quick Start
 
@@ -77,7 +91,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -112,11 +126,20 @@ $entries = $service->listEntries('q1w2e3r4t5y6', filters: [
     'Filter1' => 'Field1+Is+equal_to+value',
 ]);
 
-// Get a single entry
-$entry = $service->getEntry('12345');
+// Submit an entry
+$created = $service->submitEntry('q1w2e3r4t5y6', [
+    'Field1' => 'Example Person',
+    'Field2' => 'person@example.test',
+]);
+
+// Find a single entry within a form
+$entry = $service->getEntry('q1w2e3r4t5y6', '12345');
 
 // List reports
 $reports = $service->listReports();
+
+// List report widgets
+$widgets = $service->listReportWidgets('r1w2e3r4');
 
 // Get current user
 $user = $service->getCurrentUser();

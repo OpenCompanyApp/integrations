@@ -174,7 +174,9 @@ print(result.domain.name .. " - zone file: " .. result.domain.zone_file)
 
 ## list_spaces
 
-List Spaces (S3-compatible object storage buckets).
+List DigitalOcean Spaces access keys through the bearer-token DigitalOcean API.
+
+This does **not** list S3 buckets or objects. Bucket and object operations use the separate S3-compatible Spaces API with Spaces access keys.
 
 ### Parameters
 
@@ -182,14 +184,22 @@ List Spaces (S3-compatible object storage buckets).
 |------|------|----------|-------------|
 | `page` | integer | no | Page number for pagination |
 | `per_page` | integer | no | Items per page |
+| `sort` | string | no | Sort field supported by the Spaces Keys API |
+| `sort_direction` | string | no | Sort direction (`asc` or `desc`) |
+| `name` | string | no | Filter keys by name |
+| `bucket` | string | no | Filter keys by bucket name |
+| `permission` | string | no | Filter keys by permission |
 
 ### Example
 
 ```lua
-local result = app.integrations.digitalocean.list_spaces({})
+local result = app.integrations.digitalocean.list_spaces({
+  bucket = "assets",
+  permission = "read"
+})
 
-for _, space in ipairs(result.spaces) do
-  print(space.name .. " - " .. space.region)
+for _, key in ipairs(result.spaces_keys) do
+  print(key.name .. " - " .. key.permission)
 end
 ```
 

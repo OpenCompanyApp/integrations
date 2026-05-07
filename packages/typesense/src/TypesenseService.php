@@ -2,11 +2,23 @@
 
 namespace OpenCompany\Integrations\Typesense;
 
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Typesense REST API.
+ *
+ * Executes official OpenAPI operation metadata, sends the Typesense API key
+ * header, and normalizes Typesense error responses for tools.
+ */
 class TypesenseService
 {
+    /**
+     * @param  string  $apiKey  Typesense API key.
+     * @param  string  $baseUrl  Base URL of the Typesense node or cluster.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'http://localhost:8108',
@@ -15,105 +27,170 @@ class TypesenseService
     }
 
     /**
-     * Check whether the Typesense service is configured (has an API key).
+     * Check whether the service is configured with an API key.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '' && $this->baseUrl !== '';
     }
 
     /**
-     * List all collections in the Typesense instance.
+     * Return official Typesense operation metadata used by generated tools.
      *
-     * @return array The list of collections.
+     * @return array<string, array<string, mixed>>
      */
+    public static function operations(): array
+    {
+        return TypesenseOperations::all();
+    }
+
+    /**
+     * Execute an official Typesense OpenAPI operation.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata from TypesenseOperations.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function executeOperation(array $operation, array $args = []): array
+    {
+        $path = (string) $operation['path'];
+        $query = [];
+        $headers = [];
+        $consumed = [];
+
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            $apiName = (string) $parameter['name'];
+            $argumentName = (string) ($parameter['argument_name'] ?? $this->snakeName($apiName));
+            $value = $this->argument($args, $argumentName, $apiName);
+
+            if ($value === null && $parameter['in'] === 'query' && str_ends_with($apiName, 'Parameters')) {
+                $loose = $this->bodyFromLooseArguments($args, $consumed);
+                $value = $loose !== [] ? $loose : null;
+            }
+
+            if ($value === null) {
+                if (!empty($parameter['required'])) {
+                    throw new \RuntimeException("The {$argumentName} parameter is required.");
+                }
+
+                continue;
+            }
+
+            $consumed[] = $apiName;
+            $consumed[] = $argumentName;
+            $consumed[] = $this->snakeName($apiName);
+            $consumed[] = strtolower($apiName);
+
+            if ($parameter['in'] === 'path') {
+                $path = str_replace('{' . $apiName . '}', rawurlencode((string) $value), $path);
+            } elseif ($parameter['in'] === 'query') {
+                if (is_array($value) && str_ends_with($apiName, 'Parameters')) {
+                    foreach ($value as $key => $item) {
+                        $query[$key] = $item;
+                    }
+                } else {
+                    $query[$apiName] = $value;
+                }
+            } elseif ($parameter['in'] === 'header') {
+                $headers[$apiName] = $value;
+            }
+        }
+
+        $requestBody = $operation['request_body'] ?? null;
+        $body = null;
+
+        if ($requestBody !== null) {
+            $body = $args['body'] ?? $this->bodyFromLooseArguments($args, $consumed);
+
+            if (!empty($requestBody['required']) && ($body === null || $body === [] || $body === '')) {
+                throw new \RuntimeException('body is required.');
+            }
+        }
+
+        return $this->request((string) $operation['method'], $this->baseUrl . $path, $query, $headers, $body);
+    }
+
+    /**
+     * Execute an operation by generated slug.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    private function executeSlug(string $slug, array $args = []): array
+    {
+        $operations = self::operations();
+
+        if (!isset($operations[$slug])) {
+            throw new \RuntimeException("Unknown Typesense operation: {$slug}");
+        }
+
+        return $this->executeOperation($operations[$slug], $args);
+    }
+
+    /** @return array<string, mixed> */
     public function listCollections(): array
     {
-        return $this->request('GET', '/collections');
+        return $this->executeSlug('typesense_list_collections');
     }
 
-    /**
-     * Get details of a specific collection by name.
-     *
-     * @param  string  $name  The name of the collection.
-     * @return array The collection details.
-     */
+    /** @return array<string, mixed> */
     public function getCollection(string $name): array
     {
-        return $this->request('GET', '/collections/' . urlencode($name));
+        return $this->executeSlug('typesense_get_collection', ['collection_name' => $name]);
     }
 
-    /**
-     * Create a new collection with the given schema.
-     *
-     * @param  array  $schema  The collection schema (name, fields, default_sorting_field, etc.).
-     * @return array The created collection details.
-     */
+    /** @param  array<string, mixed>  $schema  Collection schema. @return array<string, mixed> */
     public function createCollection(array $schema): array
     {
-        return $this->request('POST', '/collections', $schema);
+        return $this->executeSlug('typesense_create_collection', ['body' => $schema]);
     }
 
-    /**
-     * Search for documents in a collection.
-     *
-     * @param  string  $collection  The collection name to search in.
-     * @param  array  $params  Search parameters (q, query_by, filter_by, sort_by, per_page, page, etc.).
-     * @return array The search results.
-     */
+    /** @param  array<string, mixed>  $params  Search parameters. @return array<string, mixed> */
     public function searchDocuments(string $collection, array $params): array
     {
-        return $this->request('GET', '/collections/' . urlencode($collection) . '/documents/search', $params);
+        return $this->executeSlug('typesense_search_documents', ['collection_name' => $collection, 'search_parameters' => $params]);
     }
 
-    /**
-     * Index (create or update) a document in a collection.
-     *
-     * @param  string  $collection  The collection name.
-     * @param  array  $document  The document data to index.
-     * @return array The indexed document.
-     */
+    /** @param  array<string, mixed>  $document  Document payload. @return array<string, mixed> */
     public function indexDocument(string $collection, array $document): array
     {
-        return $this->request('POST', '/collections/' . urlencode($collection) . '/documents', $document);
+        return $this->executeSlug('typesense_index_document', ['collection_name' => $collection, 'body' => $document]);
     }
 
-    /**
-     * Get a single document by its ID from a collection.
-     *
-     * @param  string  $collection  The collection name.
-     * @param  string  $id  The document ID.
-     * @return array The document data.
-     */
+    /** @return array<string, mixed> */
     public function getDocument(string $collection, string $id): array
     {
-        return $this->request('GET', '/collections/' . urlencode($collection) . '/documents/' . urlencode($id));
+        return $this->executeSlug('typesense_get_document', ['collection_name' => $collection, 'document_id' => $id]);
     }
 
-    /**
-     * Check the health of the Typesense instance.
-     *
-     * @return array The health status.
-     */
+    /** @return array<string, mixed> */
     public function getHealth(): array
     {
-        return $this->request('GET', '/health');
+        return $this->executeSlug('typesense_get_health');
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Make an API request and return parsed output.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array  $data  Query params (GET) or body data (POST/PUT).
-     * @return array The parsed JSON response.
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $url, array $query = [], array $headers = [], mixed $body = null): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $url, $query, $headers, $body);
 
-        if ($path === '/health' && $response->status() === 200) {
-            return $response->json() ?? ['ok' => true];
+        if ($response->status() === 204 || $response->body() === '') {
+            return [];
+        }
+
+        $contentType = (string) $response->header('Content-Type');
+
+        if (!str_contains($contentType, 'json')) {
+            return ['body' => $response->body(), 'content_type' => $contentType];
         }
 
         return $response->json() ?? [];
@@ -122,53 +199,109 @@ class TypesenseService
     /**
      * Make a raw HTTP request to the Typesense API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array  $data  Query params (GET) or body data (POST/PUT).
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException When the request fails.
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $url, array $query = [], array $headers = [], mixed $body = null): Response
     {
-        if (!$this->apiKey) {
+        if ($this->apiKey === '') {
             throw new \RuntimeException('Typesense API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
-
         try {
-            $http = Http::withHeaders([
+            $http = Http::withHeaders(array_merge([
                 'X-TYPESENSE-API-KEY' => $this->apiKey,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ], $headers))->timeout(120);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $response = $this->sendRequest($http, $method, $url, $query, $body);
 
             if (!$response->successful()) {
-                $body = $response->body();
-                $error = $response->json('message') ?? $body;
-
-                Log::error("Typesense API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-
-                throw new \RuntimeException("Typesense API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $error = $response->json('message') ?? $response->body();
+                Log::error("Typesense API error: {$method} {$url}", ['status' => $response->status(), 'error' => $error]);
+                throw new \RuntimeException('Typesense API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Typesense API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
+            Log::error("Typesense API connection error: {$method} {$url}", ['error' => $e->getMessage()]);
             throw new \RuntimeException("Failed to connect to Typesense API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Dispatch the request with the appropriate HTTP verb.
+     *
+     * @param  PendingRequest  $http  Pending HTTP request.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  mixed  $body  Request body.
+     */
+    private function sendRequest(PendingRequest $http, string $method, string $url, array $query, mixed $body): Response
+    {
+        $method = strtoupper($method);
+
+        if ($query !== []) {
+            $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        }
+
+        return match ($method) {
+            'GET' => $http->get($url),
+            'POST' => $http->post($url, $body ?? []),
+            'PUT' => $http->put($url, $body ?? []),
+            'PATCH' => $http->patch($url, $body ?? []),
+            'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+            default => $http->send($method, $url, ['json' => $body ?? []]),
+        };
+    }
+
+    /**
+     * Resolve an argument by generated, API, snake_case, or lower-case name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
+    private function argument(array $args, string $argumentName, string $apiName): mixed
+    {
+        foreach ([$argumentName, $apiName, $this->snakeName($apiName), strtolower($apiName)] as $key) {
+            if (array_key_exists($key, $args)) {
+                return $args[$key];
+            }
+        }
+
+        return null;
+    }
+
+    private function snakeName(string $name): string
+    {
+        $name = str_replace('[]', '', $name);
+        $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name);
+        $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name);
+        $name = (string) preg_replace('/_+/', '_', $name);
+
+        return strtolower(trim($name, '_')) ?: 'value';
+    }
+
+    /**
+     * Build a request body from arguments that are not path/query/header params.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<int, string>  $consumed  Already consumed parameter names.
+     * @return array<string, mixed>
+     */
+    private function bodyFromLooseArguments(array $args, array $consumed): array
+    {
+        $body = [];
+        $consumed = array_flip($consumed);
+
+        foreach ($args as $key => $value) {
+            if (!isset($consumed[$key])) {
+                $body[$key] = $value;
+            }
+        }
+
+        return $body;
     }
 }

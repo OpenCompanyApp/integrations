@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Cisco Webex integration with Laravel.
+ *
+ * Binds the Webex REST client and adds the tool provider to the registry when available.
+ */
 class WebexServiceProvider extends ServiceProvider
 {
     public function register(): void

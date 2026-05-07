@@ -5,8 +5,17 @@ namespace OpenCompany\Integrations\Trello;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Trello REST API.
+ *
+ * Handles bearer-token authentication, board/list/card endpoints, and normalized API errors.
+ */
 class TrelloService
 {
+    /**
+     * @param  string  $accessToken  Trello API access token
+     * @param  string  $baseUrl  Trello API base URL
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.trello.com/1',
@@ -150,7 +159,7 @@ class TrelloService
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains((string) $contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Trello API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);

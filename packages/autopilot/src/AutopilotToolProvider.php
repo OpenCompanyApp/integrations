@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Autopilot;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotListContacts;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotGetContact;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotCreateContact;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotListLists;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotGetList;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotListJourneys;
-use OpenCompany\Integrations\Autopilot\Tools\AutopilotGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Autopilot.
+ *
+ * Exposes the official Autopilot API Blueprint operations and resolves default
+ * or named account credentials for tool instances.
+ */
+class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,46 +25,27 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key_header',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => ['Autopilot requires the API key in the autopilotapikey header.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -78,7 +58,7 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             'label' => 'Autopilot',
-            'description' => 'Marketing automation',
+            'description' => 'Contacts, lists, journeys, and REST hooks',
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:autopilot',
         ];
@@ -88,66 +68,48 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             'name' => 'Autopilot',
-            'description' => 'Marketing automation and contact management',
+            'description' => 'Manage Autopilot contacts, lists, journey ejection, and REST hook subscriptions.',
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:autopilot',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://autopilot.docs.apiary.io/',
-        ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'api_key',
-                'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Autopilot API key',
-                'hint' => 'Find your API key in your Autopilot account settings under "API Keys"',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.autopilotapp.com/v1',
-                'hint' => 'The Autopilot API base URL. Change only if using a custom endpoint.',
-                'default' => 'https://api.autopilotapp.com/v1',
-            ],
+            'docs_url' => 'https://github.com/autopilotdev/autopilotdev.github.io/blob/master/_api_docs/apiary.md',
         ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Test Autopilot credentials with a lightweight REST hook list request.
+     *
+     * @param  array<string, mixed>  $config  Configuration values to test.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.autopilotapp.com/v1', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.autopilothq.com'), '/');
+        $baseUrl = str_ends_with($baseUrl, '/v1') ? substr($baseUrl, 0, -3) : $baseUrl;
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
-            $response = Http::withToken($apiKey)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'autopilot-sdk-version' => '2.0',
-                ])
+            $response = Http::withHeaders([
+                'autopilotapikey' => $apiKey,
+                'autopilot-sdk-version' => '2.0',
+            ])
+                ->acceptJson()
                 ->timeout(10)
-                ->get($baseUrl . '/account');
+                ->get($baseUrl.'/v1/hooks');
 
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Autopilot API at {$baseUrl}. Check the URL and API key.",
-                ];
-            }
-
-            return [
-                'success' => true,
-                'message' => "Connected to Autopilot API successfully.",
-            ];
+            return $response->successful()
+                ? ['success' => true, 'message' => 'Connected to Autopilot API.']
+                : ['success' => false, 'error' => "Autopilot API returned HTTP {$response->status()}."];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -161,70 +123,38 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function tools(): array
+    public function credentialFields(): array
     {
         return [
-            'autopilot_list_contacts' => [
-                'class' => AutopilotListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List contacts in your Autopilot account.',
-                'icon' => 'ph:users',
-            ],
-            'autopilot_get_contact' => [
-                'class' => AutopilotGetContact::class,
-                'type' => 'read',
-                'name' => 'Get Contact',
-                'description' => 'Get details for a specific contact.',
-                'icon' => 'ph:user',
-            ],
-            'autopilot_create_contact' => [
-                'class' => AutopilotCreateContact::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create or update a contact in Autopilot.',
-                'icon' => 'ph:user-plus',
-            ],
-            'autopilot_list_lists' => [
-                'class' => AutopilotListLists::class,
-                'type' => 'read',
-                'name' => 'List Lists',
-                'description' => 'List all lists in your Autopilot account.',
-                'icon' => 'ph:list',
-            ],
-            'autopilot_get_list' => [
-                'class' => AutopilotGetList::class,
-                'type' => 'read',
-                'name' => 'Get List',
-                'description' => 'Get details for a specific list.',
-                'icon' => 'ph:list',
-            ],
-            'autopilot_list_journeys' => [
-                'class' => AutopilotListJourneys::class,
-                'type' => 'read',
-                'name' => 'List Journeys',
-                'description' => 'List all journeys in your Autopilot account.',
-                'icon' => 'ph:path',
-            ],
-            'autopilot_get_current_user' => [
-                'class' => AutopilotGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s account details.',
-                'icon' => 'ph:user-circle',
-            ],
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.autopilothq.com'],
         ];
+    }
+
+    /**
+     * Registered Autopilot operation tools keyed by tool slug.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
+    public function tools(): array
+    {
+        $tools = [];
+        foreach (AutopilotService::operations() as $definition) {
+            $tools[(string) $definition['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$definition['class'],
+                'type' => (string) $definition['type'],
+                'name' => (string) $definition['name'],
+                'description' => (string) $definition['description'],
+                'icon' => $definition['type'] === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/autopilot.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.autopilotapp.com/v1'],
-        ];
+        return __DIR__.'/../lua-docs/autopilot.md';
     }
 
     public function isIntegration(): bool
@@ -232,21 +162,34 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return true;
     }
 
+    /**
+     * Create an Autopilot tool instance.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve an Autopilot service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): AutopilotService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new AutopilotService(
+            return new AutopilotService(
                 apiKey: $creds->get('autopilot', 'api_key', '', $account),
-                baseUrl: $creds->get('autopilot', 'url', 'https://api.autopilotapp.com/v1', $account),
+                baseUrl: $creds->get('autopilot', 'url', 'https://api.autopilothq.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(AutopilotService::class));
+        return app(AutopilotService::class);
     }
 }

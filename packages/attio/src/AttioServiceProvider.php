@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Attio integration with Laravel's service container.
+ *
+ * Binds AttioService from stored credentials and registers AttioToolProvider
+ * with the shared tool registry when available.
+ */
 class AttioServiceProvider extends ServiceProvider
 {
     /**

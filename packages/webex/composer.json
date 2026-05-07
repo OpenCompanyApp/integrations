@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-webex",
-    "description": "Cisco Webex integration for Laravel — list rooms, send messages, manage meetings.",
+    "description": "Cisco Webex integration for Laravel: rooms, messages, people, teams, meetings, and webhooks.",
     "license": "MIT",
     "authors": [
         {

@@ -1,0 +1,48 @@
+<?php
+
+namespace OpenCompany\Integrations\Keycloak\Tools;
+
+/**
+ * Add new authentication execution.
+ *
+ * Maps to POST /admin/realms/{realm}/authentication/executions in the official Keycloak Admin REST API.
+ */
+class KeycloakPostAdminRealmsRealmAuthenticationExecutions extends AbstractKeycloakTool
+{
+    protected const OPERATION = array (
+  'slug' => 'keycloak_post_admin_realms_realm_authentication_executions',
+  'class' => 'KeycloakPostAdminRealmsRealmAuthenticationExecutions',
+  'method' => 'POST',
+  'path' => '/admin/realms/{realm}/authentication/executions',
+  'summary' => 'Add new authentication execution',
+  'description' => 'Add new authentication execution.',
+  'parameters' =>
+  array (
+    'realm' =>
+    array (
+      'type' => 'string',
+      'required' => true,
+      'description' => 'realm name (not id!)',
+    ),
+    'body' =>
+    array (
+      'type' => 'object',
+      'required' => false,
+      'description' => 'Request body matching the official Keycloak Admin REST API schema for this endpoint.',
+    ),
+  ),
+  'path_params' =>
+  array (
+    'realm' => 'realm',
+  ),
+  'query_params' =>
+  array (
+  ),
+  'header_params' =>
+  array (
+  ),
+  'body_required' => false,
+  'content_type' => 'application/json',
+  'type' => 'write',
+);
+}

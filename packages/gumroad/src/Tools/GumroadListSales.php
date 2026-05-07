@@ -2,67 +2,65 @@
 
 namespace OpenCompany\Integrations\Gumroad\Tools;
 
-use OpenCompany\Integrations\Gumroad\GumroadService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class GumroadListSales implements Tool
+/**
+ * List successful sales with optional filters.
+ */
+class GumroadListSales extends AbstractGumroadEndpointTool
 {
-    public function __construct(
-        private GumroadService $service,
-    ) {}
+    protected string $toolName = 'gumroad_list_sales';
 
-    public function name(): string
-    {
-        return 'gumroad_list_sales';
-    }
+    protected string $toolDescription = 'List successful sales with optional filters.';
 
-    public function description(): string
-    {
-        return 'List sales from your Gumroad account. Optionally filter by product ID, date range, or page. Returns sale details including buyer info, amount, and product.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'product_id' => ['type' => 'string', 'description' => 'Filter sales by a specific product ID.'],
-            'before' => ['type' => 'string', 'description' => 'Only return sales before this ISO 8601 timestamp (e.g., "2026-01-01T00:00:00Z").'],
-            'after' => ['type' => 'string', 'description' => 'Only return sales after this ISO 8601 timestamp (e.g., "2026-01-01T00:00:00Z").'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
-        ];
-    }
+    protected string $path = '/sales';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gumroad integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'page' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Page number for paginated Gumroad endpoints.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Gumroad query parameters to pass through.',
+    ],
+    'product_id' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by product ID.',
+    ],
+    'email' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by buyer email when supported.',
+    ],
+    'before' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Only return sales before this timestamp.',
+    ],
+    'after' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Only return sales after this timestamp.',
+    ],
+];
 
-            $params = [];
-            if (!empty($args['product_id'])) {
-                $params['product_id'] = $args['product_id'];
-            }
-            if (!empty($args['before'])) {
-                $params['before'] = $args['before'];
-            }
-            if (!empty($args['after'])) {
-                $params['after'] = $args['after'];
-            }
-            if (isset($args['page'])) {
-                $params['page'] = (int) $args['page'];
-            }
+    /** @var list<string> */
+    protected array $required = [];
 
-            $result = $this->service->listSales($params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'page',
+    'product_id',
+    'email',
+    'before',
+    'after',
+];
 
-            $sales = $result['sales'] ?? [];
-
-            return ToolResult::success([
-                'sales' => $sales,
-                'totalCount' => count($sales),
-            ]);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

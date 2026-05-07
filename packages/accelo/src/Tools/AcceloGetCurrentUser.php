@@ -7,12 +7,15 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: accelo_get_current_user
+ * Get information about the current Accelo access token.
  *
- * Retrieves the profile of the currently authenticated Accelo user.
+ * Accelo exposes this through `/api/v0/tokeninfo`.
  */
 class AcceloGetCurrentUser implements Tool
 {
+    /**
+     * @param  AcceloService  $service  The Accelo API client.
+     */
     public function __construct(
         private AcceloService $service,
     ) {}
@@ -24,7 +27,7 @@ class AcceloGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the profile of the currently authenticated Accelo user. Use this to verify credentials and see user details.';
+        return 'Get token information for the current Accelo access token, including user email and expiry details.';
     }
 
     public function parameters(): array
@@ -32,6 +35,11 @@ class AcceloGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get Accelo token information.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -2,57 +2,36 @@
 
 namespace OpenCompany\Integrations\Braze\Tools;
 
-use OpenCompany\Integrations\Braze\BrazeService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get detailed information about a specific Braze campaign.
- *
- * Returns the full campaign configuration including targeting, messaging,
- * scheduling, and conversion tracking settings.
- *
- * @see https://www.braze.com/docs/api/endpoints/export/campaigns/get_campaign_details/
+ * Get Braze campaign details.
  */
-class BrazeGetCampaign implements Tool
+class BrazeGetCampaign extends AbstractBrazeTool
 {
-    public function __construct(
-        private BrazeService $service,
-    ) {}
+    protected array $parameters = array (
+  'campaign_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'Campaign ID.',
+    'required' => true,
+  ),
+);
 
-    public function name(): string
-    {
-        return 'braze_get_campaign';
-    }
+    protected array $required = array (
+  0 => 'campaign_id',
+);
 
-    public function description(): string
-    {
-        return 'Get detailed information about a specific Braze campaign, including targeting rules, messaging content, schedule, and analytics.';
-    }
+    protected array $queryParams = array (
+  0 => 'campaign_id',
+);
 
-    public function parameters(): array
-    {
-        return [
-            'campaign_id' => ['type' => 'string', 'required' => true, 'description' => 'The Braze campaign identifier.'],
-        ];
-    }
+    protected array $bodyParams = array (
+);
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Braze integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            if (empty($args['campaign_id'])) {
-                return ToolResult::error('campaign_id is required.');
-            }
+    protected string $path = '/campaigns/details';
 
-            $result = $this->service->getCampaign($args['campaign_id']);
+    protected string $toolName = 'braze_get_campaign';
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'Get Braze campaign details.';
 }

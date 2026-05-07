@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-chargify",
-    "description": "Chargify integration for Laravel — manage subscriptions, customers, products, and invoices.",
+    "description": "Chargify / Maxio Advanced Billing integration for Laravel — manage subscriptions, customers, products, invoices, and site metadata.",
     "license": "MIT",
     "authors": [
         {

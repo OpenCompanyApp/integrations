@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\MicrosoftTeams;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for Microsoft Teams operations through Microsoft Graph.
+ *
+ * Handles bearer-token authentication, request dispatch, error normalization,
+ * and response parsing for team, channel, message, chat, and user endpoints.
+ */
 class MicrosoftTeamsService
 {
     /**
@@ -46,7 +52,7 @@ class MicrosoftTeamsService
      */
     public function getTeam(string $teamId): array
     {
-        return $this->request('GET', '/teams/' . urlencode($teamId));
+        return $this->request('GET', '/teams/' . rawurlencode($teamId));
     }
 
     /**
@@ -57,7 +63,7 @@ class MicrosoftTeamsService
      */
     public function listChannels(string $teamId): array
     {
-        return $this->request('GET', '/teams/' . urlencode($teamId) . '/channels');
+        return $this->request('GET', '/teams/' . rawurlencode($teamId) . '/channels');
     }
 
     /**
@@ -69,7 +75,7 @@ class MicrosoftTeamsService
      */
     public function getChannel(string $teamId, string $channelId): array
     {
-        return $this->request('GET', '/teams/' . urlencode($teamId) . '/channels/' . urlencode($channelId));
+        return $this->request('GET', '/teams/' . rawurlencode($teamId) . '/channels/' . rawurlencode($channelId));
     }
 
     /**
@@ -82,7 +88,7 @@ class MicrosoftTeamsService
      */
     public function listMessages(string $teamId, string $channelId, int $limit = 50): array
     {
-        return $this->request('GET', '/teams/' . urlencode($teamId) . '/channels/' . urlencode($channelId) . '/messages', [
+        return $this->request('GET', '/teams/' . rawurlencode($teamId) . '/channels/' . rawurlencode($channelId) . '/messages', [
             '$top' => $limit,
         ]);
     }
@@ -98,7 +104,7 @@ class MicrosoftTeamsService
      */
     public function sendMessage(string $teamId, string $channelId, string $content, string $contentType = 'text'): array
     {
-        return $this->request('POST', '/teams/' . urlencode($teamId) . '/channels/' . urlencode($channelId) . '/messages', [
+        return $this->request('POST', '/teams/' . rawurlencode($teamId) . '/channels/' . rawurlencode($channelId) . '/messages', [
             'body' => [
                 'content' => $content,
                 'contentType' => $contentType,

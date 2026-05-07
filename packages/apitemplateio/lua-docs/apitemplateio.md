@@ -1,163 +1,181 @@
-# API Template IO — Lua API Reference
+# APITemplate.io Lua Reference
+
+APITemplate.io generates PDFs and images through the REST API v2. The integration uses the `X-API-KEY` header and defaults to `https://rest.apitemplate.io`; regional hosts such as `https://rest-us.apitemplate.io` can be configured per account.
+
+Generation tools usually return APITemplate.io response fields such as `status`, `download_url`, `download_url_png`, `template_id`, and `transaction_ref`. When `async = true`, the API returns quickly and you should track the returned `transaction_ref` or receive the configured webhook callback.
 
 ## create_pdf
 
-Generate a PDF document from a template.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `template_id` | string | yes | The template ID (e.g., `"tpl_abc123"`) |
-| `data` | object | yes | Key-value pairs to merge into the template |
-| `output_html` | boolean | no | If true, returns the rendered HTML alongside the PDF URL |
-| `expire` | integer | no | Minutes until the generated file URL expires |
-| `meta` | string | no | Optional metadata string for the generation request |
-
-### Example
+Generate a PDF from a saved template.
 
 ```lua
 local result = app.integrations.apitemplateio.create_pdf({
-  template_id = "tpl_abc123",
+  template_id = "tpl_invoice",
   data = {
-    company_name = "Acme Corp",
-    amount = "$500.00",
     invoice_number = "INV-001",
-    due_date = "2026-04-30"
-  }
+    company_name = "Example Corp",
+    amount = "$500.00"
+  },
+  filename = "invoice-INV-001.pdf",
+  expiration = 1440
 })
-
-print("PDF URL: " .. result.download_url)
-print("Transaction ID: " .. result.transaction_id)
 ```
 
----
+Common query options: `export_type`, `output_format`, `output_html`, `expiration`, `filename`, `async`, `webhook_url`, `webhook_method`, and `meta`.
 
 ## create_image
 
-Generate an image (PNG or JPEG) from a template.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `template_id` | string | yes | The template ID (e.g., `"tpl_xyz789"`) |
-| `data` | object | yes | Key-value pairs to merge into the template |
-| `output_format` | string | no | Image format: `"png"` (default) or `"jpeg"` |
-| `output_html` | boolean | no | If true, returns the rendered HTML alongside the image URL |
-| `expire` | integer | no | Minutes until the generated file URL expires |
-| `meta` | string | no | Optional metadata string for the generation request |
-
-### Example
+Generate images from a visual image template. Prefer `overrides`; `data` is accepted as a backward-compatible full payload.
 
 ```lua
 local result = app.integrations.apitemplateio.create_image({
-  template_id = "tpl_xyz789",
-  data = {
-    title = "Summer Sale",
-    discount = "30% Off",
-    tagline = "Limited time offer!"
+  template_id = "tpl_social",
+  output_image_type = "pngOnly",
+  overrides = {
+    { name = "title", text = "Launch Week" },
+    { name = "hero", src = "https://example.test/hero.png" }
+  }
+})
+```
+
+`output_image_type` accepts `all`, `jpegOnly`, or `pngOnly`.
+
+## create_pdf_from_html
+
+Generate a PDF without creating a saved template first.
+
+```lua
+local result = app.integrations.apitemplateio.create_pdf_from_html({
+  body = "<h1>Hello {{name}}</h1>",
+  css = "<style>h1 { color: #2563eb; }</style>",
+  data = { name = "World" },
+  settings = {
+    paper_size = "A4",
+    orientation = "1",
+    margin_top = "40",
+    margin_right = "10",
+    margin_bottom = "40",
+    margin_left = "10"
+  }
+})
+```
+
+## create_pdf_from_url
+
+Render a public web page into a PDF.
+
+```lua
+local result = app.integrations.apitemplateio.create_pdf_from_url({
+  url = "https://example.test/report",
+  settings = {
+    paper_size = "A4",
+    print_background = "1"
+  }
+})
+```
+
+## create_pdf_from_markdown
+
+Render Markdown into a PDF.
+
+```lua
+local result = app.integrations.apitemplateio.create_pdf_from_markdown({
+  body = "# {{title}}\n\nGenerated report body.",
+  data = { title = "Monthly Report" },
+  css = "<style>body { font-family: sans-serif; }</style>"
+})
+```
+
+## merge_pdfs
+
+Merge normal PDF URLs or PDF data URLs into a single PDF.
+
+```lua
+local result = app.integrations.apitemplateio.merge_pdfs({
+  urls = {
+    "https://example.test/a.pdf",
+    "https://example.test/b.pdf"
   },
-  output_format = "png"
+  export_type = "json",
+  expiration = 1440
 })
-
-print("Image URL: " .. result.download_url)
 ```
 
----
+## list_objects
 
-## list_templates
-
-List available templates with pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of templates per page (default: 50, max: 100) |
-| `offset` | integer | no | Number of templates to skip for pagination (default: 0) |
-| `filter` | string | no | Optional filter expression to narrow results |
-
-### Example
+List generated PDFs and images.
 
 ```lua
--- First page
-local result = app.integrations.apitemplateio.list_templates({
-  limit = 10,
-  offset = 0
-})
-
-for _, tpl in ipairs(result.templates) do
-  print(tpl.id .. ": " .. tpl.name)
-end
-
--- Next page
-local page2 = app.integrations.apitemplateio.list_templates({
-  limit = 10,
-  offset = 10
+local result = app.integrations.apitemplateio.list_objects({
+  limit = 50,
+  transaction_type = "PDF",
+  template_id = "tpl_invoice"
 })
 ```
 
----
+Filters include `limit`, `offset`, `template_id`, `transaction_type`, and `transaction_ref`.
 
-## get_template
+## delete_object
 
-Get details for a specific template by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `template_id` | string | yes | The template ID to retrieve (e.g., `"tpl_abc123"`) |
-
-### Example
+Delete a generated object from APITemplate.io CDN storage.
 
 ```lua
-local result = app.integrations.apitemplateio.get_template({
-  template_id = "tpl_abc123"
+local result = app.integrations.apitemplateio.delete_object({
+  transaction_ref = "txn_123"
 })
-
-print("Template: " .. result.name)
-print("Format: " .. result.format)
-print("Modified: " .. result.modified_at)
 ```
-
----
 
 ## get_current_user
 
-Get the authenticated user's account information, including usage and subscription details.
-
-### Parameters
-
-This tool takes no parameters.
-
-### Example
+Get account information for the configured API key. The tool keeps the historical name but maps to the current `/v2/account-information` endpoint.
 
 ```lua
-local result = app.integrations.apitemplateio.get_current_user({})
-
-print("Account: " .. result.email)
-print("Plan: " .. result.plan)
-print("API calls used: " .. result.api_calls_used .. " / " .. result.api_calls_limit)
+local account = app.integrations.apitemplateio.get_current_user({})
 ```
 
----
+## list_templates
+
+List saved templates.
+
+```lua
+local templates = app.integrations.apitemplateio.list_templates({
+  limit = 100,
+  format = "PDF",
+  group_name = "invoices"
+})
+```
+
+Filters include `limit`, `offset`, `format`, `template_id`, `group_name`, and `with_layer_info`.
+
+## get_template
+
+Get a saved PDF template by ID. APITemplate.io marks this endpoint experimental.
+
+```lua
+local template = app.integrations.apitemplateio.get_template({
+  template_id = "tpl_invoice"
+})
+```
+
+## update_template
+
+Update a saved PDF template. APITemplate.io marks this endpoint experimental, so hosts should expect availability to depend on account/API support.
+
+```lua
+local result = app.integrations.apitemplateio.update_template({
+  template_id = "tpl_invoice",
+  body = "<h1>{{title}}</h1>",
+  css = "<style>body { background: white; }</style>",
+  settings = {
+    custom_footer = "<div>Page <span class='pageNumber'></span></div>"
+  }
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple API Template IO accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.apitemplateio.create_pdf({...})
-
--- Explicit default (portable across setups)
 app.integrations.apitemplateio.default.create_pdf({...})
-
--- Named accounts
 app.integrations.apitemplateio.production.create_pdf({...})
-app.integrations.apitemplateio.staging.create_pdf({...})
 ```
-
-All functions are identical across accounts — only the credentials differ.

@@ -30,9 +30,9 @@ This tool requires a ServiceM8 API access token (OAuth bearer token).
 
 ```php
 return [
-    'service_m8' => [
+    'service-m8' => [
         'access_token' => env('SERVICEM8_ACCESS_TOKEN'),
-        'url'          => env('SERVICEM8_URL', 'https://api.servicem8.com/v1'),
+        'url'          => env('SERVICEM8_URL', 'https://api.servicem8.com/api_1.0'),
     ],
 ];
 ```
@@ -77,7 +77,7 @@ If you have `integration-core` installed, all 7 tools auto-register with the `To
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 $registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('service_m8');
+$provider = $registry->get('service-m8');
 
 // Create any tool via the provider
 $tool = $provider->createTool(

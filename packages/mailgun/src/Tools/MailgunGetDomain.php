@@ -2,55 +2,36 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class MailgunGetDomain implements Tool
+/**
+ * Get a Mailgun domain and DNS records.
+ */
+class MailgunGetDomain extends AbstractMailgunEndpointTool
 {
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_get_domain';
 
-    public function name(): string
-    {
-        return 'mailgun_get_domain';
-    }
+    protected string $toolDescription = 'Get a Mailgun domain and DNS records.';
 
-    public function description(): string
-    {
-        return 'Get details and DNS records for a specific Mailgun domain.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'domain' => ['type' => 'string', 'description' => 'The domain name to retrieve. Defaults to the configured sending domain.'],
-        ];
-    }
+    protected string $path = '/v4/domains/{domain}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'domain' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Mailgun domain.',
+    ],
+];
 
-            $domainName = $args['domain'] ?? '';
+    /** @var list<string> */
+    protected array $required = [
+    'domain',
+];
 
-            if (empty($domainName)) {
-                $domainName = $this->service->getConfiguredDomain();
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            if (empty($domainName)) {
-                return ToolResult::error('Domain name is required. Pass the "domain" parameter or configure a default sending domain.');
-            }
-
-            $result = $this->service->getDomain($domainName);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

@@ -1,177 +1,103 @@
-# Clearbit — Lua API Reference
+# Clearbit Lua API Reference
 
-## enrich_person
+Namespace: `app.integrations.clearbit`
 
-Look up a person by email address. Returns social profiles, employment, location, and demographic data when available.
+Clearbit exposes B2B person, company, reveal, prospector, discovery, autocomplete, name-to-domain, and risk APIs. Most tools require an API key. `list_autocomplete` is public. Name-to-domain and risk are legacy unsupported APIs for existing Clearbit customers.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | The email address of the person to look up (e.g., `"alex@stripe.com"`) |
-
-### Examples
+## Enrichment
 
 ```lua
-local result = app.integrations.clearbit.enrich_person({
-  email = "alex@stripe.com"
+local person = app.integrations.clearbit.enrich_person({
+  email = "person@example.test"
 })
 
-if result.found ~= false then
-  print(result.person.fullName)
-  print(result.person.employment.title)
-  print(result.person.employment.name)
-end
-```
-
----
-
-## enrich_company
-
-Look up a company by domain name. Returns company metrics, industry categorization, social profiles, and funding data.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `domain` | string | yes | The company domain (e.g., `"stripe.com"`) |
-
-### Examples
-
-```lua
-local result = app.integrations.clearbit.enrich_company({
-  domain = "stripe.com"
+local combined = app.integrations.clearbit.enrich_combined({
+  email = "person@example.test"
 })
 
-if result.found ~= false then
-  print(result.name)
-  print(result.category.industry)
-  print(result.metrics.employees)
-end
-```
-
----
-
-## reveal
-
-Identify the company and person behind an IP address. Useful for de-anonymizing website visitors.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `ip` | string | yes | IPv4 or IPv6 address (e.g., `"104.193.168.24"`) |
-
-### Examples
-
-```lua
-local result = app.integrations.clearbit.reveal({
-  ip = "104.193.168.24"
+local company = app.integrations.clearbit.enrich_company({
+  domain = "example.test"
 })
-
-if result.found ~= false then
-  print(result.company.name)
-  print(result.person.fullName)
-end
 ```
 
----
+`enrich_combined` returns Clearbit's combined person/company response. Use it when you need both the individual contact and company context from one email lookup.
 
-## prospect
-
-Find people by job title and/or company name. Returns lists of matching people with names, titles, and email addresses.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | string | no | Job title to search for (e.g., `"CEO"`, `"Software Engineer"`) |
-| `company` | string | no | Company name to filter by (e.g., `"Stripe"`) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-At least one of `title` or `company` must be provided.
-
-### Examples
+## Reveal
 
 ```lua
--- Find all CEOs at Stripe
-local result = app.integrations.clearbit.prospect({
-  title = "CEO",
-  company = "Stripe"
+local reveal = app.integrations.clearbit.reveal({
+  ip = "203.0.113.10"
 })
-
-for _, person in ipairs(result.results or {}) do
-  print(person.fullName .. " — " .. person.title)
-end
 ```
 
+Reveal identifies the company associated with an IP address. It does not identify the specific person visiting the site.
+
+## Prospector
+
 ```lua
--- Find all Software Engineers (any company)
-local result = app.integrations.clearbit.prospect({
-  title = "Software Engineer",
+local prospects = app.integrations.clearbit.prospect({
+  domain = "example.test",
+  roles = "sales,engineering",
+  seniority = "executive",
   page = 1
 })
 ```
 
----
+Useful filters include `domain`, `role`, `roles`, `seniority`, `title`, `company`, and `page`.
 
-## list_autocomplete
-
-Search for companies by name. Returns a list of matching companies with domains, logos, and descriptions. Ideal for type-ahead / autocomplete UI flows.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Company name or prefix to search for (e.g., `"Stripe"`, `"Goo"`) |
-
-### Examples
+## Company Lookup
 
 ```lua
-local result = app.integrations.clearbit.list_autocomplete({
-  name = "Stripe"
+local suggestions = app.integrations.clearbit.list_autocomplete({
+  name = "Example"
 })
 
-for _, company in ipairs(result) do
-  print(company.name .. " — " .. company.domain)
-end
+local domain = app.integrations.clearbit.name_to_domain({
+  name = "Example"
+})
 ```
 
----
+Autocomplete is public and returns matching company names, domains, and logos. Name-to-domain requires an existing Clearbit API key and may be unavailable for new accounts.
 
-## get_current_user
-
-Get the authenticated user's Clearbit account information. Useful for verifying API credentials and checking plan details.
-
-### Parameters
-
-None.
-
-### Examples
+## Discovery And Risk
 
 ```lua
-local result = app.integrations.clearbit.get_current_user({})
+local companies = app.integrations.clearbit.discovery_search({
+  params = {
+    query = "name:example",
+    limit = 10
+  }
+})
 
-print("Account: " .. result.name)
-print("Plan: " .. (result.plan or "unknown"))
+local risk = app.integrations.clearbit.calculate_risk({
+  params = {
+    email = "person@example.test",
+    ip = "203.0.113.10",
+    name = "Example Person"
+  }
+})
 ```
 
----
+Risk is a legacy unsupported API. Treat errors from this endpoint as a plan or product-availability issue unless credentials are known to have Risk access.
+
+## Long-Tail GET Endpoints
+
+```lua
+local result = app.integrations.clearbit.api_get({
+  api = "company",
+  path = "/companies/find",
+  params = { domain = "example.test" }
+})
+```
+
+`api` must be one of `person`, `company`, `autocomplete`, `prospector`, `reveal`, `discovery`, `risk`, or `name_to_domain`. The path must be relative, not a full URL.
 
 ## Multi-Account Usage
 
-If you have multiple Clearbit accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.clearbit.enrich_person({ email = "alex@stripe.com" })
-
--- Explicit default (portable across setups)
-app.integrations.clearbit.default.enrich_person({ email = "alex@stripe.com" })
-
--- Named accounts
-app.integrations.clearbit.sales.enrich_person({ email = "alex@stripe.com" })
-app.integrations.clearbit.marketing.enrich_company({ domain = "stripe.com" })
+app.integrations.clearbit.enrich_company({ domain = "example.test" })
+app.integrations.clearbit.default.enrich_company({ domain = "example.test" })
+app.integrations.clearbit.sales.enrich_person({ email = "person@example.test" })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts; only credentials differ.

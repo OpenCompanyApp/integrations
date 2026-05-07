@@ -15,6 +15,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AuthZeroListRoles implements Tool
 {
+    /**
+     * @param  AuthZeroService  $service  The Auth0 Management API client.
+     */
     public function __construct(
         private AuthZeroService $service,
     ) {}
@@ -37,6 +40,11 @@ class AuthZeroListRoles implements Tool
         ];
     }
 
+    /**
+     * List Auth0 roles with optional pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

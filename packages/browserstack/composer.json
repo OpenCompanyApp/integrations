@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-browserstack",
+    "description": "BrowserStack integration for Laravel AI agents - Automate plan, browsers, projects, builds, sessions, App Automate apps, and raw API helper calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\BrowserStack\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\BrowserStack\\BrowserStackServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

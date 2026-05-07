@@ -87,7 +87,7 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, H
 
     public function appName(): string
     {
-        return 'google_docs';
+        return 'google-docs';
     }
 
     public function appMeta(): array
@@ -110,6 +110,8 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, H
             'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/docs.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-docs',
         ];
     }    public function configSchema(): array
     {
@@ -308,7 +310,10 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, H
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleDocsService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleDocsService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleDocsService::class);
 
         return new $class($service);
     }

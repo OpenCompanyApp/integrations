@@ -8,6 +8,7 @@
         "opencompanyapp/integration-google-docs": "self.version",
         "opencompanyapp/integration-google-drive": "self.version",
         "opencompanyapp/integration-google-forms": "self.version",
+        "opencompanyapp/integration-google-analytics": "self.version",
         "opencompanyapp/integration-google-search-console": "self.version",
         "opencompanyapp/integration-google-tasks": "self.version"
     },

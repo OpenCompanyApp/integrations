@@ -13,6 +13,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class HuggingFaceListSpaces implements Tool
 {
+    /**
+     * @param  HuggingFaceService  $service  Hugging Face Hub API client.
+     */
     public function __construct(
         private HuggingFaceService $service,
     ) {}
@@ -40,6 +43,11 @@ class HuggingFaceListSpaces implements Tool
         ];
     }
 
+    /**
+     * Search Spaces on the Hub.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments for Space search.
+     */
     public function execute(array $args): ToolResult
     {
         try {

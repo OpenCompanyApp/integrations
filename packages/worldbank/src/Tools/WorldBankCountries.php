@@ -6,8 +6,14 @@ use OpenCompany\Integrations\WorldBank\WorldBankService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List and filter World Bank countries.
+ */
 class WorldBankCountries implements Tool
 {
+    /**
+     * @param  WorldBankService  $service  The World Bank API client.
+     */
     public function __construct(
         private WorldBankService $service,
     ) {}
@@ -31,6 +37,11 @@ class WorldBankCountries implements Tool
         ];
     }
 
+    /**
+     * List countries with optional local filtering.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (query, region, income_level).
+     */
     public function execute(array $args): ToolResult
     {
         try {

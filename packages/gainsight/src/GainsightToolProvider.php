@@ -109,7 +109,7 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Customer success platform — companies, users, and surveys',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:gainsight',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://support.gainsight.com/s/article/Gainsight-API-Documentation',
         ];

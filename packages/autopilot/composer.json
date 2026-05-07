@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-autopilot",
-    "description": "Autopilot integration for Laravel — manage contacts, lists, and journeys.",
+    "description": "Autopilot integration for Laravel covering the official contact, list, journey ejection, and REST hook APIs.",
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,7 @@
     "keywords": ["tools", "autopilot", "marketing", "automation", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "opencompanyapp/integration-core": "^2.0"
     },
     "replace": {
         "opencompanyapp/ai-tool-autopilot": "self.version"

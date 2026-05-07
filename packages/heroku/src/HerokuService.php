@@ -6,8 +6,18 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Heroku Platform API.
+ *
+ * Handles bearer-token authentication, Heroku v3 media headers, request
+ * dispatch, error normalization, and parsed JSON responses.
+ */
 class HerokuService
 {
+    /**
+     * @param  string  $apiKey  Heroku API key or OAuth bearer token.
+     * @param  string  $baseUrl  Heroku Platform API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.heroku.com',

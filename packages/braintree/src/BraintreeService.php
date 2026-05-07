@@ -2,218 +2,178 @@
 
 namespace OpenCompany\Integrations\Braintree;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the official Braintree GraphQL API.
+ *
+ * Handles Basic API-key or OAuth bearer authentication, GraphQL document generation, and response parsing for generated tools.
+ */
 class BraintreeService
 {
+    private const SANDBOX_URL = 'https://payments.sandbox.braintree-api.com/graphql';
+
+    /**
+     * @param  string  $accessToken  Optional OAuth bearer token for third-party integrations.
+     * @param  string  $merchantId  Optional Braintree merchant ID for host metadata and legacy compatibility.
+     * @param  string  $baseUrl  Braintree GraphQL endpoint.
+     * @param  string  $publicKey  Braintree public API key for Basic auth.
+     * @param  string  $privateKey  Braintree private API key for Basic auth.
+     * @param  string  $version  Braintree-Version header in YYYY-MM-DD format.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $merchantId = '',
-        private string $baseUrl = 'https://api.braintreegateway.com',
+        private string $baseUrl = self::SANDBOX_URL,
+        private string $publicKey = '',
+        private string $privateKey = '',
+        private string $version = '2019-01-01',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl !== '' ? $this->baseUrl : self::SANDBOX_URL, '/');
     }
 
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken) && !empty($this->merchantId);
+        return $this->accessToken !== '' || ($this->publicKey !== '' && $this->privateKey !== '');
     }
 
-    /**
-     * Get the configured merchant ID.
-     */
     public function getMerchantId(): string
     {
         return $this->merchantId;
     }
 
     /**
-     * List transactions for the merchant.
+     * Return all official Braintree GraphQL operation fields exposed by this integration.
      *
-     * @param  int  $limit  Maximum number of transactions to return (default: 10, max: 100).
-     * @param  int  $page  Page number for pagination (default: 1).
-     * @param  string|null  $status  Filter by transaction status (e.g., "authorized", "submitted_for_settlement", "settled", "failed", "voided", "declined").
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function listTransactions(int $limit = 10, int $page = 1, ?string $status = null): array
+    public static function operations(): array
     {
-        $params = ['limit' => $limit, 'page' => $page];
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', "/merchants/{$this->merchantId}/transactions", $params);
+        return BraintreeOperations::all();
     }
 
     /**
-     * Get a single transaction by ID.
-     *
-     * @param  string  $id  The transaction ID.
-     * @return array<string, mixed>
-     */
-    public function getTransaction(string $id): array
-    {
-        return $this->request('GET', "/merchants/{$this->merchantId}/transactions/{$id}");
-    }
-
-    /**
-     * List customers for the merchant.
-     *
-     * @param  int  $limit  Maximum number of customers to return (default: 10, max: 100).
-     * @param  int  $page  Page number for pagination (default: 1).
-     * @return array<string, mixed>
-     */
-    public function listCustomers(int $limit = 10, int $page = 1): array
-    {
-        return $this->request('GET', "/merchants/{$this->merchantId}/customers", [
-            'limit' => $limit,
-            'page' => $page,
-        ]);
-    }
-
-    /**
-     * Get a single customer by ID.
-     *
-     * @param  string  $id  The customer ID.
-     * @return array<string, mixed>
-     */
-    public function getCustomer(string $id): array
-    {
-        return $this->request('GET', "/merchants/{$this->merchantId}/customers/{$id}");
-    }
-
-    /**
-     * List plans for the merchant.
-     *
-     * @param  int  $limit  Maximum number of plans to return (default: 10, max: 100).
-     * @param  int  $page  Page number for pagination (default: 1).
-     * @return array<string, mixed>
-     */
-    public function listPlans(int $limit = 10, int $page = 1): array
-    {
-        return $this->request('GET', "/merchants/{$this->merchantId}/plans", [
-            'limit' => $limit,
-            'page' => $page,
-        ]);
-    }
-
-    /**
-     * Get a single plan by ID.
-     *
-     * @param  string  $id  The plan ID.
-     * @return array<string, mixed>
-     */
-    public function getPlan(string $id): array
-    {
-        return $this->request('GET', "/merchants/{$this->merchantId}/plans/{$id}");
-    }
-
-    /**
-     * List subscriptions for the merchant.
-     *
-     * @param  int  $limit  Maximum number of subscriptions to return (default: 10, max: 100).
-     * @param  int  $page  Page number for pagination (default: 1).
-     * @param  string|null  $status  Filter by subscription status (e.g., "active", "past_due", "canceled", "expired").
-     * @return array<string, mixed>
-     */
-    public function listSubscriptions(int $limit = 10, int $page = 1, ?string $status = null): array
-    {
-        $params = ['limit' => $limit, 'page' => $page];
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', "/merchants/{$this->merchantId}/subscriptions", $params);
-    }
-
-    /**
-     * Get current merchant account info.
+     * Return one operation definition by slug.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', "/merchants/{$this->merchantId}");
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g., "/merchants/{id}/transactions").
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
-        }
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Braintree API.
-     *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException If the API key is missing or the request fails.
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Braintree access token is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
-        try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Braintree API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Braintree API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("Braintree API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Braintree API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) {
+                return $definition;
             }
+        }
+        throw new RuntimeException("Unsupported Braintree operation: {$operation}");
+    }
 
+    /**
+     * Execute an official GraphQL operation field using normalized tool arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function call(string $operation, array $args = []): array
+    {
+        $definition = $this->operation($operation);
+        [$query, $variables] = $this->buildDocument($definition, $args);
+        return $this->graphql($query, $variables);
+    }
+
+    /**
+     * Run a GraphQL document against Braintree.
+     *
+     * @param  array<string, mixed>  $variables  GraphQL variables.
+     * @return array<string, mixed>
+     */
+    public function graphql(string $query, array $variables = []): array
+    {
+        $response = $this->rawGraphql($query, $variables);
+        $json = $response->json() ?? [];
+        if (isset($json['errors']) && is_array($json['errors']) && $json['errors'] !== []) {
+            Log::error('Braintree GraphQL errors', ['errors' => $json['errors']]);
+            throw new RuntimeException('Braintree GraphQL error: '.json_encode($json['errors']));
+        }
+        return $json;
+    }
+
+    /**
+     * Build a GraphQL document and variable map for an operation definition.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>}
+     */
+    private function buildDocument(array $definition, array $args): array
+    {
+        $variables = [];
+        $declarations = [];
+        $fieldArgs = [];
+        foreach ($definition['parameters'] as $parameter) {
+            $param = (string) $parameter['param'];
+            $name = (string) $parameter['name'];
+            $required = (bool) ($parameter['required'] ?? false);
+            if (!array_key_exists($param, $args)) {
+                if ($required) {
+                    throw new RuntimeException("{$param} is required for {$definition['slug']}.");
+                }
+                continue;
+            }
+            $variables[$name] = $args[$param];
+            $declarations[] = '$'.$name.': '.$parameter['graphql_type'];
+            $fieldArgs[] = $name.': $'.$name;
+        }
+        if (isset($args['variables']) && is_array($args['variables'])) {
+            foreach ($args['variables'] as $name => $value) {
+                $variables[(string) $name] = $value;
+            }
+        }
+        $selection = trim((string) ($args['selection'] ?? ''));
+        if ($selection === '' && !($definition['returns_scalar'] ?? false)) {
+            $selection = '__typename';
+        }
+        $fieldCall = (string) $definition['field'].($fieldArgs === [] ? '' : '('.implode(', ', $fieldArgs).')');
+        if (!($definition['returns_scalar'] ?? false)) {
+            $fieldCall .= ' { '.$selection.' }';
+        }
+        $body = match ($definition['scope']) {
+            'search' => 'search { '.$fieldCall.' }',
+            'report' => 'report { '.$fieldCall.' }',
+            default => $fieldCall,
+        };
+        $operationName = str_replace(' ', '', ucwords(str_replace('_', ' ', (string) $definition['operation'])));
+        $declarationText = $declarations === [] ? '' : '('.implode(', ', $declarations).')';
+        $query = $definition['graphql_kind'].' Braintree'.$operationName.$declarationText.' { '.$body.' }';
+        return [$query, $variables];
+    }
+
+    /**
+     * Execute a raw GraphQL HTTP request.
+     *
+     * @param  array<string, mixed>  $variables  GraphQL variables.
+     */
+    private function rawGraphql(string $query, array $variables = []): Response
+    {
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Braintree credentials are not configured. Provide public/private keys or an OAuth access token.');
+        }
+        $headers = ['Accept' => 'application/json', 'Content-Type' => 'application/json', 'Braintree-Version' => $this->version ?: '2019-01-01'];
+        $headers['Authorization'] = $this->publicKey !== '' && $this->privateKey !== ''
+            ? 'Basic '.base64_encode($this->publicKey.':'.$this->privateKey)
+            : 'Bearer '.$this->accessToken;
+        try {
+            $response = Http::withHeaders($headers)->timeout(30)->post($this->baseUrl, ['query' => $query, 'variables' => $variables]);
+            if (!$response->successful()) {
+                Log::error('Braintree GraphQL HTTP error', ['status' => $response->status(), 'body' => $response->body()]);
+                throw new RuntimeException("Braintree GraphQL HTTP error ({$response->status()}): {$response->body()}");
+            }
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Braintree API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Braintree API: {$e->getMessage()}");
+            Log::error('Braintree GraphQL connection error', ['error' => $e->getMessage()]);
+            throw new RuntimeException("Failed to connect to Braintree GraphQL API: {$e->getMessage()}");
         }
     }
 }

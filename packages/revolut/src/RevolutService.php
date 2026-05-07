@@ -10,13 +10,15 @@ use Illuminate\Support\Facades\Log;
  */
 class RevolutService
 {
-    private const BASE_URL = 'https://api.revolut.com/v1';
+    private const BASE_URL = 'https://b2b.revolut.com/api/1.0';
 
     /**
      * @param  string  $accessToken  Revolut API access token
+     * @param  string  $baseUrl  Revolut Business API base URL
      */
     public function __construct(
         private string $accessToken = '',
+        private string $baseUrl = self::BASE_URL,
     ) {}
 
     public function isConfigured(): bool
@@ -46,6 +48,16 @@ class RevolutService
         return $this->request('GET', "/accounts/{$id}");
     }
 
+    /**
+     * Get full bank details for an account.
+     *
+     * @return array<string, mixed>
+     */
+    public function getAccountBankDetails(string $id): array
+    {
+        return $this->request('GET', "/accounts/{$id}/bank-details");
+    }
+
     // ── Transactions ───────────────────────────────────────
 
     /**
@@ -66,7 +78,18 @@ class RevolutService
      */
     public function getTransaction(string $id): array
     {
-        return $this->request('GET', "/transactions/{$id}");
+        return $this->request('GET', "/transaction/{$id}");
+    }
+
+    /**
+     * Get a transaction by ID or request ID.
+     *
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
+    public function getTransactionById(string $id, array $params = []): array
+    {
+        return $this->request('GET', "/transaction/{$id}", $params);
     }
 
     // ── Cards ──────────────────────────────────────────────
@@ -74,11 +97,12 @@ class RevolutService
     /**
      * List all cards.
      *
+     * @param  array<string, mixed>  $params
      * @return array<string, mixed>
      */
-    public function listCards(): array
+    public function listCards(array $params = []): array
     {
-        return $this->request('GET', '/cards');
+        return $this->request('GET', '/cards', $params);
     }
 
     /**
@@ -91,16 +115,39 @@ class RevolutService
         return $this->request('GET', "/cards/{$id}");
     }
 
-    // ── User ───────────────────────────────────────────────
+    /**
+     * Get sensitive card details.
+     *
+     * Requires Revolut's READ_SENSITIVE_CARD_DATA scope and IP whitelisting.
+     *
+     * @return array<string, mixed>
+     */
+    public function getSensitiveCardDetails(string $id): array
+    {
+        return $this->request('GET', "/cards/{$id}/sensitive-details");
+    }
+
+    // ── Team members ──────────────────────────────────────
 
     /**
-     * Get the current authenticated user.
+     * List team members with optional pagination.
+     *
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
+    public function listTeamMembers(array $params = []): array
+    {
+        return $this->request('GET', '/team-members', $params);
+    }
+
+    /**
+     * Explain that the Revolut Business API has no current-user endpoint.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/user');
+        throw new \RuntimeException('Revolut Business API does not expose a current-user endpoint. Use revolut_list_team_members for team visibility.');
     }
 
     // ── HTTP ───────────────────────────────────────────────
@@ -122,8 +169,8 @@ class RevolutService
                 ->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get(self::BASE_URL . $path, $data),
-                'POST' => $http->post(self::BASE_URL . $path, $data),
+                'GET' => $http->get($this->normalizedBaseUrl() . $path, $data),
+                'POST' => $http->post($this->normalizedBaseUrl() . $path, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
@@ -149,5 +196,10 @@ class RevolutService
             ]);
             throw new \RuntimeException("Failed to connect to Revolut API: {$e->getMessage()}");
         }
+    }
+
+    private function normalizedBaseUrl(): string
+    {
+        return rtrim($this->baseUrl ?: self::BASE_URL, '/');
     }
 }

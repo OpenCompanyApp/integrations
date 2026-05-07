@@ -15,6 +15,8 @@ class NetlifyCreateDeploy implements Tool
 {
     /**
      * Create a new NetlifyCreateDeploy tool instance.
+     *
+     * @param  NetlifyService  $service  The Netlify REST API client.
      */
     public function __construct(
         private NetlifyService $service,
@@ -67,10 +69,6 @@ class NetlifyCreateDeploy implements Tool
             $siteId = $args['site_id'];
             $body = $args['body'] ?? [];
 
-            if (isset($args['title'])) {
-                $body['title'] = $args['title'];
-            }
-
             if (isset($args['branch'])) {
                 $body['branch'] = $args['branch'];
             }
@@ -79,7 +77,12 @@ class NetlifyCreateDeploy implements Tool
                 $body['framework'] = $args['framework'];
             }
 
-            $result = $this->service->createDeploy($siteId, $body);
+            $query = [];
+            if (isset($args['title'])) {
+                $query['title'] = $args['title'];
+            }
+
+            $result = $this->service->createDeploy($siteId, $body, $query);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

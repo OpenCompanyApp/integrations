@@ -13,6 +13,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class HuggingFaceGetModel implements Tool
 {
+    /**
+     * @param  HuggingFaceService  $service  Hugging Face Hub API client.
+     */
     public function __construct(
         private HuggingFaceService $service,
     ) {}
@@ -34,6 +37,11 @@ class HuggingFaceGetModel implements Tool
         ];
     }
 
+    /**
+     * Fetch model details from the Hub.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (model_id)
+     */
     public function execute(array $args): ToolResult
     {
         try {

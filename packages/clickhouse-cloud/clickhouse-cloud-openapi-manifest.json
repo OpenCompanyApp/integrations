@@ -1,0 +1,779 @@
+{
+    "source_url": "https://api.clickhouse.cloud/v1",
+    "openapi": "3.1.2",
+    "title": "OpenAPI spec for ClickHouse Cloud",
+    "version": "1.0",
+    "base_url": "https://api.clickhouse.cloud",
+    "auth": "basic",
+    "method_count": 96,
+    "operations": [
+        {
+            "operation_id": "organizationGetList",
+            "class": "ClickHouseCloudOrganizationGetList",
+            "slug": "clickhouse_cloud_organization_get_list",
+            "method": "get",
+            "path": "/v1/organizations",
+            "type": "read"
+        },
+        {
+            "operation_id": "organizationGet",
+            "class": "ClickHouseCloudOrganizationGet",
+            "slug": "clickhouse_cloud_organization_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "organizationUpdate",
+            "class": "ClickHouseCloudOrganizationUpdate",
+            "slug": "clickhouse_cloud_organization_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "organizationPrometheusGet",
+            "class": "ClickHouseCloudOrganizationPrometheusGet",
+            "slug": "clickhouse_cloud_organization_prometheus_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/prometheus",
+            "type": "read"
+        },
+        {
+            "operation_id": "organizationRolesGetList",
+            "class": "ClickHouseCloudOrganizationRolesGetList",
+            "slug": "clickhouse_cloud_organization_roles_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "organizationRolePost",
+            "class": "ClickHouseCloudOrganizationRolePost",
+            "slug": "clickhouse_cloud_organization_role_post",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "organizationRoleGet",
+            "class": "ClickHouseCloudOrganizationRoleGet",
+            "slug": "clickhouse_cloud_organization_role_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/roles/{roleId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "organizationRolePatch",
+            "class": "ClickHouseCloudOrganizationRolePatch",
+            "slug": "clickhouse_cloud_organization_role_patch",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/roles/{roleId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "organizationRoleDelete",
+            "class": "ClickHouseCloudOrganizationRoleDelete",
+            "slug": "clickhouse_cloud_organization_role_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/roles/{roleId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceGetList",
+            "class": "ClickHouseCloudInstanceGetList",
+            "slug": "clickhouse_cloud_instance_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "instanceCreate",
+            "class": "ClickHouseCloudInstanceCreate",
+            "slug": "clickhouse_cloud_instance_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceGet",
+            "class": "ClickHouseCloudInstanceGet",
+            "slug": "clickhouse_cloud_instance_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "instanceUpdate",
+            "class": "ClickHouseCloudInstanceUpdate",
+            "slug": "clickhouse_cloud_instance_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceDelete",
+            "class": "ClickHouseCloudInstanceDelete",
+            "slug": "clickhouse_cloud_instance_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "instancePrivateEndpointConfigGet",
+            "class": "ClickHouseCloudInstancePrivateEndpointConfigGet",
+            "slug": "clickhouse_cloud_instance_private_endpoint_config_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/privateEndpointConfig",
+            "type": "read"
+        },
+        {
+            "operation_id": "instanceQueryEndpointGet",
+            "class": "ClickHouseCloudInstanceQueryEndpointGet",
+            "slug": "clickhouse_cloud_instance_query_endpoint_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/serviceQueryEndpoint",
+            "type": "read"
+        },
+        {
+            "operation_id": "instanceQueryEndpointUpsert",
+            "class": "ClickHouseCloudInstanceQueryEndpointUpsert",
+            "slug": "clickhouse_cloud_instance_query_endpoint_upsert",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/serviceQueryEndpoint",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceQueryEndpointDelete",
+            "class": "ClickHouseCloudInstanceQueryEndpointDelete",
+            "slug": "clickhouse_cloud_instance_query_endpoint_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/serviceQueryEndpoint",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceStateUpdate",
+            "class": "ClickHouseCloudInstanceStateUpdate",
+            "slug": "clickhouse_cloud_instance_state_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/state",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceScalingUpdate",
+            "class": "ClickHouseCloudInstanceScalingUpdate",
+            "slug": "clickhouse_cloud_instance_scaling_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/scaling",
+            "type": "write"
+        },
+        {
+            "operation_id": "instanceReplicaScalingUpdate",
+            "class": "ClickHouseCloudInstanceReplicaScalingUpdate",
+            "slug": "clickhouse_cloud_instance_replica_scaling_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/replicaScaling",
+            "type": "write"
+        },
+        {
+            "operation_id": "instancePasswordUpdate",
+            "class": "ClickHouseCloudInstancePasswordUpdate",
+            "slug": "clickhouse_cloud_instance_password_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/password",
+            "type": "write"
+        },
+        {
+            "operation_id": "instancePrivateEndpointCreate",
+            "class": "ClickHouseCloudInstancePrivateEndpointCreate",
+            "slug": "clickhouse_cloud_instance_private_endpoint_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/privateEndpoint",
+            "type": "write"
+        },
+        {
+            "operation_id": "instancePrometheusGet",
+            "class": "ClickHouseCloudInstancePrometheusGet",
+            "slug": "clickhouse_cloud_instance_prometheus_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/prometheus",
+            "type": "read"
+        },
+        {
+            "operation_id": "serviceClickhouseSettingsListGet",
+            "class": "ClickHouseCloudServiceClickhouseSettingsListGet",
+            "slug": "clickhouse_cloud_service_clickhouse_settings_list_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickhouseSettings",
+            "type": "read"
+        },
+        {
+            "operation_id": "serviceClickhouseSettingsUpdate",
+            "class": "ClickHouseCloudServiceClickhouseSettingsUpdate",
+            "slug": "clickhouse_cloud_service_clickhouse_settings_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickhouseSettings",
+            "type": "write"
+        },
+        {
+            "operation_id": "serviceClickhouseSettingsSchemaGet",
+            "class": "ClickHouseCloudServiceClickhouseSettingsSchemaGet",
+            "slug": "clickhouse_cloud_service_clickhouse_settings_schema_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickhouseSettings/schema",
+            "type": "read"
+        },
+        {
+            "operation_id": "serviceClickhouseSettingGet",
+            "class": "ClickHouseCloudServiceClickhouseSettingGet",
+            "slug": "clickhouse_cloud_service_clickhouse_setting_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickhouseSettings/{settingName}",
+            "type": "read"
+        },
+        {
+            "operation_id": "backupGetList",
+            "class": "ClickHouseCloudBackupGetList",
+            "slug": "clickhouse_cloud_backup_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backups",
+            "type": "read"
+        },
+        {
+            "operation_id": "backupGet",
+            "class": "ClickHouseCloudBackupGet",
+            "slug": "clickhouse_cloud_backup_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backups/{backupId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "backupConfigurationGet",
+            "class": "ClickHouseCloudBackupConfigurationGet",
+            "slug": "clickhouse_cloud_backup_configuration_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backupConfiguration",
+            "type": "read"
+        },
+        {
+            "operation_id": "backupConfigurationUpdate",
+            "class": "ClickHouseCloudBackupConfigurationUpdate",
+            "slug": "clickhouse_cloud_backup_configuration_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backupConfiguration",
+            "type": "write"
+        },
+        {
+            "operation_id": "backupBucketGet",
+            "class": "ClickHouseCloudBackupBucketGet",
+            "slug": "clickhouse_cloud_backup_bucket_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backupBucket",
+            "type": "read"
+        },
+        {
+            "operation_id": "backupBucketCreate",
+            "class": "ClickHouseCloudBackupBucketCreate",
+            "slug": "clickhouse_cloud_backup_bucket_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backupBucket",
+            "type": "write"
+        },
+        {
+            "operation_id": "backupBucketUpdate",
+            "class": "ClickHouseCloudBackupBucketUpdate",
+            "slug": "clickhouse_cloud_backup_bucket_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backupBucket",
+            "type": "write"
+        },
+        {
+            "operation_id": "backupBucketDelete",
+            "class": "ClickHouseCloudBackupBucketDelete",
+            "slug": "clickhouse_cloud_backup_bucket_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/backupBucket",
+            "type": "write"
+        },
+        {
+            "operation_id": "openapiKeyGetList",
+            "class": "ClickHouseCloudOpenapiKeyGetList",
+            "slug": "clickhouse_cloud_openapi_key_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/keys",
+            "type": "read"
+        },
+        {
+            "operation_id": "openapiKeyCreate",
+            "class": "ClickHouseCloudOpenapiKeyCreate",
+            "slug": "clickhouse_cloud_openapi_key_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/keys",
+            "type": "write"
+        },
+        {
+            "operation_id": "openapiKeyGet",
+            "class": "ClickHouseCloudOpenapiKeyGet",
+            "slug": "clickhouse_cloud_openapi_key_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/keys/{keyId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "openapiKeyUpdate",
+            "class": "ClickHouseCloudOpenapiKeyUpdate",
+            "slug": "clickhouse_cloud_openapi_key_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/keys/{keyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "openapiKeyDelete",
+            "class": "ClickHouseCloudOpenapiKeyDelete",
+            "slug": "clickhouse_cloud_openapi_key_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/keys/{keyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "memberGetList",
+            "class": "ClickHouseCloudMemberGetList",
+            "slug": "clickhouse_cloud_member_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/members",
+            "type": "read"
+        },
+        {
+            "operation_id": "memberGet",
+            "class": "ClickHouseCloudMemberGet",
+            "slug": "clickhouse_cloud_member_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/members/{userId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "memberUpdate",
+            "class": "ClickHouseCloudMemberUpdate",
+            "slug": "clickhouse_cloud_member_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/members/{userId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "memberDelete",
+            "class": "ClickHouseCloudMemberDelete",
+            "slug": "clickhouse_cloud_member_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/members/{userId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "invitationGetList",
+            "class": "ClickHouseCloudInvitationGetList",
+            "slug": "clickhouse_cloud_invitation_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/invitations",
+            "type": "read"
+        },
+        {
+            "operation_id": "invitationCreate",
+            "class": "ClickHouseCloudInvitationCreate",
+            "slug": "clickhouse_cloud_invitation_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/invitations",
+            "type": "write"
+        },
+        {
+            "operation_id": "invitationGet",
+            "class": "ClickHouseCloudInvitationGet",
+            "slug": "clickhouse_cloud_invitation_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/invitations/{invitationId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "invitationDelete",
+            "class": "ClickHouseCloudInvitationDelete",
+            "slug": "clickhouse_cloud_invitation_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/invitations/{invitationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "activityGetList",
+            "class": "ClickHouseCloudActivityGetList",
+            "slug": "clickhouse_cloud_activity_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/activities",
+            "type": "read"
+        },
+        {
+            "operation_id": "activityGet",
+            "class": "ClickHouseCloudActivityGet",
+            "slug": "clickhouse_cloud_activity_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/activities/{activityId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "usageCostGet",
+            "class": "ClickHouseCloudUsageCostGet",
+            "slug": "clickhouse_cloud_usage_cost_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/usageCost",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeGetList",
+            "class": "ClickHouseCloudClickPipeGetList",
+            "slug": "clickhouse_cloud_click_pipe_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeCreate",
+            "class": "ClickHouseCloudClickPipeCreate",
+            "slug": "clickhouse_cloud_click_pipe_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeGet",
+            "class": "ClickHouseCloudClickPipeGet",
+            "slug": "clickhouse_cloud_click_pipe_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeUpdate",
+            "class": "ClickHouseCloudClickPipeUpdate",
+            "slug": "clickhouse_cloud_click_pipe_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeDelete",
+            "class": "ClickHouseCloudClickPipeDelete",
+            "slug": "clickhouse_cloud_click_pipe_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeSettingsGet",
+            "class": "ClickHouseCloudClickPipeSettingsGet",
+            "slug": "clickhouse_cloud_click_pipe_settings_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}/settings",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeSettingsUpdate",
+            "class": "ClickHouseCloudClickPipeSettingsUpdate",
+            "slug": "clickhouse_cloud_click_pipe_settings_update",
+            "method": "put",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}/settings",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeScalingUpdate",
+            "class": "ClickHouseCloudClickPipeScalingUpdate",
+            "slug": "clickhouse_cloud_click_pipe_scaling_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}/scaling",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeStateUpdate",
+            "class": "ClickHouseCloudClickPipeStateUpdate",
+            "slug": "clickhouse_cloud_click_pipe_state_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipes/{clickPipeId}/state",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeCdcScalingGet",
+            "class": "ClickHouseCloudClickPipeCdcScalingGet",
+            "slug": "clickhouse_cloud_click_pipe_cdc_scaling_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipesCdcScaling",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeCdcScalingUpdate",
+            "class": "ClickHouseCloudClickPipeCdcScalingUpdate",
+            "slug": "clickhouse_cloud_click_pipe_cdc_scaling_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipesCdcScaling",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackListDashboards",
+            "class": "ClickHouseCloudClickStackListDashboards",
+            "slug": "clickhouse_cloud_click_stack_list_dashboards",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/dashboards",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickStackCreateDashboard",
+            "class": "ClickHouseCloudClickStackCreateDashboard",
+            "slug": "clickhouse_cloud_click_stack_create_dashboard",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/dashboards",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackGetDashboard",
+            "class": "ClickHouseCloudClickStackGetDashboard",
+            "slug": "clickhouse_cloud_click_stack_get_dashboard",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/dashboards/{clickStackDashboardId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickStackUpdateDashboard",
+            "class": "ClickHouseCloudClickStackUpdateDashboard",
+            "slug": "clickhouse_cloud_click_stack_update_dashboard",
+            "method": "put",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/dashboards/{clickStackDashboardId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackDeleteDashboard",
+            "class": "ClickHouseCloudClickStackDeleteDashboard",
+            "slug": "clickhouse_cloud_click_stack_delete_dashboard",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/dashboards/{clickStackDashboardId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackListAlerts",
+            "class": "ClickHouseCloudClickStackListAlerts",
+            "slug": "clickhouse_cloud_click_stack_list_alerts",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickStackCreateAlert",
+            "class": "ClickHouseCloudClickStackCreateAlert",
+            "slug": "clickhouse_cloud_click_stack_create_alert",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/alerts",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackListSources",
+            "class": "ClickHouseCloudClickStackListSources",
+            "slug": "clickhouse_cloud_click_stack_list_sources",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/sources",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickStackGetAlert",
+            "class": "ClickHouseCloudClickStackGetAlert",
+            "slug": "clickhouse_cloud_click_stack_get_alert",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/alerts/{clickStackAlertId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickStackUpdateAlert",
+            "class": "ClickHouseCloudClickStackUpdateAlert",
+            "slug": "clickhouse_cloud_click_stack_update_alert",
+            "method": "put",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/alerts/{clickStackAlertId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackDeleteAlert",
+            "class": "ClickHouseCloudClickStackDeleteAlert",
+            "slug": "clickhouse_cloud_click_stack_delete_alert",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/alerts/{clickStackAlertId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickStackListWebhooks",
+            "class": "ClickHouseCloudClickStackListWebhooks",
+            "slug": "clickhouse_cloud_click_stack_list_webhooks",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickstack/webhooks",
+            "type": "read"
+        },
+        {
+            "operation_id": "postgresServiceGetList",
+            "class": "ClickHouseCloudPostgresServiceGetList",
+            "slug": "clickhouse_cloud_postgres_service_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/postgres",
+            "type": "read"
+        },
+        {
+            "operation_id": "postgresServiceCreate",
+            "class": "ClickHouseCloudPostgresServiceCreate",
+            "slug": "clickhouse_cloud_postgres_service_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/postgres",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresServiceGet",
+            "class": "ClickHouseCloudPostgresServiceGet",
+            "slug": "clickhouse_cloud_postgres_service_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "postgresServicePatch",
+            "class": "ClickHouseCloudPostgresServicePatch",
+            "slug": "clickhouse_cloud_postgres_service_patch",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresServiceDelete",
+            "class": "ClickHouseCloudPostgresServiceDelete",
+            "slug": "clickhouse_cloud_postgres_service_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresServiceCertsGet",
+            "class": "ClickHouseCloudPostgresServiceCertsGet",
+            "slug": "clickhouse_cloud_postgres_service_certs_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/caCertificates",
+            "type": "read"
+        },
+        {
+            "operation_id": "postgresInstanceRestore",
+            "class": "ClickHouseCloudPostgresInstanceRestore",
+            "slug": "clickhouse_cloud_postgres_instance_restore",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/restoredService",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresServiceSetPassword",
+            "class": "ClickHouseCloudPostgresServiceSetPassword",
+            "slug": "clickhouse_cloud_postgres_service_set_password",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/password",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresServicePatchState",
+            "class": "ClickHouseCloudPostgresServicePatchState",
+            "slug": "clickhouse_cloud_postgres_service_patch_state",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/state",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresInstanceCreateReadReplica",
+            "class": "ClickHouseCloudPostgresInstanceCreateReadReplica",
+            "slug": "clickhouse_cloud_postgres_instance_create_read_replica",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/readReplica",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresInstanceConfigGet",
+            "class": "ClickHouseCloudPostgresInstanceConfigGet",
+            "slug": "clickhouse_cloud_postgres_instance_config_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/config",
+            "type": "read"
+        },
+        {
+            "operation_id": "postgresInstanceConfigPost",
+            "class": "ClickHouseCloudPostgresInstanceConfigPost",
+            "slug": "clickhouse_cloud_postgres_instance_config_post",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/config",
+            "type": "write"
+        },
+        {
+            "operation_id": "postgresInstanceConfigPatch",
+            "class": "ClickHouseCloudPostgresInstanceConfigPatch",
+            "slug": "clickhouse_cloud_postgres_instance_config_patch",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/postgres/{postgresId}/config",
+            "type": "write"
+        },
+        {
+            "operation_id": "organizationPrivateEndpointConfigGetList",
+            "class": "ClickHouseCloudOrganizationPrivateEndpointConfigGetList",
+            "slug": "clickhouse_cloud_organization_private_endpoint_config_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/privateEndpointConfig",
+            "type": "read"
+        },
+        {
+            "operation_id": "organizationByocInfrastructureCreate",
+            "class": "ClickHouseCloudOrganizationByocInfrastructureCreate",
+            "slug": "clickhouse_cloud_organization_byoc_infrastructure_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/byocInfrastructure",
+            "type": "write"
+        },
+        {
+            "operation_id": "organizationByocInfrastructureUpdate",
+            "class": "ClickHouseCloudOrganizationByocInfrastructureUpdate",
+            "slug": "clickhouse_cloud_organization_byoc_infrastructure_update",
+            "method": "patch",
+            "path": "/v1/organizations/{organizationId}/byocInfrastructure/{byocInfrastructureId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "organizationByocInfrastructureDelete",
+            "class": "ClickHouseCloudOrganizationByocInfrastructureDelete",
+            "slug": "clickhouse_cloud_organization_byoc_infrastructure_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/byocInfrastructure/{byocInfrastructureId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeReversePrivateEndpointGetList",
+            "class": "ClickHouseCloudClickPipeReversePrivateEndpointGetList",
+            "slug": "clickhouse_cloud_click_pipe_reverse_private_endpoint_get_list",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipesReversePrivateEndpoints",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeReversePrivateEndpointCreate",
+            "class": "ClickHouseCloudClickPipeReversePrivateEndpointCreate",
+            "slug": "clickhouse_cloud_click_pipe_reverse_private_endpoint_create",
+            "method": "post",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipesReversePrivateEndpoints",
+            "type": "write"
+        },
+        {
+            "operation_id": "clickPipeReversePrivateEndpointGet",
+            "class": "ClickHouseCloudClickPipeReversePrivateEndpointGet",
+            "slug": "clickhouse_cloud_click_pipe_reverse_private_endpoint_get",
+            "method": "get",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipesReversePrivateEndpoints/{reversePrivateEndpointId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "clickPipeReversePrivateEndpointDelete",
+            "class": "ClickHouseCloudClickPipeReversePrivateEndpointDelete",
+            "slug": "clickhouse_cloud_click_pipe_reverse_private_endpoint_delete",
+            "method": "delete",
+            "path": "/v1/organizations/{organizationId}/services/{serviceId}/clickpipesReversePrivateEndpoints/{reversePrivateEndpointId}",
+            "type": "write"
+        }
+    ]
+}

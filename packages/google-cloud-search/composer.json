@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-google-cloud-search",
+    "description": "Google Cloud Search integration for Laravel AI agents - query, suggest, indexing, data sources, search applications, debug, settings, stats, media upload, and operations.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GoogleCloudSearch\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GoogleCloudSearch\\GoogleCloudSearchServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "google",
+        "cloud-search",
+        "workspace",
+        "search",
+        "indexing",
+        "opencompany"
+    ]
+}

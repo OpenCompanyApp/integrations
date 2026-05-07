@@ -9,7 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool: List Contacts
  *
- * Lists contacts from Insightly CRM with optional pagination and search.
+ * Lists contacts from Insightly CRM with optional pagination.
  *
  * @see https://api.na1.insightly.com/v3.1/Help#!/Contacts/GetEntities
  */
@@ -37,7 +37,7 @@ class InsightlyListContacts implements Tool
      */
     public function description(): string
     {
-        return 'List contacts from Insightly CRM. Returns contact records with names, emails, phones, and organization info. Use top/skip for pagination and search to filter by name or email.';
+        return 'List contacts from Insightly CRM. Returns contact records with names, emails, phones, and organization info. Use top/skip for pagination.';
     }
 
     /**
@@ -50,14 +50,15 @@ class InsightlyListContacts implements Tool
         return [
             'top' => ['type' => 'integer', 'description' => 'Maximum number of contacts to return.'],
             'skip' => ['type' => 'integer', 'description' => 'Number of contacts to skip for pagination.'],
-            'search' => ['type' => 'string', 'description' => 'Search term to filter contacts by name or email.'],
+            'brief' => ['type' => 'boolean', 'description' => 'Return only top-level contact properties.'],
+            'count_total' => ['type' => 'boolean', 'description' => 'Ask Insightly to include total count metadata.'],
         ];
     }
 
     /**
      * Execute the list contacts tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (top, skip, search).
+     * @param  array<string, mixed>  $args  Tool arguments (top, skip, brief, count_total).
      * @return ToolResult The list of contacts or an error message.
      */
     public function execute(array $args): ToolResult
@@ -70,7 +71,8 @@ class InsightlyListContacts implements Tool
             $result = $this->service->listContacts(
                 top: isset($args['top']) ? (int) $args['top'] : null,
                 skip: isset($args['skip']) ? (int) $args['skip'] : null,
-                search: $args['search'] ?? null,
+                brief: isset($args['brief']) ? (bool) $args['brief'] : null,
+                countTotal: isset($args['count_total']) ? (bool) $args['count_total'] : null,
             );
 
             return ToolResult::success([

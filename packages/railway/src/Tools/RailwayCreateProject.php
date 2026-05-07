@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Railway\RailwayService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a new Railway project.
+ *
+ * Supports a required project name and optional description.
+ */
 class RailwayCreateProject implements Tool
 {
+    /**
+     * @param  RailwayService  $service  The Railway GraphQL API client.
+     */
     public function __construct(
         private RailwayService $service,
     ) {}
@@ -30,6 +38,11 @@ class RailwayCreateProject implements Tool
         ];
     }
 
+    /**
+     * Create a project and return its normalized identifiers and timestamps.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (name, description)
+     */
     public function execute(array $args): ToolResult
     {
         try {

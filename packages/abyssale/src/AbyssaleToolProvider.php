@@ -3,22 +3,34 @@
 namespace OpenCompany\Integrations\Abyssale;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleCreateGeneration;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetCurrentUser;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetGeneration;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetTemplate;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleListFormats;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleListGenerations;
-use OpenCompany\Integrations\Abyssale\Tools\AbyssaleListTemplates;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleApiGet;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleApiPost;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleCreateBannerExport;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleCreateDynamicImageUrl;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleCreateProject;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleDuplicateWorkspaceTemplate;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGenerateImage;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGenerateMultiFormatMedia;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGenerateMultiPagePdf;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetDesign;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetDesignFormat;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetDuplicationRequest;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleGetFile;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleListDesigns;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleListFonts;
+use OpenCompany\Integrations\Abyssale\Tools\AbyssaleListProjects;
 
 /**
+ * Exposes the Abyssale integration catalog, credentials, and tool factory.
+ */
+class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +38,36 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'api_key_header',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Abyssale expects the API key in the x-api-key header.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +80,7 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'label' => 'Abyssale',
-            'description' => 'Automated image generation',
+            'description' => 'Creative automation and visual generation',
             'icon' => 'ph:image',
             'logo' => 'simple-icons:abyssale',
         ];
@@ -89,75 +90,52 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'name' => 'Abyssale',
-            'description' => 'Automated image and banner generation platform',
+            'description' => 'Automated image, video, PDF, HTML5, export, project, and dynamic-image generation',
             'icon' => 'ph:image',
             'logo' => 'simple-icons:abyssale',
-            'category' => 'media',
+            'category' => 'rendering',
             'badge' => 'verified',
-            'docs_url' => 'https://api.abyssale.com/docs',
-        ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Abyssale access token',
-                'hint' => 'Find your API key in Abyssale under Settings → API Keys',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.abyssale.com',
-                'hint' => 'Defaults to <code>https://api.abyssale.com</code>. Change only if using a custom endpoint.',
-                'default' => 'https://api.abyssale.com',
-            ],
+            'docs_url' => 'https://api-reference.abyssale.com/',
         ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate credentials with a lightweight design-list request.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.abyssale.com', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) (($config['url'] ?? '') ?: 'https://api.abyssale.com'), '/');
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        if ($accessToken === '') {
+            return ['success' => false, 'error' => 'Abyssale API key is required.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
+                'x-api-key' => $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/v2/users/me');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Abyssale API at {$baseUrl}. Check the URL.",
-                ];
-            }
+            ])->timeout(10)->get($baseUrl.'/designs');
 
             if (!$response->successful()) {
-                $error = $json['error'] ?? $json['message'] ?? 'Unknown error';
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+
                 return [
                     'success' => false,
-                    'error' => "Abyssale API returned an error: {$error}",
+                    'error' => 'Abyssale API returned an error: '.(is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
-            $name = trim(($json['first_name'] ?? '') . ' ' . ($json['last_name'] ?? ''));
-            $email = $json['email'] ?? 'unknown';
-
-            return [
-                'success' => true,
-                'message' => "Connected to Abyssale as {$name} ({$email}).",
-            ];
-        } catch (\Exception $e) {
+            return ['success' => true, 'message' => 'Connected to Abyssale.'];
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -165,7 +143,7 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function validationRules(): array
     {
         return [
-            'access_token' => 'nullable|string',
+            'access_token' => 'required|string',
             'url' => 'nullable|url',
         ];
     }
@@ -173,65 +151,34 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function tools(): array
     {
         return [
-            'abyssale_list_generations' => [
-                'class' => AbyssaleListGenerations::class,
-                'type' => 'read',
-                'name' => 'List Generations',
-                'description' => 'List image generation jobs.',
-                'icon' => 'ph:images',
-            ],
-            'abyssale_get_generation' => [
-                'class' => AbyssaleGetGeneration::class,
-                'type' => 'read',
-                'name' => 'Get Generation',
-                'description' => 'Get details of a specific image generation.',
-                'icon' => 'ph:image',
-            ],
-            'abyssale_create_generation' => [
-                'class' => AbyssaleCreateGeneration::class,
-                'type' => 'write',
-                'name' => 'Create Generation',
-                'description' => 'Generate images from a template.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'abyssale_list_templates' => [
-                'class' => AbyssaleListTemplates::class,
-                'type' => 'read',
-                'name' => 'List Templates',
-                'description' => 'List available design templates.',
-                'icon' => 'ph:layout',
-            ],
-            'abyssale_get_template' => [
-                'class' => AbyssaleGetTemplate::class,
-                'type' => 'read',
-                'name' => 'Get Template',
-                'description' => 'Get details of a specific template.',
-                'icon' => 'ph:layout',
-            ],
-            'abyssale_list_formats' => [
-                'class' => AbyssaleListFormats::class,
-                'type' => 'read',
-                'name' => 'List Formats',
-                'description' => 'List available output formats.',
-                'icon' => 'ph:crop',
-            ],
-            'abyssale_get_current_user' => [
-                'class' => AbyssaleGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user profile.',
-                'icon' => 'ph:user-circle',
-            ],
+            'abyssale_list_designs' => $this->tool(AbyssaleListDesigns::class, 'read', 'List Designs', 'List Abyssale designs available to the API key.'),
+            'abyssale_get_design' => $this->tool(AbyssaleGetDesign::class, 'read', 'Get Design', 'Get design metadata, formats, and editable elements.'),
+            'abyssale_get_design_format' => $this->tool(AbyssaleGetDesignFormat::class, 'read', 'Get Design Format', 'Get details for a specific design format.'),
+            'abyssale_generate_image' => $this->tool(AbyssaleGenerateImage::class, 'write', 'Generate Image', 'Synchronously generate one static image.'),
+            'abyssale_generate_multi_format_media' => $this->tool(AbyssaleGenerateMultiFormatMedia::class, 'write', 'Generate Multi-Format Media', 'Asynchronously generate images, videos, PDFs, GIFs, or HTML5.'),
+            'abyssale_list_fonts' => $this->tool(AbyssaleListFonts::class, 'read', 'List Fonts', 'List custom and Google fonts.'),
+            'abyssale_create_banner_export' => $this->tool(AbyssaleCreateBannerExport::class, 'write', 'Create Banner Export', 'Create an asynchronous ZIP export for generated banners.'),
+            'abyssale_get_file' => $this->tool(AbyssaleGetFile::class, 'read', 'Get File', 'Get a generated file by banner ID.'),
+            'abyssale_list_projects' => $this->tool(AbyssaleListProjects::class, 'read', 'List Projects', 'List Abyssale projects.'),
+            'abyssale_create_project' => $this->tool(AbyssaleCreateProject::class, 'write', 'Create Project', 'Create an Abyssale project.'),
+            'abyssale_duplicate_workspace_template' => $this->tool(AbyssaleDuplicateWorkspaceTemplate::class, 'write', 'Duplicate Workspace Template', 'Duplicate a workspace template into a project.'),
+            'abyssale_get_duplication_request' => $this->tool(AbyssaleGetDuplicationRequest::class, 'read', 'Get Duplication Request', 'Get duplication request status.'),
+            'abyssale_create_dynamic_image_url' => $this->tool(AbyssaleCreateDynamicImageUrl::class, 'write', 'Create Dynamic Image URL', 'Create or retrieve a dynamic image URL for a design.'),
+            'abyssale_generate_multi_page_pdf' => $this->tool(AbyssaleGenerateMultiPagePdf::class, 'write', 'Generate Multi-Page PDF', 'Asynchronously generate a multi-page PDF.'),
+            'abyssale_api_get' => $this->tool(AbyssaleApiGet::class, 'read', 'Abyssale API GET', 'Call a documented Abyssale GET endpoint not yet wrapped by a named tool.'),
+            'abyssale_api_post' => $this->tool(AbyssaleApiPost::class, 'write', 'Abyssale API POST', 'Call a documented Abyssale POST endpoint not yet wrapped by a named tool.'),
         ];
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/abyssale.md';
-    }    public function credentialFields(): array
+        return __DIR__.'/../lua-docs/abyssale.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
             ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.abyssale.com'],
         ];
     }
@@ -241,21 +188,52 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return true;
     }
 
+    /**
+     * Create a tool instance with optional multi-account credential resolution.
+     *
+     * @param  class-string<Tool>  $class  The tool class to instantiate.
+     * @param  array<string, mixed>  $context  Runtime context, may include an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Abyssale API client for default or account-specific credentials.
+     *
+     * @param  array<string, mixed>  $context  Runtime context with optional account key.
+     */
+    private function resolveService(array $context = []): AbyssaleService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new AbyssaleService(
-                accessToken: $creds->get('abyssale', 'access_token', '', $account),
+            return new AbyssaleService(
+                apiKey: $creds->get('abyssale', 'access_token', '', $account),
                 baseUrl: $creds->get('abyssale', 'url', 'https://api.abyssale.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(AbyssaleService::class));
+        return app(AbyssaleService::class);
+    }
+
+    /**
+     * Build catalog metadata for a tool class.
+     *
+     * @param  class-string<Tool>  $class  Tool class name.
+     * @return array<string, mixed>
+     */
+    private function tool(string $class, string $type, string $name, string $description): array
+    {
+        return [
+            'class' => $class,
+            'type' => $type,
+            'name' => $name,
+            'description' => $description,
+            'icon' => 'ph:wrench',
+        ];
     }
 }

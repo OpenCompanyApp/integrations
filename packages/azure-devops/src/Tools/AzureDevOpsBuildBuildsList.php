@@ -1,0 +1,26 @@
+<?php
+
+namespace OpenCompany\Integrations\AzureDevOps\Tools;
+
+/**
+ * Gets a list of builds..
+ *
+ * Maps to Azure DevOps REST API 7.2 endpoint GET https://dev.azure.com/{organization}/{project}/_apis/build/builds.
+ */
+class AzureDevOpsBuildBuildsList extends AbstractAzureDevOpsTool
+{
+    protected const NAME = 'azure_devops_build_builds_list';
+    protected const DESCRIPTION = 'Gets a list of builds.
+
+Official Azure DevOps REST API 7.2 endpoint: GET https://dev.azure.com/{organization}/{project}/_apis/build/builds (spec: build/7.2/build.json).';
+    protected const PARAMETERS = ['organization' => ['type' => 'string', 'required' => true, 'description' => 'The name of the Azure DevOps organization.'], 'project' => ['type' => 'string', 'required' => true, 'description' => 'Project ID or project name'], 'definitions' => ['type' => 'string', 'required' => false, 'description' => 'A comma-delimited list of definition IDs. If specified, filters to builds for these definitions.'], 'queues' => ['type' => 'string', 'required' => false, 'description' => 'A comma-delimited list of queue IDs. If specified, filters to builds that ran against these queues.'], 'build_number' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that match this build number. Append * to do a prefix search.'], 'min_time' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that finished/started/queued after this date based on the queryOrder specified.'], 'max_time' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that finished/started/queued before this date based on the queryOrder specified.'], 'requested_for' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds requested for the specified user.'], 'reason_filter' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that match this reason.'], 'status_filter' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that match this status.'], 'result_filter' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that match this result.'], 'tag_filters' => ['type' => 'string', 'required' => false, 'description' => 'A comma-delimited list of tags. If specified, filters to builds that have the specified tags.'], 'properties' => ['type' => 'string', 'required' => false, 'description' => 'A comma-delimited list of properties to retrieve.'], 'top' => ['type' => 'number', 'required' => false, 'description' => 'The maximum number of builds to return.'], 'continuation_token' => ['type' => 'string', 'required' => false, 'description' => 'A continuation token, returned by a previous call to this method, that can be used to return the next set of builds.'], 'max_builds_per_definition' => ['type' => 'number', 'required' => false, 'description' => 'The maximum number of builds to return per definition.'], 'deleted_filter' => ['type' => 'string', 'required' => false, 'description' => 'Indicates whether to exclude, include, or only return deleted builds.'], 'query_order' => ['type' => 'string', 'required' => false, 'description' => 'The order in which builds should be returned.'], 'branch_name' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that built branches that built this branch.'], 'build_ids' => ['type' => 'string', 'required' => false, 'description' => 'A comma-delimited list that specifies the IDs of builds to retrieve.'], 'repository_id' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that built from this repository.'], 'repository_type' => ['type' => 'string', 'required' => false, 'description' => 'If specified, filters to builds that built from repositories of this type.'], 'api_version' => ['type' => 'string', 'required' => false, 'description' => 'Azure DevOps API version. Defaults to `7.2-preview.8`.']];
+    protected const METHOD = 'GET';
+    protected const HOST = 'dev.azure.com';
+    protected const PATH = '/{organization}/{project}/_apis/build/builds';
+    protected const PATH_PARAMS = ['organization' => 'organization', 'project' => 'project'];
+    protected const QUERY_PARAMS = ['definitions' => 'definitions', 'queues' => 'queues', 'buildNumber' => 'build_number', 'minTime' => 'min_time', 'maxTime' => 'max_time', 'requestedFor' => 'requested_for', 'reasonFilter' => 'reason_filter', 'statusFilter' => 'status_filter', 'resultFilter' => 'result_filter', 'tagFilters' => 'tag_filters', 'properties' => 'properties', '$top' => 'top', 'continuationToken' => 'continuation_token', 'maxBuildsPerDefinition' => 'max_builds_per_definition', 'deletedFilter' => 'deleted_filter', 'queryOrder' => 'query_order', 'branchName' => 'branch_name', 'buildIds' => 'build_ids', 'repositoryId' => 'repository_id', 'repositoryType' => 'repository_type', 'api-version' => 'api_version'];
+    protected const HEADER_PARAMS = [];
+    protected const BODY_REQUIRED = false;
+    protected const BODY_MODE = 'json';
+    protected const API_VERSION = '7.2-preview.8';
+}

@@ -107,7 +107,7 @@ class LemlistToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Email outreach and sales engagement platform',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:lemlist',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.lemlist.com/',
         ];

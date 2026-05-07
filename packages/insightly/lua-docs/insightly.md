@@ -1,188 +1,106 @@
-# Insightly CRM — Lua API Reference
+# Insightly CRM Lua Reference
 
-## list_contacts
+Namespace: `app.integrations.insightly`
 
-List contacts from Insightly CRM.
+Use Insightly field names for create and update bodies. Most record fields are
+uppercase, such as `FIRST_NAME`, `ORGANISATION_NAME`, `OPPORTUNITY_NAME`,
+`PROJECT_NAME`, `TASK_ID`, `TITLE`, `BODY`, and `CUSTOMFIELDS`.
 
-### Parameters
+## Common Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `top` | integer | no | Maximum number of contacts to return |
-| `skip` | integer | no | Number of contacts to skip for pagination |
-| `search` | string | no | Search term to filter contacts by name or email |
+List and search tools commonly accept:
 
-### Example
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `top` | integer | Maximum number of records to return. |
+| `skip` | integer | Number of records to skip. |
+| `brief` | boolean | Return only top-level fields when Insightly supports it. |
+| `count_total` | boolean | Ask Insightly to include total count metadata. |
 
-```lua
-local result = app.integrations.insightly.list_contacts({
-  top = 20,
-  search = "John"
-})
+Field search tools accept `field_name`, `field_value`, and
+`updated_after_utc`. Tag search tools require `tagName`.
 
-for _, contact in ipairs(result.contacts) do
-  print(contact.FIRST_NAME .. " " .. contact.LAST_NAME .. " - " .. (contact.EMAIL_ADDRESS or "no email"))
-end
-```
+## Core Records
 
----
-
-## get_contact
-
-Get a single contact by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Insightly contact ID |
-
-### Example
+Tools include list, get, create, update, delete, field search, and tag search
+for contacts, organizations, leads, opportunities, and projects where the
+official API exposes those operations.
 
 ```lua
-local result = app.integrations.insightly.get_contact({ id = 12345 })
-print(result.FIRST_NAME .. " " .. result.LAST_NAME)
-print("Email: " .. (result.EMAIL_ADDRESS or "N/A"))
-print("Title: " .. (result.TITLE or "N/A"))
-```
-
----
-
-## create_contact
-
-Create a new contact in Insightly.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `first_name` | string | no | First name |
-| `last_name` | string | no | Last name |
-| `email` | string | no | Primary email address |
-| `phone` | string | no | Primary phone number |
-
-### Example
-
-```lua
-local result = app.integrations.insightly.create_contact({
-  first_name = "Jane",
-  last_name = "Smith",
-  email = "jane@example.com",
+local contact = app.integrations.insightly.create_contact({
+  first_name = "Ada",
+  last_name = "Example",
+  email = "ada@example.test",
   phone = "+1-555-0100"
 })
 
-print("Created contact ID: " .. result.CONTACT_ID)
-```
-
----
-
-## list_opportunities
-
-List opportunities from Insightly CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `top` | integer | no | Maximum number of opportunities to return |
-| `skip` | integer | no | Number of opportunities to skip for pagination |
-| `status` | string | no | Filter by status (e.g., "Open", "Won", "Lost", "Suspended") |
-
-### Example
-
-```lua
-local result = app.integrations.insightly.list_opportunities({
-  top = 10,
-  status = "Open"
+local contacts = app.integrations.insightly.search_contacts({
+  field_name = "EMAIL_ADDRESS",
+  field_value = "ada@example.test"
 })
 
-for _, opp in ipairs(result.opportunities) do
-  print(opp.OPPORTUNITY_NAME .. " - $" .. (opp.BID_AMOUNT or 0))
-end
+local opportunity = app.integrations.insightly.update_opportunity({
+  id = 12345,
+  OPPORTUNITY_NAME = "Renewal",
+  BID_AMOUNT = 25000,
+  OPPORTUNITY_STATE = "OPEN"
+})
 ```
 
----
+## Activities
 
-## get_opportunity
-
-Get a single opportunity by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Insightly opportunity ID |
-
-### Example
+Use task tools for agent follow-up work and event tools for calendar-style CRM
+activity. Note creation is exposed through the official note-comment and note
+update/read endpoints in this package; parent record note endpoints can be
+added separately if a host needs them.
 
 ```lua
-local result = app.integrations.insightly.get_opportunity({ id = 67890 })
-print(result.OPPORTUNITY_NAME)
-print("Amount: $" .. (result.BID_AMOUNT or 0))
-print("Stage: " .. (result.PIPELINE_NAME or "N/A"))
-```
-
----
-
-## list_projects
-
-List projects from Insightly CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `top` | integer | no | Maximum number of projects to return |
-| `skip` | integer | no | Number of projects to skip for pagination |
-| `status` | string | no | Filter by status (e.g., "In Progress", "Completed", "Scheduled") |
-
-### Example
-
-```lua
-local result = app.integrations.insightly.list_projects({
-  top = 15,
-  status = "In Progress"
+local task = app.integrations.insightly.create_task({
+  TITLE = "Send renewal proposal",
+  DUE_DATE = "2026-05-20T12:00:00Z",
+  OPPORTUNITY_ID = 12345,
+  RESPONSIBLE_USER_ID = 678
 })
 
-for _, project in ipairs(result.projects) do
-  print(project.PROJECT_NAME .. " - " .. project.STATUS)
-end
+local event = app.integrations.insightly.create_event({
+  TITLE = "Implementation call",
+  START_DATE_UTC = "2026-05-21T15:00:00Z",
+  END_DATE_UTC = "2026-05-21T15:30:00Z"
+})
 ```
 
----
+## Metadata
 
-## get_current_user
+Metadata tools help agents choose valid IDs before writing records:
 
-Get the profile of the currently authenticated Insightly user.
-
-### Parameters
-
-None.
-
-### Example
+- `list_pipelines`, `get_pipeline`, `list_pipeline_stages`,
+  `get_pipeline_stage`
+- `list_activity_sets`, `get_activity_set`
+- `list_task_categories`, `create_task_category`, `update_task_category`,
+  `delete_task_category`
+- `list_lead_sources`, `list_lead_statuses`, `list_opportunity_categories`,
+  `list_project_categories`
+- `list_custom_fields`, `search_custom_fields`
+- `list_countries`, `list_currencies`, `list_tags`, `list_permissions`,
+  `get_instance`
 
 ```lua
-local result = app.integrations.insightly.get_current_user({})
-print("User: " .. result.FIRST_NAME .. " " .. result.LAST_NAME)
-print("Email: " .. (result.EMAIL or "N/A"))
+local fields = app.integrations.insightly.list_custom_fields({
+  objectName = "Contacts"
+})
+
+local stages = app.integrations.insightly.list_pipeline_stages({})
 ```
 
----
+## Return Shape
+
+Tools return the decoded Insightly JSON response. Legacy hand-written list tools
+for contacts, opportunities, and projects wrap results as `{ records, count }`
+style arrays; endpoint tools return the API response directly.
 
 ## Multi-Account Usage
 
-If you have multiple Insightly accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.insightly.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.insightly.default.function_name({...})
-
--- Named accounts
-app.integrations.insightly.production.function_name({...})
-app.integrations.insightly.staging.function_name({...})
+app.integrations.insightly.list_contacts({ top = 10 })
+app.integrations.insightly.production.list_contacts({ top = 10 })
 ```
-
-All functions are identical across accounts — only the credentials differ.

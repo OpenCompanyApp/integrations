@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
  */
 class VimeoListVideos implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -31,7 +34,7 @@ class VimeoListVideos implements Tool
     public function parameters(): array
     {
         return [
-            'per_page' => ['type' => 'integer', 'description' => 'Number of videos per page (1–100, default: 25).'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of videos per page (1-100, default: 25).'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
             'query' => ['type' => 'string', 'description' => 'Full-text search query to filter videos by name or description.'],
             'filter' => ['type' => 'string', 'description' => 'Filter category: "embeddable", "playable", "purchase_price", "privacy".'],
@@ -43,7 +46,9 @@ class VimeoListVideos implements Tool
     }
 
     /**
-     * @param  array<string, mixed>  $args
+     * List videos.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

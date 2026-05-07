@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Square\SquareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Square business locations.
+ *
+ * Returns all locations configured for the authenticated merchant account.
+ */
 class SquareListLocations implements Tool
 {
     /**

@@ -5,21 +5,19 @@ namespace OpenCompany\Integrations\Directus;
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Directus\Tools\DirectusCreateItem;
-use OpenCompany\Integrations\Directus\Tools\DirectusDeleteItem;
-use OpenCompany\Integrations\Directus\Tools\DirectusGetCurrentUser;
-use OpenCompany\Integrations\Directus\Tools\DirectusGetItem;
-use OpenCompany\Integrations\Directus\Tools\DirectusListCollections;
-use OpenCompany\Integrations\Directus\Tools\DirectusListItems;
-use OpenCompany\Integrations\Directus\Tools\DirectusUpdateItem;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
 
 /**
+ * Tool catalog and setup metadata for the Directus integration.
+ *
+ * Exposes generated tools for the official Directus OpenAPI specification and
+ * resolves account-specific Directus tokens for host applications.
+ */
+class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -27,47 +25,27 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Directus requests use Authorization: Bearer with a static token or temporary access token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -80,7 +58,7 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'label' => 'Directus',
-            'description' => 'Headless CMS & data platform',
+            'description' => 'Items, collections, files, users, roles, permissions, flows, schema, utilities, and versions',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:directus',
         ];
@@ -90,14 +68,17 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'name' => 'Directus',
-            'description' => 'Open-source headless CMS and data platform for managing SQL databases via REST API.',
+            'description' => 'Manage Directus content, collections, files, users, roles, permissions, flows, schema, utilities, settings, and content versions through the official REST API.',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:directus',
             'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.directus.io/reference/introduction.html',
+            'docs_url' => 'https://docs.directus.io/reference/introduction',
+            'source_url' => 'https://unpkg.com/@directus/specs@13.0.0/dist/openapi.json',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -105,7 +86,7 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'type' => 'secret',
                 'label' => 'Access Token',
                 'placeholder' => 'Enter your Directus access token',
-                'hint' => 'Generate a static token in <strong>Settings → Access Tokens</strong> or use your user\'s temporary token.',
+                'hint' => 'Generate a static token in Directus user settings or use a temporary access token.',
                 'required' => true,
             ],
             [
@@ -113,51 +94,59 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'type' => 'url',
                 'label' => 'Instance URL',
                 'placeholder' => 'https://your-directus.example.com',
-                'hint' => 'The base URL of your Directus instance (no trailing slash).',
+                'hint' => 'The base URL of your Directus instance without a trailing slash.',
                 'required' => true,
             ],
         ];
     }
 
+    /**
+     * Test the configured Directus token with the current-user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? '', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? ''), '/');
 
-        if (empty($accessToken)) {
+        if ($accessToken === '') {
             return ['success' => false, 'error' => 'No access token provided.'];
         }
 
-        if (empty($baseUrl)) {
+        if ($baseUrl === '') {
             return ['success' => false, 'error' => 'No instance URL provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl . '/users/me');
 
-            if ($response->successful()) {
-                $user = $response->json('data');
+            if (!$response->successful()) {
+                $message = $response->json('errors.0.message') ?? $response->json('message') ?? $response->body();
 
                 return [
-                    'success' => true,
-                    'message' => "Connected to Directus at {$baseUrl}" . ($user ? " as {$user['email']}" : '') . '.',
+                    'success' => false,
+                    'error' => "Directus API error ({$response->status()}): {$message}",
                 ];
             }
 
-            $error = $response->json('errors.0.message') ?? "HTTP {$response->status()}";
+            $user = $response->json('data');
+            $identity = is_array($user) && isset($user['email']) ? " as {$user['email']}" : '';
 
             return [
-                'success' => false,
-                'error' => "Directus returned an error: {$error}",
+                'success' => true,
+                'message' => "Connected to Directus{$identity}.",
             ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => "Could not reach Directus at {$baseUrl}: {$e->getMessage()}"];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
@@ -166,70 +155,37 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    /**
+     * Register generated Directus OpenAPI tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
-        return [
-            'directus_list_items' => [
-                'class' => DirectusListItems::class,
-                'type' => 'read',
-                'name' => 'List Items',
-                'description' => 'List items in a Directus collection with filtering, sorting, and pagination.',
-                'icon' => 'ph:list',
-            ],
-            'directus_get_item' => [
-                'class' => DirectusGetItem::class,
-                'type' => 'read',
-                'name' => 'Get Item',
-                'description' => 'Retrieve a single item from a Directus collection by ID.',
-                'icon' => 'ph:eye',
-            ],
-            'directus_create_item' => [
-                'class' => DirectusCreateItem::class,
-                'type' => 'write',
-                'name' => 'Create Item',
-                'description' => 'Create a new item in a Directus collection.',
-                'icon' => 'ph:plus',
-            ],
-            'directus_update_item' => [
-                'class' => DirectusUpdateItem::class,
-                'type' => 'write',
-                'name' => 'Update Item',
-                'description' => 'Update an existing item in a Directus collection.',
-                'icon' => 'ph:pencil',
-            ],
-            'directus_delete_item' => [
-                'class' => DirectusDeleteItem::class,
-                'type' => 'write',
-                'name' => 'Delete Item',
-                'description' => 'Delete an item from a Directus collection.',
-                'icon' => 'ph:trash',
-            ],
-            'directus_list_collections' => [
-                'class' => DirectusListCollections::class,
-                'type' => 'read',
-                'name' => 'List Collections',
-                'description' => 'List all available collections in the Directus instance.',
-                'icon' => 'ph:folders',
-            ],
-            'directus_get_current_user' => [
-                'class' => DirectusGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the profile of the currently authenticated Directus user.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (DirectusService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/directus.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Instance URL', 'required' => true],
-        ];
     }
 
     public function isIntegration(): bool
@@ -237,21 +193,57 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return true;
     }
 
+    /**
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): DirectusService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);
 
-            $service = new DirectusService(
-                accessToken: $creds->get('directus', 'access_token', '', $account),
-                baseUrl: $creds->get('directus', 'url', 'https://directus.example.com', $account),
+            return new DirectusService(
+                accessToken: (string) $creds->get('directus', 'access_token', '', (string) $account),
+                baseUrl: (string) $creds->get('directus', 'url', 'https://directus.example.com', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(DirectusService::class));
+        return app(DirectusService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/items') => 'ph:database',
+            str_contains($path, '/collections') => 'ph:folders',
+            str_contains($path, '/files'), str_contains($path, '/assets') => 'ph:file',
+            str_contains($path, '/users') => 'ph:user',
+            str_contains($path, '/roles'), str_contains($path, '/permissions') => 'ph:shield-check',
+            str_contains($path, '/flows'), str_contains($path, '/operations') => 'ph:flow-arrow',
+            str_contains($path, '/schema') => 'ph:tree-structure',
+            str_contains($path, '/auth') => 'ph:key',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

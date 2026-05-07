@@ -2,6 +2,11 @@
 
 Tools for interacting with the Microsoft Power BI REST API.
 
+The namespace is `powerbi`. Use workspace IDs returned by
+`powerbi_list_workspaces` when querying workspace-scoped datasets and reports.
+The Power BI REST API does not expose a general current-user profile endpoint in
+this package; credential checks use a lightweight workspace-list probe.
+
 ## Tools
 
 ### powerbi_list_workspaces
@@ -63,12 +68,3 @@ Get details for a specific report within a workspace.
 - `report_id` (string, required): The report ID (a GUID).
 
 **Returns:** Report object with embed URL, description, and associated dataset.
-
----
-
-### powerbi_get_current_user
-Get the authenticated user's Power BI profile.
-
-**Parameters:** None.
-
-**Returns:** User profile with `id`, `displayName`, `email`, etc.

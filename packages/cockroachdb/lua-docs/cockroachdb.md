@@ -1,181 +1,71 @@
-# CockroachDB — Lua API Reference
+# CockroachDB Cloud Lua API Reference
 
-## list_clusters
+Namespace: `cockroachdb`
 
-List all CockroachDB clusters in the organization.
+This integration exposes generated coverage for CockroachDB Cloud's official OpenAPI document at `https://cockroachlabs.cloud/assets/docs/api/latest/openapi.json`.
 
-### Parameters
+Configure `url` as the API root, usually `https://cockroachlabs.cloud`. Existing configs that use `https://cockroachlabs.cloud/api/v1` continue to work for Cloud v1 tools.
 
-None.
+Authentication uses a CockroachDB Cloud API key as a bearer token. Endpoint access depends on the roles assigned to that API key.
 
-### Example
+## Common Tools
 
-```lua
-local result = app.integrations.cockroachdb.list_clusters({})
+- `cockroachdb_list_clusters` maps to `GET /api/v1/clusters`.
+- `cockroachdb_get_cluster` maps to `GET /api/v1/clusters/{cluster_id}`.
+- `cockroachdb_create_cluster` maps to `POST /api/v1/clusters`.
+- `cockroachdb_list_databases` maps to `GET /api/v1/clusters/{cluster_id}/databases`.
+- `cockroachdb_list_users` maps to `GET /api/v1/clusters/{cluster_id}/sql-users`.
 
-for _, cluster in ipairs(result.clusters) do
-  print(cluster.name .. " (" .. cluster.status .. ") - " .. cluster.cloud_provider)
-end
-```
+The generated catalog also covers API keys, audit logs, available regions, backups, backup config, blackout windows, client CA certificates, CMEK, connection strings, folders, invites, maintenance windows, metrics exports, networking, node maps, physical replication streams, private endpoints, roles, JWT issuers, spend limits, egress rules, log export, and SCIM users/groups/schemas.
 
----
+## Arguments
 
-## get_cluster
+Path and query parameters use names from the OpenAPI document. Snake-case aliases are also accepted. For dotted query parameters such as `pagination.limit`, you may pass either `pagination.limit` or `pagination_limit`.
 
-Get details for a specific CockroachDB cluster.
+Tools with a JSON request body accept a `body` table. If `body` is omitted, non-path/query/header arguments are collected into the JSON body.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cluster_id` | string | yes | The cluster ID |
-
-### Example
+## Examples
 
 ```lua
-local result = app.integrations.cockroachdb.get_cluster({ cluster_id = "abc123-def456" })
-local c = result.cluster
-print(c.name .. " - " .. c.cloud_provider .. " - " .. c.status)
-```
-
----
-
-## create_cluster
-
-Create a new CockroachDB cluster.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Cluster name (e.g., `"my-app-prod"`) |
-| `cloud_provider` | string | yes | Cloud provider: `"GCP"`, `"AWS"`, or `"AZURE"` |
-| `region` | string | yes | Region (e.g., `"us-east-1"`, `"europe-west1"`) |
-| `plan` | string | no | Plan type: `"SERVERLESS"` or `"DEDICATED"` (default: `"SERVERLESS"`) |
-| `spend_limit` | integer | no | Monthly spend limit in cents for serverless clusters |
-| `cluster_version` | string | no | CockroachDB version (e.g., `"v23.2"`) |
-
-### Common Cloud Providers & Regions
-
-- **AWS**: `us-east-1`, `us-west-2`, `eu-west-1`, `ap-southeast-1`
-- **GCP**: `us-east1`, `us-west1`, `europe-west1`, `asia-east1`
-- **AZURE**: `eastus`, `westus2`, `westeurope`, `southeastasia`
-
-### Example
-
-```lua
-local result = app.integrations.cockroachdb.create_cluster({
-  name = "my-app-prod",
-  cloud_provider = "AWS",
-  region = "us-east-1",
-  plan = "SERVERLESS",
-  spend_limit = 1000
+local clusters = cockroachdb.cockroachdb_list_clusters({
+  pagination_limit = 25
 })
-
-print("Created cluster: " .. result.cluster.id)
 ```
 
----
-
-## list_databases
-
-List all databases in a CockroachDB cluster.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cluster_id` | string | yes | The cluster ID |
-
-### Example
-
 ```lua
-local result = app.integrations.cockroachdb.list_databases({ cluster_id = "abc123-def456" })
-
-for _, db in ipairs(result.databases) do
-  print(db.name)
-end
-```
-
----
-
-## get_database
-
-Get details for a specific database in a CockroachDB cluster.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cluster_id` | string | yes | The cluster ID |
-| `database_name` | string | yes | The database name |
-
-### Example
-
-```lua
-local result = app.integrations.cockroachdb.get_database({
-  cluster_id = "abc123-def456",
-  database_name = "mydb"
+local cluster = cockroachdb.cockroachdb_get_cluster({
+  cluster_id = "00000000-0000-0000-0000-000000000000"
 })
-
-print(result.database.name)
 ```
-
----
-
-## list_users
-
-List all SQL users in a CockroachDB cluster.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cluster_id` | string | yes | The cluster ID |
-
-### Example
 
 ```lua
-local result = app.integrations.cockroachdb.list_users({ cluster_id = "abc123-def456" })
-
-for _, user in ipairs(result.users) do
-  print(user.name)
-end
+local databases = cockroachdb.cockroachdb_list_databases({
+  cluster_id = "00000000-0000-0000-0000-000000000000",
+  pagination_limit = 50
+})
 ```
-
----
-
-## get_current_user
-
-Get the current authenticated CockroachDB Cloud user information.
-
-### Parameters
-
-None.
-
-### Example
 
 ```lua
-local result = app.integrations.cockroachdb.get_current_user({})
-print("User: " .. result.user.email)
+local created = cockroachdb.cockroachdb_create_cluster({
+  body = {
+    name = "agent-demo",
+    provider = "AWS",
+    spec = {}
+  }
+})
 ```
 
----
+## Return Shapes
 
-## Multi-Account Usage
+Responses are CockroachDB Cloud's parsed JSON responses. Paginated responses may include token or pagination fields, depending on the endpoint.
 
-If you have multiple CockroachDB Cloud accounts configured, use account-specific namespaces:
+Non-JSON responses return:
 
 ```lua
--- Default account (always works)
-app.integrations.cockroachdb.list_clusters({})
-
--- Explicit default (portable across setups)
-app.integrations.cockroachdb.default.list_clusters({})
-
--- Named accounts
-app.integrations.cockroachdb.production.list_clusters({})
-app.integrations.cockroachdb.staging.list_clusters({})
+{
+  body = "...",
+  content_type = "text/plain"
+}
 ```
 
-All functions are identical across accounts — only the credentials differ.
+The previous `cockroachdb_get_current_user` and `cockroachdb_get_database` helpers are intentionally not part of the generated catalog because the current official OpenAPI document does not expose those operations.

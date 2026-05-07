@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Wufoo\WufooService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Submit a new entry to a Wufoo form.
+ *
+ * Accepts field values keyed by Wufoo API field IDs such as Field1 and Field2.
+ */
 class WufooSubmitEntry implements Tool
 {
     /**
      * Create a new WufooSubmitEntry tool instance.
+     *
+     * @param  WufooService  $service  The Wufoo API service instance.
      */
     public function __construct(
         private WufooService $service,
@@ -56,10 +63,14 @@ class WufooSubmitEntry implements Tool
                 return ToolResult::error('Wufoo integration is not configured.');
             }
 
-            $formId = $args['form_id'];
+            $formId = trim((string) ($args['form_id'] ?? ''));
+            if ($formId === '') {
+                return ToolResult::error('form_id is required.');
+            }
+
             $fields = $args['fields'] ?? [];
 
-            if (empty($fields)) {
+            if (!is_array($fields) || empty($fields)) {
                 return ToolResult::error('The fields parameter must contain at least one field value.');
             }
 

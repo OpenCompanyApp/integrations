@@ -13,6 +13,8 @@ class MailerLiteListSubscribers implements Tool
 {
     /**
      * Create a new list subscribers tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -31,7 +33,7 @@ class MailerLiteListSubscribers implements Tool
      */
     public function description(): string
     {
-        return 'List subscribers from MailerLite. Supports pagination and filtering by status (active, unsubscribed, etc.).';
+        return 'List subscribers from MailerLite. Supports cursor pagination, status filtering, and groups include.';
     }
 
     /**
@@ -42,9 +44,10 @@ class MailerLiteListSubscribers implements Tool
     public function parameters(): array
     {
         return [
-            'page' => ['type' => 'integer', 'description' => 'Page number (default: 1).'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of subscribers per page (default: 25, max: 100).'],
+            'cursor' => ['type' => 'string', 'description' => 'Cursor from a previous response.'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of subscribers to return (default: 25).'],
             'status' => ['type' => 'string', 'description' => 'Filter by status: active, unsubscribed, unconfirmed, bounced, junk.'],
+            'include' => ['type' => 'string', 'description' => 'Additional resource include. Currently groups is supported.'],
         ];
     }
 
@@ -60,11 +63,19 @@ class MailerLiteListSubscribers implements Tool
                 return ToolResult::error('MailerLite integration is not configured.');
             }
 
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 25;
-            $status = $args['status'] ?? null;
+            $params = [];
 
-            $result = $this->service->listSubscribers($page, $limit, $status);
+            foreach (['cursor', 'limit', 'include'] as $key) {
+                if (array_key_exists($key, $args) && $args[$key] !== null && $args[$key] !== '') {
+                    $params[$key] = $args[$key];
+                }
+            }
+
+            if (($args['status'] ?? null) !== null && $args['status'] !== '') {
+                $params['filter[status]'] = $args['status'];
+            }
+
+            $result = $this->service->listSubscribers($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

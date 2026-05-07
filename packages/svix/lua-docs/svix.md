@@ -1,184 +1,140 @@
-# Svix — Lua API Reference
+# Svix
 
-## list_applications
+Namespace: `app.integrations.svix`
 
-List all Svix applications.
+Svix tools use the official Svix REST API. Configure `auth_token`; set `url`
+only for self-hosted Svix or a test proxy. Tool names follow the API operation
+names where possible, and each tool description includes the official HTTP
+endpoint and operation id.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 50, max: 250) |
-| `iterator` | string | no | Pagination cursor from a previous response |
-
-### Example
+## Common Webhook Operations
 
 ```lua
-local result = app.integrations.svix.list_applications({ limit = 50 })
-
-for _, app in ipairs(result.data) do
-  print(app.name .. " (" .. app.id .. ")")
-end
-```
-
----
-
-## get_application
-
-Get details of a specific Svix application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The application ID (e.g., `"app_xxxxxxxxx"`) |
-
-### Example
-
-```lua
-local result = app.integrations.svix.get_application({ id = "app_xxxxxxxxx" })
-print("Name: " .. result.name)
-print("UID: " .. (result.uid or "none"))
-print("Created: " .. result.created_at)
-```
-
----
-
-## create_application
-
-Create a new Svix application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Application name (e.g., `"My App"`) |
-| `uid` | string | no | Optional unique identifier |
-
-### Example
-
-```lua
-local result = app.integrations.svix.create_application({
-  name = "My New App",
-  uid = "my-app-unique-id"
-})
-print("Created app: " .. result.id)
-```
-
----
-
-## list_messages
-
-List messages for a Svix application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | The application ID |
-| `limit` | integer | no | Max results (default: 50, max: 250) |
-| `iterator` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.svix.list_messages({
-  app_id = "app_xxxxxxxxx",
-  limit = 25
+local apps = app.integrations.svix.list_applications({
+  limit = 10
 })
 
-for _, msg in ipairs(result.data) do
-  print(msg.event_type .. " -> " .. msg.id)
-end
-```
-
----
-
-## list_endpoints
-
-List webhook endpoints for a Svix application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | The application ID |
-| `limit` | integer | no | Max results (default: 50, max: 250) |
-| `iterator` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.svix.list_endpoints({
-  app_id = "app_xxxxxxxxx"
+local app = app.integrations.svix.create_application({
+  get_if_exists = true,
+  payload = {
+    name = "Example tenant",
+    uid = "tenant_123"
+  }
 })
 
-for _, ep in ipairs(result.data) do
-  print(ep.url .. " (" .. ep.id .. ")")
-end
-```
-
----
-
-## create_endpoint
-
-Create a new webhook endpoint for a Svix application.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | The application ID |
-| `url` | string | yes | The webhook URL (e.g., `"https://example.com/webhooks"`) |
-| `version` | integer | yes | API version for the endpoint (e.g., `1`) |
-| `description` | string | no | Optional endpoint description |
-
-### Example
-
-```lua
-local result = app.integrations.svix.create_endpoint({
-  app_id = "app_xxxxxxxxx",
-  url = "https://example.com/webhooks",
-  version = 1,
-  description = "Production webhook receiver"
+local endpoint = app.integrations.svix.create_endpoint({
+  app_id = app.id,
+  idempotency_key = "setup-tenant-123-endpoint",
+  payload = {
+    url = "https://example.test/webhooks/svix",
+    version = 1,
+    description = "Primary receiver",
+    filterTypes = { "user.created", "user.deleted" }
+  }
 })
-print("Created endpoint: " .. result.id)
+
+local message = app.integrations.svix.create_message({
+  app_id = app.id,
+  idempotency_key = "msg-user-123-created",
+  payload = {
+    eventType = "user.created",
+    payload = {
+      id = "user_123",
+      email = "user@example.test"
+    }
+  }
+})
 ```
 
----
-
-## get_current_user
-
-Get the current authenticated Svix user and dashboard usage information.
-
-### Parameters
-
-None.
-
-### Example
+## Event Types
 
 ```lua
-local result = app.integrations.svix.get_current_user({})
-print("User: " .. result.email)
-print("Message count: " .. result.message_count)
+local event_types = app.integrations.svix.list_event_types({
+  limit = 50,
+  include_archived = false
+})
+
+local event_type = app.integrations.svix.create_event_type({
+  payload = {
+    name = "invoice.paid",
+    description = "An invoice was paid"
+  }
+})
 ```
 
----
+## Delivery Inspection And Replay
+
+```lua
+local messages = app.integrations.svix.list_messages({
+  app_id = "app_123",
+  limit = 25,
+  with_content = true
+})
+
+local attempts = app.integrations.svix.list_attempts_by_msg({
+  app_id = "app_123",
+  msg_id = "msg_123"
+})
+
+local replay = app.integrations.svix.resend_webhook({
+  app_id = "app_123",
+  msg_id = "msg_123",
+  endpoint_id = "ep_123",
+  idempotency_key = "replay-msg-123-ep-123"
+})
+```
+
+## Streams And Ingest
+
+The integration also exposes Svix Streams and Ingest APIs:
+
+```lua
+local stream = app.integrations.svix.create_stream({
+  payload = {
+    name = "Audit stream",
+    uid = "audit"
+  }
+})
+
+local sink = app.integrations.svix.create_sink({
+  stream_id = stream.id,
+  payload = {
+    name = "Warehouse",
+    type = "webhook",
+    config = {
+      url = "https://example.test/ingest"
+    }
+  }
+})
+
+local source = app.integrations.svix.create_ingest_source({
+  payload = {
+    name = "Inbound partner",
+    uid = "partner_123"
+  }
+})
+```
+
+## Argument Shape
+
+Path and query parameters are top-level snake_case arguments. Header parameters
+are also top-level snake_case arguments, so the Svix `idempotency-key` header is
+`idempotency_key`.
+
+Write operations accept a `payload` object for the JSON body. Tools also accept:
+
+- `query`: extra documented query parameters
+- `headers`: extra HTTP headers
+
+Responses are the parsed Svix JSON response. Empty responses return
+`{ success = true, status = 204 }`.
 
 ## Multi-Account Usage
 
-If you have multiple Svix accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.svix.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.svix.default.function_name({...})
-
--- Named accounts
-app.integrations.svix.production.function_name({...})
-app.integrations.svix.staging.function_name({...})
+app.integrations.svix.list_applications({ limit = 10 })
+app.integrations.svix.default.list_applications({ limit = 10 })
+app.integrations.svix.production.list_applications({ limit = 10 })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tool names. Only the credentials differ.

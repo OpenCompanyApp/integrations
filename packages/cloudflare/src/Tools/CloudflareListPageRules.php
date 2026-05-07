@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Cloudflare\CloudflareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List page rules in a Cloudflare zone.
+ *
+ * Returns compact metadata for legacy Cloudflare page rules.
+ */
 class CloudflareListPageRules implements Tool
 {
+    /**
+     * @param  CloudflareService  $service  Cloudflare API client.
+     */
     public function __construct(
         private CloudflareService $service,
     ) {}
@@ -32,6 +40,11 @@ class CloudflareListPageRules implements Tool
         ];
     }
 
+    /**
+     * List page rules for a zone.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

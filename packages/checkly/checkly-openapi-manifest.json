@@ -1,0 +1,11 @@
+{
+  "source_url": "https://api.checklyhq.com/openapi.json",
+  "docs_url": "https://www.checklyhq.com/docs/api/",
+  "openapi": "3.0.0",
+  "version": "v1",
+  "path_count": 117,
+  "method_count": 164,
+  "read_count": 84,
+  "write_count": 80,
+  "account_header_operations": 151
+}

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\WorldBank\WorldBankService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch detailed World Bank country metadata.
+ */
 class WorldBankCountryInfo implements Tool
 {
+    /**
+     * @param  WorldBankService  $service  The World Bank API client.
+     */
     public function __construct(
         private WorldBankService $service,
     ) {}
@@ -29,6 +35,11 @@ class WorldBankCountryInfo implements Tool
         ];
     }
 
+    /**
+     * Get country metadata by code.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (code).
+     */
     public function execute(array $args): ToolResult
     {
         try {

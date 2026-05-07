@@ -129,23 +129,6 @@ end
 
 ---
 
-## get_current_user
-
-Get the current authenticated Fly.io user information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["fly-io"].get_current_user({})
-print("User: " .. result.email)
-```
-
----
-
 ## Multi-Account Usage
 
 If you have multiple Fly.io accounts configured, use account-specific namespaces:

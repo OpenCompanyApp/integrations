@@ -1,4 +1,6 @@
-# ElevenLabs — Lua API Reference
+# ElevenLabs Legacy Lua API Reference
+
+This legacy `eleven-labs` namespace is kept for compatibility. Prefer the canonical `elevenlabs` integration namespace for new automations because it exposes broader ElevenLabs API coverage.
 
 ## list_voices
 
@@ -61,8 +63,8 @@ Generate speech audio from text using an ElevenLabs voice.
 | `text` | string | yes | The text to convert to speech |
 | `voice_id` | string | yes | The voice identifier |
 | `model_id` | string | no | Model ID (default: `"eleven_multilingual_v2"`) |
-| `stability` | number | no | Voice stability 0.0–1.0 (higher = more consistent) |
-| `similarity_boost` | number | no | Similarity boost 0.0–1.0 (higher = closer to original voice) |
+| `stability` | number | no | Voice stability 0.0-1.0 (higher = more consistent) |
+| `similarity_boost` | number | no | Similarity boost 0.0-1.0 (higher = closer to original voice) |
 
 ### Example
 
@@ -167,4 +169,4 @@ app.integrations["eleven-labs"].production.function_name({...})
 app.integrations["eleven-labs"].staging.function_name({...})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts. Only the credentials differ.

@@ -3,21 +3,31 @@
 namespace OpenCompany\Integrations\Beamer;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Beamer\Tools\BeamerListPosts;
-use OpenCompany\Integrations\Beamer\Tools\BeamerGetPost;
-use OpenCompany\Integrations\Beamer\Tools\BeamerCreatePost;
-use OpenCompany\Integrations\Beamer\Tools\BeamerListComments;
-use OpenCompany\Integrations\Beamer\Tools\BeamerGetCurrentUser;
-use OpenCompany\Integrations\Beamer\Tools\BeamerListCategories;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Beamer\Tools\BeamerApiDelete;
+use OpenCompany\Integrations\Beamer\Tools\BeamerApiGet;
+use OpenCompany\Integrations\Beamer\Tools\BeamerApiPost;
+use OpenCompany\Integrations\Beamer\Tools\BeamerApiPut;
+use OpenCompany\Integrations\Beamer\Tools\BeamerCreatePost;
+use OpenCompany\Integrations\Beamer\Tools\BeamerGetCurrentUser;
+use OpenCompany\Integrations\Beamer\Tools\BeamerGetPost;
+use OpenCompany\Integrations\Beamer\Tools\BeamerListCategories;
+use OpenCompany\Integrations\Beamer\Tools\BeamerListComments;
+use OpenCompany\Integrations\Beamer\Tools\BeamerListPosts;
 
 /**
+ * Tool provider for the Beamer changelog and notification API.
+ *
+ * Exposes typed post/comment/category tools plus generic API helpers for
+ * Beamer endpoints that do not yet have a dedicated wrapper.
+ */
+class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,46 +35,38 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => [
+                    'manual_secret',
+                ],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -90,11 +92,13 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Changelog, announcements, and user notifications platform',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:beamer',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.getbeamer.com/docs/api',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -116,10 +120,16 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
+    /**
+     * Verify the configured Beamer API key against the user profile endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential configuration.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.getbeamer.com/v0', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.getbeamer.com/v0'), '/');
 
         if (empty($apiKey)) {
             return ['success' => false, 'error' => 'No API key provided'];
@@ -127,7 +137,7 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
+                'Beamer-Api-Key' => $apiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(10)->get($baseUrl . '/me');
 
@@ -211,13 +221,43 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'List all post categories.',
                 'icon' => 'ph:folder',
             ],
+            'beamer_api_get' => [
+                'class' => BeamerApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call any Beamer GET API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'beamer_api_post' => [
+                'class' => BeamerApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call any Beamer POST API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'beamer_api_put' => [
+                'class' => BeamerApiPut::class,
+                'type' => 'write',
+                'name' => 'API PUT',
+                'description' => 'Call any Beamer PUT API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'beamer_api_delete' => [
+                'class' => BeamerApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call any Beamer DELETE API endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/beamer.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -230,12 +270,18 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return true;
     }
 
+    /**
+     * Create a Beamer tool with default or account-scoped credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class name.
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new BeamerService(
                 apiKey: $creds->get('beamer', 'api_key', '', $account),

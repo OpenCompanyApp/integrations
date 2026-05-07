@@ -1,0 +1,25 @@
+{
+    "name": "opencompanyapp/integration-feedbin",
+    "description": "Feedbin integration for Laravel AI agents - subscriptions, entries, unread/starred state, tags, saved searches, imports, icons, and pages.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Feedbin\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Feedbin\\FeedbinServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

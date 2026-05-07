@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-translate",
-    "description": "Google Cloud Translation API integration for Laravel — translate text, detect languages, manage glossaries, and list supported languages.",
+    "description": "Google Translate integration for Laravel AI agents - generated Cloud Translation API v3 coverage for translation, language detection, documents, glossaries, datasets, models, adaptive MT, and operations.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google", "translate", "translation", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-translate": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,13 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "translate",
+        "translation",
+        "cloud",
+        "ai",
+        "opencompany"
+    ]
 }

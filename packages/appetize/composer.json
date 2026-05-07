@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-appetize",
+    "description": "Appetize integration for Laravel AI agents - apps, builds, usage, devices, and raw API helper calls.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Appetize\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Appetize\\AppetizeServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

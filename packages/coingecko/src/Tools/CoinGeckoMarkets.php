@@ -6,8 +6,14 @@ use OpenCompany\Integrations\CoinGecko\CoinGeckoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get ranked market data for CoinGecko coins.
+ */
 class CoinGeckoMarkets implements Tool
 {
+    /**
+     * @param  CoinGeckoService  $service  CoinGecko API client
+     */
     public function __construct(
         private CoinGeckoService $service,
     ) {}
@@ -34,6 +40,11 @@ class CoinGeckoMarkets implements Tool
         ];
     }
 
+    /**
+     * Execute the markets lookup.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         if (! $this->service->isConfigured()) {

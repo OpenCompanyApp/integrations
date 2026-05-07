@@ -98,8 +98,18 @@ class OutlookCreateEvent implements Tool
                 return ToolResult::error('Microsoft Outlook integration is not configured.');
             }
 
+            foreach (['subject', 'start', 'end'] as $field) {
+                if (empty($args[$field])) {
+                    return ToolResult::error("{$field} is required.");
+                }
+            }
+
             $timeZone = $args['time_zone'] ?? 'UTC';
             $bodyType = $args['body_type'] ?? 'HTML';
+
+            if (!in_array($bodyType, ['HTML', 'Text'], true)) {
+                return ToolResult::error('body_type must be "HTML" or "Text".');
+            }
 
             $payload = [
                 'subject' => $args['subject'],
@@ -127,6 +137,10 @@ class OutlookCreateEvent implements Tool
             }
 
             if (isset($args['attendees'])) {
+                if (!is_array($args['attendees'])) {
+                    return ToolResult::error('attendees must be an array of email addresses.');
+                }
+
                 /** @var array<int, string> $attendeeEmails */
                 $attendeeEmails = $args['attendees'];
                 $payload['attendees'] = array_map(fn (string $email) => [

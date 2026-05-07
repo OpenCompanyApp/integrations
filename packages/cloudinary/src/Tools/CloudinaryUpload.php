@@ -46,9 +46,11 @@ class CloudinaryUpload implements Tool
     public function parameters(): array
     {
         return [
-            'file' => ['type' => 'string', 'required' => true, 'description' => 'The file to upload — a remote URL (e.g. "https://example.com/photo.jpg") or a base64 data URI (e.g. "data:image/png;base64,...").'],
+            'file' => ['type' => 'string', 'required' => true, 'description' => 'The file to upload — a remote URL (e.g. "https://example.test/photo.jpg") or a base64 data URI (e.g. "data:image/png;base64,...").'],
             'public_id' => ['type' => 'string', 'description' => 'The public ID to assign to the uploaded asset. If omitted, Cloudinary generates a random ID.'],
             'folder' => ['type' => 'string', 'description' => 'The folder to store the asset in (e.g. "blog/images").'],
+            'resource_type' => ['type' => 'string', 'description' => 'Resource type: image, video, or raw. Default: image.'],
+            'options' => ['type' => 'object', 'description' => 'Additional signed upload parameters such as tags, context, eager, overwrite, or upload_preset.'],
         ];
     }
 
@@ -67,8 +69,10 @@ class CloudinaryUpload implements Tool
             $file = $args['file'];
             $publicId = $args['public_id'] ?? null;
             $folder = $args['folder'] ?? null;
+            $resourceType = (string) ($args['resource_type'] ?? 'image');
+            $options = is_array($args['options'] ?? null) ? $args['options'] : [];
 
-            $result = $this->service->upload($file, $publicId, $folder);
+            $result = $this->service->upload($file, $publicId, $folder, $resourceType, $options);
 
             return ToolResult::success([
                 'public_id' => $result['public_id'] ?? null,

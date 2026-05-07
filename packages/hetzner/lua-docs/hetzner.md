@@ -1,208 +1,74 @@
-# Hetzner Cloud — Lua API Reference
+# Hetzner Cloud Lua API Reference
 
-## list_servers
+Namespace: `hetzner`
 
-List Hetzner Cloud servers with optional pagination.
+This integration exposes generated coverage for the official Hetzner Cloud OpenAPI document at `https://docs.hetzner.cloud/cloud.spec.json`.
 
-### Parameters
+Authentication uses a Hetzner Cloud project API token. Read-only tokens can call `GET` tools. Read-write tokens are required for create, update, delete, and action tools.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of servers per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
+## Common Tools
 
-### Examples
+- `hetzner_list_servers` maps to `GET /servers`.
+- `hetzner_get_server` maps to `GET /servers/{id}`.
+- `hetzner_create_server` maps to `POST /servers`.
+- `hetzner_list_volumes` maps to `GET /volumes`.
+- `hetzner_list_networks` maps to `GET /networks`.
+- `hetzner_list_ssh_keys` maps to `GET /ssh_keys`.
+
+The generated catalog also covers actions, certificates, datacenters, firewalls, floating IPs, images, ISOs, load balancers, locations, networks, placement groups, primary IPs, pricing, server types, volumes, DNS zones, DNS record sets, and resource-specific action endpoints.
+
+## Arguments
+
+Path and query parameters use names from Hetzner's OpenAPI document. Snake-case aliases are also accepted.
+
+For example, both `per_page` and `perPage` can be supplied when the upstream parameter is represented that way by a tool. Path IDs are URL encoded automatically.
+
+Tools with a JSON request body accept a `body` table. If you omit `body`, non-path/query/header arguments are collected into the JSON body.
+
+## Examples
 
 ```lua
--- List servers
-local result = app.integrations.hetzner.list_servers({
-  per_page = 10,
+local servers = hetzner.hetzner_list_servers({
+  per_page = 25,
   page = 1
 })
-
-for _, server in ipairs(result.servers) do
-  print(server.id .. ": " .. server.name .. " (" .. server.status .. ")")
-end
 ```
 
----
-
-## get_server
-
-Get details for a specific Hetzner Cloud server.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The server ID |
-
-### Examples
-
 ```lua
-local result = app.integrations.hetzner.get_server({ id = "12345" })
-print(result.server.name)
-print(result.server.status)
-print(result.server.public_net.ipv4.ip)
-print(result.server.server_type.name)
-```
-
----
-
-## create_server
-
-Create a new Hetzner Cloud server.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Server name (must be unique per project) |
-| `server_type` | string | yes | Server type (e.g., "cx22", "cx32", "cx42") |
-| `image` | string | yes | Image name or ID (e.g., "ubuntu-24.04", "debian-12") |
-| `location` | string | no | Location name (e.g., "fsn1", "nbg1", "hel1") |
-| `ssh_keys` | array | no | Array of SSH key names or IDs to inject |
-| `networks` | array | no | Array of network IDs to attach |
-| `labels` | object | no | Key-value labels to apply to the server |
-| `user_data` | string | no | Cloud-init user data (YAML) for initialization |
-
-### Examples
-
-```lua
--- Create a basic server
-local result = app.integrations.hetzner.create_server({
-  name = "my-web-server",
-  server_type = "cx22",
-  image = "ubuntu-24.04",
-  location = "fsn1"
-})
-
-print("Created server: " .. result.server.name)
-print("Root password: " .. (result.root_password or "check email"))
-print("IP: " .. result.server.public_net.ipv4.ip)
-
--- Create a server with SSH keys and labels
-local result = app.integrations.hetzner.create_server({
-  name = "production-app",
-  server_type = "cx32",
-  image = "debian-12",
-  location = "hel1",
-  ssh_keys = { "my-ssh-key" },
-  labels = { env = "production", team = "backend" }
+local server = hetzner.hetzner_get_server({
+  id = 123456
 })
 ```
 
----
-
-## list_volumes
-
-List Hetzner Cloud volumes with optional pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of volumes per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-
-### Examples
-
 ```lua
-local result = app.integrations.hetzner.list_volumes({
-  per_page = 50,
-  page = 1
+local created = hetzner.hetzner_create_server({
+  body = {
+    name = "agent-demo",
+    server_type = "cx22",
+    image = "ubuntu-24.04",
+    location = "fsn1",
+    ssh_keys = { "agent-key" }
+  }
 })
-
-for _, volume in ipairs(result.volumes) do
-  print(volume.id .. ": " .. volume.name .. " (" .. volume.size .. "GB)")
-end
 ```
 
----
-
-## list_networks
-
-List Hetzner Cloud networks with optional pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of networks per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-
-### Examples
-
 ```lua
-local result = app.integrations.hetzner.list_networks({
-  per_page = 50,
-  page = 1
+local action = hetzner.hetzner_poweron_server({
+  id = 123456
 })
-
-for _, network in ipairs(result.networks) do
-  print(network.id .. ": " .. network.name .. " (" .. network.ip_range .. ")")
-end
 ```
 
----
+## Return Shapes
 
-## list_ssh_keys
+Responses are Hetzner Cloud's parsed JSON responses. Pagination responses usually include a `meta.pagination` object. Mutating endpoints often return an `action`, a resource object, or both depending on the endpoint.
 
-List Hetzner Cloud SSH keys with optional pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of SSH keys per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-
-### Examples
+Non-JSON responses return:
 
 ```lua
-local result = app.integrations.hetzner.list_ssh_keys({
-  per_page = 50,
-  page = 1
-})
-
-for _, key in ipairs(result.ssh_keys) do
-  print(key.id .. ": " .. key.name .. " (" .. key.fingerprint .. ")")
-end
+{
+  body = "...",
+  content_type = "text/plain"
+}
 ```
 
----
-
-## get_current_user
-
-Get the profile of the currently authenticated user.
-
-### Parameters
-
-None.
-
-### Examples
-
-```lua
-local result = app.integrations.hetzner.get_current_user({})
-print("Logged in as: " .. result.user.email .. " (" .. result.user.id .. ")")
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Hetzner Cloud accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.hetzner.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.hetzner.default.function_name({...})
-
--- Named accounts
-app.integrations.hetzner.production.function_name({...})
-app.integrations.hetzner.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+The old `hetzner_get_current_user` helper is intentionally not part of the generated catalog because the current official Cloud API spec does not expose a `/user` endpoint. Use a lightweight read tool such as `hetzner_list_locations` to verify token access.

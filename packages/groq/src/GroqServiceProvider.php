@@ -6,8 +6,16 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Groq integration with Laravel.
+ *
+ * Binds the Groq service using stored credentials and registers the tool provider.
+ */
 class GroqServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the Groq service singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(GroqService::class, function ($app) {
@@ -20,6 +28,9 @@ class GroqServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the Groq tool provider when the registry is available.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

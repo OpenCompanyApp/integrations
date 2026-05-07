@@ -1,0 +1,33 @@
+{
+    "source": "https://docs.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Docs API",
+    "version": "v1",
+    "method_count": 3,
+    "generated_package": "google-docs",
+    "methods": [
+        {
+            "discovery_id": "documents.get",
+            "tool": "google_docs_documents_get",
+            "class": "GoogleDocsDocumentsGet",
+            "http_method": "GET",
+            "path": "/v1/documents/{documentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "documents.batchUpdate",
+            "tool": "google_docs_documents_batch_update",
+            "class": "GoogleDocsDocumentsBatchUpdate",
+            "http_method": "POST",
+            "path": "/v1/documents/{documentId}:batchUpdate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "documents.create",
+            "tool": "google_docs_documents_create",
+            "class": "GoogleDocsDocumentsCreate",
+            "http_method": "POST",
+            "path": "/v1/documents",
+            "type": "write"
+        }
+    ]
+}

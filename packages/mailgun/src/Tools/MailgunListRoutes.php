@@ -2,51 +2,52 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class MailgunListRoutes implements Tool
+/**
+ * List account-level inbound routes.
+ */
+class MailgunListRoutes extends AbstractMailgunEndpointTool
 {
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_list_routes';
 
-    public function name(): string
-    {
-        return 'mailgun_list_routes';
-    }
+    protected string $toolDescription = 'List account-level inbound routes.';
 
-    public function description(): string
-    {
-        return 'List all routes in your Mailgun account with optional pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of routes to return (default: 100, max: 1000).'],
-            'skip' => ['type' => 'integer', 'description' => 'Number of routes to skip for pagination.'],
-        ];
-    }
+    protected string $path = '/routes';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum number of records to return.',
+    ],
+    'skip' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of records to skip.',
+    ],
+    'page' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Pagination cursor or page URL/token.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Mailgun query parameters to pass through.',
+    ],
+];
 
-            $params = array_filter([
-                'limit' => $args['limit'] ?? null,
-                'skip' => $args['skip'] ?? null,
-            ], fn($value) => $value !== null);
+    /** @var list<string> */
+    protected array $required = [];
 
-            $result = $this->service->listRoutes($params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'skip',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

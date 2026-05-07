@@ -19,15 +19,15 @@ class AmazonSesListSuppressions implements Tool
 
     public function description(): string
     {
-        return 'List email addresses on the suppression list for a specific configuration set in Amazon SES. Suppressed addresses will not receive emails.';
+        return 'List email addresses on the Amazon SES account-level suppression list. Suppressed addresses will not receive emails.';
     }
 
     public function parameters(): array
     {
         return [
-            'configuration_set' => ['type' => 'string', 'required' => true, 'description' => 'The configuration set name to retrieve suppressions for.'],
             'page_size' => ['type' => 'integer', 'description' => 'Maximum number of suppressed addresses to return per page.'],
             'next_token' => ['type' => 'string', 'description' => 'Pagination token from a previous response to fetch the next page of results.'],
+            'reason' => ['type' => 'string', 'enum' => ['BOUNCE', 'COMPLAINT'], 'description' => 'Optional suppression reason filter.'],
         ];
     }
 
@@ -39,9 +39,9 @@ class AmazonSesListSuppressions implements Tool
             }
 
             $result = $this->service->listSuppressions(
-                configurationSet: $args['configuration_set'],
                 pageSize: isset($args['page_size']) ? (int) $args['page_size'] : null,
                 nextToken: $args['next_token'] ?? null,
+                reason: $args['reason'] ?? null,
             );
 
             return ToolResult::success($result);

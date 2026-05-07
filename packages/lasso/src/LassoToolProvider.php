@@ -107,7 +107,7 @@ class LassoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'CRM for real estate developers and homebuilders',
             'icon'        => 'ph:buildings',
             'logo'        => 'simple-icons:lasso',
-            'category'    => 'sales',
+            'category'    => 'productivity',
             'badge'       => 'verified',
             'docs_url'    => 'https://api.lassocrm.com/v1',
         ];

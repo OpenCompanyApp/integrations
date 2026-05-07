@@ -1,197 +1,189 @@
-# Zoho Mail — Lua API Reference
+# Zoho Mail Lua API Reference
 
-## get_current_user
+Namespace: `app.integrations["zoho-mail"]`
 
-Get the current user's account information. Returns account IDs needed for all other operations.
+Configure a Zoho OAuth `access_token` and the regional Mail API base URL. The
+default is `https://mail.zoho.com/api`; use the matching regional host such as
+`https://mail.zoho.eu/api` when required.
 
-### Parameters
-
-None.
-
-### Example
+## Accounts
 
 ```lua
-local result = app.integrations["zoho-mail"].get_current_user({})
-
-for _, account in ipairs(result.data.accounts) do
-  print(account.accountId .. ": " .. account.primaryEmailAddress)
-end
-```
-
----
-
-## list_messages
-
-List email messages in a folder.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `accountId` | string | yes | Zoho Mail account ID |
-| `folderId` | string | no | Folder ID (default: Inbox) |
-| `start` | integer | no | Offset for pagination (default: 0) |
-| `limit` | integer | no | Max messages to return (default: 20, max: 100) |
-| `searchKey` | string | no | Search query to filter messages |
-
-### Example
-
-```lua
-local result = app.integrations["zoho-mail"].list_messages({
-  accountId = "12345678",
-  folderId = "INBOX",
-  limit = 10
-})
-
-for _, msg in ipairs(result.data.list) do
-  print(msg.from .. ": " .. msg.subject)
-end
-```
-
-### Search messages
-
-```lua
-local result = app.integrations["zoho-mail"].list_messages({
-  accountId = "12345678",
-  searchKey = "project update"
+local accounts = app.integrations["zoho-mail"].get_current_user({})
+local account = app.integrations["zoho-mail"].get_account({
+  accountId = "12345678"
 })
 ```
 
----
+The returned account IDs are required for every mailbox operation.
 
-## get_message
+## Messages
 
-Get a single email message by ID with full content.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `accountId` | string | yes | Zoho Mail account ID |
-| `messageId` | string | yes | The message ID to retrieve |
-
-### Example
+List or search messages:
 
 ```lua
-local result = app.integrations["zoho-mail"].get_message({
+local page = app.integrations["zoho-mail"].list_messages({
   accountId = "12345678",
-  messageId = "9807654321"
+  folderId = "987654",
+  start = 0,
+  limit = 50
 })
 
-print("From: " .. result.data.from)
-print("Subject: " .. result.data.subject)
-print("Content: " .. result.data.content)
-```
-
----
-
-## send_message
-
-Send a new email message.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `accountId` | string | yes | Account ID to send from |
-| `toAddress` | string | yes | Recipient email(s), comma-separated |
-| `subject` | string | yes | Email subject line |
-| `content` | string | yes | Email body (HTML or plain text) |
-| `ccAddress` | string | no | CC recipients, comma-separated |
-| `bccAddress` | string | no | BCC recipients, comma-separated |
-| `inReplyTo` | string | no | Message ID to reply to (for threading) |
-| `mailFormat` | string | no | "html" or "plaintext" (default: "html") |
-
-### Example
-
-```lua
-local result = app.integrations["zoho-mail"].send_message({
+local search = app.integrations["zoho-mail"].search_messages({
   accountId = "12345678",
-  toAddress = "recipient@example.com",
-  subject = "Meeting Follow-up",
-  content = "<p>Thanks for the meeting today!</p>"
+  params = {
+    searchKey = "from:billing@example.test",
+    limit = 20
+  }
 })
 ```
 
-### Reply to a message
+Read content, metadata, headers, and original MIME:
 
 ```lua
-local result = app.integrations["zoho-mail"].send_message({
+local body = app.integrations["zoho-mail"].get_message({
   accountId = "12345678",
-  toAddress = "sender@example.com",
-  subject = "Re: Project Update",
-  content = "<p>Got it, thanks for the update.</p>",
-  inReplyTo = "9807654321"
+  folderId = "987654",
+  messageId = "555555",
+  includeBlockContent = false
+})
+
+local details = app.integrations["zoho-mail"].get_message_details({
+  accountId = "12345678",
+  folderId = "987654",
+  messageId = "555555"
+})
+
+local headers = app.integrations["zoho-mail"].get_message_headers({
+  accountId = "12345678",
+  folderId = "987654",
+  messageId = "555555"
+})
+
+local original = app.integrations["zoho-mail"].get_original_message({
+  accountId = "12345678",
+  messageId = "555555"
 })
 ```
 
----
-
-## list_folders
-
-List all email folders in an account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `accountId` | string | yes | Zoho Mail account ID |
-
-### Example
+Send, reply, update, or delete:
 
 ```lua
-local result = app.integrations["zoho-mail"].list_folders({
+app.integrations["zoho-mail"].send_message({
+  accountId = "12345678",
+  toAddress = "recipient@example.test",
+  subject = "Status update",
+  content = "<p>All set.</p>",
+  mailFormat = "html"
+})
+
+app.integrations["zoho-mail"].reply_message({
+  accountId = "12345678",
+  messageId = "555555",
+  payload = {
+    toAddress = "sender@example.test",
+    content = "<p>Thanks.</p>"
+  }
+})
+
+app.integrations["zoho-mail"].update_messages({
+  accountId = "12345678",
+  payload = {
+    mode = "markAsRead",
+    messageId = { "555555" }
+  }
+})
+
+app.integrations["zoho-mail"].delete_message({
+  accountId = "12345678",
+  folderId = "987654",
+  messageId = "555555"
+})
+```
+
+## Attachments
+
+```lua
+local info = app.integrations["zoho-mail"].get_attachment_info({
+  accountId = "12345678",
+  folderId = "987654",
+  messageId = "555555"
+})
+
+local attachment = app.integrations["zoho-mail"].get_attachment_content({
+  accountId = "12345678",
+  folderId = "987654",
+  messageId = "555555",
+  attachmentId = "att-123"
+})
+```
+
+## Folders
+
+```lua
+local folders = app.integrations["zoho-mail"].list_folders({
   accountId = "12345678"
 })
 
-for _, folder in ipairs(result.data.list) do
-  print(folder.folderId .. ": " .. folder.folderName)
-end
-```
-
----
-
-## list_tasks
-
-List tasks from Zoho Mail.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `accountId` | string | yes | Zoho Mail account ID |
-| `start` | integer | no | Offset for pagination (default: 0) |
-| `limit` | integer | no | Max tasks to return (default: 20) |
-
-### Example
-
-```lua
-local result = app.integrations["zoho-mail"].list_tasks({
+local folder = app.integrations["zoho-mail"].get_folder({
   accountId = "12345678",
-  limit = 10
+  folderId = "987654"
 })
 
-for _, task in ipairs(result.data.list) do
-  print(task.title .. " - " .. task.status)
-end
+app.integrations["zoho-mail"].create_folder({
+  accountId = "12345678",
+  payload = { folderName = "Invoices" }
+})
+
+app.integrations["zoho-mail"].update_folder({
+  accountId = "12345678",
+  folderId = "987654",
+  payload = { mode = "renameFolder", folderName = "Receipts" }
+})
 ```
 
----
+## Labels
+
+```lua
+local labels = app.integrations["zoho-mail"].list_labels({
+  accountId = "12345678"
+})
+
+app.integrations["zoho-mail"].create_label({
+  accountId = "12345678",
+  payload = { labelName = "Follow up", color = "#3366cc" }
+})
+```
+
+## Tasks
+
+```lua
+local tasks = app.integrations["zoho-mail"].list_tasks({
+  accountId = "12345678",
+  limit = 20
+})
+```
+
+## Raw API Helpers
+
+Use raw helpers for documented Zoho Mail endpoints that do not yet have a named
+tool. Paths must be relative; full URLs and parent-directory segments are
+rejected.
+
+```lua
+local raw = app.integrations["zoho-mail"].api_get({
+  path = "/accounts/12345678/folders"
+})
+
+local posted = app.integrations["zoho-mail"].api_post({
+  path = "/accounts/12345678/labels",
+  payload = { labelName = "Review" }
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple Zoho Mail accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["zoho-mail"].list_messages({accountId = "12345678"})
-
--- Explicit default (portable across setups)
-app.integrations["zoho-mail"].default.list_messages({accountId = "12345678"})
-
--- Named accounts
-app.integrations["zoho-mail"].work.list_messages({accountId = "12345678"})
-app.integrations["zoho-mail"].personal.list_messages({accountId = "12345678"})
+app.integrations["zoho-mail"].list_messages({ accountId = "12345678" })
+app.integrations["zoho-mail"].work.list_messages({ accountId = "12345678" })
 ```
-
-All functions are identical across accounts — only the credentials differ.

@@ -1,0 +1,23 @@
+{
+    "name": "opencompanyapp/integration-fivetran",
+    "description": "Fivetran REST API integration for OpenCompany and KosmoKrator agents.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Fivetran\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Fivetran\\FivetranServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

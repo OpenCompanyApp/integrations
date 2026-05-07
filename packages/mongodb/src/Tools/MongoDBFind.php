@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MongoDB\MongoDBService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Query documents from a MongoDB Atlas Data API collection.
+ *
+ * Supports filters, projection, sort, limit, and skip.
+ */
 class MongoDBFind implements Tool
 {
+    /**
+     * @param  MongoDBService  $service  MongoDB Atlas Data API client.
+     */
     public function __construct(
         private MongoDBService $service,
     ) {}
@@ -35,6 +43,11 @@ class MongoDBFind implements Tool
         ];
     }
 
+    /**
+     * Execute a find action against the configured collection.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (database, collection, filter, projection, sort, limit, skip).
+     */
     public function execute(array $args): ToolResult
     {
         try {

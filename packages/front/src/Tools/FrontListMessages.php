@@ -2,51 +2,23 @@
 
 namespace OpenCompany\Integrations\Front\Tools;
 
-use OpenCompany\Integrations\Front\FrontService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class FrontListMessages implements Tool
+/**
+ * List messages in a Front conversation.
+ */
+class FrontListMessages extends AbstractFrontTool
 {
-    public function __construct(
-        private FrontService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'front_list_messages';
-    }
-
-    public function description(): string
-    {
-        return 'List all messages in a Front conversation. Returns paginated message details including sender, body, and timestamps.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'conversation_id' => ['type' => 'string', 'required' => true, 'description' => 'The conversation ID (e.g., "cnv_123abc").'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of messages per page (max 100).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based).'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Front integration is not configured.');
-            }
-
-            $result = $this->service->listMessages(
-                id: $args['conversation_id'],
-                limit: isset($args['limit']) ? (int) $args['limit'] : null,
-                page: isset($args['page']) ? (int) $args['page'] : null,
-            );
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const NAME = 'front_list_messages';
+    protected const DESCRIPTION = 'List messages in a Front conversation in reverse chronological order by default.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/conversations/{conversation_id}/messages';
+    protected const REQUIRED = ['conversation_id'];
+    protected const QUERY_KEYS = ['limit', 'page_token', 'sort_by', 'sort_order', 'page'];
+    protected const PARAMETERS = [
+        'conversation_id' => ['type' => 'string', 'required' => true, 'description' => 'Conversation ID, such as cnv_123abc.'],
+        'limit' => ['type' => 'integer', 'description' => 'Max results per page, up to 100.'],
+        'page_token' => ['type' => 'string', 'description' => 'Pagination token from a previous response.'],
+        'sort_by' => ['type' => 'string', 'description' => 'Sort field. Front currently supports created_at.'],
+        'sort_order' => ['type' => 'string', 'enum' => ['asc', 'desc'], 'description' => 'Sort order.'],
+        'page' => ['type' => 'integer', 'description' => 'Legacy page number for older host usage. Prefer page_token.'],
+    ];
 }

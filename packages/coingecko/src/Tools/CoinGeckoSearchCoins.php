@@ -6,8 +6,14 @@ use OpenCompany\Integrations\CoinGecko\CoinGeckoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Search CoinGecko for coin and category IDs.
+ */
 class CoinGeckoSearchCoins implements Tool
 {
+    /**
+     * @param  CoinGeckoService  $service  CoinGecko API client
+     */
     public function __construct(
         private CoinGeckoService $service,
     ) {}
@@ -29,6 +35,11 @@ class CoinGeckoSearchCoins implements Tool
         ];
     }
 
+    /**
+     * Execute the coin search.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         if (! $this->service->isConfigured()) {

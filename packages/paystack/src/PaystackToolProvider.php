@@ -3,22 +3,29 @@
 namespace OpenCompany\Integrations\Paystack;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Paystack\Tools\PaystackListTransactions;
+use OpenCompany\Integrations\Paystack\Tools\PaystackCreateCustomer;
+use OpenCompany\Integrations\Paystack\Tools\PaystackGetCurrentUser;
 use OpenCompany\Integrations\Paystack\Tools\PaystackGetTransaction;
 use OpenCompany\Integrations\Paystack\Tools\PaystackInitializeTransaction;
 use OpenCompany\Integrations\Paystack\Tools\PaystackListCustomers;
-use OpenCompany\Integrations\Paystack\Tools\PaystackCreateCustomer;
 use OpenCompany\Integrations\Paystack\Tools\PaystackListPlans;
-use OpenCompany\Integrations\Paystack\Tools\PaystackGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\Paystack\Tools\PaystackListTransactions;
+use OpenCompany\Integrations\Paystack\Tools\PaystackVerifyTransaction;
 
 /**
+ * Registers Paystack tools and metadata for integration discovery.
+ *
+ * Exposes payment transaction, customer, plan, and connectivity operations
+ * for the Paystack REST API.
+ */
+class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,46 +33,36 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['secret_key'],
+                'notes' => ['Paystack secret keys are sent as Authorization: Bearer <secret_key>.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -91,11 +88,13 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Payments platform for Africa — manage transactions, customers, and plans.',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:paystack',
-            'category' => 'finance',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://paystack.com/docs/api',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -170,8 +169,15 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'class' => PaystackGetTransaction::class,
                 'type' => 'read',
                 'name' => 'Get Transaction',
-                'description' => 'Get details of a specific transaction.',
+                'description' => 'Fetch a specific Paystack transaction by numeric ID.',
                 'icon' => 'ph:receipt',
+            ],
+            'paystack_verify_transaction' => [
+                'class' => PaystackVerifyTransaction::class,
+                'type' => 'read',
+                'name' => 'Verify Transaction',
+                'description' => 'Verify a Paystack transaction by reference.',
+                'icon' => 'ph:check-circle',
             ],
             'paystack_initialize_transaction' => [
                 'class' => PaystackInitializeTransaction::class,
@@ -214,7 +220,9 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/paystack.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'secret_key', 'type' => 'secret', 'label' => 'Secret Key', 'required' => true],
@@ -231,7 +239,7 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new PaystackService(
                 secretKey: $creds->get('paystack', 'secret_key', '', $account),

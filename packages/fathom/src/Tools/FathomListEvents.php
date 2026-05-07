@@ -49,14 +49,15 @@ class FathomListEvents implements Tool
         return [
             'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The Fathom site ID (e.g., "CDCLS").'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of events to return (default: 20).'],
-            'starting_after' => ['type' => 'integer', 'description' => 'Cursor for pagination — pass the ID of the last event from a previous response.'],
+            'starting_after' => ['type' => 'string', 'description' => 'Cursor for pagination; event ID to start after.'],
+            'ending_before' => ['type' => 'string', 'description' => 'Cursor for pagination; event ID to end before.'],
         ];
     }
 
     /**
      * Execute the tool and return a list of events.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (site_id, limit, starting_after).
+     * @param  array<string, mixed>  $args  Tool arguments (site_id, limit, starting_after, ending_before).
      */
     public function execute(array $args): ToolResult
     {
@@ -71,9 +72,10 @@ class FathomListEvents implements Tool
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-            $startingAfter = isset($args['starting_after']) ? (int) $args['starting_after'] : null;
+            $startingAfter = $args['starting_after'] ?? null;
+            $endingBefore = $args['ending_before'] ?? null;
 
-            $result = $this->service->listEvents($siteId, $limit, $startingAfter);
+            $result = $this->service->listEvents($siteId, $limit, $startingAfter, $endingBefore);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

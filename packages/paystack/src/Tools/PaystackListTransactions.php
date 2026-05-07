@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Paystack transactions.
+ *
+ * Supports pagination plus status, customer, and date range filters.
+ */
 class PaystackListTransactions implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -34,6 +42,11 @@ class PaystackListTransactions implements Tool
         ];
     }
 
+    /**
+     * List transactions using optional filters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

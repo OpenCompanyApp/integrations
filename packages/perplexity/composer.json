@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-perplexity",
-    "description": "Perplexity AI integration for Laravel — chat completions, ask queries, model listing, and user info.",
+    "description": "Perplexity integration for Laravel — Sonar chat, web search, async research, Agent API responses, and embeddings.",
     "license": "MIT",
     "authors": [
         {

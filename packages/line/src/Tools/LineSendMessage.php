@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Line\LineService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Send a LINE push message.
+ *
+ * Sends one or more message objects to a user, group, or room ID.
+ */
 class LineSendMessage implements Tool
 {
+    /**
+     * @param  LineService  $service  The LINE Messaging API client
+     */
     public function __construct(
         private LineService $service,
     ) {}
@@ -28,9 +36,15 @@ class LineSendMessage implements Tool
             'to' => ['type' => 'string', 'required' => true, 'description' => 'LINE user ID, group ID, or room ID to send the message to.'],
             'messages' => ['type' => 'array', 'required' => true, 'description' => 'Array of message objects. Each message must have a "type" (e.g., "text", "image", "sticker") and corresponding fields. Example for text: [{"type": "text", "text": "Hello!"}].'],
             'notification_disabled' => ['type' => 'boolean', 'description' => 'If true, the recipient will not receive a push notification. Default: false.'],
+            'custom_aggregation_units' => ['type' => 'string', 'description' => 'Optional custom aggregation unit for message analytics.'],
         ];
     }
 
+    /**
+     * Send a push message.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -48,6 +62,7 @@ class LineSendMessage implements Tool
                 $args['to'],
                 $args['messages'],
                 (bool) $notificationDisabled,
+                $args['custom_aggregation_units'] ?? null,
             );
 
             return ToolResult::success([

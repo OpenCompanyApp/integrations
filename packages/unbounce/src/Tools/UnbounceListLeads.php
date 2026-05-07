@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Unbounce\UnbounceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List form submissions for an Unbounce page.
+ */
 class UnbounceListLeads implements Tool
 {
+    /**
+     * @param  UnbounceService  $service  Unbounce API client.
+     */
     public function __construct(
         private UnbounceService $service,
     ) {}
@@ -31,6 +37,11 @@ class UnbounceListLeads implements Tool
         ];
     }
 
+    /**
+     * List leads.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

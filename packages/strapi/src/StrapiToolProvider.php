@@ -105,7 +105,7 @@ class StrapiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Strapi headless CMS integration for Laravel — manage content types, entries, and users.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

@@ -6,8 +6,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Statuspage\StatuspageService;
 
+/**
+ * Create a new incident on an Atlassian Statuspage page.
+ *
+ * Supports regular incidents and scheduled maintenance status values.
+ */
 class StatuspageCreateIncident implements Tool
 {
+    /**
+     * @param  StatuspageService  $service  The Statuspage API client.
+     */
     public function __construct(
         private StatuspageService $service,
     ) {}
@@ -51,9 +59,22 @@ class StatuspageCreateIncident implements Tool
                 'description' => 'Array of component IDs affected by this incident.',
                 'items' => ['type' => 'string'],
             ],
+            'scheduled_for' => [
+                'type' => 'string',
+                'description' => 'Optional ISO-8601 start time for scheduled maintenance.',
+            ],
+            'scheduled_until' => [
+                'type' => 'string',
+                'description' => 'Optional ISO-8601 end time for scheduled maintenance.',
+            ],
         ];
     }
 
+    /**
+     * Create a Statuspage incident from normalized tool arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -73,6 +94,12 @@ class StatuspageCreateIncident implements Tool
 
             if (isset($args['component_ids']) && is_array($args['component_ids'])) {
                 $incident['component_ids'] = $args['component_ids'];
+            }
+
+            foreach (['scheduled_for', 'scheduled_until'] as $field) {
+                if (isset($args[$field])) {
+                    $incident[$field] = $args[$field];
+                }
             }
 
             $result = $this->service->createIncident($incident);

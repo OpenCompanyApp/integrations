@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Strava\StravaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List routes for a Strava athlete.
+ */
 class StravaListRoutes implements Tool
 {
     public function __construct(

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-hugging-face",
-    "description": "Hugging Face integration for Laravel — list models, datasets, spaces, run inference, and manage your account.",
+    "description": "Hugging Face integration for Laravel. List models, datasets, Spaces, run inference, and manage repositories.",
     "license": "MIT",
     "authors": [
         {
@@ -14,7 +14,9 @@
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
     "replace": {
-        "opencompanyapp/ai-tool-hugging-face": "self.version"
+        "opencompanyapp/ai-tool-hugging-face": "self.version",
+        "opencompanyapp/integration-huggingface": "self.version",
+        "opencompanyapp/ai-tool-huggingface": "self.version"
     },
     "autoload": {
         "psr-4": {

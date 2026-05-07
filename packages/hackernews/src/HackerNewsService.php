@@ -84,6 +84,58 @@ class HackerNewsService
     }
 
     /**
+     * Fetch the list of latest Ask HN story IDs (up to ~200).
+     *
+     * @return int[] Array of item IDs
+     */
+    public function askStories(): array
+    {
+        return $this->request('GET', '/askstories.json') ?? [];
+    }
+
+    /**
+     * Fetch the list of latest Show HN story IDs (up to ~200).
+     *
+     * @return int[] Array of item IDs
+     */
+    public function showStories(): array
+    {
+        return $this->request('GET', '/showstories.json') ?? [];
+    }
+
+    /**
+     * Fetch the list of latest job story IDs (up to ~200).
+     *
+     * @return int[] Array of item IDs
+     */
+    public function jobStories(): array
+    {
+        return $this->request('GET', '/jobstories.json') ?? [];
+    }
+
+    /**
+     * Fetch the current largest Hacker News item ID.
+     */
+    public function maxItem(): ?int
+    {
+        $value = $this->request('GET', '/maxitem.json');
+
+        return is_numeric($value) ? (int) $value : null;
+    }
+
+    /**
+     * Fetch recently changed item IDs and profile IDs.
+     *
+     * @return array{items?: int[], profiles?: string[]}|null
+     */
+    public function updates(): ?array
+    {
+        $value = $this->request('GET', '/updates.json');
+
+        return is_array($value) ? $value : null;
+    }
+
+    /**
      * Fetch multiple items by ID and return their full data.
      *
      * @param  int[]  $ids  Array of item IDs to fetch

@@ -16,11 +16,15 @@ class AuthZeroService
 {
     private string $baseUrl;
 
+    /**
+     * @param  string  $accessToken  Auth0 Management API access token.
+     * @param  string  $domain  Auth0 tenant domain, with or without scheme.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $domain = '',
     ) {
-        $this->domain = rtrim($this->domain, '/');
+        $this->domain = $this->normalizeDomain($this->domain);
         $this->baseUrl = $this->domain !== ''
             ? 'https://' . $this->domain . '/api/v2'
             : '';
@@ -112,6 +116,16 @@ class AuthZeroService
     }
 
     /**
+     * Lightweight health check for the configured Management API token.
+     *
+     * @return array<string, mixed>
+     */
+    public function healthCheck(): array
+    {
+        return $this->getTenantSettings();
+    }
+
+    /**
      * Send an HTTP request to the Auth0 Management API and return parsed JSON.
      *
      * @param string $method HTTP method (GET, POST, PUT, DELETE, PATCH)
@@ -183,5 +197,24 @@ class AuthZeroService
             ]);
             throw new \RuntimeException("Failed to connect to Auth0 API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize configured tenant domains to host-only form.
+     */
+    private function normalizeDomain(string $domain): string
+    {
+        $domain = trim($domain);
+        if ($domain === '') {
+            return '';
+        }
+
+        if (str_contains($domain, '://')) {
+            $host = parse_url($domain, PHP_URL_HOST);
+
+            return is_string($host) ? rtrim($host, '/') : '';
+        }
+
+        return rtrim(explode('/', $domain, 2)[0], '/');
     }
 }

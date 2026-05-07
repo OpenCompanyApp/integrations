@@ -112,7 +112,7 @@ class OdooToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Manage contacts, sales orders, invoices, products, and leads',
             'icon' => 'ph:buildings',
             'logo' => 'simple-icons:odoo',
-            'category' => 'erp',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.odoo.com/documentation/developer/api.html',
         ];

@@ -2,188 +2,131 @@
 
 namespace OpenCompany\Integrations\GoogleGemini;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Google Gemini API.
+ *
+ * Handles API-key authentication, Discovery path expansion, JSON and multipart
+ * media upload dispatch, response parsing, and API error handling.
+ */
 class GeminiService
 {
-    public function __construct(
-        private string $apiKey = '',
-        private string $baseUrl = 'https://generativelanguage.googleapis.com',
-    ) {
+    /**
+     * @param  string  $apiKey  Google AI Studio or Generative Language API key.
+     * @param  string  $baseUrl  Gemini API base URL.
+     */
+    public function __construct(private string $apiKey = '', private string $baseUrl = 'https://generativelanguage.googleapis.com')
+    {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    public function isConfigured(): bool
-    {
-        return !empty($this->apiKey);
-    }
+    public function isConfigured(): bool { return $this->apiKey !== ''; }
 
     /**
-     * List available models.
+     * Execute a Gemini API method.
      *
-     * @param  int  $pageSize  Maximum number of models to return per page.
-     * @param  string|null  $pageToken  Token for requesting the next page of results.
+     * @param  array<string, mixed>  $pathParams  Path parameter values keyed by Discovery parameter name.
+     * @param  string[]  $reservedPathParams  Path parameters using `{+param}` reserved expansion.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return array<string, mixed>
      */
-    public function listModels(int $pageSize = 50, ?string $pageToken = null): array
+    public function request(string $method, string $pathTemplate, array $pathParams = [], array $reservedPathParams = [], array $query = [], array $body = []): array
     {
-        $params = ['pageSize' => $pageSize];
-        if ($pageToken) {
-            $params['pageToken'] = $pageToken;
-        }
-
-        return $this->request('GET', '/v1/models', $params);
+        $response = $this->rawRequest($method, $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, $body);
+        if ($response->body() === '') return ['success' => true, 'status' => $response->status()];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
     }
 
     /**
-     * Get details for a specific model.
+     * Upload media to a Gemini multipart upload endpoint.
      *
-     * @param  string  $id  The model identifier (e.g., "models/gemini-pro").
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Reserved path parameters.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $metadata  Upload metadata.
      * @return array<string, mixed>
      */
-    public function getModel(string $id): array
+    public function upload(string $pathTemplate, array $pathParams, array $reservedPathParams, array $query, array $metadata, string $filePath, string $mimeType = 'application/octet-stream'): array
     {
-        return $this->request('GET', '/v1/' . $id);
+        if (!$this->isConfigured()) throw new RuntimeException('Google Gemini API key is not configured.');
+        if (!is_file($filePath) || !is_readable($filePath)) throw new RuntimeException('file_path must point to a readable local file.');
+        $boundary = 'opencompany-gemini-'.bin2hex(random_bytes(8));
+        $metadataJson = json_encode($metadata === [] ? new \stdClass : $metadata, JSON_UNESCAPED_SLASHES);
+        $body = "--{$boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n";
+        $body .= "--{$boundary}\r\nContent-Type: {$mimeType}\r\n\r\n".file_get_contents($filePath)."\r\n--{$boundary}--\r\n";
+        $query['uploadType'] = 'multipart';
+        $response = $this->rawRequest('POST', $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, [], 'multipart/related; boundary='.$boundary, $body);
+        if ($response->body() === '') return ['success' => true, 'status' => $response->status()];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
     }
 
     /**
-     * Generate content using a model.
+     * Perform a raw HTTP request against Gemini.
      *
-     * @param  string  $id  The model identifier (e.g., "models/gemini-pro").
-     * @param  array  $contents  The content messages to send.
-     * @param  array  $generationConfig  Generation parameters (temperature, topP, maxOutputTokens).
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|string  $body  JSON request body or raw multipart body.
      */
-    public function generateContent(string $id, array $contents, array $generationConfig = []): array
+    private function rawRequest(string $method, string $path, array $query = [], array|string $body = [], ?string $contentType = null, ?string $rawBody = null): Response
     {
-        $body = [
-            'contents' => $contents,
-        ];
-
-        if (!empty($generationConfig)) {
-            $body['generationConfig'] = $generationConfig;
-        }
-
-        return $this->request('POST', '/v1/' . $id . ':generateContent', $body);
-    }
-
-    /**
-     * List uploaded files.
-     *
-     * @param  int  $pageSize  Maximum number of files to return per page.
-     * @param  string|null  $pageToken  Token for requesting the next page of results.
-     * @return array<string, mixed>
-     */
-    public function listFiles(int $pageSize = 50, ?string $pageToken = null): array
-    {
-        $params = ['pageSize' => $pageSize];
-        if ($pageToken) {
-            $params['pageToken'] = $pageToken;
-        }
-
-        return $this->request('GET', '/v1/files', $params);
-    }
-
-    /**
-     * Get details for a specific file.
-     *
-     * @param  string  $id  The file identifier (e.g., "files/abc123").
-     * @return array<string, mixed>
-     */
-    public function getFile(string $id): array
-    {
-        return $this->request('GET', '/v1/' . $id);
-    }
-
-    /**
-     * List tuned models.
-     *
-     * @param  int  $pageSize  Maximum number of tuned models to return per page.
-     * @param  string|null  $pageToken  Token for requesting the next page of results.
-     * @return array<string, mixed>
-     */
-    public function listTunedModels(int $pageSize = 50, ?string $pageToken = null): array
-    {
-        $params = ['pageSize' => $pageSize];
-        if ($pageToken) {
-            $params['pageToken'] = $pageToken;
-        }
-
-        return $this->request('GET', '/v1/tunedModels', $params);
-    }
-
-    /**
-     * Get the current authenticated user's information.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/v1/users/me');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g., "/v1/models").
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Gemini API.
-     *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Google Gemini API key is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
+        if (!$this->isConfigured()) throw new RuntimeException('Google Gemini API key is not configured.');
         try {
-            $http = Http::withHeaders([
-                'x-goog-api-key' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(60);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            $method = strtoupper($method);
+            $url = $this->urlWithQuery($this->baseUrl.$path, $query);
+            $http = Http::withHeaders(['x-goog-api-key' => $this->apiKey, 'Content-Type' => $contentType ?? 'application/json', 'Accept' => 'application/json'])->timeout(120);
+            if ($rawBody !== null) $http = $http->withBody($rawBody, $contentType ?? 'application/octet-stream');
+            $response = match ($method) {
+                'GET' => $http->get($url),
+                'POST' => $rawBody !== null ? $http->post($url) : $http->post($url, is_array($body) ? $body : []),
+                'PUT' => $http->put($url, is_array($body) ? $body : []),
+                'PATCH' => $http->patch($url, is_array($body) ? $body : []),
+                'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
-
             if (!$response->successful()) {
-                $error = $response->json('error.message') ?? $response->body();
-                Log::error("Gemini API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Gemini API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->body();
+                Log::error("Google Gemini API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
+                throw new RuntimeException('Google Gemini API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
-
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Gemini API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Gemini API: {$e->getMessage()}");
+            Log::error("Google Gemini API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            throw new RuntimeException("Failed to connect to Google Gemini API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Expand Discovery path templates.
+     *
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Parameters using reserved expansion.
+     */
+    private function expandPath(string $template, array $pathParams, array $reservedPathParams): string
+    {
+        return (string) preg_replace_callback('/\{(\+?)([A-Za-z0-9_]+)(?:=[^}]*)?\}/', function (array $matches) use ($pathParams, $reservedPathParams): string {
+            $key = $matches[2];
+            if (!array_key_exists($key, $pathParams) || $pathParams[$key] === null || $pathParams[$key] === '') throw new RuntimeException($key.' must be a non-empty path parameter.');
+            $reserved = $matches[1] === '+' || in_array($key, $reservedPathParams, true);
+            return $reserved ? str_replace('%2F', '/', rawurlencode((string) $pathParams[$key])) : rawurlencode((string) $pathParams[$key]);
+        }, $template);
+    }
+
+    /**
+     * Append query parameters while preserving repeated keys.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') continue;
+            foreach (is_array($value) ? $value : [$value] as $item) if ($item !== null && $item !== '') $parts[] = rawurlencode((string) $key).'='.rawurlencode((string) $item);
+        }
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

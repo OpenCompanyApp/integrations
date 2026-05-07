@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List customers registered on the Flutterwave account.
+ *
+ * Supports Flutterwave pagination with a page parameter.
+ */
 class FlutterwaveListCustomers implements Tool
 {
     /**
@@ -48,8 +53,7 @@ class FlutterwaveListCustomers implements Tool
     /**
      * Execute the tool: list customers from Flutterwave.
      *
-     * @param  array  $args  The tool arguments (page optional).
-     * @return ToolResult The result containing the list of customers or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

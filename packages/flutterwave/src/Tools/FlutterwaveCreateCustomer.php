@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a customer record in Flutterwave.
+ *
+ * Requires an email address and supports optional name and phone fields.
+ */
 class FlutterwaveCreateCustomer implements Tool
 {
     /**
@@ -51,8 +56,7 @@ class FlutterwaveCreateCustomer implements Tool
     /**
      * Execute the tool: create a customer on Flutterwave.
      *
-     * @param  array  $args  The tool arguments (email required, first_name/last_name/phone optional).
-     * @return ToolResult The result containing the created customer data or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

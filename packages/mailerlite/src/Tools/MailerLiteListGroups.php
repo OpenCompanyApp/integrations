@@ -13,6 +13,8 @@ class MailerLiteListGroups implements Tool
 {
     /**
      * Create a new list groups tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,

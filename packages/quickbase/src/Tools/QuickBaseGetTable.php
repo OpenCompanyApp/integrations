@@ -6,8 +6,14 @@ use OpenCompany\Integrations\QuickBase\QuickBaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get metadata for a Quickbase table.
+ */
 class QuickBaseGetTable implements Tool
 {
+    /**
+     * @param  QuickBaseService  $service  The Quickbase REST API client.
+     */
     public function __construct(
         private QuickBaseService $service,
     ) {}

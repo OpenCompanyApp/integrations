@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class MattermostListChannels implements Tool
 {
+    /**
+     * @param  MattermostService  $service  Mattermost API client.
+     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -36,6 +39,11 @@ class MattermostListChannels implements Tool
         ];
     }
 
+    /**
+     * List channels visible to the current user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

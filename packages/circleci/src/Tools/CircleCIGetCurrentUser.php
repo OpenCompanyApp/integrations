@@ -2,50 +2,32 @@
 
 namespace OpenCompany\Integrations\CircleCI\Tools;
 
-use OpenCompany\Integrations\CircleCI\CircleCIService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get the current authenticated CircleCI user profile.
- *
- * Returns the user's login, name, and account information.
- * Useful for verifying that the API token is valid and belongs
- * to the expected user.
+ * Get the authenticated CircleCI user profile.
  */
-class CircleCIGetCurrentUser implements Tool
+class CircleCIGetCurrentUser extends AbstractCircleCITool
 {
-    public function __construct(
-        private CircleCIService $service,
-    ) {}
+    protected string $toolName = 'circleci_get_current_user';
 
-    public function name(): string
-    {
-        return 'circleci_get_current_user';
-    }
+    protected string $toolDescription = 'Get the authenticated CircleCI user profile.';
 
-    public function description(): string
-    {
-        return 'Get the current authenticated CircleCI user profile. Returns login, name, and account details. Useful for verifying API token validity.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/v2/user';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CircleCI integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+];
 
-            $result = $this->service->getCurrentUser();
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

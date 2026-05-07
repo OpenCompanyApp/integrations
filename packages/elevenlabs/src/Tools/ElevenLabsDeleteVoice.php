@@ -40,6 +40,11 @@ class ElevenLabsDeleteVoice implements Tool
         ];
     }
 
+    /**
+     * Delete an ElevenLabs voice.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (voice_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -47,9 +52,14 @@ class ElevenLabsDeleteVoice implements Tool
                 return ToolResult::error('ElevenLabs integration is not configured.');
             }
 
-            $this->service->deleteVoice($args['voice_id']);
+            $voiceId = trim((string) ($args['voice_id'] ?? ''));
+            if ($voiceId === '') {
+                return ToolResult::error('voice_id is required.');
+            }
 
-            return ToolResult::success("Voice '{$args['voice_id']}' has been deleted.");
+            $this->service->deleteVoice($voiceId);
+
+            return ToolResult::success("Voice '{$voiceId}' has been deleted.");
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

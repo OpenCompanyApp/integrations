@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ChartMogul\ChartMogulService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List subscriptions for a specific ChartMogul customer.
+ */
 class ChartMogulListSubscriptions implements Tool
 {
+    /**
+     * @param  ChartMogulService  $service  The ChartMogul API client.
+     */
     public function __construct(
         private ChartMogulService $service,
     ) {}
@@ -19,19 +25,23 @@ class ChartMogulListSubscriptions implements Tool
 
     public function description(): string
     {
-        return 'List subscriptions from ChartMogul. Supports filtering by customer UUID or status and pagination. Returns subscription details including plan, dates, and state.';
+        return 'List subscriptions for a specific ChartMogul customer. The current API endpoint is /v1/customers/{CUSTOMER_UUID}/subscriptions and uses cursor pagination.';
     }
 
     public function parameters(): array
     {
         return [
             'per_page' => ['type' => 'integer', 'description' => 'Number of results per page (default: 50, max: 200).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number, starting from 1 (default: 1).'],
-            'customer_uuid' => ['type' => 'string', 'description' => 'Filter subscriptions by customer UUID.'],
-            'status' => ['type' => 'string', 'description' => 'Filter by subscription status. Common values: "active", "cancelled", "expired", "future".'],
+            'cursor' => ['type' => 'string', 'description' => 'Cursor from a previous response. Use only when has_more is true.'],
+            'customer_uuid' => ['type' => 'string', 'required' => true, 'description' => 'The ChartMogul customer UUID.'],
         ];
     }
 
+    /**
+     * List customer subscriptions through the ChartMogul API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (customer_uuid, per_page, cursor).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -39,12 +49,14 @@ class ChartMogulListSubscriptions implements Tool
                 return ToolResult::error('ChartMogul integration is not configured.');
             }
 
-            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 50;
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
-            $customerUuid = $args['customer_uuid'] ?? null;
-            $status = $args['status'] ?? null;
+            if (!isset($args['customer_uuid']) || $args['customer_uuid'] === '') {
+                return ToolResult::error('customer_uuid is required.');
+            }
 
-            $result = $this->service->listSubscriptions($perPage, $page, $customerUuid, $status);
+            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 50;
+            $customerUuid = (string) $args['customer_uuid'];
+
+            $result = $this->service->listSubscriptions($customerUuid, $perPage, $args['cursor'] ?? null);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

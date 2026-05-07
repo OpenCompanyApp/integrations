@@ -1,211 +1,251 @@
-# WhatsApp Business — Lua API Reference
+# WhatsApp Business Lua API Reference
 
-## send_message
+Namespace: `app.integrations.whatsapp`
 
-Send a text message to a WhatsApp recipient. Use this for replying within an existing 24-hour customer service window. For new conversations, use `send_template` instead.
+This package wraps the WhatsApp Business Platform Graph API. Configure an
+`access_token` for all calls, a `phone_number_id` for message/media/profile
+operations, and a `whatsapp_business_account_id` for template, phone-number
+listing, and webhook subscription operations.
 
-### Parameters
+## Messages
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | string | yes | Recipient phone number in international format without + (e.g. `"15551234567"`) |
-| `body` | string | yes | Text content of the message (max 4096 characters) |
-| `preview_url` | boolean | no | Whether to render URLs as link previews (default: `false`) |
+### send_message
 
-### Examples
+Send a text message within an active customer-service window.
 
 ```lua
--- Send a simple text message
 local result = app.integrations.whatsapp.send_message({
   to = "15551234567",
-  body = "Hello! Your order has been shipped."
+  body = "Your order has shipped.",
+  preview_url = false
 })
 
-print("Message ID: " .. result.messages[1].id)
+print(result.messages[1].id)
 ```
+
+### send_template
+
+Send a pre-approved template message, usually used to start a conversation.
 
 ```lua
--- Send with link preview
-local result = app.integrations.whatsapp.send_message({
-  to = "15551234567",
-  body = "Check out our docs: https://example.com/docs",
-  preview_url = true
-})
-```
-
----
-
-## get_message
-
-Retrieve a specific WhatsApp message by its ID. Returns the message content, status (sent, delivered, read), and timestamps.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `message_id` | string | yes | The WhatsApp message ID (e.g. `"wamid.HBgM..."`) |
-
-### Examples
-
-```lua
-local result = app.integrations.whatsapp.get_message({
-  message_id = "wamid.HBgM..."
-})
-
-print("Status: " .. result.messages[1].message_status)
-```
-
----
-
-## list_templates
-
-List approved WhatsApp message templates. Templates are required to initiate new conversations outside the 24-hour service window.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of templates to return (default: 100) |
-| `after` | string | no | Cursor for pagination — pass the value from a previous response to get the next page |
-
-### Examples
-
-```lua
-local result = app.integrations.whatsapp.list_templates({
-  limit = 50
-})
-
-for _, tmpl in ipairs(result.data) do
-  print(tmpl.name .. " (" .. tmpl.status .. ")")
-end
-```
-
-```lua
--- Paginate through templates
-local page = app.integrations.whatsapp.list_templates({ limit = 10 })
-local cursor = page.paging and page.paging.cursors and page.paging.cursors.after or nil
-
-if cursor then
-  local next_page = app.integrations.whatsapp.list_templates({ limit = 10, after = cursor })
-end
-```
-
----
-
-## list_contacts
-
-List WhatsApp contacts for the business phone number. Returns WhatsApp IDs and profile names.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of contacts to return (default: 100) |
-| `after` | string | no | Cursor for pagination — pass the value from a previous response to get the next page |
-
-### Examples
-
-```lua
-local result = app.integrations.whatsapp.list_contacts({})
-
-for _, contact in ipairs(result.data) do
-  print(contact.wa_id .. ": " .. (contact.profile_name or "Unknown"))
-end
-```
-
----
-
-## send_template
-
-Send a template-based WhatsApp message. Use this to initiate new conversations outside the 24-hour window. The template must be pre-approved in the WhatsApp Business Manager.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | string | yes | Recipient phone number in international format without + |
-| `template_name` | string | yes | Name of the approved template (e.g. `"hello_world"`) |
-| `language` | string | no | Language code (e.g. `"en_US"`, `"en"`). Defaults to `"en"` |
-| `components` | array | no | Template components — array of objects with `type` and parameters |
-
-### Component Structure
-
-```json
-[
-  {
-    "type": "body",
-    "parameters": [
-      { "type": "text", "text": "John" }
-    ]
-  }
-]
-```
-
-### Examples
-
-```lua
--- Send the built-in hello_world template
 local result = app.integrations.whatsapp.send_template({
   to = "15551234567",
   template_name = "hello_world",
   language = "en_US"
 })
-
-print("Message ID: " .. result.messages[1].id)
 ```
 
+### send_message_payload
+
+Send any official Cloud API message payload. Use this for media, location,
+contacts, reaction, interactive, catalog, or future message types.
+
 ```lua
--- Send a template with dynamic body parameters
-local result = app.integrations.whatsapp.send_template({
-  to = "15551234567",
-  template_name = "order_update",
-  language = "en",
-  components = {
-    {
-      type = "body",
-      parameters = {
-        { type = "text", text = "Order #12345" },
-        { type = "text", text = "shipped" }
-      }
+local result = app.integrations.whatsapp.send_message_payload({
+  payload = {
+    to = "15551234567",
+    type = "image",
+    image = { link = "https://example.test/image.jpg" }
+  }
+})
+```
+
+### mark_message_read
+
+```lua
+app.integrations.whatsapp.mark_message_read({
+  message_id = "wamid.HBgM..."
+})
+```
+
+### get_message
+
+Retrieves a message or Graph object by ID. Meta may return limited fields for
+message IDs; webhook payloads are still the primary source for message content
+and delivery statuses.
+
+```lua
+local message = app.integrations.whatsapp.get_message({
+  message_id = "wamid.HBgM...",
+  fields = "id"
+})
+```
+
+## Contacts
+
+### check_contacts
+
+Validate phone numbers through the official `/{phone-number-id}/contacts`
+endpoint. The legacy `list_contacts` slug is kept as an alias for this
+validation behavior because Cloud API does not expose a contact listing edge.
+
+```lua
+local result = app.integrations.whatsapp.check_contacts({
+  contacts = { "15551234567", "15557654321" }
+})
+```
+
+## Media
+
+### upload_media
+
+Upload a readable local file and receive a WhatsApp media ID.
+
+```lua
+local media = app.integrations.whatsapp.upload_media({
+  file_path = "/tmp/invoice.pdf",
+  mime_type = "application/pdf"
+})
+```
+
+### get_media
+
+Get media metadata and a temporary download URL.
+
+```lua
+local media = app.integrations.whatsapp.get_media({
+  media_id = "1234567890"
+})
+```
+
+### delete_media
+
+```lua
+app.integrations.whatsapp.delete_media({ media_id = "1234567890" })
+```
+
+## Message Templates
+
+Template tools use the configured `whatsapp_business_account_id`, not the phone
+number ID.
+
+### list_templates
+
+```lua
+local page = app.integrations.whatsapp.list_templates({
+  limit = 50,
+  status = "APPROVED"
+})
+
+for _, template in ipairs(page.data or {}) do
+  print(template.name .. " " .. template.status)
+end
+```
+
+### get_template
+
+```lua
+local template = app.integrations.whatsapp.get_template({
+  template_id = "1234567890"
+})
+```
+
+### create_template
+
+```lua
+local created = app.integrations.whatsapp.create_template({
+  template = {
+    name = "order_update",
+    language = "en_US",
+    category = "UTILITY",
+    components = {
+      { type = "BODY", text = "Order {{1}} is {{2}}." }
     }
   }
 })
 ```
 
----
-
-## get_current_user
-
-Get the authenticated WhatsApp Business user info — name, email, and business ID. Useful for verifying which account is connected.
-
-### Parameters
-
-None.
-
-### Examples
+### update_template
 
 ```lua
-local result = app.integrations.whatsapp.get_current_user({})
-
-print("Connected as: " .. result.name .. " (ID: " .. result.id .. ")")
+app.integrations.whatsapp.update_template({
+  template_id = "1234567890",
+  template = {
+    components = {
+      { type = "BODY", text = "Order {{1}} status: {{2}}." }
+    }
+  }
+})
 ```
 
----
+### delete_template
+
+```lua
+app.integrations.whatsapp.delete_template({
+  name = "order_update",
+  template_id = "1234567890"
+})
+```
+
+## Phone Numbers
+
+```lua
+local numbers = app.integrations.whatsapp.list_phone_numbers({ limit = 25 })
+
+local number = app.integrations.whatsapp.get_phone_number({
+  phone_number_id = "1234567890"
+})
+```
+
+Registration helpers map to Meta's phone-number lifecycle endpoints:
+`request_verification_code`, `verify_code`, `register_phone_number`, and
+`deregister_phone_number`.
+
+```lua
+app.integrations.whatsapp.request_verification_code({
+  code_method = "SMS",
+  language = "en"
+})
+```
+
+## Business Profile
+
+```lua
+local profile = app.integrations.whatsapp.get_business_profile({})
+
+app.integrations.whatsapp.update_business_profile({
+  profile = {
+    about = "Support and order updates",
+    email = "support@example.test",
+    websites = { "https://example.test" },
+    vertical = "ECOMMERCE"
+  }
+})
+```
+
+## Webhook Subscriptions
+
+```lua
+app.integrations.whatsapp.subscribe_app({})
+local apps = app.integrations.whatsapp.list_subscribed_apps({})
+app.integrations.whatsapp.unsubscribe_app({})
+```
+
+## Raw Graph API Helpers
+
+Use these only for WhatsApp Graph API endpoints that are not yet modeled as
+first-class tools. Paths must be relative; full URLs and parent-directory
+segments are rejected.
+
+```lua
+local me = app.integrations.whatsapp.api_get({
+  path = "/me",
+  params = { fields = "id,name" }
+})
+
+local response = app.integrations.whatsapp.api_post({
+  path = "/1234567890/subscribed_apps",
+  payload = {}
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple WhatsApp accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.whatsapp.send_message({ to = "15551234567", body = "Hello" })
-
--- Explicit default (portable across setups)
-app.integrations.whatsapp.default.send_message({ to = "15551234567", body = "Hello" })
-
--- Named accounts
-app.integrations.whatsapp.support.send_message({ to = "15551234567", body = "Hello" })
-app.integrations.whatsapp.sales.send_template({ to = "15551234567", template_name = "hello_world" })
+app.integrations.whatsapp.support.send_template({
+  to = "15551234567",
+  template_name = "hello_world",
+  language = "en_US"
+})
 ```
-
-All functions are identical across accounts — only the credentials differ.

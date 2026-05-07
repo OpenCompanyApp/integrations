@@ -2,22 +2,32 @@
 
 namespace OpenCompany\Integrations\Droplr;
 
-use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Droplr\Tools\DroplrListDrops;
-use OpenCompany\Integrations\Droplr\Tools\DroplrGetDrop;
-use OpenCompany\Integrations\Droplr\Tools\DroplrCreateDrop;
-use OpenCompany\Integrations\Droplr\Tools\DroplrDeleteDrop;
-use OpenCompany\Integrations\Droplr\Tools\DroplrListBoards;
-use OpenCompany\Integrations\Droplr\Tools\DroplrGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Droplr\Tools\DroplrApiDelete;
+use OpenCompany\Integrations\Droplr\Tools\DroplrApiGet;
+use OpenCompany\Integrations\Droplr\Tools\DroplrApiPost;
+use OpenCompany\Integrations\Droplr\Tools\DroplrApiPut;
+use OpenCompany\Integrations\Droplr\Tools\DroplrCreateDrop;
+use OpenCompany\Integrations\Droplr\Tools\DroplrCreateDropRaw;
+use OpenCompany\Integrations\Droplr\Tools\DroplrCreateNote;
+use OpenCompany\Integrations\Droplr\Tools\DroplrDeleteDrop;
+use OpenCompany\Integrations\Droplr\Tools\DroplrGetCurrentUser;
+use OpenCompany\Integrations\Droplr\Tools\DroplrGetDrop;
+use OpenCompany\Integrations\Droplr\Tools\DroplrListBoards;
+use OpenCompany\Integrations\Droplr\Tools\DroplrListDrops;
+use OpenCompany\Integrations\Droplr\Tools\DroplrUpdateCurrentUser;
+use OpenCompany\Integrations\Droplr\Tools\DroplrUpdateDrop;
 
 /**
+ * Exposes Droplr tools and credential metadata to host applications.
+ */
+class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,47 +35,38 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => [
+                    'Droplr public documentation also describes an older HMAC signature scheme. This package preserves bearer-token host behavior and exposes generic helpers for additional documented endpoints.',
+                ],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -78,7 +79,7 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'label' => 'Droplr',
-            'description' => 'Link shortening & file sharing',
+            'description' => 'Link shortening and file sharing',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:droplr',
         ];
@@ -93,9 +94,11 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'logo' => 'simple-icons:droplr',
             'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://droplr.com/docs/api',
+            'docs_url' => 'https://droplr.github.io/docs/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -103,7 +106,7 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'secret',
                 'label' => 'Access Token',
                 'placeholder' => 'Enter your Droplr access token',
-                'hint' => 'Generate an access token in your Droplr account settings under "Integrations"',
+                'hint' => 'Store the Droplr token used by your host API connection.',
                 'required' => true,
             ],
             [
@@ -111,41 +114,39 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.droplr.com',
-                'hint' => 'Use <code>https://api.droplr.com</code> for the default API, or your custom endpoint',
+                'hint' => 'Use https://api.droplr.com unless you are targeting a Droplr-compatible environment.',
                 'default' => 'https://api.droplr.com',
             ],
         ];
     }
 
+    /**
+     * Verify credentials with a lightweight profile request.
+     *
+     * @param  array<string, mixed>  $config  Droplr connection configuration.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.droplr.com', '/');
+        $accessToken = trim((string) ($config['access_token'] ?? ''));
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        if ($accessToken === '') {
+            return ['success' => false, 'error' => 'No access token provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/v2/user');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Droplr API at {$baseUrl}. Check the URL.",
-                ];
-            }
+            $service = new DroplrService(
+                accessToken: $accessToken,
+                baseUrl: (string) ($config['url'] ?? 'https://api.droplr.com'),
+            );
+            $data = $service->getCurrentUser();
+            $email = is_string($data['email'] ?? null) ? $data['email'] : 'Droplr';
 
             return [
                 'success' => true,
-                'message' => "Connected to Droplr API as {$json['email']}.",
+                'message' => "Connected to Droplr API as {$email}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -153,7 +154,7 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function validationRules(): array
     {
         return [
-            'access_token' => 'nullable|string',
+            'access_token' => 'required|string',
             'url' => 'nullable|url',
         ];
     }
@@ -161,55 +162,29 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function tools(): array
     {
         return [
-            'droplr_list_drops' => [
-                'class' => DroplrListDrops::class,
-                'type' => 'read',
-                'name' => 'List Drops',
-                'description' => 'List drops (short links, files, images, notes).',
-                'icon' => 'ph:list',
-            ],
-            'droplr_get_drop' => [
-                'class' => DroplrGetDrop::class,
-                'type' => 'read',
-                'name' => 'Get Drop',
-                'description' => 'Get details of a specific drop.',
-                'icon' => 'ph:link',
-            ],
-            'droplr_create_drop' => [
-                'class' => DroplrCreateDrop::class,
-                'type' => 'write',
-                'name' => 'Create Drop',
-                'description' => 'Create a new short link (drop).',
-                'icon' => 'ph:plus',
-            ],
-            'droplr_delete_drop' => [
-                'class' => DroplrDeleteDrop::class,
-                'type' => 'write',
-                'name' => 'Delete Drop',
-                'description' => 'Delete a drop.',
-                'icon' => 'ph:trash',
-            ],
-            'droplr_list_boards' => [
-                'class' => DroplrListBoards::class,
-                'type' => 'read',
-                'name' => 'List Boards',
-                'description' => 'List boards (collections of drops).',
-                'icon' => 'ph:folder',
-            ],
-            'droplr_get_current_user' => [
-                'class' => DroplrGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:user',
-            ],
+            'droplr_list_drops' => ['class' => DroplrListDrops::class, 'type' => 'read', 'name' => 'List Drops', 'description' => 'List drops with filtering and sorting.', 'icon' => 'ph:list'],
+            'droplr_get_drop' => ['class' => DroplrGetDrop::class, 'type' => 'read', 'name' => 'Get Drop', 'description' => 'Get one drop.', 'icon' => 'ph:link'],
+            'droplr_create_drop' => ['class' => DroplrCreateDrop::class, 'type' => 'write', 'name' => 'Create Link Drop', 'description' => 'Create a short-link drop.', 'icon' => 'ph:plus'],
+            'droplr_create_note' => ['class' => DroplrCreateNote::class, 'type' => 'write', 'name' => 'Create Note', 'description' => 'Create a note drop.', 'icon' => 'ph:note-pencil'],
+            'droplr_create_drop_raw' => ['class' => DroplrCreateDropRaw::class, 'type' => 'write', 'name' => 'Create Drop Raw', 'description' => 'Create a drop from a raw payload.', 'icon' => 'ph:brackets-curly'],
+            'droplr_update_drop' => ['class' => DroplrUpdateDrop::class, 'type' => 'write', 'name' => 'Update Drop', 'description' => 'Update one drop.', 'icon' => 'ph:pencil-simple'],
+            'droplr_delete_drop' => ['class' => DroplrDeleteDrop::class, 'type' => 'write', 'name' => 'Delete Drop', 'description' => 'Delete a drop.', 'icon' => 'ph:trash'],
+            'droplr_list_boards' => ['class' => DroplrListBoards::class, 'type' => 'read', 'name' => 'List Boards', 'description' => 'List boards.', 'icon' => 'ph:folder'],
+            'droplr_get_current_user' => ['class' => DroplrGetCurrentUser::class, 'type' => 'read', 'name' => 'Get Current User', 'description' => 'Get current user profile.', 'icon' => 'ph:user'],
+            'droplr_update_current_user' => ['class' => DroplrUpdateCurrentUser::class, 'type' => 'write', 'name' => 'Update Current User', 'description' => 'Update account fields.', 'icon' => 'ph:user-gear'],
+            'droplr_api_get' => ['class' => DroplrApiGet::class, 'type' => 'read', 'name' => 'API GET', 'description' => 'Call a Droplr GET endpoint.', 'icon' => 'ph:terminal-window'],
+            'droplr_api_post' => ['class' => DroplrApiPost::class, 'type' => 'write', 'name' => 'API POST', 'description' => 'Call a Droplr POST endpoint.', 'icon' => 'ph:terminal-window'],
+            'droplr_api_put' => ['class' => DroplrApiPut::class, 'type' => 'write', 'name' => 'API PUT', 'description' => 'Call a Droplr PUT endpoint.', 'icon' => 'ph:terminal-window'],
+            'droplr_api_delete' => ['class' => DroplrApiDelete::class, 'type' => 'write', 'name' => 'API DELETE', 'description' => 'Call a Droplr DELETE endpoint.', 'icon' => 'ph:terminal-window'],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/droplr.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -224,19 +199,27 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Droplr service for the default or selected account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): DroplrService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new DroplrService(
+            return new DroplrService(
                 accessToken: $creds->get('droplr', 'access_token', '', $account),
                 baseUrl: $creds->get('droplr', 'url', 'https://api.droplr.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(DroplrService::class));
+        return app(DroplrService::class);
     }
 }

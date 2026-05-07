@@ -93,7 +93,7 @@ class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration,
 
     public function appName(): string
     {
-        return 'google_sheets';
+        return 'google-sheets';
     }
 
     public function appMeta(): array
@@ -363,7 +363,10 @@ class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration,
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleSheetsService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleSheetsService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleSheetsService::class);
 
         return new $class($service);
     }

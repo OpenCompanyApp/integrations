@@ -1,13 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OpenCompany\Integrations\Agora\Tools;
 
-use OpenCompany\Integrations\Agora\AgoraService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Agora\AgoraService;
+use OpenCompany\Integrations\Agora\Support\AgoraPayload;
 
+/**
+ * Start an Agora Cloud Recording session.
+ *
+ * Starts individual, composite, or web page recording with caller-provided
+ * recording and storage configuration.
+ */
 class AgoraStartRecording implements Tool
 {
+    /**
+     * @param  AgoraService  $service  The Agora Cloud Recording API client.
+     */
     public function __construct(
         private AgoraService $service,
     ) {}
@@ -19,47 +31,65 @@ class AgoraStartRecording implements Tool
 
     public function description(): string
     {
-        return 'Start a cloud recording for an Agora channel. Specify the channel name, UID, and recording configuration such as container format, storage settings, and layout.';
+        return 'Start an Agora Cloud Recording session using a resource ID returned by agora_acquire_recording_resource.';
     }
 
     public function parameters(): array
     {
         return [
-            'cname' => ['type' => 'string', 'required' => true, 'description' => 'The channel name to record.'],
-            'uid' => ['type' => 'string', 'required' => true, 'description' => 'The user ID of the recording client in the channel.'],
-            'clientRequest' => ['type' => 'object', 'description' => 'Recording configuration including recordingConfig and storageConfig (e.g., {"recordingConfig": {"maxIdleTime": 30, "streamTypes": 2}, "storageConfig": {"vendor": 1, "region": 0, "bucket": "my-bucket", "accessKey": "...", "secretKey": "...", "fileNamePrefix": ["recording"]}}).'],
+            'resource_id' => ['type' => 'string', 'required' => true, 'description' => 'Resource ID returned by acquire.'],
+            'mode' => ['type' => 'string', 'required' => true, 'enum' => ['individual', 'mix', 'web'], 'description' => 'Recording mode: individual, mix, or web.'],
+            'cname' => ['type' => 'string', 'required' => true, 'description' => 'Agora channel name to record.'],
+            'uid' => ['type' => 'string', 'required' => true, 'description' => 'Recording client UID used in acquire.'],
+            'token' => ['type' => 'string', 'description' => 'Optional RTC token for the recording client.'],
+            'recording_config' => ['type' => 'object', 'description' => 'Agora recordingConfig object.'],
+            'recording_file_config' => ['type' => 'object', 'description' => 'Agora recordingFileConfig object, for example avFileType.'],
+            'storage_config' => ['type' => 'object', 'description' => 'Agora storageConfig object for the destination cloud storage.'],
+            'snapshot_config' => ['type' => 'object', 'description' => 'Optional snapshotConfig object.'],
+            'extension_service_config' => ['type' => 'object', 'description' => 'Optional extensionServiceConfig object for web recording or streaming extensions.'],
+            'client_request' => ['type' => 'object', 'description' => 'Raw start clientRequest object. Explicit fields above override matching values.'],
         ];
     }
 
+    /**
+     * Start a Cloud Recording session.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Agora integration is not configured.');
             }
 
-            if (empty($args['cname'])) {
-                return ToolResult::error('The channel name (cname) is required.');
+            $clientRequest = AgoraPayload::object($args, 'client_request');
+
+            foreach ([
+                'recording_config' => 'recordingConfig',
+                'recording_file_config' => 'recordingFileConfig',
+                'storage_config' => 'storageConfig',
+                'snapshot_config' => 'snapshotConfig',
+                'extension_service_config' => 'extensionServiceConfig',
+            ] as $argKey => $apiKey) {
+                $value = AgoraPayload::object($args, $argKey);
+                if ($value !== []) {
+                    $clientRequest[$apiKey] = $value;
+                }
             }
 
-            if (empty($args['uid'])) {
-                return ToolResult::error('The user ID (uid) is required.');
+            $token = AgoraPayload::optionalString($args, 'token');
+            if ($token !== '') {
+                $clientRequest['token'] = $token;
             }
 
-            $data = [
-                'cname' => $args['cname'],
-                'uid' => $args['uid'],
-            ];
-
-            if (isset($args['clientRequest'])) {
-                $data['clientRequest'] = is_string($args['clientRequest'])
-                    ? json_decode($args['clientRequest'], true) ?? []
-                    : $args['clientRequest'];
-            }
-
-            $result = $this->service->startRecording($data);
-
-            return ToolResult::success($result);
+            return ToolResult::success($this->service->startRecording(
+                AgoraPayload::requiredString($args, 'resource_id'),
+                AgoraPayload::requiredString($args, 'mode'),
+                AgoraPayload::requiredString($args, 'cname'),
+                AgoraPayload::requiredString($args, 'uid'),
+                $clientRequest,
+            ));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

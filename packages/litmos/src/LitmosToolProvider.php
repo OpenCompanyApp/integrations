@@ -107,7 +107,7 @@ class LitmosToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Learning management system for training and education',
             'icon' => 'ph:graduation-cap',
             'logo' => 'simple-icons:litmos',
-            'category' => 'education',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://support.litmos.com/hc/en-us/articles/227734727-Litmos-API-v1-0-Documentation',
         ];

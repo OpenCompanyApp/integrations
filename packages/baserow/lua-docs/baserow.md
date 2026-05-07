@@ -1,227 +1,136 @@
-# Baserow — Lua API Reference
+# Baserow Lua API Reference
 
-## list_tables
+Namespace: `app.integrations.baserow`
 
-List rows in a Baserow database table with pagination and optional filtering.
+Baserow tools operate on database IDs, table IDs, field IDs, and row IDs from the Baserow REST API. Database tokens normally use `Authorization: Token ...`; account-level endpoints may require a host-provided JWT or Bearer token.
 
-### Parameters
+## Discovery
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID to list rows from |
-| `page` | integer | no | Page number (1-based). Defaults to 1. |
-| `size` | integer | no | Number of rows per page. Defaults to 100. |
-| `filters` | object | no | Optional Baserow filter parameters |
-
-### Filter Parameters
-
-Filters are passed as a key-value object. Common filter keys:
-
-| Key | Description |
-|-----|-------------|
-| `search` | Full-text search across all fields |
-| `filter__field_{id}__equal` | Field equals value |
-| `filter__field_{id}__contains` | Field contains value |
-| `filter__field_{id}__contains_not` | Field does not contain value |
-| `filter__field_{id}__higher_than` | Field value is higher than |
-| `filter__field_{id}__lower_than` | Field value is lower than |
-| `filter__field_{id}__empty` | Field is empty (set to "true") |
-| `filter__field_{id}__not_empty` | Field is not empty (set to "true") |
-| `filter_type` | `"AND"` (default) or `"OR"` for combining filters |
-
-### Examples
+Use `list_databases`, `list_all_tables`, `list_database_tables`, `get_table`, and `list_fields` to find the schema before reading or writing rows.
 
 ```lua
--- List first page of rows from table 42
-local result = app.integrations.baserow.list_tables({
-  table_id = 42
-})
-
--- Paginated results
-local result = app.integrations.baserow.list_tables({
-  table_id = 42,
-  page = 2,
-  size = 50
-})
-
--- Search rows
-local result = app.integrations.baserow.list_tables({
-  table_id = 42,
-  filters = { search = "John" }
-})
-
--- Filter by specific field value
-local result = app.integrations.baserow.list_tables({
-  table_id = 42,
-  filters = {
-    filter__field_123__equal = "Active"
-  }
-})
+local databases = app.integrations.baserow.list_databases({ page = 1, size = 100 })
+local tables = app.integrations.baserow.list_database_tables({ database_id = 123 })
+local fields = app.integrations.baserow.list_fields({ table_id = 456 })
 ```
 
----
+`list_all_tables` returns the tables visible to the configured database token and is useful when the agent only has a database token scope.
 
-## get_row
+## Rows
 
-Get a single row from a Baserow database table by its row ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID |
-| `row_id` | integer | yes | The ID of the row to retrieve |
-
-### Example
+Use `list_rows` for new row-listing work. The older `list_tables` tool is kept only as a compatibility alias and also lists rows.
 
 ```lua
+local rows = app.integrations.baserow.list_rows({
+  table_id = 456,
+  search = "Acme",
+  order_by = "-id",
+  filters = {
+    { field = 789, type = "equal", value = "Active" }
+  }
+})
+
 local row = app.integrations.baserow.get_row({
-  table_id = 42,
+  table_id = 456,
   row_id = 1
 })
-
-print(row.id, row.Name, row.Email)
 ```
 
----
+Row outputs are the normalized JSON returned by Baserow. When `user_field_names` or field-name mode is used by the upstream endpoint, field names appear directly in the row object; otherwise Baserow may return field IDs such as `field_789`.
 
-## create_row
-
-Create a new row in a Baserow database table.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID |
-| `data` | object | yes | Row data with field names as keys |
-
-### Example
+## Row Writes
 
 ```lua
-local row = app.integrations.baserow.create_row({
-  table_id = 42,
+local created = app.integrations.baserow.create_row({
+  table_id = 456,
   data = {
-    Name = "John Doe",
-    Email = "john@example.com",
-    Status = "Active",
-    Notes = "New customer"
+    Name = "Acme",
+    Status = "Active"
   }
 })
 
-print("Created row with ID: " .. row.id)
-```
-
----
-
-## update_row
-
-Update fields of an existing row in a Baserow database table.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID |
-| `row_id` | integer | yes | The ID of the row to update |
-| `data` | object | yes | Updated field data (only specified fields are changed) |
-
-### Example
-
-```lua
-local row = app.integrations.baserow.update_row({
-  table_id = 42,
+local updated = app.integrations.baserow.update_row({
+  table_id = 456,
   row_id = 1,
   data = {
-    Status = "Inactive",
-    Notes = "Customer churned"
+    Status = "Inactive"
   }
 })
 
-print("Updated row: " .. row.id)
-```
+app.integrations.baserow.move_row({
+  table_id = 456,
+  row_id = 1,
+  before_id = 2
+})
 
----
-
-## delete_row
-
-Delete a row from a Baserow database table. This action is permanent.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID |
-| `row_id` | integer | yes | The ID of the row to delete |
-
-### Example
-
-```lua
 app.integrations.baserow.delete_row({
-  table_id = 42,
+  table_id = 456,
   row_id = 1
 })
 ```
 
----
+## Batch Rows
 
-## list_databases
-
-List all databases (applications) in the Baserow workspace.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based). Defaults to 1. |
-| `size` | integer | no | Number of results per page. Defaults to 100. |
-
-### Example
+Batch payloads use Baserow's `items` wrapper internally. You can pass a JSON array or Lua array of row objects.
 
 ```lua
-local result = app.integrations.baserow.list_databases()
+local result = app.integrations.baserow.batch_create({
+  table_id = 456,
+  records = {
+    { Name = "Acme" },
+    { Name = "Globex" }
+  }
+})
 
-for _, db in ipairs(result) do
-  print(db.id, db.name, db.type)
-end
+app.integrations.baserow.batch_update({
+  table_id = 456,
+  records = {
+    { id = 1, Status = "Active" },
+    { id = 2, Status = "Inactive" }
+  }
+})
+
+app.integrations.baserow.batch_delete({
+  table_id = 456,
+  row_ids = { 1, 2 }
+})
 ```
 
----
+## Fields
 
-## get_current_user
-
-Get the currently authenticated Baserow user profile.
-
-### Parameters
-
-None.
-
-### Example
+Field mutation endpoints require credentials with schema permissions.
 
 ```lua
-local user = app.integrations.baserow.get_current_user()
+local field = app.integrations.baserow.create_field({
+  table_id = 456,
+  payload = {
+    name = "Status",
+    type = "single_select"
+  }
+})
 
-print("Logged in as: " .. user.first_name .. " " .. user.last_name)
-print("Email: " .. user.email)
-print("Workspaces: " .. #user.workspaces)
+app.integrations.baserow.update_field({
+  field_id = field.id,
+  payload = { name = "Lifecycle status" }
+})
 ```
 
----
+## Raw API Helpers
 
-## Multi-Account Usage
-
-If you have multiple Baserow accounts configured, use account-specific namespaces:
+Use `api_get`, `api_post`, `api_patch`, and `api_delete` only for relative paths inside the configured Baserow API host. Full URLs and parent-directory paths are rejected.
 
 ```lua
--- Default account (always works)
-app.integrations.baserow.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.baserow.default.function_name({...})
-
--- Named accounts
-app.integrations.baserow.production.function_name({...})
-app.integrations.baserow.staging.function_name({...})
+local response = app.integrations.baserow.api_get({
+  path = "/api/database/fields/table/456/",
+  query = { include = { "id", "name" } }
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Multi-Account
+
+If multiple Baserow accounts are configured, use the generated account namespace:
+
+```lua
+app.integrations.baserow.production.list_rows({ table_id = 456 })
+app.integrations.baserow.staging.list_rows({ table_id = 456 })
+```

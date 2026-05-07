@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers CoinGecko services and tools with Laravel hosts.
+ */
 class CoinGeckoServiceProvider extends ServiceProvider
 {
     public function register(): void

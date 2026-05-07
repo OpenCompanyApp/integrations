@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List files uploaded to Groq.
+ */
 class GroqListFiles implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -27,10 +33,15 @@ class GroqListFiles implements Tool
         return [
             'purpose' => ['type' => 'string', 'description' => 'Filter files by purpose (e.g., "batch").'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of files to return per page (default: 20).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — file ID to start after.'],
+            'after' => ['type' => 'string', 'description' => 'Cursor for pagination: file ID to start after.'],
         ];
     }
 
+    /**
+     * Execute the file listing request.
+     *
+     * @param  array<string, mixed>  $args  Optional listing filters.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -38,11 +49,14 @@ class GroqListFiles implements Tool
                 return ToolResult::error('Groq integration is not configured.');
             }
 
-            $purpose = $args['purpose'] ?? null;
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-            $after = $args['after'] ?? null;
+            $query = [];
+            foreach (['purpose', 'limit', 'after'] as $key) {
+                if (isset($args[$key]) && $args[$key] !== '') {
+                    $query[$key] = $key === 'limit' ? (int) $args[$key] : $args[$key];
+                }
+            }
 
-            $result = $this->service->listFiles($purpose, $limit, $after);
+            $result = $this->service->listFiles($query);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

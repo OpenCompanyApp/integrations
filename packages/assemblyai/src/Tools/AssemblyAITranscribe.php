@@ -72,20 +72,30 @@ class AssemblyAITranscribe implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('AssemblyAI integration is not configured.');
+            }
+
+            if (empty($args['audio_url'])) {
+                return ToolResult::error('audio_url is required.');
             }
 
             $options = [
                 'audio_url' => $args['audio_url'],
             ];
 
-            // Forward optional parameters
             $optionalKeys = [
-                'language_code', 'speaker_labels', 'auto_chapters',
-                'entity_detection', 'sentiment_analysis', 'summarization',
-                'punctuate', 'format_text', 'webhook_url',
-                'custom_topics', 'topics',
+                'speech_model', 'speech_models', 'language_code', 'language_codes',
+                'language_detection', 'language_confidence_threshold', 'speaker_labels',
+                'speakers_expected', 'multichannel', 'auto_chapters', 'auto_highlights',
+                'entity_detection', 'sentiment_analysis', 'summarization', 'summary_model',
+                'summary_type', 'content_safety', 'iab_categories', 'punctuate',
+                'format_text', 'disfluencies', 'filter_profanity', 'redact_pii',
+                'redact_pii_audio', 'redact_pii_audio_quality', 'redact_pii_policies',
+                'redact_pii_sub', 'webhook_url', 'webhook_auth_header_name',
+                'webhook_auth_header_value', 'custom_spelling', 'custom_topics',
+                'topics', 'keyterms_prompt', 'word_boost', 'boost_param',
+                'audio_start_from', 'audio_end_at',
             ];
 
             foreach ($optionalKeys as $key) {

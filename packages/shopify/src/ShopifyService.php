@@ -2,175 +2,239 @@
 
 namespace OpenCompany\Integrations\Shopify;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for Shopify Admin REST APIs.
+ *
+ * Builds shop-scoped Admin API URLs, sends access-token authentication, and
+ * centralizes request dispatch, error logging, and response parsing.
+ */
 class ShopifyService
 {
+    /**
+     * @param  string  $accessToken  Shopify Admin API access token.
+     * @param  string  $shopDomain  Store domain such as example.myshopify.com.
+     * @param  string  $apiVersion  Shopify Admin API version such as 2025-10.
+     * @param  string  $baseUrl  Optional full Admin REST base URL for proxies or tests.
+     */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.shopify.com/v1',
+        private string $shopDomain = '',
+        private string $apiVersion = '2025-10',
+        private string $baseUrl = '',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = $this->normalizeBaseUrl($this->shopDomain, $this->apiVersion, $this->baseUrl);
     }
 
-    /**
-     * Check whether the service is properly configured with credentials.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '' && $this->baseUrl !== '';
     }
-
-    // ─── Products ──────────────────────────────────────────────────────────
 
     /**
      * List products.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, status, product_type, vendor, etc.)
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
      */
     public function listProducts(array $params = []): array
     {
-        return $this->request('GET', '/products', $params);
+        return $this->apiGet('/products.json', $params);
     }
 
     /**
-     * Get a single product by ID.
+     * Get one product.
      *
      * @return array<string, mixed>
      */
     public function getProduct(string $productId): array
     {
-        return $this->request('GET', '/products/' . $productId);
+        return $this->apiGet('/products/' . $productId . '.json');
     }
 
     /**
-     * Create a new product.
+     * Create a product.
      *
-     * @param  array<string, mixed>  $data  Product data (title, body_html, vendor, product_type, status, tags, etc.)
+     * @param  array<string, mixed>  $data  Product request body.
      * @return array<string, mixed>
      */
     public function createProduct(array $data): array
     {
-        return $this->request('POST', '/products', $data);
+        return $this->apiPost('/products.json', $data);
     }
-
-    // ─── Orders ────────────────────────────────────────────────────────────
 
     /**
      * List orders.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, status, financial_status, fulfillment_status, etc.)
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
      */
     public function listOrders(array $params = []): array
     {
-        return $this->request('GET', '/orders', $params);
+        return $this->apiGet('/orders.json', $params);
     }
 
     /**
-     * Get a single order by ID.
+     * Get one order.
      *
      * @return array<string, mixed>
      */
     public function getOrder(string $orderId): array
     {
-        return $this->request('GET', '/orders/' . $orderId);
+        return $this->apiGet('/orders/' . $orderId . '.json');
     }
-
-    // ─── Customers ─────────────────────────────────────────────────────────
 
     /**
      * List customers.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, page, etc.)
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
      */
     public function listCustomers(array $params = []): array
     {
-        return $this->request('GET', '/customers', $params);
+        return $this->apiGet('/customers.json', $params);
     }
 
-    // ─── Current User ──────────────────────────────────────────────────────
-
     /**
-     * Get the currently authenticated user / shop info.
+     * Get shop metadata.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/shop');
+        return $this->apiGet('/shop.json');
     }
 
-    // ─── HTTP Layer ────────────────────────────────────────────────────────
+    /**
+     * Send a GET request.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Send a POST request.
+     *
+     * @param  array<string, mixed>  $data  JSON request body.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $data, $query);
+    }
+
+    /**
+     * Send a PUT request.
+     *
+     * @param  array<string, mixed>  $data  JSON request body.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $data, $query);
+    }
+
+    /**
+     * Send a DELETE request.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query);
+    }
 
     /**
      * Make an API request and return parsed JSON data.
      *
-     * @param  array<string, mixed>  $data  Query params (GET) or body (POST/PUT)
+     * @param  array<string, mixed>  $data  Query params (GET/DELETE) or body (POST/PUT).
+     * @param  array<string, mixed>  $query  Query params for mutating requests.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $data, $query);
 
-        return $response->json('data', $response->json() ?? []);
+        return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the Shopify API.
+     * Make a raw HTTP request to Shopify.
      *
      * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $query
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = [], array $query = []): Response
     {
         if (!$this->isConfigured()) {
-            throw new \RuntimeException('Shopify integration is not configured. Access token is required.');
+            throw new RuntimeException('Shopify integration is not configured. Access token and shop domain or base URL are required.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->baseUrl . '/' . ltrim($path, '/');
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+                'X-Shopify-Access-Token' => $this->accessToken,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'POST' => $http->withOptions(['query' => $query])->post($url, $data),
+                'PUT' => $http->withOptions(['query' => $query])->put($url, $data),
+                'DELETE' => $http->withOptions(['query' => $data])->delete($url),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $errorBody = $response->json();
-                $errorTitle = $errorBody['title'] ?? $response->body();
-                $errors = $errorBody['errors'] ?? [];
-
-                $errorMessage = is_string($errorTitle) ? $errorTitle : json_encode($errorTitle);
-                if (!empty($errors)) {
-                    $errorMessage .= ' — ' . json_encode($errors);
-                }
+                $body = $response->json();
+                $errors = $body['errors'] ?? $body['error'] ?? $body['message'] ?? $response->body();
+                $errorMessage = is_string($errors) ? $errors : json_encode($errors);
 
                 Log::error("Shopify API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $errorMessage,
                 ]);
 
-                throw new \RuntimeException("Shopify API error ({$response->status()}): {$errorMessage}");
+                throw new RuntimeException("Shopify API error ({$response->status()}): {$errorMessage}");
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Shopify API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Shopify API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Shopify API: {$e->getMessage()}");
         }
+    }
+
+    private function normalizeBaseUrl(string $shopDomain, string $apiVersion, string $baseUrl = ''): string
+    {
+        if ($baseUrl !== '') {
+            $baseUrl = preg_replace('~/$~', '', $baseUrl) ?? $baseUrl;
+            return preg_replace('~/+$~', '', $baseUrl) ?? $baseUrl;
+        }
+
+        if ($shopDomain === '') {
+            return '';
+        }
+
+        $shopDomain = preg_replace('~^https?://~', '', $shopDomain) ?? $shopDomain;
+        $shopDomain = rtrim($shopDomain, '/');
+
+        return "https://{$shopDomain}/admin/api/{$apiVersion}";
     }
 }

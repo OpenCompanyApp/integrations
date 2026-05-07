@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the MailerSend integration with Laravel.
+ *
+ * Binds the MailerSend API client using configured credentials and registers
+ * the tool provider with the shared registry when available.
+ */
 class MailerSendServiceProvider extends ServiceProvider
 {
     /**

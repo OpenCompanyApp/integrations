@@ -7,12 +7,12 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the current authenticated user's profile.
+ * Backward-compatible alias for organization information.
  *
- * Sends a GET request to /users/me and returns the user profile
- * data including account information.
+ * Anthropic does not expose /users/me. This calls /organizations/me
+ * through the Admin API and requires an Admin API key.
  *
- * @see https://docs.anthropic.com/en/api/get-user
+ * @see https://docs.anthropic.com/en/api/admin-api/organization/get-me
  */
 class AnthropicGetCurrentUser implements Tool
 {
@@ -36,11 +36,11 @@ class AnthropicGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the authenticated user\'s profile and account information.';
+        return 'Backward-compatible alias for Anthropic organization information. Requires an Admin API key.';
     }
 
     /**
-     * Parameter schema — no parameters required.
+     * Parameter schema - no parameters required.
      *
      * @return array<string, array{type: string, required?: bool, description: string}>
      */
@@ -50,7 +50,7 @@ class AnthropicGetCurrentUser implements Tool
     }
 
     /**
-     * Execute the get current user request.
+     * Execute the organization lookup alias.
      *
      * @param  array  $args  No parameters required.
      * @return ToolResult The user profile or an error.
@@ -58,8 +58,8 @@ class AnthropicGetCurrentUser implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Anthropic integration is not configured.');
+            if (!$this->service->isAdminConfigured()) {
+                return ToolResult::error('Anthropic Admin API key is not configured.');
             }
 
             $result = $this->service->getCurrentUser();

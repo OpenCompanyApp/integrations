@@ -18,11 +18,18 @@ class ZohoInvoiceServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZohoInvoiceService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('zoho-invoice', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_invoice', $key, $default);
+            };
 
             return new ZohoInvoiceService(
-                accessToken: $creds->get('zoho_invoice', 'access_token', ''),
-                baseUrl: $creds->get('zoho_invoice', 'base_url', 'https://invoice.zoho.com/api/v3'),
-                organizationId: $creds->get('zoho_invoice', 'organization_id', ''),
+                accessToken: $get('access_token'),
+                baseUrl: $get('base_url', 'https://invoice.zoho.com/api/v3'),
+                organizationId: $get('organization_id'),
             );
         });
     }

@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class PowerBiListWorkspaces implements Tool
 {
+    /**
+     * @param  PowerBiService  $service  The Power BI API client.
+     */
     public function __construct(
         private PowerBiService $service,
     ) {}
@@ -35,6 +38,11 @@ class PowerBiListWorkspaces implements Tool
         ];
     }
 
+    /**
+     * List Power BI workspaces available to the authenticated principal.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (top).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -43,6 +51,10 @@ class PowerBiListWorkspaces implements Tool
             }
 
             $top = isset($args['top']) ? (int) $args['top'] : 100;
+            if ($top < 1) {
+                return ToolResult::error('top must be greater than 0.');
+            }
+
             $result = $this->service->listWorkspaces($top);
 
             return ToolResult::success($result);

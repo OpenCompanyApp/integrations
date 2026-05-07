@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class RetellAIGetCurrentUser implements Tool
 {
+    /**
+     * @param  RetellAIService  $service  The Retell AI API client.
+     */
     public function __construct(
         private RetellAIService $service,
     ) {}
@@ -33,6 +36,11 @@ class RetellAIGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Run the lightweight account connectivity check.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

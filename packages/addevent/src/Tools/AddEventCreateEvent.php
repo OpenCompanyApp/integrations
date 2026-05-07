@@ -9,11 +9,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Create a new calendar event in AddEvent.
  *
- * Creates an event with a title, start and end dates. Optionally include
- * a location, description, and category ID to organize the event.
+ * Creates an event with v2 Calendar and Events API fields.
  */
 class AddEventCreateEvent implements Tool
 {
+    /**
+     * @param  AddEventService  $service  The AddEvent API client.
+     */
     public function __construct(
         private AddEventService $service,
     ) {}
@@ -25,21 +27,33 @@ class AddEventCreateEvent implements Tool
 
     public function description(): string
     {
-        return 'Create a new calendar event in AddEvent. Requires a title, start date, and end date. Optionally add a location, description, and category.';
+        return 'Create a new calendar event in AddEvent. Requires title and datetime_start. Optionally set calendar_id, datetime_end, timezone, location, description, RSVP, color, and custom data.';
     }
 
     public function parameters(): array
     {
         return [
             'title' => ['type' => 'string', 'required' => true, 'description' => 'Event title.'],
-            'start_date' => ['type' => 'string', 'required' => true, 'description' => 'Event start date/time (e.g., "2026-04-10T09:00:00").'],
-            'end_date' => ['type' => 'string', 'required' => true, 'description' => 'Event end date/time (e.g., "2026-04-10T10:00:00").'],
-            'location' => ['type' => 'string', 'description' => 'Event location (e.g., "Conference Room A, 123 Main St").'],
-            'description' => ['type' => 'string', 'description' => 'Event description with details about the event.'],
-            'category_id' => ['type' => 'integer', 'description' => 'Category ID to assign the event to. Use addevent_list_categories to find available categories.'],
+            'datetime_start' => ['type' => 'string', 'required' => true, 'description' => 'Event start date/time, e.g. "2026-04-10 09:00:00".'],
+            'datetime_end' => ['type' => 'string', 'description' => 'Event end date/time. Defaults to one hour after datetime_start when omitted by AddEvent.'],
+            'calendar_id' => ['type' => 'string', 'description' => 'Calendar ID. Defaults to the account default calendar when omitted.'],
+            'timezone' => ['type' => 'string', 'description' => 'Event timezone, e.g. "America/New_York" or "floating".'],
+            'all_day_event' => ['type' => 'boolean', 'description' => 'Whether this is an all-day event.'],
+            'location' => ['type' => 'string', 'description' => 'Event location or meeting URL.'],
+            'description' => ['type' => 'string', 'description' => 'Event description. Plain text and simplified HTML are supported by AddEvent.'],
+            'organizer_name' => ['type' => 'string', 'description' => 'Organizer name. Requires organizer_email when provided.'],
+            'organizer_email' => ['type' => 'string', 'description' => 'Organizer email. Requires organizer_name when provided.'],
+            'color' => ['type' => 'integer', 'description' => 'Event color ID from 1 to 20.'],
+            'rsvp_enabled' => ['type' => 'boolean', 'description' => 'Whether RSVP is enabled for the event.'],
+            'custom_data' => ['type' => 'object', 'description' => 'Custom key/value data to attach to the event.'],
         ];
     }
 
+    /**
+     * Create an AddEvent event.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -50,21 +64,13 @@ class AddEventCreateEvent implements Tool
             if (empty($args['title'])) {
                 return ToolResult::error('Event title is required.');
             }
-            if (empty($args['start_date'])) {
-                return ToolResult::error('Event start date is required.');
-            }
-            if (empty($args['end_date'])) {
-                return ToolResult::error('Event end date is required.');
+            if (empty($args['datetime_start'])) {
+                return ToolResult::error('Event datetime_start is required.');
             }
 
-            $result = $this->service->createEvent(
-                title: $args['title'],
-                startDate: $args['start_date'],
-                endDate: $args['end_date'],
-                location: $args['location'] ?? null,
-                description: $args['description'] ?? null,
-                categoryId: isset($args['category_id']) ? (int) $args['category_id'] : null,
-            );
+            $attributes = $args;
+            unset($attributes['start_date'], $attributes['end_date'], $attributes['category_id']);
+            $result = $this->service->createEvent($attributes);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

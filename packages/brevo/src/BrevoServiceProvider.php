@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Brevo integration with Laravel's service container.
+ *
+ * Binds BrevoService with host-provided credentials and registers the tool
+ * provider when the integration registry is available.
+ */
 class BrevoServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,7 +20,8 @@ class BrevoServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new BrevoService(
-                apiKey: $creds->get('brevo', 'api_key', ''),
+                apiKey: (string) $creds->get('brevo', 'api_key', ''),
+                baseUrl: (string) $creds->get('brevo', 'url', 'https://api.brevo.com/v3'),
             );
         });
     }

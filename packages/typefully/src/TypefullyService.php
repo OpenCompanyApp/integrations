@@ -5,11 +5,20 @@ namespace OpenCompany\Integrations\Typefully;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Typefully API v2.
+ *
+ * Handles bearer-token authentication and social-set-scoped draft, media, tag, and queue operations.
+ */
 class TypefullyService
 {
+    /**
+     * @param  string  $apiKey  Typefully API v2 key.
+     * @param  string  $baseUrl  Typefully API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.typefully.com/v1',
+        private string $baseUrl = 'https://api.typefully.com/v2',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -29,83 +38,179 @@ class TypefullyService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/me/');
+        return $this->request('GET', '/me');
     }
 
     /**
-     * Create a new draft in Typefully.
+     * List social sets available to the authenticated account.
      *
-     * @param  string  $content  The tweet/thread content. Separate tweets with 4 newlines.
-     * @param  string|null  $type  The type of draft: "tweet", "thread", or "mail".
-     * @param  array<string, mixed>  $options  Additional options (schedule_date, thread_connector, etc.).
+     * @param  array<string, mixed>  $params  Query parameters such as limit and offset.
      * @return array<string, mixed>
      */
-    public function createDraft(string $content, ?string $type = null, array $options = []): array
+    public function listSocialSets(array $params = []): array
     {
-        $data = array_merge(['content' => $content], $options);
-
-        if ($type !== null) {
-            $data['type'] = $type;
-        }
-
-        return $this->request('POST', '/drafts/', $data);
+        return $this->request('GET', '/social-sets', $params);
     }
 
     /**
-     * List scheduled drafts.
+     * Get one social set by id.
      *
-     * @param  int  $limit  Maximum number of drafts to return (default 20, max 100).
-     * @param  int  $offset  Number of drafts to skip for pagination.
+     * @param  string  $socialSetId  Social set identifier.
      * @return array<string, mixed>
      */
-    public function listScheduled(int $limit = 20, int $offset = 0): array
+    public function getSocialSet(string $socialSetId): array
     {
-        return $this->request('GET', '/drafts/scheduled/', [
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
+        return $this->request('GET', '/social-sets/' . urlencode($socialSetId));
     }
 
     /**
-     * List published drafts.
+     * List drafts for a social set.
      *
-     * @param  int  $limit  Maximum number of drafts to return (default 20, max 100).
-     * @param  int  $offset  Number of drafts to skip for pagination.
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  array<string, mixed>  $params  Query parameters (status, tags, limit, offset, sort).
      * @return array<string, mixed>
      */
-    public function listPublished(int $limit = 20, int $offset = 0): array
+    public function listDrafts(string $socialSetId, array $params = []): array
     {
-        return $this->request('GET', '/drafts/published/', [
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
+        return $this->request('GET', "/social-sets/{$socialSetId}/drafts", $params);
     }
 
     /**
-     * Get a single draft by its ID.
+     * Create a draft for a social set.
      *
-     * @param  string  $id  The Typefully draft ID.
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  array<string, mixed>  $payload  Draft payload using Typefully v2 platforms structure.
      * @return array<string, mixed>
      */
-    public function getDraft(string $id): array
+    public function createDraft(string $socialSetId, array $payload): array
     {
-        return $this->request('GET', '/drafts/' . urlencode($id) . '/');
+        return $this->request('POST', "/social-sets/{$socialSetId}/drafts", $payload);
+    }
+
+    /**
+     * Get a single draft by id.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  string  $draftId  Draft identifier.
+     * @return array<string, mixed>
+     */
+    public function getDraft(string $socialSetId, string $draftId): array
+    {
+        return $this->request('GET', "/social-sets/{$socialSetId}/drafts/" . urlencode($draftId));
+    }
+
+    /**
+     * Update a draft.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  string  $draftId  Draft identifier.
+     * @param  array<string, mixed>  $updates  Draft fields to update.
+     * @return array<string, mixed>
+     */
+    public function updateDraft(string $socialSetId, string $draftId, array $updates): array
+    {
+        return $this->request('PATCH', "/social-sets/{$socialSetId}/drafts/" . urlencode($draftId), $updates);
+    }
+
+    /**
+     * Delete a draft.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  string  $draftId  Draft identifier.
+     */
+    public function deleteDraft(string $socialSetId, string $draftId): void
+    {
+        $this->request('DELETE', "/social-sets/{$socialSetId}/drafts/" . urlencode($draftId));
+    }
+
+    /**
+     * Request a presigned upload URL for media.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  array<string, mixed>  $payload  Media upload request fields.
+     * @return array<string, mixed>
+     */
+    public function requestMediaUpload(string $socialSetId, array $payload): array
+    {
+        return $this->request('POST', "/social-sets/{$socialSetId}/media/upload", $payload);
+    }
+
+    /**
+     * Get media processing status.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  string  $mediaId  Media identifier.
+     * @return array<string, mixed>
+     */
+    public function getMedia(string $socialSetId, string $mediaId): array
+    {
+        return $this->request('GET', "/social-sets/{$socialSetId}/media/" . urlencode($mediaId));
+    }
+
+    /**
+     * List tags for a social set.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as limit and offset.
+     * @return array<string, mixed>
+     */
+    public function listTags(string $socialSetId, array $params = []): array
+    {
+        return $this->request('GET', "/social-sets/{$socialSetId}/tags", $params);
+    }
+
+    /**
+     * Create a tag for a social set.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  string  $name  Tag display name.
+     * @return array<string, mixed>
+     */
+    public function createTag(string $socialSetId, string $name): array
+    {
+        return $this->request('POST', "/social-sets/{$socialSetId}/tags", ['name' => $name]);
+    }
+
+    /**
+     * Get upcoming scheduled content for a social set.
+     *
+     * @param  string  $socialSetId  Social set identifier.
+     * @param  array<string, mixed>  $params  Query parameters such as limit and offset.
+     * @return array<string, mixed>
+     */
+    public function getQueue(string $socialSetId, array $params = []): array
+    {
+        return $this->request('GET', "/social-sets/{$socialSetId}/queue", $params);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Query params or JSON body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
 
+        if ($response->body() === '') {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Typefully API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Query params or JSON body.
+     * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \RuntimeException
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
@@ -124,7 +229,7 @@ class TypefullyService
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
@@ -133,7 +238,7 @@ class TypefullyService
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Typefully API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);

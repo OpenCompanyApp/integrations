@@ -18,20 +18,27 @@ class GoogleAdsServiceProvider extends ServiceProvider
     {
         $this->app->singleton(GoogleAdsService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('google-ads', $key, null);
 
-            $expiresAt = $creds->get('google_ads', 'expires_at');
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('google_ads', $key, $default);
+            };
+
+            $expiresAt = $get('expires_at', null);
 
             return new GoogleAdsService(
-                clientId: $creds->get('google_ads', 'client_id', ''),
-                clientSecret: $creds->get('google_ads', 'client_secret', ''),
-                accessToken: $creds->get('google_ads', 'access_token', ''),
-                refreshToken: $creds->get('google_ads', 'refresh_token', ''),
+                clientId: $get('client_id'),
+                clientSecret: $get('client_secret'),
+                accessToken: $get('access_token'),
+                refreshToken: $get('refresh_token'),
                 expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
-                developerToken: $creds->get('google_ads', 'developer_token', ''),
-                managerCustomerId: $creds->get('google_ads', 'manager_customer_id', ''),
-                defaultCustomerId: $creds->get('google_ads', 'default_customer_id', ''),
-                linkedCustomerId: $creds->get('google_ads', 'linked_customer_id', ''),
-                apiVersion: $creds->get('google_ads', 'api_version', 'v24'),
+                developerToken: $get('developer_token'),
+                managerCustomerId: $get('manager_customer_id'),
+                defaultCustomerId: $get('default_customer_id'),
+                linkedCustomerId: $get('linked_customer_id'),
+                apiVersion: $get('api_version', 'v24'),
             );
         });
     }

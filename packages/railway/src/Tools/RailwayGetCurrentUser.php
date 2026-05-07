@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Railway\RailwayService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the authenticated Railway user.
+ *
+ * Useful for credential verification and account context in agents.
+ */
 class RailwayGetCurrentUser implements Tool
 {
+    /**
+     * @param  RailwayService  $service  The Railway GraphQL API client.
+     */
     public function __construct(
         private RailwayService $service,
     ) {}
@@ -27,6 +35,11 @@ class RailwayGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Return the current Railway user's normalized profile fields.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (none)
+     */
     public function execute(array $args): ToolResult
     {
         try {

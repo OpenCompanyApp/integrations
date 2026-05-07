@@ -2,12 +2,18 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
 
+/**
+ * List domains registered in Vercel.
+ */
 class VercelListDomains implements Tool
 {
+    /**
+     * @param  VercelService  $service  The Vercel REST API client.
+     */
     public function __construct(private VercelService $service)
     {
     }
@@ -35,9 +41,19 @@ class VercelListDomains implements Tool
                 'required' => false,
                 'description' => 'Optional team ID to scope domains to a specific team.',
             ],
+            'slug' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team slug to scope domains to a specific team.',
+            ],
         ];
     }
 
+    /**
+     * List domains using optional pagination and team scope.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (limit, team_id, slug).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -48,6 +64,7 @@ class VercelListDomains implements Tool
             $params = array_filter([
                 'limit' => $args['limit'] ?? null,
                 'teamId' => $args['team_id'] ?? null,
+                'slug' => $args['slug'] ?? null,
             ], fn ($v) => $v !== null);
 
             $result = $this->service->listDomains($params);

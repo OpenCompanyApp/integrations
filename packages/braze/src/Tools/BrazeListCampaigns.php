@@ -2,57 +2,40 @@
 
 namespace OpenCompany\Integrations\Braze\Tools;
 
-use OpenCompany\Integrations\Braze\BrazeService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List marketing campaigns from Braze.
- *
- * Returns a paginated list of campaigns including names, IDs, and tags.
- * Use page and limit parameters to navigate through large result sets.
- *
- * @see https://www.braze.com/docs/api/endpoints/export/campaigns/get_campaigns/
+ * List Braze campaigns.
  */
-class BrazeListCampaigns implements Tool
+class BrazeListCampaigns extends AbstractBrazeTool
 {
-    public function __construct(
-        private BrazeService $service,
-    ) {}
+    protected array $parameters = array (
+  'page' =>
+  array (
+    'type' => 'integer',
+    'description' => 'Page number, zero-indexed.',
+  ),
+  'limit' =>
+  array (
+    'type' => 'integer',
+    'description' => 'Results per page.',
+  ),
+);
 
-    public function name(): string
-    {
-        return 'braze_list_campaigns';
-    }
+    protected array $required = array (
+);
 
-    public function description(): string
-    {
-        return 'List marketing campaigns from Braze. Returns campaign IDs, names, tags, and creation dates. Use pagination to browse large numbers of campaigns.';
-    }
+    protected array $queryParams = array (
+  0 => 'page',
+  1 => 'limit',
+);
 
-    public function parameters(): array
-    {
-        return [
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (0-indexed, default: 0).'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of campaigns to return per page (max 100, default: 100).'],
-        ];
-    }
+    protected array $bodyParams = array (
+);
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Braze integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $page = isset($args['page']) ? (int) $args['page'] : 0;
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
+    protected string $path = '/campaigns/list';
 
-            $result = $this->service->listCampaigns($page, $limit);
+    protected string $toolName = 'braze_list_campaigns';
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'List Braze campaigns.';
 }

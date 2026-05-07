@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-openweather",
+    "description": "OpenWeather integration for Laravel AI agents - current weather, forecasts, One Call 3.0, air pollution, and geocoding.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\OpenWeather\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\OpenWeather\\OpenWeatherServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "openweather",
+        "openweathermap",
+        "weather",
+        "forecast",
+        "geocoding",
+        "opencompany"
+    ]
+}

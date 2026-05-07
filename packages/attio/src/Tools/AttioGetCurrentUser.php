@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Attio\AttioService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the currently authenticated Attio user profile.
+ */
 class AttioGetCurrentUser implements Tool
 {
     /**

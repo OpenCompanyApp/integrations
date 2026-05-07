@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MessageBird\MessageBirdService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List purchased MessageBird numbers.
+ *
+ * Supports official number listing filters and pagination.
+ */
 class MessageBirdListNumbers implements Tool
 {
+    /**
+     * @param  MessageBirdService  $service  The MessageBird REST API client
+     */
     public function __construct(
         private MessageBirdService $service,
     ) {}
@@ -32,6 +40,11 @@ class MessageBirdListNumbers implements Tool
         ];
     }
 
+    /**
+     * List numbers.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -39,12 +52,12 @@ class MessageBirdListNumbers implements Tool
                 return ToolResult::error('MessageBird integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
-            $countryCode = $args['country_code'] ?? null;
-            $numberType = $args['number_type'] ?? null;
-
-            $result = $this->service->listNumbers($limit, $offset, $countryCode, $numberType);
+            $result = $this->service->listNumbers(array_filter([
+                'limit' => isset($args['limit']) ? (int) $args['limit'] : null,
+                'offset' => isset($args['offset']) ? (int) $args['offset'] : null,
+                'country_code' => $args['country_code'] ?? null,
+                'number_type' => $args['number_type'] ?? null,
+            ], static fn (mixed $value): bool => $value !== null));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -1,130 +1,80 @@
 # Integration: Braze
 
-> Braze integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage campaigns, canvases, and user data. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to the Braze marketing platform. List and inspect campaigns and canvases, export user profiles by segment or ID, and verify connections — all through the [Braze REST API](https://www.braze.com/docs/api/basics/).
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Braze tool lets AI agents query campaign and canvas data, look up user profiles, and surface marketing insights — giving agents data-driven awareness of your customer engagement strategy.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-braze
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Braze integration for OpenCompany and KosmoKrator agents. It exposes the Braze REST API for campaigns, Canvases, users, messaging, catalogs, templates, subscriptions, SCIM, SDK authentication, and analytics.
 
 ## Configuration
 
-This tool requires a Braze REST API key.
+Create a Braze REST API key in Settings > APIs and Identifiers > API Keys. Braze keys are scoped per endpoint, so the key must include the permissions for the tools an agent will call.
 
-**In OpenCompany**, credentials are managed through the Integrations UI.
+Required credentials:
 
-**For standalone usage**, create `config/ai-tools.php`:
+| Key | Description |
+|-----|-------------|
+| `api_key` | Braze REST API key. |
+| `url` | Braze REST endpoint for the workspace region. Defaults to `https://rest.iad-01.braze.com`. |
 
-```php
-return [
-    'braze' => [
-        'api_key' => env('BRAZE_API_KEY'),
-        'url'     => env('BRAZE_REST_URL', 'https://rest.iad-01.braze.com'),
-    ],
-];
-```
+Examples of Braze REST endpoints include `https://rest.iad-01.braze.com` and `https://rest.fra-01.braze.eu`. Use the REST endpoint shown next to the API key in Braze, not the SDK endpoint.
 
-## Available Tools
+## Coverage
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `braze_list_campaigns` | read | List marketing campaigns with pagination |
-| `braze_get_campaign` | read | Get details for a specific campaign |
-| `braze_list_canvases` | read | List canvases (multi-step journeys) with pagination |
-| `braze_get_canvas` | read | Get details for a specific canvas |
-| `braze_list_users` | read | Export users by segment ID or external IDs |
-| `braze_get_user` | read | Get a single user profile by external ID |
-| `braze_get_current_user` | read | Get the current authenticated user profile |
+The package includes focused tools for:
+
+- Catalogs, catalog items, catalog fields, and catalog selections
+- Cloud Data Ingestion integrations and syncs
+- Email bounces, unsubscribes, status updates, spam removal, and blocklisting
+- Campaign and Canvas lists, details, analytics, URL info, and duplication
+- Events, KPIs, sessions, purchases, segments, and custom attributes
+- Message sends, scheduled messages, campaign triggers, Canvas triggers, transactional email, and Live Activities
+- Preference centers
+- SCIM dashboard users
+- SDK authentication keys
+- SMS invalid number handling and subscription group status
+- Content Blocks and email templates
+- User aliases, identify, track, bulk/sync track, delete, merge, external ID migration, and user exports
+- Raw `api_get`, `api_post`, `api_put`, `api_patch`, and `api_delete` escape hatches for new or specialized Braze endpoints
 
 ## Quick Start
 
 ```php
 use OpenCompany\Integrations\Braze\BrazeService;
 use OpenCompany\Integrations\Braze\Tools\BrazeListCampaigns;
-use OpenCompany\Integrations\Braze\Tools\BrazeGetCampaign;
+use OpenCompany\Integrations\Braze\Tools\BrazeTrackUsers;
 
-// Create tools
 $service = app(BrazeService::class);
-$tools = [
-    new BrazeListCampaigns($service),
-    new BrazeGetCampaign($service),
-];
 
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List the 5 most recent campaigns and show their status.');
+$campaigns = (new BrazeListCampaigns($service))->execute([
+    'page' => 0,
+    'limit' => 10,
+]);
+
+$tracked = (new BrazeTrackUsers($service))->execute([
+    'payload' => [
+        'attributes' => [
+            ['external_id' => 'user_123', 'email' => 'person@example.test'],
+        ],
+    ],
+]);
 ```
 
-### Via ToolProvider (recommended)
+## Tool Provider
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+The Laravel service provider registers `BrazeToolProvider` with the `ToolProviderRegistry` when the registry is available. The provider supports multi-account credentials through `CredentialResolver`.
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
+use OpenCompany\Integrations\Braze\Tools\BrazeSendMessages;
 
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('braze');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Braze\Tools\BrazeListCampaigns::class
-);
+$provider = app(ToolProviderRegistry::class)->get('braze');
+$tool = $provider->createTool(BrazeSendMessages::class, ['account' => 'eu']);
 ```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Braze\BrazeService;
-
-$service = app(BrazeService::class);
-
-// List campaigns
-$campaigns = $service->listCampaigns(page: 0, limit: 10);
-
-// Get campaign details
-$details = $service->getCampaign('campaign-abc-123');
-
-// List canvases
-$canvases = $service->listCanvases();
-
-// Export users by segment
-$users = $service->exportUsers(segmentId: 'segment-xyz', limit: 50);
-
-// Get a specific user
-$user = $service->exportUsers(externalIds: ['user-123']);
-
-// Verify connection
-$me = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Braze](https://www.braze.com) account with REST API access
+- Laravel host application
+- `opencompanyapp/integration-core`
+- Braze account with REST API access
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT. See [LICENSE](LICENSE).

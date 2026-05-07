@@ -2,73 +2,80 @@
 
 namespace OpenCompany\Integrations\BigCommerce\Tools;
 
-use OpenCompany\Integrations\BigCommerce\BigCommerceService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List orders from the BigCommerce store.
- *
- * Supports filtering by status, date range, and pagination.
+ * List store orders with BigCommerce v2 filters.
  */
-class BigCommerceListOrders implements Tool
+class BigCommerceListOrders extends AbstractBigCommerceEndpointTool
 {
-    public function __construct(
-        private BigCommerceService $service,
-    ) {}
+    protected string $toolName = 'bigcommerce_list_orders';
 
-    public function name(): string
-    {
-        return 'bigcommerce_list_orders';
-    }
+    protected string $toolDescription = 'List store orders with BigCommerce v2 filters.';
 
-    public function description(): string
-    {
-        return 'List orders from the BigCommerce store. Supports filtering by status, customer, and pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of orders per page (default: 50, max: 250).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
-            'status_id' => ['type' => 'integer', 'description' => 'Filter by order status ID (0=Awaiting Fulfillment, 1=Awaiting Shipment, 2=Shipped, 3=Completed, 4=Cancelled, etc.).'],
-            'customer_id' => ['type' => 'integer', 'description' => 'Filter by customer ID.'],
-            'min_date_created' => ['type' => 'string', 'description' => 'Minimum date created (ISO 8601, e.g., "2025-01-01").'],
-            'max_date_created' => ['type' => 'string', 'description' => 'Maximum date created (ISO 8601, e.g., "2025-12-31").'],
-            'sort' => ['type' => 'string', 'description' => 'Sort field (e.g., "date_created", "total_inc_tax", "id").'],
-            'direction' => ['type' => 'string', 'description' => 'Sort direction: "asc" or "desc".'],
-        ];
-    }
+    protected string $path = '/v2/orders';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('BigCommerce integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = array (
+  'limit' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Maximum number of records to return.',
+  ),
+  'page' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Page number for paginated endpoints.',
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'required' => false,
+    'description' => 'Additional documented BigCommerce query parameters to pass through.',
+  ),
+  'status_id' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Order status ID.',
+  ),
+  'customer_id' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Customer ID.',
+  ),
+  'min_date_created' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Minimum created date.',
+  ),
+  'max_date_created' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Maximum created date.',
+  ),
+);
 
-            $params = [];
-            $stringParams = ['min_date_created', 'max_date_created', 'sort', 'direction'];
-            $intParams = ['limit', 'page', 'status_id', 'customer_id'];
+    /** @var list<string> */
+    protected array $required = array (
+);
 
-            foreach ($stringParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = $args[$key];
-                }
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = array (
+  0 => 'limit',
+  1 => 'page',
+  2 => 'status_id',
+  3 => 'customer_id',
+  4 => 'min_date_created',
+  5 => 'max_date_created',
+);
 
-            foreach ($intParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = (int) $args[$key];
-                }
-            }
-
-            $result = $this->service->listOrders($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = array (
+);
 }

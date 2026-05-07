@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Chroma\ChromaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Chroma collections in the configured tenant/database.
+ */
 class ChromaListCollections implements Tool
 {
+    /**
+     * @param  ChromaService  $service  Chroma API client.
+     */
     public function __construct(
         private ChromaService $service,
     ) {}
@@ -26,10 +32,15 @@ class ChromaListCollections implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of collections to return (default: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the value from a previous response to get the next page.'],
+            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination.'],
         ];
     }
 
+    /**
+     * Execute the collection list request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (limit, offset).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -38,7 +49,8 @@ class ChromaListCollections implements Tool
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $result = $this->service->listCollections($limit, $args['after'] ?? null);
+            $offset = isset($args['offset']) ? (int) $args['offset'] : null;
+            $result = $this->service->listCollections($limit, $offset);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

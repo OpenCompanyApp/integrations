@@ -6,8 +6,14 @@ use OpenCompany\Integrations\CoinGecko\CoinGeckoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get historical market chart data for a CoinGecko coin.
+ */
 class CoinGeckoHistory implements Tool
 {
+    /**
+     * @param  CoinGeckoService  $service  CoinGecko API client
+     */
     public function __construct(
         private CoinGeckoService $service,
     ) {}
@@ -31,6 +37,11 @@ class CoinGeckoHistory implements Tool
         ];
     }
 
+    /**
+     * Execute the historical market chart lookup.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         if (! $this->service->isConfigured()) {

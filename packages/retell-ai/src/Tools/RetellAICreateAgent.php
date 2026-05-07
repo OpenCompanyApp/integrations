@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class RetellAICreateAgent implements Tool
 {
+    /**
+     * @param  RetellAIService  $service  The Retell AI API client.
+     */
     public function __construct(
         private RetellAIService $service,
     ) {}
@@ -37,6 +40,11 @@ class RetellAICreateAgent implements Tool
         ];
     }
 
+    /**
+     * Create a voice agent.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -55,7 +63,7 @@ class RetellAICreateAgent implements Tool
                 return ToolResult::error('prompt is required.');
             }
 
-            $options = $args['options'] ?? [];
+            $options = is_array($args['options'] ?? null) ? $args['options'] : [];
 
             $result = $this->service->createAgent($voiceId, $prompt, $options);
 

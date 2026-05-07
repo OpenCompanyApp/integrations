@@ -91,7 +91,7 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Email marketing automation platform — manage subscribers, campaigns, and workflows',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:drip',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.drip.com/',
         ];

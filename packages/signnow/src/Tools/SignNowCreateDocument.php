@@ -6,6 +6,9 @@ use OpenCompany\Integrations\SignNow\SignNowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Upload a file to create a SignNow document.
+ */
 class SignNowCreateDocument implements Tool
 {
     /**

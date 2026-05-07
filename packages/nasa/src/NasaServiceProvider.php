@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the NASA integration with Laravel.
+ *
+ * Binds the NASA API service and registers NASA tools with the shared registry.
+ */
 class NasaServiceProvider extends ServiceProvider
 {
     /**

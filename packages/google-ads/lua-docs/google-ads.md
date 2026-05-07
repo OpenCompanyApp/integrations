@@ -1,6 +1,6 @@
 # Google Ads
 
-Namespace: `google_ads`
+Namespace: `google-ads`
 
 Enterprise Google Ads API integration for reporting, account discovery, campaign creation, campaign management, assets, recommendations, conversions, Customer Match, change tracking, billing, batch jobs, and raw versioned API access.
 
@@ -47,15 +47,15 @@ https://www.googleapis.com/auth/adwords
 Store:
 
 ```text
-google_ads.developer_token
-google_ads.client_id
-google_ads.client_secret
-google_ads.access_token
-google_ads.refresh_token
-google_ads.expires_at
-google_ads.manager_customer_id
-google_ads.default_customer_id
-google_ads.api_version
+google-ads.developer_token
+google-ads.client_id
+google-ads.client_secret
+google-ads.access_token
+google-ads.refresh_token
+google-ads.expires_at
+google-ads.manager_customer_id
+google-ads.default_customer_id
+google-ads.api_version
 ```
 
 Hosted web apps should still use a redirect endpoint for user self-service connection and consent.

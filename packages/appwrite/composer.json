@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-appwrite",
-    "description": "Appwrite integration for Laravel — manage databases, collections, and documents.",
+    "description": "Appwrite integration for Laravel: manage databases, users, teams, storage, functions, and messaging.",
     "license": "MIT",
     "authors": [
         {

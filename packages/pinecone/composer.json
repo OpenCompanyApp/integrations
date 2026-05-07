@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-pinecone",
-    "description": "Pinecone vector database integration for Laravel — manage indexes, upsert vectors, and query embeddings.",
+    "description": "Pinecone vector database integration for Laravel: manage indexes and vector records.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "pinecone", "database", "vectors", "embeddings", "opencompany"],
+    "keywords": ["tools", "pinecone", "data", "vectors", "embeddings", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

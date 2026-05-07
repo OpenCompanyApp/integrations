@@ -2,43 +2,23 @@
 
 namespace OpenCompany\Integrations\Droplr\Tools;
 
-use OpenCompany\Integrations\Droplr\DroplrService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class DroplrGetCurrentUser implements Tool
+/**
+ * Get the authenticated Droplr user profile.
+ */
+class DroplrGetCurrentUser extends AbstractDroplrTool
 {
-    public function __construct(
-        private DroplrService $service,
-    ) {}
+    public const NAME = 'droplr_get_current_user';
+    public const DESCRIPTION = 'Get the authenticated Droplr user profile and account details.';
+    public const PARAMETERS = [];
 
-    public function name(): string
+    /**
+     * Get the current user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    protected function call(array $args): array
     {
-        return 'droplr_get_current_user';
-    }
-
-    public function description(): string
-    {
-        return 'Get the authenticated Droplr user\'s profile, including name, email, and plan information.';
-    }
-
-    public function parameters(): array
-    {
-        return [];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Droplr integration is not configured.');
-            }
-
-            $result = $this->service->getCurrentUser();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->getCurrentUser();
     }
 }

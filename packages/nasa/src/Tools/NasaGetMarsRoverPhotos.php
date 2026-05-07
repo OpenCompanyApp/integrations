@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Nasa\NasaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve Mars rover photo metadata from NASA's Mars Photos API.
+ */
 class NasaGetMarsRoverPhotos implements Tool
 {
     /**

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-rabbitmq",
-    "description": "RabbitMQ Management API integration for Laravel — monitor queues, exchanges, connections, and vhosts.",
+    "description": "RabbitMQ Management HTTP API integration for Laravel agents: monitor and manage queues, exchanges, bindings, vhosts, users, permissions, nodes, and definitions.",
     "license": "MIT",
     "authors": [
         {

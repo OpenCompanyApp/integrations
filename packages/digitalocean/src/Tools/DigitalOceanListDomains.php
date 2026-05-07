@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List DNS domains managed through the DigitalOcean account.
+ */
 class DigitalOceanListDomains implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -30,6 +36,11 @@ class DigitalOceanListDomains implements Tool
         ];
     }
 
+    /**
+     * List account domains using optional DigitalOcean pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -37,7 +48,10 @@ class DigitalOceanListDomains implements Tool
                 return ToolResult::error('DigitalOcean integration is not configured.');
             }
 
-            $result = $this->service->listDomains();
+            $page = isset($args['page']) ? (int) $args['page'] : null;
+            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : null;
+
+            $result = $this->service->listDomains($page, $perPage);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

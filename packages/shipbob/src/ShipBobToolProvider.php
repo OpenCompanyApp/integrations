@@ -92,7 +92,7 @@ class ShipBobToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'E-commerce fulfillment and order management',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:shipbob',
-            'category' => 'ecommerce',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.shipbob.com',
         ];

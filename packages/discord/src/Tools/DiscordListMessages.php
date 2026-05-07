@@ -37,7 +37,7 @@ class DiscordListMessages implements Tool
     {
         return [
             'channel_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the channel to get messages from.'],
-            'limit'      => ['type' => 'integer', 'description' => 'Number of messages to retrieve (1–100, default 50).'],
+            'limit'      => ['type' => 'integer', 'description' => 'Number of messages to retrieve (1-100, default 50).'],
             'before'     => ['type' => 'string', 'description' => 'Message ID to get messages before (for pagination).'],
             'after'      => ['type' => 'string', 'description' => 'Message ID to get messages after (for pagination).'],
         ];

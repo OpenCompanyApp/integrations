@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Paddle integration with Laravel's service container.
+ *
+ * Binds the Paddle service using stored credentials and registers the
+ * Paddle tool provider with the shared integration registry when available.
+ */
 class PaddleServiceProvider extends ServiceProvider
 {
     /**

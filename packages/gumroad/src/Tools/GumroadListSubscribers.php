@@ -2,59 +2,47 @@
 
 namespace OpenCompany\Integrations\Gumroad\Tools;
 
-use OpenCompany\Integrations\Gumroad\GumroadService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class GumroadListSubscribers implements Tool
+/**
+ * List subscribers, optionally filtered by product.
+ */
+class GumroadListSubscribers extends AbstractGumroadEndpointTool
 {
-    public function __construct(
-        private GumroadService $service,
-    ) {}
+    protected string $toolName = 'gumroad_list_subscribers';
 
-    public function name(): string
-    {
-        return 'gumroad_list_subscribers';
-    }
+    protected string $toolDescription = 'List subscribers, optionally filtered by product.';
 
-    public function description(): string
-    {
-        return 'List all subscribers in your Gumroad account. Optionally filter by product ID to get subscribers for a specific membership or product.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'product_id' => ['type' => 'string', 'description' => 'Filter subscribers by a specific product ID (e.g., a membership product).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
-        ];
-    }
+    protected string $path = '/subscribers';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gumroad integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'page' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Page number for paginated Gumroad endpoints.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Gumroad query parameters to pass through.',
+    ],
+    'product_id' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by product ID.',
+    ],
+];
 
-            $params = [];
-            if (!empty($args['product_id'])) {
-                $params['product_id'] = $args['product_id'];
-            }
-            if (isset($args['page'])) {
-                $params['page'] = (int) $args['page'];
-            }
+    /** @var list<string> */
+    protected array $required = [];
 
-            $result = $this->service->listSubscribers($params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'page',
+    'product_id',
+];
 
-            $subscribers = $result['subscribers'] ?? [];
-
-            return ToolResult::success([
-                'subscribers' => $subscribers,
-                'totalCount' => count($subscribers),
-            ]);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

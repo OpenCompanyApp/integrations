@@ -3,18 +3,23 @@
 namespace OpenCompany\Integrations\ExchangeRate;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRateConvertCurrency;
 use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRateHistory;
-use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRateRates;
 use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRateListCurrencies;
+use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRatePairRate;
 use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRatePopularCurrencies;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\ExchangeRate\Tools\ExchangeRateRates;
 
 /**
+ * Exposes public Fawaz Ahmed exchange-api currency tools.
+ *
+ * No credentials are required; all rates are fetched from public static JSON datasets.
+ */
+class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -22,46 +27,36 @@ class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabiliti
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'none',
-            'legacy_auth_type' => 'none',
-            'credential_mode' => 'none',
-            'setup_flows' =>
-            [
-              0 => 'none',
+            'auth' => [
+                'strategy' => 'none',
+                'legacy_auth_type' => 'none',
+                'credential_mode' => 'none',
+                'setup_flows' => ['none'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'none',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'none',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'none',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'none',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -94,14 +89,15 @@ class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabiliti
     {
         return [
             'name' => 'ExchangeRate',
-            'description' => 'Currency exchange rates',
+            'description' => 'Public currency exchange rates for fiat, crypto, and metals',
             'icon' => 'ph:currency-circle-dollar',
             'logo' => 'ph:currency-circle-dollar',
             'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://www.exchangerate-api.com/docs/overview',
+            'docs_url' => 'https://github.com/fawazahmed0/exchange-api',
         ];
     }
+
     public function tools(): array
     {
         return [
@@ -125,6 +121,13 @@ class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabiliti
                 'name' => 'Convert Currency',
                 'description' => 'Convert an amount from one currency to another.',
                 'icon' => 'ph:arrows-left-right',
+            ],
+            'exchangerate_pair_rate' => [
+                'class' => ExchangeRatePairRate::class,
+                'type' => 'read',
+                'name' => 'Pair Rate',
+                'description' => 'Get the direct exchange rate for one currency pair.',
+                'icon' => 'ph:equals',
             ],
             'exchangerate_rates' => [
                 'class' => ExchangeRateRates::class,
@@ -151,7 +154,9 @@ class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabiliti
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/exchangerate.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [];
     }

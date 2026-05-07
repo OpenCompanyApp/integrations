@@ -1,101 +1,61 @@
 # Jina AI — Lua API Reference
 
+Namespace: `app.integrations.jinaai`
+
+This integration uses Jina Search Foundation endpoints:
+
+- Search Reader: `https://s.jina.ai/`
+- URL Reader: `https://r.jina.ai/`
+- Grounding: `https://g.jina.ai/`
+- Embeddings: `https://api.jina.ai/v1/embeddings`
+- Rerank: `https://api.jina.ai/v1/rerank`
+- Classify: `https://api.jina.ai/v1/classify`
+- Segment: `https://api.jina.ai/v1/segment`
+
 ## search
 
-Search the web using Jina AI.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `q` | string | yes | The search query string |
-
-### Examples
-
-### Basic web search
+Search the web and return Jina Reader search results.
 
 ```lua
 local result = app.integrations.jinaai.search({
-  q = "Laravel 12 new features"
+  q = "Laravel queue worker retry strategy"
 })
 
-for _, item in ipairs(result.data.result) do
-  print(item.title .. ": " .. item.url)
+for _, item in ipairs(result.data.result or {}) do
+  print(item.title .. " " .. item.url)
 end
 ```
 
----
-
 ## read
 
-Read and extract clean content from a URL.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `url` | string | yes | The URL to read and extract content from |
-
-### Examples
-
-### Read a web page
+Read a URL and extract LLM-friendly content.
 
 ```lua
 local result = app.integrations.jinaai.read({
-  url = "https://laravel.com/docs/12.x"
+  url = "https://example.test/article"
 })
 
 print(result.data.content)
 ```
 
----
-
 ## ground
 
-Ground a statement against provided context — verify whether a claim is supported by reference text.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `statement` | string | yes | The statement or claim to verify |
-| `context` | string | yes | The reference context text to ground the statement against |
-
-### Examples
-
-### Verify a claim
+Verify a statement with Jina Grounding.
 
 ```lua
 local result = app.integrations.jinaai.ground({
-  statement = "Laravel 12 was released in 2025",
-  context = "Laravel 12 was officially released on March 11, 2025, introducing new features like conversational exception handling and improved queue management."
+  statement = "Jina Reader can convert URLs to markdown."
 })
 
-for _, fact in ipairs(result.data.facts) do
-  print(fact.statement .. ": " .. fact.grounded)
-end
+print(result.data.result)
+print(result.data.factuality)
 ```
 
----
+`references` can be passed to restrict sources. The legacy `context` field is still forwarded for compatibility, but `references` is preferred for source control.
 
 ## embeddings
 
-Generate text embeddings — convert text into dense vector representations.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `input` | array | yes | An array of strings to generate embeddings for |
-| `model` | string | no | The embedding model (e.g., `"jina-embeddings-v3"`) |
-
-### Available Models
-
-`jina-embeddings-v3`, `jina-embeddings-v2-base-en`, `jina-embeddings-v2-base-de`, `jina-embeddings-v2-base-es`, `jina-embeddings-v2-base-code`, `jina-embeddings-v2-base-zh`
-
-### Examples
-
-### Generate embeddings for texts
+Generate embeddings.
 
 ```lua
 local result = app.integrations.jinaai.embeddings({
@@ -106,67 +66,64 @@ local result = app.integrations.jinaai.embeddings({
   model = "jina-embeddings-v3"
 })
 
-for _, embedding in ipairs(result.data) do
-  print("Embedding index " .. embedding.index .. ": " .. #embedding.embedding .. " dimensions")
-end
+print(#(result.data or {}))
 ```
-
----
 
 ## rerank
 
 Rerank documents by relevance to a query.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | The query to rank documents against |
-| `documents` | array | yes | An array of document strings to rank |
-| `model` | string | no | The reranking model (e.g., `"jina-reranker-v2-base-multilingual"`) |
-| `top_n` | integer | no | Maximum number of top results to return |
-
-### Available Models
-
-`jina-reranker-v2-base-multilingual`, `jina-reranker-v1-turbo-en`, `jina-reranker-v1-tiny-en`, `jina-colbert-v1-en`, `jina-colbert-v2`
-
-### Examples
-
-### Rerank search results
-
 ```lua
 local result = app.integrations.jinaai.rerank({
   query = "How to install Laravel",
   documents = {
-    "Laravel is a web application framework with expressive, elegant syntax.",
-    "To install Laravel, use Composer: composer create-project laravel/laravel example-app",
-    "Vue.js is a progressive JavaScript framework for building user interfaces.",
-    "Laravel Sail provides a Docker-based development environment."
+    "Laravel uses Composer for installation.",
+    "Vue renders browser interfaces."
   },
-  top_n = 2
+  top_n = 1
 })
 
-for _, doc in ipairs(result.results) do
-  print("Rank " .. doc.index .. " (score: " .. doc.relevance_score .. "): " .. doc.document.text:sub(1, 80))
+print(result.results[1].relevance_score)
+```
+
+## classify
+
+Classify text or image inputs.
+
+```lua
+local result = app.integrations.jinaai.classify({
+  input = { "Composer installs Laravel packages." },
+  labels = { "php", "javascript", "database" },
+  top_k = 1
+})
+
+print(result.data[1].label)
+```
+
+For few-shot classification, pass the classifier fields supported by the upstream API, such as `classifier_id`.
+
+## segment
+
+Tokenize or segment long text.
+
+```lua
+local result = app.integrations.jinaai.segment({
+  content = "A long paragraph that should be split before embedding.",
+  return_chunks = true,
+  max_chunk_length = 256
+})
+
+for _, chunk in ipairs(result.chunks or {}) do
+  print(chunk)
 end
 ```
 
----
-
 ## Multi-Account Usage
 
-If you have multiple Jina AI accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.jinaai.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.jinaai.default.function_name({...})
-
--- Named accounts
-app.integrations.jinaai.production.function_name({...})
-app.integrations.jinaai.staging.function_name({...})
+app.integrations.jinaai.search({...})
+app.integrations.jinaai.default.search({...})
+app.integrations.jinaai.production.search({...})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts; only credentials differ.

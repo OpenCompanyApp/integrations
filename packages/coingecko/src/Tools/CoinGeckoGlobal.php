@@ -6,8 +6,14 @@ use OpenCompany\Integrations\CoinGecko\CoinGeckoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get global cryptocurrency market statistics.
+ */
 class CoinGeckoGlobal implements Tool
 {
+    /**
+     * @param  CoinGeckoService  $service  CoinGecko API client
+     */
     public function __construct(
         private CoinGeckoService $service,
     ) {}
@@ -27,6 +33,11 @@ class CoinGeckoGlobal implements Tool
         return [];
     }
 
+    /**
+     * Execute the global market lookup.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         if (! $this->service->isConfigured()) {

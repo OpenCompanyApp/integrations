@@ -30,8 +30,8 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
+            'auth' => [
+            'strategy' => 'bearer_token',
             'legacy_auth_type' => 'api_key',
             'credential_mode' => 'secret',
             'setup_flows' =>
@@ -42,6 +42,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'refreshable' => false,
             'token_keys' =>
             [
+              0 => 'api_key',
             ],
             'notes' =>
             [
@@ -113,7 +114,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'International money transfers and multi-currency accounts',
             'icon' => 'ph:money',
             'logo' => 'simple-icons:wise',
-            'category' => 'finance',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.wise.com/api/',
         ];
@@ -130,16 +131,16 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Wise API token',
-                'hint' => 'Generate an API token in your Wise account settings under "API tokens"',
+                'hint' => 'Generate an API token in your Wise account settings under API tokens.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API URL',
-                'placeholder' => 'https://api.transferwise.com',
-                'hint' => 'Use <code>https://api.transferwise.com</code> for production, or <code>https://api.sandbox.transferwise.tech</code> for testing',
-                'default' => 'https://api.transferwise.com',
+                'placeholder' => 'https://api.wise.com',
+                'hint' => 'Use https://api.wise.com for production or https://api.wise-sandbox.com for sandbox.',
+                'default' => 'https://api.wise.com',
             ],
         ];
     }
@@ -153,7 +154,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.transferwise.com', '/');
+        $baseUrl = rtrim($config['url'] ?? 'https://api.wise.com', '/');
 
         if (empty($apiKey)) {
             return ['success' => false, 'error' => 'No API key provided'];
@@ -280,7 +281,6 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Wise API URL', 'required' => false, 'default' => 'https://api.transferwise.com'],
         ];
     }
 
@@ -312,7 +312,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
 
             $service = new WiseService(
                 apiKey: $creds->get('wise', 'api_key', '', $account),
-                baseUrl: $creds->get('wise', 'url', 'https://api.transferwise.com', $account),
+                baseUrl: $creds->get('wise', 'url', 'https://api.wise.com', $account),
             );
 
             return new $class($service);

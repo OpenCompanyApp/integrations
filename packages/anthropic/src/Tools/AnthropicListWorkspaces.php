@@ -7,12 +7,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Anthropic workspaces.
+ * List Anthropic organization workspaces.
  *
- * Sends a GET request to /workspaces with optional pagination parameters.
- * Returns a paginated list of workspace resources.
+ * Sends a GET request to /organizations/workspaces through the Admin API.
  *
- * @see https://docs.anthropic.com/en/api/list-workspaces
+ * @see https://docs.anthropic.com/en/api/admin-api/workspaces/list-workspaces
  */
 class AnthropicListWorkspaces implements Tool
 {
@@ -36,7 +35,7 @@ class AnthropicListWorkspaces implements Tool
      */
     public function description(): string
     {
-        return 'List Anthropic workspaces. Returns workspace identifiers, names, and configuration details.';
+        return 'List Anthropic organization workspaces. Requires an Admin API key.';
     }
 
     /**
@@ -48,8 +47,9 @@ class AnthropicListWorkspaces implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of workspaces to return per page (default: 20, max: 1000).'],
-            'before_id' => ['type' => 'string', 'description' => 'Workspace ID used for cursor-based pagination — return workspaces before this ID.'],
-            'after_id' => ['type' => 'string', 'description' => 'Workspace ID used for cursor-based pagination — return workspaces after this ID.'],
+            'before_id' => ['type' => 'string', 'description' => 'Workspace ID used for cursor-based pagination - return workspaces before this ID.'],
+            'after_id' => ['type' => 'string', 'description' => 'Workspace ID used for cursor-based pagination - return workspaces after this ID.'],
+            'include_archived' => ['type' => 'boolean', 'description' => 'Whether to include archived workspaces.'],
         ];
     }
 
@@ -62,13 +62,13 @@ class AnthropicListWorkspaces implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Anthropic integration is not configured.');
+            if (!$this->service->isAdminConfigured()) {
+                return ToolResult::error('Anthropic Admin API key is not configured.');
             }
 
             $params = [];
 
-            $optionalKeys = ['limit', 'before_id', 'after_id'];
+            $optionalKeys = ['limit', 'before_id', 'after_id', 'include_archived'];
 
             foreach ($optionalKeys as $key) {
                 if (isset($args[$key])) {

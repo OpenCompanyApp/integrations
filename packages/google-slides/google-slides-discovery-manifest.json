@@ -1,0 +1,49 @@
+{
+    "source": "https://slides.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Slides API",
+    "version": "v1",
+    "method_count": 5,
+    "generated_package": "google-slides",
+    "methods": [
+        {
+            "discovery_id": "presentations.get",
+            "tool": "google_slides_presentations_get",
+            "class": "GoogleSlidesPresentationsGet",
+            "http_method": "GET",
+            "path": "/v1/presentations/{+presentationId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "presentations.create",
+            "tool": "google_slides_presentations_create",
+            "class": "GoogleSlidesPresentationsCreate",
+            "http_method": "POST",
+            "path": "/v1/presentations",
+            "type": "write"
+        },
+        {
+            "discovery_id": "presentations.batchUpdate",
+            "tool": "google_slides_presentations_batch_update",
+            "class": "GoogleSlidesPresentationsBatchUpdate",
+            "http_method": "POST",
+            "path": "/v1/presentations/{presentationId}:batchUpdate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "presentations.pages.get",
+            "tool": "google_slides_presentations_pages_get",
+            "class": "GoogleSlidesPresentationsPagesGet",
+            "http_method": "GET",
+            "path": "/v1/presentations/{presentationId}/pages/{pageObjectId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "presentations.pages.getThumbnail",
+            "tool": "google_slides_presentations_pages_get_thumbnail",
+            "class": "GoogleSlidesPresentationsPagesGetThumbnail",
+            "http_method": "GET",
+            "path": "/v1/presentations/{presentationId}/pages/{pageObjectId}/thumbnail",
+            "type": "read"
+        }
+    ]
+}

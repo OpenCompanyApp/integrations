@@ -92,7 +92,7 @@ class WeaveToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Healthcare patient communication platform — manage patients, appointments, and messages.',
             'icon' => 'ph:heartbeat',
             'logo' => 'simple-icons:weave',
-            'category' => 'healthcare',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.getweave.com',
         ];

@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Courier;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Courier\Tools\CourierSendMessage;
-use OpenCompany\Integrations\Courier\Tools\CourierListMessages;
-use OpenCompany\Integrations\Courier\Tools\CourierGetMessage;
-use OpenCompany\Integrations\Courier\Tools\CourierListRecipients;
-use OpenCompany\Integrations\Courier\Tools\CourierGetRecipient;
-use OpenCompany\Integrations\Courier\Tools\CourierListTemplates;
-use OpenCompany\Integrations\Courier\Tools\CourierGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Courier.
+ *
+ * Exposes official Courier API operations generated from the API reference
+ * markdown linked by Courier's llms.txt documentation index.
+ */
+class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,46 +25,27 @@ class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'required_secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => ['Courier API keys are sent as Bearer tokens. Test and production environments use different keys.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -78,7 +58,7 @@ class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'label' => 'Courier',
-            'description' => 'Notifications & messaging',
+            'description' => 'Notifications and messaging',
             'icon' => 'ph:paper-plane-tilt',
             'logo' => 'simple-icons:courier',
         ];
@@ -88,63 +68,46 @@ class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'name' => 'Courier',
-            'description' => 'Programmable notifications and messaging platform',
+            'description' => 'Send notifications and manage Courier users, lists, tenants, templates, automations, journeys, logs, brands, and preferences.',
             'icon' => 'ph:paper-plane-tilt',
             'logo' => 'simple-icons:courier',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.courier.com/docs/reference/',
         ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'api_key',
-                'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Courier API key',
-                'hint' => 'Generate an API key in your Courier account settings under "API Keys"',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.courier.com',
-                'hint' => 'Use <code>https://api.courier.com</code> for the default Courier API, or a custom endpoint',
-                'default' => 'https://api.courier.com',
-            ],
-        ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Test a Courier API key with a lightweight messages request.
+     *
+     * @param  array<string, mixed>  $config  Configuration values to test.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.courier.com', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.courier.com'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            $response = Http::withToken($apiKey)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl.'/messages', ['limit' => 1]);
 
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Courier API at {$baseUrl}. Check the URL.",
-                ];
+            if (!$response->successful()) {
+                return ['success' => false, 'error' => 'Courier API returned HTTP '.$response->status().'.'];
             }
 
-            return [
-                'success' => true,
-                'message' => "Connected to Courier API as " . ($json['user']['name'] ?? 'unknown user') . ".",
-            ];
+            return ['success' => true, 'message' => 'Connected to Courier API.'];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -158,65 +121,7 @@ class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function tools(): array
-    {
-        return [
-            'courier_send_message' => [
-                'class' => CourierSendMessage::class,
-                'type' => 'write',
-                'name' => 'Send Message',
-                'description' => 'Send a notification message via Courier.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'courier_list_messages' => [
-                'class' => CourierListMessages::class,
-                'type' => 'read',
-                'name' => 'List Messages',
-                'description' => 'List messages with optional filtering and pagination.',
-                'icon' => 'ph:envelope',
-            ],
-            'courier_get_message' => [
-                'class' => CourierGetMessage::class,
-                'type' => 'read',
-                'name' => 'Get Message',
-                'description' => 'Get details of a specific message.',
-                'icon' => 'ph:envelope-open',
-            ],
-            'courier_list_recipients' => [
-                'class' => CourierListRecipients::class,
-                'type' => 'read',
-                'name' => 'List Recipients',
-                'description' => 'List notification recipients.',
-                'icon' => 'ph:users',
-            ],
-            'courier_get_recipient' => [
-                'class' => CourierGetRecipient::class,
-                'type' => 'read',
-                'name' => 'Get Recipient',
-                'description' => 'Get details of a specific recipient.',
-                'icon' => 'ph:user',
-            ],
-            'courier_list_templates' => [
-                'class' => CourierListTemplates::class,
-                'type' => 'read',
-                'name' => 'List Templates',
-                'description' => 'List notification templates.',
-                'icon' => 'ph:file-text',
-            ],
-            'courier_get_current_user' => [
-                'class' => CourierGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Courier user.',
-                'icon' => 'ph:identification-badge',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/courier.md';
-    }    public function credentialFields(): array
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -224,26 +129,65 @@ class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
+    /**
+     * Registered Courier operation tools keyed by tool slug.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
+    public function tools(): array
+    {
+        $tools = [];
+        foreach (CourierService::operations() as $definition) {
+            $tools[(string) $definition['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$definition['class'],
+                'type' => (string) $definition['type'],
+                'name' => (string) $definition['name'],
+                'description' => (string) $definition['description'],
+                'icon' => $definition['type'] === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            ];
+        }
+
+        return $tools;
+    }
+
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__.'/../lua-docs/courier.md';
+    }
+
     public function isIntegration(): bool
     {
         return true;
     }
 
+    /**
+     * Create a Courier tool instance.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a Courier service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): CourierService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new CourierService(
+            return new CourierService(
                 apiKey: $creds->get('courier', 'api_key', '', $account),
                 baseUrl: $creds->get('courier', 'url', 'https://api.courier.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(CourierService::class));
+        return app(CourierService::class);
     }
 }

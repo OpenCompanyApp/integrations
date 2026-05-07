@@ -4,21 +4,24 @@ namespace OpenCompany\Integrations\Postmark;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
  * Client for the Postmark REST API covering email sending, messages, templates, and servers.
  *
- * Wraps HTTP calls to Postmark's API endpoints with Bearer token authentication
- * passed via the X-Postmark-Server-Token header on every request.
+ * Wraps server-level calls with X-Postmark-Server-Token and account-level
+ * server management calls with X-Postmark-Account-Token.
  */
 class PostmarkService
 {
     /**
      * @param  string  $serverToken  Postmark Server API token
-     * @param  string  $baseUrl      Postmark API base URL
+     * @param  string  $accountToken  Optional Postmark Account API token for account-level endpoints
+     * @param  string  $baseUrl  Postmark API base URL
      */
     public function __construct(
         private string $serverToken = '',
+        private string $accountToken = '',
         private string $baseUrl = 'https://api.postmarkapp.com',
     ) {}
 
@@ -148,7 +151,7 @@ class PostmarkService
      */
     public function listServers(array $params = []): array
     {
-        return $this->request('GET', '/servers', $params);
+        return $this->request('GET', '/servers', $params, 'account');
     }
 
     // ── Account / Server Info ───────────────────────────────
@@ -168,17 +171,30 @@ class PostmarkService
     /**
      * Make an API request to Postmark.
      *
-     * Sends Bearer token via X-Postmark-Server-Token header on every request.
+     * Sends the correct Postmark token header for server-level or account-level endpoints.
      *
-     * @param  string                 $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string                 $path    API path (e.g. /email, /messages/outbound)
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
+     * @param  string  $path  API path (e.g. /email, /messages/outbound)
      * @param  array<string, mixed>  $data    Query params (GET) or JSON body (POST/PUT)
+     * @param  string  $tokenType  Token scope: server or account
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], string $tokenType = 'server'): array
     {
         if (! $this->isConfigured()) {
-            throw new \RuntimeException('Postmark server token is not configured.');
+            throw new RuntimeException('Postmark server token is not configured.');
+        }
+
+        $headerName = 'X-Postmark-Server-Token';
+        $token = $this->serverToken;
+
+        if ($tokenType === 'account') {
+            if ($this->accountToken === '') {
+                throw new RuntimeException('Postmark account token is required for account-level endpoints such as /servers.');
+            }
+
+            $headerName = 'X-Postmark-Account-Token';
+            $token = $this->accountToken;
         }
 
         $baseUrl = rtrim($this->baseUrl, '/');
@@ -186,7 +202,7 @@ class PostmarkService
 
         try {
             $http = Http::withHeaders([
-                'X-Postmark-Server-Token' => $this->serverToken,
+                $headerName => $token,
                 'Accept' => 'application/json',
             ])->timeout(30);
 
@@ -195,7 +211,7 @@ class PostmarkService
                 'POST'   => $http->post($url, $data),
                 'PUT'    => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default  => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (! $response->successful()) {
@@ -204,7 +220,7 @@ class PostmarkService
                     'body'   => $response->body(),
                 ]);
 
-                throw new \RuntimeException("Postmark API error ({$response->status()}): {$response->body()}");
+                throw new RuntimeException("Postmark API error ({$response->status()}): {$response->body()}");
             }
 
             return $response->json() ?? [];
@@ -212,7 +228,7 @@ class PostmarkService
             Log::error("Postmark API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Postmark API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Postmark API: {$e->getMessage()}");
         }
     }
 }

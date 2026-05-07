@@ -1,223 +1,74 @@
-# Docker Hub — Lua API Reference
+# Docker Hub Lua API Reference
 
-## list_repositories
+Namespace: `docker`
 
-List Docker Hub repositories. Optionally filter by namespace.
+This integration exposes generated coverage for Docker Hub's official OpenAPI document at `https://docs.docker.com/reference/api/hub/latest.yaml`.
 
-### Parameters
+Configure `url` as the API root, usually `https://hub.docker.com`. Existing configs that use `https://hub.docker.com/v2` continue to work for `/v2` tools.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | string | no | Docker Hub namespace (username or organization) to filter by |
-| `page_size` | integer | no | Number of repositories per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
+Authentication uses a Docker Hub bearer token or personal access token. Endpoint access depends on the token and organization permissions.
 
-### Examples
+## Common Tools
+
+- `docker_list_repositories` maps to `GET /v2/namespaces/{namespace}/repositories`.
+- `docker_get_repository` maps to `GET /v2/namespaces/{namespace}/repositories/{repository}`.
+- `docker_create_repository` maps to `POST /v2/namespaces/{namespace}/repositories`.
+- `docker_list_tags` maps to `GET /v2/namespaces/{namespace}/repositories/{repository}/tags`.
+- `docker_get_tag` maps to `GET /v2/namespaces/{namespace}/repositories/{repository}/tags/{tag}`.
+
+The generated catalog also covers user login/token endpoints, access tokens, audit logs, organization settings, organization access tokens, members, groups, invites, immutable tags, repository groups, and SCIM users/groups/schemas.
+
+## Arguments
+
+Path and query parameters use names from Docker's OpenAPI document. Snake-case aliases are also accepted. JSON request bodies go in `body`; if `body` is omitted, non-path/query/header arguments are collected into the body.
+
+## Examples
 
 ```lua
--- List repositories
-local result = app.integrations.docker.list_repositories({
-  page_size = 10,
+local repos = docker.docker_list_repositories({
+  namespace = "example-org",
+  page_size = 25,
   page = 1
 })
+```
 
-for _, repo in ipairs(result.results) do
-  print(repo.namespace .. "/" .. repo.name .. " - " .. repo.description)
-end
+```lua
+local repo = docker.docker_get_repository({
+  namespace = "example-org",
+  repository = "api"
+})
+```
 
--- List repositories for a specific namespace
-local result = app.integrations.docker.list_repositories({
-  namespace = "myorg",
+```lua
+local tags = docker.docker_list_tags({
+  namespace = "example-org",
+  repository = "api",
   page_size = 50
 })
-
-for _, repo in ipairs(result.results) do
-  print(repo.name .. " (pulls: " .. repo.pull_count .. ")")
-end
 ```
 
----
-
-## get_repository
-
-Get details for a specific Docker Hub repository.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | string | yes | The Docker Hub namespace (username or organization) |
-| `name` | string | yes | The repository name |
-
-### Examples
-
 ```lua
-local result = app.integrations.docker.get_repository({
-  namespace = "library",
-  name = "nginx"
-})
-
-print(result.name)
-print(result.description)
-print("Stars: " .. result.star_count)
-print("Pulls: " .. result.pull_count)
-print("Private: " .. tostring(result.is_private))
-```
-
----
-
-## list_tags
-
-List tags for a Docker Hub repository.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | string | yes | The Docker Hub namespace (username or organization) |
-| `name` | string | yes | The repository name |
-| `page_size` | integer | no | Number of tags per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-
-### Examples
-
-```lua
-local result = app.integrations.docker.list_tags({
-  namespace = "library",
-  name = "nginx",
-  page_size = 10
-})
-
-for _, tag in ipairs(result.results) do
-  print(tag.name .. " (" .. tag.full_size .. " bytes)")
-end
-```
-
----
-
-## get_tag
-
-Get details for a specific tag in a Docker Hub repository.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | string | yes | The Docker Hub namespace (username or organization) |
-| `name` | string | yes | The repository name |
-| `tag` | string | yes | The tag name (e.g., "latest", "1.0.0") |
-
-### Examples
-
-```lua
-local result = app.integrations.docker.get_tag({
-  namespace = "library",
-  name = "nginx",
-  tag = "latest"
-})
-
-print("Tag: " .. result.name)
-print("Full size: " .. result.full_size .. " bytes")
-print("Digest: " .. result.images[1].digest)
-```
-
----
-
-## create_repository
-
-Create a new Docker Hub repository.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | string | yes | Docker Hub namespace (username or organization) |
-| `name` | string | yes | Repository name (must be unique within the namespace) |
-| `description` | string | no | Short description of the repository |
-| `full_description` | string | no | Full description (supports Markdown) |
-| `is_private` | boolean | no | Whether the repository is private (default: false) |
-
-### Examples
-
-```lua
--- Create a public repository
-local result = app.integrations.docker.create_repository({
-  namespace = "myorg",
-  name = "my-app",
-  description = "My application container image",
-  full_description = "# My App\n\nA containerized version of my application.",
-  is_private = false
-})
-
-print("Created: " .. result.namespace .. "/" .. result.name)
-
--- Create a private repository
-local result = app.integrations.docker.create_repository({
-  namespace = "myorg",
-  name = "internal-service",
-  is_private = true
+local created = docker.docker_create_repository({
+  namespace = "example-org",
+  body = {
+    name = "agent-demo",
+    description = "Demo repository",
+    is_private = true
+  }
 })
 ```
 
----
+## Return Shapes
 
-## list_organizations
+Responses are Docker Hub's parsed JSON responses. Paginated endpoints usually include `count`, `next`, `previous`, and `results` fields.
 
-List Docker Hub organizations the authenticated user belongs to.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of organizations per page (default: 25) |
-| `page` | integer | no | Page number for pagination (1-indexed, default: 1) |
-
-### Examples
+Non-JSON responses return:
 
 ```lua
-local result = app.integrations.docker.list_organizations({
-  page_size = 50
-})
-
-for _, org in ipairs(result.results) do
-  print(org.orgname .. " (" .. org.full_name .. ")")
-end
+{
+  body = "...",
+  content_type = "text/plain"
+}
 ```
 
----
-
-## get_current_user
-
-Get the profile of the currently authenticated Docker Hub user.
-
-### Parameters
-
-None.
-
-### Examples
-
-```lua
-local result = app.integrations.docker.get_current_user({})
-print("Logged in as: " .. result.username .. " (" .. result.full_name .. ")")
-print("ID: " .. result.id)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Docker Hub accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.docker.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.docker.default.function_name({...})
-
--- Named accounts
-app.integrations.docker.production.function_name({...})
-app.integrations.docker.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+The previous `docker_list_organizations` and `docker_get_current_user` helpers are intentionally not part of the generated catalog because the current official Hub OpenAPI document does not expose those operations.

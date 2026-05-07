@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Paystack subscription plans.
+ *
+ * Supports pagination and active or inactive status filtering.
+ */
 class PaystackListPlans implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -31,6 +39,11 @@ class PaystackListPlans implements Tool
         ];
     }
 
+    /**
+     * List plans with optional pagination and status filters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

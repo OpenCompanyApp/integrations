@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ExchangeRate\ExchangeRateService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List and search currencies supported by the exchange-api dataset.
+ */
 class ExchangeRateListCurrencies implements Tool
 {
+    /**
+     * @param  ExchangeRateService  $service  The exchange-rate API client.
+     */
     public function __construct(
         private ExchangeRateService $service,
     ) {}
@@ -29,6 +35,11 @@ class ExchangeRateListCurrencies implements Tool
         ];
     }
 
+    /**
+     * List available currencies, optionally filtered by code or name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (query).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -43,7 +54,6 @@ class ExchangeRateListCurrencies implements Tool
                 }, ARRAY_FILTER_USE_BOTH);
             }
 
-            // Limit output
             $total = count($currencies);
             $currencies = array_slice($currencies, 0, 50, true);
 

@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class OneSignalCreateNotification implements Tool
 {
+    /**
+     * @param  OneSignalService  $service  OneSignal API client.
+     */
     public function __construct(
         private OneSignalService $service,
     ) {}
@@ -32,7 +35,8 @@ class OneSignalCreateNotification implements Tool
     {
         return [
             'app_id' => ['type' => 'string', 'required' => true, 'description' => 'The OneSignal app ID to send the notification from.'],
-            'contents' => ['type' => 'object', 'required' => true, 'description' => 'Notification body per language, e.g. {"en": "Hello!", "es": "¡Hola!"}. The "en" key is required.'],
+            'payload' => ['type' => 'object', 'description' => 'Full message payload. If provided, it is sent directly with app_id.'],
+            'contents' => ['type' => 'object', 'required' => true, 'description' => 'Notification body per language, e.g. {"en": "Hello!", "es": "Hola!"}. The "en" key is required.'],
             'headings' => ['type' => 'object', 'description' => 'Notification title per language, e.g. {"en": "Update"}. Defaults to the app name if omitted.'],
             'included_segments' => ['type' => 'array', 'description' => 'Segments to target, e.g. ["All", "Active Users"]. Defaults to ["All"] if omitted.'],
             'url' => ['type' => 'string', 'description' => 'URL to open when the notification is tapped.'],
@@ -48,6 +52,11 @@ class OneSignalCreateNotification implements Tool
             }
 
             $appId = $args['app_id'];
+
+            if (isset($args['payload']) && is_array($args['payload'])) {
+                return ToolResult::success($this->service->createMessage($appId, $args['payload']));
+            }
+
             $contents = $args['contents'];
 
             if (!is_array($contents) || empty($contents)) {

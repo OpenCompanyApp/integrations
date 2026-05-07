@@ -3,22 +3,22 @@
 namespace OpenCompany\Integrations\Mindee;
 
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * Service class for interacting with the Mindee document OCR API.
+ * HTTP client for the Mindee document parsing REST API.
  *
- * Handles authentication, HTTP communication, and file uploads for
- * document parsing endpoints (invoices, receipts, passports, custom).
+ * Handles Token authentication, product endpoint construction, document
+ * payload encoding, asynchronous polling, and error normalization.
  */
 class MindeeService
 {
     /**
-     * Create a new MindeeService instance.
-     *
-     * @param string $apiKey  Mindee API key for Bearer token authentication.
-     * @param string $baseUrl Base URL for the Mindee API (default: https://api.mindee.net/v1).
+     * @param  string  $apiKey  Mindee API key for Token authentication.
+     * @param  string  $baseUrl  Base URL for the Mindee API.
      */
     public function __construct(
         private string $apiKey = '',
@@ -28,209 +28,278 @@ class MindeeService
     }
 
     /**
-     * Check whether the service is properly configured with an API key.
+     * Check whether the service is configured with an API key.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
-     * Parse an invoice document.
+     * Parse an invoice document with Mindee's off-the-shelf invoice API.
      *
-     * Accepts either a file path or a base64-encoded string.
-     *
-     * @param string      $document   File path or base64-encoded document content.
-     * @param string|null $fileName   Optional filename override (used for base64 uploads).
-     * @param array       $options    Additional options (e.g., include_merging, cropper).
-     * @return array Parsed invoice prediction result.
-     *
-     * @throws \RuntimeException If the API request fails.
+     * @param  string  $document  File path, URL, or base64-encoded document content.
+     * @param  string|null  $fileName  Filename for multipart or base64 uploads.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
      */
     public function parseInvoice(string $document, ?string $fileName = null, array $options = []): array
     {
-        return $this->predict('/products/invoices/v4/predict', $document, $fileName, $options);
+        return $this->predictProduct('mindee', 'invoices', 'v4', $document, $fileName, $options);
     }
 
     /**
-     * Parse an expense receipt document.
+     * Parse an expense receipt document with Mindee's off-the-shelf receipt API.
      *
-     * Accepts either a file path or a base64-encoded string.
-     *
-     * @param string      $document   File path or base64-encoded document content.
-     * @param string|null $fileName   Optional filename override (used for base64 uploads).
-     * @param array       $options    Additional options (e.g., include_merging, cropper).
-     * @return array Parsed receipt prediction result.
-     *
-     * @throws \RuntimeException If the API request fails.
+     * @param  string  $document  File path, URL, or base64-encoded document content.
+     * @param  string|null  $fileName  Filename for multipart or base64 uploads.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
      */
     public function parseReceipt(string $document, ?string $fileName = null, array $options = []): array
     {
-        return $this->predict('/products/expense_receipts/v5/predict', $document, $fileName, $options);
+        return $this->predictProduct('mindee', 'expense_receipts', 'v5', $document, $fileName, $options);
     }
 
     /**
-     * Parse a passport document.
+     * Parse a passport document with Mindee's off-the-shelf passport API.
      *
-     * Accepts either a file path or a base64-encoded string.
-     *
-     * @param string      $document   File path or base64-encoded document content.
-     * @param string|null $fileName   Optional filename override (used for base64 uploads).
-     * @param array       $options    Additional options.
-     * @return array Parsed passport prediction result.
-     *
-     * @throws \RuntimeException If the API request fails.
+     * @param  string  $document  File path, URL, or base64-encoded document content.
+     * @param  string|null  $fileName  Filename for multipart or base64 uploads.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
      */
     public function parsePassport(string $document, ?string $fileName = null, array $options = []): array
     {
-        return $this->predict('/products/passport/v1/predict', $document, $fileName, $options);
+        return $this->predictProduct('mindee', 'passport', 'v1', $document, $fileName, $options);
     }
 
     /**
-     * Parse a custom document using a specific endpoint ID.
+     * Parse a document with any Mindee product endpoint.
      *
-     * Accepts either a file path or a base64-encoded string.
+     * @param  string  $account  Mindee account name, usually "mindee" for off-the-shelf APIs.
+     * @param  string  $apiName  API name such as "invoices" or a custom model name.
+     * @param  string  $apiVersion  API version such as "v4" or "1".
+     * @param  string  $document  File path, URL, or base64-encoded document content.
+     * @param  string|null  $fileName  Filename for multipart or base64 uploads.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
+     */
+    public function predictProduct(string $account, string $apiName, string $apiVersion, string $document, ?string $fileName = null, array $options = []): array
+    {
+        return $this->predict($this->productPath($account, $apiName, $apiVersion, 'predict'), $document, $fileName, $options);
+    }
+
+    /**
+     * Enqueue an asynchronous document prediction with any Mindee product endpoint.
      *
-     * @param string      $endpointId The custom endpoint ID (from your Mindee dashboard).
-     * @param string      $document   File path or base64-encoded document content.
-     * @param string|null $fileName   Optional filename override (used for base64 uploads).
-     * @param array       $options    Additional options.
-     * @return array Parsed custom document prediction result.
+     * @param  string  $account  Mindee account name.
+     * @param  string  $apiName  API name.
+     * @param  string  $apiVersion  API version.
+     * @param  string  $document  File path, URL, or base64-encoded document content.
+     * @param  string|null  $fileName  Filename for multipart or base64 uploads.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
+     */
+    public function predictProductAsync(string $account, string $apiName, string $apiVersion, string $document, ?string $fileName = null, array $options = []): array
+    {
+        return $this->predict($this->productPath($account, $apiName, $apiVersion, 'predict_async'), $document, $fileName, $options);
+    }
+
+    /**
+     * Retrieve an asynchronous prediction job status or completed document redirect.
      *
-     * @throws \RuntimeException If the API request fails.
+     * @param  string  $account  Mindee account name.
+     * @param  string  $apiName  API name.
+     * @param  string  $apiVersion  API version.
+     * @param  string  $jobId  Mindee asynchronous job ID.
+     * @return array<string, mixed>
+     */
+    public function getAsyncPrediction(string $account, string $apiName, string $apiVersion, string $jobId): array
+    {
+        return $this->request('GET', $this->productPath($account, $apiName, $apiVersion, 'documents/queue/'.rawurlencode($jobId)));
+    }
+
+    /**
+     * Parse a document using an endpoint ID in account/api/version format.
+     *
+     * @param  string  $endpointId  Endpoint ID such as "acme/purchase_orders/v1".
+     * @param  string  $document  File path, URL, or base64-encoded document content.
+     * @param  string|null  $fileName  Filename for multipart or base64 uploads.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
      */
     public function parseCustom(string $endpointId, string $document, ?string $fileName = null, array $options = []): array
     {
-        return $this->predict('/custom/v1/predict', $document, $fileName, array_merge($options, [
-            'endpoint_id' => $endpointId,
-        ]));
+        [$account, $apiName, $apiVersion] = $this->parseEndpointId($endpointId);
+
+        return $this->predictProduct($account, $apiName, $apiVersion, $document, $fileName, $options);
     }
 
     /**
-     * Get the current authenticated user's information.
+     * Send a document to a Mindee prediction endpoint.
      *
-     * @return array User data from the Mindee API.
-     *
-     * @throws \RuntimeException If the API request fails.
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/user');
-    }
-
-    /**
-     * Send a document to a prediction endpoint.
-     *
-     * Detects whether the document input is a file path or a base64 string,
-     * and sends the appropriate request type (multipart or JSON).
-     *
-     * @param string      $path     API endpoint path (e.g., /products/invoices/v4/predict).
-     * @param string      $document File path or base64-encoded content.
-     * @param string|null $fileName Filename for the upload.
-     * @param array       $options  Additional query parameters or options.
-     * @return array Prediction result from the API.
+     * @param  string  $path  API endpoint path.
+     * @param  string  $document  File path, URL, or base64-encoded content.
+     * @param  string|null  $fileName  Filename for the upload.
+     * @param  array<string, mixed>  $options  Additional query parameters.
+     * @return array<string, mixed>
      */
     private function predict(string $path, string $document, ?string $fileName, array $options = []): array
     {
-        $url = $this->baseUrl . $path;
-
-        if (!empty($options)) {
-            $separator = str_contains($url, '?') ? '&' : '?';
-            $url .= $separator . http_build_query($options);
-        }
-
+        $url = $this->urlWithQuery($this->baseUrl.$path, $options);
         $http = $this->buildHttpClient();
 
-        // Detect if document is a file path or base64 data
-        if (file_exists($document) && is_readable($document)) {
-            $name = $fileName ?? basename($document);
-            $response = $http->attach('document', file_get_contents($document), $name)->post($url);
-        } else {
-            // Treat as base64-encoded content
-            $name = $fileName ?? 'document.pdf';
-            $response = $http->post($url, [
-                'document' => $document,
-            ]);
+        if (is_file($document) && is_readable($document)) {
+            $response = $http
+                ->attach('document', file_get_contents($document), $fileName ?? basename($document))
+                ->post($url);
+
+            return $this->handleResponse($response, 'POST', $path);
         }
+
+        $response = $http->post($url, ['document' => $document]);
 
         return $this->handleResponse($response, 'POST', $path);
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Make a JSON API request and return parsed JSON.
      *
-     * @param string $method HTTP method (GET, POST, PUT, DELETE).
-     * @param string $path   API endpoint path.
-     * @param array  $data   Query or body parameters.
-     * @return array Parsed JSON response.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $data  Query or body parameters.
+     * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        $url = $this->baseUrl . $path;
         $http = $this->buildHttpClient();
+        $url = $this->baseUrl.$path;
 
         $response = match (strtoupper($method)) {
             'GET' => $http->get($url, $data),
             'POST' => $http->post($url, $data),
-            'PUT' => $http->put($url, $data),
-            'DELETE' => $http->delete($url, $data),
-            default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
         };
 
         return $this->handleResponse($response, $method, $path);
     }
 
     /**
-     * Build an HTTP client instance with authentication headers.
+     * Build an authenticated HTTP client.
      *
-     * @return \Illuminate\Http\Client\PendingRequest
-     *
-     * @throws \RuntimeException If the API key is not configured.
+     * @throws RuntimeException If the API key is not configured.
      */
     private function buildHttpClient(): \Illuminate\Http\Client\PendingRequest
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Mindee API key is not configured.');
+        if (! $this->apiKey) {
+            throw new RuntimeException('Mindee API key is not configured.');
         }
 
         return Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Authorization' => 'Token '.$this->apiKey,
+            'Accept' => 'application/json',
         ])->timeout(60);
     }
 
     /**
-     * Handle an API response, logging errors and throwing on failure.
+     * Handle an API response.
      *
-     * @param \Illuminate\Http\Client\Response $response The HTTP response.
-     * @param string                           $method   The HTTP method used.
-     * @param string                           $path     The API path called.
-     * @return array Parsed JSON response body.
+     * @param  Response  $response  HTTP response.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path called.
+     * @return array<string, mixed>
      *
-     * @throws \RuntimeException On non-successful responses or connection errors.
+     * @throws RuntimeException On non-successful responses.
      */
-    private function handleResponse(\Illuminate\Http\Client\Response $response, string $method, string $path): array
+    private function handleResponse(Response $response, string $method, string $path): array
     {
         try {
-            if (!$response->successful()) {
-                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+            if ($response->status() >= 300 && $response->status() < 400) {
+                return [
+                    'status' => $response->status(),
+                    'location' => $response->header('Location'),
+                ];
+            }
+
+            if (! $response->successful()) {
+                $error = $response->json('api_request.error') ?? $response->json('error') ?? $response->json('message') ?? $response->body();
 
                 Log::error("Mindee API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
 
-                throw new \RuntimeException(
-                    "Mindee API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error))
-                );
+                throw new RuntimeException('Mindee API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
 
-            return $response->json() ?? [];
+            if ($response->body() === '') {
+                return ['success' => true, 'status' => $response->status()];
+            }
+
+            return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
         } catch (ConnectionException $e) {
             Log::error("Mindee API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
 
-            throw new \RuntimeException("Failed to connect to Mindee API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Mindee API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a Mindee product path.
+     */
+    private function productPath(string $account, string $apiName, string $apiVersion, string $operation): string
+    {
+        foreach (compact('account', 'apiName', 'apiVersion') as $name => $value) {
+            if ($value === '') {
+                throw new RuntimeException("{$name} must be provided.");
+            }
+        }
+
+        return '/products/'.rawurlencode($account).'/'.rawurlencode($apiName).'/'.rawurlencode($apiVersion).'/'.$operation;
+    }
+
+    /**
+     * Parse custom endpoint IDs from account/api/version strings.
+     *
+     * @return array{0: string, 1: string, 2: string}
+     */
+    private function parseEndpointId(string $endpointId): array
+    {
+        $parts = array_values(array_filter(explode('/', trim($endpointId, '/')), static fn (string $part): bool => $part !== ''));
+
+        if (count($parts) !== 3) {
+            throw new RuntimeException('endpoint_id must use account/api_name/api_version format, for example acme/purchase_orders/v1.');
+        }
+
+        return [$parts[0], $parts[1], $parts[2]];
+    }
+
+    /**
+     * Append query parameters to a URL.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item === null || $item === '') {
+                    continue;
+                }
+
+                $parts[] = rawurlencode((string) $key).'='.rawurlencode(is_bool($item) ? ($item ? 'true' : 'false') : (string) $item);
+            }
+        }
+
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

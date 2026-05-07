@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-zoho-mail",
-    "description": "Zoho Mail integration for Laravel — list messages, send email, manage folders and tasks.",
+    "description": "Zoho Mail integration for Laravel: accounts, folders, messages, attachments, labels, tasks, sending, and replies.",
     "license": "MIT",
     "authors": [
         {

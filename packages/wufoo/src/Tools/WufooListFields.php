@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Wufoo\WufooService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List field definitions for a Wufoo form.
+ *
+ * Returns field API IDs, labels, field types, subfields, and validation metadata.
+ */
 class WufooListFields implements Tool
 {
     /**
      * Create a new WufooListFields tool instance.
+     *
+     * @param  WufooService  $service  The Wufoo API service instance.
      */
     public function __construct(
         private WufooService $service,
@@ -55,7 +62,12 @@ class WufooListFields implements Tool
                 return ToolResult::error('Wufoo integration is not configured.');
             }
 
-            $result = $this->service->listFields($args['form_id']);
+            $formId = trim((string) ($args['form_id'] ?? ''));
+            if ($formId === '') {
+                return ToolResult::error('form_id is required.');
+            }
+
+            $result = $this->service->listFields($formId);
             $fields = $result['Fields'] ?? [];
 
             return ToolResult::success([

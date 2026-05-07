@@ -6,6 +6,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * Retrieve a Recurly billing account.
+ *
+ * Supports Recurly account UUIDs and account-code references.
+ */
 class RecurlyGetAccount implements Tool
 {
     /**

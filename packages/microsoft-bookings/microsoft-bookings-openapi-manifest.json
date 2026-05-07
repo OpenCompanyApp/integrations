@@ -1,0 +1,331 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/booking-api-overview?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 53,
+  "path_prefixes": [
+    "/solutions/bookingBusinesses",
+    "/solutions/bookingCurrencies"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses",
+      "operationId": "solutions.ListBookingBusinesses",
+      "tool": "microsoft_bookings_list_booking_businesses"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses",
+      "operationId": "solutions.CreateBookingBusinesses",
+      "tool": "microsoft_bookings_create_booking_businesses"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/$count",
+      "operationId": "solutions.bookingBusinesses.GetCount-b75b",
+      "tool": "microsoft_bookings_booking_businesses_get_count_b75b"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}",
+      "operationId": "solutions.GetBookingBusinesses",
+      "tool": "microsoft_bookings_get_booking_businesses"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}",
+      "operationId": "solutions.UpdateBookingBusinesses",
+      "tool": "microsoft_bookings_update_booking_businesses"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}",
+      "operationId": "solutions.DeleteBookingBusinesses",
+      "tool": "microsoft_bookings_delete_booking_businesses"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments",
+      "operationId": "solutions.bookingBusinesses.ListAppointments",
+      "tool": "microsoft_bookings_booking_businesses_list_appointments"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments",
+      "operationId": "solutions.bookingBusinesses.CreateAppointments",
+      "tool": "microsoft_bookings_booking_businesses_create_appointments"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments/$count",
+      "operationId": "solutions.bookingBusinesses.appointments.GetCount-205a",
+      "tool": "microsoft_bookings_booking_businesses_appointments_get_count_205a"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments/{bookingAppointment-id}",
+      "operationId": "solutions.bookingBusinesses.GetAppointments",
+      "tool": "microsoft_bookings_booking_businesses_get_appointments"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments/{bookingAppointment-id}",
+      "operationId": "solutions.bookingBusinesses.UpdateAppointments",
+      "tool": "microsoft_bookings_booking_businesses_update_appointments"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments/{bookingAppointment-id}",
+      "operationId": "solutions.bookingBusinesses.DeleteAppointments",
+      "tool": "microsoft_bookings_booking_businesses_delete_appointments"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/appointments/{bookingAppointment-id}/cancel",
+      "operationId": "solutions.bookingBusinesses.bookingBusiness.appointments.bookingAppointment.cancel",
+      "tool": "microsoft_bookings_booking_businesses_booking_business_appointments_booking_appointment_cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView",
+      "operationId": "solutions.bookingBusinesses.ListCalendarView",
+      "tool": "microsoft_bookings_booking_businesses_list_calendar_view"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView",
+      "operationId": "solutions.bookingBusinesses.CreateCalendarView",
+      "tool": "microsoft_bookings_booking_businesses_create_calendar_view"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView/$count",
+      "operationId": "solutions.bookingBusinesses.calendarView.GetCount-f3a3",
+      "tool": "microsoft_bookings_booking_businesses_calendar_view_get_count_f3a3"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView/{bookingAppointment-id}",
+      "operationId": "solutions.bookingBusinesses.GetCalendarView",
+      "tool": "microsoft_bookings_booking_businesses_get_calendar_view"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView/{bookingAppointment-id}",
+      "operationId": "solutions.bookingBusinesses.UpdateCalendarView",
+      "tool": "microsoft_bookings_booking_businesses_update_calendar_view"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView/{bookingAppointment-id}",
+      "operationId": "solutions.bookingBusinesses.DeleteCalendarView",
+      "tool": "microsoft_bookings_booking_businesses_delete_calendar_view"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/calendarView/{bookingAppointment-id}/cancel",
+      "operationId": "solutions.bookingBusinesses.bookingBusiness.calendarView.bookingAppointment.cancel",
+      "tool": "microsoft_bookings_booking_businesses_booking_business_calendar_view_booking_appointment_cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customQuestions",
+      "operationId": "solutions.bookingBusinesses.ListCustomQuestions",
+      "tool": "microsoft_bookings_booking_businesses_list_custom_questions"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customQuestions",
+      "operationId": "solutions.bookingBusinesses.CreateCustomQuestions",
+      "tool": "microsoft_bookings_booking_businesses_create_custom_questions"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customQuestions/$count",
+      "operationId": "solutions.bookingBusinesses.customQuestions.GetCount-385a",
+      "tool": "microsoft_bookings_booking_businesses_custom_questions_get_count_385a"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customQuestions/{bookingCustomQuestion-id}",
+      "operationId": "solutions.bookingBusinesses.GetCustomQuestions",
+      "tool": "microsoft_bookings_booking_businesses_get_custom_questions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customQuestions/{bookingCustomQuestion-id}",
+      "operationId": "solutions.bookingBusinesses.UpdateCustomQuestions",
+      "tool": "microsoft_bookings_booking_businesses_update_custom_questions"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customQuestions/{bookingCustomQuestion-id}",
+      "operationId": "solutions.bookingBusinesses.DeleteCustomQuestions",
+      "tool": "microsoft_bookings_booking_businesses_delete_custom_questions"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customers",
+      "operationId": "solutions.bookingBusinesses.ListCustomers",
+      "tool": "microsoft_bookings_booking_businesses_list_customers"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customers",
+      "operationId": "solutions.bookingBusinesses.CreateCustomers",
+      "tool": "microsoft_bookings_booking_businesses_create_customers"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customers/$count",
+      "operationId": "solutions.bookingBusinesses.customers.GetCount-1771",
+      "tool": "microsoft_bookings_booking_businesses_customers_get_count_1771"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customers/{bookingCustomerBase-id}",
+      "operationId": "solutions.bookingBusinesses.GetCustomers",
+      "tool": "microsoft_bookings_booking_businesses_get_customers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customers/{bookingCustomerBase-id}",
+      "operationId": "solutions.bookingBusinesses.UpdateCustomers",
+      "tool": "microsoft_bookings_booking_businesses_update_customers"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/customers/{bookingCustomerBase-id}",
+      "operationId": "solutions.bookingBusinesses.DeleteCustomers",
+      "tool": "microsoft_bookings_booking_businesses_delete_customers"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/getStaffAvailability",
+      "operationId": "solutions.bookingBusinesses.bookingBusiness.getStaffAvailability",
+      "tool": "microsoft_bookings_booking_businesses_booking_business_get_staff_availability"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/publish",
+      "operationId": "solutions.bookingBusinesses.bookingBusiness.publish",
+      "tool": "microsoft_bookings_booking_businesses_booking_business_publish"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/services",
+      "operationId": "solutions.bookingBusinesses.ListServices",
+      "tool": "microsoft_bookings_booking_businesses_list_services"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/services",
+      "operationId": "solutions.bookingBusinesses.CreateServices",
+      "tool": "microsoft_bookings_booking_businesses_create_services"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/services/$count",
+      "operationId": "solutions.bookingBusinesses.services.GetCount-35c3",
+      "tool": "microsoft_bookings_booking_businesses_services_get_count_35c3"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/services/{bookingService-id}",
+      "operationId": "solutions.bookingBusinesses.GetServices",
+      "tool": "microsoft_bookings_booking_businesses_get_services"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/services/{bookingService-id}",
+      "operationId": "solutions.bookingBusinesses.UpdateServices",
+      "tool": "microsoft_bookings_booking_businesses_update_services"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/services/{bookingService-id}",
+      "operationId": "solutions.bookingBusinesses.DeleteServices",
+      "tool": "microsoft_bookings_booking_businesses_delete_services"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/staffMembers",
+      "operationId": "solutions.bookingBusinesses.ListStaffMembers",
+      "tool": "microsoft_bookings_booking_businesses_list_staff_members"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/staffMembers",
+      "operationId": "solutions.bookingBusinesses.CreateStaffMembers",
+      "tool": "microsoft_bookings_booking_businesses_create_staff_members"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/staffMembers/$count",
+      "operationId": "solutions.bookingBusinesses.staffMembers.GetCount-7947",
+      "tool": "microsoft_bookings_booking_businesses_staff_members_get_count_7947"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/staffMembers/{bookingStaffMemberBase-id}",
+      "operationId": "solutions.bookingBusinesses.GetStaffMembers",
+      "tool": "microsoft_bookings_booking_businesses_get_staff_members"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/staffMembers/{bookingStaffMemberBase-id}",
+      "operationId": "solutions.bookingBusinesses.UpdateStaffMembers",
+      "tool": "microsoft_bookings_booking_businesses_update_staff_members"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/staffMembers/{bookingStaffMemberBase-id}",
+      "operationId": "solutions.bookingBusinesses.DeleteStaffMembers",
+      "tool": "microsoft_bookings_booking_businesses_delete_staff_members"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingBusinesses/{bookingBusiness-id}/unpublish",
+      "operationId": "solutions.bookingBusinesses.bookingBusiness.unpublish",
+      "tool": "microsoft_bookings_booking_businesses_booking_business_unpublish"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingCurrencies",
+      "operationId": "solutions.ListBookingCurrencies",
+      "tool": "microsoft_bookings_list_booking_currencies"
+    },
+    {
+      "method": "POST",
+      "path": "/solutions/bookingCurrencies",
+      "operationId": "solutions.CreateBookingCurrencies",
+      "tool": "microsoft_bookings_create_booking_currencies"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingCurrencies/$count",
+      "operationId": "solutions.bookingCurrencies.GetCount-f6c6",
+      "tool": "microsoft_bookings_booking_currencies_get_count_f6c6"
+    },
+    {
+      "method": "GET",
+      "path": "/solutions/bookingCurrencies/{bookingCurrency-id}",
+      "operationId": "solutions.GetBookingCurrencies",
+      "tool": "microsoft_bookings_get_booking_currencies"
+    },
+    {
+      "method": "PATCH",
+      "path": "/solutions/bookingCurrencies/{bookingCurrency-id}",
+      "operationId": "solutions.UpdateBookingCurrencies",
+      "tool": "microsoft_bookings_update_booking_currencies"
+    },
+    {
+      "method": "DELETE",
+      "path": "/solutions/bookingCurrencies/{bookingCurrency-id}",
+      "operationId": "solutions.DeleteBookingCurrencies",
+      "tool": "microsoft_bookings_delete_booking_currencies"
+    }
+  ]
+}

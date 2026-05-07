@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-invoiceninja",
-    "description": "Invoice Ninja integration for Laravel — manage invoices, clients, products and payments.",
+    "description": "Invoice Ninja integration for Laravel: manage invoicing, billing, clients, expenses, projects and related records.",
     "license": "MIT",
     "authors": [
         {

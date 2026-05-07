@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Strava\StravaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List activities for the authenticated Strava athlete.
+ */
 class StravaListActivities implements Tool
 {
     /**
@@ -41,8 +44,8 @@ class StravaListActivities implements Tool
         return [
             'page' => ['type' => 'integer', 'description' => 'Page number (default: 1).'],
             'per_page' => ['type' => 'integer', 'description' => 'Number of activities per page (default: 30, max: 200).'],
-            'before' => ['type' => 'integer', 'description' => 'Unix timestamp — return activities before this time.'],
-            'after' => ['type' => 'integer', 'description' => 'Unix timestamp — return activities after this time.'],
+            'before' => ['type' => 'integer', 'description' => 'Unix timestamp for activities before this time.'],
+            'after' => ['type' => 'integer', 'description' => 'Unix timestamp for activities after this time.'],
         ];
     }
 

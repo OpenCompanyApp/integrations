@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-brevo",
-    "description": "Brevo (formerly Sendinblue) integration for Laravel — manage contacts, lists, and send transactional emails.",
+    "description": "Brevo integration for Laravel - manage contacts, campaigns, transactional email and SMS, WhatsApp, senders, webhooks, eCommerce data, and events.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,14 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "brevo", "sendinblue", "email", "marketing", "opencompany"],
+    "keywords": [
+        "tools",
+        "brevo",
+        "sendinblue",
+        "email",
+        "marketing",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

@@ -2,51 +2,37 @@
 
 namespace OpenCompany\Integrations\Bugsnag\Tools;
 
-use OpenCompany\Integrations\Bugsnag\BugsnagService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BugsnagGetError implements Tool
+/**
+ * Get details for a Bugsnag error.
+ */
+class BugsnagGetError extends AbstractBugsnagTool
 {
-    public function __construct(
-        private BugsnagService $service,
-    ) {}
+    protected array $parameters = array (
+  'error_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'Bugsnag error ID.',
+    'required' => true,
+  ),
+);
 
-    public function name(): string
-    {
-        return 'bugsnag_get_error';
-    }
+    protected array $required = array (
+  0 => 'error_id',
+);
 
-    public function description(): string
-    {
-        return 'Get details for a specific Bugsnag error, including its message, severity, context, and stack trace.';
-    }
+    protected array $queryParams = array (
+);
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The error ID.'],
-        ];
-    }
+    protected array $bodyParams = array (
+);
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Bugsnag integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $id = $args['id'] ?? '';
+    protected string $path = '/errors/{error_id}';
 
-            if (empty($id)) {
-                return ToolResult::error('Error ID is required.');
-            }
+    protected string $api = 'data';
 
-            $result = $this->service->getError($id);
+    protected string $toolName = 'bugsnag_get_error';
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'Get details for a Bugsnag error.';
 }

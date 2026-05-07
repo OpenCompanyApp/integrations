@@ -2,12 +2,20 @@
 
 namespace OpenCompany\Integrations\TrustMrr\Tools;
 
-use OpenCompany\Integrations\TrustMrr\TrustMrrService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\TrustMrr\TrustMrrService;
 
+/**
+ * Browse and filter startups with verified revenue data.
+ *
+ * Maps agent-friendly snake_case arguments to the TrustMRR API's camelCase query parameters.
+ */
 class TrustMrrListStartups implements Tool
 {
+    /**
+     * @param  TrustMrrService  $service  The TrustMRR API client.
+     */
     public function __construct(
         private TrustMrrService $service,
     ) {}
@@ -42,9 +50,18 @@ class TrustMrrListStartups implements Tool
         ];
     }
 
+    /**
+     * Execute the tool and return normalized startup list data.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (sort, on_sale, category, x_handle, revenue, MRR, growth, price, page, limit).
+     */
     public function execute(array $args): ToolResult
     {
         try {
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('TrustMRR integration is not configured.');
+            }
+
             $params = [];
 
             // Map snake_case args to camelCase API params

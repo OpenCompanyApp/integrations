@@ -2,252 +2,265 @@
 
 namespace OpenCompany\Integrations\Apify;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the official Apify API.
+ *
+ * Handles Bearer authentication, OpenAPI operation request mapping, and
+ * response parsing for generated operation tools.
+ */
 class ApifyService
 {
+    /**
+     * @param  string  $apiToken  Apify API token for Bearer authentication.
+     * @param  string  $baseUrl  Apify API base URL. Supports either https://api.apify.com or the legacy https://api.apify.com/v2 value.
+     */
     public function __construct(
         private string $apiToken = '',
-        private string $baseUrl = 'https://api.apify.com/v2',
+        private string $baseUrl = 'https://api.apify.com',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl !== '' ? $this->baseUrl : 'https://api.apify.com', '/');
     }
 
-    /**
-     * Check whether the Apify integration is configured (has an API token).
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiToken);
+        return $this->apiToken !== '';
     }
 
     /**
-     * Run an Apify actor.
+     * Return all official Apify operations exposed by this integration.
      *
-     * @param  string  $actorId  Actor ID (e.g. "apify/web-scraper" or numeric ID).
-     * @param  array  $input  Input payload for the actor run.
-     * @param  array  $options  Optional run options (build, waitForFinish, etc.).
-     * @return array The created run resource.
+     * @return list<array<string, mixed>>
      */
-    public function runActor(string $actorId, array $input = [], array $options = []): array
+    public static function operations(): array
     {
-        $queryParams = [];
-        if (isset($options['waitForFinish'])) {
-            $queryParams['waitForFinish'] = $options['waitForFinish'];
-        }
-        if (isset($options['build'])) {
-            $queryParams['build'] = $options['build'];
-        }
-        if (isset($options['timeout'])) {
-            $queryParams['timeout'] = $options['timeout'];
-        }
-        if (isset($options['memory'])) {
-            $queryParams['memory'] = $options['memory'];
-        }
-
-        return $this->request('POST', '/acts/' . urlencode($actorId) . '/runs', $input, $queryParams);
+        return ApifyOperations::all();
     }
 
     /**
-     * Get details of an actor run.
+     * Return one operation definition by slug.
      *
-     * @param  string  $runId  The run ID.
-     * @return array The run resource.
+     * @return array<string, mixed>
      */
-    public function getRun(string $runId): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', '/actor-runs/' . urlencode($runId));
-    }
-
-    /**
-     * List available actors.
-     *
-     * @param  int  $offset  Number of actors to skip.
-     * @param  int  $limit  Maximum number of actors to return.
-     * @return array List of actor resources.
-     */
-    public function listActors(int $offset = 0, int $limit = 20): array
-    {
-        return $this->request('GET', '/acts', [], [
-            'offset' => $offset,
-            'limit' => $limit,
-        ]);
-    }
-
-    /**
-     * Get details of a specific actor.
-     *
-     * @param  string  $actorId  Actor ID (e.g. "apify/web-scraper").
-     * @return array The actor resource.
-     */
-    public function getActor(string $actorId): array
-    {
-        return $this->request('GET', '/acts/' . urlencode($actorId));
-    }
-
-    /**
-     * List datasets accessible to the authenticated user.
-     *
-     * @param  int  $offset  Number of datasets to skip.
-     * @param  int  $limit  Maximum number of datasets to return.
-     * @return array List of dataset resources.
-     */
-    public function listDatasets(int $offset = 0, int $limit = 20): array
-    {
-        return $this->request('GET', '/datasets', [], [
-            'offset' => $offset,
-            'limit' => $limit,
-        ]);
-    }
-
-    /**
-     * Get details of a specific dataset.
-     *
-     * @param  string  $datasetId  The dataset ID.
-     * @return array The dataset resource.
-     */
-    public function getDataset(string $datasetId): array
-    {
-        return $this->request('GET', '/datasets/' . urlencode($datasetId));
-    }
-
-    /**
-     * Get items from a dataset.
-     *
-     * @param  string  $datasetId  The dataset ID.
-     * @param  string  $format  Response format: "json", "csv", "xml", "html", "xlsx", "rss" or "jsonl".
-     * @param  int  $limit  Maximum number of items to return.
-     * @param  int  $offset  Number of items to skip.
-     * @return array|string The dataset items.
-     */
-    public function getDatasetItems(string $datasetId, string $format = 'json', int $limit = 100, int $offset = 0): array|string
-    {
-        $response = $this->rawRequest('GET', '/datasets/' . urlencode($datasetId) . '/items', [], [
-            'format' => $format,
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
-
-        if ($format === 'json' || $format === 'jsonl') {
-            return $response->json() ?? [];
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) {
+                return $definition;
+            }
         }
 
-        return $response->body();
+        throw new \RuntimeException("Unsupported Apify operation: {$operation}");
     }
 
     /**
-     * List key-value stores accessible to the authenticated user.
+     * Execute an official Apify operation using normalized tool arguments.
      *
-     * @param  int  $offset  Number of stores to skip.
-     * @param  int  $limit  Maximum number of stores to return.
-     * @return array List of key-value store resources.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function listKeyValueStores(int $offset = 0, int $limit = 20): array
+    public function call(string $operation, array $args = []): array
     {
-        return $this->request('GET', '/key-value-stores', [], [
-            'offset' => $offset,
-            'limit' => $limit,
-        ]);
+        $definition = $this->operation($operation);
+        [$path, $pathArgs] = $this->preparePath($definition, $args);
+        $query = $this->prepareQuery($definition, $args);
+        foreach ($pathArgs as $param) {
+            unset($query[$param]);
+        }
+        $body = $this->prepareBody($definition, $args);
+
+        return $this->request($definition, $path, $query, $body);
     }
 
     /**
-     * Get a record from a key-value store.
+     * Build request path and replace path variables.
      *
-     * @param  string  $storeId  The key-value store ID.
-     * @param  string  $key  The record key.
-     * @return array|string The record value.
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: list<string>}
      */
-    public function getRecord(string $storeId, string $key): array|string
+    private function preparePath(array $definition, array $args): array
     {
-        $response = $this->rawRequest('GET', '/key-value-stores/' . urlencode($storeId) . '/records/' . urlencode($key));
+        $path = (string) $definition['path'];
+        $pathArgs = [];
 
-        $contentType = $response->header('Content-Type') ?? '';
-        if (str_contains($contentType, 'application/json')) {
-            return $response->json() ?? [];
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'path') {
+                continue;
+            }
+
+            $original = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? null;
+
+            if ($value === null || $value === '') {
+                throw new \RuntimeException("{$param} is required for {$definition['slug']}.");
+            }
+
+            $path = str_replace('{'.$original.'}', rawurlencode((string) $value), $path);
+            $pathArgs[] = $param;
         }
 
-        return $response->body();
+        return [$path, $pathArgs];
     }
 
     /**
-     * Get the currently authenticated user profile.
+     * Build query parameters.
      *
-     * @return array The user resource.
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    private function prepareQuery(array $definition, array $args): array
     {
-        return $this->request('GET', '/users/me');
+        $query = [];
+
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'query') {
+                continue;
+            }
+
+            $param = (string) $parameter['param'];
+            if (array_key_exists($param, $args)) {
+                $query[(string) $parameter['name']] = $args[$param];
+            }
+        }
+
+        if (isset($args['query']) && is_array($args['query'])) {
+            foreach ($args['query'] as $key => $value) {
+                $query[(string) $key] = $value;
+            }
+        }
+
+        return $query;
     }
 
     /**
-     * Make an API request and return parsed JSON data.
+     * Build JSON body for write operations.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g. "/acts").
-     * @param  array  $body  Request body (for POST/PUT).
-     * @param  array  $queryParams  Query string parameters.
-     * @return array Parsed JSON response data.
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>|list<mixed>|null
      */
-    private function request(string $method, string $path, array $body = [], array $queryParams = []): array
+    private function prepareBody(array $definition, array $args): array|null
     {
-        $response = $this->rawRequest($method, $path, $body, $queryParams);
+        $bodyParameter = null;
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) === 'body') {
+                $bodyParameter = $parameter;
+                break;
+            }
+        }
 
-        return $response->json() ?? [];
+        if ($bodyParameter === null) {
+            return null;
+        }
+
+        if (! array_key_exists('body', $args)) {
+            if (! ($bodyParameter['required'] ?? false)) {
+                return null;
+            }
+
+            throw new \RuntimeException("body is required for {$definition['slug']}.");
+        }
+
+        if (! is_array($args['body'])) {
+            throw new \RuntimeException('body must be an object or array.');
+        }
+
+        return $args['body'];
     }
 
     /**
-     * Make a raw HTTP request to the Apify API.
+     * Send an HTTP request and normalize the response for tools.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array  $body  Request body.
-     * @param  array  $queryParams  Query string parameters.
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException If the API token is missing or the request fails.
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     * @return array<string, mixed>
      */
-    private function rawRequest(string $method, string $path, array $body = [], array $queryParams = []): \Illuminate\Http\Client\Response
+    private function request(array $definition, string $path, array $query = [], array|null $body = null): array
     {
-        if (!$this->apiToken) {
+        $response = $this->rawRequest($definition, $path, $query, $body);
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        $contentType = (string) ($response->header('Content-Type') ?? '');
+        if (str_contains($contentType, 'application/json') || str_contains($contentType, '+json')) {
+            $json = $response->json();
+
+            return is_array($json) ? $json : [];
+        }
+
+        return [
+            'body' => $response->body(),
+            'content_type' => $contentType,
+        ];
+    }
+
+    /**
+     * Send a raw HTTP request to the Apify API.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     */
+    private function rawRequest(array $definition, string $path, array $query = [], array|null $body = null): Response
+    {
+        if (! $this->isConfigured()) {
             throw new \RuntimeException('Apify API token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
-
-        if (!empty($queryParams)) {
-            $url .= '?' . http_build_query($queryParams);
-        }
+        $method = (string) $definition['method'];
+        $url = $this->urlFor($path);
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiToken,
+                'Authorization' => 'Bearer '.$this->apiToken,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(60);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $body),
-                'POST' => $http->post($url, $body),
-                'PUT' => $http->put($url, $body),
-                'DELETE' => $http->delete($url, $body),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $options = [];
+            if ($query !== []) {
+                $options['query'] = $query;
+            }
+            if ($body !== null) {
+                $options['json'] = $body;
+            }
 
-            if (!$response->successful()) {
-                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+            $response = $http->send($method, $url, $options);
+            if (! $response->successful()) {
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->json('message') ?? $response->body();
                 Log::error("Apify API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Apify API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException('Apify API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Apify API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
+            Log::error("Apify API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+
             throw new \RuntimeException("Failed to connect to Apify API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a request URL while tolerating the old /v2-suffixed base URL.
+     */
+    private function urlFor(string $path): string
+    {
+        if (str_ends_with($this->baseUrl, '/v2') && str_starts_with($path, '/v2/')) {
+            return $this->baseUrl.substr($path, 3);
+        }
+
+        return $this->baseUrl.$path;
     }
 }

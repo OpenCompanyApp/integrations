@@ -6,8 +6,16 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a new DigitalOcean Droplet.
+ *
+ * Supports the core create parameters plus common optional provisioning fields.
+ */
 class DigitalOceanCreateDroplet implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -37,6 +45,11 @@ class DigitalOceanCreateDroplet implements Tool
         ];
     }
 
+    /**
+     * Create a Droplet from the provided region, size, and image arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (name, region, size, image, ssh_keys, backups, ipv6, user_data, tags).
+     */
     public function execute(array $args): ToolResult
     {
         try {

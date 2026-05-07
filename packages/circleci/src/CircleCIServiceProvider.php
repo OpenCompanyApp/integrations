@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the CircleCI integration with Laravel's service container.
+ *
+ * Binds CircleCIService with host-provided credentials and registers the tool
+ * provider when the integration registry is available.
+ */
 class CircleCIServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,8 +20,8 @@ class CircleCIServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new CircleCIService(
-                accessToken: $creds->get('circleci', 'access_token', ''),
-                baseUrl: $creds->get('circleci', 'url', 'https://circleci.com/api'),
+                accessToken: (string) $creds->get('circleci', 'access_token', ''),
+                baseUrl: (string) $creds->get('circleci', 'url', 'https://circleci.com/api'),
             );
         });
     }

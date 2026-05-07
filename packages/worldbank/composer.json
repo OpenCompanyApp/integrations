@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-worldbank",
-    "description": "World Bank economic indicators integration for Laravel — GDP, inflation, population, development data for 200+ countries.",
+    "description": "World Bank Indicators API v2 integration for Laravel: countries, aggregates, sources, topics, indicators, languages, and development data.",
     "license": "MIT",
     "authors": [
         {

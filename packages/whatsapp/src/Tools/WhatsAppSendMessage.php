@@ -18,7 +18,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 class WhatsAppSendMessage implements Tool
 {
     /**
-     * Create a new WhatsAppSendMessage tool instance.
+     * @param  WhatsAppService  $service  WhatsApp API client.
      */
     public function __construct(
         private WhatsAppService $service,
@@ -55,14 +55,14 @@ class WhatsAppSendMessage implements Tool
     }
 
     /**
-     * Execute the tool — send the message via the WhatsApp Cloud API.
+     * Execute the tool and send the message via the WhatsApp Cloud API.
      *
      * @param  array{to?: string, body?: string, preview_url?: bool}  $args
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('WhatsApp integration is not configured.');
             }
 

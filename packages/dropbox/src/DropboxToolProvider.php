@@ -108,7 +108,7 @@ class DropboxToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Manage files, folders, sharing, and search on Dropbox.',
             'icon' => 'mdi:dropbox',
             'logo' => 'mdi:dropbox',
-            'category' => 'storage',
+            'category' => 'data',
             'docs_url' => 'https://www.dropbox.com/developers/documentation/http/documentation',
         ];
     }

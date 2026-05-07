@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Heroku\HerokuService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List add-ons attached to a Heroku app.
+ */
 class HerokuListAddons implements Tool
 {
+    /**
+     * @param  HerokuService  $service  The Heroku Platform API client.
+     */
     public function __construct(
         private HerokuService $service,
     ) {}
@@ -29,6 +35,11 @@ class HerokuListAddons implements Tool
         ];
     }
 
+    /**
+     * List add-ons for an app ID or name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (app_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

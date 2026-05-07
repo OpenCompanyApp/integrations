@@ -2,46 +2,49 @@
 
 namespace OpenCompany\Integrations\CloudConvert\Tools;
 
-use OpenCompany\Integrations\CloudConvert\CloudConvertService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class CloudConvertGetTask implements Tool
+/**
+ * Get details and status for a CloudConvert task.
+ */
+class CloudConvertGetTask extends AbstractCloudConvertTool
 {
-    public function __construct(
-        private CloudConvertService $service,
-    ) {}
+    protected string $toolName = 'cloudconvert_get_task';
 
-    public function name(): string
-    {
-        return 'cloudconvert_get_task';
-    }
+    protected string $toolDescription = 'Get details and status for a CloudConvert task.';
 
-    public function description(): string
-    {
-        return 'Get details and status of a CloudConvert task by ID, including the result payload with download URLs for completed conversions.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'task_id' => ['type' => 'string', 'required' => true, 'description' => 'The CloudConvert task ID.'],
-        ];
-    }
+    protected string $path = '/tasks/{task_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CloudConvert integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'task_id' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'CloudConvert task ID.',
+    ],
+    'include' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Comma-separated includes such as retries,depends_on_tasks,payload,job.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented CloudConvert query parameters to pass through.',
+    ],
+];
 
-            $result = $this->service->getTask($args['task_id']);
-            $data = $result['data'] ?? $result;
+    /** @var list<string> */
+    protected array $required = [
+    'task_id',
+];
 
-            return ToolResult::success($data);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'include',
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

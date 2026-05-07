@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Phantombuster\Tools;
 
-use OpenCompany\Integrations\Phantombuster\PhantombusterService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class PhantombusterListContainers implements Tool
+/**
+ * List containers for one Phantombuster agent.
+ */
+class PhantombusterListContainers extends AbstractPhantombusterTool implements Tool
 {
-    public function __construct(
-        private PhantombusterService $service,
-    ) {}
-
     public function name(): string
     {
         return 'phantombuster_list_containers';
@@ -19,22 +17,41 @@ class PhantombusterListContainers implements Tool
 
     public function description(): string
     {
-        return 'List all Phantombuster containers (execution runs). Returns container IDs, associated agent IDs, status, and timestamps.';
+        return 'List Phantombuster containers (execution runs) for one agent. Returns container IDs, status, timestamps, and optional runtime events.';
     }
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'agent_id' => ['type' => 'string', 'required' => true, 'description' => 'Agent ID whose containers should be listed.'],
+            'before_ended_at' => ['type' => 'string', 'description' => 'Return containers that ended before this date.'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of containers.'],
+            'mode' => ['type' => 'string', 'enum' => ['all', 'finalized'], 'description' => 'Return all or only finalized containers.'],
+            'with_runtime_events' => ['type' => 'boolean', 'description' => 'Include runtime events.'],
+        ];
     }
 
+    /**
+     * List containers for an agent.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Phantombuster integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
+            }
+            if (empty($args['agent_id'])) {
+                return ToolResult::error('agent_id is required.');
             }
 
-            $result = $this->service->listContainers();
+            $result = $this->service->listContainers((string) $args['agent_id'], $this->only($args, [
+                'before_ended_at' => 'beforeEndedAt',
+                'limit',
+                'mode',
+                'with_runtime_events' => 'withRuntimeEvents',
+            ]));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

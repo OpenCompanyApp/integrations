@@ -36,7 +36,7 @@ class CloseListActivities implements Tool
      */
     public function description(): string
     {
-        return 'List activities in Close CRM — emails, calls, notes, and other activity types. Filter by lead ID or activity type. Supports pagination.';
+        return 'List activities in Close CRM: emails, calls, notes, and other activity types. Filter by lead ID or activity type. Supports pagination.';
     }
 
     /**

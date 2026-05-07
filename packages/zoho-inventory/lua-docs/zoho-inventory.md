@@ -16,7 +16,7 @@ List inventory items (products) from Zoho Inventory.
 
 ```lua
 -- List first page of active items
-local result = app.integrations.zoho_inventory.list_items({
+local result = app.integrations["zoho-inventory"].zoho_inventory_list_items({
   page = 1,
   per_page = 25,
   status = "active"
@@ -31,7 +31,7 @@ end
 -- Paginate through all items
 local page = 1
 repeat
-  local result = app.integrations.zoho_inventory.list_items({ page = page, per_page = 200 })
+  local result = app.integrations["zoho-inventory"].zoho_inventory_list_items({ page = page, per_page = 200 })
   for _, item in ipairs(result.items or {}) do
     print(item.item_id .. ": " .. item.name)
   end
@@ -54,7 +54,7 @@ Get details of a specific inventory item.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_inventory.get_item({ item_id = "4815162342" })
+local result = app.integrations["zoho-inventory"].zoho_inventory_get_item({ item_id = "4815162342" })
 local item = result.item
 print(item.name .. " — " .. item.unit .. " — $" .. item.rate)
 ```
@@ -77,7 +77,7 @@ List sales orders from Zoho Inventory.
 
 ```lua
 -- List open sales orders
-local result = app.integrations.zoho_inventory.list_orders({
+local result = app.integrations["zoho-inventory"].zoho_inventory_list_orders({
   page = 1,
   per_page = 25,
   status = "open"
@@ -103,7 +103,7 @@ Get details of a specific sales order.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_inventory.get_order({ order_id = "4815162342" })
+local result = app.integrations["zoho-inventory"].zoho_inventory_get_order({ order_id = "4815162342" })
 local order = result.salesorder
 print("Order: " .. order.salesorder_number)
 print("Customer: " .. order.customer_name)
@@ -129,7 +129,7 @@ List shipments from Zoho Inventory.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_inventory.list_shipments({ page = 1, per_page = 25 })
+local result = app.integrations["zoho-inventory"].zoho_inventory_list_shipments({ page = 1, per_page = 25 })
 
 for _, shipment in ipairs(result.shipments or {}) do
   print(shipment.shipment_id .. " — " .. (shipment.status or "unknown"))
@@ -152,7 +152,7 @@ List packages from Zoho Inventory.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_inventory.list_packages({ page = 1, per_page = 25 })
+local result = app.integrations["zoho-inventory"].zoho_inventory_list_packages({ page = 1, per_page = 25 })
 
 for _, pkg in ipairs(result.packages or {}) do
   print(pkg.package_id .. " — " .. (pkg.status or "unknown"))
@@ -172,7 +172,7 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_inventory.get_current_user({})
+local result = app.integrations["zoho-inventory"].zoho_inventory_get_current_user({})
 local user = result.user
 print("Logged in as: " .. user.name .. " (" .. user.email .. ")")
 ```
@@ -185,14 +185,14 @@ If you have multiple Zoho Inventory accounts configured, use account-specific na
 
 ```lua
 -- Default account (always works)
-app.integrations.zoho_inventory.list_items({...})
+app.integrations["zoho-inventory"].zoho_inventory_list_items({...})
 
 -- Explicit default (portable across setups)
-app.integrations.zoho_inventory.default.list_items({...})
+app.integrations["zoho-inventory"].default.zoho_inventory_list_items({...})
 
 -- Named accounts
-app.integrations.zoho_inventory.warehouse_us.list_items({...})
-app.integrations.zoho_inventory.warehouse_eu.list_orders({...})
+app.integrations["zoho-inventory"].warehouse_us.zoho_inventory_list_items({...})
+app.integrations["zoho-inventory"].warehouse_eu.zoho_inventory_list_orders({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

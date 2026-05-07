@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\Log;
 /**
  * HTTP client for the Exa AI search API.
  *
- * Wraps all Exa endpoints (search, findSimilar, contents, user) behind
+ * Wraps Exa endpoints (search, findSimilar, contents, answer, user) behind
  * typed methods. Tools call this service — they never make HTTP requests directly.
  */
 class ExaService
 {
+    /**
+     * @param  string  $apiKey  Exa API key.
+     * @param  string  $baseUrl  Exa API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.exa.ai',
@@ -53,14 +57,25 @@ class ExaService
     }
 
     /**
-     * Retrieve contents for a list of document IDs.
+     * Retrieve contents for a list of URLs or document IDs.
      *
-     * @param  array<string, mixed>  $body  Request payload (ids, text, highlights, etc.)
+     * @param  array<string, mixed>  $body  Request payload (urls, ids, text, highlights, summary, livecrawl, etc.)
      * @return array<string, mixed>
      */
     public function getContents(array $body): array
     {
         return $this->request('POST', '/contents', $body);
+    }
+
+    /**
+     * Generate a grounded answer with citations using Exa search results.
+     *
+     * @param  array<string, mixed>  $body  Request payload (query, text, stream).
+     * @return array<string, mixed>
+     */
+    public function answer(array $body): array
+    {
+        return $this->request('POST', '/answer', $body);
     }
 
     /**

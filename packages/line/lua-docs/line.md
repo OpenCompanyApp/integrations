@@ -1,195 +1,168 @@
-# LINE Messaging — Lua API Reference
+# LINE Messaging - Lua API Reference
 
-## send_message
+Namespace: `app.integrations.line`
 
-Send a push message to a specific LINE user, group, or room.
+This integration wraps documented LINE Messaging API v2 endpoints for messaging, webhook settings, users, bot info, group chats, rich menus, per-user rich menus, and account linking. The configured API URL should normally be `https://api.line.me`; the integration appends `/v2/...` endpoint paths.
 
-### Parameters
+Most write tools return the LINE API response body, or an empty table for `204 No Content` endpoints. Message tools accept raw LINE message objects so agents can use current LINE message types without this package flattening or renaming fields.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | string | yes | LINE user ID, group ID, or room ID |
-| `messages` | array | yes | Array of message objects (see message types below) |
-| `notification_disabled` | boolean | no | Suppress push notification (default: `false`) |
+## Messaging
 
-### Message Types
-
-#### Text Message
+`reply_message`, `send_message`, `multicast_message`, `narrowcast_message`, and `broadcast_message` all accept `messages`, an array of LINE message objects:
 
 ```lua
-{ type = "text", text = "Hello, world!" }
+{
+  { type = "text", text = "Hello from the bot." }
+}
 ```
 
-#### Image Message
+Common tools:
 
 ```lua
-{ type = "image", originalContentUrl = "https://example.com/image.jpg", previewImageUrl = "https://example.com/preview.jpg" }
-```
-
-#### Sticker Message
-
-```lua
-{ type = "sticker", packageId = "446", stickerId = "1988" }
-```
-
-#### Location Message
-
-```lua
-{ type = "location", title = "Tokyo Tower", address = "4-2-8 Shibakoen, Minato, Tokyo", latitude = 35.6598, longitude = 139.7394 }
-```
-
-### Examples
-
-#### Send a text message
-
-```lua
-local result = app.integrations.line.send_message({
-  to = "U4af4980629...",
-  messages = {
-    { type = "text", text = "Hello! This is a message from the bot." }
-  }
+app.integrations.line.reply_message({
+  reply_token = "reply-token-from-webhook",
+  messages = {{ type = "text", text = "Thanks." }}
 })
 
-print("Sent " .. result.message_count .. " message(s)")
-```
+app.integrations.line.send_message({
+  to = "U0000000000",
+  messages = {{ type = "text", text = "Your order is ready." }},
+  notification_disabled = false,
+  custom_aggregation_units = "orders"
+})
 
-#### Send multiple messages
+app.integrations.line.multicast_message({
+  to = {"U0000000000", "U1111111111"},
+  messages = {{ type = "text", text = "A shared update." }}
+})
 
-```lua
-local result = app.integrations.line.send_message({
-  to = "U4af4980629...",
-  messages = {
-    { type = "text", text = "Here is the update:" },
-    { type = "sticker", packageId = "446", stickerId = "1988" }
-  }
+app.integrations.line.narrowcast_message({
+  messages = {{ type = "text", text = "Segment update." }},
+  recipient = { type = "operator", and = {{ type = "audience", audienceGroupId = 1234567890 }}}
+})
+
+app.integrations.line.broadcast_message({
+  messages = {{ type = "text", text = "Announcement for all followers." }}
 })
 ```
 
----
+Operational message tools:
 
-## broadcast_message
+- `get_narrowcast_progress({ request_id = "request-id" })`
+- `mark_as_read({ chat_id = "U0000000000" })`
+- `start_loading_animation({ chat_id = "U0000000000", loading_seconds = 20 })`
+- `get_message_quota({})`
+- `get_message_quota_consumption({})`
+- `get_delivery_count({ type = "push", date = "20260506" })`
+- `validate_messages({ type = "push", messages = {{ type = "text", text = "Preview" }} })`
 
-Broadcast a message to all friends of the LINE Official Account.
+Allowed delivery count types are `reply`, `push`, `multicast`, and `broadcast`. Allowed validation types are `reply`, `push`, `multicast`, `narrowcast`, and `broadcast`.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `messages` | array | yes | Array of message objects (same types as send_message) |
-| `notification_disabled` | boolean | no | Suppress push notification (default: `false`) |
-
-### Example
+## Webhooks
 
 ```lua
-local result = app.integrations.line.broadcast_message({
-  messages = {
-    { type = "text", text = "📢 New announcement for everyone!" }
-  }
+app.integrations.line.set_webhook_endpoint({
+  endpoint = "https://example.test/line/webhook"
 })
 
-print("Broadcast sent with " .. result.message_count .. " message(s)")
+local webhook = app.integrations.line.get_webhook_endpoint({})
+
+local test = app.integrations.line.test_webhook_endpoint({
+  endpoint = "https://example.test/line/webhook"
+})
 ```
 
----
+Webhook test responses are passed through from LINE and can include endpoint, success, timestamp, and status details depending on the API response.
 
-## get_profile
-
-Get the profile information of a LINE user.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `user_id` | string | yes | The LINE user ID (e.g., `"U4af4980629..."`) |
-
-### Response Fields
-
-| Field | Description |
-|-------|-------------|
-| `displayName` | User's display name |
-| `userId` | LINE user ID |
-| `pictureUrl` | Profile image URL |
-| `statusMessage` | Status message |
-| `language` | User's language |
-
-### Example
+## Users And Bot
 
 ```lua
-local result = app.integrations.line.get_profile({
-  user_id = "U4af4980629..."
+local profile = app.integrations.line.get_profile({
+  user_id = "U0000000000"
 })
 
-print("Name: " .. result.displayName)
-print("Status: " .. (result.statusMessage or "none"))
-```
-
----
-
-## list_friends
-
-List friends (followers) of the LINE Official Account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results per page (default: 100, max: 1000) |
-| `start` | string | no | Continuation token from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.line.list_friends({
-  limit = 50
+local followers = app.integrations.line.list_friends({
+  limit = 100,
+  start = nil
 })
 
-for _, user in ipairs(result.friends or {}) do
-  print("Friend: " .. (user.displayName or user.userId))
-end
-
--- Paginate
-if result.next then
-  local next = app.integrations.line.list_friends({
-    start = result.next
-  })
-end
+local bot = app.integrations.line.get_current_user({})
 ```
 
----
+`list_friends` maps to LINE's follower ID endpoint. It returns IDs and pagination fields from LINE, not expanded profile records.
 
-## get_current_user
-
-Get the profile of the LINE Official Account (bot) itself.
-
-### Parameters
-
-None.
-
-### Example
+## Group Chats
 
 ```lua
-local result = app.integrations.line.get_current_user({})
+local summary = app.integrations.line.get_group_summary({
+  group_id = "C0000000000"
+})
 
-print("Bot name: " .. result.displayName)
-print("Bot ID: " .. result.userId)
+local count = app.integrations.line.get_group_member_count({
+  group_id = "C0000000000"
+})
+
+local members = app.integrations.line.list_group_member_ids({
+  group_id = "C0000000000",
+  start = nil
+})
+
+local member = app.integrations.line.get_group_member_profile({
+  group_id = "C0000000000",
+  user_id = "U0000000000"
+})
 ```
 
----
+`leave_group({ group_id = "C0000000000" })` removes the bot from the group. Use it only when that is the intended operational effect.
+
+## Rich Menus
+
+Rich menu tools accept LINE rich menu objects directly.
+
+```lua
+local rich_menu = {
+  size = { width = 2500, height = 843 },
+  selected = false,
+  name = "main-menu",
+  chatBarText = "Menu",
+  areas = {}
+}
+
+app.integrations.line.validate_rich_menu({ rich_menu = rich_menu })
+local created = app.integrations.line.create_rich_menu({ rich_menu = rich_menu })
+
+local list = app.integrations.line.list_rich_menus({})
+local one = app.integrations.line.get_rich_menu({ rich_menu_id = "richmenu-123" })
+```
+
+Default and per-user rich menu tools:
+
+- `set_default_rich_menu({ rich_menu_id = "richmenu-123" })`
+- `get_default_rich_menu({})`
+- `clear_default_rich_menu({})`
+- `link_rich_menu_to_user({ user_id = "U0000000000", rich_menu_id = "richmenu-123" })`
+- `get_user_rich_menu({ user_id = "U0000000000" })`
+- `unlink_rich_menu_from_user({ user_id = "U0000000000" })`
+- `delete_rich_menu({ rich_menu_id = "richmenu-123" })`
+
+Image upload/download endpoints are binary content endpoints and are not exposed by this JSON-only tool set.
+
+## Account Link
+
+```lua
+local token = app.integrations.line.issue_link_token({
+  user_id = "U0000000000"
+})
+```
+
+Use the returned token in LINE's account-linking flow for your service.
 
 ## Multi-Account Usage
 
-If you have multiple LINE accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.line.send_message({...})
-
--- Explicit default (portable across setups)
 app.integrations.line.default.send_message({...})
-
--- Named accounts
 app.integrations.line.production.send_message({...})
-app.integrations.line.staging.send_message({...})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+Named account namespaces use the same functions with different stored credentials.

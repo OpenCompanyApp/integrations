@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
  */
 class AlgoliaServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the Algolia API client singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(AlgoliaService::class, function ($app) {
@@ -26,6 +29,9 @@ class AlgoliaServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the Algolia tool provider with the host registry.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

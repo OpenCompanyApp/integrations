@@ -2,51 +2,22 @@
 
 namespace OpenCompany\Integrations\Front\Tools;
 
-use OpenCompany\Integrations\Front\FrontService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class FrontListContacts implements Tool
+/**
+ * List company-level contacts in Front.
+ */
+class FrontListContacts extends AbstractFrontTool
 {
-    public function __construct(
-        private FrontService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'front_list_contacts';
-    }
-
-    public function description(): string
-    {
-        return 'List and search contacts in Front. Search by name, email, or other identifiers. Returns paginated contact details.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based).'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of contacts per page (max 100).'],
-            'q' => ['type' => 'string', 'description' => 'Search query to filter contacts by name, email, or other identifiers.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Front integration is not configured.');
-            }
-
-            $result = $this->service->listContacts(
-                page: isset($args['page']) ? (int) $args['page'] : null,
-                limit: isset($args['limit']) ? (int) $args['limit'] : null,
-                q: $args['q'] ?? null,
-            );
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const NAME = 'front_list_contacts';
+    protected const DESCRIPTION = 'List and search company-level Front contacts.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/contacts';
+    protected const QUERY_KEYS = ['q', 'limit', 'page_token', 'sort_by', 'sort_order', 'page'];
+    protected const PARAMETERS = [
+        'q' => ['type' => 'string', 'description' => 'Search query object or text. Front supports updated_after and updated_before inside q for contact lists.'],
+        'limit' => ['type' => 'integer', 'description' => 'Max results per page, up to 100.'],
+        'page_token' => ['type' => 'string', 'description' => 'Pagination token from a previous response.'],
+        'sort_by' => ['type' => 'string', 'description' => 'Sort field, such as created_at or updated_at.'],
+        'sort_order' => ['type' => 'string', 'enum' => ['asc', 'desc'], 'description' => 'Sort order.'],
+        'page' => ['type' => 'integer', 'description' => 'Legacy page number for older host usage. Prefer page_token.'],
+    ];
 }

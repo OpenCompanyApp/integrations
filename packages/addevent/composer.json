@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-addevent",
-    "description": "AddEvent integration for Laravel — manage events, categories, and groups.",
+    "description": "AddEvent Calendar and Events API v2 integration for Laravel - manage events and calendars.",
     "license": "MIT",
     "authors": [
         {

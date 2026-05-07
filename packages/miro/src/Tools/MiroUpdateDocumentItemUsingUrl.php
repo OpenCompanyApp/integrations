@@ -1,0 +1,45 @@
+<?php
+
+namespace OpenCompany\Integrations\Miro\Tools;
+
+/**
+ * Updates a document item on a board Required scope boards:write Rate limiting Level 2.
+ *
+ * Maps to the official Miro endpoint PATCH /v2/boards/{board_id}/documents/{item_id}.
+ */
+class MiroUpdateDocumentItemUsingUrl extends AbstractMiroTool
+{
+    protected const NAME = 'miro_update_document_item_using_url';
+    protected const DESCRIPTION = 'Updates a document item on a board Required scope boards:write Rate limiting Level 2
+
+Official Miro endpoint: PATCH /v2/boards/{board_id}/documents/{item_id}.';
+    protected const PARAMETERS = array (
+      'board_id' => array (
+        'type' => 'string',
+        'description' => 'Unique identifier (ID) of the board where you want to update the item.',
+        'required' => true,
+      ),
+      'item_id' => array (
+        'type' => 'string',
+        'description' => 'Unique identifier (ID) of the item that you want to update.',
+        'required' => true,
+      ),
+      'body' => array (
+        'type' => 'object',
+        'description' => 'Request body matching the Miro API schema.',
+        'required' => true,
+      ),
+    );
+    protected const METHOD = 'PATCH';
+    protected const PATH = '/v2/boards/{board_id}/documents/{item_id}';
+    protected const PATH_PARAMS = array (
+      'board_id' => 'board_id',
+      'item_id' => 'item_id',
+    );
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = true;
+    protected const BODY_CONTENT_TYPE = 'application/json';
+}

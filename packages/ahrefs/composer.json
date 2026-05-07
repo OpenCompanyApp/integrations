@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-ahrefs",
-    "description": "Ahrefs SEO integration for Laravel — backlinks, referring domains, organic keywords, pages, and more.",
+    "description": "Ahrefs API v3 integration for Laravel agents with Site Explorer, subscription usage, and generic GET tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "ahrefs", "seo", "opencompany"],
+    "keywords": ["tools", "ahrefs", "api-v3", "site-explorer", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

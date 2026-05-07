@@ -1,0 +1,308 @@
+{
+    "source_url": "https://github.com/airbytehq/airbyte-api-python-sdk/blob/main/airbyte-api.openapi.yaml",
+    "spec_file_url": "https://raw.githubusercontent.com/airbytehq/airbyte-api-python-sdk/main/airbyte-api.openapi.yaml",
+    "openapi": "3.1.0",
+    "title": "airbyte-api",
+    "version": "1.0.0",
+    "base_url": "https://api.airbyte.com/v1",
+    "auth": "bearer",
+    "method_count": 37,
+    "operations": [
+        {
+            "operation_id": "getHealthCheck",
+            "class": "AirbyteGetHealthCheck",
+            "slug": "airbyte_get_health_check",
+            "method": "get",
+            "path": "/health",
+            "type": "read"
+        },
+        {
+            "operation_id": "listJobs",
+            "class": "AirbyteListJobs",
+            "slug": "airbyte_list_jobs",
+            "method": "get",
+            "path": "/jobs",
+            "type": "read"
+        },
+        {
+            "operation_id": "createJob",
+            "class": "AirbyteCreateJob",
+            "slug": "airbyte_create_job",
+            "method": "post",
+            "path": "/jobs",
+            "type": "write"
+        },
+        {
+            "operation_id": "getJob",
+            "class": "AirbyteGetJob",
+            "slug": "airbyte_get_job",
+            "method": "get",
+            "path": "/jobs/{jobId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "cancelJob",
+            "class": "AirbyteCancelJob",
+            "slug": "airbyte_cancel_job",
+            "method": "delete",
+            "path": "/jobs/{jobId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listSources",
+            "class": "AirbyteListSources",
+            "slug": "airbyte_list_sources",
+            "method": "get",
+            "path": "/sources",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSource",
+            "class": "AirbyteCreateSource",
+            "slug": "airbyte_create_source",
+            "method": "post",
+            "path": "/sources",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSource",
+            "class": "AirbyteGetSource",
+            "slug": "airbyte_get_source",
+            "method": "get",
+            "path": "/sources/{sourceId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "patchSource",
+            "class": "AirbytePatchSource",
+            "slug": "airbyte_patch_source",
+            "method": "patch",
+            "path": "/sources/{sourceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "putSource",
+            "class": "AirbytePutSource",
+            "slug": "airbyte_put_source",
+            "method": "put",
+            "path": "/sources/{sourceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSource",
+            "class": "AirbyteDeleteSource",
+            "slug": "airbyte_delete_source",
+            "method": "delete",
+            "path": "/sources/{sourceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDestinations",
+            "class": "AirbyteListDestinations",
+            "slug": "airbyte_list_destinations",
+            "method": "get",
+            "path": "/destinations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createDestination",
+            "class": "AirbyteCreateDestination",
+            "slug": "airbyte_create_destination",
+            "method": "post",
+            "path": "/destinations",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDestination",
+            "class": "AirbyteGetDestination",
+            "slug": "airbyte_get_destination",
+            "method": "get",
+            "path": "/destinations/{destinationId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteDestination",
+            "class": "AirbyteDeleteDestination",
+            "slug": "airbyte_delete_destination",
+            "method": "delete",
+            "path": "/destinations/{destinationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "patchDestination",
+            "class": "AirbytePatchDestination",
+            "slug": "airbyte_patch_destination",
+            "method": "patch",
+            "path": "/destinations/{destinationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "putDestination",
+            "class": "AirbytePutDestination",
+            "slug": "airbyte_put_destination",
+            "method": "put",
+            "path": "/destinations/{destinationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "initiateOAuth",
+            "class": "AirbyteInitiateOAuth",
+            "slug": "airbyte_initiate_oauth",
+            "method": "post",
+            "path": "/sources/initiateOAuth",
+            "type": "write"
+        },
+        {
+            "operation_id": "createConnection",
+            "class": "AirbyteCreateConnection",
+            "slug": "airbyte_create_connection",
+            "method": "post",
+            "path": "/connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "listConnections",
+            "class": "AirbyteListConnections",
+            "slug": "airbyte_list_connections",
+            "method": "get",
+            "path": "/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "getConnection",
+            "class": "AirbyteGetConnection",
+            "slug": "airbyte_get_connection",
+            "method": "get",
+            "path": "/connections/{connectionId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "patchConnection",
+            "class": "AirbytePatchConnection",
+            "slug": "airbyte_patch_connection",
+            "method": "patch",
+            "path": "/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteConnection",
+            "class": "AirbyteDeleteConnection",
+            "slug": "airbyte_delete_connection",
+            "method": "delete",
+            "path": "/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getStreamProperties",
+            "class": "AirbyteGetStreamProperties",
+            "slug": "airbyte_get_stream_properties",
+            "method": "get",
+            "path": "/streams",
+            "type": "read"
+        },
+        {
+            "operation_id": "listWorkspaces",
+            "class": "AirbyteListWorkspaces",
+            "slug": "airbyte_list_workspaces",
+            "method": "get",
+            "path": "/workspaces",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkspace",
+            "class": "AirbyteCreateWorkspace",
+            "slug": "airbyte_create_workspace",
+            "method": "post",
+            "path": "/workspaces",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWorkspace",
+            "class": "AirbyteGetWorkspace",
+            "slug": "airbyte_get_workspace",
+            "method": "get",
+            "path": "/workspaces/{workspaceId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWorkspace",
+            "class": "AirbyteUpdateWorkspace",
+            "slug": "airbyte_update_workspace",
+            "method": "patch",
+            "path": "/workspaces/{workspaceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWorkspace",
+            "class": "AirbyteDeleteWorkspace",
+            "slug": "airbyte_delete_workspace",
+            "method": "delete",
+            "path": "/workspaces/{workspaceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "createOrUpdateWorkspaceOAuthCredentials",
+            "class": "AirbyteCreateOrUpdateWorkspaceOAuthCredentials",
+            "slug": "airbyte_create_or_update_workspace_oauth_credentials",
+            "method": "put",
+            "path": "/workspaces/{workspaceId}/oauthCredentials",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPermission",
+            "class": "AirbyteGetPermission",
+            "slug": "airbyte_get_permission",
+            "method": "get",
+            "path": "/permissions/{permissionId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updatePermission",
+            "class": "AirbyteUpdatePermission",
+            "slug": "airbyte_update_permission",
+            "method": "patch",
+            "path": "/permissions/{permissionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deletePermission",
+            "class": "AirbyteDeletePermission",
+            "slug": "airbyte_delete_permission",
+            "method": "delete",
+            "path": "/permissions/{permissionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listPermissions",
+            "class": "AirbyteListPermissions",
+            "slug": "airbyte_list_permissions",
+            "method": "get",
+            "path": "/permissions",
+            "type": "read"
+        },
+        {
+            "operation_id": "createPermission",
+            "class": "AirbyteCreatePermission",
+            "slug": "airbyte_create_permission",
+            "method": "post",
+            "path": "/permissions",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOrganizationsForUser",
+            "class": "AirbyteListOrganizationsForUser",
+            "slug": "airbyte_list_organizations_for_user",
+            "method": "get",
+            "path": "/organizations",
+            "type": "read"
+        },
+        {
+            "operation_id": "listUsersWithinAnOrganization",
+            "class": "AirbyteListUsersWithinAnOrganization",
+            "slug": "airbyte_list_users_within_an_organization",
+            "method": "get",
+            "path": "/users",
+            "type": "read"
+        }
+    ]
+}

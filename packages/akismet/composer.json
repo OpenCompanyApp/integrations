@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-akismet",
+    "description": "Akismet integration for Laravel AI agents - key verification, spam checks, feedback submission, site activity, and usage limits.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Akismet\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Akismet\\AkismetServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "akismet",
+        "spam-detection",
+        "content-moderation",
+        "comments",
+        "forms",
+        "opencompany"
+    ]
+}

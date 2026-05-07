@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-assemblyai",
-    "description": "AssemblyAI integration for Laravel — transcribe audio, manage transcripts, upload files, and more.",
+    "description": "AssemblyAI integration for Laravel — transcripts, uploads, streaming tokens, and LLM Gateway chat.",
     "license": "MIT",
     "authors": [
         {

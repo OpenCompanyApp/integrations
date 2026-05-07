@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a Vimeo upload ticket.
+ */
 class VimeoUploadVideo implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -31,6 +37,11 @@ class VimeoUploadVideo implements Tool
         ];
     }
 
+    /**
+     * Create the upload ticket.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

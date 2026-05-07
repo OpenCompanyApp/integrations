@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
  */
 class VimeoGetVideo implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -36,7 +39,9 @@ class VimeoGetVideo implements Tool
     }
 
     /**
-     * @param  array<string, mixed>  $args
+     * Get one video.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

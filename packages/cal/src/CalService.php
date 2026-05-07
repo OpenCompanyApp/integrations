@@ -8,16 +8,20 @@ use Illuminate\Support\Facades\Log;
 /**
  * Cal.com API service for managing event types, bookings, and user information.
  *
- * Communicates with the Cal.com v1 REST API using Bearer token authentication.
+ * Communicates with the Cal.com v2 REST API using Bearer token authentication.
  * Supports configurable base URL for self-hosted Cal.com instances.
  *
- * @see https://developer.cal.com/api
+ * @see https://cal.com/docs/api-reference/v2/introduction
  */
 class CalService
 {
+    /**
+     * @param  string  $accessToken  Cal.com API key, managed-user token, or OAuth access token.
+     * @param  string  $baseUrl  Cal.com API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.cal.com/v1',
+        private string $baseUrl = 'https://api.cal.com/v2',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -51,7 +55,7 @@ class CalService
             $params['teamId'] = $teamId;
         }
 
-        return $this->request('GET', '/event-types', $params);
+        return $this->apiGet('/event-types', $params);
     }
 
     /**
@@ -62,7 +66,7 @@ class CalService
      */
     public function getEventType(int $id): array
     {
-        return $this->request('GET', '/event-types/' . $id);
+        return $this->apiGet('/event-types/' . $id);
     }
 
     /**
@@ -90,18 +94,18 @@ class CalService
             $params['eventTypeId'] = $eventTypeId;
         }
 
-        return $this->request('GET', '/bookings', $params);
+        return $this->apiGet('/bookings', $params);
     }
 
     /**
-     * Get a single booking by its ID.
+     * Get a single booking by numeric ID or UID.
      *
-     * @param  int  $id  The booking ID.
+     * @param  int|string  $id  The booking ID or UID.
      * @return array<string, mixed> API response containing the booking.
      */
-    public function getBooking(int $id): array
+    public function getBooking(int|string $id): array
     {
-        return $this->request('GET', '/bookings/' . $id);
+        return $this->apiGet('/bookings/' . rawurlencode((string) $id));
     }
 
     /**
@@ -115,12 +119,36 @@ class CalService
      */
     public function createBooking(int $eventTypeId, string $start, string $end, array $responses): array
     {
-        return $this->request('POST', '/bookings', [
+        return $this->apiPost('/bookings', [
             'eventTypeId' => $eventTypeId,
             'start' => $start,
             'end' => $end,
             'responses' => $responses,
         ]);
+    }
+
+    /**
+     * Cancel a booking by booking UID.
+     *
+     * @param  string  $bookingUid  Booking UID.
+     * @param  array<string, mixed>  $body  Cancellation payload.
+     * @return array<string, mixed>
+     */
+    public function cancelBooking(string $bookingUid, array $body = []): array
+    {
+        return $this->apiPost('/bookings/'.rawurlencode($bookingUid).'/cancel', $body);
+    }
+
+    /**
+     * Reschedule a booking by booking UID.
+     *
+     * @param  string  $bookingUid  Booking UID.
+     * @param  array<string, mixed>  $body  Reschedule payload.
+     * @return array<string, mixed>
+     */
+    public function rescheduleBooking(string $bookingUid, array $body): array
+    {
+        return $this->apiPost('/bookings/'.rawurlencode($bookingUid).'/reschedule', $body);
     }
 
     /**
@@ -130,7 +158,55 @@ class CalService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->apiGet('/me');
+    }
+
+    /**
+     * Call any Cal.com GET API endpoint.
+     *
+     * @param  string  $path  API path relative to the v2 base URL.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Call any Cal.com POST API endpoint.
+     *
+     * @param  string  $path  API path relative to the v2 base URL.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $body);
+    }
+
+    /**
+     * Call any Cal.com PATCH API endpoint.
+     *
+     * @param  string  $path  API path relative to the v2 base URL.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $body = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $body);
+    }
+
+    /**
+     * Call any Cal.com DELETE API endpoint.
+     *
+     * @param  string  $path  API path relative to the v2 base URL.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $body = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $body);
     }
 
     /**
@@ -179,6 +255,7 @@ class CalService
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
@@ -210,5 +287,13 @@ class CalService
             ]);
             throw new \RuntimeException("Failed to connect to Cal.com API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a generic API path.
+     */
+    private function normalizePath(string $path): string
+    {
+        return '/'.ltrim($path, '/');
     }
 }

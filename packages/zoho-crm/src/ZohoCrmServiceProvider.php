@@ -15,9 +15,16 @@ class ZohoCrmServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZohoCrmService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $credential = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('zoho-crm', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_crm', $key, $default);
+            };
 
             return new ZohoCrmService(
-                accessToken: $creds->get('zoho_crm', 'access_token', ''),
+                accessToken: $credential('access_token'),
             );
         });
     }

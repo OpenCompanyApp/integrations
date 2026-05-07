@@ -6,8 +6,14 @@ use OpenCompany\Integrations\MercadoPago\MercadoPagoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a Mercado Pago customer by ID.
+ */
 class MercadoPagoGetCustomer implements Tool
 {
+    /**
+     * @param  MercadoPagoService  $service  The Mercado Pago API service.
+     */
     public function __construct(
         private MercadoPagoService $service,
     ) {}
@@ -29,6 +35,11 @@ class MercadoPagoGetCustomer implements Tool
         ];
     }
 
+    /**
+     * Execute the get-customer request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

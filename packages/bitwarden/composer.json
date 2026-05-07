@@ -1,0 +1,22 @@
+{
+    "name": "opencompanyapp/integration-bitwarden",
+    "description": "Bitwarden Public API integration for organization members, collections, groups, event logs, and policies.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Bitwarden\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Bitwarden\\BitwardenServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "*"
+    }
+}

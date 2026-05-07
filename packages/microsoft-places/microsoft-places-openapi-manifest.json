@@ -1,0 +1,798 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/place?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 131,
+  "path_prefixes": [
+    "/places"
+  ],
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/places",
+      "operationId": "places.place.CreatePlace",
+      "tool": "microsoft_places_places_place_create_place"
+    },
+    {
+      "method": "GET",
+      "path": "/places/$count",
+      "operationId": "places.GetCount-f02b",
+      "tool": "microsoft_places_places_get_count_f02b"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.building",
+      "operationId": "places.place.ListPlace.AsBuilding",
+      "tool": "microsoft_places_places_place_list_place_as_building"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.building/$count",
+      "operationId": "places.place.Place.GetCount.AsBuilding-9b72",
+      "tool": "microsoft_places_places_place_place_get_count_as_building_9b72"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.desk",
+      "operationId": "places.place.ListPlace.AsDesk",
+      "tool": "microsoft_places_places_place_list_place_as_desk"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.desk/$count",
+      "operationId": "places.place.Place.GetCount.AsDesk-6f90",
+      "tool": "microsoft_places_places_place_place_get_count_as_desk_6f90"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.floor",
+      "operationId": "places.place.ListPlace.AsFloor",
+      "tool": "microsoft_places_places_place_list_place_as_floor"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.floor/$count",
+      "operationId": "places.place.Place.GetCount.AsFloor-2f1e",
+      "tool": "microsoft_places_places_place_place_get_count_as_floor_2f1e"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.room",
+      "operationId": "places.place.ListPlace.AsRoom",
+      "tool": "microsoft_places_places_place_list_place_as_room"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.room/$count",
+      "operationId": "places.place.Place.GetCount.AsRoom-56fc",
+      "tool": "microsoft_places_places_place_place_get_count_as_room_56fc"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.roomList",
+      "operationId": "places.place.ListPlace.AsRoomList",
+      "tool": "microsoft_places_places_place_list_place_as_room_list"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.roomList/$count",
+      "operationId": "places.place.Place.GetCount.AsRoomList-e9fd",
+      "tool": "microsoft_places_places_place_place_get_count_as_room_list_e9fd"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.section",
+      "operationId": "places.place.ListPlace.AsSection",
+      "tool": "microsoft_places_places_place_list_place_as_section"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.section/$count",
+      "operationId": "places.place.Place.GetCount.AsSection-95fa",
+      "tool": "microsoft_places_places_place_place_get_count_as_section_95fa"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.workspace",
+      "operationId": "places.place.ListPlace.AsWorkspace",
+      "tool": "microsoft_places_places_place_list_place_as_workspace"
+    },
+    {
+      "method": "GET",
+      "path": "/places/graph.workspace/$count",
+      "operationId": "places.place.Place.GetCount.AsWorkspace-7f2e",
+      "tool": "microsoft_places_places_place_place_get_count_as_workspace_7f2e"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}",
+      "operationId": "places.place.DeletePlace",
+      "tool": "microsoft_places_places_place_delete_place"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}",
+      "operationId": "places.place.UpdatePlace",
+      "tool": "microsoft_places_places_place_update_place"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/checkIns",
+      "operationId": "places.ListCheckIns",
+      "tool": "microsoft_places_places_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/checkIns",
+      "operationId": "places.CreateCheckIns",
+      "tool": "microsoft_places_places_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/checkIns/$count",
+      "operationId": "places.checkIns.GetCount-2709",
+      "tool": "microsoft_places_places_check_ins_get_count_2709"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.DeleteCheckIns",
+      "tool": "microsoft_places_places_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.GetCheckIns",
+      "tool": "microsoft_places_places_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.UpdateCheckIns",
+      "tool": "microsoft_places_places_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/descendants()",
+      "operationId": "places.place.descendants",
+      "tool": "microsoft_places_places_place_descendants"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building",
+      "operationId": "places.place.GetPlace.AsBuilding",
+      "tool": "microsoft_places_places_place_get_place_as_building"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/checkIns",
+      "operationId": "places.AsBuilding.ListCheckIns",
+      "tool": "microsoft_places_places_as_building_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.building/checkIns",
+      "operationId": "places.AsBuilding.CreateCheckIns",
+      "tool": "microsoft_places_places_as_building_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/checkIns/$count",
+      "operationId": "places.AsBuilding.checkIns.GetCount-114f",
+      "tool": "microsoft_places_places_as_building_check_ins_get_count_114f"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsBuilding.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_building_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsBuilding.GetCheckIns",
+      "tool": "microsoft_places_places_as_building_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsBuilding.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_building_update_check_ins"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/map",
+      "operationId": "places.AsBuilding.DeleteMap",
+      "tool": "microsoft_places_places_as_building_delete_map"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map",
+      "operationId": "places.AsBuilding.GetMap",
+      "tool": "microsoft_places_places_as_building_get_map"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/map",
+      "operationId": "places.AsBuilding.UpdateMap",
+      "tool": "microsoft_places_places_as_building_update_map"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/footprints",
+      "operationId": "places.AsBuilding.map.ListFootprints",
+      "tool": "microsoft_places_places_as_building_map_list_footprints"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.building/map/footprints",
+      "operationId": "places.AsBuilding.map.CreateFootprints",
+      "tool": "microsoft_places_places_as_building_map_create_footprints"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/footprints/$count",
+      "operationId": "places.AsBuilding.map.footprints.GetCount-273d",
+      "tool": "microsoft_places_places_as_building_map_footprints_get_count_273d"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/map/footprints/{footprintMap-id}",
+      "operationId": "places.AsBuilding.map.DeleteFootprints",
+      "tool": "microsoft_places_places_as_building_map_delete_footprints"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/footprints/{footprintMap-id}",
+      "operationId": "places.AsBuilding.map.GetFootprints",
+      "tool": "microsoft_places_places_as_building_map_get_footprints"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/map/footprints/{footprintMap-id}",
+      "operationId": "places.AsBuilding.map.UpdateFootprints",
+      "tool": "microsoft_places_places_as_building_map_update_footprints"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels",
+      "operationId": "places.AsBuilding.map.ListLevels",
+      "tool": "microsoft_places_places_as_building_map_list_levels"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.building/map/levels",
+      "operationId": "places.AsBuilding.map.CreateLevels",
+      "tool": "microsoft_places_places_as_building_map_create_levels"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/$count",
+      "operationId": "places.AsBuilding.map.levels.GetCount-292f",
+      "tool": "microsoft_places_places_as_building_map_levels_get_count_292f"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}",
+      "operationId": "places.AsBuilding.map.DeleteLevels",
+      "tool": "microsoft_places_places_as_building_map_delete_levels"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}",
+      "operationId": "places.AsBuilding.map.GetLevels",
+      "tool": "microsoft_places_places_as_building_map_get_levels"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}",
+      "operationId": "places.AsBuilding.map.UpdateLevels",
+      "tool": "microsoft_places_places_as_building_map_update_levels"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/fixtures",
+      "operationId": "places.AsBuilding.map.levels.ListFixtures",
+      "tool": "microsoft_places_places_as_building_map_levels_list_fixtures"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/fixtures",
+      "operationId": "places.AsBuilding.map.levels.CreateFixtures",
+      "tool": "microsoft_places_places_as_building_map_levels_create_fixtures"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/fixtures/$count",
+      "operationId": "places.AsBuilding.map.levels.fixtures.GetCount-85dd",
+      "tool": "microsoft_places_places_as_building_map_levels_fixtures_get_count_85dd"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/fixtures/{fixtureMap-id}",
+      "operationId": "places.AsBuilding.map.levels.DeleteFixtures",
+      "tool": "microsoft_places_places_as_building_map_levels_delete_fixtures"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/fixtures/{fixtureMap-id}",
+      "operationId": "places.AsBuilding.map.levels.GetFixtures",
+      "tool": "microsoft_places_places_as_building_map_levels_get_fixtures"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/fixtures/{fixtureMap-id}",
+      "operationId": "places.AsBuilding.map.levels.UpdateFixtures",
+      "tool": "microsoft_places_places_as_building_map_levels_update_fixtures"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/sections",
+      "operationId": "places.AsBuilding.map.levels.ListSections",
+      "tool": "microsoft_places_places_as_building_map_levels_list_sections"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/sections",
+      "operationId": "places.AsBuilding.map.levels.CreateSections",
+      "tool": "microsoft_places_places_as_building_map_levels_create_sections"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/sections/$count",
+      "operationId": "places.AsBuilding.map.levels.sections.GetCount-bdac",
+      "tool": "microsoft_places_places_as_building_map_levels_sections_get_count_bdac"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/sections/{sectionMap-id}",
+      "operationId": "places.AsBuilding.map.levels.DeleteSections",
+      "tool": "microsoft_places_places_as_building_map_levels_delete_sections"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/sections/{sectionMap-id}",
+      "operationId": "places.AsBuilding.map.levels.GetSections",
+      "tool": "microsoft_places_places_as_building_map_levels_get_sections"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/sections/{sectionMap-id}",
+      "operationId": "places.AsBuilding.map.levels.UpdateSections",
+      "tool": "microsoft_places_places_as_building_map_levels_update_sections"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/units",
+      "operationId": "places.AsBuilding.map.levels.ListUnits",
+      "tool": "microsoft_places_places_as_building_map_levels_list_units"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/units",
+      "operationId": "places.AsBuilding.map.levels.CreateUnits",
+      "tool": "microsoft_places_places_as_building_map_levels_create_units"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/units/$count",
+      "operationId": "places.AsBuilding.map.levels.units.GetCount-3fc3",
+      "tool": "microsoft_places_places_as_building_map_levels_units_get_count_3fc3"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/units/{unitMap-id}",
+      "operationId": "places.AsBuilding.map.levels.DeleteUnits",
+      "tool": "microsoft_places_places_as_building_map_levels_delete_units"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/units/{unitMap-id}",
+      "operationId": "places.AsBuilding.map.levels.GetUnits",
+      "tool": "microsoft_places_places_as_building_map_levels_get_units"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.building/map/levels/{levelMap-id}/units/{unitMap-id}",
+      "operationId": "places.AsBuilding.map.levels.UpdateUnits",
+      "tool": "microsoft_places_places_as_building_map_levels_update_units"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.desk",
+      "operationId": "places.place.GetPlace.AsDesk",
+      "tool": "microsoft_places_places_place_get_place_as_desk"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.desk/checkIns",
+      "operationId": "places.AsDesk.ListCheckIns",
+      "tool": "microsoft_places_places_as_desk_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.desk/checkIns",
+      "operationId": "places.AsDesk.CreateCheckIns",
+      "tool": "microsoft_places_places_as_desk_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.desk/checkIns/$count",
+      "operationId": "places.AsDesk.checkIns.GetCount-fd8b",
+      "tool": "microsoft_places_places_as_desk_check_ins_get_count_fd8b"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.desk/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsDesk.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_desk_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.desk/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsDesk.GetCheckIns",
+      "tool": "microsoft_places_places_as_desk_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.desk/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsDesk.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_desk_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.floor",
+      "operationId": "places.place.GetPlace.AsFloor",
+      "tool": "microsoft_places_places_place_get_place_as_floor"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.floor/checkIns",
+      "operationId": "places.AsFloor.ListCheckIns",
+      "tool": "microsoft_places_places_as_floor_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.floor/checkIns",
+      "operationId": "places.AsFloor.CreateCheckIns",
+      "tool": "microsoft_places_places_as_floor_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.floor/checkIns/$count",
+      "operationId": "places.AsFloor.checkIns.GetCount-e279",
+      "tool": "microsoft_places_places_as_floor_check_ins_get_count_e279"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.floor/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsFloor.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_floor_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.floor/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsFloor.GetCheckIns",
+      "tool": "microsoft_places_places_as_floor_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.floor/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsFloor.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_floor_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.room",
+      "operationId": "places.place.GetPlace.AsRoom",
+      "tool": "microsoft_places_places_place_get_place_as_room"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.room/checkIns",
+      "operationId": "places.AsRoom.ListCheckIns",
+      "tool": "microsoft_places_places_as_room_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.room/checkIns",
+      "operationId": "places.AsRoom.CreateCheckIns",
+      "tool": "microsoft_places_places_as_room_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.room/checkIns/$count",
+      "operationId": "places.AsRoom.checkIns.GetCount-9b19",
+      "tool": "microsoft_places_places_as_room_check_ins_get_count_9b19"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.room/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoom.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_room_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.room/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoom.GetCheckIns",
+      "tool": "microsoft_places_places_as_room_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.room/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoom.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_room_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList",
+      "operationId": "places.place.GetPlace.AsRoomList",
+      "tool": "microsoft_places_places_place_get_place_as_room_list"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/checkIns",
+      "operationId": "places.AsRoomList.ListCheckIns",
+      "tool": "microsoft_places_places_as_room_list_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.roomList/checkIns",
+      "operationId": "places.AsRoomList.CreateCheckIns",
+      "tool": "microsoft_places_places_as_room_list_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/checkIns/$count",
+      "operationId": "places.AsRoomList.checkIns.GetCount-e70f",
+      "tool": "microsoft_places_places_as_room_list_check_ins_get_count_e70f"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.roomList/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_room_list_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.GetCheckIns",
+      "tool": "microsoft_places_places_as_room_list_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.roomList/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_room_list_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/rooms",
+      "operationId": "places.AsRoomList.ListRooms",
+      "tool": "microsoft_places_places_as_room_list_list_rooms"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.roomList/rooms",
+      "operationId": "places.AsRoomList.CreateRooms",
+      "tool": "microsoft_places_places_as_room_list_create_rooms"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/rooms/$count",
+      "operationId": "places.AsRoomList.rooms.GetCount-b534",
+      "tool": "microsoft_places_places_as_room_list_rooms_get_count_b534"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}",
+      "operationId": "places.AsRoomList.DeleteRooms",
+      "tool": "microsoft_places_places_as_room_list_delete_rooms"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}",
+      "operationId": "places.AsRoomList.GetRooms",
+      "tool": "microsoft_places_places_as_room_list_get_rooms"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}",
+      "operationId": "places.AsRoomList.UpdateRooms",
+      "tool": "microsoft_places_places_as_room_list_update_rooms"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}/checkIns",
+      "operationId": "places.AsRoomList.rooms.ListCheckIns",
+      "tool": "microsoft_places_places_as_room_list_rooms_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}/checkIns",
+      "operationId": "places.AsRoomList.rooms.CreateCheckIns",
+      "tool": "microsoft_places_places_as_room_list_rooms_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}/checkIns/$count",
+      "operationId": "places.AsRoomList.rooms.checkIns.GetCount-28dc",
+      "tool": "microsoft_places_places_as_room_list_rooms_check_ins_get_count_28dc"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.rooms.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_room_list_rooms_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.rooms.GetCheckIns",
+      "tool": "microsoft_places_places_as_room_list_rooms_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.roomList/rooms/{room-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.rooms.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_room_list_rooms_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/workspaces",
+      "operationId": "places.AsRoomList.ListWorkspaces",
+      "tool": "microsoft_places_places_as_room_list_list_workspaces"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.roomList/workspaces",
+      "operationId": "places.AsRoomList.CreateWorkspaces",
+      "tool": "microsoft_places_places_as_room_list_create_workspaces"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/workspaces/$count",
+      "operationId": "places.AsRoomList.workspaces.GetCount-4b94",
+      "tool": "microsoft_places_places_as_room_list_workspaces_get_count_4b94"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}",
+      "operationId": "places.AsRoomList.DeleteWorkspaces",
+      "tool": "microsoft_places_places_as_room_list_delete_workspaces"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}",
+      "operationId": "places.AsRoomList.GetWorkspaces",
+      "tool": "microsoft_places_places_as_room_list_get_workspaces"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}",
+      "operationId": "places.AsRoomList.UpdateWorkspaces",
+      "tool": "microsoft_places_places_as_room_list_update_workspaces"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}/checkIns",
+      "operationId": "places.AsRoomList.workspaces.ListCheckIns",
+      "tool": "microsoft_places_places_as_room_list_workspaces_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}/checkIns",
+      "operationId": "places.AsRoomList.workspaces.CreateCheckIns",
+      "tool": "microsoft_places_places_as_room_list_workspaces_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}/checkIns/$count",
+      "operationId": "places.AsRoomList.workspaces.checkIns.GetCount-8c5e",
+      "tool": "microsoft_places_places_as_room_list_workspaces_check_ins_get_count_8c5e"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.workspaces.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_room_list_workspaces_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.workspaces.GetCheckIns",
+      "tool": "microsoft_places_places_as_room_list_workspaces_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.roomList/workspaces/{workspace-id}/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsRoomList.workspaces.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_room_list_workspaces_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.section",
+      "operationId": "places.place.GetPlace.AsSection",
+      "tool": "microsoft_places_places_place_get_place_as_section"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.section/checkIns",
+      "operationId": "places.AsSection.ListCheckIns",
+      "tool": "microsoft_places_places_as_section_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.section/checkIns",
+      "operationId": "places.AsSection.CreateCheckIns",
+      "tool": "microsoft_places_places_as_section_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.section/checkIns/$count",
+      "operationId": "places.AsSection.checkIns.GetCount-4bba",
+      "tool": "microsoft_places_places_as_section_check_ins_get_count_4bba"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.section/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsSection.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_section_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.section/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsSection.GetCheckIns",
+      "tool": "microsoft_places_places_as_section_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.section/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsSection.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_section_update_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.workspace",
+      "operationId": "places.place.GetPlace.AsWorkspace",
+      "tool": "microsoft_places_places_place_get_place_as_workspace"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.workspace/checkIns",
+      "operationId": "places.AsWorkspace.ListCheckIns",
+      "tool": "microsoft_places_places_as_workspace_list_check_ins"
+    },
+    {
+      "method": "POST",
+      "path": "/places/{place-id}/graph.workspace/checkIns",
+      "operationId": "places.AsWorkspace.CreateCheckIns",
+      "tool": "microsoft_places_places_as_workspace_create_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.workspace/checkIns/$count",
+      "operationId": "places.AsWorkspace.checkIns.GetCount-d022",
+      "tool": "microsoft_places_places_as_workspace_check_ins_get_count_d022"
+    },
+    {
+      "method": "DELETE",
+      "path": "/places/{place-id}/graph.workspace/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsWorkspace.DeleteCheckIns",
+      "tool": "microsoft_places_places_as_workspace_delete_check_ins"
+    },
+    {
+      "method": "GET",
+      "path": "/places/{place-id}/graph.workspace/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsWorkspace.GetCheckIns",
+      "tool": "microsoft_places_places_as_workspace_get_check_ins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/places/{place-id}/graph.workspace/checkIns/{checkInClaim-calendarEventId}",
+      "operationId": "places.AsWorkspace.UpdateCheckIns",
+      "tool": "microsoft_places_places_as_workspace_update_check_ins"
+    }
+  ]
+}

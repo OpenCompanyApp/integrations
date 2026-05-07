@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Delete a Clerk user.
+ *
+ * Removes a user and associated Clerk data by user ID.
+ */
 class ClerkDeleteUser implements Tool
 {
     /**
      * Create a new ClerkDeleteUser tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -46,7 +53,7 @@ class ClerkDeleteUser implements Tool
     /**
      * Execute the delete user tool.
      *
-     * @param  array  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

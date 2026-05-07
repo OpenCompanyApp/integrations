@@ -24,12 +24,13 @@ class GrafanaServiceProvider extends ServiceProvider
 
             return new GrafanaService(
                 apiToken: $creds->get('grafana', 'api_token', ''),
+                baseUrl: $creds->get('grafana', 'url', 'http://localhost:3000/api'),
             );
         });
     }
 
     /**
-     * Boot the service provider — register the ToolProvider.
+     * Boot the service provider and register the ToolProvider.
      */
     public function boot(): void
     {

@@ -22,10 +22,17 @@ class MicrosoftTodoServiceProvider extends ServiceProvider
     {
         $this->app->singleton(MicrosoftTodoService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('microsoft-todo', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('microsoft_todo', $key, $default);
+            };
 
             return new MicrosoftTodoService(
-                accessToken: $creds->get('microsoft_todo', 'access_token', ''),
-                baseUrl: $creds->get('microsoft_todo', 'url', 'https://graph.microsoft.com/v1.0'),
+                accessToken: $get('access_token'),
+                baseUrl: $get('url', 'https://graph.microsoft.com/v1.0'),
             );
         });
     }

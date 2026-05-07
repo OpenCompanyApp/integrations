@@ -17,11 +17,11 @@ class WiseService
      * Create a new WiseService instance.
      *
      * @param string $apiKey  Wise API token.
-     * @param string $baseUrl Wise API base URL (default: https://api.transferwise.com).
+     * @param string $baseUrl Wise API base URL (default: https://api.wise.com).
      */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.transferwise.com',
+        private string $baseUrl = 'https://api.wise.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -58,15 +58,16 @@ class WiseService
     }
 
     /**
-     * List borderless account balances for a given profile.
+     * List multi-currency account balances for a given profile.
      *
      * @param int|string $profileId Profile ID.
+     * @param  string  $types  Comma-separated balance types, for example STANDARD,SAVINGS.
      * @return array
      */
-    public function listBalances(int|string $profileId): array
+    public function listBalances(int|string $profileId, string $types = 'STANDARD,SAVINGS'): array
     {
-        return $this->request('GET', '/v1/borderless-accounts', [
-            'profileId' => $profileId,
+        return $this->request('GET', '/v4/profiles/' . rawurlencode((string) $profileId) . '/balances', [
+            'types' => $types,
         ]);
     }
 

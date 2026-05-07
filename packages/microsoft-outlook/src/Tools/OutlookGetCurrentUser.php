@@ -68,7 +68,7 @@ class OutlookGetCurrentUser implements Tool
                 $params['$select'] = $args['select'];
             }
 
-            $user = $this->service->getCurrentUser();
+            $user = $this->service->getCurrentUser($params);
 
             return ToolResult::success($user);
         } catch (\Throwable $e) {

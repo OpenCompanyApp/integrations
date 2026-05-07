@@ -92,7 +92,7 @@ class KeapToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'CRM and sales automation platform for small businesses',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:keap',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.keap.com/docs/rest/',
         ];

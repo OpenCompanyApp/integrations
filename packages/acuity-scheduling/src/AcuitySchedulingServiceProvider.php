@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Acuity Scheduling integration with Laravel.
+ *
+ * Binds the AcuitySchedulingService singleton and registers its tool provider
+ * for discovery when the shared registry is available.
+ */
 class AcuitySchedulingServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +25,8 @@ class AcuitySchedulingServiceProvider extends ServiceProvider
             return new AcuitySchedulingService(
                 accessToken: $creds->get('acuity-scheduling', 'access_token', ''),
                 baseUrl: $creds->get('acuity-scheduling', 'url', 'https://acuityscheduling.com/api/v1'),
+                userId: $creds->get('acuity-scheduling', 'user_id', ''),
+                apiKey: $creds->get('acuity-scheduling', 'api_key', ''),
             );
         });
     }

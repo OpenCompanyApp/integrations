@@ -2,12 +2,20 @@
 
 namespace OpenCompany\Integrations\TrustMrr\Tools;
 
-use OpenCompany\Integrations\TrustMrr\TrustMrrService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\TrustMrr\TrustMrrService;
 
+/**
+ * Get full details for a single TrustMRR startup.
+ *
+ * Returns the full startup detail object, including fields that are omitted or truncated in list results.
+ */
 class TrustMrrGetStartup implements Tool
 {
+    /**
+     * @param  TrustMrrService  $service  The TrustMRR API client.
+     */
     public function __construct(
         private TrustMrrService $service,
     ) {}
@@ -29,6 +37,11 @@ class TrustMrrGetStartup implements Tool
         ];
     }
 
+    /**
+     * Execute the tool and return a startup detail object.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (slug).
+     */
     public function execute(array $args): ToolResult
     {
         $slug = $args['slug'] ?? '';
@@ -38,6 +51,10 @@ class TrustMrrGetStartup implements Tool
         }
 
         try {
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('TrustMRR integration is not configured.');
+            }
+
             $result = $this->service->getStartup($slug);
 
             $startup = $result['data'] ?? $result;

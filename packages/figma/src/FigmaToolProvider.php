@@ -111,7 +111,7 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Files, images, comments, projects, components, and styles',
             'icon' => 'ph:figma-logo',
             'logo' => 'simple-icons:figma',
-            'category' => 'design',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.figma.com/developers/api',
         ];

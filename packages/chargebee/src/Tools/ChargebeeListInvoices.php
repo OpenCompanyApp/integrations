@@ -45,7 +45,7 @@ class ChargebeeListInvoices implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of invoices to return per page (max 100, default 10).'],
-            'page' => ['type' => 'string', 'description' => 'Pagination cursor — pass the value from a previous response to get the next page.'],
+            'page' => ['type' => 'string', 'description' => 'Pagination cursor. Pass the value from a previous response to get the next page.'],
             'status' => ['type' => 'string', 'description' => 'Filter by invoice status: paid, posted, payment_due, not_paid, voided, pending.'],
         ];
     }

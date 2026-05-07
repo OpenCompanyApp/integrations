@@ -4,15 +4,22 @@ namespace OpenCompany\Integrations\Appwrite;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Appwrite server REST API.
+ *
+ * Handles project API-key authentication, safe path construction, error
+ * parsing, and the small convenience wrappers used by the Appwrite tools.
+ */
 class AppwriteService
 {
     /**
      * Create a new Appwrite service instance.
      *
-     * @param string $apiKey    The Appwrite API key (used as X-Appwrite-Key header).
-     * @param string $projectId The Appwrite project ID (used as X-Appwrite-Project header).
-     * @param string $baseUrl   The Appwrite server base URL.
+     * @param  string  $apiKey  The Appwrite API key.
+     * @param  string  $projectId  The Appwrite project ID.
+     * @param  string  $baseUrl  The Appwrite server REST base URL.
      */
     public function __construct(
         private string $apiKey = '',
@@ -35,8 +42,8 @@ class AppwriteService
     /**
      * List all databases in the project.
      *
-     * @param  array $params Query parameters: limit, offset, search.
-     * @return array The parsed JSON response containing databases.
+     * @param  array<string, mixed>  $params  Query parameters such as queries, search, and total.
+     * @return array<string, mixed>
      */
     public function listDatabases(array $params = []): array
     {
@@ -46,8 +53,7 @@ class AppwriteService
     /**
      * Get a database by its ID.
      *
-     * @param  string $id The database ID.
-     * @return array The parsed JSON response containing the database.
+     * @return array<string, mixed>
      */
     public function getDatabase(string $id): array
     {
@@ -57,9 +63,8 @@ class AppwriteService
     /**
      * List collections in a database.
      *
-     * @param  string $databaseId The database ID.
-     * @param  array  $params     Query parameters: limit, offset.
-     * @return array The parsed JSON response containing collections.
+     * @param  array<string, mixed>  $params  Query parameters such as queries, search, and total.
+     * @return array<string, mixed>
      */
     public function listCollections(string $databaseId, array $params = []): array
     {
@@ -69,10 +74,8 @@ class AppwriteService
     /**
      * List documents in a collection.
      *
-     * @param  string $databaseId   The database ID.
-     * @param  string $collectionId The collection ID.
-     * @param  array  $params       Query parameters: limit, offset.
-     * @return array The parsed JSON response containing documents.
+     * @param  array<string, mixed>  $params  Query parameters such as queries and total.
+     * @return array<string, mixed>
      */
     public function listDocuments(string $databaseId, string $collectionId, array $params = []): array
     {
@@ -82,10 +85,7 @@ class AppwriteService
     /**
      * Get a single document by its ID.
      *
-     * @param  string $databaseId   The database ID.
-     * @param  string $collectionId The collection ID.
-     * @param  string $docId        The document ID.
-     * @return array The parsed JSON response containing the document.
+     * @return array<string, mixed>
      */
     public function getDocument(string $databaseId, string $collectionId, string $docId): array
     {
@@ -95,20 +95,18 @@ class AppwriteService
     /**
      * Create a new document in a collection.
      *
-     * @param  string $databaseId   The database ID.
-     * @param  string $collectionId The collection ID.
-     * @param  array  $data         The document data including documentId and data fields.
-     * @return array The parsed JSON response containing the created document.
+     * @param  array<string, mixed>  $data  Request body including documentId, data, and permissions.
+     * @return array<string, mixed>
      */
     public function createDocument(string $databaseId, string $collectionId, array $data): array
     {
-        return $this->request('POST', '/databases/' . urlencode($databaseId) . '/collections/' . urlencode($collectionId) . '/documents', $data);
+        return $this->request('POST', '/databases/' . urlencode($databaseId) . '/collections/' . urlencode($collectionId) . '/documents', body: $data);
     }
 
     /**
      * Get the currently authenticated user account.
      *
-     * @return array The parsed JSON response containing the user account.
+     * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
@@ -116,54 +114,119 @@ class AppwriteService
     }
 
     /**
+     * Make a generic GET request to the Appwrite API.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, query: $query);
+    }
+
+    /**
+     * Make a generic POST request to the Appwrite API.
+     *
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $path, query: $query, body: $body);
+    }
+
+    /**
+     * Make a generic PUT request to the Appwrite API.
+     *
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, query: $query, body: $body);
+    }
+
+    /**
+     * Make a generic PATCH request to the Appwrite API.
+     *
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PATCH', $path, query: $query, body: $body);
+    }
+
+    /**
+     * Make a generic DELETE request to the Appwrite API.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, query: $query);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string $method The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string $path   The API endpoint path.
-     * @param  array  $data   Request data (query params for GET, body for POST/PUT).
-     * @return array The parsed JSON response.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $query = [], array $body = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $query, $body);
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Appwrite API.
      *
-     * @param  string $method The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string $path   The API endpoint path.
-     * @param  array  $data   Request data (query params for GET, body for POST/PUT).
+     * @param  string  $method  The HTTP method.
+     * @param  string  $path  The API endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
-     * @throws \RuntimeException If the API key is missing or the request fails.
+     * @throws RuntimeException If credentials are missing or the request fails.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): \Illuminate\Http\Client\Response
     {
         if (!$this->apiKey) {
-            throw new \RuntimeException('Appwrite API key is not configured.');
+            throw new RuntimeException('Appwrite API key is not configured.');
         }
 
         if (!$this->projectId) {
-            throw new \RuntimeException('Appwrite project ID is not configured.');
+            throw new RuntimeException('Appwrite project ID is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->buildUrl($path, $query);
 
         try {
             $http = Http::withHeaders([
                 'X-Appwrite-Key' => $this->apiKey,
                 'X-Appwrite-Project' => $this->projectId,
                 'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'PATCH' => $http->patch($url, $body),
+                'DELETE' => $http->delete($url, $body),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
@@ -175,7 +238,7 @@ class AppwriteService
                     'error' => $error,
                 ]);
 
-                throw new \RuntimeException("Appwrite API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException("Appwrite API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
@@ -183,7 +246,55 @@ class AppwriteService
             Log::error("Appwrite API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Appwrite API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Appwrite API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a safe Appwrite API URL.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function buildUrl(string $path, array $query = []): string
+    {
+        if (preg_match('/^https?:\/\//i', $path) === 1 || str_contains($path, '..')) {
+            throw new RuntimeException('Appwrite API path must be a safe relative path.');
+        }
+
+        $queryString = $this->buildQuery($query);
+
+        return $this->baseUrl.'/'.ltrim($path, '/').($queryString !== '' ? '?'.$queryString : '');
+    }
+
+    /**
+     * Build an Appwrite query string with repeated array values.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function buildQuery(array $query): string
+    {
+        $pairs = [];
+
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
+
+            if (is_array($value)) {
+                foreach ($value as $item) {
+                    $queryKey = str_ends_with((string) $key, '[]') ? (string) $key : (string) $key.'[]';
+                    $pairs[] = rawurlencode($queryKey).'='.rawurlencode(is_scalar($item) ? (string) $item : json_encode($item, JSON_THROW_ON_ERROR));
+                }
+                continue;
+            }
+
+            $pairs[] = rawurlencode((string) $key).'='.rawurlencode((string) $value);
+        }
+
+        return implode('&', $pairs);
     }
 }

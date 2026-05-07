@@ -44,7 +44,10 @@ class RabbitMQListExchanges implements Tool
      */
     public function parameters(): array
     {
-        return [];
+        return [
+            'vhost' => ['type' => 'string', 'description' => 'Optional virtual host name.'],
+            'params' => ['type' => 'object', 'description' => 'Optional query parameters.'],
+        ];
     }
 
     /**
@@ -60,9 +63,9 @@ class RabbitMQListExchanges implements Tool
                 return ToolResult::error('RabbitMQ integration is not configured.');
             }
 
-            $exchanges = $this->service->listExchanges();
+            $exchanges = $this->service->listExchanges(isset($args['vhost']) ? (string) $args['vhost'] : null, $args['params'] ?? []);
 
-            return ToolResult::success($this->formatExchanges($exchanges));
+            return ToolResult::success(array_is_list($exchanges) ? $this->formatExchanges($exchanges) : $exchanges);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

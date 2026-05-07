@@ -1,324 +1,207 @@
-# Copper CRM — Lua API Reference
+# Copper CRM Lua API Reference
 
-## copper_list_contacts
+Namespace: `copper`
 
-Search and list contacts in Copper CRM.
+Copper calls contact records "People" in the official API. This package keeps the existing `contact` tool names for agent compatibility while routing them to Copper `/people` endpoints.
 
-### Parameters
+## Authentication
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of contacts per page (default: 25, max: 200) |
-| `sort_by` | string | no | Field to sort by (e.g., `"name"`, `"created_at"`) |
+Copper requires:
 
-### Examples
+- `api_key`
+- `email`
+- optional `url`, defaulting to `https://api.copper.com/developer_api/v1`
+
+## People / Contacts
 
 ```lua
-local result = app.integrations.copper.copper_list_contacts({
-  page_size = 50,
-  sort_by = "name"
+local people = app.integrations.copper.list_contacts({
+  page_size = 25,
+  page_number = 1,
+  sort_by = "name",
 })
 
-for _, contact in ipairs(result) do
-  print(contact.name .. " (ID: " .. contact.id .. ")")
-end
-```
+local person = app.integrations.copper.get_contact({ id = 123 })
 
----
-
-## copper_get_contact
-
-Get details of a specific contact by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Copper contact ID |
-
-### Examples
-
-```lua
-local contact = app.integrations.copper.copper_get_contact({
-  id = 12345
+local by_email = app.integrations.copper.get_contact_by_email({
+  email = "ada@example.test",
 })
 
-print(contact.name)
-print(contact.emails[1].email)
-```
-
----
-
-## copper_create_contact
-
-Create a new contact in Copper CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Full name of the contact |
-| `email` | string | no | Email address |
-
-### Examples
-
-```lua
-local contact = app.integrations.copper.copper_create_contact({
-  name = "Jane Smith",
-  email = "jane@example.com"
+local created = app.integrations.copper.create_contact({
+  name = "Ada Example",
+  email = "ada@example.test",
 })
 
-print("Created contact ID: " .. contact.id)
-```
-
----
-
-## copper_update_contact
-
-Update an existing contact in Copper CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Copper contact ID to update |
-| `name` | string | no | Updated full name |
-| `email` | string | no | Updated email address |
-
-### Examples
-
-```lua
-local contact = app.integrations.copper.copper_update_contact({
-  id = 12345,
-  name = "Jane Smith-Jones"
+local updated = app.integrations.copper.update_contact({
+  id = 123,
+  name = "Ada Lovelace",
 })
 
-print("Updated: " .. contact.name)
+app.integrations.copper.delete_contact({ id = 123 })
 ```
 
----
-
-## copper_delete_contact
-
-Delete a contact from Copper CRM. This action cannot be undone.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Copper contact ID to delete |
-
-### Examples
+## Companies
 
 ```lua
-app.integrations.copper.copper_delete_contact({
-  id = 12345
+local companies = app.integrations.copper.list_companies({
+  page_size = 25,
+  sort_by = "name",
+})
+
+local company = app.integrations.copper.get_company({ id = 456 })
+
+local created = app.integrations.copper.create_company({
+  name = "Example Corp",
+})
+
+app.integrations.copper.update_company({
+  id = 456,
+  details = "Enterprise account",
+})
+
+app.integrations.copper.delete_company({ id = 456 })
+```
+
+## Opportunities
+
+```lua
+local opportunities = app.integrations.copper.list_opportunities({
+  page_size = 25,
+  pipeline_ids = { 10 },
+})
+
+local opportunity = app.integrations.copper.get_opportunity({ id = 789 })
+
+local created = app.integrations.copper.create_opportunity({
+  name = "Example renewal",
+  pipeline_id = 10,
+})
+
+app.integrations.copper.update_opportunity({
+  id = 789,
+  monetary_value = 250000,
+  win_probability = 70,
+})
+
+app.integrations.copper.delete_opportunity({ id = 789 })
+```
+
+## Leads
+
+```lua
+local leads = app.integrations.copper.list_leads({
+  page_size = 25,
+  email = "buyer@example.test",
+})
+
+local lead = app.integrations.copper.get_lead({ id = 111 })
+
+local created = app.integrations.copper.create_lead({
+  name = "Buyer Example",
+  company_name = "Example Corp",
+  status_id = 222,
+})
+
+app.integrations.copper.update_lead({
+  id = 111,
+  details = "Qualified inbound lead",
+})
+
+app.integrations.copper.delete_lead({ id = 111 })
+```
+
+## Projects And Tasks
+
+```lua
+local projects = app.integrations.copper.list_projects({
+  page_size = 25,
+})
+
+local project = app.integrations.copper.create_project({
+  name = "Implementation",
+  company_id = 456,
+})
+
+local tasks = app.integrations.copper.list_tasks({
+  page_size = 25,
+  status = "open",
+})
+
+local task = app.integrations.copper.create_task({
+  name = "Follow up",
+  assignee_id = 333,
+  related_resource = { type = "company", id = 456 },
 })
 ```
 
----
+Each project and task also has matching `get`, `update`, and `delete` tools.
 
-## copper_list_companies
-
-Search and list companies in Copper CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of companies per page (default: 25, max: 200) |
-| `sort_by` | string | no | Field to sort by (e.g., `"name"`, `"created_at"`) |
-
-### Examples
+## Activities
 
 ```lua
-local result = app.integrations.copper.copper_list_companies({
-  page_size = 50
+local activities = app.integrations.copper.list_activities({
+  page_size = 25,
+  parent = { type = "person", id = 123 },
 })
 
-for _, company in ipairs(result) do
-  print(company.name .. " (ID: " .. company.id .. ")")
-end
-```
-
----
-
-## copper_get_company
-
-Get details of a specific company by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Copper company ID |
-
-### Examples
-
-```lua
-local company = app.integrations.copper.copper_get_company({
-  id = 67890
+local activity = app.integrations.copper.create_activity({
+  parent = { type = "person", id = 123 },
+  type = { category = "user", id = 1 },
+  details = "Discussed renewal timing.",
 })
 
-print(company.name)
+local types = app.integrations.copper.list_activity_types({})
 ```
 
----
+Activities also support `get_activity`, `update_activity`, and `delete_activity`.
 
-## copper_create_company
-
-Create a new company in Copper CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Company name |
-
-### Examples
+## Users, Pipelines, And Metadata
 
 ```lua
-local company = app.integrations.copper.copper_create_company({
-  name = "Acme Corp"
+local me = app.integrations.copper.get_current_user({})
+local users = app.integrations.copper.list_users({ page_size = 50 })
+local account = app.integrations.copper.get_account_details({})
+
+local pipelines = app.integrations.copper.list_pipelines({})
+local stages = app.integrations.copper.list_pipeline_stages({})
+local stages_for_pipeline = app.integrations.copper.list_pipeline_stages_in_pipeline({
+  pipeline_id = 10,
 })
 
-print("Created company ID: " .. company.id)
+local lead_statuses = app.integrations.copper.list_lead_statuses({})
+local sources = app.integrations.copper.list_customer_sources({})
+local loss_reasons = app.integrations.copper.list_loss_reasons({})
+local contact_types = app.integrations.copper.list_contact_types({})
+local tags = app.integrations.copper.list_tags({})
+local custom_fields = app.integrations.copper.list_custom_field_definitions({})
 ```
 
----
-
-## copper_list_opportunities
-
-Search and list opportunities (deals) in Copper CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of opportunities per page (default: 25, max: 200) |
-| `sort_by` | string | no | Field to sort by (e.g., `"name"`, `"created_at"`) |
-
-### Examples
+## Webhooks
 
 ```lua
-local result = app.integrations.copper.copper_list_opportunities({
-  page_size = 50
+local hooks = app.integrations.copper.list_webhooks({})
+
+local hook = app.integrations.copper.create_webhook({
+  target = "https://example.test/hooks/copper",
+  type = "person",
+  event = "updated",
 })
 
-for _, opp in ipairs(result) do
-  print(opp.name .. " — $" .. (opp.monetary_value or 0))
-end
-```
+local fetched = app.integrations.copper.get_webhook({ id = 1001 })
 
----
-
-## copper_get_opportunity
-
-Get details of a specific opportunity by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Copper opportunity ID |
-
-### Examples
-
-```lua
-local opp = app.integrations.copper.copper_get_opportunity({
-  id = 54321
+app.integrations.copper.update_webhook({
+  id = 1001,
+  target = "https://example.test/hooks/copper-v2",
 })
 
-print(opp.name)
-print("Value: $" .. (opp.monetary_value or 0))
+app.integrations.copper.delete_webhook({ id = 1001 })
 ```
 
----
+## Multi-Account
 
-## copper_create_opportunity
-
-Create a new opportunity (deal) in Copper CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Opportunity name |
-| `pipeline_id` | integer | yes | ID of the pipeline — use `copper_list_pipelines` to find available IDs |
-
-### Examples
+Hosts can expose account-scoped namespaces. The functions are identical; only credentials differ.
 
 ```lua
--- First, get available pipelines
-local pipelines = app.integrations.copper.copper_list_pipelines({})
-
--- Create an opportunity in the first pipeline
-local opp = app.integrations.copper.copper_create_opportunity({
-  name = "New Deal",
-  pipeline_id = pipelines[1].id
-})
-
-print("Created opportunity ID: " .. opp.id)
+app.integrations.copper.default.list_contacts({ page_size = 10 })
+app.integrations.copper.sales.list_opportunities({ page_size = 10 })
 ```
-
----
-
-## copper_list_pipelines
-
-List all sales pipelines in Copper CRM. Each pipeline contains stages that opportunities move through.
-
-### Parameters
-
-This function takes no parameters.
-
-### Examples
-
-```lua
-local pipelines = app.integrations.copper.copper_list_pipelines({})
-
-for _, pipeline in ipairs(pipelines) do
-  print("Pipeline: " .. pipeline.name .. " (ID: " .. pipeline.id .. ")")
-  for _, stage in ipairs(pipeline.stages or {}) do
-    print("  Stage: " .. stage.name .. " (ID: " .. stage.id .. ")")
-  end
-end
-```
-
----
-
-## copper_get_current_user
-
-Get the currently authenticated Copper CRM user. Useful for verifying the connection and account context.
-
-### Parameters
-
-This function takes no parameters.
-
-### Examples
-
-```lua
-local user = app.integrations.copper.copper_get_current_user({})
-
-print("Logged in as: " .. (user.first_name or "") .. " " .. (user.last_name or ""))
-print("Email: " .. user.email)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Copper accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.copper.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.copper.default.function_name({...})
-
--- Named accounts
-app.integrations.copper.production.function_name({...})
-app.integrations.copper.staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.

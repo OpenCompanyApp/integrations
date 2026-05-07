@@ -80,7 +80,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
 
     public function appName(): string
     {
-        return 'google_contacts';
+        return 'google-contacts';
     }
 
     public function appMeta(): array
@@ -98,9 +98,11 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
             'name' => 'Google Contacts',
             'description' => 'Contact search, lookup, and management',
             'icon' => 'ph:address-book',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/people.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-contacts',
         ];
     }    public function configSchema(): array
     {
@@ -253,7 +255,10 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleContactsService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleContactsService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleContactsService::class);
 
         return new $class($service);
     }

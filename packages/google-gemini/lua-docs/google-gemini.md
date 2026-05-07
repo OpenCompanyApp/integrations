@@ -1,215 +1,112 @@
-# Google Gemini — Lua API Reference
+# Google Gemini
 
-## list_models
+Google Gemini tools are exposed under `app.integrations.google_gemini`. This package is generated from Google's official Gemini API v1beta Discovery document and exposes 79 REST methods.
 
-List available Gemini AI models.
+## Coverage
 
-### Parameters
+- Source: `https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta`
+- Read tools: 29
+- Write tools: 50
+- Media upload tools: 2
+- Base URL: `https://generativelanguage.googleapis.com`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Max models per page (default: 50, max: 100) |
-| `pageToken` | string | no | Token from a previous response for pagination |
+## Usage Notes
 
-### Example
+Pass resource names such as `models/gemini-2.5-pro`, `files/...`, `cachedContents/...`, `tunedModels/...`, `corpora/...`, or `fileSearchStores/...` exactly as Google documents them. Path parameters using `{+name}`, `{+model}`, `{+parent}`, or `{+fileSearchStoreName}` preserve slash-delimited resource names. Request bodies go inside `body`. Upload endpoints accept `file_path`, optional `mime_type`, and optional metadata in `body`; the integration sends multipart upload requests with `uploadType=multipart`.
+
+Streaming endpoints are exposed as ordinary POST tools and return the HTTP JSON response shape available to the host HTTP client; hosts that need incremental streaming should wrap those endpoints separately.
+
+## Tools
+
+- `google_gemini_cached_contents_patch` - PATCH /v1beta/{+name}
+- `google_gemini_cached_contents_create` - POST /v1beta/cachedContents
+- `google_gemini_cached_contents_get` - GET /v1beta/{+name}
+- `google_gemini_cached_contents_list` - GET /v1beta/cachedContents
+- `google_gemini_cached_contents_delete` - DELETE /v1beta/{+name}
+- `google_gemini_file_search_stores_create` - POST /v1beta/fileSearchStores
+- `google_gemini_file_search_stores_get` - GET /v1beta/{+name}
+- `google_gemini_file_search_stores_delete` - DELETE /v1beta/{+name}
+- `google_gemini_file_search_stores_import_file` - POST /v1beta/{+fileSearchStoreName}:importFile
+- `google_gemini_file_search_stores_list` - GET /v1beta/fileSearchStores
+- `google_gemini_file_search_stores_operations_get` - GET /v1beta/{+name}
+- `google_gemini_file_search_stores_documents_delete` - DELETE /v1beta/{+name}
+- `google_gemini_file_search_stores_documents_get` - GET /v1beta/{+name}
+- `google_gemini_file_search_stores_documents_list` - GET /v1beta/{+parent}/documents
+- `google_gemini_file_search_stores_upload_operations_get` - GET /v1beta/{+name}
+- `google_gemini_batches_cancel` - POST /v1beta/{+name}:cancel
+- `google_gemini_batches_get` - GET /v1beta/{+name}
+- `google_gemini_batches_list` - GET /v1beta/{+name}
+- `google_gemini_batches_delete` - DELETE /v1beta/{+name}
+- `google_gemini_batches_update_generate_content_batch` - PATCH /v1beta/{+name}:updateGenerateContentBatch
+- `google_gemini_batches_update_embed_content_batch` - PATCH /v1beta/{+name}:updateEmbedContentBatch
+- `google_gemini_dynamic_stream_generate_content` - POST /v1beta/{+model}:streamGenerateContent
+- `google_gemini_dynamic_generate_content` - POST /v1beta/{+model}:generateContent
+- `google_gemini_media_upload` - POST /v1beta/files (media upload)
+- `google_gemini_media_upload_to_file_search_store` - POST /v1beta/{+fileSearchStoreName}:uploadToFileSearchStore (media upload)
+- `google_gemini_corpora_list` - GET /v1beta/corpora
+- `google_gemini_corpora_create` - POST /v1beta/corpora
+- `google_gemini_corpora_get` - GET /v1beta/{+name}
+- `google_gemini_corpora_delete` - DELETE /v1beta/{+name}
+- `google_gemini_corpora_operations_get` - GET /v1beta/{+name}
+- `google_gemini_corpora_permissions_delete` - DELETE /v1beta/{+name}
+- `google_gemini_corpora_permissions_list` - GET /v1beta/{+parent}/permissions
+- `google_gemini_corpora_permissions_create` - POST /v1beta/{+parent}/permissions
+- `google_gemini_corpora_permissions_get` - GET /v1beta/{+name}
+- `google_gemini_corpora_permissions_patch` - PATCH /v1beta/{+name}
+- `google_gemini_files_register` - POST /v1beta/files:register
+- `google_gemini_files_list` - GET /v1beta/files
+- `google_gemini_files_get` - GET /v1beta/{+name}
+- `google_gemini_files_delete` - DELETE /v1beta/{+name}
+- `google_gemini_tuned_models_stream_generate_content` - POST /v1beta/{+model}:streamGenerateContent
+- `google_gemini_tuned_models_batch_generate_content` - POST /v1beta/{+model}:batchGenerateContent
+- `google_gemini_tuned_models_get` - GET /v1beta/{+name}
+- `google_gemini_tuned_models_create` - POST /v1beta/tunedModels
+- `google_gemini_tuned_models_list` - GET /v1beta/tunedModels
+- `google_gemini_tuned_models_generate_text` - POST /v1beta/{+model}:generateText
+- `google_gemini_tuned_models_delete` - DELETE /v1beta/{+name}
+- `google_gemini_tuned_models_patch` - PATCH /v1beta/{+name}
+- `google_gemini_tuned_models_async_batch_embed_content` - POST /v1beta/{+model}:asyncBatchEmbedContent
+- `google_gemini_tuned_models_generate_content` - POST /v1beta/{+model}:generateContent
+- `google_gemini_tuned_models_transfer_ownership` - POST /v1beta/{+name}:transferOwnership
+- `google_gemini_tuned_models_operations_list` - GET /v1beta/{+name}/operations
+- `google_gemini_tuned_models_operations_get` - GET /v1beta/{+name}
+- `google_gemini_tuned_models_permissions_delete` - DELETE /v1beta/{+name}
+- `google_gemini_tuned_models_permissions_list` - GET /v1beta/{+parent}/permissions
+- `google_gemini_tuned_models_permissions_create` - POST /v1beta/{+parent}/permissions
+- `google_gemini_tuned_models_permissions_get` - GET /v1beta/{+name}
+- `google_gemini_tuned_models_permissions_patch` - PATCH /v1beta/{+name}
+- `google_gemini_models_generate_content` - POST /v1beta/{+model}:generateContent
+- `google_gemini_models_generate_message` - POST /v1beta/{+model}:generateMessage
+- `google_gemini_models_predict` - POST /v1beta/{+model}:predict
+- `google_gemini_models_embed_content` - POST /v1beta/{+model}:embedContent
+- `google_gemini_models_list` - GET /v1beta/models
+- `google_gemini_models_batch_embed_text` - POST /v1beta/{+model}:batchEmbedText
+- `google_gemini_models_async_batch_embed_content` - POST /v1beta/{+model}:asyncBatchEmbedContent
+- `google_gemini_models_count_message_tokens` - POST /v1beta/{+model}:countMessageTokens
+- `google_gemini_models_count_tokens` - POST /v1beta/{+model}:countTokens
+- `google_gemini_models_predict_long_running` - POST /v1beta/{+model}:predictLongRunning
+- `google_gemini_models_generate_text` - POST /v1beta/{+model}:generateText
+- `google_gemini_models_count_text_tokens` - POST /v1beta/{+model}:countTextTokens
+- `google_gemini_models_embed_text` - POST /v1beta/{+model}:embedText
+- `google_gemini_models_generate_answer` - POST /v1beta/{+model}:generateAnswer
+- `google_gemini_models_batch_embed_contents` - POST /v1beta/{+model}:batchEmbedContents
+- `google_gemini_models_stream_generate_content` - POST /v1beta/{+model}:streamGenerateContent
+- `google_gemini_models_batch_generate_content` - POST /v1beta/{+model}:batchGenerateContent
+- `google_gemini_models_get` - GET /v1beta/{+name}
+- `google_gemini_models_operations_get` - GET /v1beta/{+name}
+- `google_gemini_models_operations_list` - GET /v1beta/{+name}/operations
+- `google_gemini_generated_files_list` - GET /v1beta/generatedFiles
+- `google_gemini_generated_files_operations_get` - GET /v1beta/{+name}
+
+## Examples
 
 ```lua
-local result = app.integrations["google-gemini"].list_models({
-  pageSize = 10
+local response = app.integrations.google_gemini.google_gemini_models_generate_content({
+  model = "models/gemini-2.5-pro",
+  body = { contents = { { parts = { { text = "Write a concise summary" } } } } }
 })
 
-for _, model in ipairs(result.models) do
-  print(model.name .. " — " .. model.displayName)
-end
+local models = app.integrations.google_gemini.google_gemini_models_list({ pageSize = 10 })
 ```
 
----
-
-## get_model
-
-Get detailed information about a specific Gemini model.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Model resource name, e.g. `"models/gemini-2.0-flash"` |
-
-### Example
-
-```lua
-local result = app.integrations["google-gemini"].get_model({
-  id = "models/gemini-2.0-flash"
-})
-
-print("Model: " .. result.displayName)
-print("Input token limit: " .. result.inputTokenLimit)
-print("Output token limit: " .. result.outputTokenLimit)
-```
-
----
-
-## generate_content
-
-Generate content using a Gemini model.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Model resource name, e.g. `"models/gemini-2.0-flash"` |
-| `contents` | array | yes | Array of content messages with `role` and `parts` |
-| `temperature` | number | no | Randomness control (0.0–2.0) |
-| `topP` | number | no | Nucleus sampling (0.0–1.0) |
-| `maxOutputTokens` | integer | no | Max tokens in the response |
-
-### Content Format
-
-The `contents` array contains message objects:
-
-```lua
-{
-  { role = "user", parts = { { text = "Your prompt here" } } }
-}
-```
-
-For multi-turn conversations:
-
-```lua
-{
-  { role = "user", parts = { { text = "Hello!" } } },
-  { role = "model", parts = { { text = "Hi there!" } } },
-  { role = "user", parts = { { text = "Tell me more." } } }
-}
-```
-
-### Example
-
-```lua
-local result = app.integrations["google-gemini"].generate_content({
-  id = "models/gemini-2.0-flash",
-  contents = {
-    { role = "user", parts = { { text = "Write a haiku about programming." } } }
-  },
-  temperature = 0.7,
-  maxOutputTokens = 100
-})
-
-for _, candidate in ipairs(result.candidates) do
-  for _, part in ipairs(candidate.content.parts) do
-    print(part.text)
-  end
-end
-```
-
----
-
-## list_files
-
-List files uploaded to the Gemini File API.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Max files per page (default: 50, max: 100) |
-| `pageToken` | string | no | Token from a previous response for pagination |
-
-### Example
-
-```lua
-local result = app.integrations["google-gemini"].list_files({
-  pageSize = 10
-})
-
-for _, file in ipairs(result.files) do
-  print(file.name .. " — " .. file.mimeType .. " (" .. file.sizeBytes .. " bytes)")
-end
-```
-
----
-
-## get_file
-
-Get metadata for an uploaded file.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | File resource name, e.g. `"files/abc123"` |
-
-### Example
-
-```lua
-local result = app.integrations["google-gemini"].get_file({
-  id = "files/abc123"
-})
-
-print("File: " .. result.displayName)
-print("MIME: " .. result.mimeType)
-print("State: " .. result.state)
-```
-
----
-
-## list_tuned_models
-
-List tuned (fine-tuned) Gemini models.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Max models per page (default: 50, max: 100) |
-| `pageToken` | string | no | Token from a previous response for pagination |
-
-### Example
-
-```lua
-local result = app.integrations["google-gemini"].list_tuned_models({
-  pageSize = 10
-})
-
-for _, model in ipairs(result.tunedModels) do
-  print(model.name .. " — base: " .. (model.baseModel or "unknown"))
-end
-```
-
----
-
-## get_current_user
-
-Get information about the currently authenticated user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["google-gemini"].get_current_user({})
-
-print("User: " .. (result.name or "unknown"))
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Google Gemini accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations["google-gemini"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["google-gemini"].default.function_name({...})
-
--- Named accounts
-app.integrations["google-gemini"].work.function_name({...})
-app.integrations["google-gemini"].personal.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Responses are decoded Gemini API JSON responses, or `{ success = true, status = ... }` for successful empty responses.

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-supabase",
-    "description": "Supabase integration for Laravel — manage projects, tables, and rows.",
+    "description": "Supabase Management API integration for Laravel agents.",
     "license": "MIT",
     "authors": [
         {

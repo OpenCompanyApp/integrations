@@ -1,0 +1,16 @@
+{
+    "name": "opencompanyapp/integration-google-cloud-storage",
+    "description": "Google Cloud Storage integration for Laravel AI agents - buckets, objects, ACLs, IAM, folders, managed folders, notifications, HMAC keys, operations, and object uploads.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\GoogleCloudStorage\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\GoogleCloudStorage\\GoogleCloudStorageServiceProvider"]}},
+    "keywords": ["tools", "google", "cloud-storage", "gcs", "objects", "buckets", "opencompany"]
+}

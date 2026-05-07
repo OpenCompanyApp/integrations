@@ -6,10 +6,13 @@ use OpenCompany\Integrations\AcuityScheduling\AcuitySchedulingService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the authenticated Acuity Scheduling account profile.
+ */
 class AcuityGetCurrentUser implements Tool
 {
     /**
-     * Create a new Get Current User tool instance.
+     * @param  AcuitySchedulingService  $service  Acuity Scheduling API client.
      */
     public function __construct(
         private AcuitySchedulingService $service,

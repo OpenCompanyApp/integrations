@@ -1,0 +1,2415 @@
+{
+    "source": "https://www.keycloak.org/docs-api/latest/rest-api/openapi.json",
+    "title": "Keycloak Admin REST API",
+    "version": "1.0",
+    "method_count": 401,
+    "generated_at": "2026-05-07T18:52:49+00:00",
+    "operations": {
+        "keycloak_delete_admin_realms_realm": {
+            "slug": "keycloak_delete_admin_realms_realm",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}",
+            "class": "KeycloakDeleteAdminRealmsRealm"
+        },
+        "keycloak_delete_admin_realms_realm_admin_events": {
+            "slug": "keycloak_delete_admin_realms_realm_admin_events",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/admin-events",
+            "class": "KeycloakDeleteAdminRealmsRealmAdminEvents"
+        },
+        "keycloak_delete_admin_realms_realm_attack_detection_brute_force_users": {
+            "slug": "keycloak_delete_admin_realms_realm_attack_detection_brute_force_users",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/attack-detection/brute-force/users",
+            "class": "KeycloakDeleteAdminRealmsRealmAttackDetectionBruteForceUsers"
+        },
+        "keycloak_delete_admin_realms_realm_attack_detection_brute_force_users_user_id": {
+            "slug": "keycloak_delete_admin_realms_realm_attack_detection_brute_force_users_user_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/attack-detection/brute-force/users/{userId}",
+            "class": "KeycloakDeleteAdminRealmsRealmAttackDetectionBruteForceUsersUserId"
+        },
+        "keycloak_delete_admin_realms_realm_authentication_config_id": {
+            "slug": "keycloak_delete_admin_realms_realm_authentication_config_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/authentication/config/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmAuthenticationConfigId"
+        },
+        "keycloak_delete_admin_realms_realm_authentication_executions_execution_id": {
+            "slug": "keycloak_delete_admin_realms_realm_authentication_executions_execution_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/authentication/executions/{executionId}",
+            "class": "KeycloakDeleteAdminRealmsRealmAuthenticationExecutionsExecutionId"
+        },
+        "keycloak_delete_admin_realms_realm_authentication_flows_id": {
+            "slug": "keycloak_delete_admin_realms_realm_authentication_flows_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/authentication/flows/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmAuthenticationFlowsId"
+        },
+        "keycloak_delete_admin_realms_realm_authentication_required_actions_alias": {
+            "slug": "keycloak_delete_admin_realms_realm_authentication_required_actions_alias",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}",
+            "class": "KeycloakDeleteAdminRealmsRealmAuthenticationRequiredActionsAlias"
+        },
+        "keycloak_delete_admin_realms_realm_authentication_required_actions_alias_config": {
+            "slug": "keycloak_delete_admin_realms_realm_authentication_required_actions_alias_config",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}/config",
+            "class": "KeycloakDeleteAdminRealmsRealmAuthenticationRequiredActionsAliasConfig"
+        },
+        "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientScopesClientScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models_id": {
+            "slug": "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModelsId"
+        },
+        "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client": {
+            "slug": "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientScopesClientScopeIdScopeMappingsClientsClient"
+        },
+        "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm": {
+            "slug": "keycloak_delete_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm",
+            "class": "KeycloakDeleteAdminRealmsRealmClientScopesClientScopeIdScopeMappingsRealm"
+        },
+        "keycloak_delete_admin_realms_realm_client_templates_client_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_client_templates_client_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientTemplatesClientScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models_id": {
+            "slug": "keycloak_delete_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsId"
+        },
+        "keycloak_delete_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client": {
+            "slug": "keycloak_delete_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsClientsClient"
+        },
+        "keycloak_delete_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm": {
+            "slug": "keycloak_delete_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm",
+            "class": "KeycloakDeleteAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealm"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuid"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceResourceId"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidAuthzResourceServerScopeScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_client_secret_rotated": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_client_secret_rotated",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/client-secret/rotated",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidClientSecretRotated"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_default_client_scopes_client_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_default_client_scopes_client_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/default-client-scopes/{clientScopeId}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidDefaultClientScopesClientScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_nodes_node": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_nodes_node",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/nodes/{node}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidNodesNode"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_optional_client_scopes_client_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_optional_client_scopes_client_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/optional-client-scopes/{clientScopeId}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidOptionalClientScopesClientScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_protocol_mappers_models_id": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_protocol_mappers_models_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidProtocolMappersModelsId"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_roles_role_name": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_roles_role_name",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidRolesRoleName"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_roles_role_name_composites": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_roles_role_name_composites",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidRolesRoleNameComposites"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidScopeMappingsClientsClient"
+        },
+        "keycloak_delete_admin_realms_realm_clients_client_uuid_scope_mappings_realm": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_client_uuid_scope_mappings_realm",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsClientUuidScopeMappingsRealm"
+        },
+        "keycloak_delete_admin_realms_realm_clients_initial_access_id": {
+            "slug": "keycloak_delete_admin_realms_realm_clients_initial_access_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/clients-initial-access/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmClientsInitialAccessId"
+        },
+        "keycloak_delete_admin_realms_realm_components_id": {
+            "slug": "keycloak_delete_admin_realms_realm_components_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/components/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmComponentsId"
+        },
+        "keycloak_delete_admin_realms_realm_default_default_client_scopes_client_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_default_default_client_scopes_client_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/default-default-client-scopes/{clientScopeId}",
+            "class": "KeycloakDeleteAdminRealmsRealmDefaultDefaultClientScopesClientScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_default_groups_group_id": {
+            "slug": "keycloak_delete_admin_realms_realm_default_groups_group_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/default-groups/{groupId}",
+            "class": "KeycloakDeleteAdminRealmsRealmDefaultGroupsGroupId"
+        },
+        "keycloak_delete_admin_realms_realm_default_optional_client_scopes_client_scope_id": {
+            "slug": "keycloak_delete_admin_realms_realm_default_optional_client_scopes_client_scope_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/default-optional-client-scopes/{clientScopeId}",
+            "class": "KeycloakDeleteAdminRealmsRealmDefaultOptionalClientScopesClientScopeId"
+        },
+        "keycloak_delete_admin_realms_realm_events": {
+            "slug": "keycloak_delete_admin_realms_realm_events",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/events",
+            "class": "KeycloakDeleteAdminRealmsRealmEvents"
+        },
+        "keycloak_delete_admin_realms_realm_groups_group_id": {
+            "slug": "keycloak_delete_admin_realms_realm_groups_group_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/groups/{group-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmGroupsGroupId"
+        },
+        "keycloak_delete_admin_realms_realm_groups_group_id_role_mappings_clients_client_id": {
+            "slug": "keycloak_delete_admin_realms_realm_groups_group_id_role_mappings_clients_client_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmGroupsGroupIdRoleMappingsClientsClientId"
+        },
+        "keycloak_delete_admin_realms_realm_groups_group_id_role_mappings_realm": {
+            "slug": "keycloak_delete_admin_realms_realm_groups_group_id_role_mappings_realm",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/realm",
+            "class": "KeycloakDeleteAdminRealmsRealmGroupsGroupIdRoleMappingsRealm"
+        },
+        "keycloak_delete_admin_realms_realm_identity_provider_instances_alias": {
+            "slug": "keycloak_delete_admin_realms_realm_identity_provider_instances_alias",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}",
+            "class": "KeycloakDeleteAdminRealmsRealmIdentityProviderInstancesAlias"
+        },
+        "keycloak_delete_admin_realms_realm_identity_provider_instances_alias_mappers_id": {
+            "slug": "keycloak_delete_admin_realms_realm_identity_provider_instances_alias_mappers_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/mappers/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmIdentityProviderInstancesAliasMappersId"
+        },
+        "keycloak_delete_admin_realms_realm_localization_locale": {
+            "slug": "keycloak_delete_admin_realms_realm_localization_locale",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/localization/{locale}",
+            "class": "KeycloakDeleteAdminRealmsRealmLocalizationLocale"
+        },
+        "keycloak_delete_admin_realms_realm_localization_locale_key": {
+            "slug": "keycloak_delete_admin_realms_realm_localization_locale_key",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/localization/{locale}/{key}",
+            "class": "KeycloakDeleteAdminRealmsRealmLocalizationLocaleKey"
+        },
+        "keycloak_delete_admin_realms_realm_organizations_org_id": {
+            "slug": "keycloak_delete_admin_realms_realm_organizations_org_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/organizations/{org-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmOrganizationsOrgId"
+        },
+        "keycloak_delete_admin_realms_realm_organizations_org_id_groups_group_id": {
+            "slug": "keycloak_delete_admin_realms_realm_organizations_org_id_groups_group_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmOrganizationsOrgIdGroupsGroupId"
+        },
+        "keycloak_delete_admin_realms_realm_organizations_org_id_groups_group_id_members_user_id": {
+            "slug": "keycloak_delete_admin_realms_realm_organizations_org_id_groups_group_id_members_user_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/members/{userId}",
+            "class": "KeycloakDeleteAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdMembersUserId"
+        },
+        "keycloak_delete_admin_realms_realm_organizations_org_id_identity_providers_alias": {
+            "slug": "keycloak_delete_admin_realms_realm_organizations_org_id_identity_providers_alias",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}",
+            "class": "KeycloakDeleteAdminRealmsRealmOrganizationsOrgIdIdentityProvidersAlias"
+        },
+        "keycloak_delete_admin_realms_realm_organizations_org_id_invitations_id": {
+            "slug": "keycloak_delete_admin_realms_realm_organizations_org_id_invitations_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/invitations/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmOrganizationsOrgIdInvitationsId"
+        },
+        "keycloak_delete_admin_realms_realm_organizations_org_id_members_member_id": {
+            "slug": "keycloak_delete_admin_realms_realm_organizations_org_id_members_member_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/{member-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmOrganizationsOrgIdMembersMemberId"
+        },
+        "keycloak_delete_admin_realms_realm_roles_by_id_role_id": {
+            "slug": "keycloak_delete_admin_realms_realm_roles_by_id_role_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmRolesByIdRoleId"
+        },
+        "keycloak_delete_admin_realms_realm_roles_by_id_role_id_composites": {
+            "slug": "keycloak_delete_admin_realms_realm_roles_by_id_role_id_composites",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/composites",
+            "class": "KeycloakDeleteAdminRealmsRealmRolesByIdRoleIdComposites"
+        },
+        "keycloak_delete_admin_realms_realm_roles_role_name": {
+            "slug": "keycloak_delete_admin_realms_realm_roles_role_name",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/roles/{role-name}",
+            "class": "KeycloakDeleteAdminRealmsRealmRolesRoleName"
+        },
+        "keycloak_delete_admin_realms_realm_roles_role_name_composites": {
+            "slug": "keycloak_delete_admin_realms_realm_roles_role_name_composites",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/roles/{role-name}/composites",
+            "class": "KeycloakDeleteAdminRealmsRealmRolesRoleNameComposites"
+        },
+        "keycloak_delete_admin_realms_realm_sessions_session": {
+            "slug": "keycloak_delete_admin_realms_realm_sessions_session",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/sessions/{session}",
+            "class": "KeycloakDeleteAdminRealmsRealmSessionsSession"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserId"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id_consents_client": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id_consents_client",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}/consents/{client}",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserIdConsentsClient"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id_credentials_credential_id": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id_credentials_credential_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserIdCredentialsCredentialId"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id_federated_identity_provider": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id_federated_identity_provider",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}/federated-identity/{provider}",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserIdFederatedIdentityProvider"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id_groups_group_id": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id_groups_group_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}/groups/{groupId}",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserIdGroupsGroupId"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id_role_mappings_clients_client_id": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id_role_mappings_clients_client_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserIdRoleMappingsClientsClientId"
+        },
+        "keycloak_delete_admin_realms_realm_users_user_id_role_mappings_realm": {
+            "slug": "keycloak_delete_admin_realms_realm_users_user_id_role_mappings_realm",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/realm",
+            "class": "KeycloakDeleteAdminRealmsRealmUsersUserIdRoleMappingsRealm"
+        },
+        "keycloak_delete_admin_realms_realm_workflows_id": {
+            "slug": "keycloak_delete_admin_realms_realm_workflows_id",
+            "method": "DELETE",
+            "path": "/admin/realms/{realm}/workflows/{id}",
+            "class": "KeycloakDeleteAdminRealmsRealmWorkflowsId"
+        },
+        "keycloak_get_admin_realms": {
+            "slug": "keycloak_get_admin_realms",
+            "method": "GET",
+            "path": "/admin/realms",
+            "class": "KeycloakGetAdminRealms"
+        },
+        "keycloak_get_admin_realms_realm": {
+            "slug": "keycloak_get_admin_realms_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}",
+            "class": "KeycloakGetAdminRealmsRealm"
+        },
+        "keycloak_get_admin_realms_realm_admin_events": {
+            "slug": "keycloak_get_admin_realms_realm_admin_events",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/admin-events",
+            "class": "KeycloakGetAdminRealmsRealmAdminEvents"
+        },
+        "keycloak_get_admin_realms_realm_attack_detection_brute_force_users_user_id": {
+            "slug": "keycloak_get_admin_realms_realm_attack_detection_brute_force_users_user_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/attack-detection/brute-force/users/{userId}",
+            "class": "KeycloakGetAdminRealmsRealmAttackDetectionBruteForceUsersUserId"
+        },
+        "keycloak_get_admin_realms_realm_authentication_authenticator_providers": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_authenticator_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/authenticator-providers",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationAuthenticatorProviders"
+        },
+        "keycloak_get_admin_realms_realm_authentication_client_authenticator_providers": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_client_authenticator_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/client-authenticator-providers",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationClientAuthenticatorProviders"
+        },
+        "keycloak_get_admin_realms_realm_authentication_config_description_provider_id": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_config_description_provider_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/config-description/{providerId}",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationConfigDescriptionProviderId"
+        },
+        "keycloak_get_admin_realms_realm_authentication_config_id": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_config_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/config/{id}",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationConfigId"
+        },
+        "keycloak_get_admin_realms_realm_authentication_executions_execution_id": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_executions_execution_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/executions/{executionId}",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationExecutionsExecutionId"
+        },
+        "keycloak_get_admin_realms_realm_authentication_executions_execution_id_config_id": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_executions_execution_id_config_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/executions/{executionId}/config/{id}",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationExecutionsExecutionIdConfigId"
+        },
+        "keycloak_get_admin_realms_realm_authentication_flows": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_flows",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/flows",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationFlows"
+        },
+        "keycloak_get_admin_realms_realm_authentication_flows_flow_alias_executions": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_flows_flow_alias_executions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/flows/{flowAlias}/executions",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationFlowsFlowAliasExecutions"
+        },
+        "keycloak_get_admin_realms_realm_authentication_flows_id": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_flows_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/flows/{id}",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationFlowsId"
+        },
+        "keycloak_get_admin_realms_realm_authentication_form_action_providers": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_form_action_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/form-action-providers",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationFormActionProviders"
+        },
+        "keycloak_get_admin_realms_realm_authentication_form_providers": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_form_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/form-providers",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationFormProviders"
+        },
+        "keycloak_get_admin_realms_realm_authentication_per_client_config_description": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_per_client_config_description",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/per-client-config-description",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationPerClientConfigDescription"
+        },
+        "keycloak_get_admin_realms_realm_authentication_required_actions": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_required_actions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/required-actions",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationRequiredActions"
+        },
+        "keycloak_get_admin_realms_realm_authentication_required_actions_alias": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_required_actions_alias",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationRequiredActionsAlias"
+        },
+        "keycloak_get_admin_realms_realm_authentication_required_actions_alias_config": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_required_actions_alias_config",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}/config",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationRequiredActionsAliasConfig"
+        },
+        "keycloak_get_admin_realms_realm_authentication_required_actions_alias_config_description": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_required_actions_alias_config_description",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}/config-description",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationRequiredActionsAliasConfigDescription"
+        },
+        "keycloak_get_admin_realms_realm_authentication_unregistered_required_actions": {
+            "slug": "keycloak_get_admin_realms_realm_authentication_unregistered_required_actions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/authentication/unregistered-required-actions",
+            "class": "KeycloakGetAdminRealmsRealmAuthenticationUnregisteredRequiredActions"
+        },
+        "keycloak_get_admin_realms_realm_client_policies_policies": {
+            "slug": "keycloak_get_admin_realms_realm_client_policies_policies",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-policies/policies",
+            "class": "KeycloakGetAdminRealmsRealmClientPoliciesPolicies"
+        },
+        "keycloak_get_admin_realms_realm_client_policies_profiles": {
+            "slug": "keycloak_get_admin_realms_realm_client_policies_profiles",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-policies/profiles",
+            "class": "KeycloakGetAdminRealmsRealmClientPoliciesProfiles"
+        },
+        "keycloak_get_admin_realms_realm_client_registration_policy_providers": {
+            "slug": "keycloak_get_admin_realms_realm_client_registration_policy_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-registration-policy/providers",
+            "class": "KeycloakGetAdminRealmsRealmClientRegistrationPolicyProviders"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes",
+            "class": "KeycloakGetAdminRealmsRealmClientScopes"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeId"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModels"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models_id": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models/{id}",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModelsId"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_protocol_protocol": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_protocol_protocol",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/protocol/{protocol}",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdProtocolMappersProtocolProtocol"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappings"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappingsClientsClient"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client_available": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}/available",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappingsClientsClientAvailable"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client_composite": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}/composite",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappingsClientsClientComposite"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappingsRealm"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm_available": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm/available",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappingsRealmAvailable"
+        },
+        "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm_composite": {
+            "slug": "keycloak_get_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm/composite",
+            "class": "KeycloakGetAdminRealmsRealmClientScopesClientScopeIdScopeMappingsRealmComposite"
+        },
+        "keycloak_get_admin_realms_realm_client_session_stats": {
+            "slug": "keycloak_get_admin_realms_realm_client_session_stats",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-session-stats",
+            "class": "KeycloakGetAdminRealmsRealmClientSessionStats"
+        },
+        "keycloak_get_admin_realms_realm_client_templates": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplates"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeId"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModels"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models_id": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models/{id}",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsId"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_protocol_protocol": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_protocol_protocol",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/protocol/{protocol}",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersProtocolProtocol"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappings"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsClientsClient"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client_available": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}/available",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsClientsClientAvailable"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client_composite": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}/composite",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsClientsClientComposite"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealm"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm_available": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm/available",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAvailable"
+        },
+        "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm_composite": {
+            "slug": "keycloak_get_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm/composite",
+            "class": "KeycloakGetAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmComposite"
+        },
+        "keycloak_get_admin_realms_realm_client_types": {
+            "slug": "keycloak_get_admin_realms_realm_client_types",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/client-types",
+            "class": "KeycloakGetAdminRealmsRealmClientTypes"
+        },
+        "keycloak_get_admin_realms_realm_clients": {
+            "slug": "keycloak_get_admin_realms_realm_clients",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients",
+            "class": "KeycloakGetAdminRealmsRealmClients"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuid"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServer"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_permission": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_permission",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerPermission"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_permission_providers": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_permission_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/providers",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerPermissionProviders"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_permission_search": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_permission_search",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/search",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerPermissionSearch"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_policy": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_policy",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicy"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_policy_providers": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_policy_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/providers",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyProviders"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_policy_search": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_policy_search",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/search",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicySearch"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerResource"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceResourceId"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id_attributes": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id_attributes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/attributes",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceResourceIdAttributes"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/permissions",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceResourceIdPermissions"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id_scopes": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id_scopes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/scopes",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceResourceIdScopes"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_search": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_search",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/search",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceSearch"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerScope"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerScopeScopeId"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}/permissions",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerScopeScopeIdPermissions"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id_resources": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id_resources",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}/resources",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerScopeScopeIdResources"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_search": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_search",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/search",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerScopeSearch"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_settings": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_authz_resource_server_settings",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/settings",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidAuthzResourceServerSettings"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_certificates_attr": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_certificates_attr",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidCertificatesAttr"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_client_secret": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_client_secret",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/client-secret",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidClientSecret"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_client_secret_rotated": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_client_secret_rotated",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/client-secret/rotated",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidClientSecretRotated"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_default_client_scopes": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_default_client_scopes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/default-client-scopes",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidDefaultClientScopes"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_generate_example_access_token": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_generate_example_access_token",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-access-token",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidEvaluateScopesGenerateExampleAccessToken"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_generate_example_id_token": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_generate_example_id_token",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-id-token",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidEvaluateScopesGenerateExampleIdToken"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_generate_example_userinfo": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_generate_example_userinfo",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-userinfo",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidEvaluateScopesGenerateExampleUserinfo"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_protocol_mappers": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_protocol_mappers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/protocol-mappers",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidEvaluateScopesProtocolMappers"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_scope_mappings_role_container_id_granted": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_scope_mappings_role_container_id_granted",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/scope-mappings/{roleContainerId}/granted",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidEvaluateScopesScopeMappingsRoleContainerIdGranted"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_scope_mappings_role_container_id_not_granted": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_evaluate_scopes_scope_mappings_role_container_id_not_granted",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/scope-mappings/{roleContainerId}/not-granted",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidEvaluateScopesScopeMappingsRoleContainerIdNotGranted"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_installation_providers_provider_id": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_installation_providers_provider_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/installation/providers/{providerId}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidInstallationProvidersProviderId"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/management/permissions",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_offline_session_count": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_offline_session_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/offline-session-count",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidOfflineSessionCount"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_offline_sessions": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_offline_sessions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/offline-sessions",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidOfflineSessions"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_optional_client_scopes": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_optional_client_scopes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/optional-client-scopes",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidOptionalClientScopes"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_protocol_mappers_models": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_protocol_mappers_models",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidProtocolMappersModels"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_protocol_mappers_models_id": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_protocol_mappers_models_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models/{id}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidProtocolMappersModelsId"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_protocol_mappers_protocol_protocol": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_protocol_mappers_protocol_protocol",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/protocol/{protocol}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidProtocolMappersProtocolProtocol"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRoles"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleName"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_composites": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_composites",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleNameComposites"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_composites_clients_target_client_uuid": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_composites_clients_target_client_uuid",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites/clients/{targetClientUuid}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleNameCompositesClientsTargetClientUuid"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_composites_realm": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_composites_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites/realm",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleNameCompositesRealm"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_groups": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/groups",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleNameGroups"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/management/permissions",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleNameManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_users": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_roles_role_name_users",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/users",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidRolesRoleNameUsers"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappings"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappingsClientsClient"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client_available": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}/available",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappingsClientsClientAvailable"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client_composite": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}/composite",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappingsClientsClientComposite"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_realm": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappingsRealm"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_realm_available": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_realm_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm/available",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappingsRealmAvailable"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_realm_composite": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_scope_mappings_realm_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm/composite",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidScopeMappingsRealmComposite"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_service_account_user": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_service_account_user",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/service-account-user",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidServiceAccountUser"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_session_count": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_session_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/session-count",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidSessionCount"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_test_nodes_available": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_test_nodes_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/test-nodes-available",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidTestNodesAvailable"
+        },
+        "keycloak_get_admin_realms_realm_clients_client_uuid_user_sessions": {
+            "slug": "keycloak_get_admin_realms_realm_clients_client_uuid_user_sessions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/user-sessions",
+            "class": "KeycloakGetAdminRealmsRealmClientsClientUuidUserSessions"
+        },
+        "keycloak_get_admin_realms_realm_clients_initial_access": {
+            "slug": "keycloak_get_admin_realms_realm_clients_initial_access",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/clients-initial-access",
+            "class": "KeycloakGetAdminRealmsRealmClientsInitialAccess"
+        },
+        "keycloak_get_admin_realms_realm_components": {
+            "slug": "keycloak_get_admin_realms_realm_components",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/components",
+            "class": "KeycloakGetAdminRealmsRealmComponents"
+        },
+        "keycloak_get_admin_realms_realm_components_id": {
+            "slug": "keycloak_get_admin_realms_realm_components_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/components/{id}",
+            "class": "KeycloakGetAdminRealmsRealmComponentsId"
+        },
+        "keycloak_get_admin_realms_realm_components_id_sub_component_types": {
+            "slug": "keycloak_get_admin_realms_realm_components_id_sub_component_types",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/components/{id}/sub-component-types",
+            "class": "KeycloakGetAdminRealmsRealmComponentsIdSubComponentTypes"
+        },
+        "keycloak_get_admin_realms_realm_credential_registrators": {
+            "slug": "keycloak_get_admin_realms_realm_credential_registrators",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/credential-registrators",
+            "class": "KeycloakGetAdminRealmsRealmCredentialRegistrators"
+        },
+        "keycloak_get_admin_realms_realm_default_default_client_scopes": {
+            "slug": "keycloak_get_admin_realms_realm_default_default_client_scopes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/default-default-client-scopes",
+            "class": "KeycloakGetAdminRealmsRealmDefaultDefaultClientScopes"
+        },
+        "keycloak_get_admin_realms_realm_default_groups": {
+            "slug": "keycloak_get_admin_realms_realm_default_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/default-groups",
+            "class": "KeycloakGetAdminRealmsRealmDefaultGroups"
+        },
+        "keycloak_get_admin_realms_realm_default_optional_client_scopes": {
+            "slug": "keycloak_get_admin_realms_realm_default_optional_client_scopes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/default-optional-client-scopes",
+            "class": "KeycloakGetAdminRealmsRealmDefaultOptionalClientScopes"
+        },
+        "keycloak_get_admin_realms_realm_events": {
+            "slug": "keycloak_get_admin_realms_realm_events",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/events",
+            "class": "KeycloakGetAdminRealmsRealmEvents"
+        },
+        "keycloak_get_admin_realms_realm_events_config": {
+            "slug": "keycloak_get_admin_realms_realm_events_config",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/events/config",
+            "class": "KeycloakGetAdminRealmsRealmEventsConfig"
+        },
+        "keycloak_get_admin_realms_realm_group_by_path_path": {
+            "slug": "keycloak_get_admin_realms_realm_group_by_path_path",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/group-by-path/{path}",
+            "class": "KeycloakGetAdminRealmsRealmGroupByPathPath"
+        },
+        "keycloak_get_admin_realms_realm_groups": {
+            "slug": "keycloak_get_admin_realms_realm_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups",
+            "class": "KeycloakGetAdminRealmsRealmGroups"
+        },
+        "keycloak_get_admin_realms_realm_groups_count": {
+            "slug": "keycloak_get_admin_realms_realm_groups_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/count",
+            "class": "KeycloakGetAdminRealmsRealmGroupsCount"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupId"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_children": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_children",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/children",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdChildren"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/management/permissions",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_members": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_members",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/members",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdMembers"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappings"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_clients_client_id": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_clients_client_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappingsClientsClientId"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_clients_client_id_available": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_clients_client_id_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}/available",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappingsClientsClientIdAvailable"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_clients_client_id_composite": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_clients_client_id_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}/composite",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappingsClientsClientIdComposite"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_realm": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/realm",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappingsRealm"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_realm_available": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_realm_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/realm/available",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappingsRealmAvailable"
+        },
+        "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_realm_composite": {
+            "slug": "keycloak_get_admin_realms_realm_groups_group_id_role_mappings_realm_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/realm/composite",
+            "class": "KeycloakGetAdminRealmsRealmGroupsGroupIdRoleMappingsRealmComposite"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstances"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAlias"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias_export": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias_export",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/export",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAliasExport"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/management/permissions",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAliasManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias_mapper_types": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias_mapper_types",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/mapper-types",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAliasMapperTypes"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias_mappers": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias_mappers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/mappers",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAliasMappers"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias_mappers_id": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias_mappers_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/mappers/{id}",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAliasMappersId"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_instances_alias_reload_keys": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_instances_alias_reload_keys",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/reload-keys",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderInstancesAliasReloadKeys"
+        },
+        "keycloak_get_admin_realms_realm_identity_provider_providers_provider_id": {
+            "slug": "keycloak_get_admin_realms_realm_identity_provider_providers_provider_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/identity-provider/providers/{provider_id}",
+            "class": "KeycloakGetAdminRealmsRealmIdentityProviderProvidersProviderId"
+        },
+        "keycloak_get_admin_realms_realm_keys": {
+            "slug": "keycloak_get_admin_realms_realm_keys",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/keys",
+            "class": "KeycloakGetAdminRealmsRealmKeys"
+        },
+        "keycloak_get_admin_realms_realm_localization": {
+            "slug": "keycloak_get_admin_realms_realm_localization",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/localization",
+            "class": "KeycloakGetAdminRealmsRealmLocalization"
+        },
+        "keycloak_get_admin_realms_realm_localization_locale": {
+            "slug": "keycloak_get_admin_realms_realm_localization_locale",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/localization/{locale}",
+            "class": "KeycloakGetAdminRealmsRealmLocalizationLocale"
+        },
+        "keycloak_get_admin_realms_realm_localization_locale_key": {
+            "slug": "keycloak_get_admin_realms_realm_localization_locale_key",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/localization/{locale}/{key}",
+            "class": "KeycloakGetAdminRealmsRealmLocalizationLocaleKey"
+        },
+        "keycloak_get_admin_realms_realm_organizations": {
+            "slug": "keycloak_get_admin_realms_realm_organizations",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations",
+            "class": "KeycloakGetAdminRealmsRealmOrganizations"
+        },
+        "keycloak_get_admin_realms_realm_organizations_count": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/count",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsCount"
+        },
+        "keycloak_get_admin_realms_realm_organizations_members_member_id_organizations": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_members_member_id_organizations",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/members/{member-id}/organizations",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsMembersMemberIdOrganizations"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgId"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_groups": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdGroups"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_by_path_path": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_by_path_path",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/group-by-path/{path}",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdGroupsGroupByPathPath"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_id": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdGroupsGroupId"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_id_children": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_id_children",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/children",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdChildren"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_id_members": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_groups_group_id_members",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/members",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdMembers"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_identity_providers": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_identity_providers",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/identity-providers",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdIdentityProviders"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_identity_providers_alias": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_identity_providers_alias",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdIdentityProvidersAlias"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_identity_providers_alias_groups": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_identity_providers_alias_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}/groups",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdIdentityProvidersAliasGroups"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_invitations": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_invitations",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/invitations",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdInvitations"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_invitations_id": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_invitations_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/invitations/{id}",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdInvitationsId"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_members": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_members",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdMembers"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_members_count": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_members_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/count",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdMembersCount"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_members_member_id": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_members_member_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/{member-id}",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdMembersMemberId"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_members_member_id_groups": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_members_member_id_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/{member-id}/groups",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdMembersMemberIdGroups"
+        },
+        "keycloak_get_admin_realms_realm_organizations_org_id_members_member_id_organizations": {
+            "slug": "keycloak_get_admin_realms_realm_organizations_org_id_members_member_id_organizations",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/{member-id}/organizations",
+            "class": "KeycloakGetAdminRealmsRealmOrganizationsOrgIdMembersMemberIdOrganizations"
+        },
+        "keycloak_get_admin_realms_realm_roles": {
+            "slug": "keycloak_get_admin_realms_realm_roles",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles",
+            "class": "KeycloakGetAdminRealmsRealmRoles"
+        },
+        "keycloak_get_admin_realms_realm_roles_by_id_role_id": {
+            "slug": "keycloak_get_admin_realms_realm_roles_by_id_role_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}",
+            "class": "KeycloakGetAdminRealmsRealmRolesByIdRoleId"
+        },
+        "keycloak_get_admin_realms_realm_roles_by_id_role_id_composites": {
+            "slug": "keycloak_get_admin_realms_realm_roles_by_id_role_id_composites",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/composites",
+            "class": "KeycloakGetAdminRealmsRealmRolesByIdRoleIdComposites"
+        },
+        "keycloak_get_admin_realms_realm_roles_by_id_role_id_composites_clients_client_uuid": {
+            "slug": "keycloak_get_admin_realms_realm_roles_by_id_role_id_composites_clients_client_uuid",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/composites/clients/{clientUuid}",
+            "class": "KeycloakGetAdminRealmsRealmRolesByIdRoleIdCompositesClientsClientUuid"
+        },
+        "keycloak_get_admin_realms_realm_roles_by_id_role_id_composites_realm": {
+            "slug": "keycloak_get_admin_realms_realm_roles_by_id_role_id_composites_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/composites/realm",
+            "class": "KeycloakGetAdminRealmsRealmRolesByIdRoleIdCompositesRealm"
+        },
+        "keycloak_get_admin_realms_realm_roles_by_id_role_id_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_roles_by_id_role_id_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/management/permissions",
+            "class": "KeycloakGetAdminRealmsRealmRolesByIdRoleIdManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleName"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name_composites": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name_composites",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}/composites",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleNameComposites"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name_composites_clients_target_client_uuid": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name_composites_clients_target_client_uuid",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}/composites/clients/{targetClientUuid}",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleNameCompositesClientsTargetClientUuid"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name_composites_realm": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name_composites_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}/composites/realm",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleNameCompositesRealm"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name_groups": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}/groups",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleNameGroups"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}/management/permissions",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleNameManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_roles_role_name_users": {
+            "slug": "keycloak_get_admin_realms_realm_roles_role_name_users",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/roles/{role-name}/users",
+            "class": "KeycloakGetAdminRealmsRealmRolesRoleNameUsers"
+        },
+        "keycloak_get_admin_realms_realm_users": {
+            "slug": "keycloak_get_admin_realms_realm_users",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users",
+            "class": "KeycloakGetAdminRealmsRealmUsers"
+        },
+        "keycloak_get_admin_realms_realm_users_count": {
+            "slug": "keycloak_get_admin_realms_realm_users_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/count",
+            "class": "KeycloakGetAdminRealmsRealmUsersCount"
+        },
+        "keycloak_get_admin_realms_realm_users_management_permissions": {
+            "slug": "keycloak_get_admin_realms_realm_users_management_permissions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users-management-permissions",
+            "class": "KeycloakGetAdminRealmsRealmUsersManagementPermissions"
+        },
+        "keycloak_get_admin_realms_realm_users_profile": {
+            "slug": "keycloak_get_admin_realms_realm_users_profile",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/profile",
+            "class": "KeycloakGetAdminRealmsRealmUsersProfile"
+        },
+        "keycloak_get_admin_realms_realm_users_profile_metadata": {
+            "slug": "keycloak_get_admin_realms_realm_users_profile_metadata",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/profile/metadata",
+            "class": "KeycloakGetAdminRealmsRealmUsersProfileMetadata"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserId"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_configured_user_storage_credential_types": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_configured_user_storage_credential_types",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/configured-user-storage-credential-types",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdConfiguredUserStorageCredentialTypes"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_consents": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_consents",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/consents",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdConsents"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_credentials": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_credentials",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/credentials",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdCredentials"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_federated_identity": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_federated_identity",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/federated-identity",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdFederatedIdentity"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_groups": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_groups",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/groups",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdGroups"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_groups_count": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_groups_count",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/groups/count",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdGroupsCount"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_offline_sessions_client_uuid": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_offline_sessions_client_uuid",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/offline-sessions/{clientUuid}",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdOfflineSessionsClientUuid"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappings"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings_clients_client_id": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings_clients_client_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappingsClientsClientId"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings_clients_client_id_available": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings_clients_client_id_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}/available",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAvailable"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings_clients_client_id_composite": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings_clients_client_id_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}/composite",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdComposite"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings_realm": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings_realm",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/realm",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappingsRealm"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings_realm_available": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings_realm_available",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/realm/available",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappingsRealmAvailable"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_role_mappings_realm_composite": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_role_mappings_realm_composite",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/realm/composite",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdRoleMappingsRealmComposite"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_sessions": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_sessions",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/sessions",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdSessions"
+        },
+        "keycloak_get_admin_realms_realm_users_user_id_unmanaged_attributes": {
+            "slug": "keycloak_get_admin_realms_realm_users_user_id_unmanaged_attributes",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/users/{user-id}/unmanagedAttributes",
+            "class": "KeycloakGetAdminRealmsRealmUsersUserIdUnmanagedAttributes"
+        },
+        "keycloak_get_admin_realms_realm_workflows": {
+            "slug": "keycloak_get_admin_realms_realm_workflows",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/workflows",
+            "class": "KeycloakGetAdminRealmsRealmWorkflows"
+        },
+        "keycloak_get_admin_realms_realm_workflows_id": {
+            "slug": "keycloak_get_admin_realms_realm_workflows_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/workflows/{id}",
+            "class": "KeycloakGetAdminRealmsRealmWorkflowsId"
+        },
+        "keycloak_get_admin_realms_realm_workflows_scheduled_resource_id": {
+            "slug": "keycloak_get_admin_realms_realm_workflows_scheduled_resource_id",
+            "method": "GET",
+            "path": "/admin/realms/{realm}/workflows/scheduled/{resource-id}",
+            "class": "KeycloakGetAdminRealmsRealmWorkflowsScheduledResourceId"
+        },
+        "keycloak_post_admin_realms": {
+            "slug": "keycloak_post_admin_realms",
+            "method": "POST",
+            "path": "/admin/realms",
+            "class": "KeycloakPostAdminRealms"
+        },
+        "keycloak_post_admin_realms_realm_authentication_config": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_config",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/config",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationConfig"
+        },
+        "keycloak_post_admin_realms_realm_authentication_executions": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_executions",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/executions",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationExecutions"
+        },
+        "keycloak_post_admin_realms_realm_authentication_executions_execution_id_config": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_executions_execution_id_config",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/executions/{executionId}/config",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationExecutionsExecutionIdConfig"
+        },
+        "keycloak_post_admin_realms_realm_authentication_executions_execution_id_lower_priority": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_executions_execution_id_lower_priority",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/executions/{executionId}/lower-priority",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationExecutionsExecutionIdLowerPriority"
+        },
+        "keycloak_post_admin_realms_realm_authentication_executions_execution_id_raise_priority": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_executions_execution_id_raise_priority",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/executions/{executionId}/raise-priority",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationExecutionsExecutionIdRaisePriority"
+        },
+        "keycloak_post_admin_realms_realm_authentication_flows": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_flows",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/flows",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationFlows"
+        },
+        "keycloak_post_admin_realms_realm_authentication_flows_flow_alias_copy": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_flows_flow_alias_copy",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/flows/{flowAlias}/copy",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationFlowsFlowAliasCopy"
+        },
+        "keycloak_post_admin_realms_realm_authentication_flows_flow_alias_executions_execution": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_flows_flow_alias_executions_execution",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/flows/{flowAlias}/executions/execution",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationFlowsFlowAliasExecutionsExecution"
+        },
+        "keycloak_post_admin_realms_realm_authentication_flows_flow_alias_executions_flow": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_flows_flow_alias_executions_flow",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/flows/{flowAlias}/executions/flow",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationFlowsFlowAliasExecutionsFlow"
+        },
+        "keycloak_post_admin_realms_realm_authentication_register_required_action": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_register_required_action",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/register-required-action",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationRegisterRequiredAction"
+        },
+        "keycloak_post_admin_realms_realm_authentication_required_actions_alias_lower_priority": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_required_actions_alias_lower_priority",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}/lower-priority",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationRequiredActionsAliasLowerPriority"
+        },
+        "keycloak_post_admin_realms_realm_authentication_required_actions_alias_raise_priority": {
+            "slug": "keycloak_post_admin_realms_realm_authentication_required_actions_alias_raise_priority",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}/raise-priority",
+            "class": "KeycloakPostAdminRealmsRealmAuthenticationRequiredActionsAliasRaisePriority"
+        },
+        "keycloak_post_admin_realms_realm_client_description_converter": {
+            "slug": "keycloak_post_admin_realms_realm_client_description_converter",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-description-converter",
+            "class": "KeycloakPostAdminRealmsRealmClientDescriptionConverter"
+        },
+        "keycloak_post_admin_realms_realm_client_scopes": {
+            "slug": "keycloak_post_admin_realms_realm_client_scopes",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-scopes",
+            "class": "KeycloakPostAdminRealmsRealmClientScopes"
+        },
+        "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_add_models": {
+            "slug": "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_add_models",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/add-models",
+            "class": "KeycloakPostAdminRealmsRealmClientScopesClientScopeIdProtocolMappersAddModels"
+        },
+        "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models": {
+            "slug": "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models",
+            "class": "KeycloakPostAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModels"
+        },
+        "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client": {
+            "slug": "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_clients_client",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}",
+            "class": "KeycloakPostAdminRealmsRealmClientScopesClientScopeIdScopeMappingsClientsClient"
+        },
+        "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm": {
+            "slug": "keycloak_post_admin_realms_realm_client_scopes_client_scope_id_scope_mappings_realm",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm",
+            "class": "KeycloakPostAdminRealmsRealmClientScopesClientScopeIdScopeMappingsRealm"
+        },
+        "keycloak_post_admin_realms_realm_client_templates": {
+            "slug": "keycloak_post_admin_realms_realm_client_templates",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-templates",
+            "class": "KeycloakPostAdminRealmsRealmClientTemplates"
+        },
+        "keycloak_post_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_add_models": {
+            "slug": "keycloak_post_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_add_models",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/add-models",
+            "class": "KeycloakPostAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersAddModels"
+        },
+        "keycloak_post_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models": {
+            "slug": "keycloak_post_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models",
+            "class": "KeycloakPostAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModels"
+        },
+        "keycloak_post_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client": {
+            "slug": "keycloak_post_admin_realms_realm_client_templates_client_scope_id_scope_mappings_clients_client",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}",
+            "class": "KeycloakPostAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsClientsClient"
+        },
+        "keycloak_post_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm": {
+            "slug": "keycloak_post_admin_realms_realm_client_templates_client_scope_id_scope_mappings_realm",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm",
+            "class": "KeycloakPostAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealm"
+        },
+        "keycloak_post_admin_realms_realm_clients": {
+            "slug": "keycloak_post_admin_realms_realm_clients",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients",
+            "class": "KeycloakPostAdminRealmsRealmClients"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_import": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_import",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/import",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerImport"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_permission": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_permission",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerPermission"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_permission_evaluate": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_permission_evaluate",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/evaluate",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerPermissionEvaluate"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_policy": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_policy",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicy"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_policy_evaluate": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_policy_evaluate",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/evaluate",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyEvaluate"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_resource": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_resource",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerResource"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_scope": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_authz_resource_server_scope",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidAuthzResourceServerScope"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_download": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_download",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/download",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidCertificatesAttrDownload"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_generate": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_generate",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/generate",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidCertificatesAttrGenerate"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_generate_and_download": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_generate_and_download",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/generate-and-download",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidCertificatesAttrGenerateAndDownload"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_upload": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_upload",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/upload",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidCertificatesAttrUpload"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_upload_certificate": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_certificates_attr_upload_certificate",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/upload-certificate",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidCertificatesAttrUploadCertificate"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_client_secret": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_client_secret",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/client-secret",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidClientSecret"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_nodes": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_nodes",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/nodes",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidNodes"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_protocol_mappers_add_models": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_protocol_mappers_add_models",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/add-models",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidProtocolMappersAddModels"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_protocol_mappers_models": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_protocol_mappers_models",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidProtocolMappersModels"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_push_revocation": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_push_revocation",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/push-revocation",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidPushRevocation"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_registration_access_token": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_registration_access_token",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/registration-access-token",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidRegistrationAccessToken"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_roles": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_roles",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidRoles"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_roles_role_name_composites": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_roles_role_name_composites",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidRolesRoleNameComposites"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_scope_mappings_clients_client",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidScopeMappingsClientsClient"
+        },
+        "keycloak_post_admin_realms_realm_clients_client_uuid_scope_mappings_realm": {
+            "slug": "keycloak_post_admin_realms_realm_clients_client_uuid_scope_mappings_realm",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm",
+            "class": "KeycloakPostAdminRealmsRealmClientsClientUuidScopeMappingsRealm"
+        },
+        "keycloak_post_admin_realms_realm_clients_initial_access": {
+            "slug": "keycloak_post_admin_realms_realm_clients_initial_access",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/clients-initial-access",
+            "class": "KeycloakPostAdminRealmsRealmClientsInitialAccess"
+        },
+        "keycloak_post_admin_realms_realm_components": {
+            "slug": "keycloak_post_admin_realms_realm_components",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/components",
+            "class": "KeycloakPostAdminRealmsRealmComponents"
+        },
+        "keycloak_post_admin_realms_realm_groups": {
+            "slug": "keycloak_post_admin_realms_realm_groups",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/groups",
+            "class": "KeycloakPostAdminRealmsRealmGroups"
+        },
+        "keycloak_post_admin_realms_realm_groups_group_id_children": {
+            "slug": "keycloak_post_admin_realms_realm_groups_group_id_children",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/groups/{group-id}/children",
+            "class": "KeycloakPostAdminRealmsRealmGroupsGroupIdChildren"
+        },
+        "keycloak_post_admin_realms_realm_groups_group_id_role_mappings_clients_client_id": {
+            "slug": "keycloak_post_admin_realms_realm_groups_group_id_role_mappings_clients_client_id",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}",
+            "class": "KeycloakPostAdminRealmsRealmGroupsGroupIdRoleMappingsClientsClientId"
+        },
+        "keycloak_post_admin_realms_realm_groups_group_id_role_mappings_realm": {
+            "slug": "keycloak_post_admin_realms_realm_groups_group_id_role_mappings_realm",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/groups/{group-id}/role-mappings/realm",
+            "class": "KeycloakPostAdminRealmsRealmGroupsGroupIdRoleMappingsRealm"
+        },
+        "keycloak_post_admin_realms_realm_identity_provider_import_config": {
+            "slug": "keycloak_post_admin_realms_realm_identity_provider_import_config",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/identity-provider/import-config",
+            "class": "KeycloakPostAdminRealmsRealmIdentityProviderImportConfig"
+        },
+        "keycloak_post_admin_realms_realm_identity_provider_instances": {
+            "slug": "keycloak_post_admin_realms_realm_identity_provider_instances",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/identity-provider/instances",
+            "class": "KeycloakPostAdminRealmsRealmIdentityProviderInstances"
+        },
+        "keycloak_post_admin_realms_realm_identity_provider_instances_alias_mappers": {
+            "slug": "keycloak_post_admin_realms_realm_identity_provider_instances_alias_mappers",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/mappers",
+            "class": "KeycloakPostAdminRealmsRealmIdentityProviderInstancesAliasMappers"
+        },
+        "keycloak_post_admin_realms_realm_identity_provider_upload_certificate": {
+            "slug": "keycloak_post_admin_realms_realm_identity_provider_upload_certificate",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/identity-provider/upload-certificate",
+            "class": "KeycloakPostAdminRealmsRealmIdentityProviderUploadCertificate"
+        },
+        "keycloak_post_admin_realms_realm_localization_locale": {
+            "slug": "keycloak_post_admin_realms_realm_localization_locale",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/localization/{locale}",
+            "class": "KeycloakPostAdminRealmsRealmLocalizationLocale"
+        },
+        "keycloak_post_admin_realms_realm_logout_all": {
+            "slug": "keycloak_post_admin_realms_realm_logout_all",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/logout-all",
+            "class": "KeycloakPostAdminRealmsRealmLogoutAll"
+        },
+        "keycloak_post_admin_realms_realm_organizations": {
+            "slug": "keycloak_post_admin_realms_realm_organizations",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations",
+            "class": "KeycloakPostAdminRealmsRealmOrganizations"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_groups": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_groups",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdGroups"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_groups_group_id_children": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_groups_group_id_children",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/children",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdChildren"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_identity_providers": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_identity_providers",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/identity-providers",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdIdentityProviders"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_invitations_id_resend": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_invitations_id_resend",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/invitations/{id}/resend",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdInvitationsIdResend"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_members": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_members",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdMembers"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_members_invite_existing_user": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_members_invite_existing_user",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/invite-existing-user",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdMembersInviteExistingUser"
+        },
+        "keycloak_post_admin_realms_realm_organizations_org_id_members_invite_user": {
+            "slug": "keycloak_post_admin_realms_realm_organizations_org_id_members_invite_user",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/members/invite-user",
+            "class": "KeycloakPostAdminRealmsRealmOrganizationsOrgIdMembersInviteUser"
+        },
+        "keycloak_post_admin_realms_realm_partial_export": {
+            "slug": "keycloak_post_admin_realms_realm_partial_export",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/partial-export",
+            "class": "KeycloakPostAdminRealmsRealmPartialExport"
+        },
+        "keycloak_post_admin_realms_realm_partial_import": {
+            "slug": "keycloak_post_admin_realms_realm_partial_import",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/partialImport",
+            "class": "KeycloakPostAdminRealmsRealmPartialImport"
+        },
+        "keycloak_post_admin_realms_realm_push_revocation": {
+            "slug": "keycloak_post_admin_realms_realm_push_revocation",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/push-revocation",
+            "class": "KeycloakPostAdminRealmsRealmPushRevocation"
+        },
+        "keycloak_post_admin_realms_realm_roles": {
+            "slug": "keycloak_post_admin_realms_realm_roles",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/roles",
+            "class": "KeycloakPostAdminRealmsRealmRoles"
+        },
+        "keycloak_post_admin_realms_realm_roles_by_id_role_id_composites": {
+            "slug": "keycloak_post_admin_realms_realm_roles_by_id_role_id_composites",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/composites",
+            "class": "KeycloakPostAdminRealmsRealmRolesByIdRoleIdComposites"
+        },
+        "keycloak_post_admin_realms_realm_roles_role_name_composites": {
+            "slug": "keycloak_post_admin_realms_realm_roles_role_name_composites",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/roles/{role-name}/composites",
+            "class": "KeycloakPostAdminRealmsRealmRolesRoleNameComposites"
+        },
+        "keycloak_post_admin_realms_realm_test_smtpconnection": {
+            "slug": "keycloak_post_admin_realms_realm_test_smtpconnection",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/testSMTPConnection",
+            "class": "KeycloakPostAdminRealmsRealmTestSmtpconnection"
+        },
+        "keycloak_post_admin_realms_realm_users": {
+            "slug": "keycloak_post_admin_realms_realm_users",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users",
+            "class": "KeycloakPostAdminRealmsRealmUsers"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_credentials_credential_id_move_after_new_previous_credential_id": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_credentials_credential_id_move_after_new_previous_credential_id",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}/moveAfter/{newPreviousCredentialId}",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdCredentialsCredentialIdMoveAfterNewPreviousCredentialId"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_credentials_credential_id_move_to_first": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_credentials_credential_id_move_to_first",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}/moveToFirst",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdCredentialsCredentialIdMoveToFirst"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_federated_identity_provider": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_federated_identity_provider",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/federated-identity/{provider}",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdFederatedIdentityProvider"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_impersonation": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_impersonation",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/impersonation",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdImpersonation"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_logout": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_logout",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/logout",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdLogout"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_role_mappings_clients_client_id": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_role_mappings_clients_client_id",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdRoleMappingsClientsClientId"
+        },
+        "keycloak_post_admin_realms_realm_users_user_id_role_mappings_realm": {
+            "slug": "keycloak_post_admin_realms_realm_users_user_id_role_mappings_realm",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/users/{user-id}/role-mappings/realm",
+            "class": "KeycloakPostAdminRealmsRealmUsersUserIdRoleMappingsRealm"
+        },
+        "keycloak_post_admin_realms_realm_workflows": {
+            "slug": "keycloak_post_admin_realms_realm_workflows",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/workflows",
+            "class": "KeycloakPostAdminRealmsRealmWorkflows"
+        },
+        "keycloak_post_admin_realms_realm_workflows_id_activate_type_resource_id": {
+            "slug": "keycloak_post_admin_realms_realm_workflows_id_activate_type_resource_id",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/workflows/{id}/activate/{type}/{resourceId}",
+            "class": "KeycloakPostAdminRealmsRealmWorkflowsIdActivateTypeResourceId"
+        },
+        "keycloak_post_admin_realms_realm_workflows_id_deactivate_type_resource_id": {
+            "slug": "keycloak_post_admin_realms_realm_workflows_id_deactivate_type_resource_id",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/workflows/{id}/deactivate/{type}/{resourceId}",
+            "class": "KeycloakPostAdminRealmsRealmWorkflowsIdDeactivateTypeResourceId"
+        },
+        "keycloak_post_admin_realms_realm_workflows_migrate": {
+            "slug": "keycloak_post_admin_realms_realm_workflows_migrate",
+            "method": "POST",
+            "path": "/admin/realms/{realm}/workflows/migrate",
+            "class": "KeycloakPostAdminRealmsRealmWorkflowsMigrate"
+        },
+        "keycloak_put_admin_realms_realm": {
+            "slug": "keycloak_put_admin_realms_realm",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}",
+            "class": "KeycloakPutAdminRealmsRealm"
+        },
+        "keycloak_put_admin_realms_realm_authentication_config_id": {
+            "slug": "keycloak_put_admin_realms_realm_authentication_config_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/authentication/config/{id}",
+            "class": "KeycloakPutAdminRealmsRealmAuthenticationConfigId"
+        },
+        "keycloak_put_admin_realms_realm_authentication_flows_flow_alias_executions": {
+            "slug": "keycloak_put_admin_realms_realm_authentication_flows_flow_alias_executions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/authentication/flows/{flowAlias}/executions",
+            "class": "KeycloakPutAdminRealmsRealmAuthenticationFlowsFlowAliasExecutions"
+        },
+        "keycloak_put_admin_realms_realm_authentication_flows_id": {
+            "slug": "keycloak_put_admin_realms_realm_authentication_flows_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/authentication/flows/{id}",
+            "class": "KeycloakPutAdminRealmsRealmAuthenticationFlowsId"
+        },
+        "keycloak_put_admin_realms_realm_authentication_required_actions_alias": {
+            "slug": "keycloak_put_admin_realms_realm_authentication_required_actions_alias",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}",
+            "class": "KeycloakPutAdminRealmsRealmAuthenticationRequiredActionsAlias"
+        },
+        "keycloak_put_admin_realms_realm_authentication_required_actions_alias_config": {
+            "slug": "keycloak_put_admin_realms_realm_authentication_required_actions_alias_config",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/authentication/required-actions/{alias}/config",
+            "class": "KeycloakPutAdminRealmsRealmAuthenticationRequiredActionsAliasConfig"
+        },
+        "keycloak_put_admin_realms_realm_client_policies_policies": {
+            "slug": "keycloak_put_admin_realms_realm_client_policies_policies",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-policies/policies",
+            "class": "KeycloakPutAdminRealmsRealmClientPoliciesPolicies"
+        },
+        "keycloak_put_admin_realms_realm_client_policies_profiles": {
+            "slug": "keycloak_put_admin_realms_realm_client_policies_profiles",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-policies/profiles",
+            "class": "KeycloakPutAdminRealmsRealmClientPoliciesProfiles"
+        },
+        "keycloak_put_admin_realms_realm_client_scopes_client_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_client_scopes_client_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}",
+            "class": "KeycloakPutAdminRealmsRealmClientScopesClientScopeId"
+        },
+        "keycloak_put_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models_id": {
+            "slug": "keycloak_put_admin_realms_realm_client_scopes_client_scope_id_protocol_mappers_models_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models/{id}",
+            "class": "KeycloakPutAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModelsId"
+        },
+        "keycloak_put_admin_realms_realm_client_templates_client_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_client_templates_client_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}",
+            "class": "KeycloakPutAdminRealmsRealmClientTemplatesClientScopeId"
+        },
+        "keycloak_put_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models_id": {
+            "slug": "keycloak_put_admin_realms_realm_client_templates_client_scope_id_protocol_mappers_models_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models/{id}",
+            "class": "KeycloakPutAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsId"
+        },
+        "keycloak_put_admin_realms_realm_client_types": {
+            "slug": "keycloak_put_admin_realms_realm_client_types",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/client-types",
+            "class": "KeycloakPutAdminRealmsRealmClientTypes"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuid"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_authz_resource_server": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_authz_resource_server",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidAuthzResourceServer"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_authz_resource_server_resource_resource_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidAuthzResourceServerResourceResourceId"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_authz_resource_server_scope_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidAuthzResourceServerScopeScopeId"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_default_client_scopes_client_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_default_client_scopes_client_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/default-client-scopes/{clientScopeId}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidDefaultClientScopesClientScopeId"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/management/permissions",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_optional_client_scopes_client_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_optional_client_scopes_client_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/optional-client-scopes/{clientScopeId}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidOptionalClientScopesClientScopeId"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_protocol_mappers_models_id": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_protocol_mappers_models_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models/{id}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidProtocolMappersModelsId"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_roles_role_name": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_roles_role_name",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidRolesRoleName"
+        },
+        "keycloak_put_admin_realms_realm_clients_client_uuid_roles_role_name_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_clients_client_uuid_roles_role_name_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/management/permissions",
+            "class": "KeycloakPutAdminRealmsRealmClientsClientUuidRolesRoleNameManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_components_id": {
+            "slug": "keycloak_put_admin_realms_realm_components_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/components/{id}",
+            "class": "KeycloakPutAdminRealmsRealmComponentsId"
+        },
+        "keycloak_put_admin_realms_realm_default_default_client_scopes_client_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_default_default_client_scopes_client_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/default-default-client-scopes/{clientScopeId}",
+            "class": "KeycloakPutAdminRealmsRealmDefaultDefaultClientScopesClientScopeId"
+        },
+        "keycloak_put_admin_realms_realm_default_groups_group_id": {
+            "slug": "keycloak_put_admin_realms_realm_default_groups_group_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/default-groups/{groupId}",
+            "class": "KeycloakPutAdminRealmsRealmDefaultGroupsGroupId"
+        },
+        "keycloak_put_admin_realms_realm_default_optional_client_scopes_client_scope_id": {
+            "slug": "keycloak_put_admin_realms_realm_default_optional_client_scopes_client_scope_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/default-optional-client-scopes/{clientScopeId}",
+            "class": "KeycloakPutAdminRealmsRealmDefaultOptionalClientScopesClientScopeId"
+        },
+        "keycloak_put_admin_realms_realm_events_config": {
+            "slug": "keycloak_put_admin_realms_realm_events_config",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/events/config",
+            "class": "KeycloakPutAdminRealmsRealmEventsConfig"
+        },
+        "keycloak_put_admin_realms_realm_groups_group_id": {
+            "slug": "keycloak_put_admin_realms_realm_groups_group_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/groups/{group-id}",
+            "class": "KeycloakPutAdminRealmsRealmGroupsGroupId"
+        },
+        "keycloak_put_admin_realms_realm_groups_group_id_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_groups_group_id_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/groups/{group-id}/management/permissions",
+            "class": "KeycloakPutAdminRealmsRealmGroupsGroupIdManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_identity_provider_instances_alias": {
+            "slug": "keycloak_put_admin_realms_realm_identity_provider_instances_alias",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}",
+            "class": "KeycloakPutAdminRealmsRealmIdentityProviderInstancesAlias"
+        },
+        "keycloak_put_admin_realms_realm_identity_provider_instances_alias_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_identity_provider_instances_alias_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/management/permissions",
+            "class": "KeycloakPutAdminRealmsRealmIdentityProviderInstancesAliasManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_identity_provider_instances_alias_mappers_id": {
+            "slug": "keycloak_put_admin_realms_realm_identity_provider_instances_alias_mappers_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/identity-provider/instances/{alias}/mappers/{id}",
+            "class": "KeycloakPutAdminRealmsRealmIdentityProviderInstancesAliasMappersId"
+        },
+        "keycloak_put_admin_realms_realm_localization_locale_key": {
+            "slug": "keycloak_put_admin_realms_realm_localization_locale_key",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/localization/{locale}/{key}",
+            "class": "KeycloakPutAdminRealmsRealmLocalizationLocaleKey"
+        },
+        "keycloak_put_admin_realms_realm_organizations_org_id": {
+            "slug": "keycloak_put_admin_realms_realm_organizations_org_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/organizations/{org-id}",
+            "class": "KeycloakPutAdminRealmsRealmOrganizationsOrgId"
+        },
+        "keycloak_put_admin_realms_realm_organizations_org_id_groups_group_id": {
+            "slug": "keycloak_put_admin_realms_realm_organizations_org_id_groups_group_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}",
+            "class": "KeycloakPutAdminRealmsRealmOrganizationsOrgIdGroupsGroupId"
+        },
+        "keycloak_put_admin_realms_realm_organizations_org_id_groups_group_id_members_user_id": {
+            "slug": "keycloak_put_admin_realms_realm_organizations_org_id_groups_group_id_members_user_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/members/{userId}",
+            "class": "KeycloakPutAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdMembersUserId"
+        },
+        "keycloak_put_admin_realms_realm_roles_by_id_role_id": {
+            "slug": "keycloak_put_admin_realms_realm_roles_by_id_role_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}",
+            "class": "KeycloakPutAdminRealmsRealmRolesByIdRoleId"
+        },
+        "keycloak_put_admin_realms_realm_roles_by_id_role_id_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_roles_by_id_role_id_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/roles-by-id/{role-id}/management/permissions",
+            "class": "KeycloakPutAdminRealmsRealmRolesByIdRoleIdManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_roles_role_name": {
+            "slug": "keycloak_put_admin_realms_realm_roles_role_name",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/roles/{role-name}",
+            "class": "KeycloakPutAdminRealmsRealmRolesRoleName"
+        },
+        "keycloak_put_admin_realms_realm_roles_role_name_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_roles_role_name_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/roles/{role-name}/management/permissions",
+            "class": "KeycloakPutAdminRealmsRealmRolesRoleNameManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_users_management_permissions": {
+            "slug": "keycloak_put_admin_realms_realm_users_management_permissions",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users-management-permissions",
+            "class": "KeycloakPutAdminRealmsRealmUsersManagementPermissions"
+        },
+        "keycloak_put_admin_realms_realm_users_profile": {
+            "slug": "keycloak_put_admin_realms_realm_users_profile",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/profile",
+            "class": "KeycloakPutAdminRealmsRealmUsersProfile"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserId"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_credentials_credential_id_user_label": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_credentials_credential_id_user_label",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}/userLabel",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdCredentialsCredentialIdUserLabel"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_disable_credential_types": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_disable_credential_types",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/disable-credential-types",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdDisableCredentialTypes"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_execute_actions_email": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_execute_actions_email",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/execute-actions-email",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdExecuteActionsEmail"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_groups_group_id": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_groups_group_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/groups/{groupId}",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdGroupsGroupId"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_reset_password": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_reset_password",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/reset-password",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdResetPassword"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_reset_password_email": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_reset_password_email",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/reset-password-email",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdResetPasswordEmail"
+        },
+        "keycloak_put_admin_realms_realm_users_user_id_send_verify_email": {
+            "slug": "keycloak_put_admin_realms_realm_users_user_id_send_verify_email",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/users/{user-id}/send-verify-email",
+            "class": "KeycloakPutAdminRealmsRealmUsersUserIdSendVerifyEmail"
+        },
+        "keycloak_put_admin_realms_realm_workflows_id": {
+            "slug": "keycloak_put_admin_realms_realm_workflows_id",
+            "method": "PUT",
+            "path": "/admin/realms/{realm}/workflows/{id}",
+            "class": "KeycloakPutAdminRealmsRealmWorkflowsId"
+        }
+    }
+}

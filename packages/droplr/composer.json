@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-droplr",
-    "description": "Droplr integration for Laravel — list drops, manage links, boards, and user info.",
+    "description": "Droplr integration for Laravel with expanded drop, account, board, and generic API coverage.",
     "license": "MIT",
     "authors": [
         {

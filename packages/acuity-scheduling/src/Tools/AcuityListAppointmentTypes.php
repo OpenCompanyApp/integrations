@@ -6,10 +6,13 @@ use OpenCompany\Integrations\AcuityScheduling\AcuitySchedulingService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List appointment types from Acuity Scheduling.
+ */
 class AcuityListAppointmentTypes implements Tool
 {
     /**
-     * Create a new List Appointment Types tool instance.
+     * @param  AcuitySchedulingService  $service  Acuity Scheduling API client.
      */
     public function __construct(
         private AcuitySchedulingService $service,

@@ -23,8 +23,9 @@ class PineconeServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new PineconeService(
-                accessToken: $creds->get('pinecone', 'access_token', ''),
+                accessToken: $creds->get('pinecone', 'api_key', $creds->get('pinecone', 'access_token', '')),
                 baseUrl: $creds->get('pinecone', 'url', 'https://api.pinecone.io'),
+                apiVersion: $creds->get('pinecone', 'api_version', '2026-04'),
             );
         });
     }

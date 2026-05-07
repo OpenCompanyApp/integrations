@@ -2,228 +2,107 @@
 
 namespace OpenCompany\Integrations\GoogleSearchConsole;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Google Search Console REST API.
+ *
+ * Handles OAuth bearer authentication, Discovery path expansion, JSON request
+ * dispatch, response parsing, and Google API error normalization.
+ */
 class GoogleSearchConsoleService
 {
-    public function __construct(
-        private string $accessToken = '',
-        private string $baseUrl = 'https://searchconsole.googleapis.com',
-    ) {
+    /**
+     * @param  string  $accessToken  Google OAuth 2.0 access token with Search Console scopes.
+     * @param  string  $baseUrl  Google Search Console REST API base URL.
+     */
+    public function __construct(private string $accessToken = '', private string $baseUrl = 'https://searchconsole.googleapis.com')
+    {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service is configured with an access token.
-     */
-    public function isConfigured(): bool
-    {
-        return !empty($this->accessToken);
-    }
+    public function isConfigured(): bool { return $this->accessToken !== ''; }
 
     /**
-     * List sites the authenticated user has access to.
+     * Execute a Google Search Console REST method.
      *
-     * @param  int|null  $pageSize  Maximum number of results per page.
-     * @param  string|null  $pageToken  Token for the next page of results.
+     * @param  array<string, mixed>  $pathParams  Path parameter values keyed by Discovery parameter name.
+     * @param  string[]  $reservedPathParams  Path parameters using `{+param}` reserved expansion.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return array<string, mixed>
      */
-    public function listSites(?int $pageSize = null, ?string $pageToken = null): array
+    public function request(string $method, string $pathTemplate, array $pathParams = [], array $reservedPathParams = [], array $query = [], array $body = []): array
     {
-        $params = [];
-        if ($pageSize !== null) {
-            $params['pageSize'] = $pageSize;
-        }
-        if ($pageToken !== null) {
-            $params['pageToken'] = $pageToken;
-        }
-
-        return $this->request('GET', '/v3/sites', $params);
+        $response = $this->rawRequest($method, $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, $body);
+        if ($response->body() === '') return ['success' => true, 'status' => $response->status()];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
     }
 
     /**
-     * Get details for a single site.
+     * Perform a raw HTTP request against Google Search Console.
      *
-     * @param  string  $id  The site URL (e.g., "https://example.com/").
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      */
-    public function getSite(string $id): array
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
-        return $this->request('GET', '/v3/sites/' . urlencode($id));
-    }
-
-    /**
-     * List sitemaps for a site.
-     *
-     * @param  string  $siteUrl  The site URL.
-     * @param  int|null  $pageSize  Maximum number of results per page.
-     * @param  string|null  $pageToken  Token for the next page of results.
-     * @param  bool|null  $shortUrls  Whether to return short URLs.
-     * @return array<string, mixed>
-     */
-    public function listSitemaps(string $siteUrl, ?int $pageSize = null, ?string $pageToken = null, ?bool $shortUrls = null): array
-    {
-        $params = [];
-        if ($pageSize !== null) {
-            $params['pageSize'] = $pageSize;
-        }
-        if ($pageToken !== null) {
-            $params['pageToken'] = $pageToken;
-        }
-        if ($shortUrls !== null) {
-            $params['shortUrls'] = $shortUrls;
-        }
-
-        return $this->request('GET', '/v3/sites/' . urlencode($siteUrl) . '/sitemaps', $params);
-    }
-
-    /**
-     * Get details for a single sitemap.
-     *
-     * @param  string  $siteUrl  The site URL.
-     * @param  string  $id  The sitemap URL or ID.
-     * @return array<string, mixed>
-     */
-    public function getSitemap(string $siteUrl, string $id): array
-    {
-        return $this->request('GET', '/v3/sites/' . urlencode($siteUrl) . '/sitemaps/' . urlencode($id));
-    }
-
-    /**
-     * List search analytics data for a site.
-     *
-     * @param  string  $siteUrl  The site URL.
-     * @param  string  $startDate  Start date in YYYY-MM-DD format.
-     * @param  string  $endDate  End date in YYYY-MM-DD format.
-     * @param  array<string>|null  $dimensions  Dimensions to group by (e.g., ["query", "page"]).
-     * @param  string|null  $type  Search type: "web", "image", "video", or "news".
-     * @return array<string, mixed>
-     */
-    public function listSearchAnalytics(string $siteUrl, string $startDate, string $endDate, ?array $dimensions = null, ?string $type = null): array
-    {
-        $params = [
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        ];
-
-        if ($dimensions !== null) {
-            $params['dimensions'] = $dimensions;
-        }
-        if ($type !== null) {
-            $params['type'] = $type;
-        }
-
-        return $this->request('GET', '/v3/sites/' . urlencode($siteUrl) . '/searchAnalytics', $params);
-    }
-
-    /**
-     * List URL inspection results for a site.
-     *
-     * @param  string  $siteUrl  The site URL.
-     * @param  string|null  $pageToken  Token for the next page of results.
-     * @param  int|null  $limit  Maximum number of results.
-     * @param  string|null  $inspectionResult  Filter by inspection result status.
-     * @return array<string, mixed>
-     */
-    public function listUrlInspection(string $siteUrl, ?string $pageToken = null, ?int $limit = null, ?string $inspectionResult = null): array
-    {
-        $params = [];
-        if ($pageToken !== null) {
-            $params['pageToken'] = $pageToken;
-        }
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($inspectionResult !== null) {
-            $params['inspectionResult'] = $inspectionResult;
-        }
-
-        return $this->request('GET', '/v3/sites/' . urlencode($siteUrl) . '/urlInspection', $params);
-    }
-
-    /**
-     * Get the authenticated user's profile.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/v3/users/me');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query or body parameters.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Google Search Console API.
-     *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query or body parameters.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Google Search Console access token is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
+        if (!$this->isConfigured()) throw new RuntimeException('Google Search Console access token is not configured.');
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            $method = strtoupper($method);
+            $url = $this->urlWithQuery($this->baseUrl.$path, $query);
+            $http = Http::withHeaders(['Authorization' => 'Bearer '.$this->accessToken, 'Content-Type' => 'application/json', 'Accept' => 'application/json'])->timeout(120);
+            $response = match ($method) {
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'PATCH' => $http->patch($url, $body),
+                'DELETE' => $http->delete($url, $body),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
-
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Google Search Console API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Google Search Console API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the token may have expired.");
-                }
-
-                $error = $response->json('error') ?? $body;
-                Log::error("Google Search Console API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Google Search Console API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->body();
+                Log::error("Google Search Console API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
+                throw new RuntimeException('Google Search Console API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
-
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Google Search Console API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Google Search Console API: {$e->getMessage()}");
+            Log::error("Google Search Console API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            throw new RuntimeException("Failed to connect to Google Search Console API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Expand Discovery path templates such as `{formId}` and `{responseId}`.
+     *
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Parameters using reserved expansion.
+     */
+    private function expandPath(string $template, array $pathParams, array $reservedPathParams): string
+    {
+        return (string) preg_replace_callback('/\{(\+?)([A-Za-z0-9_]+)(?:=[^}]*)?\}/', function (array $matches) use ($pathParams, $reservedPathParams): string {
+            $key = $matches[2];
+            if (!array_key_exists($key, $pathParams) || $pathParams[$key] === null || $pathParams[$key] === '') throw new RuntimeException($key.' must be a non-empty path parameter.');
+            $reserved = $matches[1] === '+' || in_array($key, $reservedPathParams, true);
+            return $reserved ? str_replace('%2F', '/', rawurlencode((string) $pathParams[$key])) : rawurlencode((string) $pathParams[$key]);
+        }, $template);
+    }
+
+    /**
+     * Append query parameters while preserving repeated Google API keys.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') continue;
+            foreach (is_array($value) ? $value : [$value] as $item) if ($item !== null && $item !== '') $parts[] = rawurlencode((string) $key).'='.rawurlencode((string) $item);
+        }
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

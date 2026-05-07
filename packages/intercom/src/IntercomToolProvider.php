@@ -94,7 +94,7 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Customer messaging platform – contacts, conversations, and companies',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:intercom',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.intercom.com/docs/references/',
         ];

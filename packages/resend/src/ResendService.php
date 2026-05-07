@@ -2,275 +2,219 @@
 
 namespace OpenCompany\Integrations\Resend;
 
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Client for the Resend REST API covering email delivery, domain management,
- * API key management, and audience contacts.
+ * HTTP client for the Resend REST API.
  *
- * Authentication uses a Bearer API key via the Authorization header.
+ * Executes official OpenAPI operation metadata, sends bearer-token
+ * authentication, and normalizes Resend error responses for generated tools.
  */
 class ResendService
 {
-    private const BASE_URL = 'https://api.resend.com';
-
-    /** @param string $apiKey Resend API key */
+    /**
+     * @param  string  $apiKey  Resend API key.
+     * @param  string  $baseUrl  Resend API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
-    ) {}
+        private string $baseUrl = 'https://api.resend.com',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
      * Check whether the API key is configured.
-     *
-     * @return bool
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
-    // ── Emails ─────────────────────────────────────────
-
     /**
-     * Send an email via the Resend API.
+     * Return official Resend operation metadata used by generated tools.
      *
-     * @param  string                $to       Recipient email address (or array of addresses).
-     * @param  string                $from     Sender email address.
-     * @param  string                $subject  Email subject line.
-     * @param  string|null           $html     HTML body content.
-     * @param  string|null           $text     Plain-text body content.
-     * @param  string|array|null     $cc       CC recipient email address(es).
-     * @param  string|array|null     $bcc      BCC recipient email address(es).
-     * @param  string|array|null     $replyTo  Reply-to email address(es).
-     * @param  array<int, array>     $tags     Tags to attach to the email. Each tag is ['name' => string, 'value' => string].
-     * @param  array<string, string> $headers  Custom email headers.
-     * @return array<string, mixed>  The sent email object with id.
+     * @return array<string, array<string, mixed>>
      */
-    public function sendEmail(
-        string $to,
-        string $from,
-        string $subject,
-        ?string $html = null,
-        ?string $text = null,
-        string|array|null $cc = null,
-        string|array|null $bcc = null,
-        string|array|null $replyTo = null,
-        array $tags = [],
-        array $headers = [],
-    ): array {
-        $payload = array_filter([
-            'from' => $from,
-            'to' => [$to],
-            'subject' => $subject,
-            'html' => $html,
-            'text' => $text,
-            'cc' => is_array($cc) ? $cc : ($cc !== null ? [$cc] : null),
-            'bcc' => is_array($bcc) ? $bcc : ($bcc !== null ? [$bcc] : null),
-            'reply_to' => is_array($replyTo) ? $replyTo : ($replyTo !== null ? [$replyTo] : null),
-            'tags' => ! empty($tags) ? $tags : null,
-            'headers' => ! empty($headers) ? $headers : null,
-        ], fn ($value) => $value !== null);
-
-        return $this->request('POST', '/emails', $payload);
+    public static function operations(): array
+    {
+        return ResendOperations::all();
     }
 
     /**
-     * Get a single email by ID.
+     * Execute an official Resend OpenAPI operation.
      *
-     * @param  string              $emailId  The email ID returned by sendEmail.
+     * @param  array<string, mixed>  $operation  Operation metadata from ResendOperations.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    public function getEmail(string $emailId): array
+    public function executeOperation(array $operation, array $args = []): array
     {
-        return $this->request('GET', "/emails/{$emailId}");
-    }
-
-    /**
-     * List emails with optional pagination.
-     *
-     * @param  int|null     $limit  Maximum number of emails to return.
-     * @param  string|null  $token  Cursor token for pagination.
-     * @return array<string, mixed>
-     */
-    public function listEmails(?int $limit = null, ?string $token = null): array
-    {
-        $params = array_filter([
-            'limit' => $limit,
-            'token' => $token,
-        ], fn ($value) => $value !== null);
-
-        return $this->request('GET', '/emails', $params);
-    }
-
-    // ── API Keys ───────────────────────────────────────
-
-    /**
-     * Create a new API key.
-     *
-     * @param  string       $name        Name for the API key.
-     * @param  string|null  $permission  Permission scope: "full_access" or "sending_access".
-     * @param  string|null  $domainId    Domain ID to restrict the key to.
-     * @return array<string, mixed>  The created API key object.
-     */
-    public function createApiKey(
-        string $name,
-        ?string $permission = null,
-        ?string $domainId = null,
-    ): array {
-        $payload = array_filter([
-            'name' => $name,
-            'permission' => $permission,
-            'domain_id' => $domainId,
-        ], fn ($value) => $value !== null);
-
-        return $this->request('POST', '/api-keys', $payload);
-    }
-
-    /**
-     * List all API keys.
-     *
-     * @return array<string, mixed>
-     */
-    public function listApiKeys(): array
-    {
-        return $this->request('GET', '/api-keys');
-    }
-
-    // ── Domains ────────────────────────────────────────
-
-    /**
-     * Create a new domain.
-     *
-     * @param  string       $name    Domain name (e.g. "example.com").
-     * @param  string|null  $region  Region for the domain: "us-east-1" or "eu-west-1".
-     * @return array<string, mixed>  The created domain object.
-     */
-    public function createDomain(string $name, ?string $region = null): array
-    {
-        $payload = array_filter([
-            'name' => $name,
-            'region' => $region,
-        ], fn ($value) => $value !== null);
-
-        return $this->request('POST', '/domains', $payload);
-    }
-
-    /**
-     * Get a single domain by ID.
-     *
-     * @param  string  $domainId  The domain ID.
-     * @return array<string, mixed>
-     */
-    public function getDomain(string $domainId): array
-    {
-        return $this->request('GET', "/domains/{$domainId}");
-    }
-
-    /**
-     * List all domains.
-     *
-     * @return array<string, mixed>
-     */
-    public function listDomains(): array
-    {
-        return $this->request('GET', '/domains');
-    }
-
-    /**
-     * Verify a domain by ID.
-     *
-     * @param  string  $domainId  The domain ID to verify.
-     * @return array<string, mixed>
-     */
-    public function verifyDomain(string $domainId): array
-    {
-        return $this->request('POST', "/domains/{$domainId}/verify");
-    }
-
-    // ── Contacts ───────────────────────────────────────
-
-    /**
-     * Create a contact in an audience.
-     *
-     * @param  string       $audienceId   The audience ID to add the contact to.
-     * @param  string       $email        Contact email address.
-     * @param  string|null  $firstName    Contact first name.
-     * @param  string|null  $lastName     Contact last name.
-     * @param  bool|null    $unsubscribed Whether the contact is unsubscribed.
-     * @return array<string, mixed>  The created contact object.
-     */
-    public function createContact(
-        string $audienceId,
-        string $email,
-        ?string $firstName = null,
-        ?string $lastName = null,
-        ?bool $unsubscribed = null,
-    ): array {
-        $payload = array_filter([
-            'email' => $email,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'unsubscribed' => $unsubscribed,
-        ], fn ($value) => $value !== null);
-
-        return $this->request('POST', "/audiences/{$audienceId}/contacts", $payload);
-    }
-
-    // ── HTTP ───────────────────────────────────────────
-
-    /**
-     * Send an authenticated request to the Resend API.
-     *
-     * @param  string                $method  HTTP method (GET, POST, PUT, PATCH, DELETE).
-     * @param  string                $path    API path (e.g. /emails).
-     * @param  array<string, mixed>  $data    Query params (GET) or JSON body (POST/PUT/PATCH).
-     * @return array<string, mixed>
-     *
-     * @throws \RuntimeException If the API key is missing or the request fails.
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('Resend API key is not configured.');
-        }
-
-        $url = self::BASE_URL . $path;
-
-        try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $data),
-                'POST'   => $http->post($url, $data),
-                'PUT'    => $http->put($url, $data),
-                'PATCH'  => $http->patch($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if ($response->failed()) {
-                $body = $response->json();
-                $message = $body['message'] ?? $response->body();
-
-                Log::error('Resend API error', [
-                    'method' => $method,
-                    'path'   => $path,
-                    'status' => $response->status(),
-                    'body'   => $body,
-                ]);
-
-                throw new \RuntimeException("Resend API error ({$response->status()}): {$message}");
+        $path = (string) $operation['path'];
+        $query = [];
+        $headers = [];
+        $consumed = [];
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            $apiName = (string) $parameter['name'];
+            $argumentName = (string) ($parameter['argument_name'] ?? $this->snakeName($apiName));
+            $aliases = is_array($parameter['aliases'] ?? null) ? $parameter['aliases'] : [];
+            $value = $this->argument($args, $argumentName, $apiName, $aliases);
+            if ($value === null) {
+                if (!empty($parameter['required'])) throw new \RuntimeException("The {$argumentName} parameter is required.");
+                continue;
             }
-
-            return $response->json() ?? [];
-        } catch (ConnectionException $e) {
-            Log::error('Resend connection error', ['method' => $method, 'path' => $path, 'error' => $e->getMessage()]);
-            throw new \RuntimeException("Resend connection error: {$e->getMessage()}");
+            $consumed[] = $apiName; $consumed[] = $argumentName; $consumed[] = $this->snakeName($apiName); $consumed[] = strtolower($apiName);
+            foreach ($aliases as $alias) $consumed[] = (string) $alias;
+            if ($parameter['in'] === 'path') $path = str_replace('{' . $apiName . '}', rawurlencode((string) $value), $path);
+            elseif ($parameter['in'] === 'query') $query[$apiName] = $value;
+            elseif ($parameter['in'] === 'header') $headers[$apiName] = $value;
         }
+        $requestBody = $operation['request_body'] ?? null;
+        $body = null;
+        if ($requestBody !== null) {
+            $body = $args['body'] ?? $this->bodyFromLooseArguments($args, $consumed);
+            if (!empty($requestBody['required']) && ($body === null || $body === [] || $body === '')) throw new \RuntimeException('body is required.');
+        }
+        return $this->request((string) $operation['method'], $this->baseUrl . $path, $query, $headers, $body);
+    }
+
+    /**
+     * Execute an operation by generated slug.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    private function executeSlug(string $slug, array $args = []): array
+    {
+        $operations = self::operations();
+        if (!isset($operations[$slug])) throw new \RuntimeException("Unknown Resend operation: {$slug}");
+        return $this->executeOperation($operations[$slug], $args);
+    }
+
+    /** @param  array<string, mixed>  $args  Email payload. @return array<string, mixed> */
+    public function sendEmail(array $args): array { return $this->executeSlug('resend_send_email', $args); }
+    /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
+    public function listEmails(array $params = []): array { return $this->executeSlug('resend_list_emails', $params); }
+    /** @return array<string, mixed> */
+    public function getEmail(string $emailId): array { return $this->executeSlug('resend_get_email', ['id' => $emailId]); }
+    /** @param  array<string, mixed>  $args  API key payload. @return array<string, mixed> */
+    public function createApiKey(array $args): array { return $this->executeSlug('resend_create_api_key', $args); }
+    /** @return array<string, mixed> */
+    public function listApiKeys(): array { return $this->executeSlug('resend_list_api_keys'); }
+    /** @param  array<string, mixed>  $args  Domain payload. @return array<string, mixed> */
+    public function createDomain(array $args): array { return $this->executeSlug('resend_create_domain', $args); }
+    /** @return array<string, mixed> */
+    public function getDomain(string $domainId): array { return $this->executeSlug('resend_get_domain', ['id' => $domainId]); }
+    /** @return array<string, mixed> */
+    public function listDomains(): array { return $this->executeSlug('resend_list_domains'); }
+    /** @return array<string, mixed> */
+    public function verifyDomain(string $domainId): array { return $this->executeSlug('resend_verify_domain', ['id' => $domainId]); }
+    /** @param  array<string, mixed>  $args  Contact payload. @return array<string, mixed> */
+    public function createContact(array $args): array { return $this->executeSlug('resend_create_contact', $args); }
+
+    /**
+     * Make an API request and return parsed output.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $url, array $query = [], array $headers = [], mixed $body = null): array
+    {
+        $response = $this->rawRequest($method, $url, $query, $headers, $body);
+        if ($response->status() === 204 || $response->body() === '') return [];
+        $contentType = (string) $response->header('Content-Type');
+        if (!str_contains($contentType, 'json')) return ['body' => $response->body(), 'content_type' => $contentType];
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Make a raw HTTP request to the Resend API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     */
+    private function rawRequest(string $method, string $url, array $query = [], array $headers = [], mixed $body = null): Response
+    {
+        if (!$this->isConfigured()) throw new \RuntimeException('Resend API key is not configured.');
+        try {
+            $http = Http::withHeaders(array_merge(['Authorization' => 'Bearer ' . $this->apiKey, 'Accept' => 'application/json', 'Content-Type' => 'application/json'], $headers))->timeout(120);
+            $response = $this->sendRequest($http, $method, $url, $query, $body);
+            if (!$response->successful()) {
+                $error = $response->json('message') ?? $response->json('name') ?? $response->body();
+                Log::error("Resend API error: {$method} {$url}", ['status' => $response->status(), 'error' => $error]);
+                throw new \RuntimeException('Resend API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)));
+            }
+            return $response;
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error("Resend API connection error: {$method} {$url}", ['error' => $e->getMessage()]);
+            throw new \RuntimeException("Failed to connect to Resend API: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Dispatch the request with the appropriate HTTP verb.
+     *
+     * @param  PendingRequest  $http  Pending HTTP request.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  mixed  $body  Request body.
+     */
+    private function sendRequest(PendingRequest $http, string $method, string $url, array $query, mixed $body): Response
+    {
+        $method = strtoupper($method);
+        if ($query !== []) $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        return match ($method) {
+            'GET' => $http->get($url),
+            'POST' => $http->post($url, $body ?? []),
+            'PUT' => $http->put($url, $body ?? []),
+            'PATCH' => $http->patch($url, $body ?? []),
+            'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+            default => $http->send($method, $url, ['json' => $body ?? []]),
+        };
+    }
+
+    /**
+     * Resolve an argument by generated, API, snake_case, lower-case, or alias name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<int, string>  $aliases  Additional accepted argument names.
+     */
+    private function argument(array $args, string $argumentName, string $apiName, array $aliases = []): mixed
+    {
+        foreach (array_merge([$argumentName, $apiName, $this->snakeName($apiName), strtolower($apiName)], $aliases) as $key) if (array_key_exists($key, $args)) return $args[$key];
+        return null;
+    }
+
+    private function snakeName(string $name): string
+    {
+        $name = str_replace('[]', '', $name);
+        $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name);
+        $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name);
+        $name = (string) preg_replace('/_+/', '_', $name);
+        return strtolower(trim($name, '_')) ?: 'value';
+    }
+
+    /**
+     * Build a request body from arguments that are not path/query/header params.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<int, string>  $consumed  Already consumed parameter names.
+     * @return array<string, mixed>
+     */
+    private function bodyFromLooseArguments(array $args, array $consumed): array
+    {
+        $body = [];
+        $consumed = array_flip($consumed);
+        foreach ($args as $key => $value) if (!isset($consumed[$key])) $body[$key] = $value;
+        return $body;
     }
 }

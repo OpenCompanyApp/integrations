@@ -1,130 +1,83 @@
 # Integration: WhatsApp Business
 
-> WhatsApp Business API integration for the [Laravel AI SDK](https://github.com/laravel/ai) — send messages, manage templates and contacts. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to WhatsApp Business messaging. Send text and template messages, retrieve message status, list approved templates, manage contacts, and verify account info — all through the [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api).
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This WhatsApp tool lets AI agents send and retrieve WhatsApp messages, list templates for structured communication, and manage contacts — enabling conversational workflows directly from the platform.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-whatsapp
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+WhatsApp Business Platform integration for OpenCompany agents. It covers Cloud
+API messages, media, contact validation, message templates, phone numbers,
+business profiles, webhook app subscriptions, and safe raw relative Graph API
+helpers.
 
 ## Configuration
 
-This tool requires a Meta System User access token and a WhatsApp Business phone number ID.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Credentials are managed by the host app through `CredentialResolver`.
 
 ```php
 return [
     'whatsapp' => [
-        'access_token'    => env('WHATSAPP_ACCESS_TOKEN'),
+        'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
         'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
-        'base_url'        => env('WHATSAPP_BASE_URL', 'https://graph.facebook.com/v21.0'),
+        'whatsapp_business_account_id' => env('WHATSAPP_BUSINESS_ACCOUNT_ID'),
+        'base_url' => env('WHATSAPP_BASE_URL', 'https://graph.facebook.com/v24.0'),
     ],
 ];
 ```
 
-## Available Tools
+Use `phone_number_id` for message, media, contact, registration, and business
+profile tools. Use `whatsapp_business_account_id` for template management,
+phone-number listing, and webhook subscription tools.
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `whatsapp_send_message` | write | Send a text message to a WhatsApp recipient |
-| `whatsapp_get_message` | read | Retrieve a specific message by ID |
-| `whatsapp_list_templates` | read | List approved message templates |
-| `whatsapp_list_contacts` | read | List WhatsApp contacts for the business number |
-| `whatsapp_send_template` | write | Send a template-based message |
-| `whatsapp_get_current_user` | read | Get the authenticated user / business info |
+## Available Tool Areas
 
-## Quick Start
+| Area | Tools |
+|------|-------|
+| Messages | `send_message`, `send_template`, `send_message_payload`, `mark_message_read`, `get_message` |
+| Contacts | `check_contacts`, `list_contacts` compatibility alias |
+| Media | `upload_media`, `get_media`, `delete_media` |
+| Templates | `list_templates`, `get_template`, `create_template`, `update_template`, `delete_template` |
+| Phone numbers | `get_phone_number`, `list_phone_numbers`, `request_verification_code`, `verify_code`, `register_phone_number`, `deregister_phone_number` |
+| Business profile | `get_business_profile`, `update_business_profile` |
+| Webhooks | `list_subscribed_apps`, `subscribe_app`, `unsubscribe_app` |
+| Raw Graph | `api_get`, `api_post`, `api_delete` |
+
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\WhatsApp\WhatsAppService;
-use OpenCompany\Integrations\WhatsApp\Tools\WhatsAppSendMessage;
-use OpenCompany\Integrations\WhatsApp\Tools\WhatsAppListTemplates;
 
-// Create tools
 $service = app(WhatsAppService::class);
-$tools = [
-    new WhatsAppSendMessage($service),
-    new WhatsAppListTemplates($service),
-];
 
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Send "Hello!" to +1 555 123 4567 via WhatsApp');
+$service->sendMessage('15551234567', 'Hello from OpenCompany!');
+$service->sendTemplate('15551234567', 'hello_world', 'en_US');
+$service->checkContacts(['15551234567']);
+$service->listTemplates(status: 'APPROVED');
+$service->getBusinessProfile();
 ```
 
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+## ToolProvider Usage
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('whatsapp');
-
-// Create any tool via the provider
+$provider = app(ToolProviderRegistry::class)->get('whatsapp');
 $tool = $provider->createTool(
     \OpenCompany\Integrations\WhatsApp\Tools\WhatsAppSendMessage::class
 );
 ```
 
-## Standalone Service Usage
+## Notes
 
-```php
-use OpenCompany\Integrations\WhatsApp\WhatsAppService;
+The Cloud API exposes contact validation as a POST endpoint. It does not expose
+a general contact-listing edge, so the historical `whatsapp_list_contacts` slug
+is retained as a compatibility alias for validation.
 
-$service = app(WhatsAppService::class);
-
-// Send a text message
-$result = $service->sendMessage('15551234567', 'Hello from OpenCompany!');
-
-// Send a template message
-$result = $service->sendTemplate('15551234567', 'hello_world', 'en');
-
-// Get a message
-$message = $service->getMessage('wamid.HBgM...');
-
-// List templates
-$templates = $service->listTemplates();
-
-// List contacts
-$contacts = $service->listContacts();
-
-// Get current user
-$user = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+Raw API helpers reject full URLs and parent-directory path segments. Pass only
+relative Graph API paths such as `/me` or `/{waba_id}/message_templates`.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Meta Developer](https://developers.facebook.com/) account with WhatsApp Business API access
+- A Meta app with WhatsApp Business Platform access
+- A System User or app access token with the required WhatsApp permissions
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT, see [LICENSE](LICENSE).

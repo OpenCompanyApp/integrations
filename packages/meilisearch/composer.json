@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-meilisearch",
-    "description": "Meilisearch integration for Laravel — manage indexes, search and index documents.",
+    "description": "Meilisearch integration for Laravel agents with official HTTP API coverage.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "meilisearch", "search", "opencompany"],
+    "keywords": ["tools", "meilisearch", "search", "data", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

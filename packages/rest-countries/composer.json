@@ -1,0 +1,40 @@
+{
+    "name": "opencompanyapp/integration-rest-countries",
+    "description": "REST Countries integration for Laravel AI agents - country lookup by name, code, region, currency, language, capital, demonym, translation, and independence.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\RestCountries\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\RestCountries\\RestCountriesServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "rest-countries",
+        "countries",
+        "geography",
+        "localization",
+        "currencies",
+        "languages",
+        "opencompany"
+    ]
+}

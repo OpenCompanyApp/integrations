@@ -15,7 +15,7 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 class MindeeServiceProvider extends ServiceProvider
 {
     /**
-     * Register the MindeeService singleton.
+     * Register the MindeeService singleton with configured credentials.
      */
     public function register(): void
     {
@@ -30,7 +30,7 @@ class MindeeServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the service provider — register tools with the ToolProviderRegistry.
+     * Boot the service provider and register tools with the registry.
      */
     public function boot(): void
     {

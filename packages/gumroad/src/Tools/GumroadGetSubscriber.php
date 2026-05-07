@@ -2,51 +2,36 @@
 
 namespace OpenCompany\Integrations\Gumroad\Tools;
 
-use OpenCompany\Integrations\Gumroad\GumroadService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class GumroadGetSubscriber implements Tool
+/**
+ * Get one subscriber by ID.
+ */
+class GumroadGetSubscriber extends AbstractGumroadEndpointTool
 {
-    public function __construct(
-        private GumroadService $service,
-    ) {}
+    protected string $toolName = 'gumroad_get_subscriber';
 
-    public function name(): string
-    {
-        return 'gumroad_get_subscriber';
-    }
+    protected string $toolDescription = 'Get one subscriber by ID.';
 
-    public function description(): string
-    {
-        return 'Get detailed information about a single Gumroad subscriber by their ID. Returns subscriber status, email, and subscription details.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'subscriber_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the subscriber to retrieve.'],
-        ];
-    }
+    protected string $path = '/subscribers/{subscriber_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gumroad integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'subscriber_id' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Gumroad subscriber ID.',
+    ],
+];
 
-            if (empty($args['subscriber_id'])) {
-                return ToolResult::error('subscriber_id is required.');
-            }
+    /** @var list<string> */
+    protected array $required = [
+    'subscriber_id',
+];
 
-            $result = $this->service->getSubscriber($args['subscriber_id']);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            $subscriber = $result['subscriber'] ?? $result;
-
-            return ToolResult::success($subscriber);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

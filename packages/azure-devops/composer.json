@@ -1,0 +1,24 @@
+{
+  "name": "opencompanyapp/integration-azure-devops",
+  "description": "Azure DevOps REST API integration for AI agents covering projects, repos, pipelines, builds, work items, artifacts, releases, test plans, service hooks, security, and organization APIs.",
+  "license": "MIT",
+  "type": "library",
+  "require": {
+    "php": "^8.2",
+    "opencompanyapp/integration-core": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "OpenCompany\\Integrations\\AzureDevOps\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "OpenCompany\\Integrations\\AzureDevOps\\AzureDevOpsServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

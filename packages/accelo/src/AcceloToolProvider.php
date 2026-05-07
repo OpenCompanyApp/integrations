@@ -3,8 +3,10 @@
 namespace OpenCompany\Integrations\Accelo;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Accelo\Tools\AcceloListTickets;
 use OpenCompany\Integrations\Accelo\Tools\AcceloGetTicket;
@@ -14,15 +16,15 @@ use OpenCompany\Integrations\Accelo\Tools\AcceloGetTask;
 use OpenCompany\Integrations\Accelo\Tools\AcceloListProjects;
 use OpenCompany\Integrations\Accelo\Tools\AcceloGetCurrentUser;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool catalog and configuration metadata for Accelo.
+ *
+ * Exposes core issue, task, job, and token information endpoints from the
+ * Accelo public REST API.
  */
 class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -102,7 +104,7 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'name' => 'Accelo',
-            'description' => 'Professional services automation — manage tickets, tasks, and projects',
+            'description' => 'Professional services automation - manage issues, tasks, and jobs',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:accelo',
             'category' => 'productivity',
@@ -116,7 +118,7 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      *
      * Defines the fields shown in the integration settings UI:
      * - access_token: Bearer token for API authentication.
-     * - deployment: Accelo deployment name used to construct the base URL.
+     * - deployment: Accelo deployment name used to construct the API base URL.
      * - url: Optional override for the full base URL.
      */
     public function configSchema(): array
@@ -135,14 +137,14 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'string',
                 'label' => 'Deployment Name',
                 'placeholder' => 'e.g. mycompany',
-                'hint' => 'Your Accelo deployment name (used in <code>https://{deployment}.accelo.com</code>)',
+                'hint' => 'Your Accelo deployment name (used in https://{deployment}.api.accelo.com)',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'Custom Base URL',
-                'placeholder' => 'https://mycompany.accelo.com',
+                'placeholder' => 'https://mycompany.api.accelo.com',
                 'hint' => 'Optional. Override the base URL if your Accelo instance uses a different domain.',
                 'default' => '',
             ],
@@ -152,7 +154,8 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     /**
      * Test the connection to the Accelo API.
      *
-     * Calls the /api/v0/users/me endpoint to verify credentials.
+     * @param  array<string, mixed>  $config  Configuration containing access_token and deployment or url.
+     * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
@@ -161,7 +164,7 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $baseUrl = rtrim($config['url'] ?? '', '/');
 
         if (empty($baseUrl) && !empty($deployment)) {
-            $baseUrl = 'https://' . $deployment . '.accelo.com';
+            $baseUrl = 'https://' . $deployment . '.api.accelo.com';
         }
 
         if (empty($accessToken)) {
@@ -175,8 +178,8 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/api/v0/users/me');
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/api/v0/tokeninfo');
 
             $json = $response->json();
 
@@ -195,11 +198,12 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 ];
             }
 
-            $name = trim(($json['first_name'] ?? '') . ' ' . ($json['last_name'] ?? ''));
+            $name = trim(($json['firstname'] ?? '') . ' ' . ($json['surname'] ?? ''));
+            $email = $json['email'] ?? '';
 
             return [
                 'success' => true,
-                'message' => "Connected to Accelo as {$name} ({$baseUrl}).",
+                'message' => 'Connected to Accelo' . ($name !== '' ? " as {$name}" : '') . ($email !== '' ? " <{$email}>" : '') . " ({$baseUrl}).",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -229,22 +233,22 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'accelo_list_tickets' => [
                 'class' => AcceloListTickets::class,
                 'type' => 'read',
-                'name' => 'List Tickets',
-                'description' => 'List support tickets in Accelo.',
+                'name' => 'List Issues',
+                'description' => 'List support issues, also known as tickets, in Accelo.',
                 'icon' => 'ph:ticket',
             ],
             'accelo_get_ticket' => [
                 'class' => AcceloGetTicket::class,
                 'type' => 'read',
-                'name' => 'Get Ticket',
-                'description' => 'Get details of a specific ticket.',
+                'name' => 'Get Issue',
+                'description' => 'Get details of a specific issue, also known as a ticket.',
                 'icon' => 'ph:ticket',
             ],
             'accelo_create_ticket' => [
                 'class' => AcceloCreateTicket::class,
                 'type' => 'write',
-                'name' => 'Create Ticket',
-                'description' => 'Create a new support ticket.',
+                'name' => 'Create Issue',
+                'description' => 'Create a new support issue, also known as a ticket.',
                 'icon' => 'ph:plus-circle',
             ],
             'accelo_list_tasks' => [
@@ -264,15 +268,15 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'accelo_list_projects' => [
                 'class' => AcceloListProjects::class,
                 'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List projects in Accelo.',
+                'name' => 'List Jobs',
+                'description' => 'List projects, represented as jobs in the Accelo API.',
                 'icon' => 'ph:folder',
             ],
             'accelo_get_current_user' => [
                 'class' => AcceloGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Accelo user profile.',
+                'name' => 'Get Token Info',
+                'description' => 'Get token information for the current Accelo access token.',
                 'icon' => 'ph:user-circle',
             ],
         ];
@@ -317,7 +321,7 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new AcceloService(
                 accessToken: $creds->get('accelo', 'access_token', '', $account),

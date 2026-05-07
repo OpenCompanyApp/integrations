@@ -1,0 +1,12 @@
+{
+  "source_url": "https://developer.shortcut.com/api/rest/v3/shortcut.swagger.json",
+  "docs_url": "https://developer.shortcut.com/api/rest/v3",
+  "swagger": "2.0",
+  "version": "3.0",
+  "path_count": 86,
+  "method_count": 144,
+  "read_count": 71,
+  "write_count": 73,
+  "base_url": "https://api.app.shortcut.com",
+  "auth_header": "Shortcut-Token"
+}

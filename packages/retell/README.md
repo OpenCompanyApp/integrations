@@ -1,14 +1,18 @@
 # Integration: Retell AI
 
-> Retell AI integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage AI voice calls, agents, and phone calls via the Retell AI API. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Legacy compatibility wrapper for older `retell` installs.
 
-Give your AI agents access to AI-powered voice calls. List and retrieve call details, manage voice agents, and initiate phone calls — all through the [Retell AI](https://retellai.com) API.
+New installs and new automations should use `opencompanyapp/integration-retell-ai` instead. The canonical `retell-ai` package has broader Retell API coverage and is the package shown in discovery catalogs.
+
+Retell AI integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage AI voice calls, agents, and phone calls via the Retell AI API. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+
+Give your AI agents access to AI-powered voice calls. List and retrieve call details, manage voice agents, and initiate phone calls - all through the [Retell AI](https://retellai.com) API.
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Retell AI tool lets AI agents manage voice calls, create and configure voice agents, and review call transcripts — enabling voice-aware automation workflows.
+This Retell AI tool lets AI agents manage voice calls, create and configure voice agents, and review call transcripts - enabling voice-aware automation workflows.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -137,4 +141,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

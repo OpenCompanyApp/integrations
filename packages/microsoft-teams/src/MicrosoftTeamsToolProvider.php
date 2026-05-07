@@ -3,23 +3,28 @@
 namespace OpenCompany\Integrations\MicrosoftTeams;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListTeams;
+use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsGetChannel;
+use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsGetCurrentUser;
 use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsGetTeam;
 use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListChannels;
-use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsGetChannel;
-use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListMessages;
-use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsSendMessage;
 use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListChats;
-use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListMessages;
+use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListTeams;
+use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsSendMessage;
 
 /**
+ * Tool provider for Microsoft Teams via Microsoft Graph.
+ *
+ * Exposes Teams, channel, message, chat, and current-user tools with credential
+ * metadata for default and named account resolution.
+ */
+class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -89,9 +94,9 @@ class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegratio
     {
         return [
             'label' => 'Microsoft Teams',
-            'description' => 'Microsoft Teams integration for Laravel — list teams, channels, messages, send messages…',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
+            'description' => 'Teams, channels, messages, chats, and users through Microsoft Graph.',
+            'icon' => 'ph:microsoft-teams-logo',
+            'logo' => 'simple-icons:microsoftteams',
         ];
     }
 
@@ -104,14 +109,16 @@ class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegratio
     {
         return [
             'name' => 'Microsoft Teams',
-            'description' => 'Microsoft Teams integration for Laravel — list teams, channels, messages, send messages, and manage chats via the Graph API.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-            'category' => 'other',
+            'description' => 'Teams, channels, messages, chats, and users through Microsoft Graph.',
+            'icon' => 'ph:microsoft-teams-logo',
+            'logo' => 'simple-icons:microsoftteams',
+            'category' => 'productivity',
             'badge' => 'verified',
+            'docs_url' => 'https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview',
         ];
     }
-/**
+
+    /**
      * Get the configuration schema for this integration.
      *
      * @return array<int, array<string, mixed>>
@@ -307,10 +314,20 @@ class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegratio
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $accessToken = (string) $creds->get('microsoft-teams', 'access_token', '', $account);
+            $baseUrl = (string) $creds->get('microsoft-teams', 'base_url', '', $account);
+
+            if ($accessToken === '') {
+                $accessToken = (string) $creds->get('teams', 'access_token', '', $account);
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('teams', 'base_url', 'https://graph.microsoft.com/v1.0', $account);
+            }
 
             $service = new MicrosoftTeamsService(
-                accessToken: $creds->get('microsoft-teams', 'access_token', '', $account),
-                baseUrl: $creds->get('microsoft-teams', 'base_url', 'https://graph.microsoft.com/v1.0', $account),
+                accessToken: $accessToken,
+                baseUrl: $baseUrl,
             );
 
             return new $class($service);

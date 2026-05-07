@@ -7,15 +7,18 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get a single booking by ID from Cal.com v2.
+ * Get a single booking by ID or UID from Cal.com v2.
  *
  * Returns full details for a specific booking including attendees,
  * timing, event type info, location, and status.
  *
- * @see https://developer.cal.com/api/endpoints/bookings
+ * @see https://cal.com/docs/api-reference/v2/bookings/get-a-booking
  */
 class CalComGetBooking implements Tool
 {
+    /**
+     * @param  CalComService  $service  Legacy Cal.com API client.
+     */
     public function __construct(
         private CalComService $service,
     ) {}
@@ -27,7 +30,7 @@ class CalComGetBooking implements Tool
 
     public function description(): string
     {
-        return 'Get detailed information about a specific booking from Cal.com by its ID.';
+        return 'Get detailed information about a specific booking from Cal.com by its ID or UID.';
     }
 
     /**
@@ -38,7 +41,7 @@ class CalComGetBooking implements Tool
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The booking ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The booking ID or UID.'],
         ];
     }
 
@@ -54,7 +57,7 @@ class CalComGetBooking implements Tool
                 return ToolResult::error('Cal.com integration is not configured.');
             }
 
-            $id = (int) $args['id'];
+            $id = (string) $args['id'];
             $result = $this->service->getBooking($id);
 
             return ToolResult::success($result);

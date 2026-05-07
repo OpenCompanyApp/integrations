@@ -1,205 +1,40 @@
-# PagerDuty — Lua API Reference
+# PagerDuty Lua Docs
 
-## list_incidents
+Namespace: `pagerduty`
 
-List PagerDuty incidents with optional filters.
+This integration is generated from PagerDuty's official REST OpenAPI schema and exposes 420 REST operations. Use it for incident response automation, service and team inventory, escalation policies, schedules, users, automation actions, analytics, status pages, maintenance windows, priorities, tags, and webhooks.
 
-### Parameters
+## Authentication
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `status` | string | no | Filter by status: `"triggered"`, `"acknowledged"`, or `"resolved"` |
-| `urgency` | string | no | Filter by urgency: `"high"` or `"low"` |
-| `service_id` | string | no | Filter by service ID |
-| `team_id` | string | no | Filter by team ID |
-| `limit` | integer | no | Max results (default: 25, max: 100) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
+Configure a PagerDuty REST API token. Requests use `Authorization: Bearer <token>` and `Accept: application/vnd.pagerduty+json;version=2`.
 
-### Example
+## Common Tools
+
+- `pagerduty_list_incidents` - list incidents with filters such as `statuses`, `urgencies`, `service_ids`, `team_ids`, `limit`, and `offset`.
+- `pagerduty_get_incident` - fetch one incident by `id`.
+- `pagerduty_list_services` and `pagerduty_get_service` - inspect services.
+- `pagerduty_list_teams` and `pagerduty_get_team` - inspect teams.
+- `pagerduty_get_current_user` - verify the authenticated user.
+
+## Generated Operation Pattern
+
+Path and query parameters use snake_case names. PagerDuty query parameters documented with `[]`, such as `statuses[]`, are exposed without brackets, such as `statuses`, and can be passed as arrays.
+
+For write operations, pass the JSON payload as `body`. If you pass extra top-level arguments that are not path, query, or header parameters, the integration sends them as the JSON body.
 
 ```lua
--- List all triggered incidents
-local result = app.integrations.pagerduty.list_incidents({
-  status = "triggered"
-})
-
-for _, incident in ipairs(result.incidents) do
-  print(incident.incident_number .. ": " .. incident.title .. " (" .. incident.status .. ")")
-end
-
--- List high-urgency incidents for a specific service
-local result = app.integrations.pagerduty.list_incidents({
-  service_id = "PIJ90N7",
-  urgency = "high",
+local incidents = pagerduty.pagerduty_list_incidents({
+  statuses = { "triggered", "acknowledged" },
   limit = 10
 })
-```
 
----
-
-## get_incident
-
-Get full details for a single PagerDuty incident.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The incident ID (e.g., `"Q02JTSZO2VGFBH"`) |
-
-### Example
-
-```lua
-local result = app.integrations.pagerduty.get_incident({
-  id = "Q02JTSZO2VGFBH"
+local incident = pagerduty.pagerduty_get_incident({
+  id = "Q0123456789ABC"
 })
-
-print("Incident: " .. result.title)
-print("Status: " .. result.status)
-print("Urgency: " .. result.urgency)
-print("Service: " .. (result.service.summary or "unknown"))
-
-for _, assignment in ipairs(result.assignments or {}) do
-  print("Assigned to: " .. assignment.assignee.summary)
-end
 ```
 
----
+## Scope Notes
 
-## list_services
+This package covers PagerDuty's REST OpenAPI schema. PagerDuty Events API, SCIM, and service-specific integration schemas are separate API families and are intentionally not mixed into this package.
 
-List PagerDuty services with optional team filter.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `team_id` | string | no | Filter services by team ID |
-| `limit` | integer | no | Max results (default: 25, max: 100) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.pagerduty.list_services({
-  limit = 50
-})
-
-for _, service in ipairs(result.services) do
-  print(service.name .. " — status: " .. service.status)
-end
-```
-
----
-
-## get_service
-
-Get full details for a single PagerDuty service.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The service ID (e.g., `"PIJ90N7"`) |
-
-### Example
-
-```lua
-local result = app.integrations.pagerduty.get_service({
-  id = "PIJ90N7"
-})
-
-print("Service: " .. result.name)
-print("Status: " .. result.status)
-print("Escalation Policy: " .. (result.escalation_policy.summary or "none"))
-```
-
----
-
-## list_teams
-
-List PagerDuty teams.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 25, max: 100) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.pagerduty.list_teams({
-  limit = 50
-})
-
-for _, team in ipairs(result.teams) do
-  print(team.name .. " — " .. (team.description or "no description"))
-end
-```
-
----
-
-## get_team
-
-Get full details for a single PagerDuty team.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The team ID (e.g., `"PIMJOGV"`) |
-
-### Example
-
-```lua
-local result = app.integrations.pagerduty.get_team({
-  id = "PIMJOGV"
-})
-
-print("Team: " .. result.name)
-print("Description: " .. (result.description or "none"))
-print("Default Role: " .. (result.default_role or "none"))
-```
-
----
-
-## get_current_user
-
-Get the authenticated PagerDuty user's profile.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.pagerduty.get_current_user({})
-
-print("Logged in as: " .. result.name)
-print("Email: " .. result.email)
-print("Role: " .. (result.role or "unknown"))
-print("Time Zone: " .. (result.time_zone or "unknown"))
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple PagerDuty accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.pagerduty.list_incidents({})
-
--- Explicit default (portable across setups)
-app.integrations.pagerduty.default.list_incidents({})
-
--- Named accounts
-app.integrations.pagerduty.production.list_incidents({})
-app.integrations.pagerduty.staging.list_incidents({})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Return values are the parsed PagerDuty JSON response for the operation. The integration does not unwrap collection fields, so agents should read the documented response key, such as `incidents`, `services`, `teams`, or `user`.

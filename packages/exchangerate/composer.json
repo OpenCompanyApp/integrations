@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-exchangerate",
-    "description": "Currency exchange rate integration for Laravel — 340 fiat, crypto, and metal conversions.",
+    "description": "Currency exchange rate integration for Laravel — public fiat, crypto, and metals rates from the Fawaz Ahmed exchange-api datasets.",
     "license": "MIT",
     "authors": [
         {

@@ -91,7 +91,7 @@ class NovuToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Open-source notification platform for developers',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:novu',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.novu.co/api-reference',
         ];

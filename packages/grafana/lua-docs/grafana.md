@@ -1,196 +1,73 @@
-# Grafana — Lua API Reference
+# Grafana Lua API Reference
 
-## list_dashboards
+Namespace: `grafana`
 
-Search and list Grafana dashboards.
+This integration exposes generated coverage for Grafana's official HTTP API OpenAPI document. Configure the API base URL with the `/api` prefix, for example `https://grafana.example.test/api` or `http://localhost:3000/api`.
 
-### Parameters
+Authentication uses a Grafana service account token or a legacy API key where older deployments still allow API keys. Grafana permissions are enforced by the instance, so a token may see only the dashboards, folders, data sources, teams, alerts, reports, or RBAC resources it is allowed to access.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | no | Search query to filter dashboards by title |
-| `type` | string | no | Dashboard type filter (default: `"dash-db"`) |
-| `limit` | integer | no | Maximum number of results (default: 100) |
+## Common Tools
 
-### Examples
+- `grafana_list_dashboards` maps to `GET /search` and searches dashboards and folders.
+- `grafana_get_dashboard` maps to `GET /dashboards/uid/{uid}`.
+- `grafana_create_dashboard` maps to `POST /dashboards/db`.
+- `grafana_list_datasources` maps to `GET /datasources`.
+- `grafana_list_alerts` maps to `GET /v1/provisioning/alert-rules`.
+- `grafana_list_teams` maps to `GET /teams/search`.
+- `grafana_get_current_user` maps to `GET /user`.
+
+The package also exposes generated tools for folders, annotations, dashboard versions, permissions, snapshots, playlist APIs, library elements, reports, public dashboards, teams, orgs, users, service accounts, access-control roles, alerting provisioning, query history, data source proxy calls, and admin/provisioning endpoints.
+
+## Arguments
+
+Path, query, and header parameters use the names from Grafana's OpenAPI document. The runtime also accepts snake_case aliases for camel-case names. For example, `roleUID`, `role_uid`, and `roleuid` resolve to the same path parameter.
+
+Tools with a JSON request body accept a `body` table. If you omit `body`, non-path/query/header arguments are collected into the request body.
+
+YAML-only endpoints accept `body` as a raw YAML string.
+
+## Examples
 
 ```lua
--- List all dashboards
-local result = app.integrations.grafana.list_dashboards({})
-
-for _, dash in ipairs(result) do
-  print(dash.title .. " (uid: " .. dash.uid .. ")")
-end
-
--- Search for specific dashboards
-local result = app.integrations.grafana.list_dashboards({
-  query = "infrastructure"
+local dashboards = grafana.grafana_list_dashboards({
+  query = "latency",
+  type = "dash-db",
+  limit = 25
 })
 ```
 
----
-
-## get_dashboard
-
-Get a Grafana dashboard by its UID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `uid` | string | yes | The unique identifier (UID) of the dashboard |
-
-### Example
-
 ```lua
-local result = app.integrations.grafana.get_dashboard({
-  uid = "abc123xyz"
-})
-
-print("Dashboard: " .. result.dashboard.title)
-print("Panels: " .. #result.dashboard.panels)
-```
-
----
-
-## create_dashboard
-
-Create or update a Grafana dashboard.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `dashboard` | object | yes | Complete dashboard JSON (must include `title`) |
-| `folderUid` | string | no | UID of the folder to place the dashboard in |
-| `overwrite` | boolean | no | Overwrite existing dashboard with same slug (default: false) |
-
-### Example
-
-```lua
-local result = app.integrations.grafana.create_dashboard({
-  dashboard = {
-    title = "My New Dashboard",
-    panels = {}
-  },
-  overwrite = false
-})
-
-print("Created dashboard: " .. result.url)
-print("UID: " .. result.uid)
-```
-
----
-
-## list_datasources
-
-List all configured datasources.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.grafana.list_datasources({})
-
-for _, ds in ipairs(result) do
-  print(ds.name .. " (" .. ds.type .. ") — id: " .. ds.id)
-end
-```
-
----
-
-## list_alerts
-
-List Grafana alerts with optional filtering.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `dashboardId` | integer | no | Filter alerts by dashboard ID |
-| `panelId` | integer | no | Filter alerts by panel ID |
-
-### Example
-
-```lua
--- List all alerts
-local result = app.integrations.grafana.list_alerts({})
-
-for _, alert in ipairs(result) do
-  print(alert.name .. " — state: " .. alert.state)
-end
-
--- Filter by dashboard
-local result = app.integrations.grafana.list_alerts({
-  dashboardId = 42
+local dashboard = grafana.grafana_get_dashboard({
+  uid = "service-latency"
 })
 ```
 
----
-
-## list_teams
-
-List all Grafana teams with pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `perPage` | integer | no | Number of teams per page (default: 50) |
-
-### Example
-
 ```lua
-local result = app.integrations.grafana.list_teams({
-  page = 1,
-  perPage = 20
+local result = grafana.grafana_create_dashboard({
+  body = {
+    dashboard = {
+      uid = "agent-demo",
+      title = "Agent Demo",
+      panels = {}
+    },
+    overwrite = true
+  }
 })
-
-for _, team in ipairs(result) do
-  print(team.name .. " — " .. team.memberCount .. " members")
-end
 ```
-
----
-
-## get_current_user
-
-Get the currently authenticated Grafana user. Useful for verifying credentials.
-
-### Parameters
-
-None.
-
-### Example
 
 ```lua
-local result = app.integrations.grafana.get_current_user({})
-
-print("User: " .. result.name)
-print("Login: " .. result.login)
-print("Email: " .. result.email)
+local rules = grafana.grafana_list_alerts({})
 ```
 
----
+## Return Shapes
 
-## Multi-Account Usage
-
-If you have multiple Grafana instances configured, use account-specific namespaces:
+Responses are Grafana's parsed JSON responses with no private host rewriting. Non-JSON responses return:
 
 ```lua
--- Default account (always works)
-app.integrations.grafana.list_dashboards({})
-
--- Explicit default (portable across setups)
-app.integrations.grafana.default.list_dashboards({})
-
--- Named accounts
-app.integrations.grafana.production.list_dashboards({})
-app.integrations.grafana.staging.list_dashboards({})
+{
+  body = "...",
+  content_type = "text/csv"
+}
 ```
 
-All functions are identical across accounts — only the credentials differ.
+Grafana editions and plugin sets differ. Enterprise-only endpoints, report endpoints, LDAP/SAML endpoints, or newer alerting endpoints may return authorization or not-found errors on instances that do not support them.

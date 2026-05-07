@@ -1,0 +1,197 @@
+{
+  "source": {
+    "type": "official_docs",
+    "management_url": "https://healthchecks.io/docs/api/",
+    "pinging_url": "https://healthchecks.io/docs/http_api/"
+  },
+  "version": "v3",
+  "base_url": "https://healthchecks.io/api/v3",
+  "ping_base_url": "https://hc-ping.com",
+  "method_count": 23,
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/checks/",
+      "tool": "healthchecks_io_list_checks",
+      "class": "HealthchecksIoListChecks",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/checks/{check_id}",
+      "tool": "healthchecks_io_get_check",
+      "class": "HealthchecksIoGetCheck",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "POST",
+      "path": "/checks/",
+      "tool": "healthchecks_io_create_check",
+      "class": "HealthchecksIoCreateCheck",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "POST",
+      "path": "/checks/{uuid}",
+      "tool": "healthchecks_io_update_check",
+      "class": "HealthchecksIoUpdateCheck",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "POST",
+      "path": "/checks/{uuid}/pause",
+      "tool": "healthchecks_io_pause_check",
+      "class": "HealthchecksIoPauseCheck",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "POST",
+      "path": "/checks/{uuid}/resume",
+      "tool": "healthchecks_io_resume_check",
+      "class": "HealthchecksIoResumeCheck",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/checks/{uuid}",
+      "tool": "healthchecks_io_delete_check",
+      "class": "HealthchecksIoDeleteCheck",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/checks/{uuid}/pings/",
+      "tool": "healthchecks_io_list_pings",
+      "class": "HealthchecksIoListPings",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/checks/{uuid}/pings/{n}/body",
+      "tool": "healthchecks_io_get_ping_body",
+      "class": "HealthchecksIoGetPingBody",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/checks/{check_id}/flips/",
+      "tool": "healthchecks_io_list_flips",
+      "class": "HealthchecksIoListFlips",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/channels/",
+      "tool": "healthchecks_io_list_channels",
+      "class": "HealthchecksIoListChannels",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/badges/",
+      "tool": "healthchecks_io_list_badges",
+      "class": "HealthchecksIoListBadges",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "GET",
+      "path": "/status/",
+      "tool": "healthchecks_io_get_status",
+      "class": "HealthchecksIoGetStatus",
+      "requires_auth": true,
+      "ping": false
+    },
+    {
+      "method": "POST",
+      "path": "/{uuid}",
+      "tool": "healthchecks_io_ping_success_uuid",
+      "class": "HealthchecksIoPingSuccessUuid",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{uuid}/start",
+      "tool": "healthchecks_io_ping_start_uuid",
+      "class": "HealthchecksIoPingStartUuid",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{uuid}/fail",
+      "tool": "healthchecks_io_ping_fail_uuid",
+      "class": "HealthchecksIoPingFailUuid",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{uuid}/log",
+      "tool": "healthchecks_io_ping_log_uuid",
+      "class": "HealthchecksIoPingLogUuid",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{uuid}/{exit_status}",
+      "tool": "healthchecks_io_ping_exit_status_uuid",
+      "class": "HealthchecksIoPingExitStatusUuid",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{ping_key}/{slug}",
+      "tool": "healthchecks_io_ping_success_slug",
+      "class": "HealthchecksIoPingSuccessSlug",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{ping_key}/{slug}/start",
+      "tool": "healthchecks_io_ping_start_slug",
+      "class": "HealthchecksIoPingStartSlug",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{ping_key}/{slug}/fail",
+      "tool": "healthchecks_io_ping_fail_slug",
+      "class": "HealthchecksIoPingFailSlug",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{ping_key}/{slug}/log",
+      "tool": "healthchecks_io_ping_log_slug",
+      "class": "HealthchecksIoPingLogSlug",
+      "requires_auth": false,
+      "ping": true
+    },
+    {
+      "method": "POST",
+      "path": "/{ping_key}/{slug}/{exit_status}",
+      "tool": "healthchecks_io_ping_exit_status_slug",
+      "class": "HealthchecksIoPingExitStatusSlug",
+      "requires_auth": false,
+      "ping": true
+    }
+  ]
+}

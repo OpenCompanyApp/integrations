@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-daily-co",
-    "description": "Daily.co video API integration for Laravel — manage rooms, meetings, and recordings.",
+    "description": "Daily.co video API integration for Laravel covering rooms, meetings, tokens, recordings, transcripts, domain config, presence, logs, phone numbers, and webhooks.",
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,7 @@
     "keywords": ["tools", "daily-co", "communication", "video", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "opencompanyapp/integration-core": "^2.0"
     },
     "replace": {
         "opencompanyapp/ai-tool-daily-co": "self.version"

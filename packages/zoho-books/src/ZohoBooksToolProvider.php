@@ -3,8 +3,10 @@
 namespace OpenCompany\Integrations\ZohoBooks;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksListInvoices;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksGetInvoice;
@@ -18,8 +20,6 @@ use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksCreateItem;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksListEstimates;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksCreateEstimate;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -88,7 +88,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration, Ha
      */
     public function appName(): string
     {
-        return 'zoho_books';
+        return 'zoho-books';
     }
 
 /**
@@ -114,7 +114,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Online accounting software for managing invoices, contacts, items, and estimates.',
             'icon' => 'ph:book-open',
             'logo' => 'simple-icons:zoho',
-            'category' => 'accounting',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://www.zoho.com/books/api/v3/',
         ];
@@ -356,12 +356,19 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('zoho-books', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_books', $key, $default, $account);
+            };
 
             $service = new ZohoBooksService(
-                accessToken: $creds->get('zoho_books', 'access_token', '', $account),
-                organizationId: $creds->get('zoho_books', 'organization_id', '', $account),
-                baseUrl: $creds->get('zoho_books', 'url', 'https://www.zohoapis.com/books/v3', $account),
+                accessToken: $get('access_token'),
+                organizationId: $get('organization_id'),
+                baseUrl: $get('url', 'https://www.zohoapis.com/books/v3'),
             );
 
             return new $class($service);

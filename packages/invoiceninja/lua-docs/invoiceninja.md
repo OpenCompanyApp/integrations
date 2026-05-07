@@ -1,272 +1,126 @@
-# Invoice Ninja — Lua API Reference
+# Invoice Ninja Lua API Reference
 
-## list_invoices
+Namespace: `app.integrations.invoiceninja`
 
-List invoices from Invoice Ninja with optional filtering and pagination.
+Use this integration to inspect and manage Invoice Ninja v5 business records. The API token must be configured for the target Invoice Ninja account or self-hosted instance.
 
-### Parameters
+## Return Shape
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of invoices per page (default: 20) |
-| `page` | integer | no | Page number for pagination |
-| `client_id` | string | no | Filter invoices by client ID |
-| `status` | string | no | Filter by status: `draft`, `sent`, `partial`, `paid`, `cancelled`, `overdue`, `reversed` |
-| `number` | string | no | Filter by invoice number (partial match) |
-| `sort` | string | no | Sort field (e.g. `"number"`, `"date"`, `"due_date"`, `"amount"`) |
+Tools return the parsed Invoice Ninja JSON response. Most successful resource calls return a top-level `data` object or `data` array. Paginated list endpoints may include pagination metadata from Invoice Ninja. Binary endpoints such as PDF downloads are intentionally not exposed here because agent tools expect JSON-shaped results.
 
-### Example
+## Common List Parameters
+
+Most list tools accept:
+
+| Name | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `per_page` | integer | no | Number of records per page. Invoice Ninja defaults to 20. |
+| `page` | integer | no | Page number. |
+| `sort` | string | no | Sort expression such as `name|desc`. |
+| `include` | string | no | Comma-separated relations to include. |
+| `search` | string | no | Search text or endpoint-supported filter. |
+| `client_id` | string | no | Filter by client where supported. |
+| `vendor_id` | string | no | Filter by vendor where supported. |
+| `project_id` | string | no | Filter by project where supported. |
+
+Invoice Ninja supports rich query filters such as `balance=gt:1000` on some endpoints. If a filter is not listed as a first-class parameter, use the closest specific tool only when the endpoint supports it in Invoice Ninja.
+
+## Core Tools
+
+The namespace exposes list/get/create/update/delete/blank/bulk tools for these resources:
+
+| Resource | Tool prefix |
+| --- | --- |
+| Clients | `client`, `clients` |
+| Invoices | `invoice`, `invoices` |
+| Products | `product`, `products` |
+| Payments | `payment`, `payments` |
+| Quotes | `quote`, `quotes` |
+| Credits | `credit`, `credits` |
+| Projects | `project`, `projects` |
+| Tasks | `task`, `tasks` |
+| Vendors | `vendor`, `vendors` |
+| Expenses | `expense`, `expenses` |
+| Recurring invoices | `recurring_invoice`, `recurring_invoices` |
+| Purchase orders | `purchase_order`, `purchase_orders` |
+| Tax rates | `tax_rate`, `tax_rates` |
+
+Examples:
 
 ```lua
-local result = app.integrations.invoiceninja.list_invoices({
-  status = "overdue",
-  per_page = 50
+local clients = app.integrations.invoiceninja.list_clients({
+  per_page = 25,
+  sort = "name|desc"
 })
 
-for _, inv in ipairs(result.data) do
-  print(inv.number .. ": " .. inv.amount .. " (due " .. inv.due_date .. ")")
-end
-```
-
----
-
-## get_invoice
-
-Get a single invoice by ID with full details.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The invoice ID |
-
-### Example
-
-```lua
-local result = app.integrations.invoiceninja.get_invoice({ id = "inv_123" })
-local inv = result.data
-print("Invoice " .. inv.number .. ": " .. inv.amount)
-print("Client: " .. inv.client.name)
-print("Status: " .. inv.status)
-```
-
----
-
-## create_invoice
-
-Create a new invoice in Invoice Ninja.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `client_id` | string | yes | The client ID to assign the invoice to |
-| `line_items` | array | yes | Array of line items (see below) |
-| `due_date` | string | no | Due date in YYYY-MM-DD format |
-| `date` | string | no | Invoice date in YYYY-MM-DD format (defaults to today) |
-| `public_notes` | string | no | Public notes visible to the client |
-| `private_notes` | string | no | Private notes (internal only) |
-| `discount` | number | no | Discount amount or percentage |
-| `is_amount_discount` | boolean | no | Whether discount is a fixed amount (true) or percentage (false) |
-| `tax_name1` | string | no | First tax name |
-| `tax_rate1` | number | no | First tax rate percentage |
-| `partial` | number | no | Partial/deposit amount |
-| `partial_due_date` | string | no | Due date for the partial deposit (YYYY-MM-DD) |
-
-### Line Item Fields
-
-| Name | Type | Description |
-|------|------|-------------|
-| `product_key` | string | Product key or SKU |
-| `notes` | string | Line item description |
-| `quantity` | number | Quantity |
-| `cost` | number | Unit price |
-
-### Example
-
-```lua
-local result = app.integrations.invoiceninja.create_invoice({
-  client_id = "client_123",
-  line_items = {
-    { product_key = "consulting", notes = "Strategy session", quantity = 2, cost = 150.00 },
-    { product_key = "hosting", notes = "Monthly hosting", quantity = 1, cost = 49.99 }
-  },
-  due_date = "2026-05-05",
-  public_notes = "Thank you for your business!"
+local quote = app.integrations.invoiceninja.create_quote({
+  payload = {
+    client_id = "client_123",
+    line_items = {
+      { product_key = "consulting", notes = "Planning call", quantity = 1, cost = 250 }
+    }
+  }
 })
 
-print("Created invoice: " .. result.data.number)
-```
-
----
-
-## list_clients
-
-List clients from Invoice Ninja.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of clients per page (default: 20) |
-| `page` | integer | no | Page number for pagination |
-| `search` | string | no | Search by name or email (partial match) |
-| `id_number` | string | no | Filter by client ID number |
-| `sort` | string | no | Sort field (e.g. `"name"`, `"balance"`, `"created_at"`) |
-
-### Example
-
-```lua
-local result = app.integrations.invoiceninja.list_clients({
-  search = "Acme",
-  per_page = 10
+local task = app.integrations.invoiceninja.update_task({
+  id = "task_123",
+  payload = {
+    description = "Follow up with client",
+    project_id = "project_123"
+  }
 })
-
-for _, client in ipairs(result.data) do
-  print(client.name .. " (balance: " .. client.balance .. ")")
-end
 ```
 
----
+## Payload Tools
 
-## create_client
+Generated create, update and bulk tools use a `payload` object. The payload is sent as the JSON body to the corresponding Invoice Ninja endpoint. Use Invoice Ninja field names exactly, for example `client_id`, `line_items`, `contacts`, `amount`, `due_date`, or `action`.
 
-Create a new client in Invoice Ninja.
+Client create/update calls require child contacts when contact data changes; Invoice Ninja does not modify client contacts in isolation.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Client or company name |
-| `contacts` | array | yes | Array of contacts (see below) |
-| `id_number` | string | no | Custom ID number |
-| `vat_number` | string | no | VAT/tax identification number |
-| `website` | string | no | Client website URL |
-| `phone` | string | no | Primary phone number |
-| `address1` | string | no | Street address line 1 |
-| `address2` | string | no | Street address line 2 |
-| `city` | string | no | City |
-| `state` | string | no | State or province |
-| `postal_code` | string | no | Postal / ZIP code |
-| `country_id` | string | no | Country ID (ISO 3166-1 numeric) |
-| `private_notes` | string | no | Internal notes |
-| `public_notes` | string | no | Notes visible to the client |
-
-### Contact Fields
-
-| Name | Type | Description |
-|------|------|-------------|
-| `first_name` | string | First name |
-| `last_name` | string | Last name |
-| `email` | string | Email address |
-| `phone` | string | Phone number (optional) |
-
-### Example
+Bulk tools expect the action payload shape supported by Invoice Ninja for that resource:
 
 ```lua
-local result = app.integrations.invoiceninja.create_client({
-  name = "Acme Corp",
-  contacts = {
-    { first_name = "John", last_name = "Doe", email = "john@acme.com" }
-  },
-  vat_number = "NL123456789",
-  website = "https://acme.com"
+app.integrations.invoiceninja.bulk_invoices({
+  payload = {
+    action = "archive",
+    ids = { "invoice_123" }
+  }
 })
-
-print("Created client: " .. result.data.id)
 ```
 
----
+## Payments
 
-## list_products
-
-List products from Invoice Ninja.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of products per page (default: 20) |
-| `page` | integer | no | Page number for pagination |
-| `product_key` | string | no | Filter by product key (exact match) |
-| `sort` | string | no | Sort field (e.g. `"product_key"`, `"cost"`, `"created_at"`) |
-| `is_deleted` | boolean | no | Include soft-deleted products |
-
-### Example
+Payment tools include `list_payments`, `get_payment`, `create_payment`, `update_payment`, `delete_payment`, `refund_payment`, `blank_payment`, and `bulk_payments`.
 
 ```lua
-local result = app.integrations.invoiceninja.list_products({ per_page = 50 })
-
-for _, product in ipairs(result.data) do
-  print(product.product_key .. ": " .. product.cost)
-end
-```
-
----
-
-## list_payments
-
-List payments from Invoice Ninja.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `per_page` | integer | no | Number of payments per page (default: 20) |
-| `page` | integer | no | Page number for pagination |
-| `client_id` | string | no | Filter payments by client ID |
-| `invoice_id` | string | no | Filter payments by invoice ID |
-| `status` | string | no | Filter by status (e.g. `"completed"`, `"pending"`, `"failed"`, `"refunded"`) |
-| `sort` | string | no | Sort field (e.g. `"amount"`, `"date"`, `"created_at"`) |
-
-### Example
-
-```lua
-local result = app.integrations.invoiceninja.list_payments({
-  client_id = "client_123",
-  status = "completed"
+local result = app.integrations.invoiceninja.refund_payment({
+  id = "payment_123",
+  payload = {
+    amount = 25.00,
+    reason = "Duplicate charge"
+  }
 })
-
-for _, payment in ipairs(result.data) do
-  print(payment.amount .. " on " .. payment.date)
-end
 ```
 
----
+## Reference And Health
 
-## get_current_user
+Use these read tools for setup and lookup flows:
 
-Get the profile of the currently authenticated Invoice Ninja user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.invoiceninja.get_current_user({})
-local user = result.data
-print("Logged in as: " .. user.first_name .. " " .. user.last_name)
-print("Email: " .. user.email)
-```
-
----
+| Tool | Purpose |
+| --- | --- |
+| `get_current_user` | Verify the configured token and current user. |
+| `list_users` / `get_user` | Inspect Invoice Ninja users. |
+| `list_activities` / `get_activity` | Inspect activity feed entries. |
+| `statics` | Fetch static selector data. |
+| `ping` | Lightweight API ping. |
+| `health_check` | Health-check endpoint for compatible hosts. |
 
 ## Multi-Account Usage
 
-If you have multiple Invoice Ninja instances configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.invoiceninja.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.invoiceninja.default.function_name({...})
-
--- Named accounts
-app.integrations.invoiceninja.production.function_name({...})
-app.integrations.invoiceninja.staging.function_name({...})
+app.integrations.invoiceninja.list_invoices({ per_page = 20 })
+app.integrations.invoiceninja.default.list_invoices({ per_page = 20 })
+app.integrations.invoiceninja.production.list_invoices({ per_page = 20 })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only credentials and base URL differ.

@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ManyChatGetCurrentUser implements Tool
 {
+    /**
+     * @param  ManyChatService  $service  The Manychat API client.
+     */
     public function __construct(
         private ManyChatService $service,
     ) {}
@@ -33,6 +36,11 @@ class ManyChatGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch page/account information for the authenticated bot.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

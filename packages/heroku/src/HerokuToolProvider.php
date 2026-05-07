@@ -4,21 +4,27 @@ namespace OpenCompany\Integrations\Heroku;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Heroku\Tools\HerokuListApps;
-use OpenCompany\Integrations\Heroku\Tools\HerokuGetApp;
-use OpenCompany\Integrations\Heroku\Tools\HerokuListDynos;
-use OpenCompany\Integrations\Heroku\Tools\HerokuListAddons;
-use OpenCompany\Integrations\Heroku\Tools\HerokuListDomains;
-use OpenCompany\Integrations\Heroku\Tools\HerokuListCollaborators;
 use OpenCompany\Integrations\Heroku\Tools\HerokuGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\Integrations\Heroku\Tools\HerokuGetApp;
+use OpenCompany\Integrations\Heroku\Tools\HerokuListAddons;
+use OpenCompany\Integrations\Heroku\Tools\HerokuListApps;
+use OpenCompany\Integrations\Heroku\Tools\HerokuListCollaborators;
+use OpenCompany\Integrations\Heroku\Tools\HerokuListDomains;
+use OpenCompany\Integrations\Heroku\Tools\HerokuListDynos;
 
 /**
+ * Exposes Heroku Platform API tools to host applications.
+ *
+ * Handles catalog metadata, credential setup, connection checks, and
+ * multi-account service resolution for Heroku.
+ */
+class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -91,11 +97,14 @@ class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Cloud platform — manage apps, dynos, add-ons, domains, and collaborators',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:heroku',
-            'category' => 'productivity',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://devcenter.heroku.com/articles/platform-api-reference',
+            'source_url' => 'https://devcenter.heroku.com/articles/platform-api-reference',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -117,6 +126,12 @@ class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
+    /**
+     * Verify Heroku credentials with a lightweight account request.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
@@ -227,7 +242,9 @@ class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/heroku.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -245,7 +262,7 @@ class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new HerokuService(
                 apiKey: $creds->get('heroku', 'api_key', '', $account),

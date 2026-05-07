@@ -12,10 +12,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Returns user information including name, email, username,
  * time zone, and default schedule.
  *
- * @see https://developer.cal.com/api/endpoints/users
+ * @see https://cal.com/docs/api-reference/v2/me/get-my-profile
  */
 class CalComGetCurrentUser implements Tool
 {
+    /**
+     * @param  CalComService  $service  Legacy Cal.com API client.
+     */
     public function __construct(
         private CalComService $service,
     ) {}

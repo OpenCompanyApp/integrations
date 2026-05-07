@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-samsara",
-    "description": "Samsara fleet and IoT management integration for Laravel — vehicles, drivers, sensors, and user info.",
+    "description": "Samsara integration for Laravel AI agents - fleet telematics, routes, assets, sensors, documents, maintenance, users, and raw REST API tools.",
     "license": "MIT",
     "authors": [
         {

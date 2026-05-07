@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Unbounce\UnbounceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get an Unbounce lead by ID.
+ */
 class UnbounceGetLead implements Tool
 {
+    /**
+     * @param  UnbounceService  $service  Unbounce API client.
+     */
     public function __construct(
         private UnbounceService $service,
     ) {}
@@ -29,6 +35,11 @@ class UnbounceGetLead implements Tool
         ];
     }
 
+    /**
+     * Get a lead.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

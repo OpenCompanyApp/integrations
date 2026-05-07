@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-messagebird",
-    "description": "MessageBird integration for Laravel — send SMS, retrieve messages, check balance, and manage numbers.",
+    "description": "MessageBird REST API integration for Laravel agents: SMS, voice messages, contacts, groups, lookup, HLR, verify, balance, and numbers.",
     "license": "MIT",
     "authors": [
         {

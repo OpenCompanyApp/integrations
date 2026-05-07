@@ -1,0 +1,28 @@
+<?php
+
+namespace OpenCompany\Integrations\InvoiceNinja\Tools;
+
+/**
+ * Update an Invoice Ninja recurring invoice by ID.
+ */
+class InvoiceNinjaUpdateRecurringInvoice extends AbstractInvoiceNinjaEndpointTool
+{
+    protected array $parameters = [
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'Resource hashed ID.'],
+            'payload' => ['type' => 'object', 'required' => true, 'description' => 'Request payload matching the Invoice Ninja API schema for this endpoint.'],
+    ];
+
+    protected array $required = ['id', 'payload'];
+
+    protected array $queryParams = [];
+
+    protected array $bodyParams = ['payload'];
+
+    protected string $method = 'PUT';
+
+    protected string $path = '/api/v1/recurring_invoices/{id}';
+
+    protected string $toolName = 'invoiceninja_update_recurring_invoice';
+
+    protected string $toolDescription = 'Update an Invoice Ninja recurring invoice by ID.';
+}

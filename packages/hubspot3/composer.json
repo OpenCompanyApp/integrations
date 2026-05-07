@@ -7,8 +7,13 @@
         "php": "^8.2",
         "illuminate/support": "^11.0|^12.0",
         "illuminate/http": "^11.0|^12.0",
-        "opencompanyapp/integration-core": "*"
+        "opencompanyapp/integration-core": "*",
+        "opencompanyapp/integration-hubspot": "^2.0 || @dev"
     },
+    "replace": {
+        "opencompanyapp/ai-tool-hubspot3": "self.version"
+    },
+    "abandoned": "opencompanyapp/integration-hubspot",
     "autoload": {
         "psr-4": {
             "OpenCompany\\Integrations\\Hubspot3\\": "src/"

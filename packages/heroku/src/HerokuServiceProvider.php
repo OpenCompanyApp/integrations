@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Heroku integration with Laravel.
+ *
+ * Binds the Heroku Platform API client from host credentials and registers the
+ * tool provider with the shared discovery registry when available.
+ */
 class HerokuServiceProvider extends ServiceProvider
 {
     public function register(): void

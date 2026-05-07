@@ -112,7 +112,7 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Applicant tracking system — manage jobs, candidates, and hiring',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:workable',
-            'category' => 'hr',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://workable.com/spi/v3/docs',
         ];

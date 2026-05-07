@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MessageBird\MessageBirdService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List MessageBird SMS messages.
+ *
+ * Supports official message listing filters and pagination.
+ */
 class MessageBirdListMessages implements Tool
 {
+    /**
+     * @param  MessageBirdService  $service  The MessageBird REST API client
+     */
     public function __construct(
         private MessageBirdService $service,
     ) {}
@@ -29,9 +37,17 @@ class MessageBirdListMessages implements Tool
             'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
             'status' => ['type' => 'string', 'description' => 'Filter by message status: scheduled, sent, buffered, delivered, expired, delivery_failed.'],
             'direction' => ['type' => 'string', 'description' => 'Filter by direction: mt (outgoing / mobile terminated), mo (incoming / mobile originated).'],
+            'originator' => ['type' => 'string', 'description' => 'Filter by originator.'],
+            'recipient' => ['type' => 'string', 'description' => 'Filter by recipient.'],
+            'contact_id' => ['type' => 'string', 'description' => 'Filter by contact ID.'],
         ];
     }
 
+    /**
+     * List messages.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -39,12 +55,15 @@ class MessageBirdListMessages implements Tool
                 return ToolResult::error('MessageBird integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
-            $status = $args['status'] ?? null;
-            $direction = $args['direction'] ?? null;
-
-            $result = $this->service->listMessages($limit, $offset, $status, $direction);
+            $result = $this->service->listMessages(array_filter([
+                'limit' => isset($args['limit']) ? (int) $args['limit'] : null,
+                'offset' => isset($args['offset']) ? (int) $args['offset'] : null,
+                'status' => $args['status'] ?? null,
+                'direction' => $args['direction'] ?? null,
+                'originator' => $args['originator'] ?? null,
+                'recipient' => $args['recipient'] ?? null,
+                'contact_id' => $args['contact_id'] ?? null,
+            ], static fn (mixed $value): bool => $value !== null));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

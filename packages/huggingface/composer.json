@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-huggingface",
-    "description": "Hugging Face AI platform integration for Laravel — list models, datasets, spaces, and manage your account.",
+    "description": "Legacy Hugging Face AI platform integration for Laravel. Use integration-hugging-face for expanded Hub coverage.",
+    "abandoned": "opencompanyapp/integration-hugging-face",
     "license": "MIT",
     "authors": [
         {

@@ -1,178 +1,113 @@
-# Autopilot — Lua API Reference
+# Autopilot
 
-## list_contacts
+Namespace: `app.integrations.autopilot`
 
-List contacts in your Autopilot account.
+Autopilot tools follow the official API Blueprint from the
+`autopilotdev.github.io` repository. The API uses the `autopilotapikey` header,
+not bearer authorization. Configure `api_key`; set `url` only for a test proxy.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of contacts to return (default: 50, max: 100) |
-| `bookmark` | string | no | Pagination bookmark from a previous response |
-
-### Example
+## Contacts
 
 ```lua
-local result = app.integrations["autopilot"].list_contacts({
-  limit = 50
+local contact = app.integrations.autopilot.create_contact({
+  payload = {
+    Email = "ada@example.test",
+    FirstName = "Ada",
+    LastName = "Lovelace",
+    Company = "Example Co",
+    custom_fields = {
+      Plan = "pro"
+    }
+  }
 })
 
-for _, contact in ipairs(result.contacts) do
-  print(contact.Email .. " - " .. (contact.FirstName or ""))
-end
-```
-
----
-
-## get_contact
-
-Get detailed information about a specific Autopilot contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `contact_id` | string | yes | The contact ID or email address |
-
-### Example
-
-```lua
-local result = app.integrations["autopilot"].get_contact({
-  contact_id = "john@example.com"
+local fetched = app.integrations.autopilot.get_contact({
+  contact_id_or_email = "ada@example.test"
 })
 
-print("Name: " .. (result.FirstName or "") .. " " .. (result.LastName or ""))
-print("Email: " .. result.Email)
+app.integrations.autopilot.delete_contact({
+  contact_id_or_email = "ada@example.test"
+})
 ```
 
----
+Autopilot de-duplicates contacts by `Email`. The create contact operation is
+also the documented update path.
 
-## create_contact
-
-Create or update a contact in Autopilot.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | The contact's email address |
-| `first_name` | string | no | The contact's first name |
-| `last_name` | string | no | The contact's last name |
-| `phone` | string | no | The contact's phone number |
-| `title` | string | no | The contact's job title |
-| `company` | string | no | The contact's company name |
-| `custom_fields` | object | no | Custom field key-value pairs |
-
-### Example
+## Lists
 
 ```lua
-local result = app.integrations["autopilot"].create_contact({
-  email = "john@example.com",
-  first_name = "John",
-  last_name = "Doe",
-  company = "Acme Inc"
+local list = app.integrations.autopilot.add_list({
+  payload = {
+    name = "Product-qualified leads"
+  }
 })
 
-print(result.message)
-```
-
----
-
-## list_lists
-
-List all lists in your Autopilot account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["autopilot"].list_lists()
-
-for _, list in ipairs(result.lists) do
-  print(list.Title .. " (" .. list.list_id .. ")")
-end
-```
-
----
-
-## get_list
-
-Get detailed information about a specific Autopilot list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The list ID |
-
-### Example
-
-```lua
-local result = app.integrations["autopilot"].get_list({
-  list_id = "abc123"
+local contacts = app.integrations.autopilot.get_contacts_on_list({
+  list_id = list.list_id
 })
 
-print("List: " .. result.Title)
+app.integrations.autopilot.delete_list({
+  payload = {
+    list_id = list.list_id
+  }
+})
 ```
 
----
+The official API Blueprint does not expose bulk contact listing or journey
+listing endpoints. Use list-specific contact lookup when you have a list ID.
 
-## list_journeys
-
-List all journeys in your Autopilot account.
-
-### Parameters
-
-None.
-
-### Example
+## Journeys
 
 ```lua
-local result = app.integrations["autopilot"].list_journeys()
-
-for _, journey in ipairs(result.journeys) do
-  print(journey.Name .. " (" .. journey.journey_id .. ")")
-end
+app.integrations.autopilot.eject_contact_from_journey({
+  journey_id = "campaign_123",
+  contact_id_or_email = "ada@example.test"
+})
 ```
 
----
+The documented journey operation removes a known contact from a known journey.
+The blueprint says there is no programmatic journey listing endpoint.
 
-## get_current_user
-
-Get the authenticated user's Autopilot account details.
-
-### Parameters
-
-None.
-
-### Example
+## REST Hooks
 
 ```lua
-local result = app.integrations["autopilot"].get_current_user()
+local hook = app.integrations.autopilot.register_rest_hook({
+  payload = {
+    event = "contact_added",
+    target_url = "https://example.test/autopilot/hooks/contact-added"
+  }
+})
 
-print("Account connected successfully")
+local hooks = app.integrations.autopilot.list_rest_hooks({})
+
+app.integrations.autopilot.unregister_rest_hook({
+  hook_id = hook.id
+})
 ```
 
----
+Supported events in the blueprint are:
+
+- `contact_added`
+- `contact_unsubscribes`
+- `contact_added_to_list`
+- `contact_removed_from_list`
+- `contact_entered_segment`
+- `contact_left_segment`
+
+## Argument Shape
+
+Path parameters are top-level snake_case arguments. Write operations accept a
+`payload` object for the documented JSON body. Tools also accept `query` for
+extra documented query parameters.
+
+Empty Autopilot responses return `{ success = true, status = 204 }`.
 
 ## Multi-Account Usage
 
-If you have multiple Autopilot accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["autopilot"].list_contacts({})
-
--- Explicit default (portable across setups)
-app.integrations["autopilot"].default.list_contacts({})
-
--- Named accounts
-app.integrations["autopilot"].marketing.list_contacts({})
-app.integrations["autopilot"].sales.list_contacts({})
+app.integrations.autopilot.get_contact({ contact_id_or_email = "ada@example.test" })
+app.integrations.autopilot.default.get_contact({ contact_id_or_email = "ada@example.test" })
+app.integrations.autopilot.marketing.get_contact({ contact_id_or_email = "ada@example.test" })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tool names. Only credentials differ.

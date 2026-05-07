@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-checkly",
+    "description": "Checkly Public API integration for Laravel agents.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "email": "hello@opencompany.ai"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Checkly\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Checkly\\ChecklyServiceProvider"
+            ]
+        }
+    }
+}

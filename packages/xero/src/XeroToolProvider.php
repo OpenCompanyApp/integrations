@@ -103,7 +103,7 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Cloud accounting platform – invoices, contacts, and chart of accounts',
             'icon' => 'ph:calculator',
             'logo' => 'simple-icons:xero',
-            'category' => 'finance',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.xero.com/documentation/api/accounting/',
         ];

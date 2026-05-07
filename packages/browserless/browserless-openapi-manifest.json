@@ -1,0 +1,11 @@
+{
+  "source_url": "https://docs.browserless.io/open-api redocusaurus/plugin-redoc-0.yaml",
+  "docs_url": "https://docs.browserless.io/open-api",
+  "openapi": "3.0.0",
+  "path_count": 67,
+  "method_count": 74,
+  "read_count": 33,
+  "write_count": 41,
+  "base_url": "https://production-sfo.browserless.io",
+  "auth_query": "token"
+}

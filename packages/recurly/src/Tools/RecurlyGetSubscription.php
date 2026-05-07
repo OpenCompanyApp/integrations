@@ -6,6 +6,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * Retrieve a Recurly subscription by UUID.
+ *
+ * Returns the decoded subscription response from the Recurly v3 API.
+ */
 class RecurlyGetSubscription implements Tool
 {
     /**

@@ -1,0 +1,744 @@
+{
+    "source": "https://github.com/adobe/acrobat-sign/tree/main/sdks/AcrobatSign_OpenAPI_SDK/json",
+    "swagger": "1.2",
+    "base_path": "/api/rest/v6",
+    "method_count": 92,
+    "operations": [
+        {
+            "resource": "agreements",
+            "operation_id": "createAgreement",
+            "method": "POST",
+            "path": "/agreements",
+            "tool": "adobe_acrobat_sign_agreements_create_agreement",
+            "class": "AdobeAcrobatSignAgreementsCreateAgreement"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "addTemplateFieldsToAgreement",
+            "method": "POST",
+            "path": "/agreements/{agreementId}/formFields",
+            "tool": "adobe_acrobat_sign_agreements_add_template_fields_to_agreement",
+            "class": "AdobeAcrobatSignAgreementsAddTemplateFieldsToAgreement"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "createDelegatedParticipantSets",
+            "method": "POST",
+            "path": "/agreements/{agreementId}/members/participantSets/{participantSetId}/delegatedParticipantSets",
+            "tool": "adobe_acrobat_sign_agreements_create_delegated_participant_sets",
+            "class": "AdobeAcrobatSignAgreementsCreateDelegatedParticipantSets"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "createShareOnAgreement",
+            "method": "POST",
+            "path": "/agreements/{agreementId}/members/share",
+            "tool": "adobe_acrobat_sign_agreements_create_share_on_agreement",
+            "class": "AdobeAcrobatSignAgreementsCreateShareOnAgreement"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "createReminderOnParticipant",
+            "method": "POST",
+            "path": "/agreements/{agreementId}/reminders",
+            "tool": "adobe_acrobat_sign_agreements_create_reminder_on_participant",
+            "class": "AdobeAcrobatSignAgreementsCreateReminderOnParticipant"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "createAgreementView",
+            "method": "POST",
+            "path": "/agreements/{agreementId}/views",
+            "tool": "adobe_acrobat_sign_agreements_create_agreement_view",
+            "class": "AdobeAcrobatSignAgreementsCreateAgreementView"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAgreements",
+            "method": "GET",
+            "path": "/agreements",
+            "tool": "adobe_acrobat_sign_agreements_get_agreements",
+            "class": "AdobeAcrobatSignAgreementsGetAgreements"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAgreementInfo",
+            "method": "GET",
+            "path": "/agreements/{agreementId}",
+            "tool": "adobe_acrobat_sign_agreements_get_agreement_info",
+            "class": "AdobeAcrobatSignAgreementsGetAgreementInfo"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAuditTrail",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/auditTrail",
+            "tool": "adobe_acrobat_sign_agreements_get_audit_trail",
+            "class": "AdobeAcrobatSignAgreementsGetAuditTrail"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getCombinedDocument",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/combinedDocument",
+            "tool": "adobe_acrobat_sign_agreements_get_combined_document",
+            "class": "AdobeAcrobatSignAgreementsGetCombinedDocument"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getCombinedDocumentPagesInfo",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/combinedDocument/pagesInfo",
+            "tool": "adobe_acrobat_sign_agreements_get_combined_document_pages_info",
+            "class": "AdobeAcrobatSignAgreementsGetCombinedDocumentPagesInfo"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAllDocuments",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/documents",
+            "tool": "adobe_acrobat_sign_agreements_get_all_documents",
+            "class": "AdobeAcrobatSignAgreementsGetAllDocuments"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getDocument",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/documents/{documentId}",
+            "tool": "adobe_acrobat_sign_agreements_get_document",
+            "class": "AdobeAcrobatSignAgreementsGetDocument"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getDocumentImageUrls",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/documents/{documentId}/imageUrls",
+            "tool": "adobe_acrobat_sign_agreements_get_document_image_urls",
+            "class": "AdobeAcrobatSignAgreementsGetDocumentImageUrls"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAllDocumentsImageUrls",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/documents/imageUrls",
+            "tool": "adobe_acrobat_sign_agreements_get_all_documents_image_urls",
+            "class": "AdobeAcrobatSignAgreementsGetAllDocumentsImageUrls"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getEvents",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/events",
+            "tool": "adobe_acrobat_sign_agreements_get_events",
+            "class": "AdobeAcrobatSignAgreementsGetEvents"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getFormData",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/formData",
+            "tool": "adobe_acrobat_sign_agreements_get_form_data",
+            "class": "AdobeAcrobatSignAgreementsGetFormData"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getFormFields",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/formFields",
+            "tool": "adobe_acrobat_sign_agreements_get_form_fields",
+            "class": "AdobeAcrobatSignAgreementsGetFormFields"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getMergeInfo",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/formFields/mergeInfo",
+            "tool": "adobe_acrobat_sign_agreements_get_merge_info",
+            "class": "AdobeAcrobatSignAgreementsGetMergeInfo"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAgreementNoteForApiUser",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/me/note",
+            "tool": "adobe_acrobat_sign_agreements_get_agreement_note_for_api_user",
+            "class": "AdobeAcrobatSignAgreementsGetAgreementNoteForApiUser"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAllMembers",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/members",
+            "tool": "adobe_acrobat_sign_agreements_get_all_members",
+            "class": "AdobeAcrobatSignAgreementsGetAllMembers"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getParticipantSet",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/members/participantSets/{participantSetId}",
+            "tool": "adobe_acrobat_sign_agreements_get_participant_set",
+            "class": "AdobeAcrobatSignAgreementsGetParticipantSet"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getSigningUrl",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/signingUrls",
+            "tool": "adobe_acrobat_sign_agreements_get_signing_url",
+            "class": "AdobeAcrobatSignAgreementsGetSigningUrl"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "getAgreementReminders",
+            "method": "GET",
+            "path": "/agreements/{agreementId}/reminders",
+            "tool": "adobe_acrobat_sign_agreements_get_agreement_reminders",
+            "class": "AdobeAcrobatSignAgreementsGetAgreementReminders"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "updateAgreement",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}",
+            "tool": "adobe_acrobat_sign_agreements_update_agreement",
+            "class": "AdobeAcrobatSignAgreementsUpdateAgreement"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "updateFormFields",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}/formFields",
+            "tool": "adobe_acrobat_sign_agreements_update_form_fields",
+            "class": "AdobeAcrobatSignAgreementsUpdateFormFields"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "updateAgreementMergeInfo",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}/formFields/mergeInfo",
+            "tool": "adobe_acrobat_sign_agreements_update_agreement_merge_info",
+            "class": "AdobeAcrobatSignAgreementsUpdateAgreementMergeInfo"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "updateAgreementVisibility",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}/me/visibility",
+            "tool": "adobe_acrobat_sign_agreements_update_agreement_visibility",
+            "class": "AdobeAcrobatSignAgreementsUpdateAgreementVisibility"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "updateParticipantSet",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}/members/participantSets/{participantSetId}",
+            "tool": "adobe_acrobat_sign_agreements_update_participant_set",
+            "class": "AdobeAcrobatSignAgreementsUpdateParticipantSet"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "rejectAgreementForParticipation",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}/members/participantSets/{participantSetId}/participants/{participantId}/reject",
+            "tool": "adobe_acrobat_sign_agreements_reject_agreement_for_participation",
+            "class": "AdobeAcrobatSignAgreementsRejectAgreementForParticipation"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "updateAgreementState",
+            "method": "PUT",
+            "path": "/agreements/{agreementId}/state",
+            "tool": "adobe_acrobat_sign_agreements_update_agreement_state",
+            "class": "AdobeAcrobatSignAgreementsUpdateAgreementState"
+        },
+        {
+            "resource": "agreements",
+            "operation_id": "deleteDocuments",
+            "method": "DELETE",
+            "path": "/agreements/{agreementId}/documents",
+            "tool": "adobe_acrobat_sign_agreements_delete_documents",
+            "class": "AdobeAcrobatSignAgreementsDeleteDocuments"
+        },
+        {
+            "resource": "baseUris",
+            "operation_id": "getBaseUris",
+            "method": "GET",
+            "path": "/baseUris",
+            "tool": "adobe_acrobat_sign_base_uris_get_base_uris",
+            "class": "AdobeAcrobatSignBaseUrisGetBaseUris"
+        },
+        {
+            "resource": "groups",
+            "operation_id": "getGroups",
+            "method": "GET",
+            "path": "/groups",
+            "tool": "adobe_acrobat_sign_groups_get_groups",
+            "class": "AdobeAcrobatSignGroupsGetGroups"
+        },
+        {
+            "resource": "groups",
+            "operation_id": "getGroupDetails",
+            "method": "GET",
+            "path": "/groups/{groupId}",
+            "tool": "adobe_acrobat_sign_groups_get_group_details",
+            "class": "AdobeAcrobatSignGroupsGetGroupDetails"
+        },
+        {
+            "resource": "groups",
+            "operation_id": "getUsersInGroup",
+            "method": "GET",
+            "path": "/groups/{groupId}/users",
+            "tool": "adobe_acrobat_sign_groups_get_users_in_group",
+            "class": "AdobeAcrobatSignGroupsGetUsersInGroup"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "createLibraryDocument",
+            "method": "POST",
+            "path": "/libraryDocuments",
+            "tool": "adobe_acrobat_sign_library_documents_create_library_document",
+            "class": "AdobeAcrobatSignLibraryDocumentsCreateLibraryDocument"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "createLibraryDocumentView",
+            "method": "POST",
+            "path": "/libraryDocuments/{libraryDocumentId}/views",
+            "tool": "adobe_acrobat_sign_library_documents_create_library_document_view",
+            "class": "AdobeAcrobatSignLibraryDocumentsCreateLibraryDocumentView"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getLibraryDocuments",
+            "method": "GET",
+            "path": "/libraryDocuments",
+            "tool": "adobe_acrobat_sign_library_documents_get_library_documents",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetLibraryDocuments"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getLibraryDocumentInfo",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}",
+            "tool": "adobe_acrobat_sign_library_documents_get_library_document_info",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetLibraryDocumentInfo"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getLibraryDocumentAuditTrail",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/auditTrail",
+            "tool": "adobe_acrobat_sign_library_documents_get_library_document_audit_trail",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetLibraryDocumentAuditTrail"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getCombinedDocument",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/combinedDocument",
+            "tool": "adobe_acrobat_sign_library_documents_get_combined_document",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetCombinedDocument"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getDocuments",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/documents",
+            "tool": "adobe_acrobat_sign_library_documents_get_documents",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetDocuments"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getLibraryDocument",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/documents/{documentId}",
+            "tool": "adobe_acrobat_sign_library_documents_get_library_document",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetLibraryDocument"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getLibraryDocumentImageUrls",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/documents/{documentId}/imageUrls",
+            "tool": "adobe_acrobat_sign_library_documents_get_library_document_image_urls",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetLibraryDocumentImageUrls"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getEvents",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/events",
+            "tool": "adobe_acrobat_sign_library_documents_get_events",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetEvents"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "getLibraryDocumentNoteForApiUser",
+            "method": "GET",
+            "path": "/libraryDocuments/{libraryDocumentId}/me/note",
+            "tool": "adobe_acrobat_sign_library_documents_get_library_document_note_for_api_user",
+            "class": "AdobeAcrobatSignLibraryDocumentsGetLibraryDocumentNoteForApiUser"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "updateLibraryDocument",
+            "method": "PUT",
+            "path": "/libraryDocuments/{libraryDocumentId}",
+            "tool": "adobe_acrobat_sign_library_documents_update_library_document",
+            "class": "AdobeAcrobatSignLibraryDocumentsUpdateLibraryDocument"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "updateLibraryDocumentVisibility",
+            "method": "PUT",
+            "path": "/libraryDocuments/{libraryDocumentId}/me/visibility",
+            "tool": "adobe_acrobat_sign_library_documents_update_library_document_visibility",
+            "class": "AdobeAcrobatSignLibraryDocumentsUpdateLibraryDocumentVisibility"
+        },
+        {
+            "resource": "libraryDocuments",
+            "operation_id": "updateLibraryDocumentState",
+            "method": "PUT",
+            "path": "/libraryDocuments/{libraryDocumentId}/state",
+            "tool": "adobe_acrobat_sign_library_documents_update_library_document_state",
+            "class": "AdobeAcrobatSignLibraryDocumentsUpdateLibraryDocumentState"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "createMegaSign",
+            "method": "POST",
+            "path": "/megaSigns",
+            "tool": "adobe_acrobat_sign_mega_signs_create_mega_sign",
+            "class": "AdobeAcrobatSignMegaSignsCreateMegaSign"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getMegaSignView",
+            "method": "POST",
+            "path": "/megaSigns/{megaSignId}/views",
+            "tool": "adobe_acrobat_sign_mega_signs_get_mega_sign_view",
+            "class": "AdobeAcrobatSignMegaSignsGetMegaSignView"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getMegaSigns",
+            "method": "GET",
+            "path": "/megaSigns",
+            "tool": "adobe_acrobat_sign_mega_signs_get_mega_signs",
+            "class": "AdobeAcrobatSignMegaSignsGetMegaSigns"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getMegaSignInfo",
+            "method": "GET",
+            "path": "/megaSigns/{megaSignId}",
+            "tool": "adobe_acrobat_sign_mega_signs_get_mega_sign_info",
+            "class": "AdobeAcrobatSignMegaSignsGetMegaSignInfo"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getMegaSignChildAgreements",
+            "method": "GET",
+            "path": "/megaSigns/{megaSignId}/agreements",
+            "tool": "adobe_acrobat_sign_mega_signs_get_mega_sign_child_agreements",
+            "class": "AdobeAcrobatSignMegaSignsGetMegaSignChildAgreements"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getChildAgreementsInfoFile",
+            "method": "GET",
+            "path": "/megaSigns/{megaSignId}/childAgreementsInfo/{childAgreementsInfoFileId}",
+            "tool": "adobe_acrobat_sign_mega_signs_get_child_agreements_info_file",
+            "class": "AdobeAcrobatSignMegaSignsGetChildAgreementsInfoFile"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getMegaSignCombinedDocument",
+            "method": "GET",
+            "path": "/megaSigns/{megaSignId}/combinedDocument",
+            "tool": "adobe_acrobat_sign_mega_signs_get_mega_sign_combined_document",
+            "class": "AdobeAcrobatSignMegaSignsGetMegaSignCombinedDocument"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getEvents",
+            "method": "GET",
+            "path": "/megaSigns/{megaSignId}/events",
+            "tool": "adobe_acrobat_sign_mega_signs_get_events",
+            "class": "AdobeAcrobatSignMegaSignsGetEvents"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "getMegaSignFormData",
+            "method": "GET",
+            "path": "/megaSigns/{megaSignId}/formData",
+            "tool": "adobe_acrobat_sign_mega_signs_get_mega_sign_form_data",
+            "class": "AdobeAcrobatSignMegaSignsGetMegaSignFormData"
+        },
+        {
+            "resource": "megaSigns",
+            "operation_id": "updateMegaSignState",
+            "method": "PUT",
+            "path": "/megaSigns/{megaSignId}/state",
+            "tool": "adobe_acrobat_sign_mega_signs_update_mega_sign_state",
+            "class": "AdobeAcrobatSignMegaSignsUpdateMegaSignState"
+        },
+        {
+            "resource": "transientDocuments",
+            "operation_id": "createTransientDocument",
+            "method": "POST",
+            "path": "/transientDocuments",
+            "tool": "adobe_acrobat_sign_transient_documents_create_transient_document",
+            "class": "AdobeAcrobatSignTransientDocumentsCreateTransientDocument"
+        },
+        {
+            "resource": "users",
+            "operation_id": "getUserViews",
+            "method": "POST",
+            "path": "/users/{userId}/views",
+            "tool": "adobe_acrobat_sign_users_get_user_views",
+            "class": "AdobeAcrobatSignUsersGetUserViews"
+        },
+        {
+            "resource": "users",
+            "operation_id": "getUsers",
+            "method": "GET",
+            "path": "/users",
+            "tool": "adobe_acrobat_sign_users_get_users",
+            "class": "AdobeAcrobatSignUsersGetUsers"
+        },
+        {
+            "resource": "users",
+            "operation_id": "getUserDetail",
+            "method": "GET",
+            "path": "/users/{userId}",
+            "tool": "adobe_acrobat_sign_users_get_user_detail",
+            "class": "AdobeAcrobatSignUsersGetUserDetail"
+        },
+        {
+            "resource": "users",
+            "operation_id": "getGroupsOfUser",
+            "method": "GET",
+            "path": "/users/{userId}/groups",
+            "tool": "adobe_acrobat_sign_users_get_groups_of_user",
+            "class": "AdobeAcrobatSignUsersGetGroupsOfUser"
+        },
+        {
+            "resource": "users",
+            "operation_id": "modifyUser",
+            "method": "PUT",
+            "path": "/users/{userId}",
+            "tool": "adobe_acrobat_sign_users_modify_user",
+            "class": "AdobeAcrobatSignUsersModifyUser"
+        },
+        {
+            "resource": "users",
+            "operation_id": "updateGroupsOfUser",
+            "method": "PUT",
+            "path": "/users/{userId}/groups",
+            "tool": "adobe_acrobat_sign_users_update_groups_of_user",
+            "class": "AdobeAcrobatSignUsersUpdateGroupsOfUser"
+        },
+        {
+            "resource": "users",
+            "operation_id": "modifyUserState",
+            "method": "PUT",
+            "path": "/users/{userId}/state",
+            "tool": "adobe_acrobat_sign_users_modify_user_state",
+            "class": "AdobeAcrobatSignUsersModifyUserState"
+        },
+        {
+            "resource": "webhooks",
+            "operation_id": "createWebhook",
+            "method": "POST",
+            "path": "/webhooks",
+            "tool": "adobe_acrobat_sign_webhooks_create_webhook",
+            "class": "AdobeAcrobatSignWebhooksCreateWebhook"
+        },
+        {
+            "resource": "webhooks",
+            "operation_id": "getWebhooks",
+            "method": "GET",
+            "path": "/webhooks",
+            "tool": "adobe_acrobat_sign_webhooks_get_webhooks",
+            "class": "AdobeAcrobatSignWebhooksGetWebhooks"
+        },
+        {
+            "resource": "webhooks",
+            "operation_id": "getWebhookInfo",
+            "method": "GET",
+            "path": "/webhooks/{webhookId}",
+            "tool": "adobe_acrobat_sign_webhooks_get_webhook_info",
+            "class": "AdobeAcrobatSignWebhooksGetWebhookInfo"
+        },
+        {
+            "resource": "webhooks",
+            "operation_id": "updateWebhook",
+            "method": "PUT",
+            "path": "/webhooks/{webhookId}",
+            "tool": "adobe_acrobat_sign_webhooks_update_webhook",
+            "class": "AdobeAcrobatSignWebhooksUpdateWebhook"
+        },
+        {
+            "resource": "webhooks",
+            "operation_id": "updateWebhookState",
+            "method": "PUT",
+            "path": "/webhooks/{webhookId}/state",
+            "tool": "adobe_acrobat_sign_webhooks_update_webhook_state",
+            "class": "AdobeAcrobatSignWebhooksUpdateWebhookState"
+        },
+        {
+            "resource": "webhooks",
+            "operation_id": "deleteWebhook",
+            "method": "DELETE",
+            "path": "/webhooks/{webhookId}",
+            "tool": "adobe_acrobat_sign_webhooks_delete_webhook",
+            "class": "AdobeAcrobatSignWebhooksDeleteWebhook"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "createWidget",
+            "method": "POST",
+            "path": "/widgets",
+            "tool": "adobe_acrobat_sign_widgets_create_widget",
+            "class": "AdobeAcrobatSignWidgetsCreateWidget"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetView",
+            "method": "POST",
+            "path": "/widgets/{widgetId}/views",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_view",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetView"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgets",
+            "method": "GET",
+            "path": "/widgets",
+            "tool": "adobe_acrobat_sign_widgets_get_widgets",
+            "class": "AdobeAcrobatSignWidgetsGetWidgets"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetInfo",
+            "method": "GET",
+            "path": "/widgets/{widgetId}",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_info",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetInfo"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetAgreements",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/agreements",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_agreements",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetAgreements"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetAuditTrail",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/auditTrail",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_audit_trail",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetAuditTrail"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetCombinedDocument",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/combinedDocument",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_combined_document",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetCombinedDocument"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetDocuments",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/documents",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_documents",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetDocuments"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetDocumentInfo",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/documents/{documentId}",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_document_info",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetDocumentInfo"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getEvents",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/events",
+            "tool": "adobe_acrobat_sign_widgets_get_events",
+            "class": "AdobeAcrobatSignWidgetsGetEvents"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetFormData",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/formData",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_form_data",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetFormData"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getWidgetNoteForApiUser",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/me/note",
+            "tool": "adobe_acrobat_sign_widgets_get_widget_note_for_api_user",
+            "class": "AdobeAcrobatSignWidgetsGetWidgetNoteForApiUser"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getAllWidgetMembers",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/members",
+            "tool": "adobe_acrobat_sign_widgets_get_all_widget_members",
+            "class": "AdobeAcrobatSignWidgetsGetAllWidgetMembers"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "getParticipantSet",
+            "method": "GET",
+            "path": "/widgets/{widgetId}/members/participantSets/{participantSetId}",
+            "tool": "adobe_acrobat_sign_widgets_get_participant_set",
+            "class": "AdobeAcrobatSignWidgetsGetParticipantSet"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "updateWidget",
+            "method": "PUT",
+            "path": "/widgets/{widgetId}",
+            "tool": "adobe_acrobat_sign_widgets_update_widget",
+            "class": "AdobeAcrobatSignWidgetsUpdateWidget"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "updateWidgetVisibility",
+            "method": "PUT",
+            "path": "/widgets/{widgetId}/me/visibility",
+            "tool": "adobe_acrobat_sign_widgets_update_widget_visibility",
+            "class": "AdobeAcrobatSignWidgetsUpdateWidgetVisibility"
+        },
+        {
+            "resource": "widgets",
+            "operation_id": "updateWidgetState",
+            "method": "PUT",
+            "path": "/widgets/{widgetId}/state",
+            "tool": "adobe_acrobat_sign_widgets_update_widget_state",
+            "class": "AdobeAcrobatSignWidgetsUpdateWidgetState"
+        },
+        {
+            "resource": "workflows",
+            "operation_id": "getWorkflows",
+            "method": "GET",
+            "path": "/workflows",
+            "tool": "adobe_acrobat_sign_workflows_get_workflows",
+            "class": "AdobeAcrobatSignWorkflowsGetWorkflows"
+        }
+    ]
+}

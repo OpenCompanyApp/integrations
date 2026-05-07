@@ -2,13 +2,16 @@
 
 namespace OpenCompany\Integrations\Chargebee;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
  * Chargebee API service for managing subscriptions, customers, and invoices.
  *
- * Communicates with the Chargebee REST API v2 using Bearer token authentication.
+ * Communicates with the Chargebee REST API v2 using HTTP Basic authentication.
  * Supports multi-account configuration via constructor injection.
  *
  * The base URL is constructed as {@see https://{site_name}.chargebee.com/api/v2}
@@ -19,7 +22,7 @@ class ChargebeeService
     /**
      * Create a new ChargebeeService instance.
      *
-     * @param  string  $accessToken  Chargebee API access token for Bearer authentication.
+     * @param  string  $accessToken  Chargebee API key used as the Basic Auth username.
      * @param  string  $siteName     Chargebee site name (subdomain in the API URL).
      * @param  string  $baseUrl      Optional override for the base URL scheme (default: https://{site}.chargebee.com).
      */
@@ -51,13 +54,13 @@ class ChargebeeService
     }
 
     /**
-     * Retrieve the current authenticated user's information.
+     * Verify credentials with a lightweight list request.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/subscriptions', ['limit' => 1]);
     }
 
     /**
@@ -162,16 +165,51 @@ class ChargebeeService
     }
 
     /**
+     * Send a GET request to a Chargebee API v2 endpoint.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Send a POST request to a Chargebee API v2 endpoint.
+     *
+     * @param  array<string, mixed>  $data  Form-encoded request payload.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $data, $query);
+    }
+
+    /**
+     * Send a DELETE request to a Chargebee API v2 endpoint.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string               $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string               $path    API endpoint path (e.g., /subscriptions).
      * @param  array<string, mixed> $data    Query parameters or form data.
+     * @param  array<string, mixed> $query   Query string parameters for mutating requests.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $data, $query);
 
         if ($response->status() === 204) {
             return [];
@@ -183,52 +221,53 @@ class ChargebeeService
     /**
      * Make a raw HTTP request to the Chargebee API.
      *
-     * Uses Bearer token authentication with the configured access token.
+     * Uses HTTP Basic authentication with the API key as the username.
      *
      * @param  string               $method  HTTP method.
      * @param  string               $path    API endpoint path.
      * @param  array<string, mixed> $data    Request data.
-     * @return \Illuminate\Http\Client\Response
+     * @param  array<string, mixed> $query   Query string parameters for mutating requests.
+     * @return Response
      *
-     * @throws \RuntimeException If the access token is missing, or the request fails.
+     * @throws RuntimeException If the access token is missing, or the request fails.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = [], array $query = []): Response
     {
         if (!$this->accessToken || !$this->baseUrl) {
-            throw new \RuntimeException('Chargebee access token and site name are not configured.');
+            throw new RuntimeException('Chargebee access token and site name are not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])->withBasicAuth($this->accessToken, '')->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
+                'POST' => $http->withOptions(['query' => $query])->post($url, $data),
+                'PUT' => $http->withOptions(['query' => $query])->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $error = $response->json('message') ?? $response->body();
+                $error = $response->json('message') ?? $response->json('error_msg') ?? $response->json('api_error_code') ?? $response->body();
                 Log::error("Chargebee API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Chargebee API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new RuntimeException("Chargebee API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Chargebee API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Chargebee API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Chargebee API: {$e->getMessage()}");
         }
     }
 }

@@ -3,75 +3,17 @@
 namespace OpenCompany\Integrations\Apify;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Apify\Tools\ApifyRunActor;
-use OpenCompany\Integrations\Apify\Tools\ApifyGetRun;
-use OpenCompany\Integrations\Apify\Tools\ApifyListActors;
-use OpenCompany\Integrations\Apify\Tools\ApifyGetActor;
-use OpenCompany\Integrations\Apify\Tools\ApifyListDatasets;
-use OpenCompany\Integrations\Apify\Tools\ApifyGetDataset;
-use OpenCompany\Integrations\Apify\Tools\ApifyGetDatasetItems;
-use OpenCompany\Integrations\Apify\Tools\ApifyListKeyValueStores;
-use OpenCompany\Integrations\Apify\Tools\ApifyGetRecord;
-use OpenCompany\Integrations\Apify\Tools\ApifyGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
-     * Describe host and authentication capabilities for catalog and setup flows.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationCapabilities(): array
-    {
-        return [
-          'auth' => [
-            'strategy' => 'api_token',
-            'legacy_auth_type' => 'api_token',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
-            ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-            ],
-            'notes' =>
-            [
-            ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
-        ];
-    }
-
+ * Tool catalog and configuration metadata for official Apify API operations.
+ */
+class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
     public function appName(): string
     {
         return 'apify';
@@ -81,7 +23,7 @@ class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'label' => 'Apify',
-            'description' => 'Web scraping & automation',
+            'description' => 'Web scraping and automation platform',
             'icon' => 'ph:robot',
             'logo' => 'simple-icons:apify',
         ];
@@ -91,14 +33,58 @@ class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'name' => 'Apify',
-            'description' => 'Web scraping and automation platform — run actors, manage datasets and key-value stores.',
+            'description' => 'Official Apify API tools for actors, runs, tasks, datasets, key-value stores, request queues, webhooks, schedules, users, and tools.',
             'icon' => 'ph:robot',
             'logo' => 'simple-icons:apify',
-            'category' => 'automation',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.apify.com/api/v2',
+            'source_url' => 'https://docs.apify.com/api/openapi.json',
         ];
-    }    public function configSchema(): array
+    }
+
+    /**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+            'auth' => [
+                'strategy' => 'api_token',
+                'legacy_auth_type' => 'api_token',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_token'],
+                'notes' => ['Requests use the Authorization: Bearer API token header.'],
+            ],
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
+            ],
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
+            ],
+        ];
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -106,49 +92,55 @@ class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'type' => 'secret',
                 'label' => 'API Token',
                 'placeholder' => 'Enter your Apify API token',
-                'hint' => 'Find your API token in Apify at <strong>Settings → Integrations → API token</strong>',
+                'hint' => 'Find your API token in Apify settings under Integrations.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api.apify.com/v2',
-                'hint' => 'Use the default Apify Cloud URL, or your self-hosted Apify API URL',
-                'default' => 'https://api.apify.com/v2',
+                'placeholder' => 'https://api.apify.com',
+                'hint' => 'Use the default Apify Cloud URL. Existing /v2-suffixed values remain supported.',
+                'default' => 'https://api.apify.com',
             ],
         ];
     }
 
+    /**
+     * Verify credentials with the official current user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Connection form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.apify.com/v2', '/');
+        $apiToken = (string) ($config['api_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.apify.com'), '/');
 
-        if (empty($apiToken)) {
+        if ($apiToken === '') {
             return ['success' => false, 'error' => 'No API token provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+                'Authorization' => 'Bearer '.$apiToken,
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($this->urlFor($baseUrl, '/v2/users/me'));
 
-            $json = $response->json();
+            if (! $response->successful()) {
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->json('message') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Apify API at {$baseUrl}. Check the URL.",
+                    'error' => 'Apify API error: '.(is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
-            $username = $json['data']['username'] ?? 'unknown';
+            $username = $response->json('data.username') ?? 'user';
 
             return [
                 'success' => true,
-                'message' => "Connected to Apify as {$username}.",
+                'message' => "Connected to Apify API as {$username}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -165,88 +157,31 @@ class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
 
     public function tools(): array
     {
-        return [
-            'apify_run_actor' => [
-                'class' => ApifyRunActor::class,
-                'type' => 'write',
-                'name' => 'Run Actor',
-                'description' => 'Run an Apify actor with input configuration.',
-                'icon' => 'ph:play',
-            ],
-            'apify_get_run' => [
-                'class' => ApifyGetRun::class,
-                'type' => 'read',
-                'name' => 'Get Run',
-                'description' => 'Get details and status of an actor run.',
-                'icon' => 'ph:info',
-            ],
-            'apify_list_actors' => [
-                'class' => ApifyListActors::class,
-                'type' => 'read',
-                'name' => 'List Actors',
-                'description' => 'List available Apify actors.',
-                'icon' => 'ph:list',
-            ],
-            'apify_get_actor' => [
-                'class' => ApifyGetActor::class,
-                'type' => 'read',
-                'name' => 'Get Actor',
-                'description' => 'Get details of a specific Apify actor.',
-                'icon' => 'ph:info',
-            ],
-            'apify_list_datasets' => [
-                'class' => ApifyListDatasets::class,
-                'type' => 'read',
-                'name' => 'List Datasets',
-                'description' => 'List accessible Apify datasets.',
-                'icon' => 'ph:database',
-            ],
-            'apify_get_dataset' => [
-                'class' => ApifyGetDataset::class,
-                'type' => 'read',
-                'name' => 'Get Dataset',
-                'description' => 'Get details of a specific dataset.',
-                'icon' => 'ph:database',
-            ],
-            'apify_get_dataset_items' => [
-                'class' => ApifyGetDatasetItems::class,
-                'type' => 'read',
-                'name' => 'Get Dataset Items',
-                'description' => 'Retrieve items from a dataset.',
-                'icon' => 'ph:table',
-            ],
-            'apify_list_key_value_stores' => [
-                'class' => ApifyListKeyValueStores::class,
-                'type' => 'read',
-                'name' => 'List Key-Value Stores',
-                'description' => 'List accessible key-value stores.',
-                'icon' => 'ph:key',
-            ],
-            'apify_get_record' => [
-                'class' => ApifyGetRecord::class,
-                'type' => 'read',
-                'name' => 'Get Record',
-                'description' => 'Get a record from a key-value store.',
-                'icon' => 'ph:file-text',
-            ],
-            'apify_get_current_user' => [
-                'class' => ApifyGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user profile.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (ApifyService::operations() as $operation) {
+            $tools[(string) $operation['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$operation['class'],
+                'type' => $operation['type'],
+                'name' => $operation['name'],
+                'description' => $operation['description'],
+                'icon' => $operation['type'] === 'read' ? 'ph:eye' : 'ph:robot',
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/apify.md';
-    }    public function credentialFields(): array
+        return __DIR__.'/../lua-docs/apify.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Apify API URL', 'required' => false, 'default' => 'https://api.apify.com/v2'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Apify API URL', 'required' => false, 'default' => 'https://api.apify.com'],
         ];
     }
 
@@ -257,19 +192,39 @@ class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Apify service for a default or account-scoped context.
+     *
+     * @param  array<string, mixed>  $context  Optional host context including account.
+     */
+    private function resolveService(array $context = []): ApifyService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new ApifyService(
+            return new ApifyService(
                 apiToken: $creds->get('apify', 'api_token', '', $account),
-                baseUrl: $creds->get('apify', 'url', 'https://api.apify.com/v2', $account),
+                baseUrl: $creds->get('apify', 'url', 'https://api.apify.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(ApifyService::class));
+        return app(ApifyService::class);
+    }
+
+    /**
+     * Build a request URL while tolerating the old /v2-suffixed base URL.
+     */
+    private function urlFor(string $baseUrl, string $path): string
+    {
+        if (str_ends_with($baseUrl, '/v2') && str_starts_with($path, '/v2/')) {
+            return $baseUrl.substr($path, 3);
+        }
+
+        return $baseUrl.$path;
     }
 }

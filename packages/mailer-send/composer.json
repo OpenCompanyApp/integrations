@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mailer-send",
-    "description": "MailerSend integration for Laravel — send emails, list messages, templates, domains, and recipients.",
+    "description": "MailerSend integration for Laravel: transactional email, analytics, domains, templates, recipients, suppressions, webhooks, inbound routing, and SMTP users.",
     "license": "MIT",
     "authors": [
         {

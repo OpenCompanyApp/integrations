@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-box",
-    "description": "Box integration for Laravel — manage files, folders, sharing, and search via the Box API.",
+    "description": "Box integration for Laravel with generated tools from the official Box OpenAPI specification.",
     "license": "MIT",
     "authors": [
         {

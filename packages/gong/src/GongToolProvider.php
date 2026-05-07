@@ -108,7 +108,7 @@ class GongToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Revenue intelligence platform — calls, deals, and customer interactions',
             'icon' => 'ph:phone-call',
             'logo' => 'simple-icons:gong',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://app.gong.io/settings/api',
         ];

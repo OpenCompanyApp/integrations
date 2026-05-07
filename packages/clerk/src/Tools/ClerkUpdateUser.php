@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Update a Clerk user.
+ *
+ * Updates common user profile fields by user ID.
+ */
 class ClerkUpdateUser implements Tool
 {
     /**
      * Create a new ClerkUpdateUser tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -49,7 +56,7 @@ class ClerkUpdateUser implements Tool
     /**
      * Execute the update user tool.
      *
-     * @param  array  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

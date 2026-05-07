@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ExchangeRate\ExchangeRateService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Convert an amount between two currencies.
+ */
 class ExchangeRateConvertCurrency implements Tool
 {
+    /**
+     * @param  ExchangeRateService  $service  The exchange-rate API client.
+     */
     public function __construct(
         private ExchangeRateService $service,
     ) {}
@@ -32,6 +38,11 @@ class ExchangeRateConvertCurrency implements Tool
         ];
     }
 
+    /**
+     * Convert a currency amount.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (from, to, amount, date).
+     */
     public function execute(array $args): ToolResult
     {
         try {

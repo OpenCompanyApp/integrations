@@ -2,68 +2,25 @@
 
 namespace OpenCompany\Integrations\Recruitee\Tools;
 
-use OpenCompany\Integrations\Recruitee\RecruiteeService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class RecruiteeGetOffer implements Tool
+/**
+ * Get a single Recruitee offer by ID.
+ */
+class RecruiteeGetOffer extends AbstractRecruiteeTool
 {
-    /**
-     * Create a new RecruiteeGetOffer tool instance.
-     */
-    public function __construct(
-        private RecruiteeService $service,
-    ) {}
+    public const NAME = 'recruitee_get_offer';
+    public const DESCRIPTION = 'Get details for a specific Recruitee offer.';
+    public const PARAMETERS = [
+        'id' => ['type' => 'integer', 'required' => true, 'description' => 'Offer ID.'],
+    ];
 
     /**
-     * Get the tool name (slug).
-     */
-    public function name(): string
-    {
-        return 'recruitee_get_offer';
-    }
-
-    /**
-     * Get the tool description.
-     */
-    public function description(): string
-    {
-        return 'Get details for a specific job offer in Recruitee. Returns the full offer object including title, description, requirements, location, and status.';
-    }
-
-    /**
-     * Get the tool parameter definitions.
+     * Get one offer.
      *
-     * @return array<string, array<string, mixed>>
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function parameters(): array
+    protected function call(array $args): array
     {
-        return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The offer ID to retrieve.'],
-        ];
-    }
-
-    /**
-     * Execute the tool.
-     *
-     * @param  array<string, mixed>  $args
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Recruitee integration is not configured.');
-            }
-
-            if (!isset($args['id'])) {
-                return ToolResult::error('The "id" parameter is required.');
-            }
-
-            $result = $this->service->getOffer((int) $args['id']);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->getOffer($this->requiredInt($args, 'id', 'offer ID'));
     }
 }

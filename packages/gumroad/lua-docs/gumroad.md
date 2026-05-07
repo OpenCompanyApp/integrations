@@ -1,205 +1,37 @@
-# Gumroad — Lua API Reference
+# Gumroad Lua Reference
 
-## list_products
+Namespace: `app.integrations.gumroad`
 
-List all digital products in your Gumroad account.
+Gumroad tools use API v2 with OAuth bearer-token authentication. Configure `access_token`; leave `url` as `https://api.gumroad.com/v2` unless using a mock server.
 
-### Parameters
-
-None.
-
-### Examples
+## Examples
 
 ```lua
-local result = app.integrations.gumroad.list_products()
+local products = app.integrations.gumroad.list_products({})
 
-for _, product in ipairs(result.products) do
-  print(product.name .. " — $" .. product.price .. " (" .. product.id .. ")")
-end
-```
-
----
-
-## get_product
-
-Get detailed information about a single Gumroad product.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `product_id` | string | yes | The ID of the product to retrieve |
-
-### Example
-
-```lua
-local result = app.integrations.gumroad.get_product({
-  product_id = "ABC123"
+local sales = app.integrations.gumroad.list_sales({
+  product_id = "prod_123",
+  after = "2026-01-01T00:00:00Z"
 })
 
-print(result.product.name)
-print(result.product.description)
-print(result.product.short_url)
-```
-
----
-
-## list_sales
-
-List sales from your Gumroad account with optional filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `product_id` | string | no | Filter by product ID |
-| `before` | string | no | Only sales before this ISO 8601 timestamp |
-| `after` | string | no | Only sales after this ISO 8601 timestamp |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Examples
-
-#### All recent sales
-
-```lua
-local result = app.integrations.gumroad.list_sales()
-
-for _, sale in ipairs(result.sales) do
-  print(sale.email .. " — $" .. sale.price .. " — " .. sale.product_name)
-end
-```
-
-#### Sales for a specific product
-
-```lua
-local result = app.integrations.gumroad.list_sales({
-  product_id = "ABC123"
+local verified = app.integrations.gumroad.verify_license({
+  product_permalink = "my-product",
+  license_key = "AAAA-BBBB-CCCC",
+  increment_uses_count = true
 })
 
-print("Total sales: " .. result.totalCount)
-```
-
-#### Sales in a date range
-
-```lua
-local result = app.integrations.gumroad.list_sales({
-  after = "2026-01-01T00:00:00Z",
-  before = "2026-01-31T23:59:59Z"
+local webhook = app.integrations.gumroad.create_resource_subscription({
+  resource_name = "sale",
+  post_url = "https://example.test/gumroad/webhook"
 })
 ```
 
----
+## Coverage Notes
 
-## list_subscribers
+- Product tools cover list/get plus custom fields, variants, offer codes, and product subscribers.
+- Sales tools cover list/get, refund, and mark-as-shipped actions.
+- License tools cover verify, enable, disable, and decrement uses count.
+- Resource subscription tools cover webhook list/create/delete for sale, refund, cancellation, dispute, and subscription events.
+- Raw `api_get`, `api_post`, `api_put`, and `api_delete` accept a v2 path such as `/sales/{id}` when a niche endpoint is needed.
 
-List all subscribers, optionally filtered by product.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `product_id` | string | no | Filter by product ID (e.g., a membership) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Examples
-
-#### All subscribers
-
-```lua
-local result = app.integrations.gumroad.list_subscribers()
-
-for _, sub in ipairs(result.subscribers) do
-  print(sub.email .. " — " .. sub.status .. " — " .. sub.product_id)
-end
-```
-
-#### Subscribers for a specific membership
-
-```lua
-local result = app.integrations.gumroad.list_subscribers({
-  product_id = "MEMBERSHIP123"
-})
-```
-
----
-
-## get_subscriber
-
-Get details for a single subscriber.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `subscriber_id` | string | yes | The ID of the subscriber |
-
-### Example
-
-```lua
-local result = app.integrations.gumroad.get_subscriber({
-  subscriber_id = "SUB123"
-})
-
-print(result.subscriber.email)
-print(result.subscriber.status)
-print(result.subscriber.charged_price)
-```
-
----
-
-## list_offers
-
-List all offers (discount codes) in your Gumroad account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.gumroad.list_offers()
-
-for _, offer in ipairs(result.offers) do
-  print(offer.name .. " — " .. offer.code .. " — " .. offer.amount_cents .. " cents off")
-end
-```
-
----
-
-## get_current_user
-
-Get the profile of the currently authenticated Gumroad user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.gumroad.get_current_user()
-
-print("Connected as: " .. result.user.name)
-print("Email: " .. result.user.email)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Gumroad accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.gumroad.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.gumroad.default.function_name({...})
-
--- Named accounts
-app.integrations.gumroad.main_store.function_name({...})
-app.integrations.gumroad.side_project.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Responses are decoded Gumroad JSON exactly as returned by the API.

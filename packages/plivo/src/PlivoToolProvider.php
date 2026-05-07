@@ -111,7 +111,7 @@ class PlivoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Cloud communications platform for SMS and voice',
             'icon' => 'ph:chat-centered-text',
             'logo' => 'simple-icons:plivo',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.plivo.com/docs/',
         ];

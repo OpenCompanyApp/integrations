@@ -2,181 +2,223 @@
 
 namespace OpenCompany\Integrations\DailyCo;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Daily REST API.
+ *
+ * Handles official operation lookup, bearer authentication, request shaping,
+ * response parsing, and normalized API error handling.
+ */
 class DailyCoService
 {
+    private const DEFAULT_BASE_URL = 'https://api.daily.co/v1';
+
+    /**
+     * @param  string  $apiKey  Daily API key.
+     * @param  string  $baseUrl  Daily REST API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.daily.co/v1',
+        private string $baseUrl = self::DEFAULT_BASE_URL,
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl ?: self::DEFAULT_BASE_URL, '/');
     }
 
+    /**
+     * Check whether the service has been configured with an API key.
+     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return trim($this->apiKey) !== '';
     }
 
     /**
-     * List rooms with optional pagination and filters.
+     * Return the official Daily REST API operation map.
      *
-     * @param  int  $limit   Results per page (max 100).
-     * @param  string|null  $endingBefore  Room ID to paginate before.
-     * @param  string|null  $startingAfter  Room ID to paginate after.
+     * @return list<array<string, mixed>>
+     */
+    public static function operations(): array
+    {
+        return DailyCoOperations::all();
+    }
+
+    /**
+     * Return metadata for one Daily operation by tool slug or SDK method name.
+     *
      * @return array<string, mixed>
      */
-    public function listRooms(int $limit = 20, ?string $endingBefore = null, ?string $startingAfter = null): array
+    public function operation(string $operation): array
     {
-        $params = ['limit' => $limit];
-        if ($endingBefore !== null) {
-            $params['ending_before'] = $endingBefore;
-        }
-        if ($startingAfter !== null) {
-            $params['starting_after'] = $startingAfter;
-        }
-
-        return $this->request('GET', '/rooms', $params);
-    }
-
-    /**
-     * Get a single room by name.
-     *
-     * @param  string  $name  The room name.
-     * @return array<string, mixed>
-     */
-    public function getRoom(string $name): array
-    {
-        return $this->request('GET', '/rooms/' . urlencode($name));
-    }
-
-    /**
-     * Create a new room.
-     *
-     * @param  array<string, mixed>  $properties  Room configuration (name, privacy, properties, etc.).
-     * @return array<string, mixed>
-     */
-    public function createRoom(array $properties = []): array
-    {
-        return $this->request('POST', '/rooms', $properties);
-    }
-
-    /**
-     * Delete a room by name.
-     *
-     * @param  string  $name  The room name to delete.
-     * @return array<string, mixed>
-     */
-    public function deleteRoom(string $name): array
-    {
-        return $this->request('DELETE', '/rooms/' . urlencode($name));
-    }
-
-    /**
-     * List meetings with optional filters.
-     *
-     * @param  array<string, mixed>  $filters  Query filters (room, starting_after, ending_before, limit, etc.).
-     * @return array<string, mixed>
-     */
-    public function listMeetings(array $filters = []): array
-    {
-        return $this->request('GET', '/meetings', $filters);
-    }
-
-    /**
-     * Get a single meeting by ID.
-     *
-     * @param  string  $meetingId  The meeting ID.
-     * @return array<string, mixed>
-     */
-    public function getMeeting(string $meetingId): array
-    {
-        return $this->request('GET', '/meetings/' . urlencode($meetingId));
-    }
-
-    /**
-     * List recordings with optional filters.
-     *
-     * @param  array<string, mixed>  $filters  Query filters (room, starting_after, ending_before, limit, etc.).
-     * @return array<string, mixed>
-     */
-    public function listRecordings(array $filters = []): array
-    {
-        return $this->request('GET', '/recordings', $filters);
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API path (e.g. /rooms).
-     * @param  array<string, mixed>  $data  Query params (GET) or body (POST/PUT/DELETE).
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Daily.co API.
-     *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path    API path.
-     * @param  array<string, mixed>  $data  Request data.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Daily.co API key is not configured.');
+        foreach (self::operations() as $definition) {
+            if (($definition['slug'] ?? null) === $operation || ($definition['operation'] ?? null) === $operation) {
+                return $definition;
+            }
         }
 
-        $url = $this->baseUrl . $path;
+        throw new RuntimeException("Unsupported Daily.co operation: {$operation}");
+    }
 
-        try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+    /**
+     * Execute an official Daily REST API operation.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function call(string $operation, array $args = []): array
+    {
+        $definition = $this->operation($operation);
+        [$path, $query, $payload] = $this->shapeRequest($definition, $args);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+        return $this->request(
+            method: (string) $definition['method'],
+            path: $path,
+            query: $query,
+            payload: $payload,
+        );
+    }
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+    /**
+     * Shape tool arguments into path, query, and JSON body data.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>}
+     */
+    private function shapeRequest(array $definition, array $args): array
+    {
+        $path = (string) $definition['path'];
+        $query = isset($args['query']) && is_array($args['query']) ? $args['query'] : [];
+        $payload = isset($args['payload']) && is_array($args['payload']) ? $args['payload'] : [];
+        $consumed = ['query' => true, 'payload' => true];
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Daily.co API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Daily.co API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
-                }
+        foreach ($definition['parameters'] as $parameter) {
+            $name = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? $args[$name] ?? null;
+            $consumed[$param] = true;
+            $consumed[$name] = true;
 
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("Daily.co API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Daily.co API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            if (($parameter['required'] ?? false) && ($value === null || $value === '')) {
+                throw new RuntimeException($param.' is required.');
             }
 
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Daily.co API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Daily.co API: {$e->getMessage()}");
+            if ($value !== null && $value !== '') {
+                $path = str_replace('{'.$name.'}', rawurlencode((string) $value), $path);
+            }
         }
+
+        if (str_contains($path, '{')) {
+            throw new RuntimeException('Missing required Daily.co path parameter.');
+        }
+
+        foreach ($args as $key => $value) {
+            if (isset($consumed[$key])) {
+                continue;
+            }
+
+            if (($definition['request_body'] ?? false) === true) {
+                $payload[$key] = $value;
+            } else {
+                $query[$key] = $value;
+            }
+        }
+
+        return [$path, $query, $payload];
+    }
+
+    /**
+     * Dispatch an authenticated Daily request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array $payload = []): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $payload);
+
+        return $this->decodeResponse($response);
+    }
+
+    /**
+     * Make a raw HTTP request to the Daily REST API.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     *
+     * @throws RuntimeException
+     */
+    private function rawRequest(string $method, string $path, array $query = [], array $payload = []): Response
+    {
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Daily.co API key is not configured.');
+        }
+
+        $options = [];
+        if ($query !== []) {
+            $options['query'] = $query;
+        }
+        if ($payload !== []) {
+            $options['json'] = $payload;
+        }
+
+        try {
+            $response = Http::withToken($this->apiKey)
+                ->acceptJson()
+                ->timeout(30)
+                ->send(strtoupper($method), $this->baseUrl.$path, $options);
+        } catch (\Throwable $e) {
+            Log::error("Daily.co API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+
+            throw new RuntimeException('Failed to connect to Daily.co API: '.$e->getMessage());
+        }
+
+        if (!$response->successful()) {
+            $this->throwApiError($method, $path, $response);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Throw a normalized Daily API error.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $json = $response->json();
+        $message = is_array($json)
+            ? (string) data_get($json, 'error', data_get($json, 'message', ''))
+            : trim($response->body());
+
+        Log::error("Daily.co API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        throw new RuntimeException('Daily.co API error ('.$response->status().'): '.($message !== '' ? $message : 'Unexpected API error.'));
+    }
+
+    /**
+     * Decode JSON, text, or empty Daily responses.
+     *
+     * @return array<string, mixed>
+     */
+    private function decodeResponse(Response $response): array
+    {
+        $body = trim($response->body());
+        if ($body === '' || $body === 'null') {
+            return ['success' => true, 'status' => $response->status()];
+        }
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['value' => $body, 'status' => $response->status()];
     }
 }

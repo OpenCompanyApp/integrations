@@ -2,46 +2,18 @@
 
 namespace OpenCompany\Integrations\CampaignMonitor\Tools;
 
-use OpenCompany\Integrations\CampaignMonitor\CampaignMonitorService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List all email campaigns sent from the Campaign Monitor account.
+ * List sent campaigns for a client.
  */
-class CampaignMonitorListCampaigns implements Tool
+class CampaignMonitorListCampaigns extends AbstractCampaignMonitorEndpointTool
 {
-    public function __construct(
-        private CampaignMonitorService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'campaignmonitor_list_campaigns';
-    }
-
-    public function description(): string
-    {
-        return 'List all email campaigns in your Campaign Monitor account. Returns campaign IDs, subjects, and status.';
-    }
-
-    public function parameters(): array
-    {
-        return [];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Campaign Monitor integration is not configured.');
-            }
-
-            $result = $this->service->listCampaigns();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'campaignmonitor_list_campaigns';
+    protected const TOOL_DESCRIPTION = 'List sent campaigns for a client.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/clients/{client_id}/campaigns.json';
+    protected const PATH_KEYS = array (  0 => 'client_id',);
+    protected const QUERY_KEYS = array (  0 => 'sentFromDate',  1 => 'sentToDate',  2 => 'tags',  3 => 'page',  4 => 'pagesize',  5 => 'orderdirection',);
+    protected const BODY_KEYS = array ();
+    protected const PARAMETERS = array (  'client_id' =>   array (    'type' => 'string',    'required' => true,    'description' => 'Campaign Monitor resource ID for client id.',  ),  'params' =>   array (    'type' => 'object',    'description' => 'Query parameters.',  ),  'sentFromDate' =>   array (    'type' => 'string',    'description' => 'Query parameter: sentFromDate.',  ),  'sentToDate' =>   array (    'type' => 'string',    'description' => 'Query parameter: sentToDate.',  ),  'tags' =>   array (    'type' => 'string',    'description' => 'Query parameter: tags.',  ),  'page' =>   array (    'type' => 'string',    'description' => 'Query parameter: page.',  ),  'pagesize' =>   array (    'type' => 'string',    'description' => 'Query parameter: pagesize.',  ),  'orderdirection' =>   array (    'type' => 'string',    'description' => 'Query parameter: orderdirection.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

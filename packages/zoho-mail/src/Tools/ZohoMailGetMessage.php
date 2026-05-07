@@ -50,7 +50,9 @@ class ZohoMailGetMessage implements Tool
     {
         return [
             'accountId' => ['type' => 'string', 'required' => true, 'description' => 'The Zoho Mail account ID.'],
+            'folderId' => ['type' => 'string', 'required' => true, 'description' => 'The folder ID containing the message.'],
             'messageId' => ['type' => 'string', 'required' => true, 'description' => 'The message ID to retrieve.'],
+            'includeBlockContent' => ['type' => 'boolean', 'description' => 'Whether to include quoted block content.'],
         ];
     }
 
@@ -69,16 +71,20 @@ class ZohoMailGetMessage implements Tool
             }
 
             $accountId = $args['accountId'] ?? '';
+            $folderId = $args['folderId'] ?? '';
             $messageId = $args['messageId'] ?? '';
 
             if (empty($accountId)) {
                 return ToolResult::error('accountId is required.');
             }
+            if (empty($folderId)) {
+                return ToolResult::error('folderId is required.');
+            }
             if (empty($messageId)) {
                 return ToolResult::error('messageId is required.');
             }
 
-            $result = $this->service->getMessage($accountId, $messageId);
+            $result = $this->service->getMessage($accountId, $folderId, $messageId, (bool) ($args['includeBlockContent'] ?? false));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

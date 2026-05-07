@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-cloudflare",
-    "description": "Cloudflare integration for Laravel — manage zones, DNS records, page rules, and analytics.",
+    "description": "Cloudflare integration for Laravel - manage zones, DNS records, page rules, and analytics.",
     "license": "MIT",
     "authors": [
         {

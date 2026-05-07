@@ -1,0 +1,80 @@
+<?php
+
+namespace OpenCompany\Integrations\Greenhouse\Tools;
+
+/**
+ * List offices.
+ *
+ * Maps to the official Greenhouse Harvest v3 endpoint GET /v3/offices.
+ */
+class GreenhouseGetV3Offices extends AbstractGreenhouseTool
+{
+    protected const NAME = 'greenhouse_get_v3_offices';
+    protected const DESCRIPTION = 'List offices
+
+Official Greenhouse Harvest v3 endpoint: GET /v3/offices.';
+    protected const PARAMETERS = [
+        'cursor' => [
+            'type' => 'string',
+            'required' => false,
+            'description' => 'Cursor link for pagination from previous page response header. Do not use any other parameters when using this.',
+        ],
+        'per_page' => [
+            'type' => 'integer',
+            'required' => false,
+            'description' => 'Number of results per page',
+        ],
+        'ids' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'Comma separated list',
+        ],
+        'created_at' => [
+            'type' => 'object',
+            'required' => false,
+            'description' => 'query parameter `created_at`.',
+        ],
+        'updated_at' => [
+            'type' => 'object',
+            'required' => false,
+            'description' => 'query parameter `updated_at`.',
+        ],
+        'fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'Comma separated list of fields to return',
+        ],
+        'parent_id' => [
+            'type' => 'integer',
+            'required' => false,
+            'description' => 'query parameter `parent_id`.',
+        ],
+        'external_id' => [
+            'type' => 'string',
+            'required' => false,
+            'description' => 'query parameter `external_id`.',
+        ],
+    ];
+    protected const METHOD = 'GET';
+    protected const PATH = '/v3/offices';
+    protected const PATH_PARAMS = [];
+    protected const QUERY_PARAMS = [
+        'cursor' => 'cursor',
+        'per_page' => 'per_page',
+        'ids' => 'ids',
+        'created_at' => 'created_at',
+        'updated_at' => 'updated_at',
+        'fields' => 'fields',
+        'parent_id' => 'parent_id',
+        'external_id' => 'external_id',
+    ];
+    protected const HEADER_PARAMS = [];
+    protected const QUERY_STYLES = [
+        'ids' => 'form',
+        'created_at' => 'pipeDelimited',
+        'updated_at' => 'pipeDelimited',
+        'fields' => 'form',
+    ];
+    protected const BODY_REQUIRED = false;
+    protected const AUTH_MODE = 'bearer';
+}

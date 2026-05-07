@@ -86,7 +86,7 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, 
 
     public function appName(): string
     {
-        return 'google_forms';
+        return 'google-forms';
     }
 
     public function appMeta(): array
@@ -109,6 +109,8 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, 
             'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/forms.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-forms',
         ];
     }    public function configSchema(): array
     {
@@ -299,7 +301,10 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, 
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleFormsService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleFormsService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleFormsService::class);
 
         return new $class($service);
     }

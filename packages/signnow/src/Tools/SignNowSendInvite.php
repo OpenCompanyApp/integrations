@@ -6,6 +6,9 @@ use OpenCompany\Integrations\SignNow\SignNowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Send a SignNow signing invite.
+ */
 class SignNowSendInvite implements Tool
 {
     /**
@@ -44,6 +47,7 @@ class SignNowSendInvite implements Tool
             'from' => ['type' => 'string', 'required' => true, 'description' => 'Sender email address (must be the authenticated user email).'],
             'subject' => ['type' => 'string', 'required' => true, 'description' => 'Email subject line for the signing invitation.'],
             'message' => ['type' => 'string', 'description' => 'Optional custom message body for the invitation email.'],
+            'payload' => ['type' => 'object', 'description' => 'Additional official invite fields.'],
         ];
     }
 
@@ -79,6 +83,7 @@ class SignNowSendInvite implements Tool
                 $args['from'],
                 $args['subject'],
                 $args['message'] ?? null,
+                is_array($args['payload'] ?? null) ? $args['payload'] : [],
             );
 
             return ToolResult::success($result);

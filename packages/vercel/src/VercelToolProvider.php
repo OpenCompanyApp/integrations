@@ -4,8 +4,10 @@ namespace OpenCompany\Integrations\Vercel;
 
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Vercel\Tools\VercelCreateDeployment;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetCurrentUser;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetDeployment;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetProject;
@@ -14,12 +16,15 @@ use OpenCompany\Integrations\Vercel\Tools\VercelListDomains;
 use OpenCompany\Integrations\Vercel\Tools\VercelListProjects;
 use OpenCompany\Integrations\Vercel\Tools\VercelListTeams;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-use OpenCompany\Integrations\Vercel\Tools\VercelCreateDeployment;
+/**
+ * Exposes Vercel REST API tools to host applications.
+ *
+ * Handles catalog metadata, credential setup, connection checks, and
+ * multi-account service resolution for Vercel.
+ */
 class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -94,17 +99,20 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Manage your Vercel projects, deployments, domains, and teams.',
             'icon' => 'ph:cloud-arrow-up-bold',
             'logo' => 'simple-icons:vercel',
-            'category' => 'productivity',
+            'category' => 'data',
             'badge' => 'Official',
             'docs_url' => 'https://vercel.com/docs/api',
+            'source_url' => 'https://vercel.com/docs/rest-api',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
-                'name' => 'token',
+                'key' => 'token',
                 'label' => 'Vercel API Token',
-                'type' => 'password',
+                'type' => 'secret',
                 'required' => true,
                 'description' => 'A Vercel API token (Bearer token) with the required scopes.',
                 'docs_link' => 'https://vercel.com/account/tokens',
@@ -112,19 +120,28 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
+    /**
+     * Verify Vercel credentials with a lightweight current-user request.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         try {
-            $service = new VercelService(token: $config['token'] ?? '');
+            $service = new VercelService(
+                token: $config['token'] ?? '',
+                baseUrl: $config['url'] ?? 'https://api.vercel.com',
+            );
             $user = $service->getCurrentUser();
 
             if (isset($user['user'])) {
                 return ['success' => true, 'message' => "Connected as {$user['user']['username']}"];
             }
 
-            return ['success' => false, 'message' => 'Unexpected response from Vercel API.'];
+            return ['success' => false, 'error' => 'Unexpected response from Vercel API.'];
         } catch (\Throwable $e) {
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -132,14 +149,22 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'token' => ['required', 'string', 'min:1'],
+            'url' => ['nullable', 'url'],
         ];
     }
 
     /* ---------- ToolProvider ---------- */
 
-        public function tools(): array
+    public function tools(): array
     {
         return [
+            'vercel_create_deployment' => [
+                'class' => VercelCreateDeployment::class,
+                'type' => 'write',
+                'name' => 'Create Deployment',
+                'description' => 'Create a new Vercel deployment using files or a Git source.',
+                'icon' => 'ph:cloud-arrow-up',
+            ],
             'vercel_get_current_user' => [
                 'class' => VercelGetCurrentUser::class,
                 'type' => 'read',
@@ -206,10 +231,13 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/vercel.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
-            'token' => 'Vercel API Token',
+            ['key' => 'token', 'type' => 'secret', 'label' => 'Vercel API Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.vercel.com'],
         ];
     }
 
@@ -219,7 +247,10 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         if (! empty($context['account'])) {
             $creds = app(CredentialResolver::class);
-            return new VercelService(token: $creds->get('vercel', 'token', '', $context['account']));
+            return new VercelService(
+                token: $creds->get('vercel', 'token', '', $context['account']),
+                baseUrl: $creds->get('vercel', 'url', 'https://api.vercel.com', $context['account']),
+            );
         }
 
         return app(VercelService::class);

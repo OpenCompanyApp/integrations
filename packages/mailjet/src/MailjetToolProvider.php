@@ -93,7 +93,7 @@ class MailjetToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Email delivery and marketing automation platform',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:mailjet',
-            'category' => 'email',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://dev.mailjet.com/email/guides/',
         ];

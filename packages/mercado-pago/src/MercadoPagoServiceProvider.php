@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Mercado Pago integration with Laravel's service container.
+ *
+ * Binds the Mercado Pago service using stored credentials and registers the
+ * tool provider with the shared registry when available.
+ */
 class MercadoPagoServiceProvider extends ServiceProvider
 {
     public function register(): void

@@ -1,201 +1,111 @@
-# OneSignal — Lua API Reference
+# OneSignal Lua API
 
-## list_notifications
+Namespace: `app.integrations["one-signal"]`
 
-List push notifications sent through OneSignal.
+Use this integration for OneSignal messages, users, aliases, subscriptions, segments, templates, outcomes, apps, and legacy player records.
 
-### Parameters
+## Messages
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | OneSignal app ID |
-| `limit` | integer | no | Max notifications to return (default: 50, max: 50) |
-| `offset` | integer | no | Pagination offset (default: 0) |
+- `onesignal_list_notifications({ app_id, limit, offset, kind, template_id, time_offset })`
+- `onesignal_get_notification({ id, app_id, outcome_names, outcome_time_range, outcome_platforms, outcome_attribution })`
+- `onesignal_create_notification({ app_id, payload = {...} })`
+- `onesignal_create_notification({ app_id, contents, headings, included_segments, url, data })`
+- `onesignal_cancel_notification({ message_id, app_id })`
 
-### Example
+Only one targeting method should be used per message: aliases, subscription IDs, segments, or filters.
+
+## Users And Aliases
+
+- `onesignal_create_user({ app_id, payload = {...} })`
+- `onesignal_get_user({ app_id, alias_label, alias_id })`
+- `onesignal_update_user({ app_id, alias_label, alias_id, payload = {...} })`
+- `onesignal_delete_user({ app_id, alias_label, alias_id })`
+- `onesignal_get_user_identity({ app_id, alias_label, alias_id })`
+- `onesignal_create_or_update_alias({ app_id, alias_label, alias_id, identity = {...} })`
+- `onesignal_delete_alias({ app_id, alias_label, alias_id, alias_label_to_delete })`
+
+Use `external_id` as the primary `alias_label` when possible.
+
+## Subscriptions
+
+- `onesignal_get_identity_by_subscription({ app_id, subscription_id })`
+- `onesignal_create_alias_by_subscription({ app_id, subscription_id, identity = {...} })`
+- `onesignal_create_subscription({ app_id, alias_label, alias_id, payload = {...} })`
+- `onesignal_update_subscription({ app_id, subscription_id, payload = {...} })`
+- `onesignal_transfer_subscription({ app_id, subscription_id, identity = {...} })`
+
+Subscriptions represent the actual delivery channel: push, email, SMS, and related channel-specific properties.
+
+## Segments
+
+- `onesignal_list_segments({ app_id, limit, offset })`
+- `onesignal_get_segment({ app_id, segment_id, ["include-segment-detail"] = true })`
+- `onesignal_create_segment({ app_id, payload = {...} })`
+- `onesignal_update_segment({ app_id, segment_id, payload = {...} })`
+- `onesignal_delete_segment({ app_id, segment_id })`
+
+Segment filters use the same format as OneSignal's create/update segment API. User-based segments containing unsupported dashboard-only filters cannot be managed through the public API.
+
+## Templates
+
+- `onesignal_list_templates({ app_id, limit, offset })`
+- `onesignal_get_template({ app_id, template_id })`
+- `onesignal_create_template({ app_id, payload = {...} })`
+- `onesignal_update_template({ app_id, template_id, payload = {...} })`
+- `onesignal_delete_template({ app_id, template_id })`
+
+Templates can be push, email, or SMS. Pass the documented template body through `payload`.
+
+## Analytics, Apps, Legacy Devices, Raw API
+
+- `onesignal_view_outcomes({ app_id, outcome_names, outcome_time_range, outcome_platforms, outcome_attribution })`
+- `onesignal_list_apps({})`
+- `onesignal_get_current_app({ app_id })`
+- `onesignal_update_app({ app_id, payload = {...} })`
+- `onesignal_list_devices({ app_id, limit, offset })`
+- `onesignal_get_device({ id, app_id })`
+- `onesignal_api_get({ path, params })`
+- `onesignal_api_post({ path, payload })`
+- `onesignal_api_patch({ path, payload })`
+- `onesignal_api_delete({ path, payload })`
+
+App administration may require an Organization API key. Legacy device tools use the older player terminology and are kept for compatibility.
+
+## Examples
 
 ```lua
-local result = app.integrations["one-signal"].list_notifications({
-  app_id = "12345678-abcd-efgh-ijkl-1234567890ab",
-  limit = 10,
-  offset = 0
+local message = app.integrations["one-signal"].onesignal_create_notification({
+  contents = { en = "Your report is ready." },
+  include_aliases = {
+    external_id = { "user-123" }
+  },
+  target_channel = "push"
 })
-
-for _, notif in ipairs(result.notifications) do
-  print(notif.id .. ": " .. (notif.headings and notif.headings.en or "No title"))
-end
 ```
 
----
-
-## get_notification
-
-Get details of a specific push notification by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Notification ID |
-| `app_id` | string | yes | OneSignal app ID |
-
-### Example
-
 ```lua
-local result = app.integrations["one-signal"].get_notification({
-  id = "notif-abc-123",
-  app_id = "12345678-abcd-efgh-ijkl-1234567890ab"
+local user = app.integrations["one-signal"].onesignal_update_user({
+  alias_label = "external_id",
+  alias_id = "user-123",
+  payload = {
+    properties = {
+      tags = {
+        plan = "pro"
+      }
+    }
+  }
 })
-
-print("Successful: " .. result.successful .. " / " .. result.recipients)
 ```
 
----
-
-## create_notification
-
-Send a new push notification via OneSignal.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | OneSignal app ID |
-| `contents` | object | yes | Message body per language, e.g. `{"en": "Hello!"}` |
-| `headings` | object | no | Title per language, e.g. `{"en": "Update"}` |
-| `included_segments` | array | no | Target segments, e.g. `{"All", "Active Users"}` |
-| `url` | string | no | URL to open on notification tap |
-| `data` | object | no | Custom data payload delivered to the app |
-
-### Example
-
 ```lua
-local result = app.integrations["one-signal"].create_notification({
-  app_id = "12345678-abcd-efgh-ijkl-1234567890ab",
-  contents = { en = "Check out our latest update!" },
-  headings = { en = "New Feature" },
-  included_segments = { "All" },
-  url = "https://example.com/updates",
-  data = { type = "feature_update", id = 42 }
+local segment = app.integrations["one-signal"].onesignal_create_segment({
+  payload = {
+    name = "Active Pro Users",
+    filters = {
+      { field = "tag", key = "plan", relation = "=", value = "pro" },
+      { operator = "AND" },
+      { field = "session_count", relation = ">", value = "5" }
+    }
+  }
 })
-
-print("Notification sent! ID: " .. result.id)
-print("Recipients: " .. result.recipients)
 ```
-
----
-
-## list_devices
-
-List devices (players) registered in a OneSignal app.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | OneSignal app ID |
-| `limit` | integer | no | Max devices to return (default: 50, max: 300) |
-| `offset` | integer | no | Pagination offset (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations["one-signal"].list_devices({
-  app_id = "12345678-abcd-efgh-ijkl-1234567890ab",
-  limit = 10
-})
-
-for _, device in ipairs(result.players) do
-  print(device.id .. ": " .. device.device_type .. " sessions=" .. device.session_count)
-end
-```
-
----
-
-## get_device
-
-Get details of a specific device (player) by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Device/player ID |
-| `app_id` | string | yes | OneSignal app ID |
-
-### Example
-
-```lua
-local result = app.integrations["one-signal"].get_device({
-  id = "player-xyz-789",
-  app_id = "12345678-abcd-efgh-ijkl-1234567890ab"
-})
-
-print("Platform: " .. result.device_type)
-print("Sessions: " .. result.session_count)
-print("Tags: " .. json.stringify(result.tags or {}))
-```
-
----
-
-## list_apps
-
-List all OneSignal apps accessible with the configured API key.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["one-signal"].list_apps()
-
-for _, app in ipairs(result) do
-  print(app.name .. " (" .. app.id .. ") — " .. app.players .. " players")
-end
-```
-
----
-
-## get_current_app
-
-Get details of a specific OneSignal app by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `app_id` | string | yes | OneSignal app ID |
-
-### Example
-
-```lua
-local result = app.integrations["one-signal"].get_current_app({
-  app_id = "12345678-abcd-efgh-ijkl-1234567890ab"
-})
-
-print("App: " .. result.name)
-print("Site: " .. result.site_name)
-print("Players: " .. result.players)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple OneSignal accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations["one-signal"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["one-signal"].default.function_name({...})
-
--- Named accounts
-app.integrations["one-signal"].production.function_name({...})
-app.integrations["one-signal"].staging.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.

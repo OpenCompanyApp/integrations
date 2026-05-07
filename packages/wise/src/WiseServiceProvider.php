@@ -24,7 +24,7 @@ class WiseServiceProvider extends ServiceProvider
 
             return new WiseService(
                 apiKey: $creds->get('wise', 'api_key', ''),
-                baseUrl: $creds->get('wise', 'url', 'https://api.transferwise.com'),
+                baseUrl: $creds->get('wise', 'url', 'https://api.wise.com'),
             );
         });
     }

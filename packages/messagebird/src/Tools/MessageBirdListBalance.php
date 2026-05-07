@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MessageBird\MessageBirdService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get MessageBird account balance.
+ *
+ * Returns amount, currency, and payment type from the Balance API.
+ */
 class MessageBirdListBalance implements Tool
 {
+    /**
+     * @param  MessageBirdService  $service  The MessageBird REST API client
+     */
     public function __construct(
         private MessageBirdService $service,
     ) {}
@@ -27,6 +35,11 @@ class MessageBirdListBalance implements Tool
         return [];
     }
 
+    /**
+     * Get account balance.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

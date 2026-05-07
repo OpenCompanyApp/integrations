@@ -2,181 +2,338 @@
 
 namespace OpenCompany\Integrations\BlandAI;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * BlandAI API service — handles authentication and HTTP communication with the Bland.ai v1 API.
+ * HTTP client for the Bland AI API.
  *
- * Supports making phone calls, retrieving call details, listing calls, and analyzing call transcripts.
+ * Handles authentication, v1/v2 endpoint routing, response parsing, and errors for calls,
+ * batches, voices, tools, and knowledge-base workflows.
  */
 class BlandAIService
 {
+    /**
+     * @param  string  $apiKey  Bland AI API key
+     * @param  string  $baseUrl  Bland AI API host, with or without a trailing /v1 or /v2
+     */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.bland.ai/v1',
+        private string $baseUrl = 'https://api.bland.ai',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = preg_replace('#/(v1|v2)$#', '', rtrim($this->baseUrl, '/')) ?: 'https://api.bland.ai';
     }
 
-    /**
-     * Check whether the service has a configured API key.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
-     * Initiate a new phone call via BlandAI.
+     * Send a dynamic AI phone call.
      *
-     * @param  string  $phoneNumber  The phone number to call (E.164 format recommended, e.g. "+1234567890").
-     * @param  string  $task  Instructions or task description for the AI agent on the call.
-     * @param  string|null  $voice  Optional voice identifier to use for the call.
-     * @param  array  $options  Additional optional parameters (e.g. wait_for_greeting, record, etc.).
-     * @return array The API response containing call details (including call_id).
+     * @param  array<string, mixed>  $params  Send Call request body
+     * @return array<string, mixed>
+     */
+    public function sendCall(array $params): array
+    {
+        return $this->request('POST', '/v1/calls', $params);
+    }
+
+    /**
+     * Backward-compatible helper for the old make-call signature.
+     *
+     * @param  string  $phoneNumber  Phone number to call
+     * @param  string  $task  Call objective or task
+     * @param  string|null  $voice  Optional voice id/name
+     * @param  array<string, mixed>  $options  Additional Send Call parameters
+     * @return array<string, mixed>
      */
     public function makeCall(string $phoneNumber, string $task, ?string $voice = null, array $options = []): array
     {
-        $data = array_merge([
+        $params = array_merge($options, [
             'phone_number' => $phoneNumber,
             'task' => $task,
-        ], $options);
+        ]);
 
         if ($voice !== null) {
-            $data['voice'] = $voice;
+            $params['voice'] = $voice;
         }
 
-        return $this->request('POST', '/calls', $data);
+        return $this->sendCall($params);
     }
 
     /**
      * Retrieve details for a specific call.
      *
-     * @param  string  $callId  The unique identifier of the call.
-     * @return array The call details including transcript, status, and metadata.
+     * @param  string  $callId  Call ID
+     * @return array<string, mixed>
      */
     public function getCall(string $callId): array
     {
-        return $this->request('GET', '/calls/' . urlencode($callId));
+        return $this->request('GET', '/v1/calls/' . rawurlencode($callId));
     }
 
     /**
-     * List calls with optional filtering and pagination.
+     * List calls with optional filters and cursor pagination.
      *
-     * @param  int  $limit  Maximum number of calls to return.
-     * @param  int  $offset  Number of calls to skip for pagination.
-     * @param  array  $filters  Optional query filters (e.g. status, date range).
-     * @return array List of calls and pagination metadata.
+     * @param  array<string, mixed>  $filters  Query filters such as from_number, to_number, batch_id, start_date, end_date, limit, or after
+     * @return array<string, mixed>
      */
-    public function listCalls(int $limit = 50, int $offset = 0, array $filters = []): array
+    public function listCalls(array $filters = []): array
     {
-        $params = array_merge([
-            'limit' => $limit,
-            'offset' => $offset,
-        ], $filters);
-
-        return $this->request('GET', '/calls', $params);
+        return $this->request('GET', '/v1/calls', $filters);
     }
 
     /**
-     * Analyze a completed call's transcript.
+     * Stop an active call.
      *
-     * @param  string  $callId  The unique identifier of the call to analyze.
-     * @param  string|array  $prompt  Analysis prompt or structured query for the transcript.
-     * @param  array  $options  Additional analysis options.
-     * @return array The analysis results.
+     * @param  string  $callId  Call ID
+     * @return array<string, mixed>
      */
-    public function analyzeCall(string $callId, string|array $prompt, array $options = []): array
+    public function stopCall(string $callId): array
     {
-        $data = array_merge([
-            'prompt' => $prompt,
-        ], $options);
-
-        return $this->request('POST', '/calls/' . urlencode($callId) . '/analyze', $data);
+        return $this->request('POST', '/v1/calls/' . rawurlencode($callId) . '/stop');
     }
 
     /**
-     * Get the current authenticated user's information.
+     * Stop all active calls.
      *
-     * @return array User account details.
+     * @return array<string, mixed>
+     */
+    public function stopAllActiveCalls(): array
+    {
+        return $this->request('POST', '/v1/calls/active/stop');
+    }
+
+    /**
+     * Analyze a completed call.
+     *
+     * @param  string  $callId  Call ID
+     * @param  string  $goal  Analysis goal
+     * @param  array<int, array<int, string>>  $questions  Analysis questions and expected answer types
+     * @return array<string, mixed>
+     */
+    public function analyzeCall(string $callId, string $goal, array $questions = []): array
+    {
+        return $this->request('POST', '/v1/calls/' . rawurlencode($callId) . '/analyze', [
+            'goal' => $goal,
+            'questions' => $questions,
+        ]);
+    }
+
+    /**
+     * Create a v2 batch or campaign.
+     *
+     * @param  array<string, mixed>  $params  Batch request body
+     * @return array<string, mixed>
+     */
+    public function createBatch(array $params): array
+    {
+        return $this->request('POST', '/v2/batches', $params);
+    }
+
+    /**
+     * List v2 batches.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as take and skip
+     * @return array<string, mixed>
+     */
+    public function listBatches(array $params = []): array
+    {
+        return $this->request('GET', '/v2/batches/list', $params);
+    }
+
+    /**
+     * List available voices.
+     *
+     * @return array<string, mixed>
+     */
+    public function listVoices(): array
+    {
+        return $this->request('GET', '/v1/voices');
+    }
+
+    /**
+     * Get voice details.
+     *
+     * @param  string  $voiceId  Voice name or id
+     * @return array<string, mixed>
+     */
+    public function getVoice(string $voiceId): array
+    {
+        return $this->request('GET', '/v1/voices/' . rawurlencode($voiceId));
+    }
+
+    /**
+     * List knowledge bases.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as limit, offset, or status
+     * @return array<string, mixed>
+     */
+    public function listKnowledgeBases(array $params = []): array
+    {
+        return $this->request('GET', '/v1/knowledge', $params);
+    }
+
+    /**
+     * Create a text knowledge base through the current knowledge/learn endpoint.
+     *
+     * @param  string  $name  Knowledge base name
+     * @param  string  $text  Knowledge base text content
+     * @param  string|null  $description  Optional description
+     * @return array<string, mixed>
+     */
+    public function createTextKnowledgeBase(string $name, string $text, ?string $description = null): array
+    {
+        return $this->request('POST', '/v1/knowledge/learn', array_filter([
+            'type' => 'text',
+            'name' => $name,
+            'text' => $text,
+            'description' => $description,
+        ], static fn (mixed $value): bool => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Update knowledge base metadata.
+     *
+     * @param  string  $knowledgeBaseId  Knowledge base ID
+     * @param  array<string, mixed>  $params  Metadata fields such as name and description
+     * @return array<string, mixed>
+     */
+    public function updateKnowledgeBase(string $knowledgeBaseId, array $params): array
+    {
+        return $this->request('PUT', '/v1/knowledge/' . rawurlencode($knowledgeBaseId), $params);
+    }
+
+    /**
+     * Chat with a knowledge base.
+     *
+     * @param  string  $knowledgeBaseId  Knowledge base ID
+     * @param  array<int, array<string, string>>  $messages  Chat messages
+     * @return array<string, mixed>
+     */
+    public function chatKnowledgeBase(string $knowledgeBaseId, array $messages): array
+    {
+        return $this->request('POST', '/v1/knowledge/chat', [
+            'knowledge_base_id' => $knowledgeBaseId,
+            'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * Create a custom tool for call agents.
+     *
+     * @param  array<string, mixed>  $params  Tool definition
+     * @return array<string, mixed>
+     */
+    public function createTool(array $params): array
+    {
+        return $this->request('POST', '/v1/tools', $params);
+    }
+
+    /**
+     * Get account context using a lightweight documented call-list request.
+     *
+     * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/calls');
+        return $this->listCalls(['limit' => 1]);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path (relative to base URL).
-     * @param  array  $data  Request payload or query parameters.
-     * @return array The parsed JSON response body.
+     * @param  string  $method  HTTP method
+     * @param  string  $path  API path including version
+     * @param  array<string, mixed>  $data  Query parameters or JSON body
+     * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+        $json = $response->json();
+
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['message' => trim($response->body())];
     }
 
     /**
-     * Make a raw HTTP request to the BlandAI API.
+     * Dispatch a raw HTTP request.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array  $data  Request payload or query parameters.
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException If the API key is missing, the connection fails, or the API returns an error.
+     * @param  string  $method  HTTP method
+     * @param  string  $path  API path including version
+     * @param  array<string, mixed>  $data  Query parameters or JSON body
+     * @return Response
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('BlandAI API key is not configured.');
+        if ($this->apiKey === '') {
+            throw new RuntimeException('BlandAI API key is not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'authorization' => $this->apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ])->timeout(60);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("BlandAI API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("BlandAI API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("BlandAI API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("BlandAI API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            if (! $response->successful()) {
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("BlandAI API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to BlandAI API: {$e->getMessage()}");
+
+            throw new RuntimeException("Failed to connect to BlandAI API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Log and throw a normalized API error.
+     *
+     * @throws RuntimeException
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type');
+        $body = $response->body();
+
+        if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("BlandAI API returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new RuntimeException("BlandAI API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
+        }
+
+        $error = $response->json('error') ?? $response->json('message') ?? $body;
+
+        Log::error("BlandAI API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new RuntimeException("BlandAI API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
     }
 }

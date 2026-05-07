@@ -1,263 +1,69 @@
-# Ghost CMS — Lua API Reference
+# Ghost CMS Lua API Reference
 
-## list_posts
+Namespace: `app.integrations.ghost`
 
-List blog posts with filtering, pagination, and ordering.
+Ghost tools use the Ghost Admin API with an Admin API key in `id:secret` format. Update calls usually require the current `updated_at` value from Ghost to avoid overwriting stale content.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `limit` | integer | no | Posts per page (default: 15, max: 100) |
-| `filter` | string | no | Ghost filter syntax (see below) |
-| `tag` | string | no | Filter by tag slug, e.g. `"news"` |
-| `author` | string | no | Filter by author slug, e.g. `"john"` |
-| `status` | string | no | `"published"`, `"draft"`, or `"scheduled"` |
-| `order` | string | no | Sort order, e.g. `"published_at desc"` |
-| `fields` | string | no | Comma-separated fields to return |
-| `include` | string | no | Related data to include: `"tags"`, `"authors"`, `"tags,authors"` |
-
-### Filter Syntax
-
-Ghost uses a simple filter language:
-- **AND**: `tag:news+status:published`
-- **OR**: `tag:news,tag:engineering`
-- **Comparison**: `published_at:>2025-01-01`
-
-### Examples
+## Content
 
 ```lua
--- List published posts with tags and authors
-local result = app.integrations.ghost.list_posts({
-  status = "published",
-  include = "tags,authors",
-  limit = 10
+local posts = app.integrations.ghost.list_posts({
+  params = { limit = 10, include = "tags,authors" }
 })
 
--- Filter by tag and paginate
-local result = app.integrations.ghost.list_posts({
-  tag = "engineering",
-  page = 2,
-  limit = 20
+local post = app.integrations.ghost.get_post({
+  id = "post-id",
+  params = { formats = "html,lexical", include = "tags,authors" }
 })
 
--- Search with custom filter
-local result = app.integrations.ghost.list_posts({
-  filter = "tag:news+status:published",
-  order = "published_at desc"
+app.integrations.ghost.create_post({
+  post = {
+    title = "Launch notes",
+    html = "<p>Hello</p>",
+    status = "draft"
+  }
 })
 ```
 
----
+Pages use the same pattern with `list_pages`, `get_page`, `create_page`, `update_page`, and `delete_page`.
 
-## get_post
-
-Get a single blog post by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Post UUID |
-| `fields` | string | no | Comma-separated fields to return |
-| `include` | string | no | Related data: `"tags"`, `"authors"` |
-| `formats` | string | no | Content format: `"html"`, `"plaintext"` |
-
-### Example
+## Taxonomy And Authors
 
 ```lua
-local result = app.integrations.ghost.get_post({
-  id = "64a1b2c3d4e5f6g7h8i9j0k",
-  include = "tags,authors"
-})
-
-local post = result.posts[1]
-print(post.title)
-print(post.html)
+local tags = app.integrations.ghost.list_tags({ params = { limit = 100 } })
+local authors = app.integrations.ghost.list_authors({})
 ```
 
----
+Tag mutation tools accept a `tag` object and wrap it in Ghost's native `tags` payload.
 
-## create_post
-
-Create a new blog post.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | string | yes | Post title |
-| `html` | string | no | Post content as HTML |
-| `status` | string | no | `"draft"` or `"published"` (default: `"draft"`) |
-| `featured` | boolean | no | Feature this post (default: false) |
-| `tags` | array | no | Tag names, e.g. `{"News", "Engineering"}` |
-| `authors` | array | no | Author emails, e.g. `{"admin@example.com"}` |
-| `excerpt` | string | no | Custom excerpt / meta description |
-| `feature_image` | string | no | URL for the cover image |
-
-### Examples
+## Members And Monetization
 
 ```lua
--- Create a draft post
-local result = app.integrations.ghost.create_post({
-  title = "My New Post",
-  html = "<p>Hello world!</p>",
-  status = "draft",
-  tags = {"News", "Announcement"}
+local members = app.integrations.ghost.list_members({
+  params = { filter = "status:free" }
 })
 
--- Create and publish immediately
-local result = app.integrations.ghost.create_post({
-  title = "Breaking News",
-  html = "<p>Important update...</p>",
-  status = "published",
-  featured = true,
-  tags = {"Breaking"},
-  authors = {"admin@example.com"}
-})
+local tiers = app.integrations.ghost.list_tiers({})
+local offers = app.integrations.ghost.list_offers({})
+local newsletters = app.integrations.ghost.list_newsletters({})
 ```
 
----
+Use member, tier, and offer create/update tools only when the connected Admin API key has the matching Ghost permissions.
 
-## update_post
-
-Update an existing blog post.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Post UUID to update |
-| `title` | string | no | New title |
-| `html` | string | no | New HTML content |
-| `status` | string | no | `"draft"` or `"published"` |
-| `featured` | boolean | no | Set/unset featured flag |
-| `tags` | array | no | Replace tags (e.g. `{"Updated"}`) |
-| `excerpt` | string | no | New excerpt / meta description |
-| `feature_image` | string | no | New cover image URL |
-| `updated_at` | string | no | Last known timestamp for concurrency control |
-
-### Example
+## Webhooks And Site
 
 ```lua
--- Update post content and publish
-local result = app.integrations.ghost.update_post({
-  id = "64a1b2c3d4e5f6g7h8i9j0k",
-  html = "<p>Updated content!</p>",
-  status = "published"
-})
-
--- Change tags and set featured
-local result = app.integrations.ghost.update_post({
-  id = "64a1b2c3d4e5f6g7h8i9j0k",
-  tags = {"Featured", "Engineering"},
-  featured = true
-})
+local webhooks = app.integrations.ghost.list_webhooks({})
+local site = app.integrations.ghost.get_site({})
 ```
 
----
+## Raw API Helpers
 
-## list_pages
-
-List static pages (About, Contact, etc.).
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `limit` | integer | no | Pages per page (default: 15, max: 100) |
-| `filter` | string | no | Ghost filter syntax |
-| `status` | string | no | `"published"` or `"draft"` |
-| `order` | string | no | Sort order |
-| `fields` | string | no | Comma-separated fields to return |
-| `include` | string | no | Related data: `"tags"`, `"authors"` |
-
-### Example
+Use `api_get`, `api_post`, `api_put`, and `api_delete` for safe relative Admin API paths. Full URLs and parent-directory paths are rejected.
 
 ```lua
-local result = app.integrations.ghost.list_pages({
-  status = "published",
-  limit = 50
+local response = app.integrations.ghost.api_get({
+  path = "/posts",
+  query = { limit = 5 }
 })
-
-for _, page in ipairs(result.pages) do
-  print(page.title .. " (" .. page.slug .. ")")
-end
 ```
-
----
-
-## list_members
-
-List newsletter members.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `limit` | integer | no | Members per page (default: 15, max: 100) |
-| `filter` | string | no | Ghost filter syntax |
-| `order` | string | no | Sort order (default: `"created_at desc"`) |
-| `fields` | string | no | Comma-separated fields to return |
-
-### Examples
-
-```lua
--- List all subscribed members
-local result = app.integrations.ghost.list_members({
-  filter = "subscribed:true",
-  limit = 50
-})
-
--- Search by email domain
-local result = app.integrations.ghost.list_members({
-  filter = "email:@example.com"
-})
-
-for _, member in ipairs(result.members) do
-  print(member.name .. " <" .. member.email .. ">")
-end
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Ghost admin user.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `fields` | string | no | Comma-separated fields to return |
-
-### Example
-
-```lua
-local result = app.integrations.ghost.get_current_user({})
-local user = result.users[1]
-print("Connected as: " .. user.name .. " (" .. user.email .. ")")
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Ghost sites configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.ghost.list_posts({status = "published"})
-
--- Explicit default (portable across setups)
-app.integrations.ghost.default.list_posts({status = "published"})
-
--- Named accounts (e.g. multiple Ghost sites)
-app.integrations.ghost.blog.list_posts({tag = "news"})
-app.integrations.ghost.docs.list_pages({status = "published"})
-```
-
-All functions are identical across accounts — only the credentials (API key and base URL) differ.

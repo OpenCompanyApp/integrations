@@ -1,0 +1,31 @@
+{
+    "name": "opencompanyapp/integration-fred",
+    "description": "FRED integration for Laravel AI agents - categories, releases, series, observations, sources, and tags.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Fred\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Fred\\FredServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "fred",
+        "federal-reserve",
+        "economic-data",
+        "opencompany",
+        "ai-agents"
+    ]
+}

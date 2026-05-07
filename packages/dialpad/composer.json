@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-dialpad",
-    "description": "Dialpad integration for Laravel — manage calls, SMS messages, and users.",
+    "description": "Dialpad API integration for Laravel agents.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,14 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "dialpad", "communication", "opencompany"],
+    "keywords": [
+        "tools",
+        "dialpad",
+        "communications",
+        "calls",
+        "sms",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

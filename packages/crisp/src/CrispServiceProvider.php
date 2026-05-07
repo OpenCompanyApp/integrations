@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * CrispServiceProvider — Laravel service provider for the Crisp integration.
+ * Registers the Crisp integration with Laravel's service container.
  *
- * Registers the CrispService singleton and auto-discovers the tool provider
- * via the ToolProviderRegistry.
+ * Binds CrispService using token identifier/key credentials and registers
+ * CrispToolProvider with the shared ToolProviderRegistry when available.
  */
 class CrispServiceProvider extends ServiceProvider
 {
@@ -20,9 +20,11 @@ class CrispServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new CrispService(
-                apiKey: $creds->get('crisp', 'api_key', ''),
+                identifier: $creds->get('crisp', 'identifier', $creds->get('crisp', 'api_key', '')),
+                key: $creds->get('crisp', 'key', $creds->get('crisp', 'token_key', '')),
                 websiteId: $creds->get('crisp', 'website_id', ''),
-                baseUrl: $creds->get('crisp', 'url', 'https://api.crisp.chat/v1'),
+                tier: $creds->get('crisp', 'tier', 'plugin'),
+                baseUrl: $creds->get('crisp', 'url', 'https://api.crisp.chat'),
             );
         });
     }
@@ -30,8 +32,7 @@ class CrispServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new CrispToolProvider());
+            $this->app->make(ToolProviderRegistry::class)->register(new CrispToolProvider());
         }
     }
 }

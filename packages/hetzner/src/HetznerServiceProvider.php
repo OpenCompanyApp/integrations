@@ -6,8 +6,16 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Hetzner Cloud integration with Laravel's service container.
+ *
+ * Binds the shared API service and registers the generated tool provider.
+ */
 class HetznerServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the Hetzner Cloud service singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(HetznerService::class, function ($app) {
@@ -20,6 +28,9 @@ class HetznerServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the tool provider when the host registry is available.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

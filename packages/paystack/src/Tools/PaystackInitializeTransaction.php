@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Initialize a Paystack transaction.
+ *
+ * Creates a payment authorization URL for a customer checkout flow.
+ */
 class PaystackInitializeTransaction implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -32,6 +40,11 @@ class PaystackInitializeTransaction implements Tool
         ];
     }
 
+    /**
+     * Initialize a transaction with amount and customer email.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

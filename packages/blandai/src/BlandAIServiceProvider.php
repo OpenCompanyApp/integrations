@@ -24,7 +24,7 @@ class BlandAIServiceProvider extends ServiceProvider
 
             return new BlandAIService(
                 apiKey: $creds->get('blandai', 'api_key', ''),
-                baseUrl: $creds->get('blandai', 'url', 'https://api.bland.ai/v1'),
+                baseUrl: $creds->get('blandai', 'url', 'https://api.bland.ai'),
             );
         });
     }

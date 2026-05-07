@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-braintree",
-    "description": "Braintree payments integration for Laravel — list transactions, customers, plans, and current merchant info.",
+    "description": "Braintree GraphQL API integration for Laravel agents.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,14 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "braintree", "payments", "opencompany"],
+    "keywords": [
+        "tools",
+        "braintree",
+        "graphql",
+        "payments",
+        "paypal",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-amazon-ses",
-    "description": "Amazon SES integration for Laravel — send emails, manage templates, list suppressions.",
+    "description": "Amazon SES integration for Laravel agents with SigV4-signed SES v2 email, identity, template, suppression, and generic API tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "amazon-ses", "email", "ses", "aws", "opencompany"],
+    "keywords": ["tools", "amazon-ses", "ses-v2", "aws-sigv4", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

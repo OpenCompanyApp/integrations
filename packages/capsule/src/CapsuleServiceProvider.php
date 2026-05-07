@@ -7,7 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * CapsuleServiceProvider — auto-discovered Laravel service provider.
+ * Auto-discovered Laravel service provider for Capsule CRM.
  *
  * Registers the CapsuleService singleton (resolving credentials from the
  * CredentialResolver) and boots the CapsuleToolProvider into the
@@ -15,6 +15,9 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
  */
 class CapsuleServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the Capsule CRM API client singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(CapsuleService::class, function ($app) {
@@ -27,6 +30,9 @@ class CapsuleServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the Capsule CRM tool provider with the host registry.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

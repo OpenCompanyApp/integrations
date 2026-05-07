@@ -2,7 +2,7 @@
 
 ## list_tickets
 
-List support tickets in Accelo.
+List support issues, also known as tickets, in Accelo. Accelo's API resource for these records is `/api/v0/issues`.
 
 ### Parameters
 
@@ -10,7 +10,7 @@ List support tickets in Accelo.
 |------|------|----------|-------------|
 | `limit` | integer | no | Number of tickets per page (default: 25, max: 100) |
 | `page` | integer | no | Page number for pagination (1-based) |
-| `status` | string | no | Filter by status (e.g. "open", "closed", "resolved") |
+| `status` | string | no | Filter by standing (e.g. "open", "closed", "resolved") |
 
 ### Examples
 
@@ -36,7 +36,7 @@ local page2 = app.integrations.accelo.list_tickets({ limit = 50, page = 2 })
 
 ## get_ticket
 
-Get details of a specific support ticket.
+Get details of a specific support issue, also known as a ticket.
 
 ### Parameters
 
@@ -57,7 +57,7 @@ print("Status: " .. ticket.status)
 
 ## create_ticket
 
-Create a new support ticket.
+Create a new support issue, also known as a ticket.
 
 ### Parameters
 
@@ -66,7 +66,7 @@ Create a new support ticket.
 | `title` | string | yes | Ticket title or subject |
 | `body` | string | yes | Ticket description |
 | `contract_id` | integer | no | Contract ID to associate |
-| `priority` | integer | no | Priority level (1–5, where 1 is highest) |
+| `priority` | integer | no | Issue priority ID |
 
 ### Examples
 
@@ -102,7 +102,7 @@ List tasks in Accelo.
 |------|------|----------|-------------|
 | `limit` | integer | no | Number of tasks per page (default: 25, max: 100) |
 | `page` | integer | no | Page number for pagination (1-based) |
-| `status` | string | no | Filter by status (e.g. "open", "completed", "in_progress") |
+| `status` | string | no | Filter by standing (e.g. "active", "inactive", "completed") |
 
 ### Examples
 
@@ -143,7 +143,7 @@ print("Assignee: " .. (task.assignee or "unassigned"))
 
 ## list_projects
 
-List projects in Accelo.
+List projects in Accelo. Accelo's API resource for these records is `/api/v0/jobs`.
 
 ### Parameters
 
@@ -151,7 +151,7 @@ List projects in Accelo.
 |------|------|----------|-------------|
 | `limit` | integer | no | Number of projects per page (default: 25, max: 100) |
 | `page` | integer | no | Page number for pagination (1-based) |
-| `status` | string | no | Filter by status (e.g. "open", "completed", "in_progress") |
+| `status` | string | no | Filter by standing (e.g. "active", "inactive", "completed") |
 
 ### Examples
 
@@ -170,7 +170,7 @@ end
 
 ## get_current_user
 
-Get the currently authenticated Accelo user's profile.
+Get token information for the current Accelo access token.
 
 ### Parameters
 
@@ -180,7 +180,7 @@ None.
 
 ```lua
 local user = app.integrations.accelo.get_current_user({})
-print("Logged in as: " .. user.first_name .. " " .. user.last_name)
+print("Logged in as: " .. user.firstname .. " " .. user.surname)
 print("Email: " .. user.email)
 ```
 

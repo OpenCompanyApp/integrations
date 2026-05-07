@@ -44,7 +44,9 @@ class BlandAIAnalyzeCall implements Tool
     {
         return [
             'call_id' => ['type' => 'string', 'required' => true, 'description' => 'The unique identifier of the call to analyze.'],
-            'prompt' => ['type' => 'string', 'required' => true, 'description' => 'Analysis prompt describing what to extract or evaluate from the transcript (e.g., "Summarize the key points discussed", "Was the customer satisfied?").'],
+            'goal' => ['type' => 'string', 'description' => 'Overall purpose of the analysis.'],
+            'questions' => ['type' => 'array', 'description' => 'Array of [question, expected_type] pairs.'],
+            'prompt' => ['type' => 'string', 'description' => 'Backward-compatible alias for goal when questions are omitted.'],
         ];
     }
 
@@ -60,10 +62,16 @@ class BlandAIAnalyzeCall implements Tool
                 return ToolResult::error('BlandAI integration is not configured.');
             }
 
-            $result = $this->service->analyzeCall(
-                $args['call_id'],
-                $args['prompt'],
-            );
+            $goal = (string) ($args['goal'] ?? $args['prompt'] ?? '');
+            if ($goal === '') {
+                return ToolResult::error('goal is required.');
+            }
+            $questions = $args['questions'] ?? [];
+            if (! is_array($questions)) {
+                return ToolResult::error('questions must be an array when provided.');
+            }
+
+            $result = $this->service->analyzeCall($args['call_id'], $goal, $questions);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

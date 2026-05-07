@@ -2,201 +2,172 @@
 
 namespace OpenCompany\Integrations\ConvertKit;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * ConvertKit API service for interacting with the ConvertKit v3 REST API.
+ * HTTP client for the current Kit API.
  *
- * Handles authentication via API key query parameter, HTTP requests,
- * error handling, and response parsing for all ConvertKit endpoints.
+ * Handles V4 API key or OAuth bearer authentication, response parsing, and
+ * safe relative endpoint access for all ConvertKit tools.
  */
 class ConvertKitService
 {
     /**
-     * Create a new ConvertKitService instance.
-     *
-     * @param  string  $apiKey  ConvertKit API key
-     * @param  string  $baseUrl  Base URL for the ConvertKit API (defaults to https://api.convertkit.com)
+     * @param  string  $apiKey  Kit V4 API key for personal account automation.
+     * @param  string  $baseUrl  Base URL for the Kit API.
+     * @param  string  $accessToken  OAuth access token for endpoints that require OAuth.
      */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.convertkit.com',
+        private string $baseUrl = 'https://api.kit.com',
+        private string $accessToken = '',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the service is configured with an API key.
+     * Check whether the service has either API key or OAuth credentials.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '' || $this->accessToken !== '';
     }
 
     /**
-     * Get the ConvertKit account information.
+     * Get the authenticated Kit account.
      *
-     * Used for testing the connection and verifying API credentials.
+     * @return array<string, mixed>
+     */
+    public function getCurrentAccount(): array
+    {
+        return $this->apiGet('/account');
+    }
+
+    /**
+     * Backwards-compatible alias for existing callers.
      *
-     * @return array<string, mixed> Account data from the ConvertKit API
+     * @return array<string, mixed>
      */
     public function getAccount(): array
     {
-        return $this->request('GET', '/v3/account');
+        return $this->getCurrentAccount();
     }
 
     /**
-     * List subscribers with pagination and optional date filtering.
+     * Execute a GET request against a safe relative Kit API path.
      *
-     * @param  int  $page  Page number (starts at 1)
-     * @param  int  $perPage  Number of results per page (max 50)
-     * @param  string|null  $from  Start date filter (ISO 8601, e.g. "2025-01-01")
-     * @param  string|null  $to  End date filter (ISO 8601, e.g. "2025-12-31")
-     * @return array<string, mixed> Paginated subscriber results
+     * @param  string  $path  Relative path, for example /subscribers.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
      */
-    public function listSubscribers(int $page = 1, int $perPage = 50, ?string $from = null, ?string $to = null): array
+    public function apiGet(string $path, array $query = []): array
     {
-        $params = [
-            'page' => $page,
-            'per_page' => min($perPage, 50),
-        ];
+        return $this->request('GET', $path, $query);
+    }
 
-        if ($from !== null) {
-            $params['from'] = $from;
+    /**
+     * Execute a POST request against a safe relative Kit API path.
+     *
+     * @param  string  $path  Relative path, for example /subscribers.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $query, $body);
+    }
+
+    /**
+     * Execute a PUT request against a safe relative Kit API path.
+     *
+     * @param  string  $path  Relative path, for example /subscribers/123.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $query, $body);
+    }
+
+    /**
+     * Execute a DELETE request against a safe relative Kit API path.
+     *
+     * @param  string  $path  Relative path, for example /tags/123/subscribers/456.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query, $body);
+    }
+
+    /**
+     * Execute an authenticated request and parse the JSON response.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Safe relative endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array $body = []): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $body);
+
+        if ($response->status() === 204 || trim($response->body()) === '') {
+            return ['success' => true, 'status' => $response->status()];
         }
 
-        if ($to !== null) {
-            $params['to'] = $to;
-        }
-
-        return $this->request('GET', '/v3/subscribers', $params);
-    }
-
-    /**
-     * Get a single subscriber by their ConvertKit subscriber ID.
-     *
-     * @param  int  $subscriberId  The ConvertKit subscriber ID
-     * @return array<string, mixed> Subscriber data
-     */
-    public function getSubscriber(int $subscriberId): array
-    {
-        return $this->request('GET', '/v3/subscribers/' . $subscriberId);
-    }
-
-    /**
-     * List all forms in the account.
-     *
-     * @return array<string, mixed> List of forms
-     */
-    public function listForms(): array
-    {
-        return $this->request('GET', '/v3/forms');
-    }
-
-    /**
-     * List all tags in the account.
-     *
-     * @return array<string, mixed> List of tags
-     */
-    public function listTags(): array
-    {
-        return $this->request('GET', '/v3/tags');
-    }
-
-    /**
-     * Create a new tag.
-     *
-     * @param  string  $name  The tag name
-     * @return array<string, mixed> Created tag data
-     */
-    public function createTag(string $name): array
-    {
-        return $this->request('POST', '/v3/tags', [
-            'tag' => ['name' => $name],
-        ]);
-    }
-
-    /**
-     * List broadcasts with pagination.
-     *
-     * @param  int  $page  Page number (starts at 1)
-     * @param  int  $perPage  Number of results per page
-     * @return array<string, mixed> Paginated broadcast results
-     */
-    public function listBroadcasts(int $page = 1, int $perPage = 50): array
-    {
-        return $this->request('GET', '/v3/broadcasts', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path (relative to base URL)
-     * @param  array<string, mixed>  $data  Request data (query params for GET, body for POST)
-     * @return array<string, mixed> Parsed JSON response
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
         return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the ConvertKit API.
+     * Execute an authenticated raw HTTP request.
      *
-     * Attaches the API key as a query parameter on every request.
-     * Handles error responses, HTML bodies, and connection failures.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Safe relative endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Request payload
-     * @return \Illuminate\Http\Client\Response Raw HTTP response
-     *
-     * @throws \RuntimeException On auth, connection, or API errors
+     * @throws \RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('ConvertKit API key is not configured.');
+        if (!$this->isConfigured()) {
+            throw new \RuntimeException('ConvertKit integration is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->url($this->safePath($path), $query);
 
         try {
-            $http = Http::withHeaders([
+            $headers = [
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ];
+
+            if ($this->accessToken !== '') {
+                $headers['Authorization'] = 'Bearer ' . $this->accessToken;
+            } else {
+                $headers['X-Kit-Api-Key'] = $this->apiKey;
+            }
+
+            $http = Http::withHeaders($headers)->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, array_merge($data, ['api_key' => $this->apiKey])),
-                'POST' => $http->post($url, array_merge($data, ['api_key' => $this->apiKey])),
-                'PUT' => $http->put($url, array_merge($data, ['api_key' => $this->apiKey])),
-                'DELETE' => $http->delete($url, array_merge($data, ['api_key' => $this->apiKey])),
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'DELETE' => $http->delete($url, $body),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("ConvertKit API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("ConvertKit API returned unexpected HTML (HTTP {$response->status()}).");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("ConvertKit API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("ConvertKit API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
@@ -204,7 +175,75 @@ class ConvertKitService
             Log::error("ConvertKit API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to ConvertKit API: {$e->getMessage()}");
+
+            throw new \RuntimeException("Failed to connect to Kit API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Convert a caller path into a safe V4 relative path.
+     */
+    private function safePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '' || preg_match('#^[a-z][a-z0-9+.-]*://#i', $path) || str_starts_with($path, '//') || str_contains($path, '..')) {
+            throw new \InvalidArgumentException('Path must be a safe relative Kit API path.');
+        }
+
+        $path = '/' . ltrim($path, '/');
+
+        if (!str_starts_with($path, '/v4/')) {
+            $path = '/v4' . $path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Build the absolute request URL.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function url(string $path, array $query = []): string
+    {
+        $query = array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        if ($query === []) {
+            return $this->baseUrl . $path;
+        }
+
+        return $this->baseUrl . $path . '?' . http_build_query($query);
+    }
+
+    /**
+     * Parse and throw a normalized API error.
+     *
+     * @throws \RuntimeException
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type') ?? '';
+        $body = $response->body();
+
+        if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("ConvertKit API returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new \RuntimeException("Kit API returned unexpected HTML (HTTP {$response->status()}).");
+        }
+
+        $errors = $response->json('errors');
+        $error = is_array($errors)
+            ? implode('; ', array_map(static fn (mixed $item): string => is_scalar($item) ? (string) $item : json_encode($item), $errors))
+            : ($response->json('error') ?? $response->json('message') ?? $body);
+
+        Log::error("ConvertKit API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new \RuntimeException("Kit API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
     }
 }

@@ -1,0 +1,40 @@
+{
+    "name": "opencompanyapp/integration-companies-house",
+    "description": "Companies House integration for Laravel AI agents - UK company search, filings, officers, charges, PSC records, insolvency, and disqualified officers.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\CompaniesHouse\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\CompaniesHouse\\CompaniesHouseServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "companies-house",
+        "uk",
+        "company-registry",
+        "filings",
+        "officers",
+        "psc",
+        "opencompany"
+    ]
+}

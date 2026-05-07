@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ChargeOver\ChargeOverService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a single ChargeOver customer record.
+ */
 class ChargeOverGetCustomer implements Tool
 {
+    /**
+     * @param  ChargeOverService  $service  The ChargeOver API client.
+     */
     public function __construct(
         private ChargeOverService $service,
     ) {}
@@ -29,6 +35,11 @@ class ChargeOverGetCustomer implements Tool
         ];
     }
 
+    /**
+     * Get a customer by ID through the ChargeOver API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify a Flutterwave transaction by ID.
+ *
+ * Confirms final payment status after checkout redirect or webhook delivery.
+ */
 class FlutterwaveVerifyTransaction implements Tool
 {
     /**
@@ -48,8 +53,7 @@ class FlutterwaveVerifyTransaction implements Tool
     /**
      * Execute the tool: verify a transaction on Flutterwave.
      *
-     * @param  array  $args  The tool arguments (id required).
-     * @return ToolResult The result containing the verification response or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

@@ -117,7 +117,7 @@ class WordPressToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Content management via the WordPress REST API',
             'icon' => 'ph:file-text',
             'logo' => 'simple-icons:wordpress',
-            'category' => 'cms',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.wordpress.org/rest-api/',
         ];

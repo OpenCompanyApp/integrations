@@ -9,7 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool: List Projects
  *
- * Lists projects from Insightly CRM with optional pagination and status filtering.
+ * Lists projects from Insightly CRM with optional pagination.
  *
  * @see https://api.na1.insightly.com/v3.1/Help#!/Projects/GetEntities
  */
@@ -37,7 +37,7 @@ class InsightlyListProjects implements Tool
      */
     public function description(): string
     {
-        return 'List projects from Insightly CRM. Returns project records with names, statuses, dates, and linked records. Use top/skip for pagination and status to filter by project state.';
+        return 'List projects from Insightly CRM. Returns project records with names, statuses, dates, and linked records. Use top/skip for pagination.';
     }
 
     /**
@@ -50,14 +50,15 @@ class InsightlyListProjects implements Tool
         return [
             'top' => ['type' => 'integer', 'description' => 'Maximum number of projects to return.'],
             'skip' => ['type' => 'integer', 'description' => 'Number of projects to skip for pagination.'],
-            'status' => ['type' => 'string', 'description' => 'Filter by project status (e.g., "In Progress", "Completed", "Scheduled").'],
+            'brief' => ['type' => 'boolean', 'description' => 'Return only top-level project properties.'],
+            'count_total' => ['type' => 'boolean', 'description' => 'Ask Insightly to include total count metadata.'],
         ];
     }
 
     /**
      * Execute the list projects tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (top, skip, status).
+     * @param  array<string, mixed>  $args  Tool arguments (top, skip, brief, count_total).
      * @return ToolResult The list of projects or an error message.
      */
     public function execute(array $args): ToolResult
@@ -70,7 +71,8 @@ class InsightlyListProjects implements Tool
             $result = $this->service->listProjects(
                 top: isset($args['top']) ? (int) $args['top'] : null,
                 skip: isset($args['skip']) ? (int) $args['skip'] : null,
-                status: $args['status'] ?? null,
+                brief: isset($args['brief']) ? (bool) $args['brief'] : null,
+                countTotal: isset($args['count_total']) ? (bool) $args['count_total'] : null,
             );
 
             return ToolResult::success([

@@ -55,7 +55,18 @@ class MastodonService
             $params['since_id'] = $sinceId;
         }
 
-        return $this->request('GET', "/api/v1/timelines/{$timeline}", $params);
+        $path = match ($timeline) {
+            'home' => '/api/v1/timelines/home',
+            'public' => '/api/v1/timelines/public',
+            'local' => '/api/v1/timelines/public',
+            default => str_starts_with($timeline, 'list:') ? '/api/v1/timelines/list/'.substr($timeline, 5) : "/api/v1/timelines/{$timeline}",
+        };
+
+        if ($timeline === 'local') {
+            $params['local'] = true;
+        }
+
+        return $this->request('GET', $path, $params);
     }
 
     /**
@@ -149,6 +160,54 @@ class MastodonService
     }
 
     /**
+     * Call any Mastodon GET API endpoint relative to the instance base URL.
+     *
+     * @param  string  $path  API path beginning with /api/.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizeApiPath($path), $params);
+    }
+
+    /**
+     * Call any Mastodon POST API endpoint relative to the instance base URL.
+     *
+     * @param  string  $path  API path beginning with /api/.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = []): array
+    {
+        return $this->request('POST', $this->normalizeApiPath($path), $body);
+    }
+
+    /**
+     * Call any Mastodon PUT/PATCH API endpoint relative to the instance base URL.
+     *
+     * @param  string  $path  API path beginning with /api/.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = []): array
+    {
+        return $this->request('PUT', $this->normalizeApiPath($path), $body);
+    }
+
+    /**
+     * Call any Mastodon DELETE API endpoint relative to the instance base URL.
+     *
+     * @param  string  $path  API path beginning with /api/.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $body = []): array
+    {
+        return $this->request('DELETE', $this->normalizeApiPath($path), $body);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
@@ -160,6 +219,20 @@ class MastodonService
     {
         $response = $this->rawRequest($method, $path, $data);
         return $response->json() ?? [];
+    }
+
+    /**
+     * Normalize a user-supplied API path for generic tools.
+     */
+    private function normalizeApiPath(string $path): string
+    {
+        $path = '/'.ltrim($path, '/');
+
+        if (! str_starts_with($path, '/api/')) {
+            throw new \RuntimeException('Mastodon generic API path must start with /api/.');
+        }
+
+        return $path;
     }
 
     /**

@@ -1,125 +1,82 @@
 # Integration: Devin
 
-> Devin AI integration for the [Laravel AI SDK](https://github.com/laravel/ai) — create sessions, send messages, manage AI-powered tasks. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to [Devin](https://devin.ai), the autonomous AI software engineer. Create sessions with task prompts, check session status, send follow-up messages, and manage AI-powered development workflows — all through the Devin API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Devin integration lets AI agents delegate software engineering tasks to Devin, monitor progress, and provide guidance — enabling multi-agent workflows where your agents orchestrate Devin sessions.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-devin
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Devin integration for the OpenCompany integration ecosystem. It lets agents
+create and inspect Devin sessions, send follow-up messages, manage session tags
+and insights, and administer organization secrets through the current Devin API.
 
 ## Configuration
 
-This tool requires a Devin API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+This package uses Devin API keys.
 
 ```php
 return [
     'devin' => [
-        'api_key' => env('DEVIN_API_KEY'),
-        'url'     => env('DEVIN_URL', 'https://api.devin.ai/v1'),
+        'api_key'     => env('DEVIN_API_KEY'),
+        'org_id'      => env('DEVIN_ORG_ID'),
+        'url'         => env('DEVIN_URL', 'https://api.devin.ai'),
+        'api_version' => env('DEVIN_API_VERSION', 'v3'),
     ],
 ];
 ```
+
+Use `https://api.devin.ai` plus `org_id` for current v3 organization endpoints.
+Existing hosts configured with a URL ending in `/v1` keep legacy session behavior
+for create, get, list, message, terminate, and append-tags tools.
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `devin_create_session` | write | Create a new Devin session with a task prompt |
-| `devin_get_session` | read | Get details and status of a session |
-| `devin_list_sessions` | read | List all Devin sessions |
-| `devin_send_message` | write | Send a message to an active session |
-| `devin_get_current_user` | read | Get the authenticated user info |
-
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Devin\DevinService;
-use OpenCompany\Integrations\Devin\Tools\DevinCreateSession;
-use OpenCompany\Integrations\Devin\Tools\DevinGetSession;
-
-// Create tools
-$service = app(DevinService::class);
-$tools = [
-    new DevinCreateSession($service),
-    new DevinGetSession($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Create a Devin session to fix the login bug');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 5 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('devin');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Devin\Tools\DevinCreateSession::class
-);
-```
+| `devin_create_session` | write | Create a Devin session with task context |
+| `devin_get_session` | read | Get session status and details |
+| `devin_list_sessions` | read | List sessions with pagination and filters |
+| `devin_send_message` | write | Send a message to a session |
+| `devin_terminate_session` | write | Terminate an active session |
+| `devin_list_session_messages` | read | List v3 session messages |
+| `devin_list_session_attachments` | read | List v3 session attachments |
+| `devin_get_session_tags` | read | Read v3 session tags |
+| `devin_append_session_tags` | write | Append session tags |
+| `devin_get_session_insights` | read | Read v3 session insights |
+| `devin_generate_session_insights` | write | Generate v3 session insights |
+| `devin_get_current_user` | read | Identify the authenticated API principal |
+| `devin_list_secrets` | read | List v3 organization secrets |
+| `devin_create_secret` | write | Create a v3 organization secret |
+| `devin_delete_secret` | write | Delete a v3 organization secret |
 
 ## Standalone Service Usage
 
 ```php
 use OpenCompany\Integrations\Devin\DevinService;
 
-$service = app(DevinService::class);
+$service = new DevinService(
+    apiKey: 'devin_test_key',
+    baseUrl: 'https://api.devin.ai',
+    orgId: 'org_example'
+);
 
-// Create a session
-$session = $service->createSession('Build a REST API endpoint for user registration');
+$session = $service->createSession('Fix the failing example.test billing specs', [
+    'title' => 'Billing spec fix',
+    'tags' => ['billing', 'tests'],
+]);
 
-// Check session status
-$status = $service->getSession($session['session_id']);
-
-// Send a follow-up message
-$service->sendMessage($session['session_id'], 'Also add input validation');
-
-// List all sessions
-$sessions = $service->listSessions();
-
-// Get current user
-$user = $service->getCurrentUser();
+$service->sendMessage($session['devin_id'] ?? $session['id'], 'Start by reading the failing assertion.');
+$messages = $service->listSessionMessages($session['devin_id'] ?? $session['id']);
 ```
 
-## Dependencies
+## Notes For Agents
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+Read `lua-docs/devin.md` for agent-facing usage examples and return-shape notes.
+Do not assume legacy v1 response fields match v3 response fields; this package
+returns Devin's JSON with minimal normalization so agents can use the current
+API semantics directly.
 
 ## Requirements
 
 - PHP 8.2+
 - Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Devin](https://devin.ai) account with API access
+- A Devin account with API access
+- Devin organization ID for v3 organization tools
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

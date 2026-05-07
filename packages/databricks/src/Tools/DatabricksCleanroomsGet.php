@@ -1,0 +1,67 @@
+<?php
+
+namespace OpenCompany\Integrations\Databricks\Tools;
+
+/**
+ * Cleanrooms Get.
+ *
+ * Maps to the official Databricks SDK endpoint get /api/2.0/clean-rooms/{clean_room_name}/assets/{asset_type}/{name}/revisions/{etag}.
+ */
+class DatabricksCleanroomsGet extends AbstractDatabricksTool
+{
+    protected const NAME = 'databricks_cleanrooms_get';
+    protected const DESCRIPTION = 'Cleanrooms Get
+
+Official Databricks SDK endpoint: GET /api/2.0/clean-rooms/{clean_room_name}/assets/{asset_type}/{name}/revisions/{etag}
+
+Generated from the official databricks-sdk-go surface, which is generated from Databricks OpenAPI specs.';
+    protected const PARAMETERS = array (
+  'clean_room_name' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `clean_room_name` from the Databricks SDK endpoint.',
+  ),
+  'asset_type' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `asset_type` from the Databricks SDK endpoint.',
+  ),
+  'name' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `name` from the Databricks SDK endpoint.',
+  ),
+  'etag' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `etag` from the Databricks SDK endpoint.',
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional query string parameters matching the Databricks REST API request fields.',
+  ),
+  'headers' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional additional request headers for advanced Databricks endpoints.',
+  ),
+  'body' =>
+  array (
+    'type' => 'object',
+    'description' => 'Optional JSON request body matching the Databricks REST API request fields.',
+  ),
+);
+    protected const METHOD = 'get';
+    protected const PATH = '/api/2.0/clean-rooms/{clean_room_name}/assets/{asset_type}/{name}/revisions/{etag}';
+    protected const PATH_PARAMS = array (
+  'clean_room_name' => 'clean_room_name',
+  'asset_type' => 'asset_type',
+  'name' => 'name',
+  'etag' => 'etag',
+);
+}

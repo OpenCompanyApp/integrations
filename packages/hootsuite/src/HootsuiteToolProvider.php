@@ -93,7 +93,7 @@ class HootsuiteToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Social media management platform — schedule posts, manage social profiles, and coordinate team members.',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:hootsuite',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.hootsuite.com/docs/api-reference',
         ];

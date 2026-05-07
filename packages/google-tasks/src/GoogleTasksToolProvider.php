@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\GoogleTasks;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksListTaskLists;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksGetTaskList;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksCreateTaskList;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksListTasks;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksGetTask;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksCreateTask;
-use OpenCompany\Integrations\GoogleTasks\Tools\GoogleTasksGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Google Tasks.
+ *
+ * Exposes generated coverage for the official Google Tasks API v1 Discovery
+ * document, including task lists and tasks.
+ */
+class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,233 +25,165 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'oauth2_manual_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
-            ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
-            ],
-            'notes' =>
-            [
-              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
-            ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
+            'auth' => ['strategy' => 'oauth2_manual_token', 'legacy_auth_type' => 'oauth', 'credential_mode' => 'stored_token', 'setup_flows' => ['manual_token'], 'requires_browser_for_setup' => false, 'refreshable' => false, 'token_keys' => ['access_token'], 'notes' => ['Requires a Google OAuth access token with Tasks API scopes.']],
+            'host_availability' => ['web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'], 'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal']],
+            'runtime_requirements' => [],
+            'compatibility' => ['web_setup_supported' => true, 'web_runtime_supported' => true, 'cli_setup_supported' => true, 'cli_runtime_supported' => true],
         ];
     }
 
-    public function appName(): string
-    {
-        return 'google-tasks';
-    }
+    public function appName(): string { return 'google-tasks'; }
+    public function appMeta(): array { return ['label' => 'Google Tasks', 'description' => 'Task lists and tasks', 'icon' => 'ph:list-checks', 'logo' => 'logos:google-icon']; }
+    public function integrationMeta(): array { return ['name' => 'Google Tasks', 'description' => 'Generated coverage for the Google Tasks API v1: task lists and tasks.', 'icon' => 'ph:list-checks', 'logo' => 'logos:google-icon', 'category' => 'productivity', 'badge' => 'verified', 'docs_url' => 'https://developers.google.com/workspace/tasks/reference/rest']; }
+    public function configSchema(): array { return [['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'placeholder' => 'Google OAuth access token', 'hint' => 'Use a Google OAuth 2.0 token with Tasks API scopes.', 'required' => true], ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'placeholder' => 'https://tasks.googleapis.com', 'hint' => 'Override only for a proxy or compatible endpoint.', 'default' => 'https://tasks.googleapis.com']]; }
 
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'Google Tasks',
-            'description' => 'Task management',
-            'icon' => 'ph:check-square',
-            'logo' => 'logos:google-tasks',
-        ];
-    }
-
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Google Tasks',
-            'description' => 'Manage task lists and tasks with Google Tasks',
-            'icon' => 'ph:check-square',
-            'logo' => 'logos:google-tasks',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.google.com/tasks/reference/rest',
-        ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Google OAuth access token',
-                'hint' => 'Provide an OAuth 2.0 access token with <code>https://www.googleapis.com/auth/tasks</code> scope',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://tasks.googleapis.com',
-                'hint' => 'Override only if using a proxy or mock server',
-                'default' => 'https://tasks.googleapis.com',
-            ],
-        ];
-    }
-
+    /**
+     * Verify Google Tasks credentials with a lightweight tasklists endpoint call.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://tasks.googleapis.com', '/');
-
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
-        }
-
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://tasks.googleapis.com'), '/');
+        if ($accessToken === '') return ['success' => false, 'error' => 'No access token provided.'];
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/tasks/v1/users/@me/lists', [
-                'maxResults' => 1,
-            ]);
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Google Tasks API at {$baseUrl}. Check the URL.",
-                ];
-            }
-
-            if (!$response->successful()) {
-                $error = $json['error']['message'] ?? $response->body();
-                return ['success' => false, 'error' => "Authentication failed: {$error}"];
-            }
-
-            return [
-                'success' => true,
-                'message' => 'Connected to Google Tasks API.',
-            ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
+            $response = Http::withToken($accessToken)->acceptJson()->timeout(20)->get($baseUrl.'/tasks/v1/users/@me/lists', ['maxResults' => 1]);
+            return $response->successful() ? ['success' => true, 'message' => 'Google Tasks credentials verified.'] : ['success' => false, 'error' => 'Google Tasks API returned HTTP '.$response->status().'.'];
+        } catch (\Throwable $e) { return ['success' => false, 'error' => $e->getMessage()]; }
     }
 
-    public function validationRules(): array
-    {
-        return [
-            'access_token' => 'nullable|string',
-            'url' => 'nullable|url',
-        ];
-    }
+    public function validationRules(): array { return ['access_token' => 'nullable|string', 'url' => 'nullable|url']; }
 
     public function tools(): array
     {
         return [
-            'gtasks_list_task_lists' => [
-                'class' => GoogleTasksListTaskLists::class,
-                'type' => 'read',
-                'name' => 'List Task Lists',
-                'description' => 'List all task lists for the authenticated user.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'gtasks_get_task_list' => [
-                'class' => GoogleTasksGetTaskList::class,
-                'type' => 'read',
-                'name' => 'Get Task List',
-                'description' => 'Get a specific task list by ID.',
-                'icon' => 'ph:list',
-            ],
-            'gtasks_create_task_list' => [
-                'class' => GoogleTasksCreateTaskList::class,
-                'type' => 'write',
-                'name' => 'Create Task List',
-                'description' => 'Create a new task list.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'gtasks_list_tasks' => [
-                'class' => GoogleTasksListTasks::class,
-                'type' => 'read',
-                'name' => 'List Tasks',
-                'description' => 'List tasks in a task list.',
-                'icon' => 'ph:checks',
-            ],
-            'gtasks_get_task' => [
-                'class' => GoogleTasksGetTask::class,
-                'type' => 'read',
-                'name' => 'Get Task',
-                'description' => 'Get a specific task by ID.',
-                'icon' => 'ph:check-square',
-            ],
-            'gtasks_create_task' => [
-                'class' => GoogleTasksCreateTask::class,
-                'type' => 'write',
-                'name' => 'Create Task',
-                'description' => 'Create a new task in a task list.',
-                'icon' => 'ph:plus',
-            ],
-            'gtasks_get_current_user' => [
-                'class' => GoogleTasksGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s information.',
-                'icon' => 'ph:user',
-            ],
+            'google_tasks_tasks_update' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksUpdate',
+  'type' => 'write',
+  'name' => 'Tasks Update',
+  'description' => 'Tasks Update (PUT /tasks/v1/lists/{tasklist}/tasks/{task}).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasks_move' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksMove',
+  'type' => 'write',
+  'name' => 'Tasks Move',
+  'description' => 'Tasks Move (POST /tasks/v1/lists/{tasklist}/tasks/{task}/move).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasks_delete' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksDelete',
+  'type' => 'write',
+  'name' => 'Tasks Delete',
+  'description' => 'Tasks Delete (DELETE /tasks/v1/lists/{tasklist}/tasks/{task}).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasks_clear' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksClear',
+  'type' => 'write',
+  'name' => 'Tasks Clear',
+  'description' => 'Tasks Clear (POST /tasks/v1/lists/{tasklist}/clear).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasks_get' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksGet',
+  'type' => 'read',
+  'name' => 'Tasks Get',
+  'description' => 'Tasks Get (GET /tasks/v1/lists/{tasklist}/tasks/{task}).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_tasks_tasks_insert' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksInsert',
+  'type' => 'write',
+  'name' => 'Tasks Insert',
+  'description' => 'Tasks Insert (POST /tasks/v1/lists/{tasklist}/tasks).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasks_list' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksList',
+  'type' => 'read',
+  'name' => 'Tasks List',
+  'description' => 'Tasks List (GET /tasks/v1/lists/{tasklist}/tasks).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_tasks_tasks_patch' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasksPatch',
+  'type' => 'write',
+  'name' => 'Tasks Patch',
+  'description' => 'Tasks Patch (PATCH /tasks/v1/lists/{tasklist}/tasks/{task}).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasklists_delete' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasklistsDelete',
+  'type' => 'write',
+  'name' => 'Tasklists Delete',
+  'description' => 'Tasklists Delete (DELETE /tasks/v1/users/@me/lists/{tasklist}).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasklists_get' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasklistsGet',
+  'type' => 'read',
+  'name' => 'Tasklists Get',
+  'description' => 'Tasklists Get (GET /tasks/v1/users/@me/lists/{tasklist}).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_tasks_tasklists_insert' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasklistsInsert',
+  'type' => 'write',
+  'name' => 'Tasklists Insert',
+  'description' => 'Tasklists Insert (POST /tasks/v1/users/@me/lists).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasklists_list' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasklistsList',
+  'type' => 'read',
+  'name' => 'Tasklists List',
+  'description' => 'Tasklists List (GET /tasks/v1/users/@me/lists).',
+  'icon' => 'ph:magnifying-glass',
+),
+            'google_tasks_tasklists_patch' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasklistsPatch',
+  'type' => 'write',
+  'name' => 'Tasklists Patch',
+  'description' => 'Tasklists Patch (PATCH /tasks/v1/users/@me/lists/{tasklist}).',
+  'icon' => 'ph:list-checks',
+),
+            'google_tasks_tasklists_update' => array (
+  'class' => '\\OpenCompany\\Integrations\\GoogleTasks\\Tools\\GoogleTasksTasklistsUpdate',
+  'type' => 'write',
+  'name' => 'Tasklists Update',
+  'description' => 'Tasklists Update (PUT /tasks/v1/users/@me/lists/{tasklist}).',
+  'icon' => 'ph:list-checks',
+),
         ];
     }
 
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google-tasks.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://tasks.googleapis.com'],
-        ];
-    }
+    public function credentialFields(): array { return $this->configSchema(); }
+    public function isIntegration(): bool { return true; }
 
-    public function isIntegration(): bool
-    {
-        return true;
-    }
+    /**
+     * Create a Google Tasks tool from the catalog class name.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
+    public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
 
-    public function createTool(string $class, array $context = []): Tool
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): GoogleTasksService
     {
         $account = $context['account'] ?? null;
-
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
-
-            $service = new GoogleTasksService(
-                accessToken: $creds->get('google-tasks', 'access_token', '', $account),
-                baseUrl: $creds->get('google-tasks', 'url', 'https://tasks.googleapis.com', $account),
-            );
-
-            return new $class($service);
+            $creds = app(CredentialResolver::class);
+            return new GoogleTasksService(accessToken: $creds->get('google-tasks', 'access_token', '', $account), baseUrl: $creds->get('google-tasks', 'url', 'https://tasks.googleapis.com', $account));
         }
-
-        return new $class(app(GoogleTasksService::class));
+        return app(GoogleTasksService::class);
     }
+
+    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-tasks.md'; }
 }

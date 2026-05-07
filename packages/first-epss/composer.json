@@ -1,0 +1,40 @@
+{
+    "name": "opencompanyapp/integration-first-epss",
+    "description": "FIRST EPSS integration for Laravel AI agents - Exploit Prediction Scoring System scores by CVE, batch, date, thresholds, top scores, time series, and historical CSV URLs.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\FirstEpss\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\FirstEpss\\FirstEpssServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "first",
+        "epss",
+        "exploit-prediction",
+        "cve",
+        "vulnerability",
+        "security",
+        "opencompany"
+    ]
+}

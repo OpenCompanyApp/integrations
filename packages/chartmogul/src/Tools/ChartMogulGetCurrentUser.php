@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ChartMogul\ChartMogulService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify ChartMogul API credentials with the authenticated ping endpoint.
+ */
 class ChartMogulGetCurrentUser implements Tool
 {
+    /**
+     * @param  ChartMogulService  $service  The ChartMogul API client.
+     */
     public function __construct(
         private ChartMogulService $service,
     ) {}
@@ -19,7 +25,7 @@ class ChartMogulGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the currently authenticated ChartMogul user. Returns user details including name, email, and account information. Useful for verifying API credentials.';
+        return 'Verify ChartMogul API credentials with the /v1/ping endpoint. Returns pong data when the API key is valid.';
     }
 
     public function parameters(): array
@@ -27,6 +33,11 @@ class ChartMogulGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Execute the ChartMogul ping request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

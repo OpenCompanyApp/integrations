@@ -1,0 +1,1688 @@
+{
+  "source": {
+    "type": "openapi",
+    "url": "https://api.gitguardian.com/v1/openapi.json",
+    "docs_url": "https://api.gitguardian.com/docs"
+  },
+  "openapi": "3.0.3",
+  "version": "1.1.0",
+  "title": "GitGuardian API",
+  "base_url": "https://api.gitguardian.com",
+  "path_count": 115,
+  "method_count": 167,
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/v1/api_tokens/self",
+      "operation_id": "self-retrieve-api-token",
+      "tool": "gitguardian_self_retrieve_api_token",
+      "class": "GitGuardianSelfRetrieveApiToken",
+      "tags": [
+        "API Tokens"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/api_tokens/self",
+      "operation_id": "self-delete-api-token",
+      "tool": "gitguardian_self_delete_api_token",
+      "class": "GitGuardianSelfDeleteApiToken",
+      "tags": [
+        "API Tokens"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/api_tokens",
+      "operation_id": "list-api-tokens",
+      "tool": "gitguardian_list_api_tokens",
+      "class": "GitGuardianListApiTokens",
+      "tags": [
+        "API Tokens"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/api_tokens/{token_id}",
+      "operation_id": "retrieve-api-token",
+      "tool": "gitguardian_retrieve_api_token",
+      "class": "GitGuardianRetrieveApiToken",
+      "tags": [
+        "API Tokens"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/api_tokens/{token_id}",
+      "operation_id": "delete-api-token",
+      "tool": "gitguardian_delete_api_token",
+      "class": "GitGuardianDeleteApiToken",
+      "tags": [
+        "API Tokens"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/auth/jwt",
+      "operation_id": "public-jwt-create",
+      "tool": "gitguardian_public_jwt_create",
+      "class": "GitGuardianPublicJwtCreate",
+      "tags": [
+        "API Tokens"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets",
+      "operation_id": "list-incidents",
+      "tool": "gitguardian_list_incidents",
+      "class": "GitGuardianListIncidents",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}",
+      "operation_id": "retrieve-incidents",
+      "tool": "gitguardian_retrieve_incidents",
+      "class": "GitGuardianRetrieveIncidents",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/incidents/secrets/{incident_id}",
+      "operation_id": "update-secret-incident",
+      "tool": "gitguardian_update_secret_incident",
+      "class": "GitGuardianUpdateSecretIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/leaks",
+      "operation_id": "retrieve-incidents-leaks",
+      "tool": "gitguardian_retrieve_incidents_leaks",
+      "class": "GitGuardianRetrieveIncidentsLeaks",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/assign",
+      "operation_id": "assign-incident",
+      "tool": "gitguardian_assign_incident",
+      "class": "GitGuardianAssignIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/unassign",
+      "operation_id": "unassign-incident",
+      "tool": "gitguardian_unassign_incident",
+      "class": "GitGuardianUnassignIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/resolve",
+      "operation_id": "resolve-incident",
+      "tool": "gitguardian_resolve_incident",
+      "class": "GitGuardianResolveIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/ignore",
+      "operation_id": "ignore-incident",
+      "tool": "gitguardian_ignore_incident",
+      "class": "GitGuardianIgnoreIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/reopen",
+      "operation_id": "reopen-incident",
+      "tool": "gitguardian_reopen_incident",
+      "class": "GitGuardianReopenIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/share",
+      "operation_id": "share-incident",
+      "tool": "gitguardian_share_incident",
+      "class": "GitGuardianShareIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/unshare",
+      "operation_id": "unshare-incident",
+      "tool": "gitguardian_unshare_incident",
+      "class": "GitGuardianUnshareIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/grant_access",
+      "operation_id": "grant-access-incident",
+      "tool": "gitguardian_grant_access_incident",
+      "class": "GitGuardianGrantAccessIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/revoke_access",
+      "operation_id": "revoke-access-incident",
+      "tool": "gitguardian_revoke_access_incident",
+      "class": "GitGuardianRevokeAccessIncident",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/notes",
+      "operation_id": "list-incident-notes",
+      "tool": "gitguardian_list_incident_notes",
+      "class": "GitGuardianListIncidentNotes",
+      "tags": [
+        "Internal Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/incidents/secrets/{incident_id}/notes",
+      "operation_id": "create-incident-note",
+      "tool": "gitguardian_create_incident_note",
+      "class": "GitGuardianCreateIncidentNote",
+      "tags": [
+        "Internal Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/incidents/secrets/{incident_id}/notes/{note_id}",
+      "operation_id": "update-incident-note",
+      "tool": "gitguardian_update_incident_note",
+      "class": "GitGuardianUpdateIncidentNote",
+      "tags": [
+        "Internal Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/incidents/secrets/{incident_id}/notes/{note_id}",
+      "operation_id": "delete-incident-note",
+      "tool": "gitguardian_delete_incident_note",
+      "class": "GitGuardianDeleteIncidentNote",
+      "tags": [
+        "Internal Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/members",
+      "operation_id": "list-incident-members",
+      "tool": "gitguardian_list_incident_members",
+      "class": "GitGuardianListIncidentMembers",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/teams",
+      "operation_id": "list-incident-teams",
+      "tool": "gitguardian_list_incident_teams",
+      "class": "GitGuardianListIncidentTeams",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/invitations",
+      "operation_id": "list-incident-invitations",
+      "tool": "gitguardian_list_incident_invitations",
+      "class": "GitGuardianListIncidentInvitations",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/impacted_perimeter",
+      "operation_id": "retrieve-incident-impacted-perimeter",
+      "tool": "gitguardian_retrieve_incident_impacted_perimeter",
+      "class": "GitGuardianRetrieveIncidentImpactedPerimeter",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/incidents/secrets/{incident_id}/vaults",
+      "operation_id": "get-secret-incident-vaults",
+      "tool": "gitguardian_get_secret_incident_vaults",
+      "class": "GitGuardianGetSecretIncidentVaults",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/secret-incidents/{incident_id}/members",
+      "operation_id": "list-secret-incident-member-access",
+      "tool": "gitguardian_list_secret_incident_member_access",
+      "class": "GitGuardianListSecretIncidentMemberAccess",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/secret-incidents/{incident_id}/teams",
+      "operation_id": "list-secret-incident-team-access",
+      "tool": "gitguardian_list_secret_incident_team_access",
+      "class": "GitGuardianListSecretIncidentTeamAccess",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/secret-incidents/{incident_id}/invitations",
+      "operation_id": "list-secret-incident-invitation-access",
+      "tool": "gitguardian_list_secret_incident_invitation_access",
+      "class": "GitGuardianListSecretIncidentInvitationAccess",
+      "tags": [
+        "Internal Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/occurrences/secrets",
+      "operation_id": "list-occs",
+      "tool": "gitguardian_list_occs",
+      "class": "GitGuardianListOccs",
+      "tags": [
+        "Internal Secret Occurrences"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/severity-rules",
+      "operation_id": "list-severity-rules",
+      "tool": "gitguardian_list_severity_rules",
+      "class": "GitGuardianListSeverityRules",
+      "tags": [
+        "Severity Rules"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/code-fix-requests",
+      "operation_id": "create-code-fix-request",
+      "tool": "gitguardian_create_code_fix_request",
+      "class": "GitGuardianCreateCodeFixRequest",
+      "tags": [
+        "Code Fixing"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-incidents/secrets",
+      "operation_id": "list-public-incidents",
+      "tool": "gitguardian_list_public_incidents",
+      "class": "GitGuardianListPublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-incidents/secrets/{incident_id}",
+      "operation_id": "retrieve-public-incidents",
+      "tool": "gitguardian_retrieve_public_incidents",
+      "class": "GitGuardianRetrievePublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-incidents/secrets/{incident_id}/occurrences",
+      "operation_id": "list-public-secret-occurrences",
+      "tool": "gitguardian_list_public_secret_occurrences",
+      "class": "GitGuardianListPublicSecretOccurrences",
+      "tags": [
+        "Public Secret Occurrences"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-incidents/secrets/{incident_id}/occurrences/{occurrence_id}",
+      "operation_id": "retrieve-public-secret-occurrence",
+      "tool": "gitguardian_retrieve_public_secret_occurrence",
+      "class": "GitGuardianRetrievePublicSecretOccurrence",
+      "tags": [
+        "Public Secret Occurrences"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/resolve",
+      "operation_id": "resolve-public-incidents",
+      "tool": "gitguardian_resolve_public_incidents",
+      "class": "GitGuardianResolvePublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/ignore",
+      "operation_id": "ignore-public-incidents",
+      "tool": "gitguardian_ignore_public_incidents",
+      "class": "GitGuardianIgnorePublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/reopen",
+      "operation_id": "reopen-public-incidents",
+      "tool": "gitguardian_reopen_public_incidents",
+      "class": "GitGuardianReopenPublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/assign",
+      "operation_id": "assign-public-incidents",
+      "tool": "gitguardian_assign_public_incidents",
+      "class": "GitGuardianAssignPublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/unassign",
+      "operation_id": "unassign-public-incidents",
+      "tool": "gitguardian_unassign_public_incidents",
+      "class": "GitGuardianUnassignPublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/share",
+      "operation_id": "share-public-incidents",
+      "tool": "gitguardian_share_public_incidents",
+      "class": "GitGuardianSharePublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/unshare",
+      "operation_id": "unshare-public-incidents",
+      "tool": "gitguardian_unshare_public_incidents",
+      "class": "GitGuardianUnsharePublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/set_severity",
+      "operation_id": "set-severity-public-incidents",
+      "tool": "gitguardian_set_severity_public_incidents",
+      "class": "GitGuardianSetSeverityPublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/set_custom_tags",
+      "operation_id": "set-custom-tags-public-incidents",
+      "tool": "gitguardian_set_custom_tags_public_incidents",
+      "class": "GitGuardianSetCustomTagsPublicIncidents",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-incidents/secrets/{incident_id}/notes",
+      "operation_id": "list-public-incident-notes",
+      "tool": "gitguardian_list_public_incident_notes",
+      "class": "GitGuardianListPublicIncidentNotes",
+      "tags": [
+        "Public Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public-incidents/secrets/{incident_id}/notes",
+      "operation_id": "create-public-incident-note",
+      "tool": "gitguardian_create_public_incident_note",
+      "class": "GitGuardianCreatePublicIncidentNote",
+      "tags": [
+        "Public Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/public-incidents/secrets/{incident_id}/notes/{note_id}",
+      "operation_id": "update-public-incident-note",
+      "tool": "gitguardian_update_public_incident_note",
+      "class": "GitGuardianUpdatePublicIncidentNote",
+      "tags": [
+        "Public Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/public-incidents/secrets/{incident_id}/notes/{note_id}",
+      "operation_id": "delete-public-incident-note",
+      "tool": "gitguardian_delete_public_incident_note",
+      "class": "GitGuardianDeletePublicIncidentNote",
+      "tags": [
+        "Public Secret Incident Notes"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-incidents/secrets/{incident_id}/vaults",
+      "operation_id": "get-public-secret-incident-vaults",
+      "tool": "gitguardian_get_public_secret_incident_vaults",
+      "class": "GitGuardianGetPublicSecretIncidentVaults",
+      "tags": [
+        "Public Secret Incidents"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invitations",
+      "operation_id": "list-invitations",
+      "tool": "gitguardian_list_invitations",
+      "class": "GitGuardianListInvitations",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/invitations",
+      "operation_id": "create-invitations",
+      "tool": "gitguardian_create_invitations",
+      "class": "GitGuardianCreateInvitations",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invitations/{invitation_id}",
+      "operation_id": "retrieve-invitation",
+      "tool": "gitguardian_retrieve_invitation",
+      "class": "GitGuardianRetrieveInvitation",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/invitations/{invitation_id}",
+      "operation_id": "delete-invitation",
+      "tool": "gitguardian_delete_invitation",
+      "class": "GitGuardianDeleteInvitation",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/invitations/{invitation_id}/resend",
+      "operation_id": "resend-invitation",
+      "tool": "gitguardian_resend_invitation",
+      "class": "GitGuardianResendInvitation",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invitations/{invitation_id}/{resource_type}/{resource_id}",
+      "operation_id": "get-invitation-resource-access",
+      "tool": "gitguardian_get_invitation_resource_access",
+      "class": "GitGuardianGetInvitationResourceAccess",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/invitations/{invitation_id}/{resource_type}/{resource_id}",
+      "operation_id": "set-invitation-resource-access",
+      "tool": "gitguardian_set_invitation_resource_access",
+      "class": "GitGuardianSetInvitationResourceAccess",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/invitations/{invitation_id}/{resource_type}/{resource_id}",
+      "operation_id": "revoke-invitation-resource-access",
+      "tool": "gitguardian_revoke_invitation_resource_access",
+      "class": "GitGuardianRevokeInvitationResourceAccess",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invitations/{invitation_id}/secret-incidents",
+      "operation_id": "list-invitation-secret-incident-access",
+      "tool": "gitguardian_list_invitation_secret_incident_access",
+      "class": "GitGuardianListInvitationSecretIncidentAccess",
+      "tags": [
+        "Invitations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members",
+      "operation_id": "list-members",
+      "tool": "gitguardian_list_members",
+      "class": "GitGuardianListMembers",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}",
+      "operation_id": "retrieve-member",
+      "tool": "gitguardian_retrieve_member",
+      "class": "GitGuardianRetrieveMember",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/members/{member_id}",
+      "operation_id": "delete-member",
+      "tool": "gitguardian_delete_member",
+      "class": "GitGuardianDeleteMember",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/members/{member_id}",
+      "operation_id": "update-member",
+      "tool": "gitguardian_update_member",
+      "class": "GitGuardianUpdateMember",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}/teams",
+      "operation_id": "list-member-teams",
+      "tool": "gitguardian_list_member_teams",
+      "class": "GitGuardianListMemberTeams",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}/{resource_type}/{resource_id}",
+      "operation_id": "get-member-resource-access",
+      "tool": "gitguardian_get_member_resource_access",
+      "class": "GitGuardianGetMemberResourceAccess",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/members/{member_id}/{resource_type}/{resource_id}",
+      "operation_id": "set-member-resource-access",
+      "tool": "gitguardian_set_member_resource_access",
+      "class": "GitGuardianSetMemberResourceAccess",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/members/{member_id}/{resource_type}/{resource_id}",
+      "operation_id": "revoke-member-resource-access",
+      "tool": "gitguardian_revoke_member_resource_access",
+      "class": "GitGuardianRevokeMemberResourceAccess",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}/secret-incidents",
+      "operation_id": "list-member-secret-incident-access",
+      "tool": "gitguardian_list_member_secret_incident_access",
+      "class": "GitGuardianListMemberSecretIncidentAccess",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}/email_notifications",
+      "operation_id": "retrieve-member-email-settings",
+      "tool": "gitguardian_retrieve_member_email_settings",
+      "class": "GitGuardianRetrieveMemberEmailSettings",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/members/{member_id}/email_notifications",
+      "operation_id": "update-member-email-settings",
+      "tool": "gitguardian_update_member_email_settings",
+      "class": "GitGuardianUpdateMemberEmailSettings",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/scan",
+      "operation_id": "content_scan",
+      "tool": "gitguardian_content_scan",
+      "class": "GitGuardianContentScan",
+      "tags": [
+        "Scan Methods"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/multiscan",
+      "operation_id": "multiple_scan",
+      "tool": "gitguardian_multiple_scan",
+      "class": "GitGuardianMultipleScan",
+      "tags": [
+        "Scan Methods"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/scan/create-incidents",
+      "operation_id": "scan_create_incidents",
+      "tool": "gitguardian_scan_create_incidents",
+      "class": "GitGuardianScanCreateIncidents",
+      "tags": [
+        "Scan Methods"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/secret_detectors",
+      "operation_id": "list-secret-detectors",
+      "tool": "gitguardian_list_secret_detectors",
+      "class": "GitGuardianListSecretDetectors",
+      "tags": [
+        "Secret Detectors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/secret_detectors/{detector_name}",
+      "operation_id": "get-secret-detector",
+      "tool": "gitguardian_get_secret_detector",
+      "class": "GitGuardianGetSecretDetector",
+      "tags": [
+        "Secret Detectors"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/secrets/{secret_id}",
+      "operation_id": "get-secret-detail",
+      "tool": "gitguardian_get_secret_detail",
+      "class": "GitGuardianGetSecretDetail",
+      "tags": [
+        "Internal Secret Incidents",
+        "Secrets"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/quotas",
+      "operation_id": "quotas",
+      "tool": "gitguardian_quotas",
+      "class": "GitGuardianQuotas",
+      "tags": [
+        "Quota"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sources",
+      "operation_id": "list-sources",
+      "tool": "gitguardian_list_sources",
+      "class": "GitGuardianListSources",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sources/{source_id}",
+      "operation_id": "retrieve-source",
+      "tool": "gitguardian_retrieve_source",
+      "class": "GitGuardianRetrieveSource",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/sources/{source_id}",
+      "operation_id": "update-source",
+      "tool": "gitguardian_update_source",
+      "class": "GitGuardianUpdateSource",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sources/{source_id}/incidents/secrets",
+      "operation_id": "list-sources-incidents",
+      "tool": "gitguardian_list_sources_incidents",
+      "class": "GitGuardianListSourcesIncidents",
+      "tags": [
+        "Internal Secret Incidents",
+        "Sources"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/sources/scans",
+      "operation_id": "trigger-source-scans",
+      "tool": "gitguardian_trigger_source_scans",
+      "class": "GitGuardianTriggerSourceScans",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sources/custom-sources",
+      "operation_id": "list-custom-sources",
+      "tool": "gitguardian_list_custom_sources",
+      "class": "GitGuardianListCustomSources",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/sources/custom-sources",
+      "operation_id": "create-custom-source",
+      "tool": "gitguardian_create_custom_source",
+      "class": "GitGuardianCreateCustomSource",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sources/custom-sources/{custom_source_id}",
+      "operation_id": "get-custom-source",
+      "tool": "gitguardian_get_custom_source",
+      "class": "GitGuardianGetCustomSource",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/sources/custom-sources/{custom_source_id}",
+      "operation_id": "update-custom-source",
+      "tool": "gitguardian_update_custom_source",
+      "class": "GitGuardianUpdateCustomSource",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/sources/custom-sources/{custom_source_id}",
+      "operation_id": "delete-custom-source",
+      "tool": "gitguardian_delete_custom_source",
+      "class": "GitGuardianDeleteCustomSource",
+      "tags": [
+        "Sources"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public-perimeter/developers",
+      "operation_id": "list-developers",
+      "tool": "gitguardian_list_developers",
+      "class": "GitGuardianListDevelopers",
+      "tags": [
+        "Developer"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/audit_logs",
+      "operation_id": "list-audit-logs",
+      "tool": "gitguardian_list_audit_logs",
+      "class": "GitGuardianListAuditLogs",
+      "tags": [
+        "Audit Logs"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/audit_logs/event_names",
+      "operation_id": "list-audit-log-event-names",
+      "tool": "gitguardian_list_audit_log_event_names",
+      "class": "GitGuardianListAuditLogEventNames",
+      "tags": [
+        "Audit Logs"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/health",
+      "operation_id": "api_health",
+      "tool": "gitguardian_api_health",
+      "class": "GitGuardianApiHealth",
+      "tags": [
+        "Status"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/health-checks",
+      "operation_id": "list-health-checks",
+      "tool": "gitguardian_list_health_checks",
+      "class": "GitGuardianListHealthChecks",
+      "tags": [
+        "Health Checks"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/health-checks/{type}/{instance_id}",
+      "operation_id": "list-health-check-instance-history",
+      "tool": "gitguardian_list_health_check_instance_history",
+      "class": "GitGuardianListHealthCheckInstanceHistory",
+      "tags": [
+        "Health Checks"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/health-checks/{type}/{instance_id}/trigger",
+      "operation_id": "trigger-health-check",
+      "tool": "gitguardian_trigger_health_check",
+      "class": "GitGuardianTriggerHealthCheck",
+      "tags": [
+        "Health Checks"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams",
+      "operation_id": "list-teams",
+      "tool": "gitguardian_list_teams",
+      "class": "GitGuardianListTeams",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/teams",
+      "operation_id": "create-teams",
+      "tool": "gitguardian_create_teams",
+      "class": "GitGuardianCreateTeams",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}",
+      "operation_id": "retrieve-team",
+      "tool": "gitguardian_retrieve_team",
+      "class": "GitGuardianRetrieveTeam",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/teams/{team_id}",
+      "operation_id": "delete-team",
+      "tool": "gitguardian_delete_team",
+      "class": "GitGuardianDeleteTeam",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/teams/{team_id}",
+      "operation_id": "update-team",
+      "tool": "gitguardian_update_team",
+      "class": "GitGuardianUpdateTeam",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/incidents/secrets",
+      "operation_id": "list-team-incidents",
+      "tool": "gitguardian_list_team_incidents",
+      "class": "GitGuardianListTeamIncidents",
+      "tags": [
+        "Internal Secret Incidents",
+        "Teams"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/{resource_type}/{resource_id}",
+      "operation_id": "get-team-resource-access",
+      "tool": "gitguardian_get_team_resource_access",
+      "class": "GitGuardianGetTeamResourceAccess",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/teams/{team_id}/{resource_type}/{resource_id}",
+      "operation_id": "set-team-resource-access",
+      "tool": "gitguardian_set_team_resource_access",
+      "class": "GitGuardianSetTeamResourceAccess",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/teams/{team_id}/{resource_type}/{resource_id}",
+      "operation_id": "revoke-team-resource-access",
+      "tool": "gitguardian_revoke_team_resource_access",
+      "class": "GitGuardianRevokeTeamResourceAccess",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/secret-incidents",
+      "operation_id": "list-team-secret-incident-access",
+      "tool": "gitguardian_list_team_secret_incident_access",
+      "class": "GitGuardianListTeamSecretIncidentAccess",
+      "tags": [
+        "Teams"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/team_invitations",
+      "operation_id": "list-team-invitation",
+      "tool": "gitguardian_list_team_invitation",
+      "class": "GitGuardianListTeamInvitation",
+      "tags": [
+        "Team Invitations"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/teams/{team_id}/team_invitations",
+      "operation_id": "create-team-invitations",
+      "tool": "gitguardian_create_team_invitations",
+      "class": "GitGuardianCreateTeamInvitations",
+      "tags": [
+        "Team Invitations"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/teams/{team_id}/team_invitations/{team_invitation_id}",
+      "operation_id": "update-team-invitation",
+      "tool": "gitguardian_update_team_invitation",
+      "class": "GitGuardianUpdateTeamInvitation",
+      "tags": [
+        "Team Invitations"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/teams/{team_id}/team_invitations/{team_invitation_id}",
+      "operation_id": "delete-team-invitation",
+      "tool": "gitguardian_delete_team_invitation",
+      "class": "GitGuardianDeleteTeamInvitation",
+      "tags": [
+        "Team Invitations"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/team_memberships",
+      "operation_id": "list-team-memberships",
+      "tool": "gitguardian_list_team_memberships",
+      "class": "GitGuardianListTeamMemberships",
+      "tags": [
+        "Team Memberships"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/teams/{team_id}/team_memberships",
+      "operation_id": "create-team-membership",
+      "tool": "gitguardian_create_team_membership",
+      "class": "GitGuardianCreateTeamMembership",
+      "tags": [
+        "Team Memberships"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/teams/{team_id}/team_memberships/{team_membership_id}",
+      "operation_id": "update-team-membership",
+      "tool": "gitguardian_update_team_membership",
+      "class": "GitGuardianUpdateTeamMembership",
+      "tags": [
+        "Team Memberships"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/teams/{team_id}/team_memberships/{team_membership_id}",
+      "operation_id": "delete-team-membership",
+      "tool": "gitguardian_delete_team_membership",
+      "class": "GitGuardianDeleteTeamMembership",
+      "tags": [
+        "Team Memberships"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}/team_memberships",
+      "operation_id": "list-member-team-memberships",
+      "tool": "gitguardian_list_member_team_memberships",
+      "class": "GitGuardianListMemberTeamMemberships",
+      "tags": [
+        "Members"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/team_requests",
+      "operation_id": "list-team-requests",
+      "tool": "gitguardian_list_team_requests",
+      "class": "GitGuardianListTeamRequests",
+      "tags": [
+        "Team Requests"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/teams/{team_id}/team_requests",
+      "operation_id": "create-team-request",
+      "tool": "gitguardian_create_team_request",
+      "class": "GitGuardianCreateTeamRequest",
+      "tags": [
+        "Team Requests"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/teams/{team_id}/team_requests/{team_request_id}",
+      "operation_id": "delete-team-request",
+      "tool": "gitguardian_delete_team_request",
+      "class": "GitGuardianDeleteTeamRequest",
+      "tags": [
+        "Team Requests"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/teams/{team_id}/team_requests/{team_request_id}/accept",
+      "operation_id": "accept-team-request",
+      "tool": "gitguardian_accept_team_request",
+      "class": "GitGuardianAcceptTeamRequest",
+      "tags": [
+        "Team Requests"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/members/{member_id}/team_requests",
+      "operation_id": "list-member-team-requests",
+      "tool": "gitguardian_list_member_team_requests",
+      "class": "GitGuardianListMemberTeamRequests",
+      "tags": [
+        "Team Requests"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/teams/{team_id}/sources",
+      "operation_id": "list-team-sources",
+      "tool": "gitguardian_list_team_sources",
+      "class": "GitGuardianListTeamSources",
+      "tags": [
+        "Team Sources"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/teams/{team_id}/sources",
+      "operation_id": "update-team-sources",
+      "tool": "gitguardian_update_team_sources",
+      "class": "GitGuardianUpdateTeamSources",
+      "tags": [
+        "Team Sources"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/honeytokens",
+      "operation_id": "list-honeytoken",
+      "tool": "gitguardian_list_honeytoken",
+      "class": "GitGuardianListHoneytoken",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/honeytokens",
+      "operation_id": "create-honeytoken",
+      "tool": "gitguardian_create_honeytoken",
+      "class": "GitGuardianCreateHoneytoken",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/honeytokens/with-context",
+      "operation_id": "create-honeytoken-with-context",
+      "tool": "gitguardian_create_honeytoken_with_context",
+      "class": "GitGuardianCreateHoneytokenWithContext",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/honeytokens/{honeytoken_id}",
+      "operation_id": "retrieve-honeytoken",
+      "tool": "gitguardian_retrieve_honeytoken",
+      "class": "GitGuardianRetrieveHoneytoken",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/honeytokens/{honeytoken_id}",
+      "operation_id": "update-honeytoken",
+      "tool": "gitguardian_update_honeytoken",
+      "class": "GitGuardianUpdateHoneytoken",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/honeytokens/{honeytoken_id}/reset",
+      "operation_id": "reset-honeytoken",
+      "tool": "gitguardian_reset_honeytoken",
+      "class": "GitGuardianResetHoneytoken",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/honeytokens/{honeytoken_id}/revoke",
+      "operation_id": "revoke-honeytoken",
+      "tool": "gitguardian_revoke_honeytoken",
+      "class": "GitGuardianRevokeHoneytoken",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/honeytokens/{honeytoken_id}/notes",
+      "operation_id": "list-honeytoken-notes",
+      "tool": "gitguardian_list_honeytoken_notes",
+      "class": "GitGuardianListHoneytokenNotes",
+      "tags": [
+        "Honeytoken Notes"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/honeytokens/{honeytoken_id}/notes",
+      "operation_id": "create-honeytoken-note",
+      "tool": "gitguardian_create_honeytoken_note",
+      "class": "GitGuardianCreateHoneytokenNote",
+      "tags": [
+        "Honeytoken Notes"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/honeytokens/{honeytoken_id}/notes/{note_id}",
+      "operation_id": "update-honeytoken-note",
+      "tool": "gitguardian_update_honeytoken_note",
+      "class": "GitGuardianUpdateHoneytokenNote",
+      "tags": [
+        "Honeytoken Notes"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/honeytokens/{honeytoken_id}/notes/{note_id}",
+      "operation_id": "delete-honeytoken-note",
+      "tool": "gitguardian_delete_honeytoken_note",
+      "class": "GitGuardianDeleteHoneytokenNote",
+      "tags": [
+        "Honeytoken Notes"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/honeytokens/{honeytoken_id}/sources",
+      "operation_id": "list-honeytoken-sources",
+      "tool": "gitguardian_list_honeytoken_sources",
+      "class": "GitGuardianListHoneytokenSources",
+      "tags": [
+        "Honeytoken Sources"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/honeytokens/prefixes",
+      "operation_id": "check-honeytoken-prefixes",
+      "tool": "gitguardian_check_honeytoken_prefixes",
+      "class": "GitGuardianCheckHoneytokenPrefixes",
+      "tags": [
+        "Honeytokens"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/honeytokens_events",
+      "operation_id": "list-honeytokens-events",
+      "tool": "gitguardian_list_honeytokens_events",
+      "class": "GitGuardianListHoneytokensEvents",
+      "tags": [
+        "Honeytokens Events"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/ip-allowlist",
+      "operation_id": "list-ip-allowlist",
+      "tool": "gitguardian_list_ip_allowlist",
+      "class": "GitGuardianListIpAllowlist",
+      "tags": [
+        "IP Allowlist"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/ip-allowlist",
+      "operation_id": "create-ip-allowlist",
+      "tool": "gitguardian_create_ip_allowlist",
+      "class": "GitGuardianCreateIpAllowlist",
+      "tags": [
+        "IP Allowlist"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/ip-allowlist/{ip_allowlist_rule_id}",
+      "operation_id": "retrieve-ipallowlist",
+      "tool": "gitguardian_retrieve_ipallowlist",
+      "class": "GitGuardianRetrieveIpallowlist",
+      "tags": [
+        "IP Allowlist"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/ip-allowlist/{ip_allowlist_rule_id}",
+      "operation_id": "update-ipallowlist",
+      "tool": "gitguardian_update_ipallowlist",
+      "class": "GitGuardianUpdateIpallowlist",
+      "tags": [
+        "IP Allowlist"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/ip-allowlist/{ip_allowlist_rule_id}",
+      "operation_id": "delete-ipallowlist",
+      "tool": "gitguardian_delete_ipallowlist",
+      "class": "GitGuardianDeleteIpallowlist",
+      "tags": [
+        "IP Allowlist"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/ips",
+      "operation_id": "list_ip_addresses",
+      "tool": "gitguardian_list_ip_addresses",
+      "class": "GitGuardianListIpAddresses",
+      "tags": [
+        "IPs"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/scim/v2/Users",
+      "operation_id": "scim-user-create",
+      "tool": "gitguardian_scim_user_create",
+      "class": "GitGuardianScimUserCreate",
+      "tags": [
+        "SCIM Users"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/Users",
+      "operation_id": "scim-user-list",
+      "tool": "gitguardian_scim_user_list",
+      "class": "GitGuardianScimUserList",
+      "tags": [
+        "SCIM Users"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/Users/{id}",
+      "operation_id": "scim-user-detail",
+      "tool": "gitguardian_scim_user_detail",
+      "class": "GitGuardianScimUserDetail",
+      "tags": [
+        "SCIM Users"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/scim/v2/Users/{id}",
+      "operation_id": "scim-user-update",
+      "tool": "gitguardian_scim_user_update",
+      "class": "GitGuardianScimUserUpdate",
+      "tags": [
+        "SCIM Users"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/scim/v2/Users/{id}",
+      "operation_id": "scim-user-partial-update",
+      "tool": "gitguardian_scim_user_partial_update",
+      "class": "GitGuardianScimUserPartialUpdate",
+      "tags": [
+        "SCIM Users"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/scim/v2/Users/{id}",
+      "operation_id": "scim-user-delete",
+      "tool": "gitguardian_scim_user_delete",
+      "class": "GitGuardianScimUserDelete",
+      "tags": [
+        "SCIM Users"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/Groups",
+      "operation_id": "scim-group-list",
+      "tool": "gitguardian_scim_group_list",
+      "class": "GitGuardianScimGroupList",
+      "tags": [
+        "SCIM Groups"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/scim/v2/Groups",
+      "operation_id": "scim-group-create",
+      "tool": "gitguardian_scim_group_create",
+      "class": "GitGuardianScimGroupCreate",
+      "tags": [
+        "SCIM Groups"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/Groups/{id}",
+      "operation_id": "scim-group-detail",
+      "tool": "gitguardian_scim_group_detail",
+      "class": "GitGuardianScimGroupDetail",
+      "tags": [
+        "SCIM Groups"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/scim/v2/Groups/{id}",
+      "operation_id": "scim-group-update",
+      "tool": "gitguardian_scim_group_update",
+      "class": "GitGuardianScimGroupUpdate",
+      "tags": [
+        "SCIM Groups"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/scim/v2/Groups/{id}",
+      "operation_id": "scim-group-partial-update",
+      "tool": "gitguardian_scim_group_partial_update",
+      "class": "GitGuardianScimGroupPartialUpdate",
+      "tags": [
+        "SCIM Groups"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/scim/v2/Groups/{id}",
+      "operation_id": "scim-group-delete",
+      "tool": "gitguardian_scim_group_delete",
+      "class": "GitGuardianScimGroupDelete",
+      "tags": [
+        "SCIM Groups"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/ServiceProviderConfig",
+      "operation_id": "scim-service-provider-config",
+      "tool": "gitguardian_scim_service_provider_config",
+      "class": "GitGuardianScimServiceProviderConfig",
+      "tags": [
+        "SCIM Metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/ResourceTypes",
+      "operation_id": "scim-resource-types-list",
+      "tool": "gitguardian_scim_resource_types_list",
+      "class": "GitGuardianScimResourceTypesList",
+      "tags": [
+        "SCIM Metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/ResourceTypes/{name}",
+      "operation_id": "scim-resource-types-detail",
+      "tool": "gitguardian_scim_resource_types_detail",
+      "class": "GitGuardianScimResourceTypesDetail",
+      "tags": [
+        "SCIM Metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/Schemas",
+      "operation_id": "scim-schema-list",
+      "tool": "gitguardian_scim_schema_list",
+      "class": "GitGuardianScimSchemaList",
+      "tags": [
+        "SCIM Metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/scim/v2/Schemas/{name}",
+      "operation_id": "scim-schema-detail",
+      "tool": "gitguardian_scim_schema_detail",
+      "class": "GitGuardianScimSchemaDetail",
+      "tags": [
+        "SCIM Metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/custom_tags",
+      "operation_id": "list-custom-tags",
+      "tool": "gitguardian_list_custom_tags",
+      "class": "GitGuardianListCustomTags",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/custom_tags",
+      "operation_id": "create-custom-tag",
+      "tool": "gitguardian_create_custom_tag",
+      "class": "GitGuardianCreateCustomTag",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/custom_tags",
+      "operation_id": "update-custom-tags-key",
+      "tool": "gitguardian_update_custom_tags_key",
+      "class": "GitGuardianUpdateCustomTagsKey",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/custom_tags",
+      "operation_id": "delete-custom-tags-key",
+      "tool": "gitguardian_delete_custom_tags_key",
+      "class": "GitGuardianDeleteCustomTagsKey",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/custom_tags/{custom_tag_id}",
+      "operation_id": "get-custom-tag",
+      "tool": "gitguardian_get_custom_tag",
+      "class": "GitGuardianGetCustomTag",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/custom_tags/{custom_tag_id}",
+      "operation_id": "update-custom-tag",
+      "tool": "gitguardian_update_custom_tag",
+      "class": "GitGuardianUpdateCustomTag",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/custom_tags/{custom_tag_id}",
+      "operation_id": "partial-update-custom-tag",
+      "tool": "gitguardian_partial_update_custom_tag",
+      "class": "GitGuardianPartialUpdateCustomTag",
+      "tags": [
+        "Custom Tags"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/custom_tags/{custom_tag_id}",
+      "operation_id": "delete-custom-tag",
+      "tool": "gitguardian_delete_custom_tag",
+      "class": "GitGuardianDeleteCustomTag",
+      "tags": [
+        "Custom Tags"
+      ]
+    }
+  ]
+}

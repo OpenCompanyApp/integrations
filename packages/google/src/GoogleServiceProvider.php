@@ -16,70 +16,88 @@ use OpenCompany\Integrations\Google\Services\GoogleFormsService;
 use OpenCompany\Integrations\Google\Services\GoogleTasksService;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
+use Illuminate\Contracts\Container\Container;
 
 class GoogleServiceProvider extends ServiceProvider
 {
     /** @var array<int, string> */
     private const GOOGLE_INTEGRATIONS = [
-        'google_calendar', 'gmail', 'google_drive',
-        'google_contacts', 'google_sheets', 'google_search_console', 'google_tasks', 'google_analytics',
-        'google_docs', 'google_forms',
+        'google-calendar', 'gmail', 'google-drive',
+        'google-contacts', 'google-sheets', 'google-search-console', 'google-tasks', 'google-analytics',
+        'google-docs', 'google-forms',
+    ];
+
+    /** @var array<string, string> */
+    private const LEGACY_INTEGRATION_IDS = [
+        'google-calendar' => 'google_calendar',
+        'google-drive' => 'google_drive',
+        'google-contacts' => 'google_contacts',
+        'google-sheets' => 'google_sheets',
+        'google-search-console' => 'google_search_console',
+        'google-tasks' => 'google_tasks',
+        'google-analytics' => 'google_analytics',
+        'google-docs' => 'google_docs',
+        'google-forms' => 'google_forms',
     ];
 
     public function register(): void
     {
         $this->app->singleton(GoogleCalendarService::class, function ($app) {
-            return new GoogleCalendarService($this->buildClient($app, 'google_calendar'));
+            return new GoogleCalendarService(self::makeClient($app, 'google-calendar'));
         });
 
         $this->app->singleton(GmailService::class, function ($app) {
-            return new GmailService($this->buildClient($app, 'gmail'));
+            return new GmailService(self::makeClient($app, 'gmail'));
         });
 
         $this->app->singleton(GoogleDriveService::class, function ($app) {
-            return new GoogleDriveService($this->buildClient($app, 'google_drive'));
+            return new GoogleDriveService(self::makeClient($app, 'google-drive'));
         });
 
         $this->app->singleton(GoogleContactsService::class, function ($app) {
-            return new GoogleContactsService($this->buildClient($app, 'google_contacts'));
+            return new GoogleContactsService(self::makeClient($app, 'google-contacts'));
         });
 
         $this->app->singleton(GoogleSheetsService::class, function ($app) {
-            return new GoogleSheetsService($this->buildClient($app, 'google_sheets'));
+            return new GoogleSheetsService(self::makeClient($app, 'google-sheets'));
         });
 
         $this->app->singleton(GoogleSearchConsoleService::class, function ($app) {
-            return new GoogleSearchConsoleService($this->buildClient($app, 'google_search_console'));
+            return new GoogleSearchConsoleService(self::makeClient($app, 'google-search-console'));
         });
 
         $this->app->singleton(GoogleTasksService::class, function ($app) {
-            return new GoogleTasksService($this->buildClient($app, 'google_tasks'));
+            return new GoogleTasksService(self::makeClient($app, 'google-tasks'));
         });
 
         $this->app->singleton(GoogleAnalyticsService::class, function ($app) {
-            return new GoogleAnalyticsService($this->buildClient($app, 'google_analytics'));
+            return new GoogleAnalyticsService(self::makeClient($app, 'google-analytics'));
         });
 
         $this->app->singleton(GoogleDocsService::class, function ($app) {
-            return new GoogleDocsService($this->buildClient($app, 'google_docs'));
+            return new GoogleDocsService(self::makeClient($app, 'google-docs'));
         });
 
         $this->app->singleton(GoogleFormsService::class, function ($app) {
-            return new GoogleFormsService($this->buildClient($app, 'google_forms'));
+            return new GoogleFormsService(self::makeClient($app, 'google-forms'));
         });
     }
 
-    private function buildClient(\Illuminate\Contracts\Foundation\Application $app, string $integration): GoogleClient
+    public static function makeClient(Container $app, string $integration, ?string $account = null): GoogleClient
     {
         $creds = $app->make(CredentialResolver::class);
+        $accessToken = self::resolveCredentialWithSource($creds, $integration, 'access_token', '', $account);
+        $refreshToken = self::resolveCredentialWithSource($creds, $integration, 'refresh_token', '', $account);
+        $expiresAt = self::resolveCredentialWithSource($creds, $integration, 'expires_at', null, $account);
+        $tokenSource = $accessToken['source'] ?? $refreshToken['source'] ?? $integration;
 
         return new GoogleClient(
-            clientId: $this->resolveSharedCredential($creds, $integration, 'client_id'),
-            clientSecret: $this->resolveSharedCredential($creds, $integration, 'client_secret'),
-            accessToken: $creds->get($integration, 'access_token', ''),
-            refreshToken: $creds->get($integration, 'refresh_token', ''),
-            expiresAt: $creds->get($integration, 'expires_at'),
-            integrationId: $integration,
+            clientId: self::resolveSharedCredential($creds, $integration, 'client_id', $account),
+            clientSecret: self::resolveSharedCredential($creds, $integration, 'client_secret', $account),
+            accessToken: (string) $accessToken['value'],
+            refreshToken: (string) $refreshToken['value'],
+            expiresAt: $expiresAt['value'] !== null ? (int) $expiresAt['value'] : null,
+            integrationId: $tokenSource,
         );
     }
 
@@ -87,24 +105,61 @@ class GoogleServiceProvider extends ServiceProvider
      * Resolve a shared credential (client_id/client_secret) across all Google integrations.
      * Tries the target integration first, then falls back to any sibling that has it configured.
      */
-    private function resolveSharedCredential(CredentialResolver $creds, string $integration, string $key): string
+    private static function resolveSharedCredential(CredentialResolver $creds, string $integration, string $key, ?string $account = null): string
     {
-        $value = $creds->get($integration, $key, '');
-        if (! empty($value)) {
-            return (string) $value;
+        foreach (self::credentialIds($integration) as $id) {
+            $value = $creds->get($id, $key, '', $account);
+            if ($value !== null && $value !== '') {
+                return (string) $value;
+            }
         }
 
         foreach (self::GOOGLE_INTEGRATIONS as $sibling) {
             if ($sibling === $integration) {
                 continue;
             }
-            $value = $creds->get($sibling, $key, '');
-            if (! empty($value)) {
-                return (string) $value;
+            foreach (self::credentialIds($sibling) as $id) {
+                $value = $creds->get($id, $key, '', $account);
+                if ($value !== null && $value !== '') {
+                    return (string) $value;
+                }
             }
         }
 
         return '';
+    }
+
+    /**
+     * @return array{value: mixed, source?: string}
+     */
+    private static function resolveCredentialWithSource(
+        CredentialResolver $creds,
+        string $integration,
+        string $key,
+        mixed $default = '',
+        ?string $account = null,
+    ): array {
+        foreach (self::credentialIds($integration) as $id) {
+            $value = $creds->get($id, $key, null, $account);
+            if ($value !== null && $value !== '') {
+                return ['value' => $value, 'source' => $id];
+            }
+        }
+
+        return ['value' => $default];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function credentialIds(string $integration): array
+    {
+        $ids = [$integration];
+        if (isset(self::LEGACY_INTEGRATION_IDS[$integration])) {
+            $ids[] = self::LEGACY_INTEGRATION_IDS[$integration];
+        }
+
+        return array_values(array_unique($ids));
     }
 
     public function boot(): void

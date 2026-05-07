@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-ghost",
-    "description": "Ghost CMS integration for Laravel — manage posts, pages, members, and users.",
+    "description": "Ghost CMS integration for Laravel: manage posts, pages, tags, authors, members, tiers, offers, newsletters, and webhooks.",
     "license": "MIT",
     "authors": [
         {

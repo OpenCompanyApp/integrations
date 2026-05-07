@@ -1,0 +1,692 @@
+{
+    "source_url": "https://api.tailscale.com/api/v2",
+    "docs_url": "https://tailscale.com/docs/reference/tailscale-api",
+    "openapi": "3.1.0",
+    "title": "Tailscale API",
+    "version": "v2",
+    "base_url": "https://api.tailscale.com/api/v2",
+    "auth": "basic_api_token_username",
+    "method_count": 85,
+    "operations": [
+        {
+            "operation_id": "listTailnetDevices",
+            "class": "TailscaleListTailnetDevices",
+            "slug": "tailscale_list_tailnet_devices",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/devices",
+            "type": "read"
+        },
+        {
+            "operation_id": "batchUpdateCustomDevicePostureAttributes",
+            "class": "TailscaleBatchUpdateCustomDevicePostureAttributes",
+            "slug": "tailscale_batch_update_custom_device_posture_attributes",
+            "method": "patch",
+            "path": "/tailnet/{tailnet}/device-attributes",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDevice",
+            "class": "TailscaleGetDevice",
+            "slug": "tailscale_get_device",
+            "method": "get",
+            "path": "/device/{deviceId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteDevice",
+            "class": "TailscaleDeleteDevice",
+            "slug": "tailscale_delete_device",
+            "method": "delete",
+            "path": "/device/{deviceId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "expireDeviceKey",
+            "class": "TailscaleExpireDeviceKey",
+            "slug": "tailscale_expire_device_key",
+            "method": "post",
+            "path": "/device/{deviceId}/expire",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDeviceRoutes",
+            "class": "TailscaleListDeviceRoutes",
+            "slug": "tailscale_list_device_routes",
+            "method": "get",
+            "path": "/device/{deviceId}/routes",
+            "type": "read"
+        },
+        {
+            "operation_id": "setDeviceRoutes",
+            "class": "TailscaleSetDeviceRoutes",
+            "slug": "tailscale_set_device_routes",
+            "method": "post",
+            "path": "/device/{deviceId}/routes",
+            "type": "write"
+        },
+        {
+            "operation_id": "authorizeDevice",
+            "class": "TailscaleAuthorizeDevice",
+            "slug": "tailscale_authorize_device",
+            "method": "post",
+            "path": "/device/{deviceId}/authorized",
+            "type": "write"
+        },
+        {
+            "operation_id": "setDeviceName",
+            "class": "TailscaleSetDeviceName",
+            "slug": "tailscale_set_device_name",
+            "method": "post",
+            "path": "/device/{deviceId}/name",
+            "type": "write"
+        },
+        {
+            "operation_id": "setDeviceTags",
+            "class": "TailscaleSetDeviceTags",
+            "slug": "tailscale_set_device_tags",
+            "method": "post",
+            "path": "/device/{deviceId}/tags",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateDeviceKey",
+            "class": "TailscaleUpdateDeviceKey",
+            "slug": "tailscale_update_device_key",
+            "method": "post",
+            "path": "/device/{deviceId}/key",
+            "type": "write"
+        },
+        {
+            "operation_id": "setDeviceIp",
+            "class": "TailscaleSetDeviceIp",
+            "slug": "tailscale_set_device_ip",
+            "method": "post",
+            "path": "/device/{deviceId}/ip",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDevicePostureAttributes",
+            "class": "TailscaleGetDevicePostureAttributes",
+            "slug": "tailscale_get_device_posture_attributes",
+            "method": "get",
+            "path": "/device/{deviceId}/attributes",
+            "type": "read"
+        },
+        {
+            "operation_id": "setCustomDevicePostureAttributes",
+            "class": "TailscaleSetCustomDevicePostureAttributes",
+            "slug": "tailscale_set_custom_device_posture_attributes",
+            "method": "post",
+            "path": "/device/{deviceId}/attributes/{attributeKey}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCustomDevicePostureAttributes",
+            "class": "TailscaleDeleteCustomDevicePostureAttributes",
+            "slug": "tailscale_delete_custom_device_posture_attributes",
+            "method": "delete",
+            "path": "/device/{deviceId}/attributes/{attributeKey}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDeviceInvites",
+            "class": "TailscaleListDeviceInvites",
+            "slug": "tailscale_list_device_invites",
+            "method": "get",
+            "path": "/device/{deviceId}/device-invites",
+            "type": "read"
+        },
+        {
+            "operation_id": "createDeviceInvites",
+            "class": "TailscaleCreateDeviceInvites",
+            "slug": "tailscale_create_device_invites",
+            "method": "post",
+            "path": "/device/{deviceId}/device-invites",
+            "type": "write"
+        },
+        {
+            "operation_id": "listUserInvites",
+            "class": "TailscaleListUserInvites",
+            "slug": "tailscale_list_user_invites",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/user-invites",
+            "type": "read"
+        },
+        {
+            "operation_id": "createUserInvites",
+            "class": "TailscaleCreateUserInvites",
+            "slug": "tailscale_create_user_invites",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/user-invites",
+            "type": "write"
+        },
+        {
+            "operation_id": "getUserInvite",
+            "class": "TailscaleGetUserInvite",
+            "slug": "tailscale_get_user_invite",
+            "method": "get",
+            "path": "/user-invites/{userInviteId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteUserInvite",
+            "class": "TailscaleDeleteUserInvite",
+            "slug": "tailscale_delete_user_invite",
+            "method": "delete",
+            "path": "/user-invites/{userInviteId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "resendUserInvite",
+            "class": "TailscaleResendUserInvite",
+            "slug": "tailscale_resend_user_invite",
+            "method": "post",
+            "path": "/user-invites/{userInviteId}/resend",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDeviceInvite",
+            "class": "TailscaleGetDeviceInvite",
+            "slug": "tailscale_get_device_invite",
+            "method": "get",
+            "path": "/device-invites/{deviceInviteId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteDeviceInvite",
+            "class": "TailscaleDeleteDeviceInvite",
+            "slug": "tailscale_delete_device_invite",
+            "method": "delete",
+            "path": "/device-invites/{deviceInviteId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "resendDeviceInvite",
+            "class": "TailscaleResendDeviceInvite",
+            "slug": "tailscale_resend_device_invite",
+            "method": "post",
+            "path": "/device-invites/{deviceInviteId}/resend",
+            "type": "write"
+        },
+        {
+            "operation_id": "acceptDeviceInvite",
+            "class": "TailscaleAcceptDeviceInvite",
+            "slug": "tailscale_accept_device_invite",
+            "method": "post",
+            "path": "/device-invites/-/accept",
+            "type": "write"
+        },
+        {
+            "operation_id": "listConfigurationAuditLogs",
+            "class": "TailscaleListConfigurationAuditLogs",
+            "slug": "tailscale_list_configuration_audit_logs",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/logging/configuration",
+            "type": "read"
+        },
+        {
+            "operation_id": "listNetworkFlowLogs",
+            "class": "TailscaleListNetworkFlowLogs",
+            "slug": "tailscale_list_network_flow_logs",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/logging/network",
+            "type": "read"
+        },
+        {
+            "operation_id": "getLogStreamingStatus",
+            "class": "TailscaleGetLogStreamingStatus",
+            "slug": "tailscale_get_log_streaming_status",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/logging/{logType}/stream/status",
+            "type": "read"
+        },
+        {
+            "operation_id": "getLogStreamingConfiguration",
+            "class": "TailscaleGetLogStreamingConfiguration",
+            "slug": "tailscale_get_log_streaming_configuration",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/logging/{logType}/stream",
+            "type": "read"
+        },
+        {
+            "operation_id": "setLogStreamingConfiguration",
+            "class": "TailscaleSetLogStreamingConfiguration",
+            "slug": "tailscale_set_log_streaming_configuration",
+            "method": "put",
+            "path": "/tailnet/{tailnet}/logging/{logType}/stream",
+            "type": "write"
+        },
+        {
+            "operation_id": "disableLogStreaming",
+            "class": "TailscaleDisableLogStreaming",
+            "slug": "tailscale_disable_log_streaming",
+            "method": "delete",
+            "path": "/tailnet/{tailnet}/logging/{logType}/stream",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAwsExternalId",
+            "class": "TailscaleGetAwsExternalId",
+            "slug": "tailscale_get_aws_external_id",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/aws-external-id",
+            "type": "write"
+        },
+        {
+            "operation_id": "validateAwsExternalId",
+            "class": "TailscaleValidateAwsExternalId",
+            "slug": "tailscale_validate_aws_external_id",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/aws-external-id/{id}/validate-aws-trust-policy",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDnsNameservers",
+            "class": "TailscaleListDnsNameservers",
+            "slug": "tailscale_list_dns_nameservers",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/dns/nameservers",
+            "type": "read"
+        },
+        {
+            "operation_id": "setDnsNameservers",
+            "class": "TailscaleSetDnsNameservers",
+            "slug": "tailscale_set_dns_nameservers",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/dns/nameservers",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDnsPreferences",
+            "class": "TailscaleGetDnsPreferences",
+            "slug": "tailscale_get_dns_preferences",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/dns/preferences",
+            "type": "read"
+        },
+        {
+            "operation_id": "setDnsPreferences",
+            "class": "TailscaleSetDnsPreferences",
+            "slug": "tailscale_set_dns_preferences",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/dns/preferences",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDnsSearchPaths",
+            "class": "TailscaleListDnsSearchPaths",
+            "slug": "tailscale_list_dns_search_paths",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/dns/searchpaths",
+            "type": "read"
+        },
+        {
+            "operation_id": "setDnsSearchPaths",
+            "class": "TailscaleSetDnsSearchPaths",
+            "slug": "tailscale_set_dns_search_paths",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/dns/searchpaths",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSplitDns",
+            "class": "TailscaleGetSplitDns",
+            "slug": "tailscale_get_split_dns",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/dns/split-dns",
+            "type": "read"
+        },
+        {
+            "operation_id": "setSplitDns",
+            "class": "TailscaleSetSplitDns",
+            "slug": "tailscale_set_split_dns",
+            "method": "put",
+            "path": "/tailnet/{tailnet}/dns/split-dns",
+            "type": "write"
+        },
+        {
+            "operation_id": "updateSplitDns",
+            "class": "TailscaleUpdateSplitDns",
+            "slug": "tailscale_update_split_dns",
+            "method": "patch",
+            "path": "/tailnet/{tailnet}/dns/split-dns",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDnsConfiguration",
+            "class": "TailscaleGetDnsConfiguration",
+            "slug": "tailscale_get_dns_configuration",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/dns/configuration",
+            "type": "read"
+        },
+        {
+            "operation_id": "setDnsConfiguration",
+            "class": "TailscaleSetDnsConfiguration",
+            "slug": "tailscale_set_dns_configuration",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/dns/configuration",
+            "type": "write"
+        },
+        {
+            "operation_id": "listTailnetKeys",
+            "class": "TailscaleListTailnetKeys",
+            "slug": "tailscale_list_tailnet_keys",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/keys",
+            "type": "read"
+        },
+        {
+            "operation_id": "createKey",
+            "class": "TailscaleCreateKey",
+            "slug": "tailscale_create_key",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/keys",
+            "type": "write"
+        },
+        {
+            "operation_id": "getKey",
+            "class": "TailscaleGetKey",
+            "slug": "tailscale_get_key",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/keys/{keyId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "setKey",
+            "class": "TailscaleSetKey",
+            "slug": "tailscale_set_key",
+            "method": "put",
+            "path": "/tailnet/{tailnet}/keys/{keyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteKey",
+            "class": "TailscaleDeleteKey",
+            "slug": "tailscale_delete_key",
+            "method": "delete",
+            "path": "/tailnet/{tailnet}/keys/{keyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPolicyFile",
+            "class": "TailscaleGetPolicyFile",
+            "slug": "tailscale_get_policy_file",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/acl",
+            "type": "read"
+        },
+        {
+            "operation_id": "setPolicyFile",
+            "class": "TailscaleSetPolicyFile",
+            "slug": "tailscale_set_policy_file",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/acl",
+            "type": "write"
+        },
+        {
+            "operation_id": "previewRuleMatches",
+            "class": "TailscalePreviewRuleMatches",
+            "slug": "tailscale_preview_rule_matches",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/acl/preview",
+            "type": "write"
+        },
+        {
+            "operation_id": "validateAndTestPolicyFile",
+            "class": "TailscaleValidateAndTestPolicyFile",
+            "slug": "tailscale_validate_and_test_policy_file",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/acl/validate",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPostureIntegrations",
+            "class": "TailscaleGetPostureIntegrations",
+            "slug": "tailscale_get_posture_integrations",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/posture/integrations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createPostureIntegration",
+            "class": "TailscaleCreatePostureIntegration",
+            "slug": "tailscale_create_posture_integration",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/posture/integrations",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPostureIntegration",
+            "class": "TailscaleGetPostureIntegration",
+            "slug": "tailscale_get_posture_integration",
+            "method": "get",
+            "path": "/posture/integrations/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updatePostureIntegration",
+            "class": "TailscaleUpdatePostureIntegration",
+            "slug": "tailscale_update_posture_integration",
+            "method": "patch",
+            "path": "/posture/integrations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deletePostureIntegration",
+            "class": "TailscaleDeletePostureIntegration",
+            "slug": "tailscale_delete_posture_integration",
+            "method": "delete",
+            "path": "/posture/integrations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listUsers",
+            "class": "TailscaleListUsers",
+            "slug": "tailscale_list_users",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "getUser",
+            "class": "TailscaleGetUser",
+            "slug": "tailscale_get_user",
+            "method": "get",
+            "path": "/users/{userId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateUserRole",
+            "class": "TailscaleUpdateUserRole",
+            "slug": "tailscale_update_user_role",
+            "method": "post",
+            "path": "/users/{userId}/role",
+            "type": "write"
+        },
+        {
+            "operation_id": "approveUser",
+            "class": "TailscaleApproveUser",
+            "slug": "tailscale_approve_user",
+            "method": "post",
+            "path": "/users/{userId}/approve",
+            "type": "write"
+        },
+        {
+            "operation_id": "suspendUser",
+            "class": "TailscaleSuspendUser",
+            "slug": "tailscale_suspend_user",
+            "method": "post",
+            "path": "/users/{userId}/suspend",
+            "type": "write"
+        },
+        {
+            "operation_id": "restoreUser",
+            "class": "TailscaleRestoreUser",
+            "slug": "tailscale_restore_user",
+            "method": "post",
+            "path": "/users/{userId}/restore",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteUser",
+            "class": "TailscaleDeleteUser",
+            "slug": "tailscale_delete_user",
+            "method": "post",
+            "path": "/users/{userId}/delete",
+            "type": "write"
+        },
+        {
+            "operation_id": "getContacts",
+            "class": "TailscaleGetContacts",
+            "slug": "tailscale_get_contacts",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/contacts",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateContact",
+            "class": "TailscaleUpdateContact",
+            "slug": "tailscale_update_contact",
+            "method": "patch",
+            "path": "/tailnet/{tailnet}/contacts/{contactType}",
+            "type": "write"
+        },
+        {
+            "operation_id": "resendContactVerificationEmail",
+            "class": "TailscaleResendContactVerificationEmail",
+            "slug": "tailscale_resend_contact_verification_email",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/contacts/{contactType}/resend-verification-email",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWebhooks",
+            "class": "TailscaleListWebhooks",
+            "slug": "tailscale_list_webhooks",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/webhooks",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWebhook",
+            "class": "TailscaleCreateWebhook",
+            "slug": "tailscale_create_webhook",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/webhooks",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWebhook",
+            "class": "TailscaleGetWebhook",
+            "slug": "tailscale_get_webhook",
+            "method": "get",
+            "path": "/webhooks/{endpointId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWebhook",
+            "class": "TailscaleUpdateWebhook",
+            "slug": "tailscale_update_webhook",
+            "method": "patch",
+            "path": "/webhooks/{endpointId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWebhook",
+            "class": "TailscaleDeleteWebhook",
+            "slug": "tailscale_delete_webhook",
+            "method": "delete",
+            "path": "/webhooks/{endpointId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "testWebhook",
+            "class": "TailscaleTestWebhook",
+            "slug": "tailscale_test_webhook",
+            "method": "post",
+            "path": "/webhooks/{endpointId}/test",
+            "type": "write"
+        },
+        {
+            "operation_id": "rotateWebhookSecret",
+            "class": "TailscaleRotateWebhookSecret",
+            "slug": "tailscale_rotate_webhook_secret",
+            "method": "post",
+            "path": "/webhooks/{endpointId}/rotate",
+            "type": "write"
+        },
+        {
+            "operation_id": "getTailnetSettings",
+            "class": "TailscaleGetTailnetSettings",
+            "slug": "tailscale_get_tailnet_settings",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/settings",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateTailnetSettings",
+            "class": "TailscaleUpdateTailnetSettings",
+            "slug": "tailscale_update_tailnet_settings",
+            "method": "patch",
+            "path": "/tailnet/{tailnet}/settings",
+            "type": "write"
+        },
+        {
+            "operation_id": "listServices",
+            "class": "TailscaleListServices",
+            "slug": "tailscale_list_services",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "getService",
+            "class": "TailscaleGetService",
+            "slug": "tailscale_get_service",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/services/{serviceName}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateService",
+            "class": "TailscaleUpdateService",
+            "slug": "tailscale_update_service",
+            "method": "put",
+            "path": "/tailnet/{tailnet}/services/{serviceName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteService",
+            "class": "TailscaleDeleteService",
+            "slug": "tailscale_delete_service",
+            "method": "delete",
+            "path": "/tailnet/{tailnet}/services/{serviceName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listServiceHosts",
+            "class": "TailscaleListServiceHosts",
+            "slug": "tailscale_list_service_hosts",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/services/{serviceName}/devices",
+            "type": "read"
+        },
+        {
+            "operation_id": "getServiceDeviceApproval",
+            "class": "TailscaleGetServiceDeviceApproval",
+            "slug": "tailscale_get_service_device_approval",
+            "method": "get",
+            "path": "/tailnet/{tailnet}/services/{serviceName}/device/{deviceId}/approved",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateServiceDeviceApproval",
+            "class": "TailscaleUpdateServiceDeviceApproval",
+            "slug": "tailscale_update_service_device_approval",
+            "method": "post",
+            "path": "/tailnet/{tailnet}/services/{serviceName}/device/{deviceId}/approved",
+            "type": "write"
+        }
+    ]
+}

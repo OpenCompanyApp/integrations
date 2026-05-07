@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Fellow integration with Laravel's service container.
+ *
+ * Binds the Fellow Developer API client and registers the tool provider.
+ */
 class FellowServiceProvider extends ServiceProvider
 {
     /**
@@ -17,8 +22,9 @@ class FellowServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new FellowService(
-                accessToken: $creds->get('fellow', 'access_token', ''),
-                baseUrl: $creds->get('fellow', 'url', 'https://api.fellow.app/v2'),
+                apiKey: $creds->get('fellow', 'api_key', $creds->get('fellow', 'access_token', '')),
+                subdomain: $creds->get('fellow', 'subdomain', ''),
+                baseUrl: $creds->get('fellow', 'url', ''),
             );
         });
     }

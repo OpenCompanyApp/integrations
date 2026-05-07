@@ -2,14 +2,26 @@
 
 namespace OpenCompany\Integrations\Granola;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Granola Enterprise API.
+ *
+ * Handles bearer authentication and exposes the current public read-only API
+ * for notes and folders.
+ */
 class GranolaService
 {
+    /**
+     * @param  string  $apiKey  Granola Enterprise API bearer token.
+     * @param  string  $baseUrl  Granola public API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.granola.ai/v1',
+        private string $baseUrl = 'https://public-api.granola.ai/v1',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -19,78 +31,71 @@ class GranolaService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
-     * List meetings for the authenticated user.
+     * List accessible meeting notes.
      *
-     * @param  array  $params  Query parameters (e.g. limit, offset, query, start_date, end_date).
+     * @param  array<string, mixed>  $params  Query parameters (created_before, created_after, updated_after, cursor, page_size).
      * @return array<string, mixed>
      */
-    public function listMeetings(array $params = []): array
+    public function listNotes(array $params = []): array
     {
-        return $this->request('GET', '/meetings', $params);
+        return $this->request('GET', '/notes', $this->onlyKeys($params, [
+            'created_before',
+            'created_after',
+            'updated_after',
+            'cursor',
+            'page_size',
+        ]));
     }
 
     /**
-     * Get a single meeting by ID, including transcript and notes.
+     * Retrieve a single meeting note by ID.
      *
-     * @param  string  $id  The meeting identifier.
+     * @param  string  $noteId  Granola note ID.
      * @return array<string, mixed>
      */
-    public function getMeeting(string $id): array
+    public function getNote(string $noteId): array
     {
-        return $this->request('GET', '/meetings/' . urlencode($id));
+        return $this->request('GET', '/notes/'.$this->path($noteId));
     }
 
     /**
-     * Create a note on a meeting.
+     * List accessible folders.
      *
-     * @param  string  $id  The meeting identifier.
-     * @param  array<string, mixed>  $data  Note payload (e.g. content).
+     * @param  array<string, mixed>  $params  Query parameters (cursor, page_size).
      * @return array<string, mixed>
      */
-    public function createNote(string $id, array $data): array
+    public function listFolders(array $params = []): array
     {
-        return $this->request('POST', '/meetings/' . urlencode($id) . '/notes', $data);
-    }
-
-    /**
-     * Share a meeting with other users.
-     *
-     * @param  string  $id  The meeting identifier.
-     * @param  array<string, mixed>  $data  Share payload (e.g. emails, message).
-     * @return array<string, mixed>
-     */
-    public function shareMeeting(string $id, array $data): array
-    {
-        return $this->request('POST', '/meetings/' . urlencode($id) . '/share', $data);
-    }
-
-    /**
-     * Get the currently authenticated user's profile.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/user');
+        return $this->request('GET', '/folders', $this->onlyKeys($params, [
+            'cursor',
+            'page_size',
+        ]));
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g. /meetings).
-     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Query parameters.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+        $json = $response->json();
 
-        return $response->json() ?? [];
+        if (is_array($json)) {
+            return $json;
+        }
+
+        $body = $response->body();
+
+        return $body === '' ? ['success' => true] : ['response' => $body];
     }
 
     /**
@@ -98,50 +103,32 @@ class GranolaService
      *
      * @param  string  $method  HTTP method.
      * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query or body parameters.
-     * @return \Illuminate\Http\Client\Response
+     * @param  array<string, mixed>  $data  Query parameters.
+     * @return Response
      *
-     * @throws \RuntimeException On configuration, connection, or API errors.
+     * @throws RuntimeException On configuration, connection, or API errors.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
         if (!$this->apiKey) {
-            throw new \RuntimeException('Granola API key is not configured.');
+            throw new RuntimeException('Granola API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->baseUrl.$path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer '.$this->apiKey,
+                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Granola API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Granola API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service may be down.");
-                }
-
-                $error = $response->json('error') ?? $body;
-                Log::error("Granola API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Granola API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
@@ -149,7 +136,60 @@ class GranolaService
             Log::error("Granola API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Granola API: {$e->getMessage()}");
+
+            throw new RuntimeException("Failed to connect to Granola API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Throw a normalized API error.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API endpoint path.
+     * @param  Response  $response  Failed response.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type') ?? '';
+        $body = $response->body();
+
+        if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("Granola API returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new RuntimeException("Granola API endpoint not available (HTTP {$response->status()}). Check the configured public API URL.");
+        }
+
+        $error = $response->json('error') ?? $response->json('message') ?? $body;
+
+        Log::error("Granola API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new RuntimeException("Granola API error ({$response->status()}): ".(is_string($error) ? $error : json_encode($error)));
+    }
+
+    /**
+     * Keep only supported query parameters and remove nulls.
+     *
+     * @param  array<string, mixed>  $data  Source query parameters.
+     * @param  array<int, string>  $keys  Allowed query parameter names.
+     * @return array<string, mixed>
+     */
+    private function onlyKeys(array $data, array $keys): array
+    {
+        return array_filter(array_intersect_key($data, array_flip($keys)), static fn (mixed $value): bool => $value !== null);
+    }
+
+    /**
+     * URL-encode a path segment.
+     *
+     * @param  string  $value  Path segment value.
+     */
+    private function path(string $value): string
+    {
+        return rawurlencode($value);
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-accelo",
-    "description": "Accelo integration for Laravel — manage tickets, tasks, and projects.",
+    "description": "Accelo integration for Laravel - manage issues, tasks, jobs, and token information.",
     "license": "MIT",
     "authors": [
         {

@@ -1,0 +1,34 @@
+{
+    "name": "opencompanyapp/integration-microsoft-people",
+    "description": "Microsoft People integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftPeople\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftPeople\\MicrosoftPeopleServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "people",
+        "person",
+        "profile-card",
+        "contacts",
+        "graph",
+        "opencompany"
+    ]
+}

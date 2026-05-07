@@ -13,6 +13,8 @@ class MailerLiteDeleteSubscriber implements Tool
 {
     /**
      * Create a new delete subscriber tool instance.
+     *
+     * @param  MailerLiteService  $service  MailerLite API client.
      */
     public function __construct(
         private MailerLiteService $service,
@@ -42,7 +44,7 @@ class MailerLiteDeleteSubscriber implements Tool
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber ID to delete.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber ID or email address to delete.'],
         ];
     }
 
@@ -59,9 +61,7 @@ class MailerLiteDeleteSubscriber implements Tool
             }
 
             $id = $args['id'];
-            $this->service->deleteSubscriber($id);
-
-            return ToolResult::success([
+            return ToolResult::success($this->service->deleteSubscriber($id) + [
                 'deleted' => true,
                 'id' => $id,
             ]);

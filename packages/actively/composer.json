@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-actively",
-    "description": "Actively CRM integration for Laravel — manage campaigns, contacts, and organizations.",
+    "description": "Actively CRM integration for Laravel - manage campaigns, contacts, and organizations.",
     "license": "MIT",
     "authors": [
         {

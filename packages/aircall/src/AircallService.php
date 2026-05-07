@@ -2,229 +2,236 @@
 
 namespace OpenCompany\Integrations\Aircall;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Aircall API service for making authenticated requests to the Aircall REST API.
+ * HTTP client for the Aircall Public API.
  *
- * Handles HTTP communication with the Aircall API including authentication via
- * Bearer tokens, request/response processing, and error handling.
- *
- * @see https://developer.aircall.io/
+ * Handles bearer-token authentication, v1/v2 path normalization, response
+ * parsing, and safe relative endpoint access for Aircall tools.
  */
 class AircallService
 {
     /**
-     * Create a new AircallService instance.
-     *
-     * @param  string  $accessToken  The OAuth access token for API authentication.
-     * @param  string  $baseUrl  The base URL for the Aircall API (default: https://api.aircall.io/v1).
+     * @param  string  $accessToken  Aircall OAuth access token or manual API token.
+     * @param  string  $baseUrl  Root Aircall API URL.
+     * @param  string  $apiId  Aircall Basic Auth API ID.
+     * @param  string  $apiToken  Aircall Basic Auth API token.
      */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.aircall.io/v1',
+        private string $baseUrl = 'https://api.aircall.io',
+        private string $apiId = '',
+        private string $apiToken = '',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = preg_replace('#/v[12]$#', '', rtrim($this->baseUrl, '/')) ?: 'https://api.aircall.io';
     }
 
     /**
-     * Check whether the Aircall integration is properly configured.
-     *
-     * Returns true when a non-empty access token has been provided.
+     * Check whether the Aircall integration is configured.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '' || ($this->apiId !== '' && $this->apiToken !== '');
     }
-
-    // --------------------------------------------------------------------------
-    // Calls
-    // --------------------------------------------------------------------------
 
     /**
      * List calls with optional filters and pagination.
      *
-     * @param  array  $filters  Query parameters such as `per_page`, `page`, `order`, `from`, `to`, `direction`, etc.
-     * @return array<string, mixed> The parsed JSON response containing calls data.
-     *
-     * @see https://developer.aircall.io/api-references/#list-calls
+     * @param  array<string, mixed>  $filters  Query parameters.
+     * @return array<string, mixed>
      */
     public function listCalls(array $filters = []): array
     {
-        return $this->request('GET', '/calls', $filters);
+        return $this->apiGet('/calls', $filters);
     }
 
     /**
-     * Retrieve a single call by its ID.
+     * Retrieve a single call by ID.
      *
-     * @param  int  $callId  The unique identifier of the call.
-     * @return array<string, mixed> The parsed JSON response containing the call data.
-     *
-     * @see https://developer.aircall.io/api-references/#retrieve-a-call
+     * @return array<string, mixed>
      */
-    public function getCall(int $callId): array
+    public function getCall(int|string $callId): array
     {
-        return $this->request('GET', '/calls/' . $callId);
+        return $this->apiGet('/calls/' . rawurlencode((string) $callId));
     }
-
-    // --------------------------------------------------------------------------
-    // Contacts
-    // --------------------------------------------------------------------------
 
     /**
      * List contacts with optional filters and pagination.
      *
-     * @param  array  $filters  Query parameters such as `per_page`, `page`, `order`, `q` (search), etc.
-     * @return array<string, mixed> The parsed JSON response containing contacts data.
-     *
-     * @see https://developer.aircall.io/api-references/#list-contacts
+     * @param  array<string, mixed>  $filters  Query parameters.
+     * @return array<string, mixed>
      */
     public function listContacts(array $filters = []): array
     {
-        return $this->request('GET', '/contacts', $filters);
+        return $this->apiGet('/contacts', $filters);
     }
 
     /**
-     * Create a new contact in Aircall.
+     * Create a new contact.
      *
-     * @param  array  $data  Contact fields: `first_name`, `last_name`, `company_name`, `information`, `phone_numbers`, `emails`, etc.
-     * @return array<string, mixed> The parsed JSON response containing the created contact.
-     *
-     * @see https://developer.aircall.io/api-references/#create-a-contact
+     * @param  array<string, mixed>  $data  Contact payload.
+     * @return array<string, mixed>
      */
     public function createContact(array $data): array
     {
-        return $this->request('POST', '/contacts', $data);
+        return $this->apiPost('/contacts', $data);
     }
 
     /**
-     * Update an existing contact in Aircall.
+     * Update an existing contact.
      *
-     * @param  int  $contactId  The unique identifier of the contact to update.
-     * @param  array  $data  Contact fields to update: `first_name`, `last_name`, `company_name`, `information`, `phone_numbers`, `emails`, etc.
-     * @return array<string, mixed> The parsed JSON response containing the updated contact.
-     *
-     * @see https://developer.aircall.io/api-references/#update-a-contact
+     * @param  array<string, mixed>  $data  Contact payload.
+     * @return array<string, mixed>
      */
-    public function updateContact(int $contactId, array $data): array
+    public function updateContact(int|string $contactId, array $data): array
     {
-        return $this->request('PUT', '/contacts/' . $contactId, $data);
+        return $this->apiPut('/contacts/' . rawurlencode((string) $contactId), $data);
     }
 
-    // --------------------------------------------------------------------------
-    // Users
-    // --------------------------------------------------------------------------
-
     /**
-     * List all users in the Aircall account.
+     * List users with optional filters.
      *
-     * @return array<string, mixed> The parsed JSON response containing users data.
-     *
-     * @see https://developer.aircall.io/api-references/#list-users
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
      */
-    public function listUsers(): array
+    public function listUsers(array $params = []): array
     {
-        return $this->request('GET', '/users');
+        return $this->apiGet('/users', $params);
     }
 
     /**
-     * Get the currently authenticated user.
+     * Get the authenticated user.
      *
-     * @return array<string, mixed> The parsed JSON response containing the current user data.
-     *
-     * @see https://developer.aircall.io/api-references/#retrieve-the-current-user
+     * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->apiGet('/users/me');
     }
 
-    // --------------------------------------------------------------------------
-    // Numbers
-    // --------------------------------------------------------------------------
-
     /**
-     * List all phone numbers in the Aircall account.
+     * List phone numbers.
      *
-     * @return array<string, mixed> The parsed JSON response containing numbers data.
-     *
-     * @see https://developer.aircall.io/api-references/#list-numbers
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
      */
-    public function listNumbers(): array
+    public function listNumbers(array $params = []): array
     {
-        return $this->request('GET', '/numbers');
+        return $this->apiGet('/numbers', $params);
     }
 
-    // --------------------------------------------------------------------------
-    // HTTP layer
-    // --------------------------------------------------------------------------
+    /**
+     * Execute a safe relative GET request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
 
     /**
-     * Make an authenticated API request and return parsed JSON.
+     * Execute a safe relative POST request.
      *
-     * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  The API endpoint path (e.g., "/calls").
-     * @param  array  $data  Request body (POST/PUT) or query parameters (GET).
-     * @return array<string, mixed> The parsed JSON response body.
-     *
-     * @throws \RuntimeException When the API returns an error or the service is not configured.
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    public function apiPost(string $path, array $body = [], array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        return $this->request('POST', $path, $query, $body);
+    }
+
+    /**
+     * Execute a safe relative PUT request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $query, $body);
+    }
+
+    /**
+     * Execute a safe relative DELETE request.
+     *
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query, $body);
+    }
+
+    /**
+     * Execute a request and parse JSON.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array $body = []): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $body);
+
+        if (trim($response->body()) === '') {
+            return ['success' => true, 'status' => $response->status()];
+        }
+
         return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the Aircall API.
+     * Execute an authenticated raw HTTP request.
      *
-     * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  The API endpoint path.
-     * @param  array  $data  Request body or query parameters.
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON body.
      *
-     * @throws \RuntimeException When the access token is missing, the connection fails, or the API returns an error.
+     * @throws \RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Aircall access token is not configured.');
+        if (!$this->isConfigured()) {
+            throw new \RuntimeException('Aircall API credentials are not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->url($this->safePath($path), $query);
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
+            $http = $this->apiId !== '' && $this->apiToken !== ''
+                ? $http->withBasicAuth($this->apiId, $this->apiToken)
+                : $http->withToken($this->accessToken);
+
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'DELETE' => $http->delete($url, $body),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Aircall API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Aircall API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("Aircall API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Aircall API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
@@ -232,7 +239,72 @@ class AircallService
             Log::error("Aircall API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
+
             throw new \RuntimeException("Failed to connect to Aircall API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a safe relative Aircall path.
+     */
+    private function safePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '' || preg_match('#^[a-z][a-z0-9+.-]*://#i', $path) || str_starts_with($path, '//') || str_contains($path, '..')) {
+            throw new \InvalidArgumentException('Path must be a safe relative Aircall API path.');
+        }
+
+        $path = '/' . ltrim($path, '/');
+
+        if (!str_starts_with($path, '/v1/') && !str_starts_with($path, '/v2/')) {
+            $path = '/v1' . $path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Build an absolute API URL.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function url(string $path, array $query = []): string
+    {
+        $query = array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        if ($query === []) {
+            return $this->baseUrl . $path;
+        }
+
+        return $this->baseUrl . $path . '?' . http_build_query($query);
+    }
+
+    /**
+     * Parse and throw a normalized API error.
+     *
+     * @throws \RuntimeException
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type') ?? '';
+        $body = $response->body();
+
+        if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("Aircall API returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new \RuntimeException("Aircall API returned unexpected HTML (HTTP {$response->status()}).");
+        }
+
+        $error = $response->json('error') ?? $response->json('message') ?? $body;
+
+        Log::error("Aircall API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new \RuntimeException("Aircall API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
     }
 }

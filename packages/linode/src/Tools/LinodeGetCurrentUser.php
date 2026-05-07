@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Linode\LinodeService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve the authenticated Linode user profile.
+ */
 class LinodeGetCurrentUser implements Tool
 {
+    /**
+     * @param  LinodeService  $service  The Linode API client.
+     */
     public function __construct(
         private LinodeService $service,
     ) {}
@@ -27,6 +33,11 @@ class LinodeGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the current Linode profile details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -48,7 +48,10 @@ class IpstackLookupIp implements Tool
     public function parameters(): array
     {
         return [
-            'ip' => ['type' => 'string', 'required' => true, 'description' => 'The IPv4 or IPv6 address to look up (e.g., "134.201.250.155").'],
+            'ip' => ['type' => 'string', 'required' => true, 'description' => 'The IPv4 or IPv6 address or domain to look up (e.g., "134.201.250.155").'],
+            'fields' => ['type' => 'array', 'required' => false, 'description' => 'Optional response fields, such as ["main", "location", "timezone", "currency", "connection", "security"].'],
+            'hostname' => ['type' => 'boolean', 'required' => false, 'description' => 'Set true to request hostname lookup.'],
+            'security' => ['type' => 'boolean', 'required' => false, 'description' => 'Set true to request the paid security module.'],
             'language' => ['type' => 'string', 'required' => false, 'description' => 'Response language code (e.g., "en", "de", "fr"). Defaults to English.'],
         ];
     }
@@ -71,9 +74,16 @@ class IpstackLookupIp implements Tool
                 return ToolResult::error('An IP address is required.');
             }
 
-            $language = $args['language'] ?? null;
+            $fields = $args['fields'] ?? [];
+            if (is_string($fields)) {
+                $fields = array_filter(array_map('trim', explode(',', $fields)));
+            }
 
-            $result = $this->service->lookupIp($ip, [], $language);
+            $result = $this->service->lookupIp($ip, $fields, [
+                'language' => $args['language'] ?? null,
+                'hostname' => $args['hostname'] ?? false,
+                'security' => $args['security'] ?? false,
+            ]);
 
             if (empty($result)) {
                 return ToolResult::success([

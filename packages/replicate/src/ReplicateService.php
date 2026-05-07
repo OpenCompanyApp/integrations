@@ -2,11 +2,22 @@
 
 namespace OpenCompany\Integrations\Replicate;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Replicate REST API.
+ *
+ * Handles bearer-token authentication, OpenAPI operation execution, request
+ * body encoding, multipart uploads, non-JSON downloads, and error parsing.
+ */
 class ReplicateService
 {
+    /**
+     * @param  string  $apiKey  Replicate API token.
+     * @param  string  $baseUrl  Replicate API base URL.
+     */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = 'https://api.replicate.com/v1',
@@ -19,152 +30,133 @@ class ReplicateService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
-     * List predictions.
+     * Execute an official Replicate OpenAPI operation.
      *
+     * @param  array<string, mixed>  $operation  Operation metadata from ReplicateOperations.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    public function listPredictions(): array
+    public function executeOperation(array $operation, array $args = []): array
     {
-        return $this->request('GET', '/predictions');
-    }
+        $path = (string) $operation['path'];
+        $query = [];
+        $headers = [];
+        $consumed = [];
 
-    /**
-     * Get a single prediction by ID.
-     *
-     * @param  string  $predictionId  The prediction identifier.
-     * @return array<string, mixed>
-     */
-    public function getPrediction(string $predictionId): array
-    {
-        return $this->request('GET', '/predictions/' . urlencode($predictionId));
-    }
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            $name = (string) $parameter['name'];
+            $value = $this->argument($args, $name);
 
-    /**
-     * Create a new prediction.
-     *
-     * @param  string  $modelVersion  The model version identifier.
-     * @param  array<string, mixed>  $input  The model input values.
-     * @param  string|null  $webhook  Optional webhook URL for completion notifications.
-     * @param  array<string>|null  $webhookEvents  Optional list of webhook events.
-     * @return array<string, mixed>
-     */
-    public function createPrediction(
-        string $modelVersion,
-        array $input,
-        ?string $webhook = null,
-        ?array $webhookEvents = null,
-    ): array {
-        $body = [
-            'version' => $modelVersion,
-            'input' => $input,
-        ];
+            if ($value === null) {
+                if (!empty($parameter['required'])) {
+                    throw new \RuntimeException("{$name} is required.");
+                }
 
-        if ($webhook !== null) {
-            $body['webhook'] = $webhook;
+                continue;
+            }
+
+            $consumed[] = $name;
+            $consumed[] = $this->snakeName($name);
+
+            if ($parameter['in'] === 'path') {
+                $path = str_replace('{' . $name . '}', rawurlencode((string) $value), $path);
+            } elseif ($parameter['in'] === 'query') {
+                $query[$name] = $value;
+            } elseif ($parameter['in'] === 'header') {
+                $headers[$name] = $value;
+            }
         }
 
-        if ($webhookEvents !== null) {
-            $body['webhook_events_filter'] = $webhookEvents;
+        $requestBody = $operation['request_body'] ?? null;
+        $body = null;
+
+        if ($requestBody !== null) {
+            $body = $args['body'] ?? $this->bodyFromLooseArguments($args, $consumed);
+
+            if (!empty($requestBody['required']) && ($body === null || $body === [] || $body === '')) {
+                throw new \RuntimeException('body is required.');
+            }
         }
 
-        return $this->request('POST', '/predictions', $body);
+        $method = (string) $operation['method'];
+        $url = $this->baseUrl . $path;
+
+        return $this->request($method, $url, $query, $headers, $body, $requestBody['content_types'] ?? []);
     }
 
     /**
-     * List models.
+     * Make an API request and return parsed output.
      *
+     * @param  string  $method  HTTP method, including Replicate's QUERY method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
      * @return array<string, mixed>
      */
-    public function listModels(): array
+    private function request(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, array $contentTypes = []): array
     {
-        return $this->request('GET', '/models');
-    }
+        $response = $this->rawRequest($method, $url, $query, $headers, $body, $contentTypes);
 
-    /**
-     * Get a single model by owner and name.
-     *
-     * @param  string  $modelOwner  The model owner (user or org).
-     * @param  string  $modelName  The model name.
-     * @return array<string, mixed>
-     */
-    public function getModel(string $modelOwner, string $modelName): array
-    {
-        return $this->request('GET', '/models/' . urlencode($modelOwner) . '/' . urlencode($modelName));
-    }
+        if ($response->status() === 204) {
+            return [];
+        }
 
-    /**
-     * List collections.
-     *
-     * @return array<string, mixed>
-     */
-    public function listCollections(): array
-    {
-        return $this->request('GET', '/collections');
-    }
+        $contentType = (string) $response->header('Content-Type');
 
-    /**
-     * Get the current user's profile and billing information.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/user');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
+        if (!str_contains($contentType, 'json')) {
+            return [
+                'body' => $response->body(),
+                'content_type' => $contentType,
+            ];
+        }
 
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Replicate API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $url  Fully qualified request URL.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $headers  Additional headers.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $url, array $query = [], array $headers = [], mixed $body = null, array $contentTypes = []): Response
     {
-        if (!$this->apiKey) {
+        if ($this->apiKey === '') {
             throw new \RuntimeException('Replicate API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
-
         try {
             $http = Http::withToken($this->apiKey)
-                ->withHeaders(['Content-Type' => 'application/json'])
+                ->withHeaders(array_merge([
+                    'Accept' => 'application/json',
+                ], $headers))
                 ->timeout(120);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $response = $this->sendRequest($http, $method, $url, $query, $body, $contentTypes);
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+                $contentType = (string) $response->header('Content-Type');
+                $rawBody = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Replicate API returned HTML for {$method} {$path}", [
+                if (str_contains($contentType, 'text/html') || str_starts_with(trim($rawBody), '<!DOCTYPE')) {
+                    Log::warning("Replicate API returned HTML for {$method} {$url}", [
                         'status' => $response->status(),
                     ]);
                     throw new \RuntimeException("Replicate API endpoint not available (HTTP {$response->status()}).");
                 }
 
-                $error = $response->json('detail') ?? $response->json('error') ?? $body;
-                Log::error("Replicate API error: {$method} {$path}", [
+                $error = $response->json('detail') ?? $response->json('error') ?? $rawBody;
+                Log::error("Replicate API error: {$method} {$url}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
@@ -173,10 +165,107 @@ class ReplicateService
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Replicate API connection error: {$method} {$path}", [
+            Log::error("Replicate API connection error: {$method} {$url}", [
                 'error' => $e->getMessage(),
             ]);
             throw new \RuntimeException("Failed to connect to Replicate API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Dispatch the request with the appropriate body encoder.
+     *
+     * @param  \Illuminate\Http\Client\PendingRequest  $http  Pending HTTP request.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  mixed  $body  Request body.
+     * @param  array<int, string>  $contentTypes  Request body content types from OpenAPI.
+     */
+    private function sendRequest(\Illuminate\Http\Client\PendingRequest $http, string $method, string $url, array $query, mixed $body, array $contentTypes): Response
+    {
+        $method = strtoupper($method);
+
+        if ($query !== []) {
+            $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        }
+
+        if (in_array('multipart/form-data', $contentTypes, true)) {
+            $payload = is_array($body) ? $body : [];
+            $content = $payload['content'] ?? '';
+            $filename = (string) ($payload['filename'] ?? 'upload');
+
+            if (is_string($content) && is_file($content)) {
+                $content = file_get_contents($content);
+            }
+
+            $http = $http->attach('content', (string) $content, $filename);
+            unset($payload['content']);
+
+            foreach ($payload as $key => $value) {
+                if (is_array($value)) {
+                    $payload[$key] = json_encode($value);
+                }
+            }
+
+            return $http->post($url, $payload);
+        }
+
+        if (in_array('text/plain', $contentTypes, true)) {
+            return $http->withBody(is_scalar($body) ? (string) $body : json_encode($body), 'text/plain')->send($method, $url);
+        }
+
+        return match ($method) {
+            'GET' => $http->get($url),
+            'POST' => $http->post($url, $body ?? []),
+            'PATCH' => $http->patch($url, $body ?? []),
+            'PUT' => $http->put($url, $body ?? []),
+            'DELETE' => $http->delete($url, is_array($body) ? $body : []),
+            default => $http->send($method, $url, ['json' => $body ?? []]),
+        };
+    }
+
+    /**
+     * Resolve an argument by exact, snake_case, or lower-case parameter name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
+    private function argument(array $args, string $name): mixed
+    {
+        foreach ([$name, $this->snakeName($name), strtolower($name)] as $key) {
+            if (array_key_exists($key, $args)) {
+                return $args[$key];
+            }
+        }
+
+        return null;
+    }
+
+    private function snakeName(string $name): string
+    {
+        $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name);
+        $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name);
+        $name = (string) preg_replace('/_+/', '_', $name);
+
+        return strtolower(trim($name, '_'));
+    }
+
+    /**
+     * Build a request body from arguments that are not path/query/header params.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<int, string>  $consumed  Already consumed parameter names.
+     * @return array<string, mixed>
+     */
+    private function bodyFromLooseArguments(array $args, array $consumed): array
+    {
+        $body = [];
+        $consumed = array_flip($consumed);
+
+        foreach ($args as $key => $value) {
+            if (!isset($consumed[$key])) {
+                $body[$key] = $value;
+            }
+        }
+
+        return $body;
     }
 }

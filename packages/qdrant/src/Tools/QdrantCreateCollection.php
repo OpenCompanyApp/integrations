@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Qdrant\QdrantService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a Qdrant vector collection.
+ */
 class QdrantCreateCollection implements Tool
 {
+    /**
+     * @param  QdrantService  $service  The Qdrant REST API client.
+     */
     public function __construct(
         private QdrantService $service,
     ) {}
@@ -35,10 +41,15 @@ class QdrantCreateCollection implements Tool
         ];
     }
 
+    /**
+     * Create a collection with vector configuration.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Qdrant integration is not configured.');
             }
 

@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Box integration with Laravel's service container.
+ *
+ * Binds BoxService as a singleton using host-provided credentials and registers
+ * the BoxToolProvider with the ToolProviderRegistry on boot.
+ */
 class BoxServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +25,7 @@ class BoxServiceProvider extends ServiceProvider
             return new BoxService(
                 accessToken: $creds->get('box', 'access_token', ''),
                 baseUrl: $creds->get('box', 'url', 'https://api.box.com/2.0'),
+                uploadUrl: $creds->get('box', 'upload_url', 'https://upload.box.com/api/2.0'),
             );
         });
     }

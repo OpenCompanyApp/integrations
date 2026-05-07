@@ -94,7 +94,7 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'CRM platform for managing contacts, deals, and sales accounts',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:freshworks',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.freshworks.com/crm/api/',
         ];

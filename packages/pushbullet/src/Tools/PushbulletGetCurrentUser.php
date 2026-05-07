@@ -2,12 +2,20 @@
 
 namespace OpenCompany\Integrations\Pushbullet\Tools;
 
-use OpenCompany\Integrations\Pushbullet\PushbulletService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Pushbullet\PushbulletService;
 
+/**
+ * Get the authenticated Pushbullet user's profile.
+ *
+ * Useful for credential verification and account context.
+ */
 class PushbulletGetCurrentUser implements Tool
 {
+    /**
+     * @param  PushbulletService  $service  The Pushbullet API client.
+     */
     public function __construct(
         private PushbulletService $service,
     ) {}
@@ -27,6 +35,11 @@ class PushbulletGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the authenticated Pushbullet user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

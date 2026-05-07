@@ -15,9 +15,13 @@ class NotionServiceProvider extends ServiceProvider
     {
         $this->app->singleton(NotionService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $apiKey = $creds->get('notion', 'api_key', '')
+                ?: $creds->get('notion', 'access_token', '')
+                ?: $creds->get('notion2', 'api_key', '')
+                ?: $creds->get('notion2', 'access_token', '');
 
             return new NotionService(
-                apiKey: $creds->get('notion', 'api_key', ''),
+                apiKey: $apiKey,
             );
         });
     }

@@ -1,0 +1,48 @@
+<?php
+
+namespace OpenCompany\Integrations\FireHydrant\Tools;
+
+/**
+ * Update impacts for an incident.
+ *
+ * Maps to the official FireHydrant endpoint patch /v1/incidents/{incident_id}/impact.
+ */
+class FireHydrantUpdateIncidentImpactPatch extends AbstractFireHydrantTool
+{
+    protected const NAME = 'firehydrant_update_incident_impact_patch';
+    protected const DESCRIPTION = 'Update impacts for an incident
+
+Official FireHydrant endpoint: PATCH /v1/incidents/{incident_id}/impact
+
+Allows updating an incident\'s impacted infrastructure, with the option to
+move the incident into a different milestone and provide a note to update
+the incident timeline and any attached status pages. If this method is
+requested with the PUT verb, impacts will be completely replaced with the
+information in the request body, even if not provided (effectively clearing
+all impacts). If this method is requested with the PATCH verb, the provided
+impacts will be added or updated, but no impacts will be removed.';
+    protected const PARAMETERS = array (
+  'incident_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'incident_id parameter.',
+    'required' => true,
+  ),
+  'body' =>
+  array (
+    'type' => 'object',
+    'description' => 'JSON request body matching the FireHydrant API schema.',
+    'required' => true,
+  ),
+);
+    protected const METHOD = 'patch';
+    protected const PATH = '/v1/incidents/{incident_id}/impact';
+    protected const PATH_PARAMS = array (
+  'incident_id' => 'incident_id',
+);
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = true;
+}

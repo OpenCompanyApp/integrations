@@ -3,6 +3,8 @@
 namespace OpenCompany\Integrations\Recurly;
 
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Recurly\Tools\RecurlyCreateAccount;
@@ -13,11 +15,15 @@ use OpenCompany\Integrations\Recurly\Tools\RecurlyListAccounts;
 use OpenCompany\Integrations\Recurly\Tools\RecurlyListPlans;
 use OpenCompany\Integrations\Recurly\Tools\RecurlyListSubscriptions;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Registers Recurly tools and metadata for integration discovery.
+ *
+ * Exposes Recurly v3 API operations for billing accounts, subscriptions,
+ * plans, and credential checks.
+ */
 class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,46 +31,36 @@ class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -105,11 +101,13 @@ class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Recurly subscription billing integration for Laravel — manage accounts, subscriptions, and plans.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
+            'docs_url' => 'https://recurly.com/developers/api/',
         ];
     }
-/**
+
+    /**
      * Get the configuration schema for the Recurly integration.
      *
      * @return array The config schema fields.
@@ -288,7 +286,7 @@ class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new RecurlyService(
                 apiKey: $creds->get('recurly', 'api_key', '', $account),

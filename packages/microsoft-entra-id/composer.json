@@ -1,0 +1,34 @@
+{
+    "name": "opencompanyapp/integration-microsoft-entra-id",
+    "description": "Microsoft Entra ID directory integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftEntraId\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftEntraId\\MicrosoftEntraIdServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "entra",
+        "azure-ad",
+        "identity",
+        "directory",
+        "graph",
+        "opencompany"
+    ]
+}

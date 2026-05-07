@@ -61,7 +61,7 @@ class AssemblyAIGetTranscript implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('AssemblyAI integration is not configured.');
             }
 

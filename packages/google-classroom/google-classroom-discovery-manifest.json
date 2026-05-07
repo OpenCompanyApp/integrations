@@ -1,0 +1,841 @@
+{
+    "source": "https://classroom.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Classroom API",
+    "version": "v1",
+    "method_count": 104,
+    "generated_package": "google-classroom",
+    "methods": [
+        {
+            "discovery_id": "userProfiles.get",
+            "tool": "google_classroom_user_profiles_get",
+            "class": "GoogleClassroomUserProfilesGet",
+            "http_method": "GET",
+            "path": "/v1/userProfiles/{userId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "userProfiles.guardianInvitations.list",
+            "tool": "google_classroom_user_profiles_guardian_invitations_list",
+            "class": "GoogleClassroomUserProfilesGuardianInvitationsList",
+            "http_method": "GET",
+            "path": "/v1/userProfiles/{studentId}/guardianInvitations",
+            "type": "read"
+        },
+        {
+            "discovery_id": "userProfiles.guardianInvitations.get",
+            "tool": "google_classroom_user_profiles_guardian_invitations_get",
+            "class": "GoogleClassroomUserProfilesGuardianInvitationsGet",
+            "http_method": "GET",
+            "path": "/v1/userProfiles/{studentId}/guardianInvitations/{invitationId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "userProfiles.guardianInvitations.patch",
+            "tool": "google_classroom_user_profiles_guardian_invitations_patch",
+            "class": "GoogleClassroomUserProfilesGuardianInvitationsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/userProfiles/{studentId}/guardianInvitations/{invitationId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "userProfiles.guardianInvitations.create",
+            "tool": "google_classroom_user_profiles_guardian_invitations_create",
+            "class": "GoogleClassroomUserProfilesGuardianInvitationsCreate",
+            "http_method": "POST",
+            "path": "/v1/userProfiles/{studentId}/guardianInvitations",
+            "type": "write"
+        },
+        {
+            "discovery_id": "userProfiles.guardians.list",
+            "tool": "google_classroom_user_profiles_guardians_list",
+            "class": "GoogleClassroomUserProfilesGuardiansList",
+            "http_method": "GET",
+            "path": "/v1/userProfiles/{studentId}/guardians",
+            "type": "read"
+        },
+        {
+            "discovery_id": "userProfiles.guardians.get",
+            "tool": "google_classroom_user_profiles_guardians_get",
+            "class": "GoogleClassroomUserProfilesGuardiansGet",
+            "http_method": "GET",
+            "path": "/v1/userProfiles/{studentId}/guardians/{guardianId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "userProfiles.guardians.delete",
+            "tool": "google_classroom_user_profiles_guardians_delete",
+            "class": "GoogleClassroomUserProfilesGuardiansDelete",
+            "http_method": "DELETE",
+            "path": "/v1/userProfiles/{studentId}/guardians/{guardianId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "invitations.accept",
+            "tool": "google_classroom_invitations_accept",
+            "class": "GoogleClassroomInvitationsAccept",
+            "http_method": "POST",
+            "path": "/v1/invitations/{id}:accept",
+            "type": "write"
+        },
+        {
+            "discovery_id": "invitations.delete",
+            "tool": "google_classroom_invitations_delete",
+            "class": "GoogleClassroomInvitationsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/invitations/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "invitations.list",
+            "tool": "google_classroom_invitations_list",
+            "class": "GoogleClassroomInvitationsList",
+            "http_method": "GET",
+            "path": "/v1/invitations",
+            "type": "read"
+        },
+        {
+            "discovery_id": "invitations.create",
+            "tool": "google_classroom_invitations_create",
+            "class": "GoogleClassroomInvitationsCreate",
+            "http_method": "POST",
+            "path": "/v1/invitations",
+            "type": "write"
+        },
+        {
+            "discovery_id": "invitations.get",
+            "tool": "google_classroom_invitations_get",
+            "class": "GoogleClassroomInvitationsGet",
+            "http_method": "GET",
+            "path": "/v1/invitations/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.create",
+            "tool": "google_classroom_courses_create",
+            "class": "GoogleClassroomCoursesCreate",
+            "http_method": "POST",
+            "path": "/v1/courses",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.update",
+            "tool": "google_classroom_courses_update",
+            "class": "GoogleClassroomCoursesUpdate",
+            "http_method": "PUT",
+            "path": "/v1/courses/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.updateGradingPeriodSettings",
+            "tool": "google_classroom_courses_update_grading_period_settings",
+            "class": "GoogleClassroomCoursesUpdateGradingPeriodSettings",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/gradingPeriodSettings",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.get",
+            "tool": "google_classroom_courses_get",
+            "class": "GoogleClassroomCoursesGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.getGradingPeriodSettings",
+            "tool": "google_classroom_courses_get_grading_period_settings",
+            "class": "GoogleClassroomCoursesGetGradingPeriodSettings",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/gradingPeriodSettings",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.patch",
+            "tool": "google_classroom_courses_patch",
+            "class": "GoogleClassroomCoursesPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.list",
+            "tool": "google_classroom_courses_list",
+            "class": "GoogleClassroomCoursesList",
+            "http_method": "GET",
+            "path": "/v1/courses",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.delete",
+            "tool": "google_classroom_courses_delete",
+            "class": "GoogleClassroomCoursesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.get",
+            "tool": "google_classroom_courses_course_work_get",
+            "class": "GoogleClassroomCoursesCourseWorkGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.create",
+            "tool": "google_classroom_courses_course_work_create",
+            "class": "GoogleClassroomCoursesCourseWorkCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.modifyAssignees",
+            "tool": "google_classroom_courses_course_work_modify_assignees",
+            "class": "GoogleClassroomCoursesCourseWorkModifyAssignees",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{id}:modifyAssignees",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.patch",
+            "tool": "google_classroom_courses_course_work_patch",
+            "class": "GoogleClassroomCoursesCourseWorkPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWork/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.list",
+            "tool": "google_classroom_courses_course_work_list",
+            "class": "GoogleClassroomCoursesCourseWorkList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.getAddOnContext",
+            "tool": "google_classroom_courses_course_work_get_add_on_context",
+            "class": "GoogleClassroomCoursesCourseWorkGetAddOnContext",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnContext",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.updateRubric",
+            "tool": "google_classroom_courses_course_work_update_rubric",
+            "class": "GoogleClassroomCoursesCourseWorkUpdateRubric",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/rubric",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.delete",
+            "tool": "google_classroom_courses_course_work_delete",
+            "class": "GoogleClassroomCoursesCourseWorkDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/courseWork/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.rubrics.get",
+            "tool": "google_classroom_courses_course_work_rubrics_get",
+            "class": "GoogleClassroomCoursesCourseWorkRubricsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/rubrics/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.rubrics.create",
+            "tool": "google_classroom_courses_course_work_rubrics_create",
+            "class": "GoogleClassroomCoursesCourseWorkRubricsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/rubrics",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.rubrics.patch",
+            "tool": "google_classroom_courses_course_work_rubrics_patch",
+            "class": "GoogleClassroomCoursesCourseWorkRubricsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/rubrics/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.rubrics.list",
+            "tool": "google_classroom_courses_course_work_rubrics_list",
+            "class": "GoogleClassroomCoursesCourseWorkRubricsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/rubrics",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.rubrics.delete",
+            "tool": "google_classroom_courses_course_work_rubrics_delete",
+            "class": "GoogleClassroomCoursesCourseWorkRubricsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/rubrics/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.patch",
+            "tool": "google_classroom_courses_course_work_student_submissions_patch",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.list",
+            "tool": "google_classroom_courses_course_work_student_submissions_list",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.return",
+            "tool": "google_classroom_courses_course_work_student_submissions_return",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsReturn",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:return",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.get",
+            "tool": "google_classroom_courses_course_work_student_submissions_get",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.modifyAttachments",
+            "tool": "google_classroom_courses_course_work_student_submissions_modify_attachments",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsModifyAttachments",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:modifyAttachments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.turnIn",
+            "tool": "google_classroom_courses_course_work_student_submissions_turn_in",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsTurnIn",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:turnIn",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.studentSubmissions.reclaim",
+            "tool": "google_classroom_courses_course_work_student_submissions_reclaim",
+            "class": "GoogleClassroomCoursesCourseWorkStudentSubmissionsReclaim",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:reclaim",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.create",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_create",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.get",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_get",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.list",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_list",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.patch",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_patch",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.delete",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_delete",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.studentSubmissions.patch",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_student_submissions_patch",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsStudentSubmissionsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments/{attachmentId}/studentSubmissions/{submissionId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWork.addOnAttachments.studentSubmissions.get",
+            "tool": "google_classroom_courses_course_work_add_on_attachments_student_submissions_get",
+            "class": "GoogleClassroomCoursesCourseWorkAddOnAttachmentsStudentSubmissionsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWork/{itemId}/addOnAttachments/{attachmentId}/studentSubmissions/{submissionId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.posts.getAddOnContext",
+            "tool": "google_classroom_courses_posts_get_add_on_context",
+            "class": "GoogleClassroomCoursesPostsGetAddOnContext",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnContext",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.delete",
+            "tool": "google_classroom_courses_posts_add_on_attachments_delete",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.list",
+            "tool": "google_classroom_courses_posts_add_on_attachments_list",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.patch",
+            "tool": "google_classroom_courses_posts_add_on_attachments_patch",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.get",
+            "tool": "google_classroom_courses_posts_add_on_attachments_get",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments/{attachmentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.create",
+            "tool": "google_classroom_courses_posts_add_on_attachments_create",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.studentSubmissions.patch",
+            "tool": "google_classroom_courses_posts_add_on_attachments_student_submissions_patch",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsStudentSubmissionsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments/{attachmentId}/studentSubmissions/{submissionId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.posts.addOnAttachments.studentSubmissions.get",
+            "tool": "google_classroom_courses_posts_add_on_attachments_student_submissions_get",
+            "class": "GoogleClassroomCoursesPostsAddOnAttachmentsStudentSubmissionsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/posts/{postId}/addOnAttachments/{attachmentId}/studentSubmissions/{submissionId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.topics.get",
+            "tool": "google_classroom_courses_topics_get",
+            "class": "GoogleClassroomCoursesTopicsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/topics/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.topics.create",
+            "tool": "google_classroom_courses_topics_create",
+            "class": "GoogleClassroomCoursesTopicsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/topics",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.topics.patch",
+            "tool": "google_classroom_courses_topics_patch",
+            "class": "GoogleClassroomCoursesTopicsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/topics/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.topics.list",
+            "tool": "google_classroom_courses_topics_list",
+            "class": "GoogleClassroomCoursesTopicsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/topics",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.topics.delete",
+            "tool": "google_classroom_courses_topics_delete",
+            "class": "GoogleClassroomCoursesTopicsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/topics/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.aliases.list",
+            "tool": "google_classroom_courses_aliases_list",
+            "class": "GoogleClassroomCoursesAliasesList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/aliases",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.aliases.delete",
+            "tool": "google_classroom_courses_aliases_delete",
+            "class": "GoogleClassroomCoursesAliasesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/aliases/{alias}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.aliases.create",
+            "tool": "google_classroom_courses_aliases_create",
+            "class": "GoogleClassroomCoursesAliasesCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/aliases",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.students.create",
+            "tool": "google_classroom_courses_students_create",
+            "class": "GoogleClassroomCoursesStudentsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/students",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.students.delete",
+            "tool": "google_classroom_courses_students_delete",
+            "class": "GoogleClassroomCoursesStudentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/students/{userId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.students.get",
+            "tool": "google_classroom_courses_students_get",
+            "class": "GoogleClassroomCoursesStudentsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/students/{userId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.students.list",
+            "tool": "google_classroom_courses_students_list",
+            "class": "GoogleClassroomCoursesStudentsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/students",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.teachers.get",
+            "tool": "google_classroom_courses_teachers_get",
+            "class": "GoogleClassroomCoursesTeachersGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/teachers/{userId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.teachers.list",
+            "tool": "google_classroom_courses_teachers_list",
+            "class": "GoogleClassroomCoursesTeachersList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/teachers",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.teachers.delete",
+            "tool": "google_classroom_courses_teachers_delete",
+            "class": "GoogleClassroomCoursesTeachersDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/teachers/{userId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.teachers.create",
+            "tool": "google_classroom_courses_teachers_create",
+            "class": "GoogleClassroomCoursesTeachersCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/teachers",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.get",
+            "tool": "google_classroom_courses_announcements_get",
+            "class": "GoogleClassroomCoursesAnnouncementsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/announcements/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.announcements.create",
+            "tool": "google_classroom_courses_announcements_create",
+            "class": "GoogleClassroomCoursesAnnouncementsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/announcements",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.modifyAssignees",
+            "tool": "google_classroom_courses_announcements_modify_assignees",
+            "class": "GoogleClassroomCoursesAnnouncementsModifyAssignees",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/announcements/{id}:modifyAssignees",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.list",
+            "tool": "google_classroom_courses_announcements_list",
+            "class": "GoogleClassroomCoursesAnnouncementsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/announcements",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.announcements.patch",
+            "tool": "google_classroom_courses_announcements_patch",
+            "class": "GoogleClassroomCoursesAnnouncementsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/announcements/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.getAddOnContext",
+            "tool": "google_classroom_courses_announcements_get_add_on_context",
+            "class": "GoogleClassroomCoursesAnnouncementsGetAddOnContext",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/announcements/{itemId}/addOnContext",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.announcements.delete",
+            "tool": "google_classroom_courses_announcements_delete",
+            "class": "GoogleClassroomCoursesAnnouncementsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/announcements/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.addOnAttachments.create",
+            "tool": "google_classroom_courses_announcements_add_on_attachments_create",
+            "class": "GoogleClassroomCoursesAnnouncementsAddOnAttachmentsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/announcements/{itemId}/addOnAttachments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.addOnAttachments.get",
+            "tool": "google_classroom_courses_announcements_add_on_attachments_get",
+            "class": "GoogleClassroomCoursesAnnouncementsAddOnAttachmentsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/announcements/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.announcements.addOnAttachments.list",
+            "tool": "google_classroom_courses_announcements_add_on_attachments_list",
+            "class": "GoogleClassroomCoursesAnnouncementsAddOnAttachmentsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/announcements/{itemId}/addOnAttachments",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.announcements.addOnAttachments.patch",
+            "tool": "google_classroom_courses_announcements_add_on_attachments_patch",
+            "class": "GoogleClassroomCoursesAnnouncementsAddOnAttachmentsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/announcements/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.announcements.addOnAttachments.delete",
+            "tool": "google_classroom_courses_announcements_add_on_attachments_delete",
+            "class": "GoogleClassroomCoursesAnnouncementsAddOnAttachmentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/announcements/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.studentGroups.create",
+            "tool": "google_classroom_courses_student_groups_create",
+            "class": "GoogleClassroomCoursesStudentGroupsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/studentGroups",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.studentGroups.delete",
+            "tool": "google_classroom_courses_student_groups_delete",
+            "class": "GoogleClassroomCoursesStudentGroupsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/studentGroups/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.studentGroups.patch",
+            "tool": "google_classroom_courses_student_groups_patch",
+            "class": "GoogleClassroomCoursesStudentGroupsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/studentGroups/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.studentGroups.list",
+            "tool": "google_classroom_courses_student_groups_list",
+            "class": "GoogleClassroomCoursesStudentGroupsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/studentGroups",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.studentGroups.studentGroupMembers.delete",
+            "tool": "google_classroom_courses_student_groups_student_group_members_delete",
+            "class": "GoogleClassroomCoursesStudentGroupsStudentGroupMembersDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/studentGroups/{studentGroupId}/studentGroupMembers/{userId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.studentGroups.studentGroupMembers.list",
+            "tool": "google_classroom_courses_student_groups_student_group_members_list",
+            "class": "GoogleClassroomCoursesStudentGroupsStudentGroupMembersList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/studentGroups/{studentGroupId}/studentGroupMembers",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.studentGroups.studentGroupMembers.create",
+            "tool": "google_classroom_courses_student_groups_student_group_members_create",
+            "class": "GoogleClassroomCoursesStudentGroupsStudentGroupMembersCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/studentGroups/{studentGroupId}/studentGroupMembers",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.list",
+            "tool": "google_classroom_courses_course_work_materials_list",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.patch",
+            "tool": "google_classroom_courses_course_work_materials_patch",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.getAddOnContext",
+            "tool": "google_classroom_courses_course_work_materials_get_add_on_context",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsGetAddOnContext",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{itemId}/addOnContext",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.delete",
+            "tool": "google_classroom_courses_course_work_materials_delete",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{id}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.create",
+            "tool": "google_classroom_courses_course_work_materials_create",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.get",
+            "tool": "google_classroom_courses_course_work_materials_get",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{id}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.addOnAttachments.create",
+            "tool": "google_classroom_courses_course_work_materials_add_on_attachments_create",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsAddOnAttachmentsCreate",
+            "http_method": "POST",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{itemId}/addOnAttachments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.addOnAttachments.get",
+            "tool": "google_classroom_courses_course_work_materials_add_on_attachments_get",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsAddOnAttachmentsGet",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.addOnAttachments.delete",
+            "tool": "google_classroom_courses_course_work_materials_add_on_attachments_delete",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsAddOnAttachmentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.addOnAttachments.list",
+            "tool": "google_classroom_courses_course_work_materials_add_on_attachments_list",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsAddOnAttachmentsList",
+            "http_method": "GET",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{itemId}/addOnAttachments",
+            "type": "read"
+        },
+        {
+            "discovery_id": "courses.courseWorkMaterials.addOnAttachments.patch",
+            "tool": "google_classroom_courses_course_work_materials_add_on_attachments_patch",
+            "class": "GoogleClassroomCoursesCourseWorkMaterialsAddOnAttachmentsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/courses/{courseId}/courseWorkMaterials/{itemId}/addOnAttachments/{attachmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "registrations.create",
+            "tool": "google_classroom_registrations_create",
+            "class": "GoogleClassroomRegistrationsCreate",
+            "http_method": "POST",
+            "path": "/v1/registrations",
+            "type": "write"
+        },
+        {
+            "discovery_id": "registrations.delete",
+            "tool": "google_classroom_registrations_delete",
+            "class": "GoogleClassroomRegistrationsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/registrations/{registrationId}",
+            "type": "write"
+        }
+    ]
+}

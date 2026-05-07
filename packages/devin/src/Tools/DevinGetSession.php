@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Devin\DevinService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Devin session by ID.
+ *
+ * Works with current v3 organization sessions and legacy v1 sessions.
+ */
 class DevinGetSession implements Tool
 {
+    /**
+     * @param  DevinService  $service  The Devin API client.
+     */
     public function __construct(
         private DevinService $service,
     ) {}
@@ -25,10 +33,15 @@ class DevinGetSession implements Tool
     public function parameters(): array
     {
         return [
-            'session_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the Devin session to retrieve.'],
+            'session_id' => ['type' => 'string', 'required' => true, 'description' => 'The Devin session ID. Current v3 IDs are usually prefixed with devin-.'],
         ];
     }
 
+    /**
+     * Fetch the session details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (session_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-attio",
-    "description": "Attio CRM integration for Laravel — manage records, objects, workspaces and more.",
+    "description": "Attio CRM integration for Laravel - manage records, objects, attributes, lists, entries, notes, tasks, webhooks, and raw REST API calls.",
     "license": "MIT",
     "authors": [
         {

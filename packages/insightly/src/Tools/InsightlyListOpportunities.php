@@ -9,7 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool: List Opportunities
  *
- * Lists opportunities from Insightly CRM with optional pagination and status filtering.
+ * Lists opportunities from Insightly CRM with optional pagination.
  *
  * @see https://api.na1.insightly.com/v3.1/Help#!/Opportunities/GetEntities
  */
@@ -37,7 +37,7 @@ class InsightlyListOpportunities implements Tool
      */
     public function description(): string
     {
-        return 'List opportunities from Insightly CRM. Returns opportunity records with names, amounts, stages, and pipeline info. Use top/skip for pagination and status to filter by opportunity state.';
+        return 'List opportunities from Insightly CRM. Returns opportunity records with names, amounts, stages, and pipeline info. Use top/skip for pagination.';
     }
 
     /**
@@ -50,14 +50,15 @@ class InsightlyListOpportunities implements Tool
         return [
             'top' => ['type' => 'integer', 'description' => 'Maximum number of opportunities to return.'],
             'skip' => ['type' => 'integer', 'description' => 'Number of opportunities to skip for pagination.'],
-            'status' => ['type' => 'string', 'description' => 'Filter by opportunity status (e.g., "Open", "Won", "Lost", "Suspended").'],
+            'brief' => ['type' => 'boolean', 'description' => 'Return only top-level opportunity properties.'],
+            'count_total' => ['type' => 'boolean', 'description' => 'Ask Insightly to include total count metadata.'],
         ];
     }
 
     /**
      * Execute the list opportunities tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (top, skip, status).
+     * @param  array<string, mixed>  $args  Tool arguments (top, skip, brief, count_total).
      * @return ToolResult The list of opportunities or an error message.
      */
     public function execute(array $args): ToolResult
@@ -70,7 +71,8 @@ class InsightlyListOpportunities implements Tool
             $result = $this->service->listOpportunities(
                 top: isset($args['top']) ? (int) $args['top'] : null,
                 skip: isset($args['skip']) ? (int) $args['skip'] : null,
-                status: $args['status'] ?? null,
+                brief: isset($args['brief']) ? (bool) $args['brief'] : null,
+                countTotal: isset($args['count_total']) ? (bool) $args['count_total'] : null,
             );
 
             return ToolResult::success([

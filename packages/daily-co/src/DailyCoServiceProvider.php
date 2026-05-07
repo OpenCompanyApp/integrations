@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Daily.co integration with Laravel's service container.
+ *
+ * Binds DailyCoService using configured credentials and registers the Daily
+ * tool provider with the shared ToolProviderRegistry when available.
+ */
 class DailyCoServiceProvider extends ServiceProvider
 {
     public function register(): void

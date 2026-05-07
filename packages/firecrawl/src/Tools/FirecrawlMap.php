@@ -15,6 +15,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class FirecrawlMap implements Tool
 {
+    /**
+     * @param  FirecrawlService  $service  The Firecrawl API client.
+     */
     public function __construct(
         private FirecrawlService $service,
     ) {}
@@ -45,10 +48,15 @@ class FirecrawlMap implements Tool
         ];
     }
 
+    /**
+     * Map URLs from a website.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Firecrawl integration is not configured.');
             }
 

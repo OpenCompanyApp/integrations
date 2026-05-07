@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-openstreetmap",
+    "description": "OpenStreetMap integration for Laravel AI agents - Nominatim geocoding, Overpass queries, and OSM object URL helpers.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\OpenStreetMap\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\OpenStreetMap\\OpenStreetMapServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "openstreetmap",
+        "nominatim",
+        "overpass",
+        "geocoding",
+        "maps",
+        "opencompany",
+        "ai-agents"
+    ]
+}

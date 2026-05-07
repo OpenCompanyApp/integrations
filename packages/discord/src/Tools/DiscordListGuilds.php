@@ -37,7 +37,7 @@ class DiscordListGuilds implements Tool
     public function parameters(): array
     {
         return [
-            'limit'  => ['type' => 'integer', 'description' => 'Number of guilds to retrieve (1–200, default 200).'],
+            'limit'  => ['type' => 'integer', 'description' => 'Number of guilds to retrieve (1-200, default 200).'],
             'before' => ['type' => 'string', 'description' => 'Guild ID to get guilds before (for pagination).'],
             'after'  => ['type' => 'string', 'description' => 'Guild ID to get guilds after (for pagination).'],
         ];

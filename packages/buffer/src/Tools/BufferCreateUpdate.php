@@ -35,8 +35,11 @@ class BufferCreateUpdate implements Tool
             'profileIds' => ['type' => 'array', 'required' => true, 'description' => 'Array of Buffer profile IDs to publish the update to.'],
             'shorten' => ['type' => 'boolean', 'description' => 'Whether to automatically shorten links (default true).'],
             'now' => ['type' => 'boolean', 'description' => 'Post immediately instead of scheduling (default false).'],
+            'top' => ['type' => 'boolean', 'description' => 'Add this update to the top of the buffer.'],
             'scheduledAt' => ['type' => 'string', 'description' => 'ISO 8601 timestamp for when the update should be sent (e.g., "2025-02-01T09:00:00Z").'],
             'media' => ['type' => 'object', 'description' => 'Media attachments such as photo URL, link, or thumbnail.'],
+            'retweet' => ['type' => 'object', 'description' => 'Twitter retweet payload such as tweet_id and optional comment.'],
+            'attachment' => ['type' => 'boolean', 'description' => 'Whether Buffer should automatically populate media from links in the text.'],
         ];
     }
 
@@ -56,8 +59,11 @@ class BufferCreateUpdate implements Tool
                 profileIds: $args['profileIds'],
                 shorten: $args['shorten'] ?? true,
                 now: $args['now'] ?? false,
+                top: $args['top'] ?? false,
                 scheduledAt: $args['scheduledAt'] ?? null,
                 media: $args['media'] ?? null,
+                retweet: $args['retweet'] ?? null,
+                attachment: $args['attachment'] ?? null,
             );
 
             return ToolResult::success($result);

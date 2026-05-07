@@ -10,8 +10,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Create a new contact in Zendesk Sell.
  *
  * Creates a contact with the provided first name, last name, email, and
- * optional organization association. Returns the newly created contact
- * with its assigned ID and all fields.
+ * optional organization contact association. Returns the created contact.
  */
 class ZendeskSellCreateContact implements Tool
 {
@@ -26,7 +25,7 @@ class ZendeskSellCreateContact implements Tool
 
     public function description(): string
     {
-        return 'Create a new contact in Zendesk Sell. Provide at least a first name and last name. Optionally include email and organization ID to associate the contact with an existing organization.';
+        return 'Create a new contact in Zendesk Sell. Provide at least a first name and last name for people, or use endpoint tools with raw Sell fields for organizations.';
     }
 
     public function parameters(): array
@@ -35,7 +34,7 @@ class ZendeskSellCreateContact implements Tool
             'first_name' => ['type' => 'string', 'required' => true, 'description' => 'Contact first name.'],
             'last_name' => ['type' => 'string', 'required' => true, 'description' => 'Contact last name.'],
             'email' => ['type' => 'string', 'description' => 'Contact email address.'],
-            'organization_id' => ['type' => 'integer', 'description' => 'ID of the organization to associate this contact with.'],
+            'contact_id' => ['type' => 'integer', 'description' => 'ID of the organization contact this person belongs to.'],
         ];
     }
 
@@ -63,8 +62,8 @@ class ZendeskSellCreateContact implements Tool
                 $data['email'] = $args['email'];
             }
 
-            if (isset($args['organization_id'])) {
-                $data['organization_id'] = (int) $args['organization_id'];
+            if (isset($args['contact_id'])) {
+                $data['contact_id'] = (int) $args['contact_id'];
             }
 
             $result = $this->service->createContact($data);

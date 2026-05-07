@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-splunk",
-    "description": "Splunk log analytics integration for Laravel — search logs, manage indexes, saved searches, and more.",
+    "description": "Splunk REST API integration for Laravel: search jobs, indexes, saved searches, apps, users, and server metadata.",
     "license": "MIT",
     "authors": [
         {

@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Paddle customers with optional filters.
+ *
+ * Supports Paddle's cursor-based pagination and common customer filters
+ * such as email and name.
+ */
 class PaddleListCustomers implements Tool
 {
     /**
      * Create a new PaddleListCustomers tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

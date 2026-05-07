@@ -1,0 +1,23 @@
+{
+    "name": "opencompanyapp/integration-semgrep",
+    "description": "Semgrep Web API OpenAPI integration for OpenCompany and KosmoKrator agents.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Semgrep\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Semgrep\\SemgrepServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    }
+}

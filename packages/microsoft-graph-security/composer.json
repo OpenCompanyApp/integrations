@@ -1,0 +1,34 @@
+{
+    "name": "opencompanyapp/integration-microsoft-graph-security",
+    "description": "Microsoft Graph Security integration for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftGraphSecurity\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftGraphSecurity\\MicrosoftGraphSecurityServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "graph",
+        "security",
+        "defender",
+        "ediscovery",
+        "threat-intelligence",
+        "opencompany"
+    ]
+}

@@ -1,376 +1,133 @@
-# ActiveCampaign Integration
+# ActiveCampaign Lua API Reference
 
-Manage contacts, lists, deals, automations, and notes in ActiveCampaign.
+Namespace: `app.integrations.activecampaign`
 
-## Authentication
+This integration targets the ActiveCampaign API v3 under `https://{account}.api-us1.com/api/3` and sends credentials with the `Api-Token` header. It covers common contact, tag, custom-field, list, deal, campaign, account, automation, note, user, and generic API workflows.
 
-This integration uses an **API Key** and **Account Name** for authentication.
-
-- **API Key**: Found in Settings → Developer → API Access in your ActiveCampaign account.
-- **Account Name**: The subdomain from your ActiveCampaign URL (e.g., `mycompany` from `mycompany.activehosted.com`).
-
-## Configuration
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `api_key` | secret | ✅ | Your ActiveCampaign API key |
-| `account_name` | string | ✅ | Your ActiveCampaign account name (subdomain) |
-
-## Tools
-
-### `activecampaign_list_contacts`
-
-List contacts with pagination, search, and filters.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `limit` | integer | No | Number of contacts per page (default: 20, max: 100) |
-| `offset` | integer | No | Offset for pagination |
-| `search` | string | No | Search by email or name |
-| `filters` | object | No | Additional filters (e.g., `{"status": "-1"}`, `{"listid": 5}`) |
-
-**Example**:
+## Contacts And Lists
 
 ```lua
-activecampaign_list_contacts({ search = "john@example.com", limit = 10 })
-```
-
----
-
-### `activecampaign_get_contact`
-
-Get details of a specific contact by ID.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contact_id` | integer | ✅ | The ActiveCampaign contact ID |
-
-**Example**:
-
-```lua
-activecampaign_get_contact({ contact_id = 123 })
-```
-
----
-
-### `activecampaign_create_contact`
-
-Create a new contact.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `email` | string | ✅ | Contact email address |
-| `firstName` | string | No | First name |
-| `lastName` | string | No | Last name |
-| `phone` | string | No | Phone number |
-
-**Example**:
-
-```lua
-activecampaign_create_contact({
-  email = "jane@example.com",
-  firstName = "Jane",
-  lastName = "Doe",
-  phone = "+1234567890"
+local contacts = app.integrations.activecampaign.list_contacts({
+  limit = 25,
+  search = "person@example.test"
 })
-```
 
----
+local contact = app.integrations.activecampaign.get_contact({ contact_id = 123 })
 
-### `activecampaign_update_contact`
-
-Update an existing contact.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contact_id` | integer | ✅ | The contact ID to update |
-| `email` | string | No | Updated email |
-| `firstName` | string | No | Updated first name |
-| `lastName` | string | No | Updated last name |
-| `phone` | string | No | Updated phone |
-| `fields` | object | No | Custom field values (e.g., `{"field[1]": "value"}`) |
-
-**Example**:
-
-```lua
-activecampaign_update_contact({
-  contact_id = 123,
-  firstName = "John",
-  lastName = "Updated"
+local synced = app.integrations.activecampaign.sync_contact({
+  contact = {
+    email = "person@example.test",
+    firstName = "Person",
+    lastName = "Example",
+    phone = "+15555550100"
+  }
 })
-```
 
----
-
-### `activecampaign_delete_contact`
-
-Delete a contact permanently.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contact_id` | integer | ✅ | The contact ID to delete |
-
-**Example**:
-
-```lua
-activecampaign_delete_contact({ contact_id = 123 })
-```
-
----
-
-### `activecampaign_list_lists`
-
-List all contact lists.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `limit` | integer | No | Number of lists per page (default: 20) |
-| `offset` | integer | No | Offset for pagination |
-
-**Example**:
-
-```lua
-activecampaign_list_lists({ limit = 50 })
-```
-
----
-
-### `activecampaign_get_list`
-
-Get details of a specific list.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `list_id` | integer | ✅ | The list ID |
-
-**Example**:
-
-```lua
-activecampaign_get_list({ list_id = 5 })
-```
-
----
-
-### `activecampaign_add_contact_to_list`
-
-Subscribe a contact to a list.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contact_id` | integer | ✅ | The contact ID |
-| `list_id` | integer | ✅ | The list ID to subscribe to |
-
-**Example**:
-
-```lua
-activecampaign_add_contact_to_list({
+app.integrations.activecampaign.add_contact_to_list({
   contact_id = 123,
   list_id = 5
 })
 ```
 
----
+Use `sync_contact` when you want ActiveCampaign to create or update by email. Use `create_contact` only when you explicitly want the create endpoint.
 
-### `activecampaign_remove_contact_from_list`
-
-Unsubscribe a contact from a list.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contact_id` | integer | ✅ | The contact ID |
-| `list_id` | integer | ✅ | The list ID to unsubscribe from |
-
-**Example**:
+## Tags And Custom Fields
 
 ```lua
-activecampaign_remove_contact_from_list({
+local tags = app.integrations.activecampaign.list_tags({
+  params = { limit = 100 }
+})
+
+local tag = app.integrations.activecampaign.create_tag({
+  tag = "vip",
+  description = "High-value contact"
+})
+
+app.integrations.activecampaign.add_contact_tag({
   contact_id = 123,
-  list_id = 5
+  tag_id = tag.tag.id
 })
-```
 
----
+local fields = app.integrations.activecampaign.list_fields({
+  params = { limit = 100 }
+})
 
-### `activecampaign_list_deals`
-
-List deals with filters.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `limit` | integer | No | Number of deals per page (default: 20) |
-| `offset` | integer | No | Offset for pagination |
-| `search` | string | No | Search by deal title |
-| `filters` | object | No | Filters (e.g., `{"pipeline": 1, "stage": 2, "status": 0}`). Status: 0=open, 1=won, 2=lost, 3=abandoned |
-
-**Example**:
-
-```lua
-activecampaign_list_deals({ filters = { status = 0 }, limit = 25 })
-```
-
----
-
-### `activecampaign_get_deal`
-
-Get details of a specific deal.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `deal_id` | integer | ✅ | The deal ID |
-
-**Example**:
-
-```lua
-activecampaign_get_deal({ deal_id = 42 })
-```
-
----
-
-### `activecampaign_create_deal`
-
-Create a new deal.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `title` | string | ✅ | Deal title |
-| `value` | number | ✅ | Deal value |
-| `contact_id` | integer | ✅ | Associated contact ID |
-| `stage` | integer | ✅ | Pipeline stage ID |
-| `pipeline` | integer | No | Pipeline ID (default pipeline if omitted) |
-
-**Example**:
-
-```lua
-activecampaign_create_deal({
-  title = "New Enterprise Deal",
-  value = 50000,
+app.integrations.activecampaign.create_field_value({
   contact_id = 123,
-  stage = 1,
-  pipeline = 2
+  field_id = 42,
+  value = "Enterprise"
 })
 ```
 
----
+`remove_contact_tag` expects the contact-tag relationship ID, not the tag ID. List a contact's tags first when you need that relationship ID.
 
-### `activecampaign_update_deal`
-
-Update an existing deal.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `deal_id` | integer | ✅ | The deal ID to update |
-| `title` | string | No | Updated title |
-| `value` | number | No | Updated value |
-| `stage` | integer | No | Updated stage ID |
-| `pipeline` | integer | No | Updated pipeline ID |
-| `status` | integer | No | Status: 0=open, 1=won, 2=lost, 3=abandoned |
-| `owner` | string | No | Updated owner (user ID) |
-| `percent` | integer | No | Updated percentage |
-| `fields` | object | No | Custom fields |
-
-**Example**:
+## Deals And Accounts
 
 ```lua
-activecampaign_update_deal({
-  deal_id = 42,
-  status = 1,  -- Mark as won
-  value = 55000
-})
-```
+local pipelines = app.integrations.activecampaign.list_deal_groups({})
+local stages = app.integrations.activecampaign.list_deal_stages({})
 
----
-
-### `activecampaign_list_automations`
-
-List all automations.
-
-**Type**: read
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `limit` | integer | No | Number of automations per page (default: 20) |
-| `offset` | integer | No | Offset for pagination |
-
-**Example**:
-
-```lua
-activecampaign_list_automations({ limit = 50 })
-```
-
----
-
-### `activecampaign_create_note`
-
-Add a note to a contact.
-
-**Type**: write
-
-**Parameters**:
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `contact_id` | integer | ✅ | The contact ID |
-| `note` | string | ✅ | The note text |
-
-**Example**:
-
-```lua
-activecampaign_create_note({
+local deal = app.integrations.activecampaign.create_deal({
+  title = "Expansion",
+  value = 25000,
   contact_id = 123,
-  note = "Called customer, they are interested in the enterprise plan."
+  stage = 7
+})
+
+local accounts = app.integrations.activecampaign.list_accounts({
+  params = { limit = 50 }
 })
 ```
+
+Deal status values follow ActiveCampaign's v3 API: `0` open, `1` won, `2` lost. Some accounts require Deals permissions for deal endpoints.
+
+## Campaigns, Messages, Automations, And Users
+
+```lua
+local campaigns = app.integrations.activecampaign.list_campaigns({
+  params = { limit = 20 }
+})
+
+local campaign = app.integrations.activecampaign.get_campaign({
+  campaign_id = 123
+})
+
+local messages = app.integrations.activecampaign.list_messages({})
+local automations = app.integrations.activecampaign.list_automations({})
+local user = app.integrations.activecampaign.get_current_user({})
+```
+
+Campaign and message tools are read-only wrappers for inspection/reporting workflows. Use generic API helpers for less-common campaign subresources.
+
+## Generic API Helpers
+
+```lua
+local raw = app.integrations.activecampaign.api_get({
+  path = "/contacts",
+  params = { limit = 1 }
+})
+
+local posted = app.integrations.activecampaign.api_post({
+  path = "/tags",
+  payload = { tag = { tag = "customer" } }
+})
+```
+
+Generic helpers call documented `/api/3` endpoints directly:
+
+- `api_get({ path, params? })`
+- `api_post({ path, payload? })`
+- `api_put({ path, payload? })`
+- `api_delete({ path, payload? })`
+
+Prefer named tools where available because they validate IDs and shape the common payloads.
+
+## Multi-Account Usage
+
+```lua
+app.integrations.activecampaign.list_contacts({})
+app.integrations.activecampaign.default.list_contacts({})
+app.integrations.activecampaign.production.list_contacts({})
+```
+
+All account namespaces expose the same tools; only stored credentials differ.

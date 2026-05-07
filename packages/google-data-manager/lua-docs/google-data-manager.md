@@ -1,6 +1,6 @@
 # Google Data Manager
 
-Namespace: `google_data_manager`
+Namespace: `google-data-manager`
 
 Google Data Manager API integration for first-party data ingestion into Google advertising destinations. Use this package for conversion event ingestion, audience member ingestion/removal, and asynchronous request status polling.
 
@@ -46,7 +46,7 @@ Uploads conversion event resources. Maximum 2,000 events per request.
 Example:
 
 ```lua
-google_data_manager_ingest_events({
+app.integrations["google-data-manager"].google_data_manager_ingest_events({
   confirm_execute = true,
   destinations = {
     {

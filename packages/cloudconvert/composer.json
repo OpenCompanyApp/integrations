@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-cloudconvert",
-    "description": "CloudConvert integration for Laravel — create jobs and tasks, manage file conversions.",
+    "description": "CloudConvert integration for Laravel - manage jobs, tasks, operations, webhooks, signed URLs, and file conversions.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "cloudconvert", "files", "conversion", "opencompany"],
+    "keywords": [
+        "tools",
+        "cloudconvert",
+        "files",
+        "conversion",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

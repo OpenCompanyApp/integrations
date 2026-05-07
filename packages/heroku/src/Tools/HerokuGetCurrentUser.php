@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Heroku\HerokuService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve the authenticated Heroku account.
+ */
 class HerokuGetCurrentUser implements Tool
 {
+    /**
+     * @param  HerokuService  $service  The Heroku Platform API client.
+     */
     public function __construct(
         private HerokuService $service,
     ) {}
@@ -27,6 +33,11 @@ class HerokuGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the current Heroku account details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

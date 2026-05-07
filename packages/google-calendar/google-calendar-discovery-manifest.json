@@ -1,0 +1,305 @@
+{
+    "source": "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+    "service": "Calendar API",
+    "version": "v3",
+    "method_count": 37,
+    "generated_package": "google-calendar",
+    "methods": [
+        {
+            "discovery_id": "settings.get",
+            "tool": "google_calendar_settings_get",
+            "class": "GoogleCalendarSettingsGet",
+            "http_method": "GET",
+            "path": "/users/me/settings/{setting}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.list",
+            "tool": "google_calendar_settings_list",
+            "class": "GoogleCalendarSettingsList",
+            "http_method": "GET",
+            "path": "/users/me/settings",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.watch",
+            "tool": "google_calendar_settings_watch",
+            "class": "GoogleCalendarSettingsWatch",
+            "http_method": "POST",
+            "path": "/users/me/settings/watch",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendars.insert",
+            "tool": "google_calendar_calendars_insert",
+            "class": "GoogleCalendarCalendarsInsert",
+            "http_method": "POST",
+            "path": "/calendars",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendars.get",
+            "tool": "google_calendar_calendars_get",
+            "class": "GoogleCalendarCalendarsGet",
+            "http_method": "GET",
+            "path": "/calendars/{calendarId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "calendars.patch",
+            "tool": "google_calendar_calendars_patch",
+            "class": "GoogleCalendarCalendarsPatch",
+            "http_method": "PATCH",
+            "path": "/calendars/{calendarId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendars.update",
+            "tool": "google_calendar_calendars_update",
+            "class": "GoogleCalendarCalendarsUpdate",
+            "http_method": "PUT",
+            "path": "/calendars/{calendarId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendars.delete",
+            "tool": "google_calendar_calendars_delete",
+            "class": "GoogleCalendarCalendarsDelete",
+            "http_method": "DELETE",
+            "path": "/calendars/{calendarId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendars.clear",
+            "tool": "google_calendar_calendars_clear",
+            "class": "GoogleCalendarCalendarsClear",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/clear",
+            "type": "write"
+        },
+        {
+            "discovery_id": "colors.get",
+            "tool": "google_calendar_colors_get",
+            "class": "GoogleCalendarColorsGet",
+            "http_method": "GET",
+            "path": "/colors",
+            "type": "read"
+        },
+        {
+            "discovery_id": "calendarList.get",
+            "tool": "google_calendar_calendar_list_get",
+            "class": "GoogleCalendarCalendarListGet",
+            "http_method": "GET",
+            "path": "/users/me/calendarList/{calendarId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "calendarList.watch",
+            "tool": "google_calendar_calendar_list_watch",
+            "class": "GoogleCalendarCalendarListWatch",
+            "http_method": "POST",
+            "path": "/users/me/calendarList/watch",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendarList.insert",
+            "tool": "google_calendar_calendar_list_insert",
+            "class": "GoogleCalendarCalendarListInsert",
+            "http_method": "POST",
+            "path": "/users/me/calendarList",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendarList.list",
+            "tool": "google_calendar_calendar_list_list",
+            "class": "GoogleCalendarCalendarListList",
+            "http_method": "GET",
+            "path": "/users/me/calendarList",
+            "type": "read"
+        },
+        {
+            "discovery_id": "calendarList.delete",
+            "tool": "google_calendar_calendar_list_delete",
+            "class": "GoogleCalendarCalendarListDelete",
+            "http_method": "DELETE",
+            "path": "/users/me/calendarList/{calendarId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendarList.update",
+            "tool": "google_calendar_calendar_list_update",
+            "class": "GoogleCalendarCalendarListUpdate",
+            "http_method": "PUT",
+            "path": "/users/me/calendarList/{calendarId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "calendarList.patch",
+            "tool": "google_calendar_calendar_list_patch",
+            "class": "GoogleCalendarCalendarListPatch",
+            "http_method": "PATCH",
+            "path": "/users/me/calendarList/{calendarId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "channels.stop",
+            "tool": "google_calendar_channels_stop",
+            "class": "GoogleCalendarChannelsStop",
+            "http_method": "POST",
+            "path": "/channels/stop",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.move",
+            "tool": "google_calendar_events_move",
+            "class": "GoogleCalendarEventsMove",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/events/{eventId}/move",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.watch",
+            "tool": "google_calendar_events_watch",
+            "class": "GoogleCalendarEventsWatch",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/events/watch",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.delete",
+            "tool": "google_calendar_events_delete",
+            "class": "GoogleCalendarEventsDelete",
+            "http_method": "DELETE",
+            "path": "/calendars/{calendarId}/events/{eventId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.import",
+            "tool": "google_calendar_events_import",
+            "class": "GoogleCalendarEventsImport",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/events/import",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.insert",
+            "tool": "google_calendar_events_insert",
+            "class": "GoogleCalendarEventsInsert",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/events",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.quickAdd",
+            "tool": "google_calendar_events_quick_add",
+            "class": "GoogleCalendarEventsQuickAdd",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/events/quickAdd",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.get",
+            "tool": "google_calendar_events_get",
+            "class": "GoogleCalendarEventsGet",
+            "http_method": "GET",
+            "path": "/calendars/{calendarId}/events/{eventId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "events.patch",
+            "tool": "google_calendar_events_patch",
+            "class": "GoogleCalendarEventsPatch",
+            "http_method": "PATCH",
+            "path": "/calendars/{calendarId}/events/{eventId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.instances",
+            "tool": "google_calendar_events_instances",
+            "class": "GoogleCalendarEventsInstances",
+            "http_method": "GET",
+            "path": "/calendars/{calendarId}/events/{eventId}/instances",
+            "type": "read"
+        },
+        {
+            "discovery_id": "events.update",
+            "tool": "google_calendar_events_update",
+            "class": "GoogleCalendarEventsUpdate",
+            "http_method": "PUT",
+            "path": "/calendars/{calendarId}/events/{eventId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "events.list",
+            "tool": "google_calendar_events_list",
+            "class": "GoogleCalendarEventsList",
+            "http_method": "GET",
+            "path": "/calendars/{calendarId}/events",
+            "type": "read"
+        },
+        {
+            "discovery_id": "acl.delete",
+            "tool": "google_calendar_acl_delete",
+            "class": "GoogleCalendarAclDelete",
+            "http_method": "DELETE",
+            "path": "/calendars/{calendarId}/acl/{ruleId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "acl.list",
+            "tool": "google_calendar_acl_list",
+            "class": "GoogleCalendarAclList",
+            "http_method": "GET",
+            "path": "/calendars/{calendarId}/acl",
+            "type": "read"
+        },
+        {
+            "discovery_id": "acl.patch",
+            "tool": "google_calendar_acl_patch",
+            "class": "GoogleCalendarAclPatch",
+            "http_method": "PATCH",
+            "path": "/calendars/{calendarId}/acl/{ruleId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "acl.update",
+            "tool": "google_calendar_acl_update",
+            "class": "GoogleCalendarAclUpdate",
+            "http_method": "PUT",
+            "path": "/calendars/{calendarId}/acl/{ruleId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "acl.get",
+            "tool": "google_calendar_acl_get",
+            "class": "GoogleCalendarAclGet",
+            "http_method": "GET",
+            "path": "/calendars/{calendarId}/acl/{ruleId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "acl.watch",
+            "tool": "google_calendar_acl_watch",
+            "class": "GoogleCalendarAclWatch",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/acl/watch",
+            "type": "write"
+        },
+        {
+            "discovery_id": "acl.insert",
+            "tool": "google_calendar_acl_insert",
+            "class": "GoogleCalendarAclInsert",
+            "http_method": "POST",
+            "path": "/calendars/{calendarId}/acl",
+            "type": "write"
+        },
+        {
+            "discovery_id": "freebusy.query",
+            "tool": "google_calendar_freebusy_query",
+            "class": "GoogleCalendarFreebusyQuery",
+            "http_method": "POST",
+            "path": "/freeBusy",
+            "type": "write"
+        }
+    ]
+}

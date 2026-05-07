@@ -22,8 +22,8 @@ X Ads API access must be approved by X. Tools are marked with `required_access_t
 ## Examples
 
 ```lua
-local accounts = app.integrations.x_ads.x_ads_get_accounts({})
-local campaigns = app.integrations.x_ads.x_ads_get_accounts_account_id_campaigns({
+local accounts = app.integrations["x-ads"].x_ads_get_accounts({})
+local campaigns = app.integrations["x-ads"].x_ads_get_accounts_account_id_campaigns({
   account_id = "account-id",
   count = "25"
 })

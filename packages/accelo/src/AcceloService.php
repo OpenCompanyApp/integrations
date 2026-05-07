@@ -6,22 +6,26 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Accelo API service — handles authentication and HTTP requests.
+ * Accelo API service for the public REST API.
  *
  * Communicates with the Accelo REST API using Bearer token authentication.
  * The base URL is constructed from the deployment name:
- * `https://{deployment}.accelo.com`
+ * `https://{deployment}.api.accelo.com`
  */
 class AcceloService
 {
+    /**
+     * @param  string  $accessToken  Accelo OAuth access token.
+     * @param  string  $deployment  Accelo deployment prefix.
+     * @param  string  $baseUrl  Optional full API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $deployment = '',
         private string $baseUrl = '',
     ) {
-        // Build base URL from deployment if no explicit base URL is given
         if (empty($this->baseUrl) && !empty($this->deployment)) {
-            $this->baseUrl = 'https://' . $this->deployment . '.accelo.com';
+            $this->baseUrl = 'https://' . $this->deployment . '.api.accelo.com';
         }
 
         $this->baseUrl = rtrim($this->baseUrl, '/');
@@ -44,40 +48,31 @@ class AcceloService
     }
 
     /**
-     * List tickets with optional filtering and pagination.
+     * List issues, also known as tickets, with optional filtering and pagination.
      *
      * @param  int  $limit   Number of results per page (default 25, max 100).
      * @param  int  $page    Page number for pagination (1-based).
-     * @param  string|null  $status  Filter by ticket status (e.g. "open", "closed", "resolved").
+     * @param  string|null  $status  Filter by issue standing (e.g. "open", "closed", "resolved").
      * @return array<string, mixed>
      */
     public function listTickets(int $limit = 25, int $page = 1, ?string $status = null): array
     {
-        $params = [
-            '_limit' => $limit,
-            '_page' => $page,
-        ];
-
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', '/api/v0/tickets', $params);
+        return $this->request('GET', '/api/v0/issues', $this->listParams($limit, $page, $status));
     }
 
     /**
-     * Get a single ticket by its ID.
+     * Get a single issue, also known as a ticket, by ID.
      *
      * @param  int  $ticketId  The Accelo ticket ID.
      * @return array<string, mixed>
      */
     public function getTicket(int $ticketId): array
     {
-        return $this->request('GET', '/api/v0/tickets/' . $ticketId);
+        return $this->request('GET', '/api/v0/issues/' . $ticketId);
     }
 
     /**
-     * Create a new ticket.
+     * Create a new issue, also known as a ticket.
      *
      * @param  string  $title        Ticket title/subject.
      * @param  string  $body         Ticket description body.
@@ -89,7 +84,7 @@ class AcceloService
     {
         $data = [
             'title' => $title,
-            'body' => $body,
+            'description' => $body,
         ];
 
         if ($contractId !== null) {
@@ -97,10 +92,10 @@ class AcceloService
         }
 
         if ($priority !== null) {
-            $data['priority'] = $priority;
+            $data['priority_id'] = $priority;
         }
 
-        return $this->request('POST', '/api/v0/tickets', $data);
+        return $this->request('POST', '/api/v0/issues', $data);
     }
 
     /**
@@ -113,16 +108,7 @@ class AcceloService
      */
     public function listTasks(int $limit = 25, int $page = 1, ?string $status = null): array
     {
-        $params = [
-            '_limit' => $limit,
-            '_page' => $page,
-        ];
-
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', '/api/v0/tasks', $params);
+        return $this->request('GET', '/api/v0/tasks', $this->listParams($limit, $page, $status));
     }
 
     /**
@@ -137,7 +123,7 @@ class AcceloService
     }
 
     /**
-     * List projects with optional filtering and pagination.
+     * List projects, represented as jobs in the Accelo API.
      *
      * @param  int  $limit   Number of results per page (default 25, max 100).
      * @param  int  $page    Page number for pagination (1-based).
@@ -146,26 +132,17 @@ class AcceloService
      */
     public function listProjects(int $limit = 25, int $page = 1, ?string $status = null): array
     {
-        $params = [
-            '_limit' => $limit,
-            '_page' => $page,
-        ];
-
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', '/api/v0/projects', $params);
+        return $this->request('GET', '/api/v0/jobs', $this->listParams($limit, $page, $status));
     }
 
     /**
-     * Get the currently authenticated Accelo user.
+     * Get information about the currently authenticated access token.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/api/v0/users/me');
+        return $this->request('GET', '/api/v0/tokeninfo');
     }
 
     /**
@@ -204,13 +181,13 @@ class AcceloService
         try {
             $http = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
+                'POST' => $http->asForm()->post($url, $data),
+                'PUT' => $http->asForm()->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
@@ -241,5 +218,27 @@ class AcceloService
             ]);
             throw new \RuntimeException("Failed to connect to Accelo API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build common list parameters for Accelo collection endpoints.
+     *
+     * @param  int  $limit  Number of results per page.
+     * @param  int  $page  Page number.
+     * @param  string|null  $standing  Optional standing filter.
+     * @return array<string, mixed>
+     */
+    private function listParams(int $limit, int $page, ?string $standing = null): array
+    {
+        $params = [
+            '_limit' => min(max($limit, 1), 100),
+            '_page' => max($page, 1),
+        ];
+
+        if ($standing !== null && $standing !== '') {
+            $params['_filters'] = 'standing(' . $standing . ')';
+        }
+
+        return $params;
     }
 }

@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Pushbullet integration with Laravel.
+ *
+ * Binds the Pushbullet API client and registers the tool provider for discovery.
+ */
 class PushbulletServiceProvider extends ServiceProvider
 {
     public function register(): void

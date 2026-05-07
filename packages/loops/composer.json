@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-loops",
-    "description": "Loops email marketing integration for Laravel — manage contacts, send events.",
+    "description": "Loops integration for Laravel - contacts, events, transactional email, lists, properties, suppression, and config APIs.",
     "license": "MIT",
     "authors": [
         {

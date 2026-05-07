@@ -39,6 +39,11 @@ class ElevenLabsListVoices implements Tool
         return [];
     }
 
+    /**
+     * List ElevenLabs voices.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

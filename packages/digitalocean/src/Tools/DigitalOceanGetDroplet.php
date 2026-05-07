@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a DigitalOcean Droplet by ID.
+ */
 class DigitalOceanGetDroplet implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -29,6 +35,11 @@ class DigitalOceanGetDroplet implements Tool
         ];
     }
 
+    /**
+     * Fetch a Droplet by numeric ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

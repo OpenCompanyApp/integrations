@@ -3,21 +3,43 @@
 namespace OpenCompany\Integrations\OneDrive;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\OneDrive\Tools\OneDriveListFiles;
-use OpenCompany\Integrations\OneDrive\Tools\OneDriveGetFile;
-use OpenCompany\Integrations\OneDrive\Tools\OneDriveUploadFile;
-use OpenCompany\Integrations\OneDrive\Tools\OneDriveDownloadFile;
-use OpenCompany\Integrations\OneDrive\Tools\OneDriveListShared;
-use OpenCompany\Integrations\OneDrive\Tools\OneDriveGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveApiDelete;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveApiGet;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveApiPatch;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveApiPost;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveCopyItem;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveCreateFolder;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveCreateSharingLink;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveDeleteItem;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveDeletePermission;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveDelta;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveDownloadFile;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveGetCurrentUser;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveGetDrive;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveGetFile;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveListChildren;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveListFiles;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveListPermissions;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveListShared;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveListThumbnails;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveSearch;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveUpdateItem;
+use OpenCompany\Integrations\OneDrive\Tools\OneDriveUploadFile;
 
 /**
+ * Tool catalog and setup metadata for the Microsoft OneDrive integration.
+ *
+ * Exposes Microsoft Graph DriveItem operations, sharing, delta sync, and
+ * relative Graph API helpers for less-common endpoints.
+ */
+class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -71,7 +93,7 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
 
     public function appName(): string
     {
-        return 'one_drive';
+        return 'one-drive';
     }
 
     public function appMeta(): array
@@ -91,11 +113,13 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Cloud file storage and sharing via Microsoft Graph API',
             'icon' => 'ph:cloud-arrow-up',
             'logo' => 'simple-icons:microsoftonedrive',
-            'category' => 'storage',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://learn.microsoft.com/en-us/onedrive/developer/rest-api/',
+            'docs_url' => 'https://learn.microsoft.com/en-us/graph/api/resources/driveitem',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -117,6 +141,12 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
+    /**
+     * Verify that the configured token can read the signed-in user profile.
+     *
+     * @param  array<string, mixed>  $config  Setup form configuration.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -130,7 +160,7 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/me');
 
             if ($response->successful()) {
                 $user = $response->json();
@@ -148,7 +178,7 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'success' => false,
                 'error' => "Microsoft Graph API error ({$response->status()}): {$error}",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -178,6 +208,48 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'Get metadata for a specific file or folder by its ID.',
                 'icon' => 'ph:file',
             ],
+            'onedrive_get_drive' => [
+                'class' => OneDriveGetDrive::class,
+                'type' => 'read',
+                'name' => 'Get Drive',
+                'description' => 'Get metadata for the signed-in user\'s default OneDrive.',
+                'icon' => 'ph:hard-drives',
+            ],
+            'onedrive_list_children' => [
+                'class' => OneDriveListChildren::class,
+                'type' => 'read',
+                'name' => 'List Children',
+                'description' => 'List files and folders under root or a specific folder item.',
+                'icon' => 'ph:folders',
+            ],
+            'onedrive_create_folder' => [
+                'class' => OneDriveCreateFolder::class,
+                'type' => 'write',
+                'name' => 'Create Folder',
+                'description' => 'Create a folder in the root or under a parent folder item.',
+                'icon' => 'ph:folder-plus',
+            ],
+            'onedrive_update_item' => [
+                'class' => OneDriveUpdateItem::class,
+                'type' => 'write',
+                'name' => 'Update Item',
+                'description' => 'Update, rename, or move a OneDrive file or folder.',
+                'icon' => 'ph:pencil-simple',
+            ],
+            'onedrive_delete_item' => [
+                'class' => OneDriveDeleteItem::class,
+                'type' => 'write',
+                'name' => 'Delete Item',
+                'description' => 'Delete a OneDrive file or folder by ID.',
+                'icon' => 'ph:trash',
+            ],
+            'onedrive_copy_item' => [
+                'class' => OneDriveCopyItem::class,
+                'type' => 'write',
+                'name' => 'Copy Item',
+                'description' => 'Copy a OneDrive file or folder asynchronously.',
+                'icon' => 'ph:copy',
+            ],
             'onedrive_upload_file' => [
                 'class' => OneDriveUploadFile::class,
                 'type' => 'write',
@@ -199,6 +271,48 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'List files and folders shared with the current user.',
                 'icon' => 'ph:users',
             ],
+            'onedrive_search' => [
+                'class' => OneDriveSearch::class,
+                'type' => 'read',
+                'name' => 'Search',
+                'description' => 'Search files and folders in OneDrive.',
+                'icon' => 'ph:magnifying-glass',
+            ],
+            'onedrive_delta' => [
+                'class' => OneDriveDelta::class,
+                'type' => 'read',
+                'name' => 'Delta',
+                'description' => 'Track changes in the signed-in user\'s drive.',
+                'icon' => 'ph:arrows-clockwise',
+            ],
+            'onedrive_list_thumbnails' => [
+                'class' => OneDriveListThumbnails::class,
+                'type' => 'read',
+                'name' => 'List Thumbnails',
+                'description' => 'List thumbnail sets for a OneDrive item.',
+                'icon' => 'ph:image',
+            ],
+            'onedrive_create_sharing_link' => [
+                'class' => OneDriveCreateSharingLink::class,
+                'type' => 'write',
+                'name' => 'Create Sharing Link',
+                'description' => 'Create or return a sharing link for a file or folder.',
+                'icon' => 'ph:link',
+            ],
+            'onedrive_list_permissions' => [
+                'class' => OneDriveListPermissions::class,
+                'type' => 'read',
+                'name' => 'List Permissions',
+                'description' => 'List sharing permissions for a file or folder.',
+                'icon' => 'ph:lock-key-open',
+            ],
+            'onedrive_delete_permission' => [
+                'class' => OneDriveDeletePermission::class,
+                'type' => 'write',
+                'name' => 'Delete Permission',
+                'description' => 'Delete a sharing permission from a file or folder.',
+                'icon' => 'ph:lock-key',
+            ],
             'onedrive_get_current_user' => [
                 'class' => OneDriveGetCurrentUser::class,
                 'type' => 'read',
@@ -206,13 +320,43 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'Get the profile of the currently authenticated Microsoft user.',
                 'icon' => 'ph:user',
             ],
+            'onedrive_api_get' => [
+                'class' => OneDriveApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call a relative Microsoft Graph GET endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'onedrive_api_post' => [
+                'class' => OneDriveApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call a relative Microsoft Graph POST endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'onedrive_api_patch' => [
+                'class' => OneDriveApiPatch::class,
+                'type' => 'write',
+                'name' => 'API PATCH',
+                'description' => 'Call a relative Microsoft Graph PATCH endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'onedrive_api_delete' => [
+                'class' => OneDriveApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call a relative Microsoft Graph DELETE endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/one-drive.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -230,11 +374,18 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('one-drive', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('one_drive', $key, $default, $account);
+            };
 
             $service = new OneDriveService(
-                accessToken: $creds->get('one_drive', 'access_token', '', $account),
-                baseUrl: $creds->get('one_drive', 'url', 'https://graph.microsoft.com/v1.0', $account),
+                accessToken: $get('access_token'),
+                baseUrl: $get('url', 'https://graph.microsoft.com/v1.0'),
             );
 
             return new $class($service);

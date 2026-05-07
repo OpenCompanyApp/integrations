@@ -1,130 +1,98 @@
-# Integration: Dialpad
+# Dialpad Integration
 
-> Dialpad integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage calls, SMS messages, and users. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Official Dialpad API integration for OpenCompany and KosmoKrator agents.
 
-Give your AI agents access to business communications. Query call history, send and list SMS messages, and manage users — all through the [Dialpad](https://dialpad.com) API.
+This package is generated from the official `dialpad-python-sdk` API specification (`dialpad_api_spec.json`). It exposes 193 Dialpad API operations for access control policies, calls, call centers, channels, contacts, departments, numbers, offices, rooms, scheduled reports, SMS, stats, subscriptions, transcripts, users, webhooks, and websockets.
 
-## About OpenCompany
+## Authentication
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+Set `access_token` to a Dialpad API key. The default auth mode sends `Authorization: Bearer <key>`, matching the official security scheme. Set `auth_mode` to `query` only when a host needs the documented `?apikey=` style. Use `https://sandbox.dialpad.com` as `url` for sandbox calls.
 
-This Dialpad tool lets AI agents query call history, send SMS messages, and look up contact information — giving agents communication awareness and action capabilities.
+## Tool Shape
 
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+Tools are generated from operation IDs. Parameters are normalized to snake_case, and `body` carries the documented JSON request model for write operations.
 
-## Installation
+| Tool | Endpoint | Area |
+|------|----------|------|
+| `dialpad_accesscontrolpolicies_assign` | POST `/api/v2/accesscontrolpolicies/{id}/assign` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_assignments` | GET `/api/v2/accesscontrolpolicies/{id}/assignments` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_create` | POST `/api/v2/accesscontrolpolicies` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_delete` | DELETE `/api/v2/accesscontrolpolicies/{id}` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_get` | GET `/api/v2/accesscontrolpolicies/{id}` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_list` | GET `/api/v2/accesscontrolpolicies` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_unassign` | POST `/api/v2/accesscontrolpolicies/{id}/unassign` | accesscontrolpolicies |
+| `dialpad_accesscontrolpolicies_update` | PATCH `/api/v2/accesscontrolpolicies/{id}` | accesscontrolpolicies |
+| `dialpad_app_settings_get` | GET `/api/v2/app/settings` | app |
+| `dialpad_blockednumbers_add` | POST `/api/v2/blockednumbers/add` | blockednumbers |
+| `dialpad_blockednumbers_get` | GET `/api/v2/blockednumbers/{number}` | blockednumbers |
+| `dialpad_blockednumbers_list` | GET `/api/v2/blockednumbers` | blockednumbers |
+| `dialpad_blockednumbers_remove` | POST `/api/v2/blockednumbers/remove` | blockednumbers |
+| `dialpad_call_actions_hangup` | PUT `/api/v2/call/{id}/actions/hangup` | call |
+| `dialpad_call_call` | POST `/api/v2/call` | call |
+| `dialpad_call_get_call_info` | GET `/api/v2/call/{id}` | call |
+| `dialpad_call_initiate_ivr_call` | POST `/api/v2/call/initiate_ivr_call` | call |
+| `dialpad_call_list` | GET `/api/v2/call` | call |
+| `dialpad_call_participants_add` | POST `/api/v2/call/{id}/participants/add` | call |
+| `dialpad_call_put_call_labels` | PUT `/api/v2/call/{id}/labels` | call |
+| `dialpad_call_transfer_call` | POST `/api/v2/call/{id}/transfer` | call |
+| `dialpad_call_unpark` | POST `/api/v2/call/{id}/unpark` | call |
+| `dialpad_call_callback` | POST `/api/v2/callback` | callback |
+| `dialpad_call_validate_callback` | POST `/api/v2/callback/validate` | callback |
+| `dialpad_callcenters_create` | POST `/api/v2/callcenters` | callcenters |
+| `dialpad_callcenters_delete` | DELETE `/api/v2/callcenters/{id}` | callcenters |
+| `dialpad_callcenters_get` | GET `/api/v2/callcenters/{id}` | callcenters |
+| `dialpad_callcenters_listall` | GET `/api/v2/callcenters` | callcenters |
+| `dialpad_callcenters_operators_delete` | DELETE `/api/v2/callcenters/{id}/operators` | callcenters |
+| `dialpad_callcenters_operators_dutystatus` | PATCH `/api/v2/callcenters/operators/{id}/dutystatus` | callcenters |
+| `dialpad_callcenters_operators_get` | GET `/api/v2/callcenters/{id}/operators` | callcenters |
+| `dialpad_callcenters_operators_get_dutystatus` | GET `/api/v2/callcenters/operators/{id}/dutystatus` | callcenters |
+| `dialpad_callcenters_operators_get_skilllevel` | GET `/api/v2/callcenters/{call_center_id}/operators/{user_id}/skill` | callcenters |
+| `dialpad_callcenters_operators_post` | POST `/api/v2/callcenters/{id}/operators` | callcenters |
+| `dialpad_callcenters_operators_skilllevel` | PATCH `/api/v2/callcenters/{call_center_id}/operators/{user_id}/skill` | callcenters |
+| `dialpad_callcenters_status` | GET `/api/v2/callcenters/{id}/status` | callcenters |
+| `dialpad_callcenters_update` | PATCH `/api/v2/callcenters/{id}` | callcenters |
+| `dialpad_calllabel_list` | GET `/api/v2/calllabels` | calllabels |
+| `dialpad_call_review_share_link_create` | POST `/api/v2/callreviewsharelink` | callreviewsharelink |
+| `dialpad_call_review_share_link_delete` | DELETE `/api/v2/callreviewsharelink/{id}` | callreviewsharelink |
+| `dialpad_call_review_share_link_get` | GET `/api/v2/callreviewsharelink/{id}` | callreviewsharelink |
+| `dialpad_call_review_share_link_update` | PUT `/api/v2/callreviewsharelink/{id}` | callreviewsharelink |
+| `dialpad_callrouters_create` | POST `/api/v2/callrouters` | callrouters |
+| `dialpad_callrouters_delete` | DELETE `/api/v2/callrouters/{id}` | callrouters |
+| `dialpad_callrouters_get` | GET `/api/v2/callrouters/{id}` | callrouters |
+| `dialpad_callrouters_list` | GET `/api/v2/callrouters` | callrouters |
+| `dialpad_callrouters_update` | PATCH `/api/v2/callrouters/{id}` | callrouters |
+| `dialpad_numbers_assign_call_router_number_post` | POST `/api/v2/callrouters/{id}/assign_number` | callrouters |
+| `dialpad_channels_delete` | DELETE `/api/v2/channels/{id}` | channels |
+| `dialpad_channels_get` | GET `/api/v2/channels/{id}` | channels |
+| `dialpad_channels_list` | GET `/api/v2/channels` | channels |
+| `dialpad_channels_members_delete` | DELETE `/api/v2/channels/{id}/members` | channels |
+| `dialpad_channels_members_list` | GET `/api/v2/channels/{id}/members` | channels |
+| `dialpad_channels_members_post` | POST `/api/v2/channels/{id}/members` | channels |
+| `dialpad_channels_post` | POST `/api/v2/channels` | channels |
+| `dialpad_coaching_team_get` | GET `/api/v2/coachingteams/{id}` | coachingteams |
+| `dialpad_coaching_team_listall` | GET `/api/v2/coachingteams` | coachingteams |
+| `dialpad_coaching_team_members_add` | POST `/api/v2/coachingteams/{id}/members` | coachingteams |
+| `dialpad_coaching_team_members_get` | GET `/api/v2/coachingteams/{id}/members` | coachingteams |
+| `dialpad_company_get` | GET `/api/v2/company` | company |
+| `dialpad_company_sms_opt_out` | GET `/api/v2/company/{id}/smsoptout` | company |
+| `dialpad_conference_meetings_list` | GET `/api/v2/conference/meetings` | conference |
+| `dialpad_conference_rooms_list` | GET `/api/v2/conference/rooms` | conference |
+| `dialpad_contacts_create` | POST `/api/v2/contacts` | contacts |
+| `dialpad_contacts_create_with_uid` | PUT `/api/v2/contacts` | contacts |
+| `dialpad_contacts_delete` | DELETE `/api/v2/contacts/{id}` | contacts |
+| `dialpad_contacts_get` | GET `/api/v2/contacts/{id}` | contacts |
+| `dialpad_contacts_list` | GET `/api/v2/contacts` | contacts |
+| `dialpad_contacts_update` | PATCH `/api/v2/contacts/{id}` | contacts |
+| `dialpad_custom_ivrs_get` | GET `/api/v2/customivrs` | customivrs |
+| `dialpad_ivr_create` | POST `/api/v2/customivrs` | customivrs |
+| `dialpad_ivr_delete` | DELETE `/api/v2/customivrs/{target_type}/{target_id}/{ivr_type}` | customivrs |
+| `dialpad_ivr_update` | PATCH `/api/v2/customivrs/{target_type}/{target_id}/{ivr_type}` | customivrs |
+| `dialpad_ivr_details_update` | PATCH `/api/v2/customivrs/{ivr_id}` | customivrs |
+| `dialpad_departments_create` | POST `/api/v2/departments` | departments |
+| `dialpad_departments_delete` | DELETE `/api/v2/departments/{id}` | departments |
+| `dialpad_departments_get` | GET `/api/v2/departments/{id}` | departments |
+| `dialpad_departments_listall` | GET `/api/v2/departments` | departments |
+| `dialpad_departments_operators_delete` | DELETE `/api/v2/departments/{id}/operators` | departments |
+| `dialpad_departments_operators_get` | GET `/api/v2/departments/{id}/operators` | departments |
 
-```console
-composer require opencompanyapp/integration-dialpad
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
-
-## Configuration
-
-This tool requires a Dialpad API access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
-
-```php
-return [
-    'dialpad' => [
-        'access_token' => env('DIALPAD_ACCESS_TOKEN'),
-        'url'          => env('DIALPAD_URL', 'https://dialpad.com'),
-    ],
-];
-```
-
-## Available Tools
-
-| Tool | Type | Description |
-|------|------|-------------|
-| `dialpad_list_calls` | read | List call history records with date filtering and pagination |
-| `dialpad_get_call` | read | Get details of a specific call by ID |
-| `dialpad_list_sms` | read | List SMS messages with date filtering and pagination |
-| `dialpad_send_sms` | write | Send an SMS message |
-| `dialpad_list_users` | read | List users in the organization |
-| `dialpad_get_user` | read | Get details of a specific user by ID |
-| `dialpad_get_current_user` | read | Get the currently authenticated user profile |
-
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Dialpad\DialpadService;
-use OpenCompany\Integrations\Dialpad\Tools\DialpadListCalls;
-use OpenCompany\Integrations\Dialpad\Tools\DialpadSendSms;
-
-// Create tools
-$service = app(DialpadService::class);
-$tools = [
-    new DialpadListCalls($service),
-    new DialpadSendSms($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('How many calls did we receive yesterday?');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('dialpad');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Dialpad\Tools\DialpadListCalls::class
-);
-```
-
-## Standalone Service Usage
-
-```php
-use OpenCompany\Integrations\Dialpad\DialpadService;
-
-$service = app(DialpadService::class);
-
-// List recent calls
-$calls = $service->listCalls(limit: 20);
-
-// Get a specific call
-$call = $service->getCall('call_abc123');
-
-// List SMS messages
-$messages = $service->listSms(limit: 25);
-
-// Send an SMS
-$service->sendSms('+14155551234', '+14155559876', 'Hello!');
-
-// List users
-$users = $service->listUsers();
-
-// Get current user
-$me = $service->getCurrentUser();
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Dialpad](https://dialpad.com) account with API access
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+Additional operations are available through the provider catalog.

@@ -5,6 +5,9 @@
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
     "keywords": ["tools", "notion", "wiki", "opencompany"],
     "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "replace": {
+        "opencompanyapp/integration-notion2": "self.version"
+    },
     "autoload": {"psr-4": {"OpenCompany\\Integrations\\Notion\\": "src/"}},
     "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Notion\\NotionServiceProvider"]}},
     "minimum-stability": "stable",

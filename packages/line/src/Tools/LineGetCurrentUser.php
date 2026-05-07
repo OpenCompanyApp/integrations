@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Line\LineService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get LINE bot information.
+ *
+ * Retrieves profile details for the LINE Official Account bot.
+ */
 class LineGetCurrentUser implements Tool
 {
+    /**
+     * @param  LineService  $service  The LINE Messaging API client
+     */
     public function __construct(
         private LineService $service,
     ) {}
@@ -27,6 +35,11 @@ class LineGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get bot info.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

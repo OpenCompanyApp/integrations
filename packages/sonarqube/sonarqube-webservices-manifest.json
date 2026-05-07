@@ -1,0 +1,8 @@
+{
+  "source_url": "https://next.sonarqube.com/sonarqube/api/webservices/list",
+  "docs_url": "https://docs.sonarsource.com/sonarqube-server/extension-guide/web-api",
+  "service_count": 42,
+  "method_count": 271,
+  "read_count": 106,
+  "write_count": 165
+}

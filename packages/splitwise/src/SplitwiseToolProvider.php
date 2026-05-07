@@ -114,7 +114,7 @@ class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Track and manage shared expenses with friends and groups',
             'icon' => 'ph:split',
             'logo' => 'simple-icons:splitwise',
-            'category' => 'finance',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://dev.splitwise.com/',
         ];

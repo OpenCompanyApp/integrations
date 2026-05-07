@@ -11,8 +11,10 @@
     "keywords": ["tools", "toggl", "toggl-track", "time-tracking", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "opencompanyapp/integration-core": "^2.0 || @dev",
+        "opencompanyapp/integration-toggl": "^2.0 || @dev"
     },
+    "abandoned": "opencompanyapp/integration-toggl",
     "replace": {
         "opencompanyapp/ai-tool-toggl-track": "self.version"
     },

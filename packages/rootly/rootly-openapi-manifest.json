@@ -1,0 +1,4299 @@
+{
+    "source_url": "https://rootly-heroku.s3.amazonaws.com/swagger/v1/swagger.json",
+    "openapi": "3.0.1",
+    "title": "Rootly API v1",
+    "version": "v1",
+    "base_url": "https://api.rootly.com",
+    "auth": "bearer",
+    "method_count": 536,
+    "operations": [
+        {
+            "operation_id": "listAlertEvents",
+            "class": "RootlyListAlertEvents",
+            "slug": "rootly_list_alert_events",
+            "method": "get",
+            "path": "/v1/alerts/{alert_id}/events",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertEvent",
+            "class": "RootlyCreateAlertEvent",
+            "slug": "rootly_create_alert_event",
+            "method": "post",
+            "path": "/v1/alerts/{alert_id}/events",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertEvent",
+            "class": "RootlyGetAlertEvent",
+            "slug": "rootly_get_alert_event",
+            "method": "get",
+            "path": "/v1/alert_events/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertEvent",
+            "class": "RootlyUpdateAlertEvent",
+            "slug": "rootly_update_alert_event",
+            "method": "patch",
+            "path": "/v1/alert_events/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertEvent",
+            "class": "RootlyDeleteAlertEvent",
+            "slug": "rootly_delete_alert_event",
+            "method": "delete",
+            "path": "/v1/alert_events/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlertFields",
+            "class": "RootlyListAlertFields",
+            "slug": "rootly_list_alert_fields",
+            "method": "get",
+            "path": "/v1/alert_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertField",
+            "class": "RootlyCreateAlertField",
+            "slug": "rootly_create_alert_field",
+            "method": "post",
+            "path": "/v1/alert_fields",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertField",
+            "class": "RootlyGetAlertField",
+            "slug": "rootly_get_alert_field",
+            "method": "get",
+            "path": "/v1/alert_fields/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertField",
+            "class": "RootlyUpdateAlertField",
+            "slug": "rootly_update_alert_field",
+            "method": "put",
+            "path": "/v1/alert_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertField",
+            "class": "RootlyDeleteAlertField",
+            "slug": "rootly_delete_alert_field",
+            "method": "delete",
+            "path": "/v1/alert_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlertGroups",
+            "class": "RootlyListAlertGroups",
+            "slug": "rootly_list_alert_groups",
+            "method": "get",
+            "path": "/v1/alert_groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertGroup",
+            "class": "RootlyCreateAlertGroup",
+            "slug": "rootly_create_alert_group",
+            "method": "post",
+            "path": "/v1/alert_groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertGroup",
+            "class": "RootlyGetAlertGroup",
+            "slug": "rootly_get_alert_group",
+            "method": "get",
+            "path": "/v1/alert_groups/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertGroup",
+            "class": "RootlyUpdateAlertGroup",
+            "slug": "rootly_update_alert_group",
+            "method": "patch",
+            "path": "/v1/alert_groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertGroup",
+            "class": "RootlyDeleteAlertGroup",
+            "slug": "rootly_delete_alert_group",
+            "method": "delete",
+            "path": "/v1/alert_groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlertRoutes",
+            "class": "RootlyListAlertRoutes",
+            "slug": "rootly_list_alert_routes",
+            "method": "get",
+            "path": "/v1/alert_routes",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertRoute",
+            "class": "RootlyCreateAlertRoute",
+            "slug": "rootly_create_alert_route",
+            "method": "post",
+            "path": "/v1/alert_routes",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertRoute",
+            "class": "RootlyGetAlertRoute",
+            "slug": "rootly_get_alert_route",
+            "method": "get",
+            "path": "/v1/alert_routes/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertRoute",
+            "class": "RootlyUpdateAlertRoute",
+            "slug": "rootly_update_alert_route",
+            "method": "put",
+            "path": "/v1/alert_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "patchAlertRoute",
+            "class": "RootlyPatchAlertRoute",
+            "slug": "rootly_patch_alert_route",
+            "method": "patch",
+            "path": "/v1/alert_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertRoute",
+            "class": "RootlyDeleteAlertRoute",
+            "slug": "rootly_delete_alert_route",
+            "method": "delete",
+            "path": "/v1/alert_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlertRoutingRules",
+            "class": "RootlyListAlertRoutingRules",
+            "slug": "rootly_list_alert_routing_rules",
+            "method": "get",
+            "path": "/v1/alert_routing_rules",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertRoutingRule",
+            "class": "RootlyCreateAlertRoutingRule",
+            "slug": "rootly_create_alert_routing_rule",
+            "method": "post",
+            "path": "/v1/alert_routing_rules",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertRoutingRule",
+            "class": "RootlyGetAlertRoutingRule",
+            "slug": "rootly_get_alert_routing_rule",
+            "method": "get",
+            "path": "/v1/alert_routing_rules/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertRoutingRule",
+            "class": "RootlyUpdateAlertRoutingRule",
+            "slug": "rootly_update_alert_routing_rule",
+            "method": "put",
+            "path": "/v1/alert_routing_rules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertRoutingRule",
+            "class": "RootlyDeleteAlertRoutingRule",
+            "slug": "rootly_delete_alert_routing_rule",
+            "method": "delete",
+            "path": "/v1/alert_routing_rules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlertUrgencies",
+            "class": "RootlyListAlertUrgencies",
+            "slug": "rootly_list_alert_urgencies",
+            "method": "get",
+            "path": "/v1/alert_urgencies",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertUrgency",
+            "class": "RootlyCreateAlertUrgency",
+            "slug": "rootly_create_alert_urgency",
+            "method": "post",
+            "path": "/v1/alert_urgencies",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertUrgency",
+            "class": "RootlyGetAlertUrgency",
+            "slug": "rootly_get_alert_urgency",
+            "method": "get",
+            "path": "/v1/alert_urgencies/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertUrgency",
+            "class": "RootlyUpdateAlertUrgency",
+            "slug": "rootly_update_alert_urgency",
+            "method": "put",
+            "path": "/v1/alert_urgencies/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertUrgency",
+            "class": "RootlyDeleteAlertUrgency",
+            "slug": "rootly_delete_alert_urgency",
+            "method": "delete",
+            "path": "/v1/alert_urgencies/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlertsSources",
+            "class": "RootlyListAlertsSources",
+            "slug": "rootly_list_alerts_sources",
+            "method": "get",
+            "path": "/v1/alert_sources",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlertsSource",
+            "class": "RootlyCreateAlertsSource",
+            "slug": "rootly_create_alerts_source",
+            "method": "post",
+            "path": "/v1/alert_sources",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlertsSource",
+            "class": "RootlyGetAlertsSource",
+            "slug": "rootly_get_alerts_source",
+            "method": "get",
+            "path": "/v1/alert_sources/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlertsSource",
+            "class": "RootlyUpdateAlertsSource",
+            "slug": "rootly_update_alerts_source",
+            "method": "put",
+            "path": "/v1/alert_sources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAlertsSource",
+            "class": "RootlyDeleteAlertsSource",
+            "slug": "rootly_delete_alerts_source",
+            "method": "delete",
+            "path": "/v1/alert_sources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentAlerts",
+            "class": "RootlyListIncidentAlerts",
+            "slug": "rootly_list_incident_alerts",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "attachAlert",
+            "class": "RootlyAttachAlert",
+            "slug": "rootly_attach_alert",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/alerts",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAlerts",
+            "class": "RootlyListAlerts",
+            "slug": "rootly_list_alerts",
+            "method": "get",
+            "path": "/v1/alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAlert",
+            "class": "RootlyCreateAlert",
+            "slug": "rootly_create_alert",
+            "method": "post",
+            "path": "/v1/alerts",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAlert",
+            "class": "RootlyGetAlert",
+            "slug": "rootly_get_alert",
+            "method": "get",
+            "path": "/v1/alerts/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAlert",
+            "class": "RootlyUpdateAlert",
+            "slug": "rootly_update_alert",
+            "method": "patch",
+            "path": "/v1/alerts/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "acknowledgeAlert",
+            "class": "RootlyAcknowledgeAlert",
+            "slug": "rootly_acknowledge_alert",
+            "method": "post",
+            "path": "/v1/alerts/{id}/acknowledge",
+            "type": "write"
+        },
+        {
+            "operation_id": "resolveAlert",
+            "class": "RootlyResolveAlert",
+            "slug": "rootly_resolve_alert",
+            "method": "post",
+            "path": "/v1/alerts/{id}/resolve",
+            "type": "write"
+        },
+        {
+            "operation_id": "snoozeAlert",
+            "class": "RootlySnoozeAlert",
+            "slug": "rootly_snooze_alert",
+            "method": "post",
+            "path": "/v1/alerts/{id}/snooze",
+            "type": "write"
+        },
+        {
+            "operation_id": "escalateAlert",
+            "class": "RootlyEscalateAlert",
+            "slug": "rootly_escalate_alert",
+            "method": "post",
+            "path": "/v1/alerts/{id}/escalate",
+            "type": "write"
+        },
+        {
+            "operation_id": "listApiKeys",
+            "class": "RootlyListApiKeys",
+            "slug": "rootly_list_api_keys",
+            "method": "get",
+            "path": "/v1/api_keys",
+            "type": "read"
+        },
+        {
+            "operation_id": "createApiKey",
+            "class": "RootlyCreateApiKey",
+            "slug": "rootly_create_api_key",
+            "method": "post",
+            "path": "/v1/api_keys",
+            "type": "write"
+        },
+        {
+            "operation_id": "getApiKey",
+            "class": "RootlyGetApiKey",
+            "slug": "rootly_get_api_key",
+            "method": "get",
+            "path": "/v1/api_keys/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateApiKey",
+            "class": "RootlyUpdateApiKey",
+            "slug": "rootly_update_api_key",
+            "method": "put",
+            "path": "/v1/api_keys/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteApiKey",
+            "class": "RootlyDeleteApiKey",
+            "slug": "rootly_delete_api_key",
+            "method": "delete",
+            "path": "/v1/api_keys/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "rotateApiKey",
+            "class": "RootlyRotateApiKey",
+            "slug": "rootly_rotate_api_key",
+            "method": "post",
+            "path": "/v1/api_keys/{id}/rotate",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAudits",
+            "class": "RootlyListAudits",
+            "slug": "rootly_list_audits",
+            "method": "get",
+            "path": "/v1/audits",
+            "type": "read"
+        },
+        {
+            "operation_id": "listAuthorizations",
+            "class": "RootlyListAuthorizations",
+            "slug": "rootly_list_authorizations",
+            "method": "get",
+            "path": "/v1/authorizations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createAuthorization",
+            "class": "RootlyCreateAuthorization",
+            "slug": "rootly_create_authorization",
+            "method": "post",
+            "path": "/v1/authorizations",
+            "type": "write"
+        },
+        {
+            "operation_id": "getAuthorization",
+            "class": "RootlyGetAuthorization",
+            "slug": "rootly_get_authorization",
+            "method": "get",
+            "path": "/v1/authorizations/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateAuthorization",
+            "class": "RootlyUpdateAuthorization",
+            "slug": "rootly_update_authorization",
+            "method": "put",
+            "path": "/v1/authorizations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteAuthorization",
+            "class": "RootlyDeleteAuthorization",
+            "slug": "rootly_delete_authorization",
+            "method": "delete",
+            "path": "/v1/authorizations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCatalogChecklistTemplates",
+            "class": "RootlyListCatalogChecklistTemplates",
+            "slug": "rootly_list_catalog_checklist_templates",
+            "method": "get",
+            "path": "/v1/catalog_checklist_templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCatalogChecklistTemplate",
+            "class": "RootlyCreateCatalogChecklistTemplate",
+            "slug": "rootly_create_catalog_checklist_template",
+            "method": "post",
+            "path": "/v1/catalog_checklist_templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "triggerCatalogChecklistTemplate",
+            "class": "RootlyTriggerCatalogChecklistTemplate",
+            "slug": "rootly_trigger_catalog_checklist_template",
+            "method": "post",
+            "path": "/v1/catalog_checklist_templates/{id}/trigger",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCatalogChecklistTemplate",
+            "class": "RootlyGetCatalogChecklistTemplate",
+            "slug": "rootly_get_catalog_checklist_template",
+            "method": "get",
+            "path": "/v1/catalog_checklist_templates/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCatalogChecklistTemplate",
+            "class": "RootlyUpdateCatalogChecklistTemplate",
+            "slug": "rootly_update_catalog_checklist_template",
+            "method": "put",
+            "path": "/v1/catalog_checklist_templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCatalogChecklistTemplate",
+            "class": "RootlyDeleteCatalogChecklistTemplate",
+            "slug": "rootly_delete_catalog_checklist_template",
+            "method": "delete",
+            "path": "/v1/catalog_checklist_templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCatalogEntities",
+            "class": "RootlyListCatalogEntities",
+            "slug": "rootly_list_catalog_entities",
+            "method": "get",
+            "path": "/v1/catalogs/{catalog_id}/entities",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCatalogEntity",
+            "class": "RootlyCreateCatalogEntity",
+            "slug": "rootly_create_catalog_entity",
+            "method": "post",
+            "path": "/v1/catalogs/{catalog_id}/entities",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCatalogEntity",
+            "class": "RootlyGetCatalogEntity",
+            "slug": "rootly_get_catalog_entity",
+            "method": "get",
+            "path": "/v1/catalog_entities/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCatalogEntity",
+            "class": "RootlyUpdateCatalogEntity",
+            "slug": "rootly_update_catalog_entity",
+            "method": "put",
+            "path": "/v1/catalog_entities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCatalogEntity",
+            "class": "RootlyDeleteCatalogEntity",
+            "slug": "rootly_delete_catalog_entity",
+            "method": "delete",
+            "path": "/v1/catalog_entities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCatalogEntityChecklists",
+            "class": "RootlyListCatalogEntityChecklists",
+            "slug": "rootly_list_catalog_entity_checklists",
+            "method": "get",
+            "path": "/v1/catalog_entity_checklists",
+            "type": "read"
+        },
+        {
+            "operation_id": "getCatalogEntityChecklist",
+            "class": "RootlyGetCatalogEntityChecklist",
+            "slug": "rootly_get_catalog_entity_checklist",
+            "method": "get",
+            "path": "/v1/catalog_entity_checklists/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listCatalogEntityProperties",
+            "class": "RootlyListCatalogEntityProperties",
+            "slug": "rootly_list_catalog_entity_properties",
+            "method": "get",
+            "path": "/v1/catalog_entities/{catalog_entity_id}/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCatalogEntityProperty",
+            "class": "RootlyCreateCatalogEntityProperty",
+            "slug": "rootly_create_catalog_entity_property",
+            "method": "post",
+            "path": "/v1/catalog_entities/{catalog_entity_id}/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCatalogEntityProperty",
+            "class": "RootlyGetCatalogEntityProperty",
+            "slug": "rootly_get_catalog_entity_property",
+            "method": "get",
+            "path": "/v1/catalog_entity_properties/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCatalogEntityProperty",
+            "class": "RootlyUpdateCatalogEntityProperty",
+            "slug": "rootly_update_catalog_entity_property",
+            "method": "put",
+            "path": "/v1/catalog_entity_properties/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCatalogEntityProperty",
+            "class": "RootlyDeleteCatalogEntityProperty",
+            "slug": "rootly_delete_catalog_entity_property",
+            "method": "delete",
+            "path": "/v1/catalog_entity_properties/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCatalogProperties",
+            "class": "RootlyListCatalogProperties",
+            "slug": "rootly_list_catalog_properties",
+            "method": "get",
+            "path": "/v1/catalogs/{catalog_id}/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCatalogProperty",
+            "class": "RootlyCreateCatalogProperty",
+            "slug": "rootly_create_catalog_property",
+            "method": "post",
+            "path": "/v1/catalogs/{catalog_id}/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCatalogProperty",
+            "class": "RootlyGetCatalogProperty",
+            "slug": "rootly_get_catalog_property",
+            "method": "get",
+            "path": "/v1/catalog_properties/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCatalogProperty",
+            "class": "RootlyUpdateCatalogProperty",
+            "slug": "rootly_update_catalog_property",
+            "method": "put",
+            "path": "/v1/catalog_properties/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCatalogProperty",
+            "class": "RootlyDeleteCatalogProperty",
+            "slug": "rootly_delete_catalog_property",
+            "method": "delete",
+            "path": "/v1/catalog_properties/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCatalogs",
+            "class": "RootlyListCatalogs",
+            "slug": "rootly_list_catalogs",
+            "method": "get",
+            "path": "/v1/catalogs",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCatalog",
+            "class": "RootlyCreateCatalog",
+            "slug": "rootly_create_catalog",
+            "method": "post",
+            "path": "/v1/catalogs",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCatalog",
+            "class": "RootlyGetCatalog",
+            "slug": "rootly_get_catalog",
+            "method": "get",
+            "path": "/v1/catalogs/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCatalog",
+            "class": "RootlyUpdateCatalog",
+            "slug": "rootly_update_catalog",
+            "method": "put",
+            "path": "/v1/catalogs/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCatalog",
+            "class": "RootlyDeleteCatalog",
+            "slug": "rootly_delete_catalog",
+            "method": "delete",
+            "path": "/v1/catalogs/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCauses",
+            "class": "RootlyListCauses",
+            "slug": "rootly_list_causes",
+            "method": "get",
+            "path": "/v1/causes",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCause",
+            "class": "RootlyCreateCause",
+            "slug": "rootly_create_cause",
+            "method": "post",
+            "path": "/v1/causes",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCause",
+            "class": "RootlyGetCause",
+            "slug": "rootly_get_cause",
+            "method": "get",
+            "path": "/v1/causes/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCause",
+            "class": "RootlyUpdateCause",
+            "slug": "rootly_update_cause",
+            "method": "put",
+            "path": "/v1/causes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCause",
+            "class": "RootlyDeleteCause",
+            "slug": "rootly_delete_cause",
+            "method": "delete",
+            "path": "/v1/causes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCauseCatalogProperties",
+            "class": "RootlyListCauseCatalogProperties",
+            "slug": "rootly_list_cause_catalog_properties",
+            "method": "get",
+            "path": "/v1/causes/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCauseCatalogProperty",
+            "class": "RootlyCreateCauseCatalogProperty",
+            "slug": "rootly_create_cause_catalog_property",
+            "method": "post",
+            "path": "/v1/causes/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCommunicationsGroups",
+            "class": "RootlyListCommunicationsGroups",
+            "slug": "rootly_list_communications_groups",
+            "method": "get",
+            "path": "/v1/communications/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCommunicationsGroup",
+            "class": "RootlyCreateCommunicationsGroup",
+            "slug": "rootly_create_communications_group",
+            "method": "post",
+            "path": "/v1/communications/groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCommunicationsGroup",
+            "class": "RootlyGetCommunicationsGroup",
+            "slug": "rootly_get_communications_group",
+            "method": "get",
+            "path": "/v1/communications/groups/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCommunicationsGroup",
+            "class": "RootlyUpdateCommunicationsGroup",
+            "slug": "rootly_update_communications_group",
+            "method": "patch",
+            "path": "/v1/communications/groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCommunicationsGroup",
+            "class": "RootlyDeleteCommunicationsGroup",
+            "slug": "rootly_delete_communications_group",
+            "method": "delete",
+            "path": "/v1/communications/groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCommunicationsStages",
+            "class": "RootlyListCommunicationsStages",
+            "slug": "rootly_list_communications_stages",
+            "method": "get",
+            "path": "/v1/communications/stages",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCommunicationsStage",
+            "class": "RootlyCreateCommunicationsStage",
+            "slug": "rootly_create_communications_stage",
+            "method": "post",
+            "path": "/v1/communications/stages",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCommunicationsStage",
+            "class": "RootlyGetCommunicationsStage",
+            "slug": "rootly_get_communications_stage",
+            "method": "get",
+            "path": "/v1/communications/stages/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCommunicationsStage",
+            "class": "RootlyUpdateCommunicationsStage",
+            "slug": "rootly_update_communications_stage",
+            "method": "patch",
+            "path": "/v1/communications/stages/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCommunicationsStage",
+            "class": "RootlyDeleteCommunicationsStage",
+            "slug": "rootly_delete_communications_stage",
+            "method": "delete",
+            "path": "/v1/communications/stages/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCommunicationsTemplates",
+            "class": "RootlyListCommunicationsTemplates",
+            "slug": "rootly_list_communications_templates",
+            "method": "get",
+            "path": "/v1/communications/templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCommunicationsTemplate",
+            "class": "RootlyCreateCommunicationsTemplate",
+            "slug": "rootly_create_communications_template",
+            "method": "post",
+            "path": "/v1/communications/templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCommunicationsTemplate",
+            "class": "RootlyGetCommunicationsTemplate",
+            "slug": "rootly_get_communications_template",
+            "method": "get",
+            "path": "/v1/communications/templates/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCommunicationsTemplate",
+            "class": "RootlyUpdateCommunicationsTemplate",
+            "slug": "rootly_update_communications_template",
+            "method": "patch",
+            "path": "/v1/communications/templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCommunicationsTemplate",
+            "class": "RootlyDeleteCommunicationsTemplate",
+            "slug": "rootly_delete_communications_template",
+            "method": "delete",
+            "path": "/v1/communications/templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCommunicationsTypes",
+            "class": "RootlyListCommunicationsTypes",
+            "slug": "rootly_list_communications_types",
+            "method": "get",
+            "path": "/v1/communications/types",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCommunicationsType",
+            "class": "RootlyCreateCommunicationsType",
+            "slug": "rootly_create_communications_type",
+            "method": "post",
+            "path": "/v1/communications/types",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCommunicationsType",
+            "class": "RootlyGetCommunicationsType",
+            "slug": "rootly_get_communications_type",
+            "method": "get",
+            "path": "/v1/communications/types/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCommunicationsType",
+            "class": "RootlyUpdateCommunicationsType",
+            "slug": "rootly_update_communications_type",
+            "method": "patch",
+            "path": "/v1/communications/types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCommunicationsType",
+            "class": "RootlyDeleteCommunicationsType",
+            "slug": "rootly_delete_communications_type",
+            "method": "delete",
+            "path": "/v1/communications/types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCustomFieldOptions",
+            "class": "RootlyListCustomFieldOptions",
+            "slug": "rootly_list_custom_field_options",
+            "method": "get",
+            "path": "/v1/custom_fields/{custom_field_id}/options",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCustomFieldOption",
+            "class": "RootlyCreateCustomFieldOption",
+            "slug": "rootly_create_custom_field_option",
+            "method": "post",
+            "path": "/v1/custom_fields/{custom_field_id}/options",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCustomFieldOption",
+            "class": "RootlyGetCustomFieldOption",
+            "slug": "rootly_get_custom_field_option",
+            "method": "get",
+            "path": "/v1/custom_field_options/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCustomFieldOption",
+            "class": "RootlyUpdateCustomFieldOption",
+            "slug": "rootly_update_custom_field_option",
+            "method": "put",
+            "path": "/v1/custom_field_options/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCustomFieldOption",
+            "class": "RootlyDeleteCustomFieldOption",
+            "slug": "rootly_delete_custom_field_option",
+            "method": "delete",
+            "path": "/v1/custom_field_options/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCustomFields",
+            "class": "RootlyListCustomFields",
+            "slug": "rootly_list_custom_fields",
+            "method": "get",
+            "path": "/v1/custom_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCustomField",
+            "class": "RootlyCreateCustomField",
+            "slug": "rootly_create_custom_field",
+            "method": "post",
+            "path": "/v1/custom_fields",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCustomField",
+            "class": "RootlyGetCustomField",
+            "slug": "rootly_get_custom_field",
+            "method": "get",
+            "path": "/v1/custom_fields/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCustomField",
+            "class": "RootlyUpdateCustomField",
+            "slug": "rootly_update_custom_field",
+            "method": "put",
+            "path": "/v1/custom_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCustomField",
+            "class": "RootlyDeleteCustomField",
+            "slug": "rootly_delete_custom_field",
+            "method": "delete",
+            "path": "/v1/custom_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listCustomForms",
+            "class": "RootlyListCustomForms",
+            "slug": "rootly_list_custom_forms",
+            "method": "get",
+            "path": "/v1/custom_forms",
+            "type": "read"
+        },
+        {
+            "operation_id": "createCustomForm",
+            "class": "RootlyCreateCustomForm",
+            "slug": "rootly_create_custom_form",
+            "method": "post",
+            "path": "/v1/custom_forms",
+            "type": "write"
+        },
+        {
+            "operation_id": "getCustomForm",
+            "class": "RootlyGetCustomForm",
+            "slug": "rootly_get_custom_form",
+            "method": "get",
+            "path": "/v1/custom_forms/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateCustomForm",
+            "class": "RootlyUpdateCustomForm",
+            "slug": "rootly_update_custom_form",
+            "method": "put",
+            "path": "/v1/custom_forms/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteCustomForm",
+            "class": "RootlyDeleteCustomForm",
+            "slug": "rootly_delete_custom_form",
+            "method": "delete",
+            "path": "/v1/custom_forms/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDashboardPanels",
+            "class": "RootlyListDashboardPanels",
+            "slug": "rootly_list_dashboard_panels",
+            "method": "get",
+            "path": "/v1/dashboards/{dashboard_id}/panels",
+            "type": "read"
+        },
+        {
+            "operation_id": "createDashboardPanel",
+            "class": "RootlyCreateDashboardPanel",
+            "slug": "rootly_create_dashboard_panel",
+            "method": "post",
+            "path": "/v1/dashboards/{dashboard_id}/panels",
+            "type": "write"
+        },
+        {
+            "operation_id": "duplicateDashboardPanel",
+            "class": "RootlyDuplicateDashboardPanel",
+            "slug": "rootly_duplicate_dashboard_panel",
+            "method": "post",
+            "path": "/v1/dashboard_panels/{id}/duplicate",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDashboardPanel",
+            "class": "RootlyGetDashboardPanel",
+            "slug": "rootly_get_dashboard_panel",
+            "method": "get",
+            "path": "/v1/dashboard_panels/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateDashboardPanel",
+            "class": "RootlyUpdateDashboardPanel",
+            "slug": "rootly_update_dashboard_panel",
+            "method": "put",
+            "path": "/v1/dashboard_panels/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteDashboardPanel",
+            "class": "RootlyDeleteDashboardPanel",
+            "slug": "rootly_delete_dashboard_panel",
+            "method": "delete",
+            "path": "/v1/dashboard_panels/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listDashboards",
+            "class": "RootlyListDashboards",
+            "slug": "rootly_list_dashboards",
+            "method": "get",
+            "path": "/v1/dashboards",
+            "type": "read"
+        },
+        {
+            "operation_id": "createDashboard",
+            "class": "RootlyCreateDashboard",
+            "slug": "rootly_create_dashboard",
+            "method": "post",
+            "path": "/v1/dashboards",
+            "type": "write"
+        },
+        {
+            "operation_id": "duplicateDashboard",
+            "class": "RootlyDuplicateDashboard",
+            "slug": "rootly_duplicate_dashboard",
+            "method": "post",
+            "path": "/v1/dashboards/{id}/duplicate",
+            "type": "write"
+        },
+        {
+            "operation_id": "setDefaultDashboard",
+            "class": "RootlySetDefaultDashboard",
+            "slug": "rootly_set_default_dashboard",
+            "method": "post",
+            "path": "/v1/dashboards/{id}/set_default",
+            "type": "write"
+        },
+        {
+            "operation_id": "getDashboard",
+            "class": "RootlyGetDashboard",
+            "slug": "rootly_get_dashboard",
+            "method": "get",
+            "path": "/v1/dashboards/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateDashboard",
+            "class": "RootlyUpdateDashboard",
+            "slug": "rootly_update_dashboard",
+            "method": "put",
+            "path": "/v1/dashboards/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteDashboard",
+            "class": "RootlyDeleteDashboard",
+            "slug": "rootly_delete_dashboard",
+            "method": "delete",
+            "path": "/v1/dashboards/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEdgeConnectorActions",
+            "class": "RootlyListEdgeConnectorActions",
+            "slug": "rootly_list_edge_connector_actions",
+            "method": "get",
+            "path": "/v1/edge_connectors/{edge_connector_id}/actions",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEdgeConnectorAction",
+            "class": "RootlyCreateEdgeConnectorAction",
+            "slug": "rootly_create_edge_connector_action",
+            "method": "post",
+            "path": "/v1/edge_connectors/{edge_connector_id}/actions",
+            "type": "write"
+        },
+        {
+            "operation_id": "getEdgeConnectorAction",
+            "class": "RootlyGetEdgeConnectorAction",
+            "slug": "rootly_get_edge_connector_action",
+            "method": "get",
+            "path": "/v1/edge_connectors/{edge_connector_id}/actions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateEdgeConnectorAction",
+            "class": "RootlyUpdateEdgeConnectorAction",
+            "slug": "rootly_update_edge_connector_action",
+            "method": "patch",
+            "path": "/v1/edge_connectors/{edge_connector_id}/actions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEdgeConnectorAction",
+            "class": "RootlyDeleteEdgeConnectorAction",
+            "slug": "rootly_delete_edge_connector_action",
+            "method": "delete",
+            "path": "/v1/edge_connectors/{edge_connector_id}/actions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEdgeConnectors",
+            "class": "RootlyListEdgeConnectors",
+            "slug": "rootly_list_edge_connectors",
+            "method": "get",
+            "path": "/v1/edge_connectors",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEdgeConnector",
+            "class": "RootlyCreateEdgeConnector",
+            "slug": "rootly_create_edge_connector",
+            "method": "post",
+            "path": "/v1/edge_connectors",
+            "type": "write"
+        },
+        {
+            "operation_id": "getEdgeConnector",
+            "class": "RootlyGetEdgeConnector",
+            "slug": "rootly_get_edge_connector",
+            "method": "get",
+            "path": "/v1/edge_connectors/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateEdgeConnector",
+            "class": "RootlyUpdateEdgeConnector",
+            "slug": "rootly_update_edge_connector",
+            "method": "patch",
+            "path": "/v1/edge_connectors/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEdgeConnector",
+            "class": "RootlyDeleteEdgeConnector",
+            "slug": "rootly_delete_edge_connector",
+            "method": "delete",
+            "path": "/v1/edge_connectors/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEnvironments",
+            "class": "RootlyListEnvironments",
+            "slug": "rootly_list_environments",
+            "method": "get",
+            "path": "/v1/environments",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEnvironment",
+            "class": "RootlyCreateEnvironment",
+            "slug": "rootly_create_environment",
+            "method": "post",
+            "path": "/v1/environments",
+            "type": "write"
+        },
+        {
+            "operation_id": "getEnvironment",
+            "class": "RootlyGetEnvironment",
+            "slug": "rootly_get_environment",
+            "method": "get",
+            "path": "/v1/environments/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateEnvironment",
+            "class": "RootlyUpdateEnvironment",
+            "slug": "rootly_update_environment",
+            "method": "put",
+            "path": "/v1/environments/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEnvironment",
+            "class": "RootlyDeleteEnvironment",
+            "slug": "rootly_delete_environment",
+            "method": "delete",
+            "path": "/v1/environments/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEnvironmentCatalogProperties",
+            "class": "RootlyListEnvironmentCatalogProperties",
+            "slug": "rootly_list_environment_catalog_properties",
+            "method": "get",
+            "path": "/v1/environments/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEnvironmentCatalogProperty",
+            "class": "RootlyCreateEnvironmentCatalogProperty",
+            "slug": "rootly_create_environment_catalog_property",
+            "method": "post",
+            "path": "/v1/environments/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEscalationPolicies",
+            "class": "RootlyListEscalationPolicies",
+            "slug": "rootly_list_escalation_policies",
+            "method": "get",
+            "path": "/v1/escalation_policies",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEscalationPolicy",
+            "class": "RootlyCreateEscalationPolicy",
+            "slug": "rootly_create_escalation_policy",
+            "method": "post",
+            "path": "/v1/escalation_policies",
+            "type": "write"
+        },
+        {
+            "operation_id": "getEscalationPolicy",
+            "class": "RootlyGetEscalationPolicy",
+            "slug": "rootly_get_escalation_policy",
+            "method": "get",
+            "path": "/v1/escalation_policies/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateEscalationPolicy",
+            "class": "RootlyUpdateEscalationPolicy",
+            "slug": "rootly_update_escalation_policy",
+            "method": "put",
+            "path": "/v1/escalation_policies/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEscalationPolicy",
+            "class": "RootlyDeleteEscalationPolicy",
+            "slug": "rootly_delete_escalation_policy",
+            "method": "delete",
+            "path": "/v1/escalation_policies/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEscalationLevels",
+            "class": "RootlyListEscalationLevels",
+            "slug": "rootly_list_escalation_levels",
+            "method": "get",
+            "path": "/v1/escalation_policies/{escalation_policy_id}/escalation_levels",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEscalationLevel",
+            "class": "RootlyCreateEscalationLevel",
+            "slug": "rootly_create_escalation_level",
+            "method": "post",
+            "path": "/v1/escalation_policies/{escalation_policy_id}/escalation_levels",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEscalationLevelsPaths",
+            "class": "RootlyListEscalationLevelsPaths",
+            "slug": "rootly_list_escalation_levels_paths",
+            "method": "get",
+            "path": "/v1/escalation_paths/{escalation_policy_path_id}/escalation_levels",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEscalationLevelPaths",
+            "class": "RootlyCreateEscalationLevelPaths",
+            "slug": "rootly_create_escalation_level_paths",
+            "method": "post",
+            "path": "/v1/escalation_paths/{escalation_policy_path_id}/escalation_levels",
+            "type": "write"
+        },
+        {
+            "operation_id": "getEscalationLevel",
+            "class": "RootlyGetEscalationLevel",
+            "slug": "rootly_get_escalation_level",
+            "method": "get",
+            "path": "/v1/escalation_levels/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateEscalationLevel",
+            "class": "RootlyUpdateEscalationLevel",
+            "slug": "rootly_update_escalation_level",
+            "method": "put",
+            "path": "/v1/escalation_levels/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEscalationLevel",
+            "class": "RootlyDeleteEscalationLevel",
+            "slug": "rootly_delete_escalation_level",
+            "method": "delete",
+            "path": "/v1/escalation_levels/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listEscalationPaths",
+            "class": "RootlyListEscalationPaths",
+            "slug": "rootly_list_escalation_paths",
+            "method": "get",
+            "path": "/v1/escalation_policies/{escalation_policy_id}/escalation_paths",
+            "type": "read"
+        },
+        {
+            "operation_id": "createEscalationPath",
+            "class": "RootlyCreateEscalationPath",
+            "slug": "rootly_create_escalation_path",
+            "method": "post",
+            "path": "/v1/escalation_policies/{escalation_policy_id}/escalation_paths",
+            "type": "write"
+        },
+        {
+            "operation_id": "getEscalationPath",
+            "class": "RootlyGetEscalationPath",
+            "slug": "rootly_get_escalation_path",
+            "method": "get",
+            "path": "/v1/escalation_paths/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateEscalationPath",
+            "class": "RootlyUpdateEscalationPath",
+            "slug": "rootly_update_escalation_path",
+            "method": "put",
+            "path": "/v1/escalation_paths/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteEscalationPath",
+            "class": "RootlyDeleteEscalationPath",
+            "slug": "rootly_delete_escalation_path",
+            "method": "delete",
+            "path": "/v1/escalation_paths/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormFieldOptions",
+            "class": "RootlyListFormFieldOptions",
+            "slug": "rootly_list_form_field_options",
+            "method": "get",
+            "path": "/v1/form_fields/{form_field_id}/options",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormFieldOption",
+            "class": "RootlyCreateFormFieldOption",
+            "slug": "rootly_create_form_field_option",
+            "method": "post",
+            "path": "/v1/form_fields/{form_field_id}/options",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormFieldOption",
+            "class": "RootlyGetFormFieldOption",
+            "slug": "rootly_get_form_field_option",
+            "method": "get",
+            "path": "/v1/form_field_options/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormFieldOption",
+            "class": "RootlyUpdateFormFieldOption",
+            "slug": "rootly_update_form_field_option",
+            "method": "put",
+            "path": "/v1/form_field_options/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormFieldOption",
+            "class": "RootlyDeleteFormFieldOption",
+            "slug": "rootly_delete_form_field_option",
+            "method": "delete",
+            "path": "/v1/form_field_options/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormFieldPlacementConditions",
+            "class": "RootlyListFormFieldPlacementConditions",
+            "slug": "rootly_list_form_field_placement_conditions",
+            "method": "get",
+            "path": "/v1/form_field_placements/{form_field_placement_id}/conditions",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormFieldPlacementCondition",
+            "class": "RootlyCreateFormFieldPlacementCondition",
+            "slug": "rootly_create_form_field_placement_condition",
+            "method": "post",
+            "path": "/v1/form_field_placements/{form_field_placement_id}/conditions",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormFieldPlacementCondition",
+            "class": "RootlyGetFormFieldPlacementCondition",
+            "slug": "rootly_get_form_field_placement_condition",
+            "method": "get",
+            "path": "/v1/form_field_placement_conditions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormFieldPlacementCondition",
+            "class": "RootlyUpdateFormFieldPlacementCondition",
+            "slug": "rootly_update_form_field_placement_condition",
+            "method": "put",
+            "path": "/v1/form_field_placement_conditions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormFieldPlacementCondition",
+            "class": "RootlyDeleteFormFieldPlacementCondition",
+            "slug": "rootly_delete_form_field_placement_condition",
+            "method": "delete",
+            "path": "/v1/form_field_placement_conditions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormFieldPlacements",
+            "class": "RootlyListFormFieldPlacements",
+            "slug": "rootly_list_form_field_placements",
+            "method": "get",
+            "path": "/v1/form_fields/{form_field_id}/placements",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormFieldPlacement",
+            "class": "RootlyCreateFormFieldPlacement",
+            "slug": "rootly_create_form_field_placement",
+            "method": "post",
+            "path": "/v1/form_fields/{form_field_id}/placements",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormFieldPlacement",
+            "class": "RootlyGetFormFieldPlacement",
+            "slug": "rootly_get_form_field_placement",
+            "method": "get",
+            "path": "/v1/form_field_placements/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormFieldPlacement",
+            "class": "RootlyUpdateFormFieldPlacement",
+            "slug": "rootly_update_form_field_placement",
+            "method": "put",
+            "path": "/v1/form_field_placements/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormFieldPlacement",
+            "class": "RootlyDeleteFormFieldPlacement",
+            "slug": "rootly_delete_form_field_placement",
+            "method": "delete",
+            "path": "/v1/form_field_placements/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormFieldPositions",
+            "class": "RootlyListFormFieldPositions",
+            "slug": "rootly_list_form_field_positions",
+            "method": "get",
+            "path": "/v1/form_fields/{form_field_id}/positions",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormFieldPosition",
+            "class": "RootlyCreateFormFieldPosition",
+            "slug": "rootly_create_form_field_position",
+            "method": "post",
+            "path": "/v1/form_fields/{form_field_id}/positions",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormFieldPosition",
+            "class": "RootlyGetFormFieldPosition",
+            "slug": "rootly_get_form_field_position",
+            "method": "get",
+            "path": "/v1/form_field_positions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormFieldPosition",
+            "class": "RootlyUpdateFormFieldPosition",
+            "slug": "rootly_update_form_field_position",
+            "method": "put",
+            "path": "/v1/form_field_positions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormFieldPosition",
+            "class": "RootlyDeleteFormFieldPosition",
+            "slug": "rootly_delete_form_field_position",
+            "method": "delete",
+            "path": "/v1/form_field_positions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormFields",
+            "class": "RootlyListFormFields",
+            "slug": "rootly_list_form_fields",
+            "method": "get",
+            "path": "/v1/form_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormField",
+            "class": "RootlyCreateFormField",
+            "slug": "rootly_create_form_field",
+            "method": "post",
+            "path": "/v1/form_fields",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormField",
+            "class": "RootlyGetFormField",
+            "slug": "rootly_get_form_field",
+            "method": "get",
+            "path": "/v1/form_fields/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormField",
+            "class": "RootlyUpdateFormField",
+            "slug": "rootly_update_form_field",
+            "method": "put",
+            "path": "/v1/form_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormField",
+            "class": "RootlyDeleteFormField",
+            "slug": "rootly_delete_form_field",
+            "method": "delete",
+            "path": "/v1/form_fields/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormSetConditions",
+            "class": "RootlyListFormSetConditions",
+            "slug": "rootly_list_form_set_conditions",
+            "method": "get",
+            "path": "/v1/form_sets/{form_set_id}/conditions",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormSetCondition",
+            "class": "RootlyCreateFormSetCondition",
+            "slug": "rootly_create_form_set_condition",
+            "method": "post",
+            "path": "/v1/form_sets/{form_set_id}/conditions",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormSetCondition",
+            "class": "RootlyGetFormSetCondition",
+            "slug": "rootly_get_form_set_condition",
+            "method": "get",
+            "path": "/v1/form_set_conditions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormSetCondition",
+            "class": "RootlyUpdateFormSetCondition",
+            "slug": "rootly_update_form_set_condition",
+            "method": "put",
+            "path": "/v1/form_set_conditions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormSetCondition",
+            "class": "RootlyDeleteFormSetCondition",
+            "slug": "rootly_delete_form_set_condition",
+            "method": "delete",
+            "path": "/v1/form_set_conditions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFormSets",
+            "class": "RootlyListFormSets",
+            "slug": "rootly_list_form_sets",
+            "method": "get",
+            "path": "/v1/form_sets",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFormSet",
+            "class": "RootlyCreateFormSet",
+            "slug": "rootly_create_form_set",
+            "method": "post",
+            "path": "/v1/form_sets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFormSet",
+            "class": "RootlyGetFormSet",
+            "slug": "rootly_get_form_set",
+            "method": "get",
+            "path": "/v1/form_sets/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFormSet",
+            "class": "RootlyUpdateFormSet",
+            "slug": "rootly_update_form_set",
+            "method": "put",
+            "path": "/v1/form_sets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFormSet",
+            "class": "RootlyDeleteFormSet",
+            "slug": "rootly_delete_form_set",
+            "method": "delete",
+            "path": "/v1/form_sets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listFunctionalities",
+            "class": "RootlyListFunctionalities",
+            "slug": "rootly_list_functionalities",
+            "method": "get",
+            "path": "/v1/functionalities",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFunctionality",
+            "class": "RootlyCreateFunctionality",
+            "slug": "rootly_create_functionality",
+            "method": "post",
+            "path": "/v1/functionalities",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFunctionality",
+            "class": "RootlyGetFunctionality",
+            "slug": "rootly_get_functionality",
+            "method": "get",
+            "path": "/v1/functionalities/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateFunctionality",
+            "class": "RootlyUpdateFunctionality",
+            "slug": "rootly_update_functionality",
+            "method": "put",
+            "path": "/v1/functionalities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteFunctionality",
+            "class": "RootlyDeleteFunctionality",
+            "slug": "rootly_delete_functionality",
+            "method": "delete",
+            "path": "/v1/functionalities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getFunctionalityIncidentsChart",
+            "class": "RootlyGetFunctionalityIncidentsChart",
+            "slug": "rootly_get_functionality_incidents_chart",
+            "method": "get",
+            "path": "/v1/functionalities/{id}/incidents_chart",
+            "type": "read"
+        },
+        {
+            "operation_id": "getFunctionalityUptimeChart",
+            "class": "RootlyGetFunctionalityUptimeChart",
+            "slug": "rootly_get_functionality_uptime_chart",
+            "method": "get",
+            "path": "/v1/functionalities/{id}/uptime_chart",
+            "type": "read"
+        },
+        {
+            "operation_id": "listFunctionalityCatalogProperties",
+            "class": "RootlyListFunctionalityCatalogProperties",
+            "slug": "rootly_list_functionality_catalog_properties",
+            "method": "get",
+            "path": "/v1/functionalities/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createFunctionalityCatalogProperty",
+            "class": "RootlyCreateFunctionalityCatalogProperty",
+            "slug": "rootly_create_functionality_catalog_property",
+            "method": "post",
+            "path": "/v1/functionalities/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWorkflowTasks",
+            "class": "RootlyListWorkflowTasks",
+            "slug": "rootly_list_workflow_tasks",
+            "method": "get",
+            "path": "/v1/workflows/{workflow_id}/workflow_tasks",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkflowTask",
+            "class": "RootlyCreateWorkflowTask",
+            "slug": "rootly_create_workflow_task",
+            "method": "post",
+            "path": "/v1/workflows/{workflow_id}/workflow_tasks",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWorkflowTask",
+            "class": "RootlyGetWorkflowTask",
+            "slug": "rootly_get_workflow_task",
+            "method": "get",
+            "path": "/v1/workflow_tasks/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWorkflowTask",
+            "class": "RootlyUpdateWorkflowTask",
+            "slug": "rootly_update_workflow_task",
+            "method": "put",
+            "path": "/v1/workflow_tasks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWorkflowTask",
+            "class": "RootlyDeleteWorkflowTask",
+            "slug": "rootly_delete_workflow_task",
+            "method": "delete",
+            "path": "/v1/workflow_tasks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWorkflowCustomFieldSelections",
+            "class": "RootlyListWorkflowCustomFieldSelections",
+            "slug": "rootly_list_workflow_custom_field_selections",
+            "method": "get",
+            "path": "/v1/workflows/{workflow_id}/custom_field_selections",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkflowCustomFieldSelection",
+            "class": "RootlyCreateWorkflowCustomFieldSelection",
+            "slug": "rootly_create_workflow_custom_field_selection",
+            "method": "post",
+            "path": "/v1/workflows/{workflow_id}/custom_field_selections",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWorkflowCustomFieldSelection",
+            "class": "RootlyGetWorkflowCustomFieldSelection",
+            "slug": "rootly_get_workflow_custom_field_selection",
+            "method": "get",
+            "path": "/v1/workflow_custom_field_selections/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWorkflowCustomFieldSelection",
+            "class": "RootlyUpdateWorkflowCustomFieldSelection",
+            "slug": "rootly_update_workflow_custom_field_selection",
+            "method": "put",
+            "path": "/v1/workflow_custom_field_selections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWorkflowCustomFieldSelection",
+            "class": "RootlyDeleteWorkflowCustomFieldSelection",
+            "slug": "rootly_delete_workflow_custom_field_selection",
+            "method": "delete",
+            "path": "/v1/workflow_custom_field_selections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWorkflowFormFieldConditions",
+            "class": "RootlyListWorkflowFormFieldConditions",
+            "slug": "rootly_list_workflow_form_field_conditions",
+            "method": "get",
+            "path": "/v1/workflows/{workflow_id}/form_field_conditions",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkflowFormFieldCondition",
+            "class": "RootlyCreateWorkflowFormFieldCondition",
+            "slug": "rootly_create_workflow_form_field_condition",
+            "method": "post",
+            "path": "/v1/workflows/{workflow_id}/form_field_conditions",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWorkflowFormFieldCondition",
+            "class": "RootlyGetWorkflowFormFieldCondition",
+            "slug": "rootly_get_workflow_form_field_condition",
+            "method": "get",
+            "path": "/v1/workflow_form_field_conditions/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWorkflowFormFieldCondition",
+            "class": "RootlyUpdateWorkflowFormFieldCondition",
+            "slug": "rootly_update_workflow_form_field_condition",
+            "method": "put",
+            "path": "/v1/workflow_form_field_conditions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWorkflowFormFieldCondition",
+            "class": "RootlyDeleteWorkflowFormFieldCondition",
+            "slug": "rootly_delete_workflow_form_field_condition",
+            "method": "delete",
+            "path": "/v1/workflow_form_field_conditions/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWorkflowGroups",
+            "class": "RootlyListWorkflowGroups",
+            "slug": "rootly_list_workflow_groups",
+            "method": "get",
+            "path": "/v1/workflow_groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkflowGroup",
+            "class": "RootlyCreateWorkflowGroup",
+            "slug": "rootly_create_workflow_group",
+            "method": "post",
+            "path": "/v1/workflow_groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWorkflowGroup",
+            "class": "RootlyGetWorkflowGroup",
+            "slug": "rootly_get_workflow_group",
+            "method": "get",
+            "path": "/v1/workflow_groups/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWorkflowGroup",
+            "class": "RootlyUpdateWorkflowGroup",
+            "slug": "rootly_update_workflow_group",
+            "method": "put",
+            "path": "/v1/workflow_groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWorkflowGroup",
+            "class": "RootlyDeleteWorkflowGroup",
+            "slug": "rootly_delete_workflow_group",
+            "method": "delete",
+            "path": "/v1/workflow_groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "ListWorkflowRuns",
+            "class": "RootlyListWorkflowRuns",
+            "slug": "rootly_list_workflow_runs",
+            "method": "get",
+            "path": "/v1/workflows/{workflow_id}/workflow_runs",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkflowRun",
+            "class": "RootlyCreateWorkflowRun",
+            "slug": "rootly_create_workflow_run",
+            "method": "post",
+            "path": "/v1/workflows/{workflow_id}/workflow_runs",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWorkflows",
+            "class": "RootlyListWorkflows",
+            "slug": "rootly_list_workflows",
+            "method": "get",
+            "path": "/v1/workflows",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWorkflow",
+            "class": "RootlyCreateWorkflow",
+            "slug": "rootly_create_workflow",
+            "method": "post",
+            "path": "/v1/workflows",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWorkflow",
+            "class": "RootlyGetWorkflow",
+            "slug": "rootly_get_workflow",
+            "method": "get",
+            "path": "/v1/workflows/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWorkflow",
+            "class": "RootlyUpdateWorkflow",
+            "slug": "rootly_update_workflow",
+            "method": "put",
+            "path": "/v1/workflows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWorkflow",
+            "class": "RootlyDeleteWorkflow",
+            "slug": "rootly_delete_workflow",
+            "method": "delete",
+            "path": "/v1/workflows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "pingHeartbeat",
+            "class": "RootlyPingHeartbeat",
+            "slug": "rootly_ping_heartbeat",
+            "method": "post",
+            "path": "/v1/heartbeats/{heartbeat_id}/ping",
+            "type": "write"
+        },
+        {
+            "operation_id": "listHeartbeats",
+            "class": "RootlyListHeartbeats",
+            "slug": "rootly_list_heartbeats",
+            "method": "get",
+            "path": "/v1/heartbeats",
+            "type": "read"
+        },
+        {
+            "operation_id": "createHeartbeat",
+            "class": "RootlyCreateHeartbeat",
+            "slug": "rootly_create_heartbeat",
+            "method": "post",
+            "path": "/v1/heartbeats",
+            "type": "write"
+        },
+        {
+            "operation_id": "getHeartbeat",
+            "class": "RootlyGetHeartbeat",
+            "slug": "rootly_get_heartbeat",
+            "method": "get",
+            "path": "/v1/heartbeats/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateHeartbeat",
+            "class": "RootlyUpdateHeartbeat",
+            "slug": "rootly_update_heartbeat",
+            "method": "put",
+            "path": "/v1/heartbeats/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteHeartbeat",
+            "class": "RootlyDeleteHeartbeat",
+            "slug": "rootly_delete_heartbeat",
+            "method": "delete",
+            "path": "/v1/heartbeats/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentActionItems",
+            "class": "RootlyListIncidentActionItems",
+            "slug": "rootly_list_incident_action_items",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/action_items",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentActionItem",
+            "class": "RootlyCreateIncidentActionItem",
+            "slug": "rootly_create_incident_action_item",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/action_items",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentActionItems",
+            "class": "RootlyGetIncidentActionItems",
+            "slug": "rootly_get_incident_action_items",
+            "method": "get",
+            "path": "/v1/action_items/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentActionItem",
+            "class": "RootlyUpdateIncidentActionItem",
+            "slug": "rootly_update_incident_action_item",
+            "method": "put",
+            "path": "/v1/action_items/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentActionItem",
+            "class": "RootlyDeleteIncidentActionItem",
+            "slug": "rootly_delete_incident_action_item",
+            "method": "delete",
+            "path": "/v1/action_items/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listAllIncidentActionItems",
+            "class": "RootlyListAllIncidentActionItems",
+            "slug": "rootly_list_all_incident_action_items",
+            "method": "get",
+            "path": "/v1/action_items",
+            "type": "read"
+        },
+        {
+            "operation_id": "listIncidentCustomFieldSelections",
+            "class": "RootlyListIncidentCustomFieldSelections",
+            "slug": "rootly_list_incident_custom_field_selections",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/custom_field_selections",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentCustomFieldSelection",
+            "class": "RootlyCreateIncidentCustomFieldSelection",
+            "slug": "rootly_create_incident_custom_field_selection",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/custom_field_selections",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentCustomFieldSelection",
+            "class": "RootlyGetIncidentCustomFieldSelection",
+            "slug": "rootly_get_incident_custom_field_selection",
+            "method": "get",
+            "path": "/v1/incident_custom_field_selections/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentCustomFieldSelection",
+            "class": "RootlyUpdateIncidentCustomFieldSelection",
+            "slug": "rootly_update_incident_custom_field_selection",
+            "method": "put",
+            "path": "/v1/incident_custom_field_selections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentCustomFieldSelection",
+            "class": "RootlyDeleteIncidentCustomFieldSelection",
+            "slug": "rootly_delete_incident_custom_field_selection",
+            "method": "delete",
+            "path": "/v1/incident_custom_field_selections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentEventFunctionalities",
+            "class": "RootlyListIncidentEventFunctionalities",
+            "slug": "rootly_list_incident_event_functionalities",
+            "method": "get",
+            "path": "/v1/events/{incident_event_id}/functionalities",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentEventFunctionality",
+            "class": "RootlyCreateIncidentEventFunctionality",
+            "slug": "rootly_create_incident_event_functionality",
+            "method": "post",
+            "path": "/v1/events/{incident_event_id}/functionalities",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentEventFunctionalities",
+            "class": "RootlyGetIncidentEventFunctionalities",
+            "slug": "rootly_get_incident_event_functionalities",
+            "method": "get",
+            "path": "/v1/incident_event_functionalities/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentEventFunctionality",
+            "class": "RootlyUpdateIncidentEventFunctionality",
+            "slug": "rootly_update_incident_event_functionality",
+            "method": "put",
+            "path": "/v1/incident_event_functionalities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentEventFunctionality",
+            "class": "RootlyDeleteIncidentEventFunctionality",
+            "slug": "rootly_delete_incident_event_functionality",
+            "method": "delete",
+            "path": "/v1/incident_event_functionalities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentEventServices",
+            "class": "RootlyListIncidentEventServices",
+            "slug": "rootly_list_incident_event_services",
+            "method": "get",
+            "path": "/v1/events/{incident_event_id}/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentEventService",
+            "class": "RootlyCreateIncidentEventService",
+            "slug": "rootly_create_incident_event_service",
+            "method": "post",
+            "path": "/v1/events/{incident_event_id}/services",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentEventServices",
+            "class": "RootlyGetIncidentEventServices",
+            "slug": "rootly_get_incident_event_services",
+            "method": "get",
+            "path": "/v1/incident_event_services/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentEventService",
+            "class": "RootlyUpdateIncidentEventService",
+            "slug": "rootly_update_incident_event_service",
+            "method": "put",
+            "path": "/v1/incident_event_services/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentEventService",
+            "class": "RootlyDeleteIncidentEventService",
+            "slug": "rootly_delete_incident_event_service",
+            "method": "delete",
+            "path": "/v1/incident_event_services/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentEvents",
+            "class": "RootlyListIncidentEvents",
+            "slug": "rootly_list_incident_events",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/events",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentEvent",
+            "class": "RootlyCreateIncidentEvent",
+            "slug": "rootly_create_incident_event",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/events",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentEvents",
+            "class": "RootlyGetIncidentEvents",
+            "slug": "rootly_get_incident_events",
+            "method": "get",
+            "path": "/v1/events/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentEvent",
+            "class": "RootlyUpdateIncidentEvent",
+            "slug": "rootly_update_incident_event",
+            "method": "put",
+            "path": "/v1/events/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentEvent",
+            "class": "RootlyDeleteIncidentEvent",
+            "slug": "rootly_delete_incident_event",
+            "method": "delete",
+            "path": "/v1/events/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentFeedbacks",
+            "class": "RootlyListIncidentFeedbacks",
+            "slug": "rootly_list_incident_feedbacks",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/feedbacks",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentFeedback",
+            "class": "RootlyCreateIncidentFeedback",
+            "slug": "rootly_create_incident_feedback",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/feedbacks",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentFeedbacks",
+            "class": "RootlyGetIncidentFeedbacks",
+            "slug": "rootly_get_incident_feedbacks",
+            "method": "get",
+            "path": "/v1/feedbacks/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentFeedback",
+            "class": "RootlyUpdateIncidentFeedback",
+            "slug": "rootly_update_incident_feedback",
+            "method": "put",
+            "path": "/v1/feedbacks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentFormFieldSelections",
+            "class": "RootlyListIncidentFormFieldSelections",
+            "slug": "rootly_list_incident_form_field_selections",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/form_field_selections",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentFormFieldSelection",
+            "class": "RootlyCreateIncidentFormFieldSelection",
+            "slug": "rootly_create_incident_form_field_selection",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/form_field_selections",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentFormFieldSelection",
+            "class": "RootlyGetIncidentFormFieldSelection",
+            "slug": "rootly_get_incident_form_field_selection",
+            "method": "get",
+            "path": "/v1/incident_form_field_selections/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentFormFieldSelection",
+            "class": "RootlyUpdateIncidentFormFieldSelection",
+            "slug": "rootly_update_incident_form_field_selection",
+            "method": "put",
+            "path": "/v1/incident_form_field_selections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentFormFieldSelection",
+            "class": "RootlyDeleteIncidentFormFieldSelection",
+            "slug": "rootly_delete_incident_form_field_selection",
+            "method": "delete",
+            "path": "/v1/incident_form_field_selections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentPermissionSetBooleans",
+            "class": "RootlyListIncidentPermissionSetBooleans",
+            "slug": "rootly_list_incident_permission_set_booleans",
+            "method": "get",
+            "path": "/v1/incident_permission_sets/{incident_permission_set_id}/booleans",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentPermissionSetBoolean",
+            "class": "RootlyCreateIncidentPermissionSetBoolean",
+            "slug": "rootly_create_incident_permission_set_boolean",
+            "method": "post",
+            "path": "/v1/incident_permission_sets/{incident_permission_set_id}/booleans",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentPermissionSetBoolean",
+            "class": "RootlyGetIncidentPermissionSetBoolean",
+            "slug": "rootly_get_incident_permission_set_boolean",
+            "method": "get",
+            "path": "/v1/incident_permission_set_booleans/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentPermissionSetBoolean",
+            "class": "RootlyUpdateIncidentPermissionSetBoolean",
+            "slug": "rootly_update_incident_permission_set_boolean",
+            "method": "put",
+            "path": "/v1/incident_permission_set_booleans/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentPermissionSetBoolean",
+            "class": "RootlyDeleteIncidentPermissionSetBoolean",
+            "slug": "rootly_delete_incident_permission_set_boolean",
+            "method": "delete",
+            "path": "/v1/incident_permission_set_booleans/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentPermissionSetResources",
+            "class": "RootlyListIncidentPermissionSetResources",
+            "slug": "rootly_list_incident_permission_set_resources",
+            "method": "get",
+            "path": "/v1/incident_permission_sets/{incident_permission_set_id}/resources",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentPermissionSetResource",
+            "class": "RootlyCreateIncidentPermissionSetResource",
+            "slug": "rootly_create_incident_permission_set_resource",
+            "method": "post",
+            "path": "/v1/incident_permission_sets/{incident_permission_set_id}/resources",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentPermissionSetResource",
+            "class": "RootlyGetIncidentPermissionSetResource",
+            "slug": "rootly_get_incident_permission_set_resource",
+            "method": "get",
+            "path": "/v1/incident_permission_set_resources/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentPermissionSetResource",
+            "class": "RootlyUpdateIncidentPermissionSetResource",
+            "slug": "rootly_update_incident_permission_set_resource",
+            "method": "put",
+            "path": "/v1/incident_permission_set_resources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentPermissionSetResource",
+            "class": "RootlyDeleteIncidentPermissionSetResource",
+            "slug": "rootly_delete_incident_permission_set_resource",
+            "method": "delete",
+            "path": "/v1/incident_permission_set_resources/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentPermissionSets",
+            "class": "RootlyListIncidentPermissionSets",
+            "slug": "rootly_list_incident_permission_sets",
+            "method": "get",
+            "path": "/v1/incident_permission_sets",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentPermissionSet",
+            "class": "RootlyCreateIncidentPermissionSet",
+            "slug": "rootly_create_incident_permission_set",
+            "method": "post",
+            "path": "/v1/incident_permission_sets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentPermissionSet",
+            "class": "RootlyGetIncidentPermissionSet",
+            "slug": "rootly_get_incident_permission_set",
+            "method": "get",
+            "path": "/v1/incident_permission_sets/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentPermissionSet",
+            "class": "RootlyUpdateIncidentPermissionSet",
+            "slug": "rootly_update_incident_permission_set",
+            "method": "put",
+            "path": "/v1/incident_permission_sets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentPermissionSet",
+            "class": "RootlyDeleteIncidentPermissionSet",
+            "slug": "rootly_delete_incident_permission_set",
+            "method": "delete",
+            "path": "/v1/incident_permission_sets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentPostMortems",
+            "class": "RootlyListIncidentPostMortems",
+            "slug": "rootly_list_incident_post_mortems",
+            "method": "get",
+            "path": "/v1/post_mortems",
+            "type": "read"
+        },
+        {
+            "operation_id": "ListIncidentPostmortem",
+            "class": "RootlyListIncidentPostmortem",
+            "slug": "rootly_list_incident_postmortem",
+            "method": "get",
+            "path": "/v1/post_mortems/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentPostmortem",
+            "class": "RootlyUpdateIncidentPostmortem",
+            "slug": "rootly_update_incident_postmortem",
+            "method": "put",
+            "path": "/v1/post_mortems/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentRetrospectiveStep",
+            "class": "RootlyGetIncidentRetrospectiveStep",
+            "slug": "rootly_get_incident_retrospective_step",
+            "method": "get",
+            "path": "/v1/incident_retrospective_steps/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentRetrospectiveStep",
+            "class": "RootlyUpdateIncidentRetrospectiveStep",
+            "slug": "rootly_update_incident_retrospective_step",
+            "method": "put",
+            "path": "/v1/incident_retrospective_steps/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentRoleTasks",
+            "class": "RootlyListIncidentRoleTasks",
+            "slug": "rootly_list_incident_role_tasks",
+            "method": "get",
+            "path": "/v1/incident_roles/{incident_role_id}/incident_role_tasks",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentRoleTask",
+            "class": "RootlyCreateIncidentRoleTask",
+            "slug": "rootly_create_incident_role_task",
+            "method": "post",
+            "path": "/v1/incident_roles/{incident_role_id}/incident_role_tasks",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentRoleTask",
+            "class": "RootlyGetIncidentRoleTask",
+            "slug": "rootly_get_incident_role_task",
+            "method": "get",
+            "path": "/v1/incident_role_tasks/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentRoleTask",
+            "class": "RootlyUpdateIncidentRoleTask",
+            "slug": "rootly_update_incident_role_task",
+            "method": "put",
+            "path": "/v1/incident_role_tasks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentRoleTask",
+            "class": "RootlyDeleteIncidentRoleTask",
+            "slug": "rootly_delete_incident_role_task",
+            "method": "delete",
+            "path": "/v1/incident_role_tasks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentRoles",
+            "class": "RootlyListIncidentRoles",
+            "slug": "rootly_list_incident_roles",
+            "method": "get",
+            "path": "/v1/incident_roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentRole",
+            "class": "RootlyCreateIncidentRole",
+            "slug": "rootly_create_incident_role",
+            "method": "post",
+            "path": "/v1/incident_roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentRole",
+            "class": "RootlyGetIncidentRole",
+            "slug": "rootly_get_incident_role",
+            "method": "get",
+            "path": "/v1/incident_roles/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentRole",
+            "class": "RootlyUpdateIncidentRole",
+            "slug": "rootly_update_incident_role",
+            "method": "put",
+            "path": "/v1/incident_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentRole",
+            "class": "RootlyDeleteIncidentRole",
+            "slug": "rootly_delete_incident_role",
+            "method": "delete",
+            "path": "/v1/incident_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentStatusPages",
+            "class": "RootlyListIncidentStatusPages",
+            "slug": "rootly_list_incident_status_pages",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/status-page-events",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentStatusPage",
+            "class": "RootlyCreateIncidentStatusPage",
+            "slug": "rootly_create_incident_status_page",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/status-page-events",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentStatusPages",
+            "class": "RootlyGetIncidentStatusPages",
+            "slug": "rootly_get_incident_status_pages",
+            "method": "get",
+            "path": "/v1/status-page-events/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentStatusPage",
+            "class": "RootlyUpdateIncidentStatusPage",
+            "slug": "rootly_update_incident_status_page",
+            "method": "put",
+            "path": "/v1/status-page-events/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentStatusPage",
+            "class": "RootlyDeleteIncidentStatusPage",
+            "slug": "rootly_delete_incident_status_page",
+            "method": "delete",
+            "path": "/v1/status-page-events/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentSubStatuses",
+            "class": "RootlyListIncidentSubStatuses",
+            "slug": "rootly_list_incident_sub_statuses",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/sub_statuses",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentSubStatus",
+            "class": "RootlyCreateIncidentSubStatus",
+            "slug": "rootly_create_incident_sub_status",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/sub_statuses",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentSubStatus",
+            "class": "RootlyGetIncidentSubStatus",
+            "slug": "rootly_get_incident_sub_status",
+            "method": "get",
+            "path": "/v1/incident_sub_statuses/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentSubStatus",
+            "class": "RootlyUpdateIncidentSubStatus",
+            "slug": "rootly_update_incident_sub_status",
+            "method": "put",
+            "path": "/v1/incident_sub_statuses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentSubStatus",
+            "class": "RootlyDeleteIncidentSubStatus",
+            "slug": "rootly_delete_incident_sub_status",
+            "method": "delete",
+            "path": "/v1/incident_sub_statuses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentTypes",
+            "class": "RootlyListIncidentTypes",
+            "slug": "rootly_list_incident_types",
+            "method": "get",
+            "path": "/v1/incident_types",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentType",
+            "class": "RootlyCreateIncidentType",
+            "slug": "rootly_create_incident_type",
+            "method": "post",
+            "path": "/v1/incident_types",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncidentType",
+            "class": "RootlyGetIncidentType",
+            "slug": "rootly_get_incident_type",
+            "method": "get",
+            "path": "/v1/incident_types/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncidentType",
+            "class": "RootlyUpdateIncidentType",
+            "slug": "rootly_update_incident_type",
+            "method": "put",
+            "path": "/v1/incident_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncidentType",
+            "class": "RootlyDeleteIncidentType",
+            "slug": "rootly_delete_incident_type",
+            "method": "delete",
+            "path": "/v1/incident_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidentTypeCatalogProperties",
+            "class": "RootlyListIncidentTypeCatalogProperties",
+            "slug": "rootly_list_incident_type_catalog_properties",
+            "method": "get",
+            "path": "/v1/incident_types/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncidentTypeCatalogProperty",
+            "class": "RootlyCreateIncidentTypeCatalogProperty",
+            "slug": "rootly_create_incident_type_catalog_property",
+            "method": "post",
+            "path": "/v1/incident_types/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "listIncidents",
+            "class": "RootlyListIncidents",
+            "slug": "rootly_list_incidents",
+            "method": "get",
+            "path": "/v1/incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "createIncident",
+            "class": "RootlyCreateIncident",
+            "slug": "rootly_create_incident",
+            "method": "post",
+            "path": "/v1/incidents",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIncident",
+            "class": "RootlyGetIncident",
+            "slug": "rootly_get_incident",
+            "method": "get",
+            "path": "/v1/incidents/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateIncident",
+            "class": "RootlyUpdateIncident",
+            "slug": "rootly_update_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteIncident",
+            "class": "RootlyDeleteIncident",
+            "slug": "rootly_delete_incident",
+            "method": "delete",
+            "path": "/v1/incidents/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "mitigateIncident",
+            "class": "RootlyMitigateIncident",
+            "slug": "rootly_mitigate_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/mitigate",
+            "type": "write"
+        },
+        {
+            "operation_id": "resolveIncident",
+            "class": "RootlyResolveIncident",
+            "slug": "rootly_resolve_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/resolve",
+            "type": "write"
+        },
+        {
+            "operation_id": "cancelIncident",
+            "class": "RootlyCancelIncident",
+            "slug": "rootly_cancel_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/cancel",
+            "type": "write"
+        },
+        {
+            "operation_id": "triageIncident",
+            "class": "RootlyTriageIncident",
+            "slug": "rootly_triage_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/in_triage",
+            "type": "write"
+        },
+        {
+            "operation_id": "restartIncident",
+            "class": "RootlyRestartIncident",
+            "slug": "rootly_restart_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/restart",
+            "type": "write"
+        },
+        {
+            "operation_id": "markAsDuplicateIncident",
+            "class": "RootlyMarkAsDuplicateIncident",
+            "slug": "rootly_mark_as_duplicate_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/duplicate",
+            "type": "write"
+        },
+        {
+            "operation_id": "detachFromParentIncident",
+            "class": "RootlyDetachFromParentIncident",
+            "slug": "rootly_detach_from_parent_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/detach_from_parent",
+            "type": "write"
+        },
+        {
+            "operation_id": "unmarkAsDuplicateIncident",
+            "class": "RootlyUnmarkAsDuplicateIncident",
+            "slug": "rootly_unmark_as_duplicate_incident",
+            "method": "put",
+            "path": "/v1/incidents/{id}/unmark_as_duplicate",
+            "type": "write"
+        },
+        {
+            "operation_id": "addSubscribersToIncident",
+            "class": "RootlyAddSubscribersToIncident",
+            "slug": "rootly_add_subscribers_to_incident",
+            "method": "post",
+            "path": "/v1/incidents/{id}/add_subscribers",
+            "type": "write"
+        },
+        {
+            "operation_id": "removeSubscribersToIncident",
+            "class": "RootlyRemoveSubscribersToIncident",
+            "slug": "rootly_remove_subscribers_to_incident",
+            "method": "delete",
+            "path": "/v1/incidents/{id}/remove_subscribers",
+            "type": "write"
+        },
+        {
+            "operation_id": "assignUserToIncident",
+            "class": "RootlyAssignUserToIncident",
+            "slug": "rootly_assign_user_to_incident",
+            "method": "post",
+            "path": "/v1/incidents/{id}/assign_role_to_user",
+            "type": "write"
+        },
+        {
+            "operation_id": "removeAssignedUserFromIncident",
+            "class": "RootlyRemoveAssignedUserFromIncident",
+            "slug": "rootly_remove_assigned_user_from_incident",
+            "method": "delete",
+            "path": "/v1/incidents/{id}/unassign_role_from_user",
+            "type": "write"
+        },
+        {
+            "operation_id": "getIpRanges",
+            "class": "RootlyGetIpRanges",
+            "slug": "rootly_get_ip_ranges",
+            "method": "get",
+            "path": "/v1/ip_ranges",
+            "type": "read"
+        },
+        {
+            "operation_id": "listLiveCallRouters",
+            "class": "RootlyListLiveCallRouters",
+            "slug": "rootly_list_live_call_routers",
+            "method": "get",
+            "path": "/v1/live_call_routers",
+            "type": "read"
+        },
+        {
+            "operation_id": "createLiveCallRouter",
+            "class": "RootlyCreateLiveCallRouter",
+            "slug": "rootly_create_live_call_router",
+            "method": "post",
+            "path": "/v1/live_call_routers",
+            "type": "write"
+        },
+        {
+            "operation_id": "generatePhoneNumberLiveCallRouter",
+            "class": "RootlyGeneratePhoneNumberLiveCallRouter",
+            "slug": "rootly_generate_phone_number_live_call_router",
+            "method": "get",
+            "path": "/v1/live_call_routers/generate_phone_number",
+            "type": "read"
+        },
+        {
+            "operation_id": "getLiveCallRouter",
+            "class": "RootlyGetLiveCallRouter",
+            "slug": "rootly_get_live_call_router",
+            "method": "get",
+            "path": "/v1/live_call_routers/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateLiveCallRouter",
+            "class": "RootlyUpdateLiveCallRouter",
+            "slug": "rootly_update_live_call_router",
+            "method": "put",
+            "path": "/v1/live_call_routers/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteLiveCallRouter",
+            "class": "RootlyDeleteLiveCallRouter",
+            "slug": "rootly_delete_live_call_router",
+            "method": "delete",
+            "path": "/v1/live_call_routers/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listMeetingRecordings",
+            "class": "RootlyListMeetingRecordings",
+            "slug": "rootly_list_meeting_recordings",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/meeting_recordings",
+            "type": "read"
+        },
+        {
+            "operation_id": "createMeetingRecording",
+            "class": "RootlyCreateMeetingRecording",
+            "slug": "rootly_create_meeting_recording",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/meeting_recordings",
+            "type": "write"
+        },
+        {
+            "operation_id": "getMeetingRecording",
+            "class": "RootlyGetMeetingRecording",
+            "slug": "rootly_get_meeting_recording",
+            "method": "get",
+            "path": "/v1/meeting_recordings/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "deleteMeetingRecording",
+            "class": "RootlyDeleteMeetingRecording",
+            "slug": "rootly_delete_meeting_recording",
+            "method": "delete",
+            "path": "/v1/meeting_recordings/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteMeetingRecordingVideo",
+            "class": "RootlyDeleteMeetingRecordingVideo",
+            "slug": "rootly_delete_meeting_recording_video",
+            "method": "delete",
+            "path": "/v1/meeting_recordings/{id}/delete_video",
+            "type": "write"
+        },
+        {
+            "operation_id": "pauseMeetingRecording",
+            "class": "RootlyPauseMeetingRecording",
+            "slug": "rootly_pause_meeting_recording",
+            "method": "post",
+            "path": "/v1/meeting_recordings/{id}/pause",
+            "type": "write"
+        },
+        {
+            "operation_id": "resumeMeetingRecording",
+            "class": "RootlyResumeMeetingRecording",
+            "slug": "rootly_resume_meeting_recording",
+            "method": "post",
+            "path": "/v1/meeting_recordings/{id}/resume",
+            "type": "write"
+        },
+        {
+            "operation_id": "stopMeetingRecording",
+            "class": "RootlyStopMeetingRecording",
+            "slug": "rootly_stop_meeting_recording",
+            "method": "post",
+            "path": "/v1/meeting_recordings/{id}/stop",
+            "type": "write"
+        },
+        {
+            "operation_id": "leaveMeetingRecording",
+            "class": "RootlyLeaveMeetingRecording",
+            "slug": "rootly_leave_meeting_recording",
+            "method": "post",
+            "path": "/v1/meeting_recordings/{id}/leave",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOnCallPayReports",
+            "class": "RootlyListOnCallPayReports",
+            "slug": "rootly_list_on_call_pay_reports",
+            "method": "get",
+            "path": "/v1/on_call_pay_reports",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOnCallPayReport",
+            "class": "RootlyCreateOnCallPayReport",
+            "slug": "rootly_create_on_call_pay_report",
+            "method": "post",
+            "path": "/v1/on_call_pay_reports",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOnCallPayReport",
+            "class": "RootlyGetOnCallPayReport",
+            "slug": "rootly_get_on_call_pay_report",
+            "method": "get",
+            "path": "/v1/on_call_pay_reports/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOnCallPayReport",
+            "class": "RootlyUpdateOnCallPayReport",
+            "slug": "rootly_update_on_call_pay_report",
+            "method": "put",
+            "path": "/v1/on_call_pay_reports/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "regenerateOnCallPayReport",
+            "class": "RootlyRegenerateOnCallPayReport",
+            "slug": "rootly_regenerate_on_call_pay_report",
+            "method": "post",
+            "path": "/v1/on_call_pay_reports/{id}/regenerate",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOnCallRoles",
+            "class": "RootlyListOnCallRoles",
+            "slug": "rootly_list_on_call_roles",
+            "method": "get",
+            "path": "/v1/on_call_roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOnCallRole",
+            "class": "RootlyCreateOnCallRole",
+            "slug": "rootly_create_on_call_role",
+            "method": "post",
+            "path": "/v1/on_call_roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOnCallRole",
+            "class": "RootlyGetOnCallRole",
+            "slug": "rootly_get_on_call_role",
+            "method": "get",
+            "path": "/v1/on_call_roles/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOnCallRole",
+            "class": "RootlyUpdateOnCallRole",
+            "slug": "rootly_update_on_call_role",
+            "method": "put",
+            "path": "/v1/on_call_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOnCallRole",
+            "class": "RootlyDeleteOnCallRole",
+            "slug": "rootly_delete_on_call_role",
+            "method": "delete",
+            "path": "/v1/on_call_roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOnCallShadows",
+            "class": "RootlyListOnCallShadows",
+            "slug": "rootly_list_on_call_shadows",
+            "method": "get",
+            "path": "/v1/schedules/{schedule_id}/on_call_shadows",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOnCallShadow",
+            "class": "RootlyCreateOnCallShadow",
+            "slug": "rootly_create_on_call_shadow",
+            "method": "post",
+            "path": "/v1/schedules/{schedule_id}/on_call_shadows",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOnCallShadow",
+            "class": "RootlyGetOnCallShadow",
+            "slug": "rootly_get_on_call_shadow",
+            "method": "get",
+            "path": "/v1/on_call_shadows/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOnCallShadow",
+            "class": "RootlyUpdateOnCallShadow",
+            "slug": "rootly_update_on_call_shadow",
+            "method": "put",
+            "path": "/v1/on_call_shadows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOnCallShadow",
+            "class": "RootlyDeleteOnCallShadow",
+            "slug": "rootly_delete_on_call_shadow",
+            "method": "delete",
+            "path": "/v1/on_call_shadows/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listOncalls",
+            "class": "RootlyListOncalls",
+            "slug": "rootly_list_oncalls",
+            "method": "get",
+            "path": "/v1/oncalls",
+            "type": "read"
+        },
+        {
+            "operation_id": "listOverrideShifts",
+            "class": "RootlyListOverrideShifts",
+            "slug": "rootly_list_override_shifts",
+            "method": "get",
+            "path": "/v1/schedules/{schedule_id}/override_shifts",
+            "type": "read"
+        },
+        {
+            "operation_id": "createOverrideShift",
+            "class": "RootlyCreateOverrideShift",
+            "slug": "rootly_create_override_shift",
+            "method": "post",
+            "path": "/v1/schedules/{schedule_id}/override_shifts",
+            "type": "write"
+        },
+        {
+            "operation_id": "getOverrideShift",
+            "class": "RootlyGetOverrideShift",
+            "slug": "rootly_get_override_shift",
+            "method": "get",
+            "path": "/v1/override_shifts/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateOverrideShift",
+            "class": "RootlyUpdateOverrideShift",
+            "slug": "rootly_update_override_shift",
+            "method": "put",
+            "path": "/v1/override_shifts/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteOverrideShift",
+            "class": "RootlyDeleteOverrideShift",
+            "slug": "rootly_delete_override_shift",
+            "method": "delete",
+            "path": "/v1/override_shifts/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listPlaybookTasks",
+            "class": "RootlyListPlaybookTasks",
+            "slug": "rootly_list_playbook_tasks",
+            "method": "get",
+            "path": "/v1/playbooks/{playbook_id}/playbook_tasks",
+            "type": "read"
+        },
+        {
+            "operation_id": "createPlaybookTask",
+            "class": "RootlyCreatePlaybookTask",
+            "slug": "rootly_create_playbook_task",
+            "method": "post",
+            "path": "/v1/playbooks/{playbook_id}/playbook_tasks",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPlaybookTask",
+            "class": "RootlyGetPlaybookTask",
+            "slug": "rootly_get_playbook_task",
+            "method": "get",
+            "path": "/v1/playbook_tasks/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updatePlaybookTask",
+            "class": "RootlyUpdatePlaybookTask",
+            "slug": "rootly_update_playbook_task",
+            "method": "put",
+            "path": "/v1/playbook_tasks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deletePlaybookTask",
+            "class": "RootlyDeletePlaybookTask",
+            "slug": "rootly_delete_playbook_task",
+            "method": "delete",
+            "path": "/v1/playbook_tasks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listPlaybooks",
+            "class": "RootlyListPlaybooks",
+            "slug": "rootly_list_playbooks",
+            "method": "get",
+            "path": "/v1/playbooks",
+            "type": "read"
+        },
+        {
+            "operation_id": "createPlaybook",
+            "class": "RootlyCreatePlaybook",
+            "slug": "rootly_create_playbook",
+            "method": "post",
+            "path": "/v1/playbooks",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPlaybook",
+            "class": "RootlyGetPlaybook",
+            "slug": "rootly_get_playbook",
+            "method": "get",
+            "path": "/v1/playbooks/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updatePlaybook",
+            "class": "RootlyUpdatePlaybook",
+            "slug": "rootly_update_playbook",
+            "method": "put",
+            "path": "/v1/playbooks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deletePlaybook",
+            "class": "RootlyDeletePlaybook",
+            "slug": "rootly_delete_playbook",
+            "method": "delete",
+            "path": "/v1/playbooks/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listPostmortemTemplates",
+            "class": "RootlyListPostmortemTemplates",
+            "slug": "rootly_list_postmortem_templates",
+            "method": "get",
+            "path": "/v1/post_mortem_templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "createPostmortemTemplate",
+            "class": "RootlyCreatePostmortemTemplate",
+            "slug": "rootly_create_postmortem_template",
+            "method": "post",
+            "path": "/v1/post_mortem_templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPostmortemTemplate",
+            "class": "RootlyGetPostmortemTemplate",
+            "slug": "rootly_get_postmortem_template",
+            "method": "get",
+            "path": "/v1/post_mortem_templates/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updatePostmortemTemplate",
+            "class": "RootlyUpdatePostmortemTemplate",
+            "slug": "rootly_update_postmortem_template",
+            "method": "put",
+            "path": "/v1/post_mortem_templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deletePostmortemTemplate",
+            "class": "RootlyDeletePostmortemTemplate",
+            "slug": "rootly_delete_postmortem_template",
+            "method": "delete",
+            "path": "/v1/post_mortem_templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listPulses",
+            "class": "RootlyListPulses",
+            "slug": "rootly_list_pulses",
+            "method": "get",
+            "path": "/v1/pulses",
+            "type": "read"
+        },
+        {
+            "operation_id": "createPulse",
+            "class": "RootlyCreatePulse",
+            "slug": "rootly_create_pulse",
+            "method": "post",
+            "path": "/v1/pulses",
+            "type": "write"
+        },
+        {
+            "operation_id": "getPulse",
+            "class": "RootlyGetPulse",
+            "slug": "rootly_get_pulse",
+            "method": "get",
+            "path": "/v1/pulses/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updatePulse",
+            "class": "RootlyUpdatePulse",
+            "slug": "rootly_update_pulse",
+            "method": "put",
+            "path": "/v1/pulses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRetrospectiveConfigurations",
+            "class": "RootlyListRetrospectiveConfigurations",
+            "slug": "rootly_list_retrospective_configurations",
+            "method": "get",
+            "path": "/v1/retrospective_configurations",
+            "type": "read"
+        },
+        {
+            "operation_id": "getRetrospectiveConfiguration",
+            "class": "RootlyGetRetrospectiveConfiguration",
+            "slug": "rootly_get_retrospective_configuration",
+            "method": "get",
+            "path": "/v1/retrospective_configurations/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateRetrospectiveConfiguration",
+            "class": "RootlyUpdateRetrospectiveConfiguration",
+            "slug": "rootly_update_retrospective_configuration",
+            "method": "put",
+            "path": "/v1/retrospective_configurations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRetrospectiveProcessGroupSteps",
+            "class": "RootlyListRetrospectiveProcessGroupSteps",
+            "slug": "rootly_list_retrospective_process_group_steps",
+            "method": "get",
+            "path": "/v1/retrospective_process_groups/{retrospective_process_group_id}/steps",
+            "type": "read"
+        },
+        {
+            "operation_id": "createRetrospectiveProcessGroupStep",
+            "class": "RootlyCreateRetrospectiveProcessGroupStep",
+            "slug": "rootly_create_retrospective_process_group_step",
+            "method": "post",
+            "path": "/v1/retrospective_process_groups/{retrospective_process_group_id}/steps",
+            "type": "write"
+        },
+        {
+            "operation_id": "getRetrospectiveProcessGroupStep",
+            "class": "RootlyGetRetrospectiveProcessGroupStep",
+            "slug": "rootly_get_retrospective_process_group_step",
+            "method": "get",
+            "path": "/v1/retrospective_process_group_steps/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateRetrospectiveProcessGroupStep",
+            "class": "RootlyUpdateRetrospectiveProcessGroupStep",
+            "slug": "rootly_update_retrospective_process_group_step",
+            "method": "put",
+            "path": "/v1/retrospective_process_group_steps/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteRetrospectiveProcessGroupStep",
+            "class": "RootlyDeleteRetrospectiveProcessGroupStep",
+            "slug": "rootly_delete_retrospective_process_group_step",
+            "method": "delete",
+            "path": "/v1/retrospective_process_group_steps/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRetrospectiveProcessGroups",
+            "class": "RootlyListRetrospectiveProcessGroups",
+            "slug": "rootly_list_retrospective_process_groups",
+            "method": "get",
+            "path": "/v1/retrospective_processes/{retrospective_process_id}/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "createRetrospectiveProcessGroup",
+            "class": "RootlyCreateRetrospectiveProcessGroup",
+            "slug": "rootly_create_retrospective_process_group",
+            "method": "post",
+            "path": "/v1/retrospective_processes/{retrospective_process_id}/groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "getRetrospectiveProcessGroup",
+            "class": "RootlyGetRetrospectiveProcessGroup",
+            "slug": "rootly_get_retrospective_process_group",
+            "method": "get",
+            "path": "/v1/retrospective_process_groups/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateRetrospectiveProcessGroup",
+            "class": "RootlyUpdateRetrospectiveProcessGroup",
+            "slug": "rootly_update_retrospective_process_group",
+            "method": "put",
+            "path": "/v1/retrospective_process_groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteRetrospectiveProcessGroup",
+            "class": "RootlyDeleteRetrospectiveProcessGroup",
+            "slug": "rootly_delete_retrospective_process_group",
+            "method": "delete",
+            "path": "/v1/retrospective_process_groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRetrospectiveProcesses",
+            "class": "RootlyListRetrospectiveProcesses",
+            "slug": "rootly_list_retrospective_processes",
+            "method": "get",
+            "path": "/v1/retrospective_processes",
+            "type": "read"
+        },
+        {
+            "operation_id": "createRetrospectiveProcess",
+            "class": "RootlyCreateRetrospectiveProcess",
+            "slug": "rootly_create_retrospective_process",
+            "method": "post",
+            "path": "/v1/retrospective_processes",
+            "type": "write"
+        },
+        {
+            "operation_id": "getRetrospectiveProcess",
+            "class": "RootlyGetRetrospectiveProcess",
+            "slug": "rootly_get_retrospective_process",
+            "method": "get",
+            "path": "/v1/retrospective_processes/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateRetrospectiveProcess",
+            "class": "RootlyUpdateRetrospectiveProcess",
+            "slug": "rootly_update_retrospective_process",
+            "method": "put",
+            "path": "/v1/retrospective_processes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteRetrospectiveProcess",
+            "class": "RootlyDeleteRetrospectiveProcess",
+            "slug": "rootly_delete_retrospective_process",
+            "method": "delete",
+            "path": "/v1/retrospective_processes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRetrospectiveSteps",
+            "class": "RootlyListRetrospectiveSteps",
+            "slug": "rootly_list_retrospective_steps",
+            "method": "get",
+            "path": "/v1/retrospective_processes/{retrospective_process_id}/retrospective_steps",
+            "type": "read"
+        },
+        {
+            "operation_id": "createRetrospectiveStep",
+            "class": "RootlyCreateRetrospectiveStep",
+            "slug": "rootly_create_retrospective_step",
+            "method": "post",
+            "path": "/v1/retrospective_processes/{retrospective_process_id}/retrospective_steps",
+            "type": "write"
+        },
+        {
+            "operation_id": "getRetrospectiveStep",
+            "class": "RootlyGetRetrospectiveStep",
+            "slug": "rootly_get_retrospective_step",
+            "method": "get",
+            "path": "/v1/retrospective_steps/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateRetrospectiveStep",
+            "class": "RootlyUpdateRetrospectiveStep",
+            "slug": "rootly_update_retrospective_step",
+            "method": "put",
+            "path": "/v1/retrospective_steps/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteRetrospectiveStep",
+            "class": "RootlyDeleteRetrospectiveStep",
+            "slug": "rootly_delete_retrospective_step",
+            "method": "delete",
+            "path": "/v1/retrospective_steps/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listRoles",
+            "class": "RootlyListRoles",
+            "slug": "rootly_list_roles",
+            "method": "get",
+            "path": "/v1/roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "createRole",
+            "class": "RootlyCreateRole",
+            "slug": "rootly_create_role",
+            "method": "post",
+            "path": "/v1/roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "getRole",
+            "class": "RootlyGetRole",
+            "slug": "rootly_get_role",
+            "method": "get",
+            "path": "/v1/roles/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateRole",
+            "class": "RootlyUpdateRole",
+            "slug": "rootly_update_role",
+            "method": "put",
+            "path": "/v1/roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteRole",
+            "class": "RootlyDeleteRole",
+            "slug": "rootly_delete_role",
+            "method": "delete",
+            "path": "/v1/roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listScheduleRotationActiveDays",
+            "class": "RootlyListScheduleRotationActiveDays",
+            "slug": "rootly_list_schedule_rotation_active_days",
+            "method": "get",
+            "path": "/v1/schedule_rotations/{schedule_rotation_id}/schedule_rotation_active_days",
+            "type": "read"
+        },
+        {
+            "operation_id": "createScheduleRotationActiveDay",
+            "class": "RootlyCreateScheduleRotationActiveDay",
+            "slug": "rootly_create_schedule_rotation_active_day",
+            "method": "post",
+            "path": "/v1/schedule_rotations/{schedule_rotation_id}/schedule_rotation_active_days",
+            "type": "write"
+        },
+        {
+            "operation_id": "getScheduleRotationActiveDay",
+            "class": "RootlyGetScheduleRotationActiveDay",
+            "slug": "rootly_get_schedule_rotation_active_day",
+            "method": "get",
+            "path": "/v1/schedule_rotation_active_days/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateScheduleRotationActiveDay",
+            "class": "RootlyUpdateScheduleRotationActiveDay",
+            "slug": "rootly_update_schedule_rotation_active_day",
+            "method": "put",
+            "path": "/v1/schedule_rotation_active_days/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteScheduleRotationActiveDay",
+            "class": "RootlyDeleteScheduleRotationActiveDay",
+            "slug": "rootly_delete_schedule_rotation_active_day",
+            "method": "delete",
+            "path": "/v1/schedule_rotation_active_days/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listScheduleRotationUsers",
+            "class": "RootlyListScheduleRotationUsers",
+            "slug": "rootly_list_schedule_rotation_users",
+            "method": "get",
+            "path": "/v1/schedule_rotations/{schedule_rotation_id}/schedule_rotation_users",
+            "type": "read"
+        },
+        {
+            "operation_id": "createScheduleRotationUser",
+            "class": "RootlyCreateScheduleRotationUser",
+            "slug": "rootly_create_schedule_rotation_user",
+            "method": "post",
+            "path": "/v1/schedule_rotations/{schedule_rotation_id}/schedule_rotation_users",
+            "type": "write"
+        },
+        {
+            "operation_id": "getScheduleRotationUser",
+            "class": "RootlyGetScheduleRotationUser",
+            "slug": "rootly_get_schedule_rotation_user",
+            "method": "get",
+            "path": "/v1/schedule_rotation_users/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateScheduleRotationUser",
+            "class": "RootlyUpdateScheduleRotationUser",
+            "slug": "rootly_update_schedule_rotation_user",
+            "method": "put",
+            "path": "/v1/schedule_rotation_users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteScheduleRotationUser",
+            "class": "RootlyDeleteScheduleRotationUser",
+            "slug": "rootly_delete_schedule_rotation_user",
+            "method": "delete",
+            "path": "/v1/schedule_rotation_users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listScheduleRotations",
+            "class": "RootlyListScheduleRotations",
+            "slug": "rootly_list_schedule_rotations",
+            "method": "get",
+            "path": "/v1/schedules/{schedule_id}/schedule_rotations",
+            "type": "read"
+        },
+        {
+            "operation_id": "createScheduleRotation",
+            "class": "RootlyCreateScheduleRotation",
+            "slug": "rootly_create_schedule_rotation",
+            "method": "post",
+            "path": "/v1/schedules/{schedule_id}/schedule_rotations",
+            "type": "write"
+        },
+        {
+            "operation_id": "getScheduleRotation",
+            "class": "RootlyGetScheduleRotation",
+            "slug": "rootly_get_schedule_rotation",
+            "method": "get",
+            "path": "/v1/schedule_rotations/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateScheduleRotation",
+            "class": "RootlyUpdateScheduleRotation",
+            "slug": "rootly_update_schedule_rotation",
+            "method": "put",
+            "path": "/v1/schedule_rotations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteScheduleRotation",
+            "class": "RootlyDeleteScheduleRotation",
+            "slug": "rootly_delete_schedule_rotation",
+            "method": "delete",
+            "path": "/v1/schedule_rotations/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listSchedules",
+            "class": "RootlyListSchedules",
+            "slug": "rootly_list_schedules",
+            "method": "get",
+            "path": "/v1/schedules",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSchedule",
+            "class": "RootlyCreateSchedule",
+            "slug": "rootly_create_schedule",
+            "method": "post",
+            "path": "/v1/schedules",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSchedule",
+            "class": "RootlyGetSchedule",
+            "slug": "rootly_get_schedule",
+            "method": "get",
+            "path": "/v1/schedules/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateSchedule",
+            "class": "RootlyUpdateSchedule",
+            "slug": "rootly_update_schedule",
+            "method": "put",
+            "path": "/v1/schedules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSchedule",
+            "class": "RootlyDeleteSchedule",
+            "slug": "rootly_delete_schedule",
+            "method": "delete",
+            "path": "/v1/schedules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getScheduleShifts",
+            "class": "RootlyGetScheduleShifts",
+            "slug": "rootly_get_schedule_shifts",
+            "method": "get",
+            "path": "/v1/schedules/{id}/shifts",
+            "type": "read"
+        },
+        {
+            "operation_id": "listSecrets",
+            "class": "RootlyListSecrets",
+            "slug": "rootly_list_secrets",
+            "method": "get",
+            "path": "/v1/secrets",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSecret",
+            "class": "RootlyCreateSecret",
+            "slug": "rootly_create_secret",
+            "method": "post",
+            "path": "/v1/secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSecret",
+            "class": "RootlyGetSecret",
+            "slug": "rootly_get_secret",
+            "method": "get",
+            "path": "/v1/secrets/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateSecret",
+            "class": "RootlyUpdateSecret",
+            "slug": "rootly_update_secret",
+            "method": "put",
+            "path": "/v1/secrets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSecret",
+            "class": "RootlyDeleteSecret",
+            "slug": "rootly_delete_secret",
+            "method": "delete",
+            "path": "/v1/secrets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listServices",
+            "class": "RootlyListServices",
+            "slug": "rootly_list_services",
+            "method": "get",
+            "path": "/v1/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "createService",
+            "class": "RootlyCreateService",
+            "slug": "rootly_create_service",
+            "method": "post",
+            "path": "/v1/services",
+            "type": "write"
+        },
+        {
+            "operation_id": "getService",
+            "class": "RootlyGetService",
+            "slug": "rootly_get_service",
+            "method": "get",
+            "path": "/v1/services/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateService",
+            "class": "RootlyUpdateService",
+            "slug": "rootly_update_service",
+            "method": "put",
+            "path": "/v1/services/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteService",
+            "class": "RootlyDeleteService",
+            "slug": "rootly_delete_service",
+            "method": "delete",
+            "path": "/v1/services/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getServiceIncidentsChart",
+            "class": "RootlyGetServiceIncidentsChart",
+            "slug": "rootly_get_service_incidents_chart",
+            "method": "get",
+            "path": "/v1/services/{id}/incidents_chart",
+            "type": "read"
+        },
+        {
+            "operation_id": "getServiceUptimeChart",
+            "class": "RootlyGetServiceUptimeChart",
+            "slug": "rootly_get_service_uptime_chart",
+            "method": "get",
+            "path": "/v1/services/{id}/uptime_chart",
+            "type": "read"
+        },
+        {
+            "operation_id": "listServiceCatalogProperties",
+            "class": "RootlyListServiceCatalogProperties",
+            "slug": "rootly_list_service_catalog_properties",
+            "method": "get",
+            "path": "/v1/services/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createServiceCatalogProperty",
+            "class": "RootlyCreateServiceCatalogProperty",
+            "slug": "rootly_create_service_catalog_property",
+            "method": "post",
+            "path": "/v1/services/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "listSeverities",
+            "class": "RootlyListSeverities",
+            "slug": "rootly_list_severities",
+            "method": "get",
+            "path": "/v1/severities",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSeverity",
+            "class": "RootlyCreateSeverity",
+            "slug": "rootly_create_severity",
+            "method": "post",
+            "path": "/v1/severities",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSeverity",
+            "class": "RootlyGetSeverity",
+            "slug": "rootly_get_severity",
+            "method": "get",
+            "path": "/v1/severities/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateSeverity",
+            "class": "RootlyUpdateSeverity",
+            "slug": "rootly_update_severity",
+            "method": "put",
+            "path": "/v1/severities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSeverity",
+            "class": "RootlyDeleteSeverity",
+            "slug": "rootly_delete_severity",
+            "method": "delete",
+            "path": "/v1/severities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listShifts",
+            "class": "RootlyListShifts",
+            "slug": "rootly_list_shifts",
+            "method": "get",
+            "path": "/v1/shifts",
+            "type": "read"
+        },
+        {
+            "operation_id": "listSLAs",
+            "class": "RootlyListSlas",
+            "slug": "rootly_list_slas",
+            "method": "get",
+            "path": "/v1/slas",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSLA",
+            "class": "RootlyCreateSla",
+            "slug": "rootly_create_sla",
+            "method": "post",
+            "path": "/v1/slas",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSLA",
+            "class": "RootlyGetSla",
+            "slug": "rootly_get_sla",
+            "method": "get",
+            "path": "/v1/slas/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateSLA",
+            "class": "RootlyUpdateSla",
+            "slug": "rootly_update_sla",
+            "method": "put",
+            "path": "/v1/slas/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSLA",
+            "class": "RootlyDeleteSla",
+            "slug": "rootly_delete_sla",
+            "method": "delete",
+            "path": "/v1/slas/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listStatusPageTemplates",
+            "class": "RootlyListStatusPageTemplates",
+            "slug": "rootly_list_status_page_templates",
+            "method": "get",
+            "path": "/v1/status-pages/{status_page_id}/templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "createStatusPageTemplate",
+            "class": "RootlyCreateStatusPageTemplate",
+            "slug": "rootly_create_status_page_template",
+            "method": "post",
+            "path": "/v1/status-pages/{status_page_id}/templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "getStatusPageTemplate",
+            "class": "RootlyGetStatusPageTemplate",
+            "slug": "rootly_get_status_page_template",
+            "method": "get",
+            "path": "/v1/templates/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateStatusPageTemplate",
+            "class": "RootlyUpdateStatusPageTemplate",
+            "slug": "rootly_update_status_page_template",
+            "method": "put",
+            "path": "/v1/templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteStatusPageTemplate",
+            "class": "RootlyDeleteStatusPageTemplate",
+            "slug": "rootly_delete_status_page_template",
+            "method": "delete",
+            "path": "/v1/templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listStatusPages",
+            "class": "RootlyListStatusPages",
+            "slug": "rootly_list_status_pages",
+            "method": "get",
+            "path": "/v1/status-pages",
+            "type": "read"
+        },
+        {
+            "operation_id": "createStatusPage",
+            "class": "RootlyCreateStatusPage",
+            "slug": "rootly_create_status_page",
+            "method": "post",
+            "path": "/v1/status-pages",
+            "type": "write"
+        },
+        {
+            "operation_id": "getStatusPage",
+            "class": "RootlyGetStatusPage",
+            "slug": "rootly_get_status_page",
+            "method": "get",
+            "path": "/v1/status-pages/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateStatusPage",
+            "class": "RootlyUpdateStatusPage",
+            "slug": "rootly_update_status_page",
+            "method": "put",
+            "path": "/v1/status-pages/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteStatusPage",
+            "class": "RootlyDeleteStatusPage",
+            "slug": "rootly_delete_status_page",
+            "method": "delete",
+            "path": "/v1/status-pages/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listStatuses",
+            "class": "RootlyListStatuses",
+            "slug": "rootly_list_statuses",
+            "method": "get",
+            "path": "/v1/statuses",
+            "type": "read"
+        },
+        {
+            "operation_id": "getStatus",
+            "class": "RootlyGetStatus",
+            "slug": "rootly_get_status",
+            "method": "get",
+            "path": "/v1/statuses/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listSubStatuses",
+            "class": "RootlyListSubStatuses",
+            "slug": "rootly_list_sub_statuses",
+            "method": "get",
+            "path": "/v1/sub_statuses",
+            "type": "read"
+        },
+        {
+            "operation_id": "createSubStatus",
+            "class": "RootlyCreateSubStatus",
+            "slug": "rootly_create_sub_status",
+            "method": "post",
+            "path": "/v1/sub_statuses",
+            "type": "write"
+        },
+        {
+            "operation_id": "getSubStatus",
+            "class": "RootlyGetSubStatus",
+            "slug": "rootly_get_sub_status",
+            "method": "get",
+            "path": "/v1/sub_statuses/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateSubStatus",
+            "class": "RootlyUpdateSubStatus",
+            "slug": "rootly_update_sub_status",
+            "method": "put",
+            "path": "/v1/sub_statuses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteSubStatus",
+            "class": "RootlyDeleteSubStatus",
+            "slug": "rootly_delete_sub_status",
+            "method": "delete",
+            "path": "/v1/sub_statuses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listTeams",
+            "class": "RootlyListTeams",
+            "slug": "rootly_list_teams",
+            "method": "get",
+            "path": "/v1/teams",
+            "type": "read"
+        },
+        {
+            "operation_id": "createTeam",
+            "class": "RootlyCreateTeam",
+            "slug": "rootly_create_team",
+            "method": "post",
+            "path": "/v1/teams",
+            "type": "write"
+        },
+        {
+            "operation_id": "getTeam",
+            "class": "RootlyGetTeam",
+            "slug": "rootly_get_team",
+            "method": "get",
+            "path": "/v1/teams/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateTeam",
+            "class": "RootlyUpdateTeam",
+            "slug": "rootly_update_team",
+            "method": "put",
+            "path": "/v1/teams/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteTeam",
+            "class": "RootlyDeleteTeam",
+            "slug": "rootly_delete_team",
+            "method": "delete",
+            "path": "/v1/teams/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getTeamIncidentsChart",
+            "class": "RootlyGetTeamIncidentsChart",
+            "slug": "rootly_get_team_incidents_chart",
+            "method": "get",
+            "path": "/v1/teams/{id}/incidents_chart",
+            "type": "read"
+        },
+        {
+            "operation_id": "listGroupCatalogProperties",
+            "class": "RootlyListGroupCatalogProperties",
+            "slug": "rootly_list_group_catalog_properties",
+            "method": "get",
+            "path": "/v1/teams/properties",
+            "type": "read"
+        },
+        {
+            "operation_id": "createGroupCatalogProperty",
+            "class": "RootlyCreateGroupCatalogProperty",
+            "slug": "rootly_create_group_catalog_property",
+            "method": "post",
+            "path": "/v1/teams/properties",
+            "type": "write"
+        },
+        {
+            "operation_id": "getUserEmailAddresses",
+            "class": "RootlyGetUserEmailAddresses",
+            "slug": "rootly_get_user_email_addresses",
+            "method": "get",
+            "path": "/v1/users/{user_id}/email_addresses",
+            "type": "read"
+        },
+        {
+            "operation_id": "createUserEmailAddress",
+            "class": "RootlyCreateUserEmailAddress",
+            "slug": "rootly_create_user_email_address",
+            "method": "post",
+            "path": "/v1/users/{user_id}/email_addresses",
+            "type": "write"
+        },
+        {
+            "operation_id": "showUserEmailAddress",
+            "class": "RootlyShowUserEmailAddress",
+            "slug": "rootly_show_user_email_address",
+            "method": "get",
+            "path": "/v1/email_addresses/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateUserEmailAddress",
+            "class": "RootlyUpdateUserEmailAddress",
+            "slug": "rootly_update_user_email_address",
+            "method": "put",
+            "path": "/v1/email_addresses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteUserEmailAddress",
+            "class": "RootlyDeleteUserEmailAddress",
+            "slug": "rootly_delete_user_email_address",
+            "method": "delete",
+            "path": "/v1/email_addresses/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "verifyUserEmailAddress",
+            "class": "RootlyVerifyUserEmailAddress",
+            "slug": "rootly_verify_user_email_address",
+            "method": "post",
+            "path": "/v1/email_addresses/{id}/verify",
+            "type": "write"
+        },
+        {
+            "operation_id": "resendUserEmailAddressVerification",
+            "class": "RootlyResendUserEmailAddressVerification",
+            "slug": "rootly_resend_user_email_address_verification",
+            "method": "post",
+            "path": "/v1/email_addresses/{id}/resend_verification",
+            "type": "write"
+        },
+        {
+            "operation_id": "listUserNotificationRules",
+            "class": "RootlyListUserNotificationRules",
+            "slug": "rootly_list_user_notification_rules",
+            "method": "get",
+            "path": "/v1/users/{user_id}/notification_rules",
+            "type": "read"
+        },
+        {
+            "operation_id": "createUserNotificationRule",
+            "class": "RootlyCreateUserNotificationRule",
+            "slug": "rootly_create_user_notification_rule",
+            "method": "post",
+            "path": "/v1/users/{user_id}/notification_rules",
+            "type": "write"
+        },
+        {
+            "operation_id": "getUserNotificationRule",
+            "class": "RootlyGetUserNotificationRule",
+            "slug": "rootly_get_user_notification_rule",
+            "method": "get",
+            "path": "/v1/notification_rules/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateUserNotificationRule",
+            "class": "RootlyUpdateUserNotificationRule",
+            "slug": "rootly_update_user_notification_rule",
+            "method": "put",
+            "path": "/v1/notification_rules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteUserNotificationRule",
+            "class": "RootlyDeleteUserNotificationRule",
+            "slug": "rootly_delete_user_notification_rule",
+            "method": "delete",
+            "path": "/v1/notification_rules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "getUserPhoneNumbers",
+            "class": "RootlyGetUserPhoneNumbers",
+            "slug": "rootly_get_user_phone_numbers",
+            "method": "get",
+            "path": "/v1/users/{user_id}/phone_numbers",
+            "type": "read"
+        },
+        {
+            "operation_id": "createUserPhoneNumber",
+            "class": "RootlyCreateUserPhoneNumber",
+            "slug": "rootly_create_user_phone_number",
+            "method": "post",
+            "path": "/v1/users/{user_id}/phone_numbers",
+            "type": "write"
+        },
+        {
+            "operation_id": "showUserPhoneNumber",
+            "class": "RootlyShowUserPhoneNumber",
+            "slug": "rootly_show_user_phone_number",
+            "method": "get",
+            "path": "/v1/phone_numbers/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateUserPhoneNumber",
+            "class": "RootlyUpdateUserPhoneNumber",
+            "slug": "rootly_update_user_phone_number",
+            "method": "put",
+            "path": "/v1/phone_numbers/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteUserPhoneNumber",
+            "class": "RootlyDeleteUserPhoneNumber",
+            "slug": "rootly_delete_user_phone_number",
+            "method": "delete",
+            "path": "/v1/phone_numbers/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listUsers",
+            "class": "RootlyListUsers",
+            "slug": "rootly_list_users",
+            "method": "get",
+            "path": "/v1/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "getCurrentUser",
+            "class": "RootlyGetCurrentUser",
+            "slug": "rootly_get_current_user",
+            "method": "get",
+            "path": "/v1/users/me",
+            "type": "read"
+        },
+        {
+            "operation_id": "getUser",
+            "class": "RootlyGetUser",
+            "slug": "rootly_get_user",
+            "method": "get",
+            "path": "/v1/users/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateUser",
+            "class": "RootlyUpdateUser",
+            "slug": "rootly_update_user",
+            "method": "put",
+            "path": "/v1/users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteUser",
+            "class": "RootlyDeleteUser",
+            "slug": "rootly_delete_user",
+            "method": "delete",
+            "path": "/v1/users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "listWebhooksDeliveries",
+            "class": "RootlyListWebhooksDeliveries",
+            "slug": "rootly_list_webhooks_deliveries",
+            "method": "get",
+            "path": "/v1/webhooks/endpoints/{endpoint_id}/deliveries",
+            "type": "read"
+        },
+        {
+            "operation_id": "deliverWebhooksDelivery",
+            "class": "RootlyDeliverWebhooksDelivery",
+            "slug": "rootly_deliver_webhooks_delivery",
+            "method": "post",
+            "path": "/v1/webhooks/deliveries/{id}/deliver",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWebhooksDelivery",
+            "class": "RootlyGetWebhooksDelivery",
+            "slug": "rootly_get_webhooks_delivery",
+            "method": "get",
+            "path": "/v1/webhooks/deliveries/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "listWebhooksEndpoints",
+            "class": "RootlyListWebhooksEndpoints",
+            "slug": "rootly_list_webhooks_endpoints",
+            "method": "get",
+            "path": "/v1/webhooks/endpoints",
+            "type": "read"
+        },
+        {
+            "operation_id": "createWebhooksEndpoint",
+            "class": "RootlyCreateWebhooksEndpoint",
+            "slug": "rootly_create_webhooks_endpoint",
+            "method": "post",
+            "path": "/v1/webhooks/endpoints",
+            "type": "write"
+        },
+        {
+            "operation_id": "getWebhooksEndpoint",
+            "class": "RootlyGetWebhooksEndpoint",
+            "slug": "rootly_get_webhooks_endpoint",
+            "method": "get",
+            "path": "/v1/webhooks/endpoints/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "updateWebhooksEndpoint",
+            "class": "RootlyUpdateWebhooksEndpoint",
+            "slug": "rootly_update_webhooks_endpoint",
+            "method": "put",
+            "path": "/v1/webhooks/endpoints/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "deleteWebhooksEndpoint",
+            "class": "RootlyDeleteWebhooksEndpoint",
+            "slug": "rootly_delete_webhooks_endpoint",
+            "method": "delete",
+            "path": "/v1/webhooks/endpoints/{id}",
+            "type": "write"
+        }
+    ]
+}

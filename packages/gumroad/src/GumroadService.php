@@ -2,11 +2,24 @@
 
 namespace OpenCompany\Integrations\Gumroad;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Gumroad API v2.
+ *
+ * Handles bearer-token authentication, request dispatch, error logging, and
+ * response parsing for all Gumroad tools.
+ */
 class GumroadService
 {
+    /**
+     * @param  string  $accessToken  Gumroad OAuth access token.
+     * @param  string  $baseUrl  Gumroad API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.gumroad.com/v2',
@@ -16,143 +29,190 @@ class GumroadService
 
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '';
     }
 
     /**
-     * List all products.
+     * List products.
      *
      * @return array<string, mixed>
      */
     public function listProducts(): array
     {
-        return $this->request('GET', '/products');
+        return $this->apiGet('/products');
     }
 
     /**
-     * Get a single product by ID.
+     * Get a product by ID.
      *
      * @return array<string, mixed>
      */
     public function getProduct(string $productId): array
     {
-        return $this->request('GET', '/products/' . urlencode($productId));
+        return $this->apiGet('/products/' . rawurlencode($productId));
     }
 
     /**
-     * List sales, optionally filtered.
+     * List sales.
      *
-     * @param  array<string, mixed>  $params
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
      */
     public function listSales(array $params = []): array
     {
-        return $this->request('GET', '/sales', $params);
+        return $this->apiGet('/sales', $params);
     }
 
     /**
-     * List all subscribers, optionally filtered by product.
+     * List subscribers.
      *
-     * @param  array<string, mixed>  $params
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
      */
     public function listSubscribers(array $params = []): array
     {
-        return $this->request('GET', '/subscribers', $params);
+        return $this->apiGet('/subscribers', $params);
     }
 
     /**
-     * Get a single subscriber by ID.
+     * Get a subscriber by ID.
      *
      * @return array<string, mixed>
      */
     public function getSubscriber(string $subscriberId): array
     {
-        return $this->request('GET', '/subscribers/' . urlencode($subscriberId));
+        return $this->apiGet('/subscribers/' . rawurlencode($subscriberId));
     }
 
     /**
-     * List all offers.
+     * List offers.
      *
      * @return array<string, mixed>
      */
     public function listOffers(): array
     {
-        return $this->request('GET', '/offers');
+        return $this->apiGet('/offers');
     }
 
     /**
-     * Get the currently authenticated user.
+     * Get the authenticated user.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/user');
+        return $this->apiGet('/user');
+    }
+
+    /**
+     * Send a GET request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Send a POST request.
+     *
+     * @param  array<string, mixed>  $data  Request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $data, $query);
+    }
+
+    /**
+     * Send a PUT request.
+     *
+     * @param  array<string, mixed>  $data  Request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $data = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $data, $query);
+    }
+
+    /**
+     * Send a DELETE request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
+     * @param  array<string, mixed>  $data  Query params (GET/DELETE) or body (POST/PUT).
+     * @param  array<string, mixed>  $query  Query params for mutating requests.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $data, $query);
 
         return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the Gumroad API.
+     * Make a raw HTTP request.
+     *
+     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $query
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = [], array $query = []): Response
     {
         if (!$this->accessToken) {
-            throw new \RuntimeException('Gumroad access token is not configured.');
+            throw new RuntimeException('Gumroad access token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->baseUrl . '/' . ltrim($path, '/');
 
         try {
             $http = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'POST' => $http->withOptions(['query' => $query])->post($url, $data),
+                'PUT' => $http->withOptions(['query' => $query])->put($url, $data),
+                'DELETE' => $http->withOptions(['query' => $data])->delete($url),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
                 $body = $response->body();
+                $json = $response->json();
+                $error = is_array($json) ? ($json['error'] ?? $json['message'] ?? $json['errors'] ?? $body) : $body;
+                $errorMessage = is_string($error) ? $error : json_encode($error);
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Gumroad API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Gumroad API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
                 Log::error("Gumroad API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'error' => $errorMessage,
                 ]);
-                throw new \RuntimeException("Gumroad API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new RuntimeException("Gumroad API error ({$response->status()}): {$errorMessage}");
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Gumroad API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Gumroad API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Gumroad API: {$e->getMessage()}");
         }
     }
 }

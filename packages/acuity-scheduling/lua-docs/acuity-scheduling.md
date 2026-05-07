@@ -1,206 +1,126 @@
-# Acuity Scheduling — Lua API Reference
+# Acuity Scheduling Lua Reference
 
-## list_appointments
+Namespace: `acuity-scheduling`
 
-List appointments with optional filters.
+Acuity Scheduling tools target the API v1 base URL
+`https://acuityscheduling.com/api/v1`. For one Acuity account, configure Basic
+Auth with numeric `user_id` and `api_key`. OAuth bearer tokens are also
+supported for multi-user applications.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `minDate` | string | no | Earliest appointment date (ISO 8601, e.g., `"2026-01-01"`) |
-| `maxDate` | string | no | Latest appointment date (ISO 8601, e.g., `"2026-12-31"`) |
-| `calendarID` | integer | no | Filter by calendar ID |
-| `appointmentTypeID` | integer | no | Filter by appointment type ID |
-| `max` | integer | no | Maximum number of results (default: 100) |
-| `direction` | string | no | Sort direction: `"asc"` or `"desc"` (default: `"desc"`) |
-
-### Example
+## Core Appointments
 
 ```lua
-local result = app.integrations["acuity-scheduling"].list_appointments({
-  minDate = "2026-04-01",
-  maxDate = "2026-04-30",
-  direction = "asc"
+local appointments = app.integrations["acuity-scheduling"].list_appointments({
+  minDate = "2026-05-01",
+  maxDate = "2026-05-31",
+  direction = "ASC",
 })
 
-for _, appt in ipairs(result) do
-  print(appt.id .. ": " .. appt.firstName .. " " .. appt.lastName .. " on " .. appt.date .. " at " .. appt.time)
-end
+local appointment = app.integrations["acuity-scheduling"].get_appointment({ id = 12345 })
+local payments = app.integrations["acuity-scheduling"].list_appointment_payments({ id = 12345 })
 ```
 
----
-
-## get_appointment
-
-Get full details of a specific appointment.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The appointment ID |
-
-### Example
+Create, update, cancel, and reschedule appointments:
 
 ```lua
-local result = app.integrations["acuity-scheduling"].get_appointment({
-  id = 12345
+local created = app.integrations["acuity-scheduling"].create_appointment({
+  body = {
+    datetime = "2026-05-07T10:00:00-0400",
+    appointmentTypeID = 123,
+    firstName = "Jane",
+    lastName = "Example",
+    email = "jane@example.test",
+    timezone = "America/New_York",
+  },
 })
 
-print("Appointment: " .. result.name)
-print("Date: " .. result.date .. " at " .. result.time)
-print("Client: " .. result.firstName .. " " .. result.lastName)
-print("Email: " .. result.email)
-print("Status: " .. result.status)
-```
-
----
-
-## list_clients
-
-List and search clients.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `search` | string | no | Search by name, email, or phone |
-| `email` | string | no | Filter by exact email address |
-| `max` | integer | no | Maximum number of results |
-
-### Example
-
-```lua
-local result = app.integrations["acuity-scheduling"].list_clients({
-  search = "john"
+local updated = app.integrations["acuity-scheduling"].update_appointment({
+  id = 12345,
+  body = { notes = "Prefers video call." },
 })
 
-for _, client in ipairs(result) do
-  print(client.id .. ": " .. client.firstName .. " " .. client.lastName .. " (" .. client.email .. ")")
-end
-```
-
----
-
-## list_calendars
-
-List all calendars. No parameters required.
-
-### Example
-
-```lua
-local result = app.integrations["acuity-scheduling"].list_calendars()
-
-for _, cal in ipairs(result) do
-  print(cal.id .. ": " .. cal.name .. " (timezone: " .. cal.timezone .. ")")
-end
-```
-
----
-
-## list_appointment_types
-
-List all appointment types (services). No parameters required.
-
-### Example
-
-```lua
-local result = app.integrations["acuity-scheduling"].list_appointment_types()
-
-for _, t in ipairs(result) do
-  print(t.id .. ": " .. t.name .. " (" .. t.duration .. " min, $" .. t.price .. ")")
-end
-```
-
----
-
-## cancel_appointment
-
-Cancel an existing appointment.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The appointment ID to cancel |
-
-### Example
-
-```lua
-local result = app.integrations["acuity-scheduling"].cancel_appointment({
-  id = 12345
+local rescheduled = app.integrations["acuity-scheduling"].reschedule_appointment({
+  id = 12345,
+  body = { datetime = "2026-05-08T10:00:00-0400", admin = true, noEmail = true },
 })
 
-print(result.message)
+local cancelled = app.integrations["acuity-scheduling"].cancel_appointment({ id = 12345 })
 ```
 
----
-
-## get_availability
-
-Get available time slots for a given appointment type and date.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `appointmentTypeID` | integer | yes | The appointment type ID |
-| `date` | string | yes | Date in `YYYY-MM-DD` format |
-| `calendarID` | integer | no | Filter by specific calendar |
-| `timezone` | string | no | Timezone (e.g., `"America/New_York"`) |
-
-### Example
+## Clients And Setup Data
 
 ```lua
--- First, get appointment types to find the right ID
-local types = app.integrations["acuity-scheduling"].list_appointment_types()
-local typeID = types[1].id
-
--- Then check availability
-local result = app.integrations["acuity-scheduling"].get_availability({
-  appointmentTypeID = typeID,
-  date = "2026-04-10",
-  timezone = "America/New_York"
+local clients = app.integrations["acuity-scheduling"].list_clients({
+  email = "jane@example.test",
 })
 
-for _, slot in ipairs(result) do
-  print(slot.time)
-end
+local client = app.integrations["acuity-scheduling"].create_client({
+  body = { firstName = "Jane", lastName = "Example", email = "jane@example.test" },
+})
+
+local calendars = app.integrations["acuity-scheduling"].list_calendars({})
+local types = app.integrations["acuity-scheduling"].list_appointment_types({})
+local forms = app.integrations["acuity-scheduling"].list_forms({})
 ```
 
----
+## Availability
 
-## get_current_user
-
-Get the authenticated user's profile. No parameters required.
-
-### Example
+Use dates and times together when building a booking flow.
 
 ```lua
-local result = app.integrations["acuity-scheduling"].get_current_user()
+local dates = app.integrations["acuity-scheduling"].get_availability_dates({
+  params = { appointmentTypeID = 123, month = "2026-05" },
+})
 
-print("User: " .. result.name)
-print("Email: " .. result.email)
-print("Timezone: " .. result.timezone)
+local times = app.integrations["acuity-scheduling"].get_availability({
+  appointmentTypeID = 123,
+  date = "2026-05-07",
+  timezone = "America/New_York",
+})
+
+local classes = app.integrations["acuity-scheduling"].get_availability_classes({
+  params = { month = "2026-05" },
+})
 ```
 
----
-
-## Multi-Account Usage
-
-If you have multiple Acuity Scheduling accounts configured, use account-specific namespaces:
+## Store, Blocks, And Webhooks
 
 ```lua
--- Default account (always works)
-app.integrations["acuity-scheduling"].list_appointments({...})
+local products = app.integrations["acuity-scheduling"].list_products({})
+local orders = app.integrations["acuity-scheduling"].list_orders({})
+local order = app.integrations["acuity-scheduling"].get_order({ id = 987 })
 
--- Explicit default (portable across setups)
-app.integrations["acuity-scheduling"].default.list_appointments({...})
+local certificate = app.integrations["acuity-scheduling"].create_certificate({
+  body = { productID = 55, email = "jane@example.test" },
+})
 
--- Named accounts
-app.integrations["acuity-scheduling"].work.list_appointments({...})
-app.integrations["acuity-scheduling"].personal.list_appointments({...})
+local block = app.integrations["acuity-scheduling"].create_block({
+  body = { calendarID = 1, start = "2026-05-07T13:00:00-0400", end = "2026-05-07T14:00:00-0400" },
+})
+
+local webhooks = app.integrations["acuity-scheduling"].list_webhooks({})
+local webhook = app.integrations["acuity-scheduling"].create_webhook({
+  body = { event = "appointment.scheduled", target = "https://example.test/acuity" },
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Generic API
+
+Use generic tools for Acuity API v1 endpoints without dedicated wrappers:
+
+```lua
+local result = app.integrations["acuity-scheduling"].api_get({
+  path = "/forms",
+})
+
+local posted = app.integrations["acuity-scheduling"].api_post({
+  path = "/webhooks",
+  body = { event = "appointment.changed", target = "https://example.test/acuity" },
+})
+```
+
+Generic write tools:
+
+- `api_post({ path, body })`
+- `api_put({ path, body })`
+- `api_delete({ path, body })`

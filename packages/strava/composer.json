@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-strava",
-    "description": "Strava fitness/activity integration for Laravel — list activities, view athlete profiles, manage clubs.",
+    "description": "Strava integration for Laravel: activities, athletes, clubs, routes, segments, streams, and uploads.",
     "license": "MIT",
     "authors": [
         {

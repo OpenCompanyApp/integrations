@@ -2,187 +2,283 @@
 
 namespace OpenCompany\Integrations\Brandfetch;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Brandfetch APIs.
+ *
+ * Handles Brand API bearer authentication, Brand Search client IDs, Logo CDN
+ * URL construction, response parsing, and safe relative endpoint access.
+ */
 class BrandfetchService
 {
+    /**
+     * @param  string  $accessToken  Brand API bearer token.
+     * @param  string  $baseUrl  Base URL for Brandfetch API requests.
+     * @param  string  $clientId  Brand Search and Logo API client ID.
+     * @param  string  $cdnUrl  Base URL for Logo API CDN links.
+     */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.brandfetch.com',
+        private string $baseUrl = 'https://api.brandfetch.io',
+        private string $clientId = '',
+        private string $cdnUrl = 'https://cdn.brandfetch.io',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->cdnUrl = rtrim($this->cdnUrl, '/');
     }
 
     /**
-     * Check whether the service is properly configured with an access token.
+     * Check whether the service has either Brand API or client-ID credentials.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '' || $this->clientId !== '';
     }
 
     /**
-     * Get a brand by its domain.
+     * Get brand data by generic identifier.
      *
-     * @param string $domain The brand domain (e.g., "spotify.com")
+     * @param  string  $identifier  Domain, Brand ID, ticker, ISIN, or crypto symbol.
      * @return array<string, mixed>
      */
-    public function getBrand(string $domain): array
+    public function getBrand(string $identifier): array
     {
-        return $this->request('GET', '/v2/brands/' . urlencode($domain));
+        return $this->apiGet('/v2/brands/' . rawurlencode($identifier));
     }
 
     /**
-     * Search for brands by query string.
+     * Get brand data using an explicit identifier type.
      *
-     * @param string   $query Search term (brand name or domain)
-     * @param int|null $limit Maximum number of results
+     * @param  string  $type  One of domain, ticker, isin, or crypto.
+     * @param  string  $identifier  Identifier value.
      * @return array<string, mixed>
      */
-    public function searchBrands(string $query, ?int $limit = null): array
+    public function getBrandByType(string $type, string $identifier): array
     {
-        $params = ['query' => $query];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
+        $allowed = ['domain', 'ticker', 'isin', 'crypto'];
+
+        if (!in_array($type, $allowed, true)) {
+            throw new \InvalidArgumentException('type must be one of: ' . implode(', ', $allowed));
         }
 
-        return $this->request('GET', '/v2/brands/search', $params);
+        return $this->apiGet('/v2/brands/' . $type . '/' . rawurlencode($identifier));
     }
 
     /**
-     * List logos for a brand.
+     * Search for brands by name or domain with the Brand Search API.
      *
-     * @param string   $brandId The brand identifier
-     * @param int|null $limit   Maximum number of results
+     * @param  string  $query  Brand name or domain.
+     * @param  string|null  $clientId  Optional client ID override.
      * @return array<string, mixed>
      */
-    public function listLogos(string $brandId, ?int $limit = null): array
+    public function searchBrands(string $query, ?string $clientId = null): array
     {
-        $params = ['brand_id' => $brandId];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
+        $clientId ??= $this->clientId;
+
+        if ($clientId === '') {
+            throw new \RuntimeException('Brandfetch client ID is required for Brand Search API.');
         }
 
-        return $this->request('GET', '/v2/logos', $params);
+        return $this->request('GET', '/v2/search/' . rawurlencode($query), ['c' => $clientId], [], false);
     }
 
     /**
-     * Get a single logo by its ID.
+     * Get brand data from a raw payment transaction label.
      *
-     * @param string $id The logo identifier
+     * @param  array<string, mixed>  $payload  Transaction payload with transactionLabel and countryCode.
      * @return array<string, mixed>
      */
-    public function getLogo(string $id): array
+    public function enrichTransaction(array $payload): array
     {
-        return $this->request('GET', '/v2/logos/' . urlencode($id));
+        return $this->apiPost('/v2/brands/transaction', $payload);
     }
 
     /**
-     * List colors for a brand.
+     * Build a Logo API CDN URL for direct embedding.
      *
-     * @param string   $brandId The brand identifier
-     * @param int|null $limit   Maximum number of results
+     * @param  string  $identifier  Domain, brand ID, ticker, ISIN, or crypto symbol.
+     * @param  array<string, mixed>  $options  Width, height, theme, fallback, type, format, or c/client_id.
      * @return array<string, mixed>
      */
-    public function listColors(string $brandId, ?int $limit = null): array
+    public function logoUrl(string $identifier, array $options = []): array
     {
-        $params = ['brand_id' => $brandId];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
+        $clientId = (string) ($options['client_id'] ?? $options['c'] ?? $this->clientId);
+
+        if ($clientId === '') {
+            throw new \RuntimeException('Brandfetch client ID is required for Logo API URLs.');
         }
 
-        return $this->request('GET', '/v2/colors', $params);
-    }
+        $path = rawurlencode($identifier);
+        $segments = [
+            'w' => 'width',
+            'h' => 'height',
+            'theme' => 'theme',
+            'fallback' => 'fallback',
+            'type' => 'type',
+            'format' => 'format',
+        ];
 
-    /**
-     * List fonts for a brand.
-     *
-     * @param string   $brandId The brand identifier
-     * @param int|null $limit   Maximum number of results
-     * @return array<string, mixed>
-     */
-    public function listFonts(string $brandId, ?int $limit = null): array
-    {
-        $params = ['brand_id' => $brandId];
-        if ($limit !== null) {
-            $params['limit'] = $limit;
+        foreach ($segments as $segment => $key) {
+            if (($options[$key] ?? null) !== null && $options[$key] !== '') {
+                $path .= '/' . $segment . '/' . rawurlencode((string) $options[$key]);
+            }
         }
 
-        return $this->request('GET', '/v2/fonts', $params);
+        $url = $this->cdnUrl . '/' . $path . '?' . http_build_query(['c' => $clientId]);
+
+        return [
+            'url' => $url,
+            'identifier' => $identifier,
+            'client_id' => $clientId,
+        ];
     }
 
     /**
-     * Get the currently authenticated user.
+     * Backwards-compatible helper returning logos from a brand payload.
+     *
+     * @return array<string, mixed>
+     */
+    public function listLogos(string $identifier): array
+    {
+        $brand = $this->getBrand($identifier);
+
+        return ['logos' => $brand['logos'] ?? [], 'brand' => $brand];
+    }
+
+    /**
+     * Backwards-compatible helper returning a logo format by URL.
+     *
+     * @return array<string, mixed>
+     */
+    public function getLogo(string $src): array
+    {
+        return ['src' => $src];
+    }
+
+    /**
+     * Backwards-compatible helper returning colors from a brand payload.
+     *
+     * @return array<string, mixed>
+     */
+    public function listColors(string $identifier): array
+    {
+        $brand = $this->getBrand($identifier);
+
+        return ['colors' => $brand['colors'] ?? [], 'brand' => $brand];
+    }
+
+    /**
+     * Backwards-compatible helper returning fonts from a brand payload.
+     *
+     * @return array<string, mixed>
+     */
+    public function listFonts(string $identifier): array
+    {
+        $brand = $this->getBrand($identifier);
+
+        return ['fonts' => $brand['fonts'] ?? [], 'brand' => $brand];
+    }
+
+    /**
+     * Verify credentials by fetching Brandfetch's own free test brand.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/v2/users/me');
+        return $this->getBrand('brandfetch.com');
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Execute a safe relative GET request.
      *
-     * @param string $method HTTP method
-     * @param string $path   API path
-     * @param array<string, mixed> $data Query parameters or request body
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $query  Query parameters.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    public function apiGet(string $path, array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+        return $this->request('GET', $path, $query);
     }
 
     /**
-     * Make a raw HTTP request to the Brandfetch API.
+     * Execute a safe relative POST request.
      *
-     * @param string $method HTTP method
-     * @param string $path   API path
-     * @param array<string, mixed> $data Query parameters or request body
-     * @return \Illuminate\Http\Client\Response
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    public function apiPost(string $path, array $body = [], array $query = []): array
     {
-        if (!$this->accessToken) {
+        return $this->request('POST', $path, $query, $body);
+    }
+
+    /**
+     * Execute a safe relative request and parse JSON.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  bool  $requiresBearer  Whether a bearer token is required.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array $body = [], bool $requiresBearer = true): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $body, $requiresBearer);
+
+        if (trim($response->body()) === '') {
+            return ['success' => true, 'status' => $response->status()];
+        }
+
+        $json = $response->json();
+
+        return is_array($json) ? $json : [];
+    }
+
+    /**
+     * Execute an authenticated raw HTTP request.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  Relative API path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @param  bool  $requiresBearer  Whether a bearer token is required.
+     *
+     * @throws \RuntimeException
+     */
+    private function rawRequest(string $method, string $path, array $query = [], array $body = [], bool $requiresBearer = true): Response
+    {
+        if ($requiresBearer && $this->accessToken === '') {
             throw new \RuntimeException('Brandfetch access token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->url($this->safePath($path), $query);
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+            $headers = [
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ];
+
+            if ($this->accessToken !== '') {
+                $headers['Authorization'] = 'Bearer ' . $this->accessToken;
+            }
+
+            $http = Http::withHeaders($headers)->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Brandfetch API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Brandfetch API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service may be down.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("Brandfetch API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Brandfetch API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
@@ -190,7 +286,66 @@ class BrandfetchService
             Log::error("Brandfetch API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
+
             throw new \RuntimeException("Failed to connect to Brandfetch API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Validate and normalize a relative API path.
+     */
+    private function safePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '' || preg_match('#^[a-z][a-z0-9+.-]*://#i', $path) || str_starts_with($path, '//') || str_contains($path, '..')) {
+            throw new \InvalidArgumentException('Path must be a safe relative Brandfetch API path.');
+        }
+
+        return '/' . ltrim($path, '/');
+    }
+
+    /**
+     * Build an absolute API URL.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function url(string $path, array $query = []): string
+    {
+        $query = array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        if ($query === []) {
+            return $this->baseUrl . $path;
+        }
+
+        return $this->baseUrl . $path . '?' . http_build_query($query);
+    }
+
+    /**
+     * Parse and throw a normalized API error.
+     *
+     * @throws \RuntimeException
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type') ?? '';
+        $body = $response->body();
+
+        if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("Brandfetch API returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new \RuntimeException("Brandfetch API returned unexpected HTML (HTTP {$response->status()}).");
+        }
+
+        $error = $response->json('error') ?? $response->json('message') ?? $body;
+
+        Log::error("Brandfetch API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new \RuntimeException("Brandfetch API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
     }
 }

@@ -2,15 +2,21 @@
 
 namespace OpenCompany\Integrations\Typefully\Tools;
 
-use OpenCompany\Integrations\Typefully\TypefullyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Typefully\TypefullyService;
 
+/**
+ * Get a Typefully v2 draft.
+ *
+ * Draft IDs are scoped under a social set.
+ */
 class TypefullyGetDraft implements Tool
 {
-    public function __construct(
-        private TypefullyService $service,
-    ) {}
+    /**
+     * @param  TypefullyService  $service  The Typefully API client.
+     */
+    public function __construct(private TypefullyService $service) {}
 
     public function name(): string
     {
@@ -19,16 +25,22 @@ class TypefullyGetDraft implements Tool
 
     public function description(): string
     {
-        return 'Get details of a specific Typefully draft by its ID. Returns full content, scheduling info, and metadata.';
+        return 'Get one Typefully draft by social set ID and draft ID.';
     }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The Typefully draft ID.'],
+            'social_set_id' => ['type' => 'string', 'required' => true, 'description' => 'Typefully social set ID.'],
+            'draft_id' => ['type' => 'string', 'required' => true, 'description' => 'Typefully draft ID.'],
         ];
     }
 
+    /**
+     * Get one draft.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -36,9 +48,7 @@ class TypefullyGetDraft implements Tool
                 return ToolResult::error('Typefully integration is not configured.');
             }
 
-            $result = $this->service->getDraft($args['id']);
-
-            return ToolResult::success($result);
+            return ToolResult::success($this->service->getDraft($args['social_set_id'] ?? '', $args['draft_id'] ?? ''));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

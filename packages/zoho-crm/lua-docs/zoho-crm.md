@@ -16,7 +16,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_create_account({
+local result = app.integrations["zoho-crm"].zoho_crm_create_account({
   account_name = ""
   website = ""
   phone = ""
@@ -39,7 +39,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_create_contact({
+local result = app.integrations["zoho-crm"].zoho_crm_create_contact({
   first_name = ""
   last_name = ""
   email = ""
@@ -63,7 +63,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_create_deal({
+local result = app.integrations["zoho-crm"].zoho_crm_create_deal({
   deal_name = ""
   amount = 0
   stage = ""
@@ -87,7 +87,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_create_lead({
+local result = app.integrations["zoho-crm"].zoho_crm_create_lead({
   first_name = ""
   last_name = ""
   company = ""
@@ -107,7 +107,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_get_account({
+local result = app.integrations["zoho-crm"].zoho_crm_get_account({
   account_id = ""
 })
 ```
@@ -125,7 +125,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_get_contact({
+local result = app.integrations["zoho-crm"].zoho_crm_get_contact({
   contact_id = ""
 })
 ```
@@ -137,7 +137,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_get_current_user({
+local result = app.integrations["zoho-crm"].zoho_crm_get_current_user({
 })
 ```
 
@@ -154,7 +154,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_get_deal({
+local result = app.integrations["zoho-crm"].zoho_crm_get_deal({
   deal_id = ""
 })
 ```
@@ -172,7 +172,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_get_lead({
+local result = app.integrations["zoho-crm"].zoho_crm_get_lead({
   lead_id = ""
 })
 ```
@@ -191,7 +191,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_list_deals({
+local result = app.integrations["zoho-crm"].zoho_crm_list_deals({
   page = 0
   per_page = 0
 })
@@ -211,7 +211,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_list_users({
+local result = app.integrations["zoho-crm"].zoho_crm_list_users({
   type = ""
   page = 0
 })
@@ -231,7 +231,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_search_contacts({
+local result = app.integrations["zoho-crm"].zoho_crm_search_contacts({
   criteria = ""
   email = ""
 })
@@ -251,7 +251,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_search_leads({
+local result = app.integrations["zoho-crm"].zoho_crm_search_leads({
   criteria = ""
   email = ""
 })
@@ -274,7 +274,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_update_contact({
+local result = app.integrations["zoho-crm"].zoho_crm_update_contact({
   contact_id = ""
   first_name = ""
   last_name = ""
@@ -299,7 +299,7 @@ No description.
 ### Example
 
 ```lua
-local result = app.integrations.zoho-crm.zoho_crm_update_lead({
+local result = app.integrations["zoho-crm"].zoho_crm_update_lead({
   lead_id = ""
   first_name = ""
   last_name = ""
@@ -314,14 +314,14 @@ If you have multiple zoho-crm accounts configured, use account-specific namespac
 
 ```lua
 -- Default account (always works)
-app.integrations.zoho-crm.function_name({...})
+app.integrations["zoho-crm"].function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.zoho-crm.default.function_name({...})
+app.integrations["zoho-crm"].default.function_name({...})
 
 -- Named accounts
-app.integrations.zoho-crm.work.function_name({...})
-app.integrations.zoho-crm.personal.function_name({...})
+app.integrations["zoho-crm"].work.function_name({...})
+app.integrations["zoho-crm"].personal.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

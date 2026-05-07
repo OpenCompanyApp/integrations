@@ -6,8 +6,18 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Linode API v4.
+ *
+ * Handles bearer-token authentication, request dispatch, error normalization,
+ * and parsed JSON responses for Linode cloud resources.
+ */
 class LinodeService
 {
+    /**
+     * @param  string  $accessToken  Linode personal access token.
+     * @param  string  $baseUrl  Linode API v4 base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.linode.com/v4',

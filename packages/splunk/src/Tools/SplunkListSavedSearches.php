@@ -2,16 +2,13 @@
 
 namespace OpenCompany\Integrations\Splunk\Tools;
 
-use OpenCompany\Integrations\Splunk\SplunkService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class SplunkListSavedSearches implements Tool
+/**
+ * List saved searches configured in Splunk.
+ */
+class SplunkListSavedSearches extends AbstractSplunkTool
 {
-    public function __construct(
-        private SplunkService $service,
-    ) {}
-
     public function name(): string
     {
         return 'splunk_list_saved_searches';
@@ -24,21 +21,24 @@ class SplunkListSavedSearches implements Tool
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'count' => ['type' => 'integer', 'description' => 'Maximum number of saved searches to return.'],
+            'offset' => ['type' => 'integer', 'description' => 'Pagination offset.'],
+            'search' => ['type' => 'string', 'description' => 'Optional server-side search filter.'],
+        ];
     }
 
+    /**
+     * List saved searches.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Splunk integration is not configured.');
-            }
-
-            $result = $this->service->listSavedSearches();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->listSavedSearches(
+            $this->integer($args, 'count', 100),
+            $this->integer($args, 'offset', 0),
+            $this->string($args, 'search') ?: null,
+        ));
     }
 }

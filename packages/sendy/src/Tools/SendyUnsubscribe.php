@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Sendy\SendyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Unsubscribe an email address from a Sendy list.
+ *
+ * Uses Sendy's documented unsubscribe endpoint with boolean plain-text responses.
+ */
 class SendyUnsubscribe implements Tool
 {
+    /**
+     * @param  SendyService  $service  The Sendy API client
+     */
     public function __construct(
         private SendyService $service,
     ) {}

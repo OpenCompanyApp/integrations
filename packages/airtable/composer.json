@@ -1,12 +1,36 @@
 {
     "name": "opencompanyapp/integration-airtable",
-    "description": "Airtable integration for OpenCompany — bases, tables, records, fields, and views.",
+    "description": "Airtable integration for OpenCompany - bases, tables, records, comments, fields, views, schema metadata, and webhooks.",
     "license": "MIT",
-    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
-    "keywords": ["tools", "airtable", "spreadsheet", "database", "opencompany"],
-    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
-    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Airtable\\": "src/"}},
-    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Airtable\\AirtableServiceProvider"]}},
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": [
+        "tools",
+        "airtable",
+        "spreadsheet",
+        "database",
+        "opencompany"
+    ],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Airtable\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Airtable\\AirtableServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }

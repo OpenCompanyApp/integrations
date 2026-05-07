@@ -1,11 +1,11 @@
 {
     "name": "opencompanyapp/integration-bitly",
-    "description": "Bitly link management integration for the OpenCompany AI platform — shorten links, manage bitlinks, track clicks.",
+    "description": "Bitly API v4 integration for Laravel agents with links, analytics, QR codes, webhooks, and generic REST tools.",
     "type": "library",
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "*",
+        "opencompanyapp/integration-core": "^2.0 || @dev",
         "laravel/ai": "^0.1",
         "illuminate/support": "^11.0|^12.0",
         "illuminate/http": "^11.0|^12.0"

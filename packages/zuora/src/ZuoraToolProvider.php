@@ -109,7 +109,7 @@ class ZuoraToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Subscription management and billing platform',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:zuora',
-            'category' => 'billing',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.zuora.com/api-reference/',
         ];

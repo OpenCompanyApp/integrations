@@ -101,7 +101,7 @@ public function integrationMeta(): array
             'description' => 'Send SMS, email, voice messages, and post letters via ClickSend.',
             'icon' => 'ph:paper-plane-tilt',
             'logo' => 'simple-icons:clicksend',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.clicksend.com/docs/rest/',
         ];

@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * PayPal API service for communicating with the PayPal v1 REST API.
+ * PayPal API service for communicating with the PayPal REST API.
  *
  * Handles authentication via Bearer tokens and provides methods for
- * orders, payments, invoices, and user identity endpoints.
+ * Orders v2, legacy Payments v1, Invoicing v2, and user identity endpoints.
  */
 class PayPalService
 {
@@ -17,13 +17,13 @@ class PayPalService
      * Create a new PayPal service instance.
      *
      * @param  string  $accessToken  The PayPal API access token.
-     * @param  string  $baseUrl      The PayPal API base URL (default: https://api-m.paypal.com/v1).
+     * @param  string  $baseUrl  The PayPal API host URL.
      */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api-m.paypal.com/v1',
+        private string $baseUrl = 'https://api-m.paypal.com',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = preg_replace('~/v[12]$~', '', rtrim($this->baseUrl, '/')) ?: rtrim($this->baseUrl, '/');
     }
 
     /**
@@ -35,17 +35,6 @@ class PayPalService
     }
 
     /**
-     * List checkout orders.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (e.g., page_size, start_id).
-     * @return array<string, mixed>
-     */
-    public function listOrders(array $params = []): array
-    {
-        return $this->request('GET', '/checkout/orders', $params);
-    }
-
-    /**
      * Get a checkout order by ID.
      *
      * @param  string  $orderId  The PayPal order ID.
@@ -53,7 +42,7 @@ class PayPalService
      */
     public function getOrder(string $orderId): array
     {
-        return $this->request('GET', '/checkout/orders/' . urlencode($orderId));
+        return $this->request('GET', '/v2/checkout/orders/' . urlencode($orderId));
     }
 
     /**
@@ -64,7 +53,19 @@ class PayPalService
      */
     public function createOrder(array $body): array
     {
-        return $this->request('POST', '/checkout/orders', $body);
+        return $this->request('POST', '/v2/checkout/orders', $body);
+    }
+
+    /**
+     * Capture a previously approved checkout order.
+     *
+     * @param  string  $orderId  The PayPal order ID.
+     * @param  array<string, mixed>  $body  Optional capture request payload.
+     * @return array<string, mixed>
+     */
+    public function captureOrder(string $orderId, array $body = []): array
+    {
+        return $this->request('POST', '/v2/checkout/orders/' . urlencode($orderId) . '/capture', $body);
     }
 
     /**
@@ -75,7 +76,7 @@ class PayPalService
      */
     public function listPayments(array $params = []): array
     {
-        return $this->request('GET', '/payments', $params);
+        return $this->request('GET', '/v1/payments/payment', $params);
     }
 
     /**
@@ -86,7 +87,7 @@ class PayPalService
      */
     public function getPayment(string $paymentId): array
     {
-        return $this->request('GET', '/payments/payment/' . urlencode($paymentId));
+        return $this->request('GET', '/v1/payments/payment/' . urlencode($paymentId));
     }
 
     /**
@@ -97,7 +98,7 @@ class PayPalService
      */
     public function listInvoices(array $params = []): array
     {
-        return $this->request('GET', '/invoicing/invoices', $params);
+        return $this->request('GET', '/v2/invoicing/invoices', $params);
     }
 
     /**
@@ -107,7 +108,7 @@ class PayPalService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/identity/oauth2/userinfo');
+        return $this->request('GET', '/v1/identity/oauth2/userinfo');
     }
 
     /**

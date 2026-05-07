@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for listing available API Template IO templates with pagination.
+ * List saved APITemplate.io templates.
  *
- * Sends a GET request to the /templates endpoint, supporting limit/offset pagination
- * and optional filtering.
+ * Supports documented v2 template filters such as format, template_id, group_name, and layer info.
  */
 class ApiTemplateIOListTemplates implements Tool
 {
@@ -51,9 +50,12 @@ class ApiTemplateIOListTemplates implements Tool
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of templates to return per page (default: 50, max: 100).'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination — number of templates to skip (default: 0).'],
-            'filter' => ['type' => 'string', 'description' => 'Optional filter expression to narrow down templates.'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of templates to return. Defaults to 300 upstream.'],
+            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination. Defaults to 0 upstream.'],
+            'format' => ['type' => 'string', 'description' => 'Filter by template format: PDF or JPEG.', 'enum' => ['PDF', 'JPEG']],
+            'template_id' => ['type' => 'string', 'description' => 'Filter to a specific template ID.'],
+            'group_name' => ['type' => 'string', 'description' => 'Filter templates by group name.'],
+            'with_layer_info' => ['type' => 'boolean', 'description' => 'Include image-template layer information when true.'],
         ];
     }
 
@@ -71,15 +73,30 @@ class ApiTemplateIOListTemplates implements Tool
                 return ToolResult::error('API Template IO integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
-            $filter = $args['filter'] ?? '';
-
-            $result = $this->service->listTemplates($limit, $offset, $filter);
+            $result = $this->service->listTemplates($this->queryParams($args));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }
+    }
+
+    /**
+     * @param  array<string, mixed>  $args  Tool arguments
+     * @return array<string, mixed>
+     */
+    private function queryParams(array $args): array
+    {
+        $params = [];
+        foreach (['limit', 'offset', 'format', 'template_id', 'group_name'] as $key) {
+            if (isset($args[$key])) {
+                $params[$key] = $args[$key];
+            }
+        }
+        if (isset($args['with_layer_info'])) {
+            $params['with_layer_info'] = $args['with_layer_info'] ? '1' : '0';
+        }
+
+        return $params;
     }
 }

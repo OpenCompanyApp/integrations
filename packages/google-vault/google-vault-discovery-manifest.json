@@ -1,0 +1,273 @@
+{
+    "source": "https://vault.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Vault API",
+    "version": "v1",
+    "method_count": 33,
+    "generated_package": "google-vault",
+    "methods": [
+        {
+            "discovery_id": "operations.list",
+            "tool": "google_vault_operations_list",
+            "class": "GoogleVaultOperationsList",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "operations.cancel",
+            "tool": "google_vault_operations_cancel",
+            "class": "GoogleVaultOperationsCancel",
+            "http_method": "POST",
+            "path": "/v1/{+name}:cancel",
+            "type": "write"
+        },
+        {
+            "discovery_id": "operations.get",
+            "tool": "google_vault_operations_get",
+            "class": "GoogleVaultOperationsGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "operations.delete",
+            "tool": "google_vault_operations_delete",
+            "class": "GoogleVaultOperationsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.get",
+            "tool": "google_vault_matters_get",
+            "class": "GoogleVaultMattersGet",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.removePermissions",
+            "tool": "google_vault_matters_remove_permissions",
+            "class": "GoogleVaultMattersRemovePermissions",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}:removePermissions",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.addPermissions",
+            "tool": "google_vault_matters_add_permissions",
+            "class": "GoogleVaultMattersAddPermissions",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}:addPermissions",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.count",
+            "tool": "google_vault_matters_count",
+            "class": "GoogleVaultMattersCount",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}:count",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.create",
+            "tool": "google_vault_matters_create",
+            "class": "GoogleVaultMattersCreate",
+            "http_method": "POST",
+            "path": "/v1/matters",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.update",
+            "tool": "google_vault_matters_update",
+            "class": "GoogleVaultMattersUpdate",
+            "http_method": "PUT",
+            "path": "/v1/matters/{matterId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.list",
+            "tool": "google_vault_matters_list",
+            "class": "GoogleVaultMattersList",
+            "http_method": "GET",
+            "path": "/v1/matters",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.reopen",
+            "tool": "google_vault_matters_reopen",
+            "class": "GoogleVaultMattersReopen",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}:reopen",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.close",
+            "tool": "google_vault_matters_close",
+            "class": "GoogleVaultMattersClose",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}:close",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.delete",
+            "tool": "google_vault_matters_delete",
+            "class": "GoogleVaultMattersDelete",
+            "http_method": "DELETE",
+            "path": "/v1/matters/{matterId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.undelete",
+            "tool": "google_vault_matters_undelete",
+            "class": "GoogleVaultMattersUndelete",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}:undelete",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.addHeldAccounts",
+            "tool": "google_vault_matters_holds_add_held_accounts",
+            "class": "GoogleVaultMattersHoldsAddHeldAccounts",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}/holds/{holdId}:addHeldAccounts",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.removeHeldAccounts",
+            "tool": "google_vault_matters_holds_remove_held_accounts",
+            "class": "GoogleVaultMattersHoldsRemoveHeldAccounts",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}/holds/{holdId}:removeHeldAccounts",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.delete",
+            "tool": "google_vault_matters_holds_delete",
+            "class": "GoogleVaultMattersHoldsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/matters/{matterId}/holds/{holdId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.get",
+            "tool": "google_vault_matters_holds_get",
+            "class": "GoogleVaultMattersHoldsGet",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/holds/{holdId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.holds.list",
+            "tool": "google_vault_matters_holds_list",
+            "class": "GoogleVaultMattersHoldsList",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/holds",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.holds.create",
+            "tool": "google_vault_matters_holds_create",
+            "class": "GoogleVaultMattersHoldsCreate",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}/holds",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.update",
+            "tool": "google_vault_matters_holds_update",
+            "class": "GoogleVaultMattersHoldsUpdate",
+            "http_method": "PUT",
+            "path": "/v1/matters/{matterId}/holds/{holdId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.accounts.list",
+            "tool": "google_vault_matters_holds_accounts_list",
+            "class": "GoogleVaultMattersHoldsAccountsList",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/holds/{holdId}/accounts",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.holds.accounts.create",
+            "tool": "google_vault_matters_holds_accounts_create",
+            "class": "GoogleVaultMattersHoldsAccountsCreate",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}/holds/{holdId}/accounts",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.holds.accounts.delete",
+            "tool": "google_vault_matters_holds_accounts_delete",
+            "class": "GoogleVaultMattersHoldsAccountsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/matters/{matterId}/holds/{holdId}/accounts/{accountId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.savedQueries.create",
+            "tool": "google_vault_matters_saved_queries_create",
+            "class": "GoogleVaultMattersSavedQueriesCreate",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}/savedQueries",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.savedQueries.delete",
+            "tool": "google_vault_matters_saved_queries_delete",
+            "class": "GoogleVaultMattersSavedQueriesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/matters/{matterId}/savedQueries/{savedQueryId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.savedQueries.get",
+            "tool": "google_vault_matters_saved_queries_get",
+            "class": "GoogleVaultMattersSavedQueriesGet",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/savedQueries/{savedQueryId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.savedQueries.list",
+            "tool": "google_vault_matters_saved_queries_list",
+            "class": "GoogleVaultMattersSavedQueriesList",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/savedQueries",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.exports.create",
+            "tool": "google_vault_matters_exports_create",
+            "class": "GoogleVaultMattersExportsCreate",
+            "http_method": "POST",
+            "path": "/v1/matters/{matterId}/exports",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.exports.delete",
+            "tool": "google_vault_matters_exports_delete",
+            "class": "GoogleVaultMattersExportsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/matters/{matterId}/exports/{exportId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "matters.exports.get",
+            "tool": "google_vault_matters_exports_get",
+            "class": "GoogleVaultMattersExportsGet",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/exports/{exportId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "matters.exports.list",
+            "tool": "google_vault_matters_exports_list",
+            "class": "GoogleVaultMattersExportsList",
+            "http_method": "GET",
+            "path": "/v1/matters/{matterId}/exports",
+            "type": "read"
+        }
+    ]
+}

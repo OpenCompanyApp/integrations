@@ -12,14 +12,20 @@ use Illuminate\Support\Facades\Log;
  */
 class HubSpotService
 {
-    private const BASE_URL = 'https://api.hubapi.com';
-
     /**
      * @param  string  $accessToken  HubSpot private app access token
+     * @param  string  $baseUrl  HubSpot API base URL
      */
     public function __construct(
         private string $accessToken = '',
-    ) {}
+        private string $baseUrl = 'https://api.hubapi.com',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+
+        if (str_ends_with($this->baseUrl, '/v1')) {
+            $this->baseUrl = substr($this->baseUrl, 0, -3);
+        }
+    }
 
     public function isConfigured(): bool
     {
@@ -37,6 +43,17 @@ class HubSpotService
     public function createContact(array $properties): array
     {
         return $this->request('POST', '/crm/v3/objects/contacts', ['properties' => $properties]);
+    }
+
+    /**
+     * List contacts with optional pagination and property selection.
+     *
+     * @param  array<string, mixed>  $params  Query params: limit, after, properties
+     * @return array<string, mixed>
+     */
+    public function listContacts(array $params = []): array
+    {
+        return $this->request('GET', '/crm/v3/objects/contacts', $params);
     }
 
     /**
@@ -98,6 +115,17 @@ class HubSpotService
     public function createCompany(array $properties): array
     {
         return $this->request('POST', '/crm/v3/objects/companies', ['properties' => $properties]);
+    }
+
+    /**
+     * List companies with optional pagination and property selection.
+     *
+     * @param  array<string, mixed>  $params  Query params: limit, after, properties
+     * @return array<string, mixed>
+     */
+    public function listCompanies(array $params = []): array
+    {
+        return $this->request('GET', '/crm/v3/objects/companies', $params);
     }
 
     /**
@@ -351,6 +379,18 @@ class HubSpotService
         return $this->request('GET', '/marketing/v3/forms/', $params);
     }
 
+    // ── Account ───────────────────────────────────────────
+
+    /**
+     * Get the current authenticated HubSpot user and portal information.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCurrentUser(): array
+    {
+        return $this->request('GET', '/integrations/v1/me');
+    }
+
     // ── HTTP ───────────────────────────────────────────────
 
     /**
@@ -372,11 +412,11 @@ class HubSpotService
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get(self::BASE_URL . $path, $data),
-                'POST' => $http->post(self::BASE_URL . $path, $data),
-                'PUT' => $http->put(self::BASE_URL . $path, $data),
-                'PATCH' => $http->patch(self::BASE_URL . $path, $data),
-                'DELETE' => $http->delete(self::BASE_URL . $path, $data),
+                'GET' => $http->get($this->baseUrl . $path, $data),
+                'POST' => $http->post($this->baseUrl . $path, $data),
+                'PUT' => $http->put($this->baseUrl . $path, $data),
+                'PATCH' => $http->patch($this->baseUrl . $path, $data),
+                'DELETE' => $http->delete($this->baseUrl . $path, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 

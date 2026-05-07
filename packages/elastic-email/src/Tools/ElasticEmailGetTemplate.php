@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ElasticEmail\ElasticEmailService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Load an Elastic Email template by name.
+ */
 class ElasticEmailGetTemplate implements Tool
 {
+    /**
+     * @param  ElasticEmailService  $service  Elastic Email API client.
+     */
     public function __construct(
         private ElasticEmailService $service,
     ) {}
@@ -19,16 +25,21 @@ class ElasticEmailGetTemplate implements Tool
 
     public function description(): string
     {
-        return 'Get details of a specific email template by its ID from Elastic Email.';
+        return 'Get details of a specific email template by name from Elastic Email.';
     }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The template ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The template name.'],
         ];
     }
 
+    /**
+     * Execute the template lookup.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

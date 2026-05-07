@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a new Clerk user.
+ *
+ * Supports email addresses, name fields, password, and username.
+ */
 class ClerkCreateUser implements Tool
 {
     /**
      * Create a new ClerkCreateUser tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -50,7 +57,7 @@ class ClerkCreateUser implements Tool
     /**
      * Execute the create user tool.
      *
-     * @param  array  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

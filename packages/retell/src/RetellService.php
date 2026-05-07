@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * RetellService — HTTP client for the Retell AI API.
+ * RetellService - HTTP client for the Retell AI API.
  *
  * Handles authentication, request building, and error handling for all
  * Retell AI endpoints (calls, agents, and user info).

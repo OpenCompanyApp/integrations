@@ -1,0 +1,17 @@
+{
+    "source": "https://driveactivity.googleapis.com/$discovery/rest?version=v2",
+    "service": "Google Drive Activity API",
+    "version": "v2",
+    "method_count": 1,
+    "generated_package": "google-drive-activity",
+    "methods": [
+        {
+            "discovery_id": "activity.query",
+            "tool": "google_drive_activity_activity_query",
+            "class": "GoogleDriveActivityActivityQuery",
+            "http_method": "POST",
+            "path": "/v2/activity:query",
+            "type": "write"
+        }
+    ]
+}

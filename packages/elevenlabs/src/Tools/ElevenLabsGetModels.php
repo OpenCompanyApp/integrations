@@ -39,6 +39,11 @@ class ElevenLabsGetModels implements Tool
         return [];
     }
 
+    /**
+     * List available ElevenLabs models.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

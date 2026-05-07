@@ -2,52 +2,18 @@
 
 namespace OpenCompany\Integrations\CampaignMonitor\Tools;
 
-use OpenCompany\Integrations\CampaignMonitor\CampaignMonitorService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get details for a specific subscriber list.
+ * Get subscriber list details.
  */
-class CampaignMonitorGetList implements Tool
+class CampaignMonitorGetList extends AbstractCampaignMonitorEndpointTool
 {
-    public function __construct(
-        private CampaignMonitorService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'campaignmonitor_get_list';
-    }
-
-    public function description(): string
-    {
-        return 'Get detailed information about a specific subscriber list, including subscriber counts and custom fields.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'list_id' => ['type' => 'string', 'required' => true, 'description' => 'The subscriber list ID.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Campaign Monitor integration is not configured.');
-            }
-
-            if (empty($args['list_id'])) {
-                return ToolResult::error('list_id is required.');
-            }
-
-            $result = $this->service->getList($args['list_id']);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'campaignmonitor_get_list';
+    protected const TOOL_DESCRIPTION = 'Get subscriber list details.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/lists/{list_id}.json';
+    protected const PATH_KEYS = array (  0 => 'list_id',);
+    protected const QUERY_KEYS = array ();
+    protected const BODY_KEYS = array ();
+    protected const PARAMETERS = array (  'list_id' =>   array (    'type' => 'string',    'required' => true,    'description' => 'Campaign Monitor resource ID for list id.',  ),  'params' =>   array (    'type' => 'object',    'description' => 'Query parameters.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

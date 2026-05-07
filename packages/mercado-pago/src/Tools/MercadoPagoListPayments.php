@@ -6,8 +6,17 @@ use OpenCompany\Integrations\MercadoPago\MercadoPagoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Search Mercado Pago payments.
+ *
+ * Supports pagination, status, external reference, sort order, and the
+ * official range, begin_date, and end_date query parameters.
+ */
 class MercadoPagoListPayments implements Tool
 {
+    /**
+     * @param  MercadoPagoService  $service  The Mercado Pago API service.
+     */
     public function __construct(
         private MercadoPagoService $service,
     ) {}
@@ -31,9 +40,16 @@ class MercadoPagoListPayments implements Tool
             'status' => ['type' => 'string', 'description' => 'Filter by payment status: pending, approved, authorized, in_process, in_mediation, rejected, cancelled, refunded, charged_back.'],
             'date_created_from' => ['type' => 'string', 'description' => 'Filter payments created after this date (ISO 8601, e.g., "2025-01-01T00:00:00.000-00:00").'],
             'date_created_to' => ['type' => 'string', 'description' => 'Filter payments created before this date (ISO 8601, e.g., "2025-12-31T23:59:59.999-00:00").'],
+            'sort' => ['type' => 'string', 'description' => 'Sort field such as date_created, date_approved, date_last_updated, id, or money_release_date.'],
+            'criteria' => ['type' => 'string', 'description' => 'Sort direction: asc or desc.'],
         ];
     }
 
+    /**
+     * Execute the payment search request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -56,14 +72,18 @@ class MercadoPagoListPayments implements Tool
                 $params['status'] = $args['status'];
             }
             if (isset($args['date_created_from'])) {
-                $params['range'] = $params['range'] ?? [];
-                $params['range']['date_created'] = $params['range']['date_created'] ?? [];
-                $params['range']['date_created']['gte'] = $args['date_created_from'];
+                $params['range'] = 'date_created';
+                $params['begin_date'] = $args['date_created_from'];
             }
             if (isset($args['date_created_to'])) {
-                $params['range'] = $params['range'] ?? [];
-                $params['range']['date_created'] = $params['range']['date_created'] ?? [];
-                $params['range']['date_created']['lte'] = $args['date_created_to'];
+                $params['range'] = 'date_created';
+                $params['end_date'] = $args['date_created_to'];
+            }
+            if (isset($args['sort'])) {
+                $params['sort'] = $args['sort'];
+            }
+            if (isset($args['criteria'])) {
+                $params['criteria'] = $args['criteria'];
             }
 
             $result = $this->service->listPayments($params);

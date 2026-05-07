@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Appwrite integration with Laravel.
+ *
+ * Binds the Appwrite API client using configured credentials and registers the
+ * tool provider with the shared registry when available.
+ */
 class AppwriteServiceProvider extends ServiceProvider
 {
     /**

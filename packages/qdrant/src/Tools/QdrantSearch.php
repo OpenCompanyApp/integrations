@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Qdrant\QdrantService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Search Qdrant points by vector similarity.
+ */
 class QdrantSearch implements Tool
 {
+    /**
+     * @param  QdrantService  $service  The Qdrant REST API client.
+     */
     public function __construct(
         private QdrantService $service,
     ) {}
@@ -37,10 +43,15 @@ class QdrantSearch implements Tool
         ];
     }
 
+    /**
+     * Search points by vector.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Qdrant integration is not configured.');
             }
 

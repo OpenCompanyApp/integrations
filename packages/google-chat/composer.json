@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-chat",
-    "description": "Google Chat integration for Laravel — list spaces, send and read messages, manage memberships.",
+    "description": "Google Chat integration for Laravel AI agents - generated Chat API v1 coverage for spaces, messages, members, reactions, custom emojis, user read state, sections, and media uploads.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google-chat", "communication", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-chat": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,12 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "chat",
+        "workspace",
+        "messages",
+        "opencompany"
+    ]
 }

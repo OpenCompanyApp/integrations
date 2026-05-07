@@ -94,7 +94,7 @@ class BannerbearToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Automated image, video, and GIF generation from templates',
             'icon' => 'ph:image',
             'logo' => 'simple-icons:bannerbear',
-            'category' => 'media',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developers.bannerbear.com/',
         ];

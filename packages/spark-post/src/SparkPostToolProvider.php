@@ -104,7 +104,7 @@ class SparkPostToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Email delivery and analytics platform',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:sparkpost',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.sparkpost.com/api/',
         ];

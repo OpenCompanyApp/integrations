@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Webex\Tools;
 
-use OpenCompany\Integrations\Webex\WebexService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class WebexGetRoom implements Tool
+/**
+ * Get details for one Webex room.
+ */
+class WebexGetRoom extends AbstractWebexTool implements Tool
 {
-    public function __construct(
-        private WebexService $service,
-    ) {}
-
     public function name(): string
     {
         return 'webex_get_room';
@@ -29,11 +27,16 @@ class WebexGetRoom implements Tool
         ];
     }
 
+    /**
+     * Fetch a room by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Webex integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
             $roomId = $args['room_id'] ?? '';

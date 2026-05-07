@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Clearbit integration with Laravel's service container.
+ */
 class ClearbitServiceProvider extends ServiceProvider
 {
     /**

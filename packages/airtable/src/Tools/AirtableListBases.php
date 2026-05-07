@@ -2,56 +2,34 @@
 
 namespace OpenCompany\Integrations\Airtable\Tools;
 
-use OpenCompany\Integrations\Airtable\AirtableService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List all Airtable bases the token has access to.
+ * List Airtable bases accessible to the token.
  */
-class AirtableListBases implements Tool
+class AirtableListBases extends AbstractAirtableTool
 {
-    /**
-     * @param  AirtableService  $service  The Airtable API client
-     */
-    public function __construct(
-        private AirtableService $service,
-    ) {}
+    protected array $parameters = array (
+  'offset' =>
+  array (
+    'type' => 'integer',
+    'description' => 'Pagination offset.',
+  ),
+);
 
-    public function name(): string
-    {
-        return 'airtable_list_bases';
-    }
+    protected array $required = array (
+);
 
-    public function description(): string
-    {
-        return 'List all Airtable bases the token has access to.';
-    }
+    protected array $queryParams = array (
+  0 => 'offset',
+);
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected array $bodyParams = array (
+);
 
-    /**
-     * List all accessible bases.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Airtable integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $result = $this->service->listBases();
+    protected string $path = '/meta/bases';
 
-            return ToolResult::success([
-                'bases' => $result['bases'] ?? [],
-            ]);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolName = 'airtable_list_bases';
+
+    protected string $toolDescription = 'List Airtable bases accessible to the token.';
 }

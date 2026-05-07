@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Delete a Vimeo video.
+ */
 class VimeoDeleteVideo implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -29,6 +35,11 @@ class VimeoDeleteVideo implements Tool
         ];
     }
 
+    /**
+     * Delete the video.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -36,9 +47,14 @@ class VimeoDeleteVideo implements Tool
                 return ToolResult::error('Vimeo integration is not configured.');
             }
 
-            $this->service->deleteVideo($args['video_id']);
+            $videoId = (string) ($args['video_id'] ?? '');
+            if ($videoId === '') {
+                return ToolResult::error('video_id is required.');
+            }
 
-            return ToolResult::success("Video '{$args['video_id']}' has been deleted.");
+            $this->service->deleteVideo($videoId);
+
+            return ToolResult::success("Video '{$videoId}' has been deleted.");
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

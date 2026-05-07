@@ -1,236 +1,132 @@
 # Qdrant — Lua API Reference
 
-## list_collections
+Namespace: `app.integrations.qdrant`
 
-List all vector collections in the Qdrant cluster.
-
-### Parameters
-
-None.
-
-### Example
+## Collections
 
 ```lua
-local result = app.integrations.qdrant.list_collections({})
+local collections = app.integrations.qdrant.list_collections({})
 
-for _, col in ipairs(result.result.collections) do
-  print(col.name)
-end
-```
-
----
-
-## get_collection
-
-Get detailed information about a specific collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Collection name |
-
-### Example
-
-```lua
-local result = app.integrations.qdrant.get_collection({
+local info = app.integrations.qdrant.get_collection({
   name = "documents"
 })
 
-print("Points count: " .. result.result.points_count)
-print("Vectors count: " .. result.result.vectors_count)
-```
-
----
-
-## create_collection
-
-Create a new vector collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name for the new collection |
-| `vectors` | object | yes | Vector configuration, e.g. `{size = 1536, distance = "Cosine"}` |
-| `hnsw_config` | object | no | HNSW index settings (e.g. `{m = 16, ef_construct = 100}`) |
-| `optimizers_config` | object | no | Optimizer settings |
-| `quantization_config` | object | no | Quantization for memory savings |
-| `replication_factor` | integer | no | Number of replicas per shard |
-| `shard_number` | integer | no | Number of shards |
-
-### Distance Options
-
-`Cosine`, `Euclid`, `Dot`
-
-### Example
-
-```lua
-local result = app.integrations.qdrant.create_collection({
+app.integrations.qdrant.create_collection({
   name = "documents",
-  vectors = {
-    size = 1536,
-    distance = "Cosine"
-  },
-  hnsw_config = {
-    m = 16,
-    ef_construct = 100
-  }
+  vectors = { size = 1536, distance = "Cosine" }
 })
 
-print("Status: " .. result.status)
-```
-
----
-
-## search
-
-Search for similar vectors in a collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection` | string | yes | Collection to search in |
-| `vector` | array | yes | Query vector (array of floats) |
-| `vector_name` | string | no | Named vector to search (multi-vector collections) |
-| `filter` | object | no | Filter conditions with `must`, `should`, `must_not` clauses |
-| `limit` | integer | no | Max results (default: 10) |
-| `offset` | integer | no | Pagination offset |
-| `with_payload` | boolean | no | Include payloads (default: true) |
-| `with_vectors` | boolean | no | Include vectors (default: false) |
-| `score_threshold` | number | no | Minimum similarity score |
-
-### Filter Syntax
-
-Filters use conditions within `must` (AND), `should` (OR), and `must_not` (NOT) clauses:
-
-```json
-{
-  "must": [
-    {"key": "category", "match": {"value": "technology"}}
-  ],
-  "must_not": [
-    {"key": "status", "match": {"value": "archived"}}
-  ]
-}
-```
-
-### Example
-
-```lua
-local result = app.integrations.qdrant.search({
-  collection = "documents",
-  vector = {0.1, 0.2, 0.3, /* ... */},
-  limit = 5,
-  with_payload = true,
-  filter = {
-    must = {
-      { key = "category", match = { value = "technology" } }
-    }
-  }
+app.integrations.qdrant.delete_collection({
+  name = "documents",
+  timeout = 30
 })
-
-for _, point in ipairs(result.result) do
-  print("ID: " .. tostring(point.id) .. ", Score: " .. point.score)
-  if point.payload then
-    print("  Title: " .. (point.payload.title or "N/A"))
-  end
-end
 ```
 
----
-
-## upsert_points
-
-Insert or update points in a collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection` | string | yes | Target collection |
-| `points` | array | yes | Array of point objects (see below) |
-| `wait` | boolean | no | Wait for completion (default: true) |
-| `ordering` | string | no | Write ordering: `"weak"` or `"strong"` |
-
-### Point Object
-
-Each point requires:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | integer or string | Unique point identifier (integer or UUID) |
-| `vector` | array | Vector data (array of floats) |
-| `payload` | object | Optional metadata key-value pairs |
-
-### Example
+## Points
 
 ```lua
-local result = app.integrations.qdrant.upsert_points({
+app.integrations.qdrant.upsert_points({
   collection = "documents",
   points = {
-    {
-      id = 1,
-      vector = {0.1, 0.2, 0.3, /* ... */},
-      payload = {
-        title = "Introduction to Vectors",
-        category = "technology",
-        source = "docs"
-      }
-    },
-    {
-      id = 2,
-      vector = {0.4, 0.5, 0.6, /* ... */},
-      payload = {
-        title = "Vector Databases Explained",
-        category = "technology",
-        source = "blog"
-      }
+    { id = 1, vector = {0.1, 0.2}, payload = { title = "Doc 1" } }
+  },
+  wait = true
+})
+
+local search = app.integrations.qdrant.search({
+  collection = "documents",
+  vector = {0.1, 0.2},
+  limit = 5,
+  with_payload = true
+})
+
+local query = app.integrations.qdrant.query_points({
+  collection = "documents",
+  query = {0.1, 0.2},
+  limit = 5,
+  with_payload = true
+})
+
+local retrieved = app.integrations.qdrant.retrieve_points({
+  collection = "documents",
+  ids = {1, 2},
+  with_payload = true
+})
+
+local page = app.integrations.qdrant.scroll_points({
+  collection = "documents",
+  limit = 100,
+  with_payload = true
+})
+
+local count = app.integrations.qdrant.count_points({
+  collection = "documents",
+  filter = {
+    must = {
+      { key = "category", match = { value = "docs" } }
     }
+  },
+  exact = true
+})
+```
+
+Use `delete_points` with either `points` or `filter`.
+
+## Payloads And Indexes
+
+```lua
+app.integrations.qdrant.set_payload({
+  collection = "documents",
+  points = {1},
+  payload = { reviewed = true }
+})
+
+app.integrations.qdrant.delete_payload({
+  collection = "documents",
+  points = {1},
+  keys = {"reviewed"}
+})
+
+app.integrations.qdrant.clear_payload({
+  collection = "documents",
+  points = {1}
+})
+
+app.integrations.qdrant.create_payload_index({
+  collection = "documents",
+  field_name = "category",
+  field_schema = "keyword"
+})
+```
+
+## Aliases, Cluster, Snapshots
+
+```lua
+local cluster = app.integrations.qdrant.get_cluster_info({})
+local aliases = app.integrations.qdrant.list_aliases({})
+local collection_aliases = app.integrations.qdrant.list_collection_aliases({
+  collection = "documents"
+})
+
+app.integrations.qdrant.update_aliases({
+  actions = {
+    { create_alias = { collection_name = "documents", alias_name = "active_docs" } }
   }
 })
 
-print("Status: " .. result.status)
+local snapshots = app.integrations.qdrant.list_snapshots({
+  collection = "documents"
+})
+
+local snapshot = app.integrations.qdrant.create_snapshot({
+  collection = "documents"
+})
 ```
-
----
-
-## get_current_user
-
-Get information about the Qdrant cluster and authenticated context.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.qdrant.get_current_user({})
-
-if result.result then
-  print("Cluster status: " .. (result.result.status or "unknown"))
-  print("Nodes: " .. #result.result.peer_state)
-end
-```
-
----
 
 ## Multi-Account Usage
 
-If you have multiple Qdrant clusters configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.qdrant.list_collections({})
-
--- Explicit default (portable across setups)
 app.integrations.qdrant.default.list_collections({})
-
--- Named accounts
 app.integrations.qdrant.production.list_collections({})
-app.integrations.qdrant.staging.list_collections({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

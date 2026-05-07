@@ -110,7 +110,7 @@ class GmailToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Email search, reading, sending, and management',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:gmail',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/gmail.googleapis.com',
         ];
@@ -326,7 +326,10 @@ class GmailToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GmailService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GmailService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GmailService::class);
 
         if ($class === GmailSaveAttachment::class) {
             $fileStorage = app()->bound(AgentFileStorage::class) ? app(AgentFileStorage::class) : null;

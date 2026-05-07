@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ManyChatCreateTag implements Tool
 {
+    /**
+     * @param  ManyChatService  $service  The Manychat API client.
+     */
     public function __construct(
         private ManyChatService $service,
     ) {}
@@ -35,6 +38,11 @@ class ManyChatCreateTag implements Tool
         ];
     }
 
+    /**
+     * Create a tag in the configured bot.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

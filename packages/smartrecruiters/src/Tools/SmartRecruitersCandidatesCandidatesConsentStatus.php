@@ -1,0 +1,33 @@
+<?php
+
+namespace OpenCompany\Integrations\SmartRecruiters\Tools;
+
+/**
+ * Status of candidate consent.
+ *
+ * Maps to candidates-api.json endpoint GET /candidates/{id}/consent.
+ */
+class SmartRecruitersCandidatesCandidatesConsentStatus extends AbstractSmartRecruitersTool
+{
+    protected const NAME = "smartrecruiters_candidates_candidates_consent_status";
+    protected const DESCRIPTION = "Status of candidate consent\n\nOfficial SmartRecruiters endpoint: GET /candidates/{id}/consent from candidates-api.json.";
+    protected const PARAMETERS = [
+        "id" => [
+            "type" => "string",
+            "required" => true,
+            "description" => "candidate identifier",
+        ],
+    ];
+    protected const METHOD = "GET";
+    protected const BASE_URL = "https://api.smartrecruiters.com";
+    protected const PATH = "/candidates/{id}/consent";
+    protected const PATH_PARAMS = [
+        "id" => "id",
+    ];
+    protected const QUERY_PARAMS = [];
+    protected const HEADER_PARAMS = [];
+    protected const QUERY_STYLES = [];
+    protected const BODY_REQUIRED = false;
+    protected const BODY_MODE = "json";
+    protected const AUTH_MODE = "either";
+}

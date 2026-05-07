@@ -14,7 +14,9 @@
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
     "replace": {
-        "opencompanyapp/ai-tool-microsoft-teams": "self.version"
+        "opencompanyapp/ai-tool-microsoft-teams": "self.version",
+        "opencompanyapp/integration-teams": "self.version",
+        "opencompanyapp/ai-tool-teams": "self.version"
     },
     "autoload": {
         "psr-4": {

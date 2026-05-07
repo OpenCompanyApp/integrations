@@ -12,11 +12,18 @@ class ZohoBillsServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZohoBillsService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('zoho-bills', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_bills', $key, $default);
+            };
 
             return new ZohoBillsService(
-                accessToken: $creds->get('zoho_bills', 'access_token', ''),
-                organizationId: $creds->get('zoho_bills', 'organization_id', ''),
-                baseUrl: $creds->get('zoho_bills', 'url', 'https://billing.zoho.com'),
+                accessToken: $get('access_token'),
+                organizationId: $get('organization_id'),
+                baseUrl: $get('url', 'https://billing.zoho.com'),
             );
         });
     }

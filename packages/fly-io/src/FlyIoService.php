@@ -6,8 +6,18 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Fly.io Machines API.
+ *
+ * Handles bearer-token authentication, request dispatch, error normalization,
+ * and parsed JSON responses for apps, machines, and volumes.
+ */
 class FlyIoService
 {
+    /**
+     * @param  string  $accessToken  Fly.io API token.
+     * @param  string  $baseUrl  Fly Machines API v1 base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.machines.dev/v1',
@@ -20,13 +30,24 @@ class FlyIoService
         return !empty($this->accessToken);
     }
 
-    // User
+    /**
+     * Get information about the current token owner.
+     *
+     * This legacy helper is not exposed in the provider because the Machines
+     * API docs do not currently advertise a /user resource.
+     *
+     * @return array<string, mixed>
+     */
     public function getCurrentUser(): array
     {
         return $this->request('GET', '/user');
     }
 
-    // Apps
+    /**
+     * List Fly Apps visible to the token.
+     *
+     * @return array<string, mixed>
+     */
     public function listApps(): array
     {
         return $this->request('GET', '/apps');
@@ -42,7 +63,11 @@ class FlyIoService
         return $this->request('POST', '/apps', $params);
     }
 
-    // Machines
+    /**
+     * List Machines for a Fly App.
+     *
+     * @return array<string, mixed>
+     */
     public function listMachines(string $appName): array
     {
         return $this->request('GET', '/apps/' . urlencode($appName) . '/machines');
@@ -53,20 +78,41 @@ class FlyIoService
         return $this->request('GET', '/apps/' . urlencode($appName) . '/machines/' . $machineId);
     }
 
-    // Volumes
+    /**
+     * List persistent volumes for a Fly App.
+     *
+     * @return array<string, mixed>
+     */
     public function listVolumes(string $appName): array
     {
         return $this->request('GET', '/apps/' . urlencode($appName) . '/volumes');
     }
 
-    // HTTP helpers
+    /**
+     * Make an API request and return parsed JSON.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Query params or JSON body.
+     * @return array<string, mixed>
+     */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
-        if ($method === 'DELETE') { return []; }
+        if ($method === 'DELETE') {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 
+    /**
+     * Make a raw HTTP request to the Fly.io Machines API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Request data.
+     */
     private function rawRequest(string $method, string $path, array $data = []): Response
     {
         if (!$this->accessToken) {

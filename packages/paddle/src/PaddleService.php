@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\Paddle;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Paddle Billing API.
+ *
+ * Handles bearer token authentication, sandbox/production base URLs,
+ * error normalization, and JSON response parsing for Paddle tools.
+ */
 class PaddleService
 {
     /**

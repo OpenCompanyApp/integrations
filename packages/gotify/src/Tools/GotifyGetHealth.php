@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Gotify\GotifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Check public Gotify server health.
+ */
 class GotifyGetHealth implements Tool
 {
+    /**
+     * @param  GotifyService  $service  The Gotify API client.
+     */
     public function __construct(
         private GotifyService $service,
     ) {}
@@ -27,13 +33,14 @@ class GotifyGetHealth implements Tool
         return [];
     }
 
+    /**
+     * Fetch Gotify server health.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gotify integration is not configured.');
-            }
-
             $result = $this->service->getHealth();
 
             return ToolResult::success($result);

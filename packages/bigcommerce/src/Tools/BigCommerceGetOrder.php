@@ -2,48 +2,39 @@
 
 namespace OpenCompany\Integrations\BigCommerce\Tools;
 
-use OpenCompany\Integrations\BigCommerce\BigCommerceService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get a single order from the BigCommerce store by ID.
+ * Get one order by ID.
  */
-class BigCommerceGetOrder implements Tool
+class BigCommerceGetOrder extends AbstractBigCommerceEndpointTool
 {
-    public function __construct(
-        private BigCommerceService $service,
-    ) {}
+    protected string $toolName = 'bigcommerce_get_order';
 
-    public function name(): string
-    {
-        return 'bigcommerce_get_order';
-    }
+    protected string $toolDescription = 'Get one order by ID.';
 
-    public function description(): string
-    {
-        return 'Get a single order from the BigCommerce store by its ID. Returns full order details including line items and totals.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The order ID.'],
-        ];
-    }
+    protected string $path = '/v2/orders/{order_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('BigCommerce integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = array (
+  'order_id' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'BigCommerce order ID.',
+  ),
+);
 
-            $result = $this->service->getOrder((int) $args['id']);
+    /** @var list<string> */
+    protected array $required = array (
+  0 => 'order_id',
+);
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = array (
+);
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = array (
+);
 }

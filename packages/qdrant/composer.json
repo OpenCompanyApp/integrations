@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-qdrant",
-    "description": "Qdrant vector database integration for Laravel — search, upsert points, manage collections.",
+    "description": "Qdrant vector database integration for Laravel — collections, points, payloads, aliases, and snapshots.",
     "license": "MIT",
     "authors": [
         {

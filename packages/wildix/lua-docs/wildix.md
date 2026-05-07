@@ -1,166 +1,99 @@
-# Wildix — Lua API Reference
+# Wildix Lua API Reference
 
-## list_calls
+Namespace: `app.integrations.wildix`
 
-List call records from the Wildix PBX with optional pagination and date filtering.
+This integration exposes the official Wildix WMS/PBX API surface from the `@wildix/wms-api-client` package. Configure it with a bearer token and your PBX API base URL, usually `https://example.wildixin.com`.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of call records to return (default: 25) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `date_from` | string | no | Start date for filtering calls (ISO 8601, e.g. "2026-01-01") |
-| `date_to` | string | no | End date for filtering calls (ISO 8601, e.g. "2026-01-31") |
-
-### Examples
-
-#### List recent calls
+## Usage Pattern
 
 ```lua
-local result = app.integrations.wildix.list_calls({
-  limit = 10,
-  page = 1
+local result = app.integrations.wildix.get_personal_info({})
+```
+
+Tool arguments use snake_case. The integration maps them back to Wildix request fields such as `sipCallId`, `groupDn`, `redirectUri`, and filter query names before sending the HTTP request.
+
+## Operation Coverage
+
+| `wildix_call_control_answer` | write | POST `/api/v2/call-control/answer` |
+| `wildix_call_control_attendant_transfer` | write | POST `/api/v2/call-control/attendant-transfer` |
+| `wildix_call_control_blind_transfer` | write | POST `/api/v2/call-control/blind-transfer` |
+| `wildix_call_control_dtmf` | write | POST `/api/v2/call-control/dtmf` |
+| `wildix_call_control_hangup` | write | POST `/api/v2/call-control/hangup` |
+| `wildix_call_control_hold` | write | POST `/api/v2/call-control/hold` |
+| `wildix_call_control_make_call` | write | POST `/api/v2/call-control/make-call` |
+| `wildix_call_control_unhold` | write | POST `/api/v2/call-control/unhold` |
+| `wildix_call_control_update_contact_info` | write | POST `/api/v2/call-control/update-contact-info` |
+| `wildix_create_pbx_acl_group` | write | POST `/api/v1/pbx/aclgroups` |
+| `wildix_create_pbx_colleague` | write | POST `/api/v1/PBX/Colleagues` |
+| `wildix_create_pbx_o_auth2_client` | write | POST `/api/v1/pbx/applications/oauth2` |
+| `wildix_delete_pbx_acl_group` | write | DELETE `/api/v1/pbx/aclgroups/{id}` |
+| `wildix_delete_pbx_colleague` | write | DELETE `/api/v1/PBX/Colleagues/{id}` |
+| `wildix_delete_pbx_o_auth2_client` | write | DELETE `/api/v1/pbx/applications/oauth2/{id}` |
+| `wildix_get_call_queues_settings` | read | GET `/api/v1/pbx/settings/callqueues/{groupId}` |
+| `wildix_get_colleague_by_id` | read | GET `/api/v1/Colleagues/{id}` |
+| `wildix_get_pbx_acl_groups_permissions` | read | GET `/api/v1/pbx/aclgroups/permissions` |
+| `wildix_get_pbx_call_groups` | read | GET `/api/v1/Dialplan/CallGroups` |
+| `wildix_get_pbx_colleagues` | read | GET `/api/v1/PBX/Colleagues` |
+| `wildix_get_pbxes` | read | GET `/api/v1/network/pbxes` |
+| `wildix_get_pbx_o_auth2_clients` | read | GET `/api/v1/pbx/applications/oauth2` |
+| `wildix_get_personal_info` | read | GET `/api/v1/personal/info` |
+| `wildix_list_pbx_departments` | read | GET `/api/v1/Departments` |
+| `wildix_list_pbx_groups` | read | GET `/api/v1/Groups` |
+| `wildix_list_user_active_calls` | read | GET `/api/v2/call-control/list-calls` |
+| `wildix_list_user_devices` | read | GET `/api/v2/call-control/list-devices` |
+| `wildix_notifications` | write | POST `/api/v1/notifications` |
+| `wildix_originate` | write | POST `/api/v1/originate` |
+| `wildix_originate_call` | write | POST `/api/v1/originate/call` |
+| `wildix_reload_broadcasts` | write | POST `/api/v1/broadcasts/reload` |
+| `wildix_update_pbx_o_auth2_client` | write | PUT `/api/v1/pbx/applications/oauth2/{id}` |
+
+## Examples
+
+### List active calls for the authenticated user
+
+```lua
+local calls = app.integrations.wildix.list_user_active_calls({})
+```
+
+### Make a call
+
+```lua
+local result = app.integrations.wildix.call_control_make_call({
+  destination = "+15550101000",
+  device = "Web"
 })
-
-for _, call in ipairs(result.calls or {}) do
-  print(call.id .. ": " .. call.status)
-end
 ```
 
-#### Filter calls by date range
+### Get PBX colleagues with filters
 
 ```lua
-local result = app.integrations.wildix.list_calls({
-  date_from = "2026-01-01",
-  date_to = "2026-01-31",
-  limit = 50
+local users = app.integrations.wildix.get_pbx_colleagues({
+  count = 25,
+  start = 0,
+  query = {
+    ["filter[email][]"] = { "ada@example.test" }
+  }
 })
 ```
 
----
-
-## get_call
-
-Get detailed information about a specific call record.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The unique identifier of the call record |
-
-### Example
+### Create an OAuth2 client
 
 ```lua
-local result = app.integrations.wildix.get_call({ id = "call-123" })
-print("Duration: " .. result.duration .. "s")
-print("From: " .. result.from)
-print("To: " .. result.to)
-```
-
----
-
-## list_extensions
-
-List PBX extensions configured in the Wildix system.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of extensions to return (default: 25) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Example
-
-```lua
-local result = app.integrations.wildix.list_extensions({
-  limit = 50,
-  page = 1
+local client = app.integrations.wildix.create_pbx_o_auth2_client({
+  name = "Agent App",
+  redirect_uri = { "https://example.test/oauth/callback" }
 })
-
-for _, ext in ipairs(result.extensions or {}) do
-  print(ext.id .. ": " .. ext.name)
-end
 ```
 
----
+## Notes
 
-## get_extension
+Call-control tools accept an optional `user` parameter. Wildix documents that only root admin authorization can target a different user; otherwise the authorized user is used.
 
-Get detailed information about a specific PBX extension.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The unique identifier of the extension |
-
-### Example
-
-```lua
-local result = app.integrations.wildix.get_extension({ id = "ext-456" })
-print("Extension: " .. result.number)
-print("User: " .. result.user_name)
-```
-
----
-
-## list_users
-
-List users configured in the Wildix PBX system.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of users to return (default: 25) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Example
-
-```lua
-local result = app.integrations.wildix.list_users({
-  limit = 50,
-  page = 1
-})
-
-for _, user in ipairs(result.users or {}) do
-  print(user.id .. ": " .. user.name .. " <" .. user.email .. ">")
-end
-```
-
----
-
-## get_current_user
-
-Get the profile of the currently authenticated Wildix user. No parameters required.
-
-### Example
-
-```lua
-local result = app.integrations.wildix.get_current_user({})
-print("Logged in as: " .. result.name)
-print("Email: " .. result.email)
-```
-
----
+Write tools return the normalized JSON response from the PBX host. Empty responses are returned as `{ success = true }`.
 
 ## Multi-Account Usage
 
-If you have multiple Wildix accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.wildix.list_calls({...})
-
--- Explicit default (portable across setups)
-app.integrations.wildix.default.list_calls({...})
-
--- Named accounts
-app.integrations.wildix.office.list_calls({...})
-app.integrations.wildix.support.list_calls({...})
+app.integrations.wildix.default.get_personal_info({})
+app.integrations.wildix.office.list_user_devices({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MercadoPago\MercadoPagoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch the authenticated Mercado Pago user profile.
+ *
+ * Uses the user identity endpoint as a lightweight credential check.
+ */
 class MercadoPagoGetCurrentUser implements Tool
 {
+    /**
+     * @param  MercadoPagoService  $service  The Mercado Pago API service.
+     */
     public function __construct(
         private MercadoPagoService $service,
     ) {}
@@ -27,6 +35,11 @@ class MercadoPagoGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Execute the current-user request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

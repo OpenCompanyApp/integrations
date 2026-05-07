@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-retell-ai",
-    "description": "Retell AI integration for Laravel — create and manage AI phone calls and agents.",
+    "description": "Retell AI integration for Laravel - manage calls, agents, phone numbers, LLMs, voices, and API endpoints.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,15 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "retell-ai", "voice", "phone", "ai-agents", "opencompany"],
+    "keywords": ["tools", "retell-ai", "phone", "voice-agents", "ai-agents", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
     "replace": {
-        "opencompanyapp/ai-tool-retell-ai": "self.version"
+        "opencompanyapp/ai-tool-retell-ai": "self.version",
+        "opencompanyapp/integration-retell": "self.version",
+        "opencompanyapp/ai-tool-retell": "self.version"
     },
     "autoload": {
         "psr-4": {

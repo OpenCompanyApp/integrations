@@ -18,7 +18,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 class WhatsAppSendTemplate implements Tool
 {
     /**
-     * Create a new WhatsAppSendTemplate tool instance.
+     * @param  WhatsAppService  $service  WhatsApp API client.
      */
     public function __construct(
         private WhatsAppService $service,
@@ -51,19 +51,19 @@ class WhatsAppSendTemplate implements Tool
             'to' => ['type' => 'string', 'required' => true, 'description' => 'Recipient phone number in international format without + (e.g. "15551234567").'],
             'template_name' => ['type' => 'string', 'required' => true, 'description' => 'Name of the approved WhatsApp template (e.g. "hello_world").'],
             'language' => ['type' => 'string', 'description' => 'Language code for the template (e.g. "en_US", "en"). Defaults to "en".'],
-            'components' => ['type' => 'array', 'description' => 'Template components — an array of objects with "type" (header, body, button) and corresponding parameters. Pass as a JSON string or array.'],
+            'components' => ['type' => 'array', 'description' => 'Template components as an array of objects with type and parameters. Pass as a JSON string or array.'],
         ];
     }
 
     /**
-     * Execute the tool — send the template message via the API.
+     * Execute the tool and send the template message via the API.
      *
      * @param  array{to?: string, template_name?: string, language?: string, components?: array|string}  $args
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('WhatsApp integration is not configured.');
             }
 

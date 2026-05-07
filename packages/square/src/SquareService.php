@@ -47,6 +47,17 @@ class SquareService
         return $this->request('GET', "/payments/{$id}");
     }
 
+    /**
+     * Create a payment.
+     *
+     * @param  array<string, mixed>  $data  Square CreatePayment payload.
+     * @return array<string, mixed>
+     */
+    public function createPayment(array $data): array
+    {
+        return $this->request('POST', '/payments', $data);
+    }
+
     // ── Customers ──────────────────────────────────────────
 
     /**
@@ -70,6 +81,17 @@ class SquareService
         return $this->request('GET', "/customers/{$id}");
     }
 
+    /**
+     * Create a customer.
+     *
+     * @param  array<string, mixed>  $data  Square CreateCustomer payload.
+     * @return array<string, mixed>
+     */
+    public function createCustomer(array $data): array
+    {
+        return $this->request('POST', '/customers', $data);
+    }
+
     // ── Orders ─────────────────────────────────────────────
 
     /**
@@ -87,7 +109,23 @@ class SquareService
             throw new \RuntimeException('location_id is required for listing orders.');
         }
 
-        return $this->request('GET', "/locations/{$locationId}/orders", $params);
+        $body = [
+            'location_ids' => [$locationId],
+        ];
+
+        if (isset($params['cursor'])) {
+            $body['cursor'] = $params['cursor'];
+        }
+
+        if (isset($params['limit'])) {
+            $body['limit'] = (int) $params['limit'];
+        }
+
+        if (isset($params['states'])) {
+            $body['query']['filter']['state_filter']['states'] = $params['states'];
+        }
+
+        return $this->request('POST', '/orders/search', $body);
     }
 
     /**
@@ -110,6 +148,18 @@ class SquareService
     public function getCurrentUser(): array
     {
         return $this->request('GET', '/merchants/me');
+    }
+
+    // ── Locations ──────────────────────────────────────────
+
+    /**
+     * List business locations.
+     *
+     * @return array<string, mixed>
+     */
+    public function listLocations(): array
+    {
+        return $this->request('GET', '/locations');
     }
 
     // ── HTTP ───────────────────────────────────────────────

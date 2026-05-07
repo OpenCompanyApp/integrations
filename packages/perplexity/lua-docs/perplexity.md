@@ -1,193 +1,204 @@
-# Perplexity AI — Lua API Reference
+# Perplexity — Lua API Reference
+
+Namespace: `app.integrations.perplexity`
+
+This integration uses the current Perplexity APIs:
+
+- Sonar chat: `POST /v1/sonar`
+- Search: `POST /search`
+- Async Sonar: `POST /v1/async/sonar`, `GET /v1/async/sonar`, `GET /v1/async/sonar/{id}`
+- Agent responses: `POST /v1/agent`
+- Embeddings: `POST /v1/embeddings`, `POST /v1/contextualizedembeddings`
+- Models: `GET /v1/models`
+
+`ask` is a convenience wrapper over Sonar chat. It is not a separate upstream `/ask` endpoint.
 
 ## chat
 
-Send messages to Perplexity AI for a chat completion response. Supports multi-turn conversations with message history.
+Create a Sonar chat completion.
 
-### Parameters
+Required:
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `messages` | array | yes | Array of message objects with "role" and "content". |
-| `model` | string | no | Model to use: "sonar", "sonar-pro", "sonar-reasoning", "sonar-reasoning-pro" (default: "sonar") |
-| `temperature` | number | no | Sampling temperature 0.0–2.0 (default: 0.2) |
-| `max_tokens` | integer | no | Maximum tokens in the response |
-| `search_domain_filter` | array | no | Domains to limit search to (e.g., `{"wikipedia.org"}`) |
-| `return_images` | boolean | no | Return images in response (default: false) |
-| `return_related_questions` | boolean | no | Return related questions (default: false) |
-| `search_recency_filter` | string | no | Filter by recency: "month", "week", "day", "hour" |
+- `messages`: array of `{ role = "system" | "user" | "assistant", content = "..." }`
 
-### Message Roles
+Common optional fields:
 
-| Role | Description |
-|------|-------------|
-| `system` | Set the assistant's behavior and instructions |
-| `user` | The user's message or question |
-| `assistant` | Previous assistant responses (for multi-turn) |
-
-### Available Models
-
-| Model | Description |
-|-------|-------------|
-| `sonar` | Fast, lightweight search-grounded responses |
-| `sonar-pro` | Advanced model with deeper search and reasoning |
-| `sonar-reasoning` | Reasoning-focused model |
-| `sonar-reasoning-pro` | Advanced reasoning with comprehensive search |
-
-### Examples
-
-#### Simple question
+- `model`: defaults to `sonar`
+- `temperature`, `top_p`, `max_tokens`
+- `response_format`
+- `web_search_options`: pass Perplexity's current web search options object
+- convenience search options: `search_mode`, `search_domain_filter`, `search_language_filter`, `search_recency_filter`, `return_images`, `return_related_questions`, `disable_search`
+- `reasoning_effort`, `language_preference`
 
 ```lua
 local result = app.integrations.perplexity.chat({
   messages = {
-    { role = "user", content = "What is quantum computing?" }
-  }
-})
-
-print(result.content)
--- Citations are available in result.citations
-for i, url in ipairs(result.citations or {}) do
-  print("Source: " .. url)
-end
-```
-
-#### Multi-turn conversation
-
-```lua
-local result = app.integrations.perplexity.chat({
-  messages = {
-    { role = "system", content = "You are a helpful science tutor." },
-    { role = "user", content = "Explain photosynthesis." },
-    { role = "assistant", content = "Photosynthesis is the process..." },
-    { role = "user", content = "What are the main factors affecting its rate?" }
+    { role = "user", content = "Summarize the current Perplexity Sonar API." }
   },
   model = "sonar-pro",
-  temperature = 0.3
-})
-
-print(result.content)
-```
-
-#### Domain-filtered search
-
-```lua
-local result = app.integrations.perplexity.chat({
-  messages = {
-    { role = "user", content = "What is the latest PHP version?" }
-  },
-  search_domain_filter = { "php.net" },
-  search_recency_filter = "month"
-})
-
-print(result.content)
-```
-
----
-
-## ask
-
-Ask Perplexity AI a question and get a concise answer with cited sources. Best for factual queries, research, and knowledge questions.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | The question or prompt to ask |
-| `model` | string | no | Model to use (default: "sonar") |
-| `temperature` | number | no | Sampling temperature 0.0–2.0 (default: 0.2) |
-| `max_tokens` | integer | no | Maximum tokens in the response |
-| `search_domain_filter` | array | no | Domains to limit search to |
-| `return_images` | boolean | no | Return images in response (default: false) |
-| `return_related_questions` | boolean | no | Return related questions (default: false) |
-| `search_recency_filter` | string | no | Filter by recency: "month", "week", "day", "hour" |
-
-### Examples
-
-#### Simple question
-
-```lua
-local result = app.integrations.perplexity.ask({
-  query = "What is the population of Tokyo?"
-})
-
-print(result.answer)
-```
-
-#### With options
-
-```lua
-local result = app.integrations.perplexity.ask({
-  query = "Latest news about space exploration",
-  model = "sonar-pro",
-  search_recency_filter = "week",
+  search_domain_filter = { "docs.perplexity.ai" },
   return_related_questions = true
 })
 
-print(result.answer)
+print(result.content)
+for _, source in ipairs(result.citations or {}) do
+  print(source)
+end
+```
 
-if result.related_questions then
-  for _, q in ipairs(result.related_questions) do
-    print("Related: " .. q)
+Normalized output includes `id`, `model`, `content`, `role`, `finish_reason`, `usage`, `citations`, `search_results`, `images`, and `related_questions` when present.
+
+## ask
+
+Ask a one-shot Sonar question. This builds a single user message and calls the same Sonar chat endpoint as `chat`.
+
+```lua
+local result = app.integrations.perplexity.ask({
+  query = "What changed in the latest public Sonar API shape?",
+  model = "sonar",
+  search_recency_filter = "month"
+})
+
+local content = result.choices[1].message.content
+print(content)
+```
+
+`ask` returns the raw Sonar response so agents can inspect the full `choices`, `citations`, `search_results`, `usage`, `images`, and `related_questions` payload.
+
+## search
+
+Search the web and retrieve relevant page results without generating an answer.
+
+```lua
+local result = app.integrations.perplexity.search({
+  query = "Perplexity embeddings API",
+  max_results = 5,
+  search_domain_filter = { "docs.perplexity.ai" }
+})
+
+for _, item in ipairs(result.results or {}) do
+  print(item.title .. " " .. item.url)
+end
+```
+
+## create_async_sonar
+
+Submit a long-running Sonar request and poll it later.
+
+```lua
+local created = app.integrations.perplexity.create_async_sonar({
+  query = "Create a detailed research brief on search-grounded LLM APIs.",
+  model = "sonar-deep-research",
+  idempotency_key = "research-brief-example-001"
+})
+
+print(created.id)
+print(created.status)
+```
+
+You can pass `messages` instead of `query` for multi-turn requests.
+
+## list_async_sonar
+
+List async Sonar requests for the configured account.
+
+```lua
+local result = app.integrations.perplexity.list_async_sonar({})
+
+for _, request in ipairs(result.requests or {}) do
+  print(request.id .. " " .. request.status)
+end
+```
+
+## get_async_sonar
+
+Retrieve one async Sonar request.
+
+```lua
+local result = app.integrations.perplexity.get_async_sonar({
+  request_id = "req_example"
+})
+
+print(result.status)
+if result.response then
+  print(result.response.choices[1].message.content)
+end
+```
+
+## agent
+
+Create a Perplexity Agent API response.
+
+```lua
+local result = app.integrations.perplexity.agent({
+  input = "Find three sources about agentic search APIs and summarize the tradeoffs.",
+  model = "perplexity/sonar"
+})
+
+for _, output in ipairs(result.output or {}) do
+  for _, content in ipairs(output.content or {}) do
+    if content.text then
+      print(content.text)
+    end
   end
 end
 ```
 
----
+Use `list_models` for Agent API model ids.
+
+## embeddings
+
+Create embeddings for a string or array of strings.
+
+```lua
+local result = app.integrations.perplexity.embeddings({
+  input = { "First document chunk", "Second document chunk" },
+  model = "pplx-embed-v1-0.6b",
+  encoding_format = "base64_int8"
+})
+
+print(result.model)
+print(#(result.data or {}))
+```
+
+Embeddings are returned in Perplexity's encoded format, usually base64-encoded compact vectors.
+
+## contextualized_embeddings
+
+Create contextualized embeddings for chunks grouped by source document.
+
+```lua
+local result = app.integrations.perplexity.contextualized_embeddings({
+  input = {
+    { "Document A chunk 1", "Document A chunk 2" },
+    { "Document B chunk 1" }
+  },
+  model = "pplx-embed-context-v1-0.6b"
+})
+
+print(result.model)
+```
+
+The input is nested: each inner array is one document's chunks.
 
 ## list_models
 
-List all available Perplexity AI models.
-
-### Parameters
-
-None.
-
-### Example
+List Perplexity Agent API models.
 
 ```lua
 local result = app.integrations.perplexity.list_models({})
 
 for _, model in ipairs(result.data or {}) do
-  print(model.id .. " — " .. (model.description or ""))
+  print(model.id .. " " .. (model.owned_by or ""))
 end
 ```
 
----
-
-## get_current_user
-
-Get information about the currently authenticated Perplexity API user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.perplexity.get_current_user({})
-
-print("User: " .. (result.email or "unknown"))
-print("Plan: " .. (result.plan or "unknown"))
-```
-
----
-
 ## Multi-Account Usage
 
-If you have multiple Perplexity accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.perplexity.chat({...})
-
--- Explicit default (portable across setups)
 app.integrations.perplexity.default.chat({...})
-
--- Named accounts
-app.integrations.perplexity.work.chat({...})
-app.integrations.perplexity.personal.chat({...})
+app.integrations.perplexity.research.chat({...})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+The same tool names are available on each account namespace.

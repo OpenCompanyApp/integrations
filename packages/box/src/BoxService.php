@@ -2,263 +2,326 @@
 
 namespace OpenCompany\Integrations\Box;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the official Box Platform API.
+ *
+ * Handles Bearer authentication, API and upload hosts, multipart uploads,
+ * OpenAPI operation request mapping, and response parsing for generated tools.
+ */
 class BoxService
 {
     /**
-     * Create a new BoxService instance.
-     *
-     * @param  string  $accessToken  Box API access token
-     * @param  string  $baseUrl  Box API base URL
+     * @param  string  $accessToken  Box API access token.
+     * @param  string  $baseUrl  Box API base URL.
+     * @param  string  $uploadUrl  Box upload API base URL.
      */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.box.com/2.0',
+        private string $uploadUrl = 'https://upload.box.com/api/2.0',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl !== '' ? $this->baseUrl : 'https://api.box.com/2.0', '/');
+        $this->uploadUrl = rtrim($this->uploadUrl !== '' ? $this->uploadUrl : 'https://upload.box.com/api/2.0', '/');
     }
 
-    /**
-     * Check whether the service is configured with an access token.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->accessToken !== '';
     }
 
     /**
-     * List items in a folder.
+     * Return all official Box operations exposed by this integration.
      *
-     * @param  string  $folderId  The folder ID (use "0" for root)
-     * @param  int  $limit  Maximum number of items to return (1–1000)
-     * @param  int  $offset  Zero-based offset for pagination
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function listFiles(string $folderId = '0', int $limit = 100, int $offset = 0): array
+    public static function operations(): array
     {
-        return $this->request('GET', "/folders/{$folderId}/items", [
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
+        return BoxOperations::all();
     }
 
     /**
-     * Get metadata for a file.
+     * Return one operation definition by slug.
      *
-     * @param  string  $fileId  The file ID
      * @return array<string, mixed>
      */
-    public function getFile(string $fileId): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', "/files/{$fileId}");
-    }
-
-    /**
-     * Upload a file to Box.
-     *
-     * @param  string  $content  File contents
-     * @param  string  $fileName  Name for the file in Box
-     * @param  string  $parentId  Parent folder ID (use "0" for root)
-     * @return array<string, mixed>
-     */
-    public function uploadFile(string $content, string $fileName, string $parentId = '0'): array
-    {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Box access token is not configured.');
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) {
+                return $definition;
+            }
         }
 
-        $attributes = json_encode([
-            'name' => $fileName,
-            'parent' => ['id' => $parentId],
-        ]);
+        throw new \RuntimeException("Unsupported Box operation: {$operation}");
+    }
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->accessToken,
-        ])
-            ->timeout(120)
-            ->attach('attributes', $attributes, 'attributes', ['content-type' => 'application/json'])
-            ->attach('file', $content, $fileName)
-            ->post('https://upload.box.com/api/2.0/files/content');
+    /**
+     * Execute an official Box operation using normalized tool arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function call(string $operation, array $args = []): array
+    {
+        $definition = $this->operation($operation);
+        [$path, $pathArgs] = $this->preparePath($definition, $args);
+        $query = $this->prepareQuery($definition, $args);
+        foreach ($pathArgs as $param) {
+            unset($query[$param]);
+        }
+        $body = $this->prepareBody($definition, $args);
 
-        if (!$response->successful()) {
-            $error = $response->json('message') ?? $response->body();
-            Log::error('Box API upload error', [
-                'status' => $response->status(),
-                'error' => $error,
-            ]);
-            throw new \RuntimeException("Box API upload error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+        return $this->request($definition, $path, $query, $body);
+    }
+
+    /**
+     * Build request path and replace path variables.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: list<string>}
+     */
+    private function preparePath(array $definition, array $args): array
+    {
+        $path = (string) $definition['path'];
+        $pathArgs = [];
+
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'path') {
+                continue;
+            }
+
+            $original = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? null;
+
+            if ($value === null || $value === '') {
+                throw new \RuntimeException("{$param} is required for {$definition['slug']}.");
+            }
+
+            $path = str_replace('{'.$original.'}', rawurlencode((string) $value), $path);
+            $pathArgs[] = $param;
         }
 
-        return $response->json() ?? [];
+        return [$path, $pathArgs];
     }
 
     /**
-     * Download a file's contents.
+     * Build query parameters.
      *
-     * @param  string  $fileId  The file ID
-     * @return string  The raw file contents
-     */
-    public function downloadFile(string $fileId): string
-    {
-        $response = $this->rawRequest('GET', "/files/{$fileId}/content");
-
-        return $response->body();
-    }
-
-    /**
-     * Delete a file.
-     *
-     * @param  string  $fileId  The file ID
-     */
-    public function deleteFile(string $fileId): void
-    {
-        $this->request('DELETE', "/files/{$fileId}");
-    }
-
-    /**
-     * Create a new folder.
-     *
-     * @param  string  $name  The folder name
-     * @param  string  $parentId  Parent folder ID (use "0" for root)
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    public function createFolder(string $name, string $parentId = '0'): array
+    private function prepareQuery(array $definition, array $args): array
     {
-        return $this->request('POST', '/folders', [
-            'name' => $name,
-            'parent' => ['id' => $parentId],
-        ]);
+        $query = [];
+
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'query') {
+                continue;
+            }
+
+            $param = (string) $parameter['param'];
+            if (array_key_exists($param, $args)) {
+                $query[(string) $parameter['name']] = $args[$param];
+            }
+        }
+
+        if (isset($args['query']) && is_array($args['query'])) {
+            foreach ($args['query'] as $key => $value) {
+                $query[(string) $key] = $value;
+            }
+        }
+
+        return $query;
     }
 
     /**
-     * Get metadata for a folder.
+     * Build JSON or multipart body for write operations.
      *
-     * @param  string  $folderId  The folder ID
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>|list<mixed>|null
      */
-    public function getFolder(string $folderId): array
+    private function prepareBody(array $definition, array $args): array|null
     {
-        return $this->request('GET', "/folders/{$folderId}");
+        $bodyParameter = null;
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) === 'body') {
+                $bodyParameter = $parameter;
+                break;
+            }
+        }
+
+        if ($bodyParameter === null) {
+            return null;
+        }
+
+        if (! array_key_exists('body', $args)) {
+            if (! ($bodyParameter['required'] ?? false)) {
+                return null;
+            }
+
+            throw new \RuntimeException("body is required for {$definition['slug']}.");
+        }
+
+        if (! is_array($args['body'])) {
+            throw new \RuntimeException('body must be an object or array.');
+        }
+
+        return $args['body'];
     }
 
     /**
-     * Share a file by creating a shared link.
+     * Send an HTTP request and normalize the response for tools.
      *
-     * @param  string  $fileId  The file ID
-     * @param  array<string, mixed>  $settings  Shared link settings (access, password, expires_at, etc.)
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON or multipart body.
      * @return array<string, mixed>
      */
-    public function shareFile(string $fileId, array $settings = []): array
+    private function request(array $definition, string $path, array $query = [], array|null $body = null): array
     {
-        $body = ['shared_link' => empty($settings) ? (object) [] : $settings];
-
-        return $this->request('PUT', "/files/{$fileId}", $body);
-    }
-
-    /**
-     * Search for files and folders.
-     *
-     * @param  string  $query  The search query
-     * @param  int  $limit  Maximum number of results (1–200)
-     * @param  int  $offset  Zero-based offset for pagination
-     * @return array<string, mixed>
-     */
-    public function search(string $query, int $limit = 50, int $offset = 0): array
-    {
-        return $this->request('GET', '/search', [
-            'query' => $query,
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
-    }
-
-    /**
-     * Get the currently authenticated user.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/users/me');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Query params or JSON body
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($method === 'DELETE') {
+        $response = $this->rawRequest($definition, $path, $query, $body);
+        if ($response->status() === 204) {
             return [];
         }
 
-        return $response->json() ?? [];
+        $contentType = (string) ($response->header('Content-Type') ?? '');
+        if (str_contains($contentType, 'application/json') || str_contains($contentType, '+json')) {
+            $json = $response->json();
+
+            return is_array($json) ? $json : [];
+        }
+
+        return [
+            'body' => $response->body(),
+            'content_type' => $contentType,
+        ];
     }
 
     /**
-     * Make a raw HTTP request to the Box API.
+     * Send a raw HTTP request to the Box API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Query params or JSON body
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON or multipart body.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(array $definition, string $path, array $query = [], array|null $body = null): Response
     {
-        if (!$this->accessToken) {
+        if (! $this->isConfigured()) {
             throw new \RuntimeException('Box access token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $method = (string) $definition['method'];
+        $url = $this->urlWithQuery($this->baseUrlFor($definition).$path, $query);
+        $bodyContentType = (string) ($definition['body_content_type'] ?? 'application/json');
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-            ])->timeout(30);
+            $headers = [
+                'Authorization' => 'Bearer '.$this->accessToken,
+                'Accept' => 'application/json',
+            ];
+            if ($bodyContentType !== 'multipart/form-data') {
+                $headers['Content-Type'] = $bodyContentType;
+            }
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->withHeaders(['Content-Type' => 'application/json'])->post($url, $data),
-                'PUT' => $http->withHeaders(['Content-Type' => 'application/json'])->put($url, $data),
-                'DELETE' => $http->withHeaders(['Content-Type' => 'application/json'])->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $response = Http::withHeaders($headers)
+                ->timeout(120)
+                ->send($method, $url, $this->requestOptions($body, $bodyContentType));
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Box API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Box API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the access token may be invalid.");
-                }
-
-                $error = $response->json('message') ?? $response->json('error.description') ?? $body;
+            if (! $response->successful()) {
+                $error = $response->json('message') ?? $response->json('error_description') ?? $response->json('error') ?? $response->body();
                 Log::error("Box API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Box API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException('Box API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Box API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
+            Log::error("Box API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+
             throw new \RuntimeException("Failed to connect to Box API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build request options for JSON or multipart bodies.
+     *
+     * @param  array<string, mixed>|list<mixed>|null  $body  Request body.
+     * @return array<string, mixed>
+     */
+    private function requestOptions(array|null $body, string $bodyContentType): array
+    {
+        if ($body === null) {
+            return [];
+        }
+
+        if ($bodyContentType === 'multipart/form-data') {
+            return ['multipart' => $this->multipart($body)];
+        }
+
+        return ['json' => $body];
+    }
+
+    /**
+     * Convert body fields to Laravel multipart format.
+     *
+     * @param  array<string, mixed>|list<mixed>  $body  Multipart fields.
+     * @return list<array<string, mixed>>
+     */
+    private function multipart(array $body): array
+    {
+        $parts = [];
+        foreach ($body as $name => $contents) {
+            $part = ['name' => (string) $name];
+            if (is_string($contents) && is_file($contents)) {
+                $part['contents'] = fopen($contents, 'r');
+                $part['filename'] = basename($contents);
+            } else {
+                $part['contents'] = is_scalar($contents) ? (string) $contents : json_encode($contents);
+            }
+            $parts[] = $part;
+        }
+
+        return $parts;
+    }
+
+    /**
+     * Select the API or upload host for an operation.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     */
+    private function baseUrlFor(array $definition): string
+    {
+        return ($definition['base'] ?? 'api') === 'upload' ? $this->uploadUrl : $this->baseUrl;
+    }
+
+    /**
+     * Append query parameters to a URL.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+        foreach ($query as $key => $value) {
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item === null || $item === '') {
+                    continue;
+                }
+                $parts[] = rawurlencode((string) $key).'='.rawurlencode((string) $item);
+            }
+        }
+
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a customer record in Paddle.
+ *
+ * Accepts the required email address and optional display name used for
+ * invoicing and customer management workflows.
+ */
 class PaddleCreateCustomer implements Tool
 {
     /**
      * Create a new PaddleCreateCustomer tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

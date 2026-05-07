@@ -1,198 +1,144 @@
-# ChurnZero — Lua API Reference
+# ChurnZero Lua API Reference
 
-## list_accounts
+ChurnZero uses an action-based HTTP API at an `/i` endpoint. The integration adds the secret `appKey` automatically and exposes the documented action surface for attributes, events, and lifecycle writes.
 
-Search and list accounts in ChurnZero. Supports filtering by search term and pagination.
+ChurnZero does not expose a normal paginated REST read API through this package. Use your system of record for reads and push account/contact changes into ChurnZero.
 
-### Parameters
+## set_attributes
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `search` | string | no | Search term to filter accounts by name or other attributes |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `perPage` | integer | no | Results per page (default: 25, max: 100) |
-
-### Example
-
-```lua
-local result = app.integrations.churnzero.list_accounts({
-  search = "Acme",
-  perPage = 10
-})
-
-for _, account in ipairs(result.accounts) do
-  print(account.id .. ": " .. account.name)
-end
-```
-
----
-
-## get_account
-
-Get full details for a single account by ID.
+Set one or more attributes on an account or contact. Each attribute is sent through a `setAttribute` action.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | The account ID to retrieve |
+| `entity` | string | yes | `account` or `contact` |
+| `account_external_id` | string | yes | Account ID from your source system |
+| `contact_external_id` | string | contact only | Contact ID from your source system |
+| `attributes` | table | yes | Attribute name/value pairs |
 
 ### Example
 
 ```lua
-local account = app.integrations.churnzero.get_account({
-  id = "acc_abc123"
+app.integrations.churnzero.set_attributes({
+  entity = "account",
+  account_external_id = "acct_123",
+  attributes = {
+    Name = "Example Account",
+    ARR = 12000
+  }
 })
-
-print(account.name)
-print("Health Score: " .. (account.healthScore or "N/A"))
-print("License Count: " .. (account.licenseCount or "0"))
 ```
 
----
+For contact attributes:
 
-## list_contacts
+```lua
+app.integrations.churnzero.set_attributes({
+  entity = "contact",
+  account_external_id = "acct_123",
+  contact_external_id = "user_456",
+  attributes = {
+    Email = "person@example.test",
+    Role = "Admin"
+  }
+})
+```
 
-List contacts, optionally filtered by account or search term.
+## track_event
+
+Track an event for an account and optionally a contact.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `account_id` | string | no | Filter contacts by account ID |
-| `search` | string | no | Search term to filter contacts by name or email |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `perPage` | integer | no | Results per page (default: 25, max: 100) |
+| `account_external_id` | string | yes | Account ID from your source system |
+| `event_name` | string | yes | Event name in ChurnZero |
+| `contact_external_id` | string | no | Contact ID from your source system |
+| `description` | string | no | Event description |
+| `quantity` | number | no | Numeric value for usage-style events |
+| `custom_fields` | table | no | Event custom fields |
 
 ### Example
 
 ```lua
-local result = app.integrations.churnzero.list_contacts({
-  account_id = "acc_abc123",
-  perPage = 50
+app.integrations.churnzero.track_event({
+  account_external_id = "acct_123",
+  contact_external_id = "user_456",
+  event_name = "Report Exported",
+  quantity = 1
 })
-
-for _, contact in ipairs(result.contacts) do
-  print(contact.firstName .. " " .. contact.lastName .. " (" .. (contact.email or "") .. ")")
-end
 ```
 
----
+## increment_attribute
 
-## get_contact
-
-Get full details for a single contact by ID.
+Increment a numeric account or contact attribute.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | The contact ID to retrieve |
+| `entity` | string | yes | `account` or `contact` |
+| `account_external_id` | string | yes | Account ID from your source system |
+| `contact_external_id` | string | contact only | Contact ID from your source system |
+| `name` | string | yes | Numeric attribute name |
+| `value` | number | yes | Amount to add; can be negative |
 
 ### Example
 
 ```lua
-local contact = app.integrations.churnzero.get_contact({
-  id = "con_abc123"
+app.integrations.churnzero.increment_attribute({
+  entity = "contact",
+  account_external_id = "acct_123",
+  contact_external_id = "user_456",
+  name = "Login Count",
+  value = 1
 })
-
-print(contact.firstName .. " " .. contact.lastName)
-print("Email: " .. (contact.email or "N/A"))
-print("Role: " .. (contact.role or "N/A"))
 ```
 
----
+## delete_contact
 
-## list_alerts
-
-List alerts — risk signals, usage drops, renewal reminders, and other notifications.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `account_id` | string | no | Filter alerts by account ID |
-| `status` | string | no | Alert status: `"open"`, `"dismissed"`, `"snoozed"` |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `perPage` | integer | no | Results per page (default: 25, max: 100) |
-
-### Example
+Delete a contact by external IDs. This is destructive.
 
 ```lua
-local result = app.integrations.churnzero.list_alerts({
-  status = "open",
-  perPage = 10
+app.integrations.churnzero.delete_contact({
+  account_external_id = "acct_123",
+  contact_external_id = "user_456"
 })
-
-for _, alert in ipairs(result.alerts) do
-  print(alert.type .. ": " .. (alert.title or alert.message or ""))
-end
 ```
 
----
+## delete_account
 
-## list_usage
-
-List usage data — track how customers engage with your product features.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `account_id` | string | no | Filter usage data by account ID |
-| `feature` | string | no | Filter by feature or module name |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `perPage` | integer | no | Results per page (default: 25, max: 100) |
-
-### Example
+Delete an account by external ID. This is destructive and may affect related contacts and event history.
 
 ```lua
-local result = app.integrations.churnzero.list_usage({
-  account_id = "acc_abc123",
-  feature = "Reporting"
+app.integrations.churnzero.delete_account({
+  account_external_id = "acct_123"
 })
-
-for _, entry in ipairs(result.usage) do
-  print(entry.feature .. ": " .. entry.value)
-end
 ```
 
----
+## send_action
 
-## get_current_user
-
-Get the authenticated user's profile.
-
-### Parameters
-
-None.
-
-### Example
+Send an advanced raw ChurnZero action. Do not include `appKey`; the integration adds it from credentials.
 
 ```lua
-local user = app.integrations.churnzero.get_current_user({})
-
-print("Logged in as: " .. (user.firstName or "") .. " " .. (user.lastName or ""))
-print("Email: " .. (user.email or "N/A"))
-print("Tenant: " .. (user.tenantName or "N/A"))
+app.integrations.churnzero.send_action({
+  params = {
+    action = "trackEvent",
+    accountExternalId = "acct_123",
+    eventName = "Custom Action"
+  }
+})
 ```
 
----
+## Notes
+
+Attribute names must match fields configured in ChurnZero. Custom fields are not necessarily created on the fly. The HTTP API often returns a small status payload, so treat successful calls as write acknowledgements rather than fresh record reads.
 
 ## Multi-Account Usage
 
-If you have multiple ChurnZero instances configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.churnzero.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.churnzero.default.function_name({...})
-
--- Named accounts
-app.integrations.churnzero.us_team.function_name({...})
-app.integrations.churnzero.eu_team.function_name({...})
+app.integrations.churnzero.set_attributes({...})
+app.integrations.churnzero.default.set_attributes({...})
+app.integrations.churnzero.eu_team.track_event({...})
 ```
-
-All functions are identical across accounts — only the credentials differ.

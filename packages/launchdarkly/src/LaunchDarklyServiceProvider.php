@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the LaunchDarkly integration with Laravel's service container.
+ *
+ * Binds the API service from stored credentials and registers the tool provider
+ * with the shared registry when the host exposes one.
+ */
 class LaunchDarklyServiceProvider extends ServiceProvider
 {
     public function register(): void

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-agora",
-    "description": "Agora real-time communication integration for Laravel — manage projects, recordings, and user data.",
+    "description": "Agora Cloud Recording integration for Laravel — acquire resources, start, query, update, lay out, stop, and monitor recording sessions.",
     "license": "MIT",
     "authors": [
         {

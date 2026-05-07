@@ -6,6 +6,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Samsara\SamsaraService;
 
+/**
+ * Retrieve one fleet driver from Samsara.
+ */
 class SamsaraGetDriver implements Tool
 {
     /**

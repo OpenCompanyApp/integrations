@@ -316,18 +316,26 @@ class DropboxService
      *---------------------------------------------------------------------*/
 
     /**
-     * Log a warning if the API response indicates a failure.
+     * Throw a normalized exception if the API response indicates a failure.
      *
      * @param  \Illuminate\Http\Client\Response  $response
-     * @param  string  $endpoint
+     * @throws \RuntimeException
      */
     private function logErrorIfFailed($response, string $endpoint): void
     {
         if ($response->failed()) {
+            $json = $response->json();
+            $message = is_array($json)
+                ? (string) ($json['error_summary'] ?? $json['message'] ?? $json['error']['.tag'] ?? '')
+                : '';
+            $message = $message !== '' ? $message : trim($response->body());
+
             Log::warning("Dropbox API error on {$endpoint}", [
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
+
+            throw new \RuntimeException('Dropbox API error (' . $response->status() . '): ' . ($message !== '' ? $message : 'Unexpected API error.'));
         }
     }
 }

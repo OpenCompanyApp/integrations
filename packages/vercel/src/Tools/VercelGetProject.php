@@ -2,12 +2,18 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
 
+/**
+ * Retrieve a Vercel project by ID or name.
+ */
 class VercelGetProject implements Tool
 {
+    /**
+     * @param  VercelService  $service  The Vercel REST API client.
+     */
     public function __construct(private VercelService $service)
     {
     }
@@ -35,9 +41,19 @@ class VercelGetProject implements Tool
                 'required' => false,
                 'description' => 'Optional team ID if the project belongs to a team.',
             ],
+            'slug' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team slug if the project belongs to a team.',
+            ],
         ];
     }
 
+    /**
+     * Fetch a project by ID or name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id, team_id, slug).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -49,7 +65,12 @@ class VercelGetProject implements Tool
                 return ToolResult::error('Missing required parameter: id');
             }
 
-            $result = $this->service->getProject($args['id']);
+            $params = array_filter([
+                'teamId' => $args['team_id'] ?? null,
+                'slug' => $args['slug'] ?? null,
+            ], static fn ($value): bool => $value !== null && $value !== '');
+
+            $result = $this->service->getProject($args['id'], $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

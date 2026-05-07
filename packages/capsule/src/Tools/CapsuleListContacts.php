@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * CapsuleListContacts — list contacts (parties) from Capsule CRM.
+ * List contacts (parties) from Capsule CRM.
  *
  * Supports pagination via `page` and `per_page` parameters.
  * Returns people and organisations from the authenticated account.
  */
 class CapsuleListContacts implements Tool
 {
+    /**
+     * @param  CapsuleService  $service  The Capsule CRM API client.
+     */
     public function __construct(
         private CapsuleService $service,
     ) {}
@@ -36,6 +39,11 @@ class CapsuleListContacts implements Tool
         ];
     }
 
+    /**
+     * List Capsule CRM parties.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

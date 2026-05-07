@@ -2,15 +2,18 @@
 
 namespace OpenCompany\Integrations\Etsy\Tools;
 
-use OpenCompany\Integrations\Etsy\EtsyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Etsy\EtsyService;
 
 /**
  * Get the currently authenticated Etsy user profile.
  */
 class EtsyGetCurrentUser implements Tool
 {
+    /**
+     * @param  EtsyService  $service  The Etsy Open API client.
+     */
     public function __construct(
         private EtsyService $service,
     ) {}
@@ -30,6 +33,11 @@ class EtsyGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the authenticated Etsy user's profile.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -81,7 +81,7 @@ Publish a new status (toot) on Mastodon.
 
 ```lua
 local result = app.integrations.mastodon.create_status({
-  status = "Hello from the API! 🐘"
+  status = "Hello from the API!"
 })
 print("Posted: " .. result.url)
 ```
@@ -174,6 +174,38 @@ print("Logged in as @" .. me.username)
 print("Display name: " .. me.display_name)
 print("Default visibility: " .. (me.source.privacy or "public"))
 ```
+
+---
+
+## generic_api
+
+Use generic API tools for Mastodon endpoints that do not have a dedicated wrapper.
+Paths must start with `/api/` and are relative to the configured instance URL.
+
+```lua
+local notifications = app.integrations.mastodon.api_get({
+  path = "/api/v1/notifications",
+  params = { limit = 20 }
+})
+
+local favourite = app.integrations.mastodon.api_post({
+  path = "/api/v1/statuses/123456/favourite",
+  body = {}
+})
+
+local update = app.integrations.mastodon.api_put({
+  path = "/api/v1/statuses/123456",
+  body = { status = "Edited text" }
+})
+
+local deleted = app.integrations.mastodon.api_delete({
+  path = "/api/v1/statuses/123456",
+  body = {}
+})
+```
+
+Generic tools return the raw Mastodon JSON response. Use the official Mastodon
+API docs for endpoint-specific params, scopes, and response shapes.
 
 ---
 

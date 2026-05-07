@@ -1,0 +1,2363 @@
+{
+  "source": {
+    "type": "openapi",
+    "url": "https://api-reference.checkout.com/v1/swagger.json",
+    "docs_url": "https://api-reference.checkout.com/"
+  },
+  "openapi": "3.0.1",
+  "version": "v1.0.0",
+  "title": "Checkout.com API Reference",
+  "base_url": "https://{prefix}.api.checkout.com",
+  "sandbox_base_url": "https://{prefix}.api.sandbox.checkout.com",
+  "path_count": 156,
+  "method_count": 195,
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/account-updater/cards",
+      "operation_id": "RetrieveUpdatedCardDetails",
+      "tool": "checkout_com_retrieve_updated_card_details",
+      "class": "CheckoutComRetrieveUpdatedCardDetails",
+      "tags": [
+        "Standalone Account Updater"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/accounts/entities",
+      "operation_id": "onboardEntity",
+      "tool": "checkout_com_onboard_entity",
+      "class": "CheckoutComOnboardEntity",
+      "tags": [
+        "Onboarding",
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{entityId}/members",
+      "operation_id": "getSubEntityMembers",
+      "tool": "checkout_com_get_sub_entity_members",
+      "class": "CheckoutComGetSubEntityMembers",
+      "tags": [
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/accounts/entities/{entityId}/members/{userId}",
+      "operation_id": "reinviteSubEntityMembers",
+      "tool": "checkout_com_reinvite_sub_entity_members",
+      "class": "CheckoutComReinviteSubEntityMembers",
+      "tags": [
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{entityId}/payment-instruments/{id}",
+      "operation_id": "getPlatformsPaymentInstrument",
+      "tool": "checkout_com_get_platforms_payment_instrument",
+      "class": "CheckoutComGetPlatformsPaymentInstrument",
+      "tags": [
+        "Payment instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/accounts/entities/{entityId}/payment-instruments/{id}",
+      "operation_id": "updatePlatformsPaymentInstrument",
+      "tool": "checkout_com_update_platforms_payment_instrument",
+      "class": "CheckoutComUpdatePlatformsPaymentInstrument",
+      "tags": [
+        "Payment instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{entityId}/reserve-rules/{id}",
+      "operation_id": "getReserveRule",
+      "tool": "checkout_com_get_reserve_rule",
+      "class": "CheckoutComGetReserveRule",
+      "tags": [
+        "platforms",
+        "Reserve rules"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/accounts/entities/{entityId}/reserve-rules/{id}",
+      "operation_id": "updateReserveRule",
+      "tool": "checkout_com_update_reserve_rule",
+      "class": "CheckoutComUpdateReserveRule",
+      "tags": [
+        "platforms",
+        "Reserve rules"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{id}",
+      "operation_id": "getEntityDetails",
+      "tool": "checkout_com_get_entity_details",
+      "class": "CheckoutComGetEntityDetails",
+      "tags": [
+        "Onboarding",
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/accounts/entities/{id}",
+      "operation_id": "updateEntityDetails",
+      "tool": "checkout_com_update_entity_details",
+      "class": "CheckoutComUpdateEntityDetails",
+      "tags": [
+        "Onboarding",
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/accounts/entities/{id}/payment-instruments",
+      "operation_id": "addPlatformsPaymentInstrument",
+      "tool": "checkout_com_add_platforms_payment_instrument",
+      "class": "CheckoutComAddPlatformsPaymentInstrument",
+      "tags": [
+        "Payment instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{id}/payment-instruments",
+      "operation_id": "queryPlatformsPaymentInstruments",
+      "tool": "checkout_com_query_platforms_payment_instruments",
+      "class": "CheckoutComQueryPlatformsPaymentInstruments",
+      "tags": [
+        "Payment instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{id}/payout-schedules",
+      "operation_id": "getSubEntitysPayoutSchedule",
+      "tool": "checkout_com_get_sub_entitys_payout_schedule",
+      "class": "CheckoutComGetSubEntitysPayoutSchedule",
+      "tags": [
+        "Payout schedules"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/accounts/entities/{id}/payout-schedules",
+      "operation_id": "putSubEntitysPayoutSchedule",
+      "tool": "checkout_com_put_sub_entitys_payout_schedule",
+      "class": "CheckoutComPutSubEntitysPayoutSchedule",
+      "tags": [
+        "Payout schedules"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/accounts/entities/{id}/reserve-rules",
+      "operation_id": "addReserveRule",
+      "tool": "checkout_com_add_reserve_rule",
+      "class": "CheckoutComAddReserveRule",
+      "tags": [
+        "platforms",
+        "Reserve rules"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/entities/{id}/reserve-rules",
+      "operation_id": "queryReserveRules",
+      "tool": "checkout_com_query_reserve_rules",
+      "class": "CheckoutComQueryReserveRules",
+      "tags": [
+        "platforms",
+        "Reserve rules"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/agentic_commerce/delegate_payment",
+      "operation_id": "delegatePayment",
+      "tool": "checkout_com_delegate_payment",
+      "class": "CheckoutComDelegatePayment",
+      "tags": [
+        "Agentic Commerce Protocol"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/aml-verifications",
+      "operation_id": "create_aml_verification",
+      "tool": "checkout_com_create_aml_verification",
+      "class": "CheckoutComCreateAmlVerification",
+      "tags": [
+        "AML Screening"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/aml-verifications/{aml_verification_id}",
+      "operation_id": "retrieve_aml_screening",
+      "tool": "checkout_com_retrieve_aml_screening",
+      "class": "CheckoutComRetrieveAmlScreening",
+      "tags": [
+        "AML Screening"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/applepay/certificates",
+      "operation_id": "uploadApplePayCertificate",
+      "tool": "checkout_com_upload_apple_pay_certificate",
+      "class": "CheckoutComUploadApplePayCertificate",
+      "tags": [
+        "Apple Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/applepay/enrollments",
+      "operation_id": "ApplePayEnrollMerchant",
+      "tool": "checkout_com_apple_pay_enroll_merchant",
+      "class": "CheckoutComApplePayEnrollMerchant",
+      "tags": [
+        "Apple Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/applepay/signing-requests",
+      "operation_id": "generateApplePaySigningRequest",
+      "tool": "checkout_com_generate_apple_pay_signing_request",
+      "class": "CheckoutComGenerateApplePaySigningRequest",
+      "tags": [
+        "Apple Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/balances/{id}",
+      "operation_id": "getEntityBalances",
+      "tool": "checkout_com_get_entity_balances",
+      "class": "CheckoutComGetEntityBalances",
+      "tags": [
+        "Balances"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/compliance-requests/{payment_id}",
+      "operation_id": "ComplianceRequests_GetComplianceRequest",
+      "tool": "checkout_com_compliance_requests_get_compliance_request",
+      "class": "CheckoutComComplianceRequestsGetComplianceRequest",
+      "tags": [
+        "Compliance requests"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/compliance-requests/{payment_id}",
+      "operation_id": "ComplianceRequests_SubmitComplianceRequestResponse",
+      "tool": "checkout_com_compliance_requests_submit_compliance_request_response",
+      "class": "CheckoutComComplianceRequestsSubmitComplianceRequestResponse",
+      "tags": [
+        "Compliance requests"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/connect/token",
+      "operation_id": "requestAnAccessToken",
+      "tool": "checkout_com_request_an_access_token",
+      "class": "CheckoutComRequestAnAccessToken",
+      "tags": [
+        "Access"
+      ],
+      "content_type": "application/x-www-form-urlencoded",
+      "requires_auth": false
+    },
+    {
+      "method": "POST",
+      "path": "/customers",
+      "operation_id": "createCustomer",
+      "tool": "checkout_com_create_customer",
+      "class": "CheckoutComCreateCustomer",
+      "tags": [
+        "Customers"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{identifier}",
+      "operation_id": "getCustomerDetails",
+      "tool": "checkout_com_get_customer_details",
+      "class": "CheckoutComGetCustomerDetails",
+      "tags": [
+        "Customers"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/customers/{identifier}",
+      "operation_id": "updateCustomerDetails",
+      "tool": "checkout_com_update_customer_details",
+      "class": "CheckoutComUpdateCustomerDetails",
+      "tags": [
+        "Customers"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/customers/{identifier}",
+      "operation_id": "deleteCustomer",
+      "tool": "checkout_com_delete_customer",
+      "class": "CheckoutComDeleteCustomer",
+      "tags": [
+        "Customers"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/disputes",
+      "operation_id": "getDisputes",
+      "tool": "checkout_com_get_disputes",
+      "class": "CheckoutComGetDisputes",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/disputes/{dispute_id}",
+      "operation_id": "getDisputeDetails",
+      "tool": "checkout_com_get_dispute_details",
+      "class": "CheckoutComGetDisputeDetails",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/disputes/{dispute_id}/accept",
+      "operation_id": "acceptDispute",
+      "tool": "checkout_com_accept_dispute",
+      "class": "CheckoutComAcceptDispute",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/disputes/{dispute_id}/evidence",
+      "operation_id": "provideDisputeEvidence",
+      "tool": "checkout_com_provide_dispute_evidence",
+      "class": "CheckoutComProvideDisputeEvidence",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/disputes/{dispute_id}/evidence",
+      "operation_id": "getDisputeEvidence",
+      "tool": "checkout_com_get_dispute_evidence",
+      "class": "CheckoutComGetDisputeEvidence",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/disputes/{dispute_id}/evidence",
+      "operation_id": "submitDisputeEvidence",
+      "tool": "checkout_com_submit_dispute_evidence",
+      "class": "CheckoutComSubmitDisputeEvidence",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/disputes/{dispute_id}/evidence/arbitration",
+      "operation_id": "submitDisputeArbitrationEvidence",
+      "tool": "checkout_com_submit_dispute_arbitration_evidence",
+      "class": "CheckoutComSubmitDisputeArbitrationEvidence",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/disputes/{dispute_id}/evidence/arbitration/submitted",
+      "operation_id": "getDisputeSubmittedArbitrationEvidence",
+      "tool": "checkout_com_get_dispute_submitted_arbitration_evidence",
+      "class": "CheckoutComGetDisputeSubmittedArbitrationEvidence",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/disputes/{dispute_id}/evidence/submitted",
+      "operation_id": "getDisputeSubmittedEvidence",
+      "tool": "checkout_com_get_dispute_submitted_evidence",
+      "class": "CheckoutComGetDisputeSubmittedEvidence",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/disputes/{dispute_id}/schemefiles",
+      "operation_id": "getDisputeSchemeFiles",
+      "tool": "checkout_com_get_dispute_scheme_files",
+      "class": "CheckoutComGetDisputeSchemeFiles",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/entities/{entityId}/files",
+      "operation_id": "uploadAFile",
+      "tool": "checkout_com_upload_a_file",
+      "class": "CheckoutComUploadAFile",
+      "tags": [
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/entities/{entityId}/files/{fileId}",
+      "operation_id": "retrieveAFile",
+      "tool": "checkout_com_retrieve_a_file",
+      "class": "CheckoutComRetrieveAFile",
+      "tags": [
+        "Platforms"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/face-authentications",
+      "operation_id": "create_face_authentication",
+      "tool": "checkout_com_create_face_authentication",
+      "class": "CheckoutComCreateFaceAuthentication",
+      "tags": [
+        "Face Authentication"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/face-authentications/{face_authentication_id}",
+      "operation_id": "retrieve_face_authentication",
+      "tool": "checkout_com_retrieve_face_authentication",
+      "class": "CheckoutComRetrieveFaceAuthentication",
+      "tags": [
+        "Face Authentication"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/face-authentications/{face_authentication_id}/anonymize",
+      "operation_id": "anonymize_face_authentication",
+      "tool": "checkout_com_anonymize_face_authentication",
+      "class": "CheckoutComAnonymizeFaceAuthentication",
+      "tags": [
+        "Face Authentication"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/face-authentications/{face_authentication_id}/attempts",
+      "operation_id": "create_fav_attempt",
+      "tool": "checkout_com_create_fav_attempt",
+      "class": "CheckoutComCreateFavAttempt",
+      "tags": [
+        "Face Authentication"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/face-authentications/{face_authentication_id}/attempts",
+      "operation_id": "list_fav_attempts",
+      "tool": "checkout_com_list_fav_attempts",
+      "class": "CheckoutComListFavAttempts",
+      "tags": [
+        "Face Authentication"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/face-authentications/{face_authentication_id}/attempts/{attempt_id}",
+      "operation_id": "get_fav_attempt",
+      "tool": "checkout_com_get_fav_attempt",
+      "class": "CheckoutComGetFavAttempt",
+      "tags": [
+        "Face Authentication"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/files",
+      "operation_id": "uploadFile",
+      "tool": "checkout_com_upload_file",
+      "class": "CheckoutComUploadFile",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "multipart/form-data",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/files/{file_id}",
+      "operation_id": "getFileInformation",
+      "tool": "checkout_com_get_file_information",
+      "class": "CheckoutComGetFileInformation",
+      "tags": [
+        "Disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/financial-actions",
+      "operation_id": "getFinancialActions",
+      "tool": "checkout_com_get_financial_actions",
+      "class": "CheckoutComGetFinancialActions",
+      "tags": [
+        "Financial actions"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/workflows",
+      "operation_id": "getAllWorkflows",
+      "tool": "checkout_com_get_all_workflows",
+      "class": "CheckoutComGetAllWorkflows",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows",
+      "operation_id": "addWorkflow",
+      "tool": "checkout_com_add_workflow",
+      "class": "CheckoutComAddWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/workflows/{workflowId}",
+      "operation_id": "getWorkflow",
+      "tool": "checkout_com_get_workflow",
+      "class": "CheckoutComGetWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/workflows/{workflowId}",
+      "operation_id": "removeWorkflow",
+      "tool": "checkout_com_remove_workflow",
+      "class": "CheckoutComRemoveWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/workflows/{workflowId}",
+      "operation_id": "patchWorkflow",
+      "tool": "checkout_com_patch_workflow",
+      "class": "CheckoutComPatchWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/{workflowId}/actions",
+      "operation_id": "addWorkflowAction",
+      "tool": "checkout_com_add_workflow_action",
+      "class": "CheckoutComAddWorkflowAction",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/workflows/{workflowId}/actions/{workflowActionId}",
+      "operation_id": "updateWorkflowAction",
+      "tool": "checkout_com_update_workflow_action",
+      "class": "CheckoutComUpdateWorkflowAction",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/workflows/{workflowId}/actions/{workflowActionId}",
+      "operation_id": "removeWorkflowAction",
+      "tool": "checkout_com_remove_workflow_action",
+      "class": "CheckoutComRemoveWorkflowAction",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/{workflowId}/conditions",
+      "operation_id": "addWorkflowCondition",
+      "tool": "checkout_com_add_workflow_condition",
+      "class": "CheckoutComAddWorkflowCondition",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/workflows/{workflowId}/conditions/{workflowConditionId}",
+      "operation_id": "updateWorkflowCondition",
+      "tool": "checkout_com_update_workflow_condition",
+      "class": "CheckoutComUpdateWorkflowCondition",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/workflows/{workflowId}/conditions/{workflowConditionId}",
+      "operation_id": "removeWorkflowCondition",
+      "tool": "checkout_com_remove_workflow_condition",
+      "class": "CheckoutComRemoveWorkflowCondition",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/{workflowId}/test",
+      "operation_id": "testWorkflow",
+      "tool": "checkout_com_test_workflow",
+      "class": "CheckoutComTestWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/workflows/event-types",
+      "operation_id": "getEventTypes",
+      "tool": "checkout_com_get_event_types",
+      "class": "CheckoutComGetEventTypes",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/workflows/events/{eventId}",
+      "operation_id": "getWorkflowEvent",
+      "tool": "checkout_com_get_workflow_event",
+      "class": "CheckoutComGetWorkflowEvent",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/workflows/events/{eventId}/actions/{workflowActionId}",
+      "operation_id": "getWorkflowActionInvocations",
+      "tool": "checkout_com_get_workflow_action_invocations",
+      "class": "CheckoutComGetWorkflowActionInvocations",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/events/{eventId}/reflow",
+      "operation_id": "reflowByEvent",
+      "tool": "checkout_com_reflow_by_event",
+      "class": "CheckoutComReflowByEvent",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/events/{eventId}/workflow/{workflowId}/reflow",
+      "operation_id": "reflowByEventAndWorkflow",
+      "tool": "checkout_com_reflow_by_event_and_workflow",
+      "class": "CheckoutComReflowByEventAndWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/events/reflow",
+      "operation_id": "reflowEvents",
+      "tool": "checkout_com_reflow_events",
+      "class": "CheckoutComReflowEvents",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/workflows/events/subject/{subjectId}",
+      "operation_id": "getSubjectEvents",
+      "tool": "checkout_com_get_subject_events",
+      "class": "CheckoutComGetSubjectEvents",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/events/subject/{subjectId}/reflow",
+      "operation_id": "reflowBySubject",
+      "tool": "checkout_com_reflow_by_subject",
+      "class": "CheckoutComReflowBySubject",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/workflows/events/subject/{subjectId}/workflow/{workflowId}/reflow",
+      "operation_id": "reflowBySubjectAndWorkflow",
+      "tool": "checkout_com_reflow_by_subject_and_workflow",
+      "class": "CheckoutComReflowBySubjectAndWorkflow",
+      "tags": [
+        "Workflows"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/forex/rates",
+      "operation_id": "getFxRates",
+      "tool": "checkout_com_get_fx_rates",
+      "class": "CheckoutComGetFxRates",
+      "tags": [
+        "Forex"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/forward",
+      "operation_id": "forwardRequest",
+      "tool": "checkout_com_forward_request",
+      "class": "CheckoutComForwardRequest",
+      "tags": [
+        "Forward"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/forward/{id}",
+      "operation_id": "getForwardRequest",
+      "tool": "checkout_com_get_forward_request",
+      "class": "CheckoutComGetForwardRequest",
+      "tags": [
+        "Forward"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/forward/secrets",
+      "operation_id": "createSecret",
+      "tool": "checkout_com_create_secret",
+      "class": "CheckoutComCreateSecret",
+      "tags": [
+        "Forward"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/forward/secrets",
+      "operation_id": "listSecrets",
+      "tool": "checkout_com_list_secrets",
+      "class": "CheckoutComListSecrets",
+      "tags": [
+        "Forward"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/forward/secrets/{name}",
+      "operation_id": "updateSecret",
+      "tool": "checkout_com_update_secret",
+      "class": "CheckoutComUpdateSecret",
+      "tags": [
+        "Forward"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/forward/secrets/{name}",
+      "operation_id": "deleteSecret",
+      "tool": "checkout_com_delete_secret",
+      "class": "CheckoutComDeleteSecret",
+      "tags": [
+        "Forward"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/googlepay/enrollments",
+      "operation_id": "GooglePayEnrollMerchant",
+      "tool": "checkout_com_google_pay_enroll_merchant",
+      "class": "CheckoutComGooglePayEnrollMerchant",
+      "tags": [
+        "Google Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/googlepay/enrollments/{entity_id}/domain",
+      "operation_id": "GooglePayRegisterDomain",
+      "tool": "checkout_com_google_pay_register_domain",
+      "class": "CheckoutComGooglePayRegisterDomain",
+      "tags": [
+        "Google Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/googlepay/enrollments/{entity_id}/domains",
+      "operation_id": "GooglePayGetRegisteredDomains",
+      "tool": "checkout_com_google_pay_get_registered_domains",
+      "class": "CheckoutComGooglePayGetRegisteredDomains",
+      "tags": [
+        "Google Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/googlepay/enrollments/{entity_id}/state",
+      "operation_id": "GooglePayGetEnrollmentState",
+      "tool": "checkout_com_google_pay_get_enrollment_state",
+      "class": "CheckoutComGooglePayGetEnrollmentState",
+      "tags": [
+        "Google Pay"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/hosted-payments",
+      "operation_id": "createAHostedPaymentsSession",
+      "tool": "checkout_com_create_a_hosted_payments_session",
+      "class": "CheckoutComCreateAHostedPaymentsSession",
+      "tags": [
+        "Hosted Payments Page"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/hosted-payments/{id}",
+      "operation_id": "getHostedPaymentsPageDetails",
+      "tool": "checkout_com_get_hosted_payments_page_details",
+      "class": "CheckoutComGetHostedPaymentsPageDetails",
+      "tags": [
+        "Hosted Payments Page"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/id-document-verifications",
+      "operation_id": "create_id_document_verification",
+      "tool": "checkout_com_create_id_document_verification",
+      "class": "CheckoutComCreateIdDocumentVerification",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/id-document-verifications/{id_document_verification_id}",
+      "operation_id": "retrieve_id_document_verification",
+      "tool": "checkout_com_retrieve_id_document_verification",
+      "class": "CheckoutComRetrieveIdDocumentVerification",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/id-document-verifications/{id_document_verification_id}/anonymize",
+      "operation_id": "anonymize_id_document_verification",
+      "tool": "checkout_com_anonymize_id_document_verification",
+      "class": "CheckoutComAnonymizeIdDocumentVerification",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/id-document-verifications/{id_document_verification_id}/attempts",
+      "operation_id": "create_id_document_verification_attempt",
+      "tool": "checkout_com_create_id_document_verification_attempt",
+      "class": "CheckoutComCreateIdDocumentVerificationAttempt",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/id-document-verifications/{id_document_verification_id}/attempts",
+      "operation_id": "list_attempts_id_document_verification",
+      "tool": "checkout_com_list_attempts_id_document_verification",
+      "class": "CheckoutComListAttemptsIdDocumentVerification",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/id-document-verifications/{id_document_verification_id}/attempts/{attempt_id}",
+      "operation_id": "get_id_document_verification_attempt",
+      "tool": "checkout_com_get_id_document_verification_attempt",
+      "class": "CheckoutComGetIdDocumentVerificationAttempt",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/id-document-verifications/{id_document_verification_id}/pdf-report",
+      "operation_id": "pdf_id_document_verification",
+      "tool": "checkout_com_pdf_id_document_verification",
+      "class": "CheckoutComPdfIdDocumentVerification",
+      "tags": [
+        "ID Document Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/applicants",
+      "operation_id": "create_applicant",
+      "tool": "checkout_com_create_applicant",
+      "class": "CheckoutComCreateApplicant",
+      "tags": [
+        "Applicants"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/applicants/{applicant_id}",
+      "operation_id": "retrieve_applicant",
+      "tool": "checkout_com_retrieve_applicant",
+      "class": "CheckoutComRetrieveApplicant",
+      "tags": [
+        "Applicants"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/applicants/{applicant_id}",
+      "operation_id": "update_applicant",
+      "tool": "checkout_com_update_applicant",
+      "class": "CheckoutComUpdateApplicant",
+      "tags": [
+        "Applicants"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/applicants/{applicant_id}/anonymize",
+      "operation_id": "anonymize_applicant",
+      "tool": "checkout_com_anonymize_applicant",
+      "class": "CheckoutComAnonymizeApplicant",
+      "tags": [
+        "Applicants"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/create-and-open-idv",
+      "operation_id": "create_and_start_identity_verification",
+      "tool": "checkout_com_create_and_start_identity_verification",
+      "class": "CheckoutComCreateAndStartIdentityVerification",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/identity-verifications",
+      "operation_id": "create_identity_verification",
+      "tool": "checkout_com_create_identity_verification",
+      "class": "CheckoutComCreateIdentityVerification",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/identity-verifications/{identity_verification_id}",
+      "operation_id": "retrieve_identity_verification",
+      "tool": "checkout_com_retrieve_identity_verification",
+      "class": "CheckoutComRetrieveIdentityVerification",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/identity-verifications/{identity_verification_id}/anonymize",
+      "operation_id": "anonymize_identity_verification",
+      "tool": "checkout_com_anonymize_identity_verification",
+      "class": "CheckoutComAnonymizeIdentityVerification",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/identity-verifications/{identity_verification_id}/attempts",
+      "operation_id": "create_attempt",
+      "tool": "checkout_com_create_attempt",
+      "class": "CheckoutComCreateAttempt",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/identity-verifications/{identity_verification_id}/attempts",
+      "operation_id": "list_attempts",
+      "tool": "checkout_com_list_attempts",
+      "class": "CheckoutComListAttempts",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/identity-verifications/{identity_verification_id}/attempts/{attempt_id}",
+      "operation_id": "get_attempt",
+      "tool": "checkout_com_get_attempt",
+      "class": "CheckoutComGetAttempt",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/identity-verifications/{identity_verification_id}/pdf-report",
+      "operation_id": "pdf_identity_verification",
+      "tool": "checkout_com_pdf_identity_verification",
+      "class": "CheckoutComPdfIdentityVerification",
+      "tags": [
+        "Identity Verification"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/instruments",
+      "operation_id": "createAnInstrument",
+      "tool": "checkout_com_create_an_instrument",
+      "class": "CheckoutComCreateAnInstrument",
+      "tags": [
+        "Instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/instruments/{id}",
+      "operation_id": "getInstrumentDetails",
+      "tool": "checkout_com_get_instrument_details",
+      "class": "CheckoutComGetInstrumentDetails",
+      "tags": [
+        "Instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/instruments/{id}",
+      "operation_id": "updateInstrument",
+      "tool": "checkout_com_update_instrument",
+      "class": "CheckoutComUpdateInstrument",
+      "tags": [
+        "Instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/instruments/{id}",
+      "operation_id": "deleteInstrument",
+      "tool": "checkout_com_delete_instrument",
+      "class": "CheckoutComDeleteInstrument",
+      "tags": [
+        "Instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/access/connect/token",
+      "operation_id": "requestCardholderAccessToken",
+      "tool": "checkout_com_request_cardholder_access_token",
+      "class": "CheckoutComRequestCardholderAccessToken",
+      "tags": [
+        "Cardholder access tokens"
+      ],
+      "content_type": "application/x-www-form-urlencoded",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cardholders",
+      "operation_id": "createCardholder",
+      "tool": "checkout_com_create_cardholder",
+      "class": "CheckoutComCreateCardholder",
+      "tags": [
+        "Cardholders"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/cardholders/{cardholderId}",
+      "operation_id": "getCardholder",
+      "tool": "checkout_com_get_cardholder",
+      "class": "CheckoutComGetCardholder",
+      "tags": [
+        "Cardholders"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/issuing/cardholders/{cardholderId}",
+      "operation_id": "updateCardholder",
+      "tool": "checkout_com_update_cardholder",
+      "class": "CheckoutComUpdateCardholder",
+      "tags": [
+        "Cardholders"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/cardholders/{cardholderId}/cards",
+      "operation_id": "getCardholderCards",
+      "tool": "checkout_com_get_cardholder_cards",
+      "class": "CheckoutComGetCardholderCards",
+      "tags": [
+        "Cardholders"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards",
+      "operation_id": "createCard",
+      "tool": "checkout_com_create_card",
+      "class": "CheckoutComCreateCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/cards/{cardId}",
+      "operation_id": "getCard",
+      "tool": "checkout_com_get_card",
+      "class": "CheckoutComGetCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/issuing/cards/{cardId}",
+      "operation_id": "updateCard",
+      "tool": "checkout_com_update_card",
+      "class": "CheckoutComUpdateCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards/{cardId}/3ds-enrollment",
+      "operation_id": "enrollCard",
+      "tool": "checkout_com_enroll_card",
+      "class": "CheckoutComEnrollCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/issuing/cards/{cardId}/3ds-enrollment",
+      "operation_id": "updateCardEnrollmentDetails",
+      "tool": "checkout_com_update_card_enrollment_details",
+      "class": "CheckoutComUpdateCardEnrollmentDetails",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/cards/{cardId}/3ds-enrollment",
+      "operation_id": "getCardEnrollmentDetails",
+      "tool": "checkout_com_get_card_enrollment_details",
+      "class": "CheckoutComGetCardEnrollmentDetails",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards/{cardId}/activate",
+      "operation_id": "activateCard",
+      "tool": "checkout_com_activate_card",
+      "class": "CheckoutComActivateCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/cards/{cardId}/credentials",
+      "operation_id": "getCardCredentials",
+      "tool": "checkout_com_get_card_credentials",
+      "class": "CheckoutComGetCardCredentials",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards/{cardId}/renew",
+      "operation_id": "renewCard",
+      "tool": "checkout_com_renew_card",
+      "class": "CheckoutComRenewCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards/{cardId}/revoke",
+      "operation_id": "revokeCard",
+      "tool": "checkout_com_revoke_card",
+      "class": "CheckoutComRevokeCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards/{cardId}/schedule-revocation",
+      "operation_id": "addScheduledRevocationDate",
+      "tool": "checkout_com_add_scheduled_revocation_date",
+      "class": "CheckoutComAddScheduledRevocationDate",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/issuing/cards/{cardId}/schedule-revocation",
+      "operation_id": "deleteScheduledRevocationDate",
+      "tool": "checkout_com_delete_scheduled_revocation_date",
+      "class": "CheckoutComDeleteScheduledRevocationDate",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/cards/{cardId}/suspend",
+      "operation_id": "suspendCard",
+      "tool": "checkout_com_suspend_card",
+      "class": "CheckoutComSuspendCard",
+      "tags": [
+        "Cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/controls",
+      "operation_id": "createControl",
+      "tool": "checkout_com_create_control",
+      "class": "CheckoutComCreateControl",
+      "tags": [
+        "Controls"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/controls",
+      "operation_id": "getControlByTarget",
+      "tool": "checkout_com_get_control_by_target",
+      "class": "CheckoutComGetControlByTarget",
+      "tags": [
+        "Controls"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/controls/{controlId}",
+      "operation_id": "getControl",
+      "tool": "checkout_com_get_control",
+      "class": "CheckoutComGetControl",
+      "tags": [
+        "Controls"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/issuing/controls/{controlId}",
+      "operation_id": "updateControl",
+      "tool": "checkout_com_update_control",
+      "class": "CheckoutComUpdateControl",
+      "tags": [
+        "Controls"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/issuing/controls/{controlId}",
+      "operation_id": "deleteControl",
+      "tool": "checkout_com_delete_control",
+      "class": "CheckoutComDeleteControl",
+      "tags": [
+        "Controls"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/controls/control-groups",
+      "operation_id": "createControlGroup",
+      "tool": "checkout_com_create_control_group",
+      "class": "CheckoutComCreateControlGroup",
+      "tags": [
+        "Control groups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/controls/control-groups",
+      "operation_id": "getControlGroupByTarget",
+      "tool": "checkout_com_get_control_group_by_target",
+      "class": "CheckoutComGetControlGroupByTarget",
+      "tags": [
+        "Control groups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/controls/control-groups/{controlGroupId}",
+      "operation_id": "getControlGroup",
+      "tool": "checkout_com_get_control_group",
+      "class": "CheckoutComGetControlGroup",
+      "tags": [
+        "Control groups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/issuing/controls/control-groups/{controlGroupId}",
+      "operation_id": "deleteControlGroup",
+      "tool": "checkout_com_delete_control_group",
+      "class": "CheckoutComDeleteControlGroup",
+      "tags": [
+        "Control groups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/controls/control-profiles",
+      "operation_id": "createControlProfile",
+      "tool": "checkout_com_create_control_profile",
+      "class": "CheckoutComCreateControlProfile",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/controls/control-profiles",
+      "operation_id": "getControlProfilesByTarget",
+      "tool": "checkout_com_get_control_profiles_by_target",
+      "class": "CheckoutComGetControlProfilesByTarget",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/controls/control-profiles/{controlProfileId}",
+      "operation_id": "getControlProfile",
+      "tool": "checkout_com_get_control_profile",
+      "class": "CheckoutComGetControlProfile",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/issuing/controls/control-profiles/{controlProfileId}",
+      "operation_id": "updateControlProfile",
+      "tool": "checkout_com_update_control_profile",
+      "class": "CheckoutComUpdateControlProfile",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/issuing/controls/control-profiles/{controlProfileId}",
+      "operation_id": "deleteControlProfile",
+      "tool": "checkout_com_delete_control_profile",
+      "class": "CheckoutComDeleteControlProfile",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/controls/control-profiles/{controlProfileId}/add/{targetId}",
+      "operation_id": "addTargetToControlProfile",
+      "tool": "checkout_com_add_target_to_control_profile",
+      "class": "CheckoutComAddTargetToControlProfile",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/controls/control-profiles/{controlProfileId}/remove/{targetId}",
+      "operation_id": "removeTargetFromControlProfile",
+      "tool": "checkout_com_remove_target_from_control_profile",
+      "class": "CheckoutComRemoveTargetFromControlProfile",
+      "tags": [
+        "Control profiles"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/digital-cards/{digitalCardId}",
+      "operation_id": "getDigitalCard",
+      "tool": "checkout_com_get_digital_card",
+      "class": "CheckoutComGetDigitalCard",
+      "tags": [
+        "Digital cards"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/disputes",
+      "operation_id": "createDispute",
+      "tool": "checkout_com_create_dispute",
+      "class": "CheckoutComCreateDispute",
+      "tags": [
+        "Issuing disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/disputes/{disputeId}",
+      "operation_id": "getDispute",
+      "tool": "checkout_com_get_dispute",
+      "class": "CheckoutComGetDispute",
+      "tags": [
+        "Issuing disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/disputes/{disputeId}/cancel",
+      "operation_id": "cancelDispute",
+      "tool": "checkout_com_cancel_dispute",
+      "class": "CheckoutComCancelDispute",
+      "tags": [
+        "Issuing disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/disputes/{disputeId}/escalate",
+      "operation_id": "escalateDispute",
+      "tool": "checkout_com_escalate_dispute",
+      "class": "CheckoutComEscalateDispute",
+      "tags": [
+        "Issuing disputes"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/simulate/authorizations",
+      "operation_id": "simulateAuthorization",
+      "tool": "checkout_com_simulate_authorization",
+      "class": "CheckoutComSimulateAuthorization",
+      "tags": [
+        "Card testing"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/simulate/authorizations/{id}/authorizations",
+      "operation_id": "simulateIncrementalAuthorization",
+      "tool": "checkout_com_simulate_incremental_authorization",
+      "class": "CheckoutComSimulateIncrementalAuthorization",
+      "tags": [
+        "Card testing"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/simulate/authorizations/{id}/presentments",
+      "operation_id": "simulatePresentment",
+      "tool": "checkout_com_simulate_presentment",
+      "class": "CheckoutComSimulatePresentment",
+      "tags": [
+        "Card testing"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/simulate/authorizations/{id}/refunds",
+      "operation_id": "simulateRefund",
+      "tool": "checkout_com_simulate_refund",
+      "class": "CheckoutComSimulateRefund",
+      "tags": [
+        "Card testing"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/simulate/authorizations/{id}/reversals",
+      "operation_id": "simulateReversal",
+      "tool": "checkout_com_simulate_reversal",
+      "class": "CheckoutComSimulateReversal",
+      "tags": [
+        "Card testing"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/issuing/simulate/oob/authentication",
+      "operation_id": "simulateOobAuthentication",
+      "tool": "checkout_com_simulate_oob_authentication",
+      "class": "CheckoutComSimulateOobAuthentication",
+      "tags": [
+        "Out-of-band authentication simulator"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/transactions",
+      "operation_id": "getTransactions",
+      "tool": "checkout_com_get_transactions",
+      "class": "CheckoutComGetTransactions",
+      "tags": [
+        "Transactions"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/issuing/transactions/{transactionId}",
+      "operation_id": "getTransactionById",
+      "tool": "checkout_com_get_transaction_by_id",
+      "class": "CheckoutComGetTransactionById",
+      "tags": [
+        "Transactions"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/metadata/card",
+      "operation_id": "requestCardMetadata",
+      "tool": "checkout_com_request_card_metadata",
+      "class": "CheckoutComRequestCardMetadata",
+      "tags": [
+        "Card metadata"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/network-tokens",
+      "operation_id": "provisionNetworkToken",
+      "tool": "checkout_com_provision_network_token",
+      "class": "CheckoutComProvisionNetworkToken",
+      "tags": [
+        "Network Tokens"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/network-tokens/{network_token_id}",
+      "operation_id": "getNetworkToken",
+      "tool": "checkout_com_get_network_token",
+      "class": "CheckoutComGetNetworkToken",
+      "tags": [
+        "Network Tokens"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/network-tokens/{network_token_id}/cryptograms",
+      "operation_id": "provisionCryptogram",
+      "tool": "checkout_com_provision_cryptogram",
+      "class": "CheckoutComProvisionCryptogram",
+      "tags": [
+        "Network Tokens"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/network-tokens/{network_token_id}/delete",
+      "operation_id": "deleteNetworkToken",
+      "tool": "checkout_com_delete_network_token",
+      "class": "CheckoutComDeleteNetworkToken",
+      "tags": [
+        "Network Tokens"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payment-contexts",
+      "operation_id": "requestAPaymentContext",
+      "tool": "checkout_com_request_a_payment_context",
+      "class": "CheckoutComRequestAPaymentContext",
+      "tags": [
+        "Payment Context"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payment-contexts/{id}",
+      "operation_id": "getPaymentContext",
+      "tool": "checkout_com_get_payment_context",
+      "class": "CheckoutComGetPaymentContext",
+      "tags": [
+        "Payment Context"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payment-links",
+      "operation_id": "createAPaymentLinkSession",
+      "tool": "checkout_com_create_a_payment_link_session",
+      "class": "CheckoutComCreateAPaymentLinkSession",
+      "tags": [
+        "Payment Links"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payment-links/{id}",
+      "operation_id": "getPaymentLinkDetails",
+      "tool": "checkout_com_get_payment_link_details",
+      "class": "CheckoutComGetPaymentLinkDetails",
+      "tags": [
+        "Payment Links"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payment-methods",
+      "operation_id": "getPaymentMethods",
+      "tool": "checkout_com_get_payment_methods",
+      "class": "CheckoutComGetPaymentMethods",
+      "tags": [
+        "Payment Methods"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payment-sessions",
+      "operation_id": "CreatePaymentSession",
+      "tool": "checkout_com_create_payment_session",
+      "class": "CheckoutComCreatePaymentSession",
+      "tags": [
+        "Flow"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payment-sessions/{id}/submit",
+      "operation_id": "SubmitPaymentSession",
+      "tool": "checkout_com_submit_payment_session",
+      "class": "CheckoutComSubmitPaymentSession",
+      "tags": [
+        "Flow"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payment-sessions/complete",
+      "operation_id": "CreateAndSubmitPaymentSession",
+      "tool": "checkout_com_create_and_submit_payment_session",
+      "class": "CheckoutComCreateAndSubmitPaymentSession",
+      "tags": [
+        "Flow"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments",
+      "operation_id": "requestAPaymentOrPayout",
+      "tool": "checkout_com_request_a_payment_or_payout",
+      "class": "CheckoutComRequestAPaymentOrPayout",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payments",
+      "operation_id": "getPaymentsList",
+      "tool": "checkout_com_get_payments_list",
+      "class": "CheckoutComGetPaymentsList",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payments/{id}",
+      "operation_id": "getPaymentDetails",
+      "tool": "checkout_com_get_payment_details",
+      "class": "CheckoutComGetPaymentDetails",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payments/{id}/actions",
+      "operation_id": "getPaymentActions",
+      "tool": "checkout_com_get_payment_actions",
+      "class": "CheckoutComGetPaymentActions",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{id}/authorizations",
+      "operation_id": "incrementPaymentAuthorization",
+      "tool": "checkout_com_increment_payment_authorization",
+      "class": "CheckoutComIncrementPaymentAuthorization",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{id}/cancellations",
+      "operation_id": "cancelAPayment",
+      "tool": "checkout_com_cancel_a_payment",
+      "class": "CheckoutComCancelAPayment",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{id}/captures",
+      "operation_id": "captureAPayment",
+      "tool": "checkout_com_capture_a_payment",
+      "class": "CheckoutComCaptureAPayment",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{id}/refunds",
+      "operation_id": "refundAPayment",
+      "tool": "checkout_com_refund_a_payment",
+      "class": "CheckoutComRefundAPayment",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{id}/reversals",
+      "operation_id": "reversePayment",
+      "tool": "checkout_com_reverse_payment",
+      "class": "CheckoutComReversePayment",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/{id}/voids",
+      "operation_id": "voidAPayment",
+      "tool": "checkout_com_void_a_payment",
+      "class": "CheckoutComVoidAPayment",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/search",
+      "operation_id": "search",
+      "tool": "checkout_com_search",
+      "class": "CheckoutComSearch",
+      "tags": [
+        "Payments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/setups",
+      "operation_id": "createAPaymentSetup",
+      "tool": "checkout_com_create_a_payment_setup",
+      "class": "CheckoutComCreateAPaymentSetup",
+      "tags": [
+        "Payment Setups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/payments/setups/{id}",
+      "operation_id": "updateAPaymentSetup",
+      "tool": "checkout_com_update_a_payment_setup",
+      "class": "CheckoutComUpdateAPaymentSetup",
+      "tags": [
+        "Payment Setups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/payments/setups/{id}",
+      "operation_id": "getAPaymentSetup",
+      "tool": "checkout_com_get_a_payment_setup",
+      "class": "CheckoutComGetAPaymentSetup",
+      "tags": [
+        "Payment Setups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/payments/setups/{id}/confirm/{payment_method_name}",
+      "operation_id": "confirmAPaymentSetup",
+      "tool": "checkout_com_confirm_a_payment_setup",
+      "class": "CheckoutComConfirmAPaymentSetup",
+      "tags": [
+        "Payment Setups"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/reports",
+      "operation_id": "getReports",
+      "tool": "checkout_com_get_reports",
+      "class": "CheckoutComGetReports",
+      "tags": [
+        "Reports"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/reports/{id}",
+      "operation_id": "getReportDetails",
+      "tool": "checkout_com_get_report_details",
+      "class": "CheckoutComGetReportDetails",
+      "tags": [
+        "Reports"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/reports/{id}/files/{fileId}",
+      "operation_id": "getReportFile",
+      "tool": "checkout_com_get_report_file",
+      "class": "CheckoutComGetReportFile",
+      "tags": [
+        "Reports"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/sessions",
+      "operation_id": "createSession",
+      "tool": "checkout_com_create_session",
+      "class": "CheckoutComCreateSession",
+      "tags": [
+        "Standalone"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/sessions/{id}",
+      "operation_id": "getSession",
+      "tool": "checkout_com_get_session",
+      "class": "CheckoutComGetSession",
+      "tags": [
+        "Standalone"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/sessions/{id}/collect-data",
+      "operation_id": "updateSession",
+      "tool": "checkout_com_update_session",
+      "class": "CheckoutComUpdateSession",
+      "tags": [
+        "Standalone"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/sessions/{id}/complete",
+      "operation_id": "completeSession",
+      "tool": "checkout_com_complete_session",
+      "class": "CheckoutComCompleteSession",
+      "tags": [
+        "Standalone"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/sessions/{id}/issuer-fingerprint",
+      "operation_id": "updateSessionThreeDsMethodCompletion",
+      "tool": "checkout_com_update_session_three_ds_method_completion",
+      "class": "CheckoutComUpdateSessionThreeDsMethodCompletion",
+      "tags": [
+        "Standalone"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/tokens",
+      "operation_id": "requestAToken",
+      "tool": "checkout_com_request_a_token",
+      "class": "CheckoutComRequestAToken",
+      "tags": [
+        "Tokens"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/transfers",
+      "operation_id": "createTransfer",
+      "tool": "checkout_com_create_transfer",
+      "class": "CheckoutComCreateTransfer",
+      "tags": [
+        "Transfers"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/transfers/{id}",
+      "operation_id": "getTransferDetails",
+      "tool": "checkout_com_get_transfer_details",
+      "class": "CheckoutComGetTransferDetails",
+      "tags": [
+        "Transfers"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/validation/bank-accounts/{country}/{currency}",
+      "operation_id": "getBankAccountFields",
+      "tool": "checkout_com_get_bank_account_fields",
+      "class": "CheckoutComGetBankAccountFields",
+      "tags": [
+        "Instruments"
+      ],
+      "content_type": "application/json",
+      "requires_auth": true
+    }
+  ]
+}

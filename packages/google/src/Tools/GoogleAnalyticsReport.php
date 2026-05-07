@@ -6,8 +6,14 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Google\Services\GoogleAnalyticsService;
 
+/**
+ * Run a standard GA4 report and normalize tabular rows for agents.
+ */
 class GoogleAnalyticsReport implements Tool
 {
+    /**
+     * @param  GoogleAnalyticsService  $service  The Google Analytics API client.
+     */
     public function __construct(
         private GoogleAnalyticsService $service,
     ) {}
@@ -32,6 +38,11 @@ class GoogleAnalyticsReport implements Tool
         MD;
     }
 
+    /**
+     * Execute the tool and return a normalized GA4 report.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (property_id, metrics, dimensions, dates, filters, ordering, pagination).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -136,7 +147,7 @@ class GoogleAnalyticsReport implements Tool
             $totalRow = $totals[0]['metricValues'] ?? [];
             $totalData = [];
             foreach ($metricNames as $i => $name) {
-                $raw = $totalMetrics[$i]['value'] ?? $totalRow[$i]['value'] ?? '0';
+                $raw = $totalRow[$i]['value'] ?? '0';
                 $totalData[$name] = is_numeric($raw) ? (str_contains($raw, '.') ? (float) $raw : (int) $raw) : $raw;
             }
             $response['totals'] = $totalData;

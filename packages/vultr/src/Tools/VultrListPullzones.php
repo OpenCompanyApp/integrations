@@ -1,0 +1,11 @@
+<?php
+
+namespace OpenCompany\Integrations\Vultr\Tools;
+
+/**
+ * List CDN Pull Zones
+ */
+class VultrListPullzones extends AbstractVultrOperationTool
+{
+    protected const TOOL_NAME = 'vultr_list_pullzones';
+}

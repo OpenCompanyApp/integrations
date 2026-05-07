@@ -2,51 +2,25 @@
 
 namespace OpenCompany\Integrations\Brandfetch\Tools;
 
-use OpenCompany\Integrations\Brandfetch\BrandfetchService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get a single logo by its unique identifier.
- *
- * Returns detailed information about a specific logo, including the
- * download URL, format, dimensions, and theme.
+ * Build a direct Logo API CDN URL.
  */
-class BrandfetchGetLogo implements Tool
+class BrandfetchGetLogo extends AbstractBrandfetchTool
 {
-    public function __construct(
-        private BrandfetchService $service,
-    ) {}
+    protected const TOOL_NAME = 'brandfetch_get_logo';
+    protected const TOOL_DESCRIPTION = 'Build a direct Brandfetch Logo API CDN URL for embedding.';
+    protected const PARAMETERS = [
+        'identifier' => ['type' => 'string', 'required' => true, 'description' => 'Domain, Brand ID, ticker, ISIN, or crypto symbol.'],
+        'src' => ['type' => 'string', 'description' => 'Legacy passthrough logo source URL.'],
+        'options' => ['type' => 'object', 'description' => 'Logo URL options such as width, height, theme, fallback, type, format, or client_id.'],
+    ];
 
-    public function name(): string
+    protected function run(array $args): array
     {
-        return 'brandfetch_get_logo';
-    }
-
-    public function description(): string
-    {
-        return 'Get a single logo by its ID. Returns detailed information including download URL, format, dimensions, and theme.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The unique logo identifier.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brandfetch integration is not configured.');
-            }
-
-            $result = $this->service->getLogo($args['id']);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
+        if (isset($args['src']) && !isset($args['identifier'])) {
+            return $this->service->getLogo((string) $args['src']);
         }
+
+        return $this->service->logoUrl((string) $this->required($args, 'identifier'), $this->object($args, 'options'));
     }
 }

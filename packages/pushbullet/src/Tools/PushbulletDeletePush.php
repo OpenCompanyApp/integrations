@@ -2,12 +2,20 @@
 
 namespace OpenCompany\Integrations\Pushbullet\Tools;
 
-use OpenCompany\Integrations\Pushbullet\PushbulletService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Pushbullet\PushbulletService;
 
+/**
+ * Delete a single Pushbullet push by iden.
+ *
+ * This removes the push from the authenticated account.
+ */
 class PushbulletDeletePush implements Tool
 {
+    /**
+     * @param  PushbulletService  $service  The Pushbullet API client.
+     */
     public function __construct(
         private PushbulletService $service,
     ) {}
@@ -29,6 +37,11 @@ class PushbulletDeletePush implements Tool
         ];
     }
 
+    /**
+     * Delete a push notification.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -43,7 +56,7 @@ class PushbulletDeletePush implements Tool
 
             $this->service->deletePush($pushIden);
 
-            return ToolResult::success("Push '{$pushIden}' has been deleted.");
+            return ToolResult::success(['deleted' => true, 'push_iden' => $pushIden]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

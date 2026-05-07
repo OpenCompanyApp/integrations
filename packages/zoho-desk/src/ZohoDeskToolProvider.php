@@ -94,7 +94,7 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Customer support and helpdesk management',
             'icon' => 'ph:headset',
             'logo' => 'simple-icons:zoho',
-            'category' => 'support',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://desk.zoho.com/DeskAPIDocument',
         ];

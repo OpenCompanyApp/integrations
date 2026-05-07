@@ -2,15 +2,18 @@
 
 namespace OpenCompany\Integrations\Etsy\Tools;
 
-use OpenCompany\Integrations\Etsy\EtsyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Etsy\EtsyService;
 
 /**
  * Create a new listing in the Etsy shop.
  */
 class EtsyCreateListing implements Tool
 {
+    /**
+     * @param  EtsyService  $service  The Etsy Open API client.
+     */
     public function __construct(
         private EtsyService $service,
     ) {}
@@ -78,6 +81,11 @@ class EtsyCreateListing implements Tool
         ];
     }
 
+    /**
+     * Create a draft listing with the supplied listing fields.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

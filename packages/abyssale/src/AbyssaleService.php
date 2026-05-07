@@ -2,13 +2,25 @@
 
 namespace OpenCompany\Integrations\Abyssale;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Abyssale REST API.
+ *
+ * Handles x-api-key authentication, request dispatch, and error normalization
+ * for designs, generation, files, projects, exports, and dynamic images.
+ */
 class AbyssaleService
 {
+    /**
+     * @param  string  $apiKey  Abyssale API key.
+     * @param  string  $baseUrl  Abyssale API base URL.
+     */
     public function __construct(
-        private string $accessToken = '',
+        private string $apiKey = '',
         private string $baseUrl = 'https://api.abyssale.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
@@ -16,124 +28,240 @@ class AbyssaleService
 
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return $this->apiKey !== '';
+    }
+
+    // -- Designs -----------------------------------------------------------
+
+    /**
+     * List designs available in the workspace.
+     *
+     * @return array<string, mixed>
+     */
+    public function listDesigns(): array
+    {
+        return $this->request('GET', '/designs');
     }
 
     /**
-     * List generations with optional pagination and status filter.
+     * Retrieve details for a design.
      *
-     * @param  int  $page   Page number (1-based).
-     * @param  int  $limit  Results per page.
-     * @param  string|null  $status  Filter by status (e.g. "finished", "processing", "failed").
+     * @param  string  $designId  Design UUID.
      * @return array<string, mixed>
      */
-    public function listGenerations(int $page = 1, int $limit = 20, ?string $status = null): array
+    public function getDesign(string $designId): array
     {
-        $params = [
-            'page' => $page,
-            'limit' => $limit,
-        ];
-        if ($status !== null) {
-            $params['status'] = $status;
+        return $this->request('GET', '/designs/'.$this->encode($designId));
+    }
+
+    /**
+     * Retrieve details for a specific design format.
+     *
+     * @param  string  $designId  Design UUID.
+     * @param  string  $formatSpecifier  Format ID or name.
+     * @return array<string, mixed>
+     */
+    public function getDesignFormat(string $designId, string $formatSpecifier): array
+    {
+        return $this->request('GET', '/designs/'.$this->encode($designId).'/formats/'.$this->encode($formatSpecifier));
+    }
+
+    /**
+     * Create or retrieve a dynamic image URL for a design.
+     *
+     * @param  string  $designId  Design UUID.
+     * @param  array<string, mixed>  $payload  Dynamic image options.
+     * @return array<string, mixed>
+     */
+    public function createDynamicImageUrl(string $designId, array $payload = []): array
+    {
+        return $this->request('POST', '/designs/'.$this->encode($designId).'/dynamic-image-url', $payload);
+    }
+
+    // -- Generation --------------------------------------------------------
+
+    /**
+     * Generate a single synchronous image from a static design.
+     *
+     * @param  string  $designId  Design UUID.
+     * @param  array<string, mixed>  $elements  Element override dictionary.
+     * @param  string|null  $templateFormatName  Optional format name when a design has multiple formats.
+     * @return array<string, mixed>
+     */
+    public function generateImage(string $designId, array $elements, ?string $templateFormatName = null): array
+    {
+        $payload = ['elements' => $elements];
+
+        if ($templateFormatName !== null && $templateFormatName !== '') {
+            $payload['template_format_name'] = $templateFormatName;
         }
 
-        return $this->request('GET', '/v2/generations', $params);
+        return $this->request('POST', '/banner-builder/'.$this->encode($designId).'/generate', $payload);
     }
 
     /**
-     * Get a single generation by ID.
+     * Generate images, videos, PDFs, GIFs, or HTML5 files asynchronously.
      *
-     * @param  string  $id  The generation UUID.
+     * @param  string  $designId  Design UUID.
+     * @param  array<string, mixed>  $payload  Async generation payload.
      * @return array<string, mixed>
      */
-    public function getGeneration(string $id): array
+    public function generateMultiFormatMedia(string $designId, array $payload): array
     {
-        return $this->request('GET', '/v2/generations/' . urlencode($id));
+        return $this->request('POST', '/async/banner-builder/'.$this->encode($designId).'/generate', $payload);
     }
 
     /**
-     * Create a new image generation.
+     * Generate a multi-page PDF asynchronously.
      *
-     * @param  string  $templateId  The template UUID.
-     * @param  array<string>  $formatIds  Format UUIDs to generate.
-     * @param  array<string, mixed>  $modifications  Element modifications to apply.
+     * @param  string  $designId  Design UUID.
+     * @param  array<string, mixed>  $pages  Page override dictionary.
+     * @param  string|null  $callbackUrl  Optional callback URL.
      * @return array<string, mixed>
      */
-    public function createGeneration(string $templateId, array $formatIds, array $modifications = []): array
+    public function generateMultiPagePdf(string $designId, array $pages, ?string $callbackUrl = null): array
     {
-        $body = [
-            'template_id' => $templateId,
-            'format_ids' => $formatIds,
-        ];
-        if (!empty($modifications)) {
-            $body['modifications'] = $modifications;
+        $payload = ['pages' => $pages];
+
+        if ($callbackUrl !== null && $callbackUrl !== '') {
+            $payload['callback_url'] = $callbackUrl;
         }
 
-        return $this->request('POST', '/v2/generations', $body);
+        return $this->request('POST', '/async/banner-builder/'.$this->encode($designId).'/generate', $payload);
     }
 
-    /**
-     * List templates with optional pagination.
-     *
-     * @param  int  $page   Page number (1-based).
-     * @param  int  $limit  Results per page.
-     * @return array<string, mixed>
-     */
-    public function listTemplates(int $page = 1, int $limit = 20): array
-    {
-        return $this->request('GET', '/v2/templates', [
-            'page' => $page,
-            'limit' => $limit,
-        ]);
-    }
+    // -- Fonts, files, exports --------------------------------------------
 
     /**
-     * Get a single template by ID.
-     *
-     * @param  string  $id  The template UUID.
-     * @return array<string, mixed>
-     */
-    public function getTemplate(string $id): array
-    {
-        return $this->request('GET', '/v2/templates/' . urlencode($id));
-    }
-
-    /**
-     * List formats with optional pagination.
-     *
-     * @param  int  $page   Page number (1-based).
-     * @param  int  $limit  Results per page.
-     * @return array<string, mixed>
-     */
-    public function listFormats(int $page = 1, int $limit = 20): array
-    {
-        return $this->request('GET', '/v2/formats', [
-            'page' => $page,
-            'limit' => $limit,
-        ]);
-    }
-
-    /**
-     * Get the currently authenticated user.
+     * Retrieve all custom and Google fonts available to the workspace.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function listFonts(): array
     {
-        return $this->request('GET', '/v2/users/me');
+        return $this->request('GET', '/fonts');
+    }
+
+    /**
+     * Retrieve a generated file by banner ID.
+     *
+     * @param  string  $bannerId  Generated banner/file UUID.
+     * @return array<string, mixed>
+     */
+    public function getFile(string $bannerId): array
+    {
+        return $this->request('GET', '/banners/'.$this->encode($bannerId));
+    }
+
+    /**
+     * Create an asynchronous ZIP export for generated banners.
+     *
+     * @param  array<int, string>  $ids  Banner IDs to export.
+     * @param  string|null  $callbackUrl  Optional callback URL.
+     * @return array<string, mixed>
+     */
+    public function createBannerExport(array $ids, ?string $callbackUrl = null): array
+    {
+        $payload = ['ids' => $ids];
+
+        if ($callbackUrl !== null && $callbackUrl !== '') {
+            $payload['callback_url'] = $callbackUrl;
+        }
+
+        return $this->request('POST', '/async/banners/export', $payload);
+    }
+
+    // -- Projects and workspace templates ---------------------------------
+
+    /**
+     * List projects in the workspace.
+     *
+     * @return array<string, mixed>
+     */
+    public function listProjects(): array
+    {
+        return $this->request('GET', '/projects');
+    }
+
+    /**
+     * Create a project.
+     *
+     * @param  string  $name  Project name.
+     * @return array<string, mixed>
+     */
+    public function createProject(string $name): array
+    {
+        return $this->request('POST', '/projects', ['name' => $name]);
+    }
+
+    /**
+     * Duplicate a workspace template into a project.
+     *
+     * @param  string  $companyTemplateId  Workspace template UUID.
+     * @param  string  $projectId  Target project UUID.
+     * @param  string|null  $name  Optional name for the duplicated design.
+     * @return array<string, mixed>
+     */
+    public function duplicateWorkspaceTemplate(string $companyTemplateId, string $projectId, ?string $name = null): array
+    {
+        $payload = ['project_id' => $projectId];
+
+        if ($name !== null && $name !== '') {
+            $payload['name'] = $name;
+        }
+
+        return $this->request('POST', '/workspace-templates/'.$this->encode($companyTemplateId).'/use', $payload);
+    }
+
+    /**
+     * Retrieve the status of a workspace-template duplication request.
+     *
+     * @param  string  $duplicateRequestId  Duplication request UUID.
+     * @return array<string, mixed>
+     */
+    public function getDuplicationRequest(string $duplicateRequestId): array
+    {
+        return $this->request('GET', '/design-duplication-requests/'.$this->encode($duplicateRequestId));
+    }
+
+    // -- Generic API escape hatch -----------------------------------------
+
+    /**
+     * Send a GET request to a documented Abyssale API path.
+     *
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $params = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $params);
+    }
+
+    /**
+     * Send a POST request to a documented Abyssale API path.
+     *
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API path (e.g. /v2/generations).
-     * @param  array<string, mixed>  $data  Query params (GET) or body (POST/PUT).
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Query parameters or JSON body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+
         return $response->json() ?? [];
     }
 
@@ -141,51 +269,39 @@ class AbyssaleService
      * Make a raw HTTP request to the Abyssale API.
      *
      * @param  string  $method  HTTP method.
-     * @param  string  $path    API path.
+     * @param  string  $path  API path.
      * @param  array<string, mixed>  $data  Request data.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @return Response
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Abyssale access token is not configured.');
+        if (!$this->apiKey) {
+            throw new RuntimeException('Abyssale API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $method = strtoupper($method);
+        $url = $this->baseUrl.$path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
+                'x-api-key' => $this->apiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
-            $response = match (strtoupper($method)) {
+            $response = match ($method) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Abyssale API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Abyssale API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
                 Log::error("Abyssale API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Abyssale API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new RuntimeException("Abyssale API error ({$response->status()}): ".(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
@@ -193,7 +309,24 @@ class AbyssaleService
             Log::error("Abyssale API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Abyssale API: {$e->getMessage()}");
+
+            throw new RuntimeException("Failed to connect to Abyssale API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Normalize a caller-supplied path into an API-relative path.
+     */
+    private function normalizePath(string $path): string
+    {
+        return '/'.ltrim($path, '/');
+    }
+
+    /**
+     * Encode a path segment without treating slashes as path separators.
+     */
+    private function encode(string $value): string
+    {
+        return rawurlencode($value);
     }
 }

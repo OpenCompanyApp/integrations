@@ -1,130 +1,92 @@
 # Integration: Salesloft
 
-> Salesloft integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage call sequences, automation rules, and user data. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to your sales engagement platform. Manage call sequences, review automation rules, and verify user identity — all through the [Salesloft](https://salesloft.com) API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Salesloft tool lets AI agents manage call sequences and review automation rules — giving agents visibility into sales workflows and the ability to create new sequences.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-salesloft
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Salesloft integration for OpenCompany agent tooling. It exposes Salesloft API
+coverage for people, accounts, cadences, cadence memberships, tasks, calls,
+emails, notes, users, legacy sequence/rule wrappers, and generic relative API
+helpers.
 
 ## Configuration
 
-This tool requires a Salesloft API access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+This package uses a stored Salesloft OAuth access token or API token. In
+OpenCompany and KosmoKrator, configure credentials through the integration
+settings UI. For standalone usage, bind a `CredentialResolver` value for:
 
 ```php
-return [
+[
     'salesloft' => [
         'access_token' => env('SALESLOFT_ACCESS_TOKEN'),
-        'url'          => env('SALESLOFT_URL', 'https://api.salesloft.com'),
+        'url' => env('SALESLOFT_API_URL', 'https://api.salesloft.com'),
     ],
-];
+]
 ```
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `salesloft_list_sequences` | read | List call sequences with optional status filtering |
-| `salesloft_get_sequence` | read | Get details of a specific call sequence |
-| `salesloft_create_sequence` | write | Create a new call sequence with steps and targets |
-| `salesloft_list_rules` | read | List automation rules |
-| `salesloft_get_rule` | read | Get details of a specific automation rule |
-| `salesloft_get_current_user` | read | Get the currently authenticated user profile |
+| `salesloft_list_users` | read | List users |
+| `salesloft_get_user` | read | Get one user |
+| `salesloft_list_people` | read | List people |
+| `salesloft_get_person` | read | Get one person |
+| `salesloft_create_person` | write | Create a person |
+| `salesloft_update_person` | write | Update a person |
+| `salesloft_delete_person` | write | Delete a person |
+| `salesloft_list_accounts` | read | List accounts |
+| `salesloft_get_account` | read | Get one account |
+| `salesloft_create_account` | write | Create an account |
+| `salesloft_update_account` | write | Update an account |
+| `salesloft_delete_account` | write | Delete an account |
+| `salesloft_list_cadences` | read | List cadences |
+| `salesloft_get_cadence` | read | Get one cadence |
+| `salesloft_list_cadence_memberships` | read | List cadence memberships |
+| `salesloft_create_cadence_membership` | write | Add a person to a cadence |
+| `salesloft_list_tasks` | read | List tasks |
+| `salesloft_get_task` | read | Get one task |
+| `salesloft_update_task` | write | Update a task |
+| `salesloft_list_calls` | read | List call activities |
+| `salesloft_create_call` | write | Create a call activity |
+| `salesloft_list_emails` | read | List email activities |
+| `salesloft_list_notes` | read | List notes |
+| `salesloft_create_note` | write | Create a note |
+| `salesloft_get_current_user` | read | Get the authenticated user |
+| `salesloft_list_sequences` | read | Legacy list call sequences |
+| `salesloft_get_sequence` | read | Legacy get sequence |
+| `salesloft_create_sequence` | write | Legacy create sequence |
+| `salesloft_list_rules` | read | Legacy list rules |
+| `salesloft_get_rule` | read | Legacy get rule |
+| `salesloft_api_get` | read | Call a relative API GET endpoint |
+| `salesloft_api_post` | write | Call a relative API POST endpoint |
+| `salesloft_api_put` | write | Call a relative API PUT endpoint |
+| `salesloft_api_delete` | write | Call a relative API DELETE endpoint |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Salesloft\SalesloftService;
-use OpenCompany\Integrations\Salesloft\Tools\SalesloftListSequences;
-use OpenCompany\Integrations\Salesloft\Tools\SalesloftGetCurrentUser;
-
-// Create tools
-$service = app(SalesloftService::class);
-$tools = [
-    new SalesloftListSequences($service),
-    new SalesloftGetCurrentUser($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List all active call sequences in Salesloft');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('salesloft');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Salesloft\Tools\SalesloftListSequences::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\Salesloft\SalesloftService;
 
 $service = app(SalesloftService::class);
 
-// List sequences
-$sequences = $service->listSequences(limit: 50, status: 'active');
-
-// Get a specific sequence
-$sequence = $service->getSequence(12345);
-
-// Create a sequence
-$sequence = $service->createSequence([
-    'name' => 'Q1 Outreach Campaign',
-    'owner_id' => 42,
-    'status' => 'active',
-]);
-
-// List rules
-$rules = $service->listRules();
-
-// Get current user
-$user = $service->getCurrentUser();
+$people = $service->listPeople(['per_page' => 25]);
+$person = $service->getPerson(123);
+$account = $service->createAccount(['name' => 'Example Corp']);
+$cadences = $service->listCadences();
+$tasks = $service->listTasks(['user_id' => 42]);
+$call = $service->createCall(['person_id' => 123, 'user_id' => 42]);
 ```
 
-## Dependencies
+## Notes For Agents
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+Use first-class tools for common Salesloft resources. Use generic API helpers
+only for less common endpoints, passing relative paths such as `/v2/people`,
+`/v2/tasks/123`, or `/v2/activities/calls`. Absolute URLs are rejected so hosts
+control credentials and API base URL handling.
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Salesloft](https://salesloft.com) account with API access
+- `opencompanyapp/integration-core`
+- A Salesloft account with API access
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ChargifyListCustomers implements Tool
 {
+    /**
+     * @param  ChargifyService  $service  The Chargify API client.
+     */
     public function __construct(
         private ChargifyService $service,
     ) {}
@@ -36,6 +39,11 @@ class ChargifyListCustomers implements Tool
         ];
     }
 
+    /**
+     * List customers through the Chargify API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

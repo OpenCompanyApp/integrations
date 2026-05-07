@@ -108,7 +108,7 @@ class FreshmarketerToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Marketing automation by Freshworks — manage campaigns, segments, and contacts.',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:freshworks',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.freshworks.com/crm/',
         ];

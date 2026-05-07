@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-campaign-monitor",
-    "description": "Campaign Monitor integration for Laravel — manage campaigns, lists, and subscribers.",
+    "description": "Campaign Monitor integration for Laravel - manage campaigns, clients, lists, subscribers, transactional email, and webhooks.",
     "license": "MIT",
     "authors": [
         {

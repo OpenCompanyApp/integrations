@@ -3,26 +3,28 @@
 namespace OpenCompany\Integrations\MicrosoftTodo;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoListLists;
-use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoGetList;
 use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoCreateList;
-use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoListTasks;
-use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoGetTask;
 use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoCreateTask;
 use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoGetList;
+use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoGetTask;
+use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoListLists;
+use OpenCompany\Integrations\MicrosoftTodo\Tools\TodoListTasks;
 
 /**
- * Registers the integration provider and exposes its tools.
+ * Tool provider for Microsoft To Do through Microsoft Graph.
+ *
+ * Exposes task-list, task, and current-user tools with manual-token credential
+ * metadata for default and named account resolution.
  */
 class MicrosoftTodoToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -74,33 +76,33 @@ class MicrosoftTodoToolProvider implements ToolProvider, ConfigurableIntegration
           ],
         ];
     }
-
-
-
-
-/**
+    /**
      * The machine name used to identify this integration.
      */
     public function appName(): string
     {
-        return 'microsoft_todo';
+        return 'microsoft-todo';
     }
 
-/**
+    /**
      * Short metadata for UI display — label, description, icons.
+     *
+     * @return array<string, mixed>
      */
     public function appMeta(): array
     {
         return [
             'label' => 'Microsoft To Do',
-            'description' => 'Microsoft To Do',
+            'description' => 'Task lists and tasks through Microsoft Graph.',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:microsofttodo',
         ];
     }
 
-/**
+    /**
      * Full integration metadata for the integrations catalog.
+     *
+     * @return array<string, mixed>
      */
     public function integrationMeta(): array
     {
@@ -113,7 +115,9 @@ class MicrosoftTodoToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://learn.microsoft.com/en-us/graph/api/resources/todo-overview',
         ];
-    }/**
+    }
+
+    /**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -298,14 +302,22 @@ class MicrosoftTodoToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Context containing optional 'account' key for multi-account.
      */
     public function createTool(string $class, array $context = []): Tool
-    {        $account = $context['account'] ?? null;
+    {
+        $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('microsoft-todo', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('microsoft_todo', $key, $default, $account);
+            };
 
             $service = new MicrosoftTodoService(
-                accessToken: $creds->get('microsoft_todo', 'access_token', '', $account),
-                baseUrl: $creds->get('microsoft_todo', 'url', 'https://graph.microsoft.com/v1.0', $account),
+                accessToken: $get('access_token'),
+                baseUrl: $get('url', 'https://graph.microsoft.com/v1.0'),
             );
 
             return new $class($service);

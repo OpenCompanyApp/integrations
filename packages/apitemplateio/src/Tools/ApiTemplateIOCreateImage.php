@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for generating images (PNG or JPEG) from API Template IO templates.
+ * Generate images from APITemplate.io visual templates.
  *
- * Sends a POST request to the /create endpoint with output_format set to "png" or "jpeg",
- * merging the provided data into the specified template.
+ * Sends image overrides to the v2 create-image endpoint and returns generated file metadata.
  */
 class ApiTemplateIOCreateImage implements Tool
 {
@@ -40,7 +39,7 @@ class ApiTemplateIOCreateImage implements Tool
      */
     public function description(): string
     {
-        return 'Generate an image (PNG or JPEG) from an API Template IO template. Provide a template ID, data, and the desired output format.';
+        return 'Generate PNG and/or JPEG images from an APITemplate.io image template. Provide a template ID and override payload.';
     }
 
     /**
@@ -52,10 +51,12 @@ class ApiTemplateIOCreateImage implements Tool
     {
         return [
             'template_id' => ['type' => 'string', 'required' => true, 'description' => 'The template ID to use for image generation (e.g., "tpl_abc123").'],
-            'data' => ['type' => 'object', 'required' => true, 'description' => 'Key-value pairs to merge into the template placeholders.'],
-            'output_format' => ['type' => 'string', 'description' => 'The image format to generate: "png" or "jpeg". Defaults to "png".', 'enum' => ['png', 'jpeg']],
-            'output_html' => ['type' => 'boolean', 'description' => 'If true, returns the rendered HTML in addition to the image URL.'],
-            'expire' => ['type' => 'integer', 'description' => 'Number of minutes after which the generated file URL expires (default: no expiry).'],
+            'overrides' => ['type' => 'array', 'description' => 'Image object overrides. Each item should include a name and the properties to replace.'],
+            'data' => ['type' => 'object', 'description' => 'Backward-compatible full image payload. Prefer overrides for new calls.'],
+            'output_image_type' => ['type' => 'string', 'description' => 'Which image outputs to generate: all, jpegOnly, or pngOnly. Defaults to all.', 'enum' => ['all', 'jpegOnly', 'pngOnly']],
+            'output_format' => ['type' => 'string', 'description' => 'Deprecated alias: png maps to pngOnly, jpeg maps to jpegOnly.', 'enum' => ['png', 'jpeg']],
+            'expiration' => ['type' => 'integer', 'description' => 'Minutes until generated file URLs expire. Use 0 to store permanently.'],
+            'expire' => ['type' => 'integer', 'description' => 'Deprecated alias for expiration.'],
             'meta' => ['type' => 'string', 'description' => 'Optional metadata string to attach to the generation request.'],
         ];
     }
@@ -79,32 +80,54 @@ class ApiTemplateIOCreateImage implements Tool
                 return ToolResult::error('The "template_id" parameter is required.');
             }
 
-            $data = $args['data'] ?? [];
-            if (!is_array($data)) {
-                return ToolResult::error('The "data" parameter must be an object (key-value pairs).');
+            $payload = $args['data'] ?? [];
+            if (isset($args['overrides'])) {
+                if (! is_array($args['overrides'])) {
+                    return ToolResult::error('The "overrides" parameter must be an array.');
+                }
+                $payload = ['overrides' => $args['overrides']];
             }
 
-            $outputFormat = $args['output_format'] ?? 'png';
-            if (!in_array($outputFormat, ['png', 'jpeg'], true)) {
-                return ToolResult::error('The "output_format" must be "png" or "jpeg".');
+            if (! is_array($payload)) {
+                return ToolResult::error('The image payload must be an object.');
             }
 
-            $extraParams = [];
-            if (isset($args['output_html'])) {
-                $extraParams['output_html'] = (bool) $args['output_html'];
-            }
-            if (isset($args['expire'])) {
-                $extraParams['expire'] = (int) $args['expire'];
-            }
-            if (isset($args['meta'])) {
-                $extraParams['meta'] = $args['meta'];
-            }
+            $extraParams = $this->queryParams($args);
 
-            $result = $this->service->createImage($templateId, $data, $outputFormat, $extraParams);
+            $result = $this->service->createImage($templateId, $payload, $extraParams);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }
+    }
+
+    /**
+     * Extract supported query parameters from tool arguments.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     * @return array<string, mixed>
+     */
+    private function queryParams(array $args): array
+    {
+        $params = [];
+        if (isset($args['output_image_type'])) {
+            $params['output_image_type'] = $args['output_image_type'];
+        } elseif (($args['output_format'] ?? null) === 'png') {
+            $params['output_image_type'] = 'pngOnly';
+        } elseif (($args['output_format'] ?? null) === 'jpeg') {
+            $params['output_image_type'] = 'jpegOnly';
+        }
+
+        if (isset($args['expiration'])) {
+            $params['expiration'] = (int) $args['expiration'];
+        } elseif (isset($args['expire'])) {
+            $params['expiration'] = (int) $args['expire'];
+        }
+        if (isset($args['meta'])) {
+            $params['meta'] = $args['meta'];
+        }
+
+        return $params;
     }
 }

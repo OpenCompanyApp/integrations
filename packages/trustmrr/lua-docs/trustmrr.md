@@ -1,4 +1,8 @@
-# TrustMRR — Lua API Reference
+# TrustMRR - Lua API Reference
+
+Namespace: `app.integrations.trustmrr`
+
+The TrustMRR API currently documents two endpoints: list startups and get startup by slug. This integration covers both endpoints. List results are returned as `startups`, `total`, `page`, and `has_more`; detail results return the startup `data` object directly. All monetary values are USD cents.
 
 ## trustmrr_list_startups
 
@@ -35,7 +39,7 @@ local result = app.integrations.trustmrr.trustmrr_list_startups({
 })
 
 for _, startup in ipairs(result.startups) do
-  print(startup.name .. " — MRR: $" .. (startup.mrr / 100))
+  print(startup.name .. " - MRR: $" .. (startup.revenue.mrr / 100))
 end
 ```
 
@@ -57,8 +61,8 @@ local result = app.integrations.trustmrr.trustmrr_get_startup({
 })
 
 print(result.name)
-print("Revenue: $" .. (result.revenue / 100))
-print("MRR: $" .. (result.mrr / 100))
+print("Revenue: $" .. (result.revenue.last30Days / 100))
+print("MRR: $" .. (result.revenue.mrr / 100))
 ```
 
 ---

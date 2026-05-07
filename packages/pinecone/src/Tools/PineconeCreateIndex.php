@@ -15,6 +15,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class PineconeCreateIndex implements Tool
 {
+    /**
+     * @param  PineconeService  $service  The Pinecone API client.
+     */
     public function __construct(
         private PineconeService $service,
     ) {}
@@ -35,9 +38,16 @@ class PineconeCreateIndex implements Tool
             'name' => ['type' => 'string', 'required' => true, 'description' => 'The name for the new index. Must be unique within the project.'],
             'dimension' => ['type' => 'integer', 'required' => true, 'description' => 'The dimension size of the vectors to be stored (e.g., 1536 for OpenAI text-embedding-ada-002, 3072 for text-embedding-3-large).'],
             'metric' => ['type' => 'string', 'description' => 'The similarity metric to use: "cosine" (default), "euclidean", or "dotproduct".'],
+            'cloud' => ['type' => 'string', 'description' => 'Serverless cloud provider. Defaults to aws.'],
+            'region' => ['type' => 'string', 'description' => 'Serverless cloud region. Defaults to us-east-1.'],
         ];
     }
 
+    /**
+     * Create a serverless index.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -58,6 +68,8 @@ class PineconeCreateIndex implements Tool
                 $args['name'],
                 (int) $args['dimension'],
                 $metric,
+                (string) ($args['cloud'] ?? 'aws'),
+                (string) ($args['region'] ?? 'us-east-1'),
             );
 
             return ToolResult::success($result);

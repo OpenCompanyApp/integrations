@@ -116,12 +116,25 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'hint' => 'Find your API token at the bottom of your Toggl Track profile settings page.',
                 'required' => true,
             ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.track.toggl.com',
+                'hint' => 'Use the default Toggl Track API URL unless you have a compatible gateway.',
+                'default' => 'https://api.track.toggl.com',
+            ],
         ];
     }
 
     public function testConnection(array $config): array
     {
         $apiToken = $config['api_token'] ?? '';
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.track.toggl.com'), '/');
+
+        if (! str_ends_with($baseUrl, '/api/v9')) {
+            $baseUrl .= '/api/v9';
+        }
 
         if (empty($apiToken)) {
             return ['success' => false, 'error' => 'No API token provided'];
@@ -131,7 +144,7 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             $response = Http::withBasicAuth($apiToken, 'api_token')
                 ->withHeaders(['Content-Type' => 'application/json'])
                 ->timeout(10)
-                ->get('https://api.track.toggl.com/api/v9/me');
+                ->get($baseUrl . '/me');
 
             if (!$response->successful()) {
                 return [
@@ -156,6 +169,7 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'api_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
@@ -211,6 +225,27 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'List all Toggl workspaces the authenticated user belongs to. Returns workspace IDs and names needed for other Toggl tools.',
                 'icon' => 'ph:wrench',
             ],
+            'toggl_create_project' => [
+                'class' => TogglCreateProject::class,
+                'type' => 'write',
+                'name' => 'Create Project',
+                'description' => 'Create a project in a Toggl workspace.',
+                'icon' => 'ph:folder-plus',
+            ],
+            'toggl_update_time_entry' => [
+                'class' => TogglUpdateTimeEntry::class,
+                'type' => 'write',
+                'name' => 'Update Time Entry',
+                'description' => 'Update an existing Toggl time entry.',
+                'icon' => 'ph:pencil-simple',
+            ],
+            'toggl_delete_time_entry' => [
+                'class' => TogglDeleteTimeEntry::class,
+                'type' => 'write',
+                'name' => 'Delete Time Entry',
+                'description' => 'Delete a Toggl time entry from a workspace.',
+                'icon' => 'ph:trash',
+            ],
         ];
     }
 
@@ -222,6 +257,7 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.track.toggl.com'],
         ];
     }
 
@@ -236,9 +272,20 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $apiToken = (string) $creds->get('toggl', 'api_token', '', $account);
+            $baseUrl = (string) $creds->get('toggl', 'url', '', $account);
+
+            if ($apiToken === '') {
+                $apiToken = (string) $creds->get('toggl-track', 'api_token', '', $account);
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('toggl-track', 'url', 'https://api.track.toggl.com', $account);
+            }
 
             $service = new TogglService(
-                apiToken: $creds->get('toggl', 'api_token', '', $account),
+                apiToken: $apiToken,
+                baseUrl: $baseUrl,
             );
 
             return new $class($service);

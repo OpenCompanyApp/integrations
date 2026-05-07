@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-openrouter",
-    "description": "OpenRouter AI gateway integration for Laravel — list models, create completions, manage generations, keys, and usage.",
+    "description": "OpenRouter AI gateway integration for Laravel: models, completions, responses, embeddings, reranking, media jobs, keys, workspaces, and usage.",
     "license": "MIT",
     "authors": [
         {

@@ -1,0 +1,89 @@
+{
+    "source": "https://forms.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Forms API",
+    "version": "v1",
+    "method_count": 10,
+    "generated_package": "google-forms",
+    "methods": [
+        {
+            "discovery_id": "forms.create",
+            "tool": "google_forms_forms_create",
+            "class": "GoogleFormsFormsCreate",
+            "http_method": "POST",
+            "path": "/v1/forms",
+            "type": "write"
+        },
+        {
+            "discovery_id": "forms.get",
+            "tool": "google_forms_forms_get",
+            "class": "GoogleFormsFormsGet",
+            "http_method": "GET",
+            "path": "/v1/forms/{formId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "forms.setPublishSettings",
+            "tool": "google_forms_forms_set_publish_settings",
+            "class": "GoogleFormsFormsSetPublishSettings",
+            "http_method": "POST",
+            "path": "/v1/forms/{formId}:setPublishSettings",
+            "type": "write"
+        },
+        {
+            "discovery_id": "forms.batchUpdate",
+            "tool": "google_forms_forms_batch_update",
+            "class": "GoogleFormsFormsBatchUpdate",
+            "http_method": "POST",
+            "path": "/v1/forms/{formId}:batchUpdate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "forms.responses.list",
+            "tool": "google_forms_forms_responses_list",
+            "class": "GoogleFormsFormsResponsesList",
+            "http_method": "GET",
+            "path": "/v1/forms/{formId}/responses",
+            "type": "read"
+        },
+        {
+            "discovery_id": "forms.responses.get",
+            "tool": "google_forms_forms_responses_get",
+            "class": "GoogleFormsFormsResponsesGet",
+            "http_method": "GET",
+            "path": "/v1/forms/{formId}/responses/{responseId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "forms.watches.renew",
+            "tool": "google_forms_forms_watches_renew",
+            "class": "GoogleFormsFormsWatchesRenew",
+            "http_method": "POST",
+            "path": "/v1/forms/{formId}/watches/{watchId}:renew",
+            "type": "write"
+        },
+        {
+            "discovery_id": "forms.watches.create",
+            "tool": "google_forms_forms_watches_create",
+            "class": "GoogleFormsFormsWatchesCreate",
+            "http_method": "POST",
+            "path": "/v1/forms/{formId}/watches",
+            "type": "write"
+        },
+        {
+            "discovery_id": "forms.watches.list",
+            "tool": "google_forms_forms_watches_list",
+            "class": "GoogleFormsFormsWatchesList",
+            "http_method": "GET",
+            "path": "/v1/forms/{formId}/watches",
+            "type": "read"
+        },
+        {
+            "discovery_id": "forms.watches.delete",
+            "tool": "google_forms_forms_watches_delete",
+            "class": "GoogleFormsFormsWatchesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/forms/{formId}/watches/{watchId}",
+            "type": "write"
+        }
+    ]
+}

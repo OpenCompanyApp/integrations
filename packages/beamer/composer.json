@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-beamer",
-    "description": "Beamer integration for Laravel — manage posts, comments, categories, and user info.",
+    "description": "Beamer integration for Laravel agents with changelog, comments, categories, user profile, and generic API tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "beamer", "marketing", "changelog", "announcements", "opencompany"],
+    "keywords": ["tools", "beamer", "changelog", "product-updates", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

@@ -3,21 +3,44 @@
 namespace OpenCompany\Integrations\ElasticEmail;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailSendEmail;
-use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListTemplates;
-use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetTemplate;
-use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListContacts;
-use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailCreateContact;
-use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailAddContactsToList;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailApiGet;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailApiPost;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailCreateContact;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailDeleteContact;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetCampaign;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetCampaignStatistics;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetContact;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetEmailStatus;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetList;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetStatistics;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailGetTemplate;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListCampaigns;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListContacts;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListEmailEvents;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListEvents;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListFiles;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListListContacts;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListLists;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListSuppressions;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailListTemplates;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailPauseCampaign;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailRemoveContactsFromList;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailSendBulkEmail;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailSendEmail;
+use OpenCompany\Integrations\ElasticEmail\Tools\ElasticEmailUpdateContact;
 
 /**
+ * Exposes Elastic Email API v4 tools and setup metadata.
+ */
+class ElasticEmailToolProvider implements ConfigurableIntegration, HasIntegrationCapabilities, ToolProvider
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,46 +48,27 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -77,7 +81,7 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
     {
         return [
             'label' => 'Elastic Email',
-            'description' => 'Transactional email',
+            'description' => 'Transactional email, contacts, lists, campaigns, events, suppressions, and statistics',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:elasticemail',
         ];
@@ -87,14 +91,16 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
     {
         return [
             'name' => 'Elastic Email',
-            'description' => 'Transactional email delivery and contact management',
+            'description' => 'Elastic Email REST API v4 for email delivery, contacts, lists, campaigns, events, suppressions, templates, files, and statistics.',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:elasticemail',
-            'category' => 'email',
+            'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://elasticemail.com/developers/',
+            'docs_url' => 'https://elasticemail.com/developers/api-documentation/rest-api',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -102,49 +108,54 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Elastic Email API key',
-                'hint' => 'Generate an API key in your Elastic Email account under "Settings → API"',
+                'hint' => 'Generate an API key in Elastic Email under Settings > API.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api.elasticemail.com/v2',
-                'hint' => 'Use the default Elastic Email API URL, or a custom endpoint if applicable',
-                'default' => 'https://api.elasticemail.com/v2',
+                'placeholder' => 'https://api.elasticemail.com/v4',
+                'default' => 'https://api.elasticemail.com/v4',
             ],
         ];
     }
 
+    /**
+     * Test API credentials by loading account statistics.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.elasticemail.com/v2', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.elasticemail.com/v4'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
             $response = Http::withHeaders([
                 'X-ElasticEmail-ApiKey' => $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/statistics');
 
-            $json = $response->json();
-
-            if ($json === null) {
+            if ($response->successful()) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach Elastic Email API at {$baseUrl}. Check the URL.",
+                    'success' => true,
+                    'message' => "Connected to Elastic Email API at {$baseUrl}.",
                 ];
             }
 
+            $error = $response->json('error') ?? $response->body();
+
             return [
-                'success' => true,
-                'message' => "Connected to Elastic Email API at {$baseUrl}.",
+                'success' => false,
+                'error' => 'Elastic Email API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -157,62 +168,53 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
+    /**
+     * Return all tools provided by this integration.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
         return [
-            'elasticemail_send_email' => [
-                'class' => ElasticEmailSendEmail::class,
-                'type' => 'write',
-                'name' => 'Send Email',
-                'description' => 'Send a transactional email.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'elasticemail_list_templates' => [
-                'class' => ElasticEmailListTemplates::class,
-                'type' => 'read',
-                'name' => 'List Templates',
-                'description' => 'List email templates.',
-                'icon' => 'ph:file',
-            ],
-            'elasticemail_get_template' => [
-                'class' => ElasticEmailGetTemplate::class,
-                'type' => 'read',
-                'name' => 'Get Template',
-                'description' => 'Get details of a specific email template.',
-                'icon' => 'ph:file-text',
-            ],
-            'elasticemail_list_contacts' => [
-                'class' => ElasticEmailListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List contacts in the account.',
-                'icon' => 'ph:address-book',
-            ],
-            'elasticemail_create_contact' => [
-                'class' => ElasticEmailCreateContact::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create or add a contact.',
-                'icon' => 'ph:user-plus',
-            ],
-            'elasticemail_get_current_user' => [
-                'class' => ElasticEmailGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get current authenticated user info.',
-                'icon' => 'ph:user',
-            ],
+            'elasticemail_send_email' => $this->tool(ElasticEmailSendEmail::class, 'Send Transactional Email', 'Send a transactional email.', 'write'),
+            'elasticemail_send_bulk_email' => $this->tool(ElasticEmailSendBulkEmail::class, 'Send Bulk Email', 'Send a bulk email with a full v4 payload.', 'write'),
+            'elasticemail_get_email_status' => $this->tool(ElasticEmailGetEmailStatus::class, 'Get Email Status', 'Get delivery status for a transaction ID.'),
+            'elasticemail_list_templates' => $this->tool(ElasticEmailListTemplates::class, 'List Templates', 'List email templates.'),
+            'elasticemail_get_template' => $this->tool(ElasticEmailGetTemplate::class, 'Get Template', 'Get details of a template by name.'),
+            'elasticemail_list_contacts' => $this->tool(ElasticEmailListContacts::class, 'List Contacts', 'List contacts.'),
+            'elasticemail_get_contact' => $this->tool(ElasticEmailGetContact::class, 'Get Contact', 'Load a contact by email.'),
+            'elasticemail_create_contact' => $this->tool(ElasticEmailCreateContact::class, 'Create Contact', 'Create or add a contact.', 'write'),
+            'elasticemail_update_contact' => $this->tool(ElasticEmailUpdateContact::class, 'Update Contact', 'Update a contact.', 'write'),
+            'elasticemail_delete_contact' => $this->tool(ElasticEmailDeleteContact::class, 'Delete Contact', 'Delete a contact.', 'write'),
+            'elasticemail_list_lists' => $this->tool(ElasticEmailListLists::class, 'List Lists', 'List contact lists.'),
+            'elasticemail_get_list' => $this->tool(ElasticEmailGetList::class, 'Get List', 'Get a contact list by name.'),
+            'elasticemail_list_list_contacts' => $this->tool(ElasticEmailListListContacts::class, 'List List Contacts', 'List contacts in a contact list.'),
+            'elasticemail_add_contacts_to_list' => $this->tool(ElasticEmailAddContactsToList::class, 'Add Contacts To List', 'Add contacts to a list.', 'write'),
+            'elasticemail_remove_contacts_from_list' => $this->tool(ElasticEmailRemoveContactsFromList::class, 'Remove Contacts From List', 'Remove contacts from a list.', 'write'),
+            'elasticemail_list_campaigns' => $this->tool(ElasticEmailListCampaigns::class, 'List Campaigns', 'List campaigns.'),
+            'elasticemail_get_campaign' => $this->tool(ElasticEmailGetCampaign::class, 'Get Campaign', 'Get a campaign by name.'),
+            'elasticemail_pause_campaign' => $this->tool(ElasticEmailPauseCampaign::class, 'Pause Campaign', 'Pause a campaign.', 'write'),
+            'elasticemail_list_events' => $this->tool(ElasticEmailListEvents::class, 'List Events', 'List email events.'),
+            'elasticemail_list_email_events' => $this->tool(ElasticEmailListEmailEvents::class, 'List Email Events', 'List events for a transaction ID.'),
+            'elasticemail_list_suppressions' => $this->tool(ElasticEmailListSuppressions::class, 'List Suppressions', 'List unsubscribes, bounces, or complaints.'),
+            'elasticemail_get_statistics' => $this->tool(ElasticEmailGetStatistics::class, 'Get Statistics', 'Get account-wide statistics.'),
+            'elasticemail_get_campaign_statistics' => $this->tool(ElasticEmailGetCampaignStatistics::class, 'Get Campaign Statistics', 'Get campaign statistics.'),
+            'elasticemail_list_files' => $this->tool(ElasticEmailListFiles::class, 'List Files', 'List uploaded files.'),
+            'elasticemail_api_get' => $this->tool(ElasticEmailApiGet::class, 'Elastic Email API GET', 'Call a read-only API v4 endpoint.'),
+            'elasticemail_api_post' => $this->tool(ElasticEmailApiPost::class, 'Elastic Email API POST', 'Call an API v4 POST endpoint.', 'write'),
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/elastic-email.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.elasticemail.com/v2'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.elasticemail.com/v4'],
         ];
     }
 
@@ -221,21 +223,51 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
         return true;
     }
 
+    /**
+     * Create a tool instance, optionally using account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class
+     * @param  array<string, mixed>  $context
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve service credentials for default or account-scoped contexts.
+     *
+     * @param  array<string, mixed>  $context
+     */
+    private function resolveService(array $context = []): ElasticEmailService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new ElasticEmailService(
+            return new ElasticEmailService(
                 apiKey: $creds->get('elastic-email', 'api_key', '', $account),
-                baseUrl: $creds->get('elastic-email', 'url', 'https://api.elasticemail.com/v2', $account),
+                baseUrl: $creds->get('elastic-email', 'url', 'https://api.elasticemail.com/v4', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(ElasticEmailService::class));
+        return app(ElasticEmailService::class);
+    }
+
+    /**
+     * Build standard tool metadata.
+     *
+     * @return array<string, mixed>
+     */
+    private function tool(string $class, string $name, string $description, string $type = 'read'): array
+    {
+        return [
+            'class' => $class,
+            'type' => $type,
+            'name' => $name,
+            'description' => $description,
+            'icon' => 'ph:wrench',
+        ];
     }
 }

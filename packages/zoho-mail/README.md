@@ -1,136 +1,59 @@
-# Integration: Zoho Mail
+# Zoho Mail Integration
 
-> Zoho Mail integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list messages, send email, manage folders and tasks. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to Zoho Mail. List and read emails, send messages, browse folders, and manage tasks — all through the Zoho Mail REST API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Zoho Mail tool lets AI agents read and send email, browse folder structures, and manage tasks — enabling agents to handle communication workflows autonomously.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-zoho-mail
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Zoho Mail REST API integration for OpenCompany agents. It covers mailbox
+accounts, folders, messages, attachments, labels, tasks, sending, replies,
+message updates, and safe raw relative API calls.
 
 ## Configuration
 
-This tool requires a Zoho Mail OAuth access token.
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `access_token` | secret | yes | Zoho OAuth access token with Mail scopes |
+| `url` | url | no | Regional Zoho Mail API base URL, default `https://mail.zoho.com/api` |
 
-**In OpenCompany**, credentials are managed through the Integrations UI.
+Use the regional base URL that matches the OAuth account, for example
+`https://mail.zoho.eu/api` for EU accounts.
 
-**For standalone usage**, create `config/ai-tools.php`:
+## Tool Areas
 
-```php
-return [
-    'zoho-mail' => [
-        'access_token' => env('ZOHO_MAIL_ACCESS_TOKEN'),
-        'url'          => env('ZOHO_MAIL_URL', 'https://mail.zoho.com/api/v1'),
-    ],
-];
-```
+| Area | Tools |
+|------|-------|
+| Accounts | `get_current_user`, `get_account` |
+| Messages | `list_messages`, `search_messages`, `get_message`, `get_message_details`, `get_message_headers`, `get_original_message`, `send_message`, `reply_message`, `update_messages`, `delete_message` |
+| Attachments | `get_attachment_info`, `get_attachment_content` |
+| Folders | `list_folders`, `get_folder`, `create_folder`, `update_folder`, `delete_folder` |
+| Labels | `list_labels`, `get_label`, `create_label`, `update_label`, `delete_label` |
+| Tasks | `list_tasks` |
+| Raw API | `api_get`, `api_post`, `api_put`, `api_delete` |
 
-## Available Tools
-
-| Tool | Type | Description |
-|------|------|-------------|
-| `zohomail_list_messages` | read | List email messages in a folder |
-| `zohomail_get_message` | read | Get a single email message by ID |
-| `zohomail_send_message` | write | Send a new email message |
-| `zohomail_list_folders` | read | List all email folders |
-| `zohomail_list_tasks` | read | List tasks from Zoho Mail |
-| `zohomail_get_current_user` | read | Get current user account info |
-
-## Quick Start
-
-```php
-use OpenCompany\Integrations\ZohoMail\ZohoMailService;
-use OpenCompany\Integrations\ZohoMail\Tools\ZohoMailListMessages;
-use OpenCompany\Integrations\ZohoMail\Tools\ZohoMailSendMessage;
-
-// Create tools
-$service = app(ZohoMailService::class);
-$tools = [
-    new ZohoMailListMessages($service),
-    new ZohoMailSendMessage($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('List my latest emails and summarize them');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('zoho-mail');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\ZohoMail\Tools\ZohoMailListMessages::class
-);
-```
-
-## Standalone Service Usage
+## Usage
 
 ```php
 use OpenCompany\Integrations\ZohoMail\ZohoMailService;
 
 $service = app(ZohoMailService::class);
 
-// Get account info
-$accounts = $service->getCurrentUser();
-
-// List messages
+$accounts = $service->listAccounts();
 $messages = $service->listMessages('12345678', [
-    'folderId' => 'INBOX',
-    'limit' => 10,
+    'folderId' => '987654',
+    'limit' => 25,
 ]);
 
-// Get a specific message
-$message = $service->getMessage('12345678', '9807654321');
-
-// Send a message
-$result = $service->sendMessage('12345678', [
-    'toAddress' => 'user@example.com',
-    'subject' => 'Hello from AI',
-    'content' => '<p>This is a test email.</p>',
+$content = $service->getMessage('12345678', '987654', '555555');
+$service->sendMessage('12345678', [
+    'toAddress' => 'recipient@example.test',
+    'subject' => 'Status update',
+    'content' => '<p>All set.</p>',
 ]);
-
-// List folders
-$folders = $service->listFolders('12345678');
-
-// List tasks
-$tasks = $service->listTasks('12345678');
 ```
 
-## Dependencies
+## Notes
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Zoho Mail](https://www.zoho.com/mail/) account with API access
+The package sends Zoho OAuth tokens with the official
+`Authorization: Zoho-oauthtoken ...` header. Raw helpers reject full URLs and
+parent-directory path segments; pass paths relative to the configured `/api`
+base URL.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT, see [LICENSE](LICENSE).

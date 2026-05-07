@@ -1,14 +1,14 @@
 # Integration: Bubble
 
-> Bubble integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list, get, create, update, and delete records from your Bubble application. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Bubble built-in API integration for the [Laravel AI SDK](https://github.com/laravel/ai) — Data API records, Workflow API triggers, and Swagger discovery. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents full CRUD access to your Bubble application data. Query records with constraints, retrieve individual records, and create, update, or delete entries — all through the [Bubble Data API](https://manual.bubble.io/core-resources/api/data-api).
+Give your AI agents access to Bubble's built-in API. Query and mutate database records through the [Data API](https://manual.bubble.io/core-resources/api), trigger exposed backend workflows through the Workflow API, and inspect the app Swagger specification to discover enabled endpoints.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Bubble tool lets AI agents interact with your no-code application's data — enabling automated workflows, data sync, and intelligent record management.
+This Bubble tool lets AI agents interact with your app's data and backend workflows while keeping app-specific endpoint names explicit.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -33,6 +33,7 @@ return [
     'bubble' => [
         'api_key'  => env('BUBBLE_API_KEY'),
         'hostname' => env('BUBBLE_HOSTNAME', 'https://myapp.bubbleapps.io'),
+        'api_path' => env('BUBBLE_API_PATH', '/api/1.1'),
     ],
 ];
 ```
@@ -41,18 +42,22 @@ return [
 
 1. Open your Bubble editor
 2. Go to **Settings → API**
-3. Enable the **Data API**
+3. Enable the **Data API** and/or **Workflow API**
 4. Generate a new API token with the appropriate permissions
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `bubble_list_records` | read | List records from a data type with filters and pagination |
+| `bubble_get_swagger` | read | Get the app Swagger specification |
+| `bubble_list_records` | read | List records from a data type with filters, sorting, and pagination |
 | `bubble_get_record` | read | Get a single record by ID |
 | `bubble_create_record` | write | Create a new record with specified fields |
-| `bubble_update_record` | write | Update an existing record (partial update) |
+| `bubble_update_record` | write | Patch an existing record |
+| `bubble_replace_record` | write | Replace an existing record |
 | `bubble_delete_record` | write | Delete a record by ID |
+| `bubble_trigger_workflow` | write | Trigger or initialize a POST API workflow |
+| `bubble_trigger_workflow_get` | write | Trigger a GET API workflow |
 
 ## Quick Start
 
@@ -76,7 +81,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 5 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, the tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -100,6 +105,9 @@ $service = app(BubbleService::class);
 // List records
 $users = $service->listRecords('User');
 
+// Discover enabled API endpoints
+$swagger = $service->getSwagger();
+
 // Filter with constraints
 $activeUsers = $service->listRecords('User', [
     ['key' => 'status', 'constraint_type' => 'equals', 'value' => 'active'],
@@ -121,6 +129,9 @@ $service->updateRecord('User', $newUser['id'], [
 
 // Delete a record
 $service->deleteRecord('User', $newUser['id']);
+
+// Trigger an exposed backend workflow
+$service->triggerWorkflow('sync_order', ['order_id' => 'ord_123']);
 ```
 
 ## Dependencies
@@ -135,7 +146,7 @@ $service->deleteRecord('User', $newUser['id']);
 - PHP 8.2+
 - Laravel 11 or 12
 - [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Bubble](https://bubble.io) account with the Data API enabled
+- A [Bubble](https://bubble.io) account with the Data API and/or Workflow API enabled
 
 ## License
 

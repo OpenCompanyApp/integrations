@@ -93,7 +93,7 @@ class QuickBooksToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'QuickBooks Online accounting — manage invoices, customers, accounts, and financial data',
             'icon' => 'ph:book-open',
             'logo' => 'simple-icons:quickbooks',
-            'category' => 'finance',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.intuit.com/app/developer/qbo/docs/api',
         ];

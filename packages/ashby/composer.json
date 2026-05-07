@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-ashby",
-    "description": "Ashby ATS integration for Laravel — manage jobs, applications, and interviews.",
+    "description": "Ashby ATS integration for Laravel - manage candidates, applications, jobs, interviews, offers, webhooks, and raw API calls.",
     "license": "MIT",
     "authors": [
         {

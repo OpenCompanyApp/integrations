@@ -1,123 +1,143 @@
-# Search indicators by keyword within World Development Indicators (source 2) — Lua API Reference
+# World Bank Lua API Reference
 
-## worldbank_compare_data
+Namespace: `app.integrations.worldbank`
 
-Compare a single economic indicator across multiple countries. Returns the most recent value for each country side-by-side. Use `worldbank_indicators` to find indicator codes..
+This integration uses the public World Bank Indicators API v2. No API key is required. Responses are normalized into compact agent-facing arrays while preserving World Bank IDs and codes.
 
-### Parameters
+## Discovery Tools
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indicator` | string | yes | World Bank indicator code (e.g.  |
-| `countries` | string | yes | Semicolon-separated ISO country codes (e.g.  |
-| `date_range` | string | no | Date range filter (e.g.  |
+### Countries
 
-### Example
+`worldbank_countries({ query?, region?, income_level? })`
+
+Lists countries and filters out aggregate rows. Use `query` for local filtering by country name or ISO code. Use `region` and `income_level` with World Bank codes.
 
 ```lua
-local result = app.integrations.worldbank.worldbank_compare_data({
-  indicator = ""
-  countries = ""
-  date_range = ""
+local countries = app.integrations.worldbank.worldbank_countries({
+  region = "LCN",
+  income_level = "UMC"
 })
 ```
 
-## worldbank_countries
+`worldbank_country_info({ code })`
 
-List or search countries from the World Bank. Optional query filters by name. Filter by region (EAS, ECS, LCN, MEA, NAC, SAS, SSF) or income level (HIC, UMC, LMC, LIC)..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | no | Search query — country name or ISO code to filter results. |
-| `region` | string | no | Filter by region code: EAS (East Asia), ECS (Europe & Central Asia), LCN (Latin America), MEA (Middle East), NAC (North America), SAS (South Asia), SSF (Sub-Saharan Africa). |
-| `income_level` | string | no | Filter by income level: HIC (High), UMC (Upper Middle), LMC (Lower Middle), LIC (Low). |
-
-### Example
+Gets country or aggregate metadata by code.
 
 ```lua
-local result = app.integrations.worldbank.worldbank_countries({
-  query = ""
-  region = ""
-  income_level = ""
+local brazil = app.integrations.worldbank.worldbank_country_info({
+  code = "BR"
 })
 ```
 
-## worldbank_country_info
+### Regions, Income Levels, Lending Types
 
-Get detailed information for a specific country by ISO code, including region, income level, lending type, capital city, and coordinates..
+`worldbank_regions({ page?, per_page? })`
 
-### Parameters
+Lists region and aggregate codes.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `code` | string | yes | ISO country code (e.g.  |
+`worldbank_income_levels({})`
 
-### Example
+Lists income-level codes such as `HIC`, `UMC`, `LMC`, and `LIC`.
+
+`worldbank_lending_types({})`
+
+Lists lending-type codes such as `IBD`, `IDX`, `IDB`, and `LNX`.
+
+### Sources and Indicators
+
+`worldbank_sources({ page?, per_page? })`
+
+Lists World Bank data sources. Source `2` is World Development Indicators.
+
+`worldbank_source_indicators({ source_id, page?, per_page? })`
+
+Lists indicator series available in a source.
 
 ```lua
-local result = app.integrations.worldbank.worldbank_country_info({
-  code = ""
+local source_indicators = app.integrations.worldbank.worldbank_source_indicators({
+  source_id = "2",
+  per_page = 25
 })
 ```
 
-## worldbank_get_data
+`worldbank_indicators({ query? })`
 
-Fetch economic indicator data for one or more countries from the World Bank. Supports date ranges and most-recent-value mode. Use `worldbank_indicators` to find indicator codes and `worldbank_countries` to find ISO codes..
+Searches World Development Indicators by keyword. With no query, returns a curated list of common indicator codes.
 
-### Parameters
+`worldbank_indicator_info({ indicator })`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `indicator` | string | yes | World Bank indicator code (e.g.  |
-| `countries` | string | no | Semicolon-separated ISO country codes (e.g.  |
-| `date_range` | string | no | Date range filter (e.g.  |
-| `mrnev` | string | no | Number of most recent non-empty values to return per country (default:  |
-| `per_page` | string | no | Number of results per page (default:  |
-
-### Example
+Gets detailed metadata for one indicator, including source note, source organization, and topics.
 
 ```lua
-local result = app.integrations.worldbank.worldbank_get_data({
-  indicator = ""
-  countries = ""
-  date_range = ""
+local gdp = app.integrations.worldbank.worldbank_indicator_info({
+  indicator = "NY.GDP.MKTP.CD"
 })
 ```
 
-## worldbank_indicators
+### Topics and Languages
 
-No description.
+`worldbank_topics({ topic_id? })`
 
-### Parameters
+Lists World Bank topics. When `topic_id` is supplied, lists indicators in that topic.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | no | Search keyword for indicators (e.g.  |
+`worldbank_languages({})`
 
-### Example
+Lists global and local language codes supported by the World Bank API.
+
+## Data Tools
+
+### Single Indicator Data
+
+`worldbank_get_data({ indicator, countries?, date_range?, mrnev?, per_page? })`
+
+Fetches observations for one indicator. `countries` is a semicolon-separated list of country or aggregate codes; defaults to `all`. `date_range` accepts World Bank range syntax such as `2000:2023`. `mrnev` returns most recent non-empty values.
 
 ```lua
-local result = app.integrations.worldbank.worldbank_indicators({
-  query = ""
+local data = app.integrations.worldbank.worldbank_get_data({
+  indicator = "SP.POP.TOTL",
+  countries = "US;CN;BR",
+  date_range = "2020:2023"
 })
 ```
 
-## worldbank_topics
+### Multi-Indicator Data
 
-List the 21 World Bank topic categories (e.g., Education, Health, Economy). Optionally provide a topic ID to list indicators in that topic..
+`worldbank_multi_indicator_data({ indicators, countries?, source?, date_range?, footnote?, per_page? })`
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `topic_id` | string | no | Topic ID to list indicators for that topic. Omit to see all available topics. |
-
-### Example
+Fetches multiple semicolon-separated indicators from one source. The World Bank V2 API requires a `source` for multiple indicator calls. The API supports up to 60 indicators in one request; this tool enforces that limit before calling upstream.
 
 ```lua
-local result = app.integrations.worldbank.worldbank_topics({
-  topic_id = ""
+local data = app.integrations.worldbank.worldbank_multi_indicator_data({
+  countries = "CHN;AGO",
+  indicators = "SI.POV.DDAY;SP.POP.TOTL",
+  source = "2",
+  date_range = "2000:2010"
 })
 ```
+
+### Compare Countries
+
+`worldbank_compare_data({ indicator, countries, date_range? })`
+
+Compares one indicator across countries. Without `date_range`, the tool requests the most recent non-empty value per country.
+
+```lua
+local comparison = app.integrations.worldbank.worldbank_compare_data({
+  indicator = "NY.GDP.MKTP.CD",
+  countries = "US;CN;DE;JP"
+})
+```
+
+## Common Indicator Codes
+
+| Code | Meaning |
+|------|---------|
+| `NY.GDP.MKTP.CD` | GDP, current US dollars |
+| `NY.GDP.MKTP.KD.ZG` | GDP growth, annual percent |
+| `NY.GDP.PCAP.CD` | GDP per capita, current US dollars |
+| `FP.CPI.TOTL.ZG` | Inflation, consumer prices, annual percent |
+| `SL.UEM.TOTL.ZS` | Unemployment, percent of labor force |
+| `SP.POP.TOTL` | Total population |
+| `SP.DYN.LE00.IN` | Life expectancy at birth |
+| `SI.POV.GINI` | Gini index |
+| `EN.ATM.CO2E.PC` | CO2 emissions per capita |

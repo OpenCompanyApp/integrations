@@ -2,43 +2,30 @@
 
 namespace OpenCompany\Integrations\Bugsnag\Tools;
 
-use OpenCompany\Integrations\Bugsnag\BugsnagService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BugsnagGetCurrentUser implements Tool
+/**
+ * Get the currently authenticated Bugsnag user.
+ */
+class BugsnagGetCurrentUser extends AbstractBugsnagTool
 {
-    public function __construct(
-        private BugsnagService $service,
-    ) {}
+    protected array $parameters = array (
+);
 
-    public function name(): string
-    {
-        return 'bugsnag_get_current_user';
-    }
+    protected array $required = array (
+);
 
-    public function description(): string
-    {
-        return 'Get the currently authenticated Bugsnag user, including name, email, and associated organizations.';
-    }
+    protected array $queryParams = array (
+);
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected array $bodyParams = array (
+);
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Bugsnag integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $result = $this->service->getCurrentUser();
+    protected string $path = '/user';
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $api = 'data';
+
+    protected string $toolName = 'bugsnag_get_current_user';
+
+    protected string $toolDescription = 'Get the currently authenticated Bugsnag user.';
 }

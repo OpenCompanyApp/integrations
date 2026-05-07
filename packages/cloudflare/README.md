@@ -1,14 +1,14 @@
 # Integration: Cloudflare
 
-> Cloudflare integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage zones, DNS records, page rules, and analytics. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Cloudflare integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage zones, DNS records, page rules, and analytics. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to Cloudflare's DNS, CDN, and security management platform. List and manage zones, create DNS records, review page rules, and pull analytics — all through the [Cloudflare API](https://developers.cloudflare.com/api/).
+Give your AI agents access to Cloudflare's DNS, CDN, and security management platform. List and manage zones, create DNS records, review page rules, and pull analytics - all through the [Cloudflare API](https://developers.cloudflare.com/api/).
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Cloudflare tool lets AI agents manage DNS records, review zone configuration, and monitor traffic analytics — giving agents infrastructure awareness and management capabilities.
+This Cloudflare tool lets AI agents manage DNS records, review zone configuration, and monitor traffic analytics - giving agents infrastructure awareness and management capabilities.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -143,4 +143,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

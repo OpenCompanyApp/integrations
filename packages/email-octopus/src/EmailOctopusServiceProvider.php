@@ -6,8 +6,17 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the EmailOctopus integration with Laravel's service container.
+ *
+ * Binds the API client and registers the tool provider when the host exposes
+ * the shared integration registry.
+ */
 class EmailOctopusServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the EmailOctopus API service singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(EmailOctopusService::class, function ($app) {
@@ -21,6 +30,9 @@ class EmailOctopusServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the EmailOctopus tool provider with the shared registry.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

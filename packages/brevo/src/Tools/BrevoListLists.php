@@ -2,54 +2,55 @@
 
 namespace OpenCompany\Integrations\Brevo\Tools;
 
-use OpenCompany\Integrations\Brevo\BrevoService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BrevoListLists implements Tool
+/**
+ * List contact lists.
+ */
+class BrevoListLists extends AbstractBrevoTool
 {
-    public function __construct(
-        private BrevoService $service,
-    ) {}
+    protected string $toolName = 'brevo_list_lists';
 
-    public function name(): string
-    {
-        return 'brevo_list_lists';
-    }
+    protected string $toolDescription = 'List contact lists.';
 
-    public function description(): string
-    {
-        return 'List all contact lists in your Brevo account. Supports pagination with limit and offset.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of lists to return (default: 50, max: 1000).'],
-            'offset' => ['type' => 'integer', 'description' => 'Number of lists to skip for pagination (default: 0).'],
-        ];
-    }
+    protected string $path = '/contacts/lists';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brevo integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum records to return.',
+    ],
+    'offset' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of records to skip.',
+    ],
+    'sort' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Sort order when supported.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Brevo query parameters to pass through.',
+    ],
+];
 
-            $params = [];
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (isset($args['offset'])) {
-                $params['offset'] = (int) $args['offset'];
-            }
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            $result = $this->service->listLists($params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'offset',
+    'sort',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

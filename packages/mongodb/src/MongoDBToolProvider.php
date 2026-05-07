@@ -3,24 +3,30 @@
 namespace OpenCompany\Integrations\MongoDB;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBAggregate;
+use OpenCompany\Integrations\MongoDB\Tools\MongoDBDeleteMany;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBDeleteOne;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBFind;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBFindOne;
-use OpenCompany\Integrations\MongoDB\Tools\MongoDBGetCurrentUser;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBInsertMany;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBInsertOne;
-use OpenCompany\Integrations\MongoDB\Tools\MongoDBListCollections;
+use OpenCompany\Integrations\MongoDB\Tools\MongoDBUpdateMany;
 use OpenCompany\Integrations\MongoDB\Tools\MongoDBUpdateOne;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Publishes MongoDB Atlas Data API tools to host discovery surfaces.
+ *
+ * Handles catalog metadata, setup form fields, test connections, and
+ * account-specific service resolution.
+ */
 class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -28,46 +34,38 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [
+                    'MongoDB Atlas Data API v1 is deprecated by MongoDB; this package covers its official action endpoints for compatibility.',
+                ],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -80,7 +78,7 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'label' => 'MongoDB Atlas',
-            'description' => 'MongoDB Atlas database',
+            'description' => 'MongoDB Atlas Data API',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:mongodb',
         ];
@@ -90,14 +88,17 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'name' => 'MongoDB Atlas',
-            'description' => 'Query and manage documents in MongoDB Atlas via the Data API',
+            'description' => 'Query, write, delete, and aggregate documents via the deprecated MongoDB Atlas Data API v1.',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:mongodb',
-            'category' => 'database',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://www.mongodb.com/docs/atlas/app-services/data-api/',
+            'docs_url' => 'https://www.mongodb.com/docs/api/doc/atlas-data-api-v1/',
+            'source_url' => 'https://www.mongodb.com/docs/api/doc/atlas-data-api-v1/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -105,51 +106,68 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your MongoDB Atlas Data API key',
-                'hint' => 'Generate an API key in your MongoDB Atlas project under "App Services" → "Data API"',
+                'hint' => 'Generate an API key in your MongoDB Atlas App Services Data API settings.',
                 'required' => true,
             ],
             [
                 'key' => 'cluster_url',
                 'type' => 'url',
-                'label' => 'Cluster URL',
+                'label' => 'Data API Endpoint URL',
                 'placeholder' => 'https://data.mongodb-api.com/app/data-xxxxx/endpoint/data/v1',
-                'hint' => 'The Data API endpoint URL from your Atlas App Services app. Found in "App Services" → "Data API" → "Endpoint URL".',
+                'hint' => 'The full Data API endpoint URL ending in /endpoint/data/v1.',
                 'required' => true,
+            ],
+            [
+                'key' => 'data_source',
+                'type' => 'text',
+                'label' => 'Data Source',
+                'placeholder' => 'mongodb-atlas',
+                'hint' => 'Linked Atlas data source name. Most apps use mongodb-atlas.',
+                'required' => false,
             ],
         ];
     }
 
+    /**
+     * Verify the MongoDB Atlas Data API credentials with a lightweight find action.
+     *
+     * @param  array<string, mixed>  $config  Candidate credential values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $clusterUrl = rtrim($config['cluster_url'] ?? '', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $clusterUrl = rtrim((string) ($config['cluster_url'] ?? ''), '/');
+        $dataSource = (string) ($config['data_source'] ?? 'mongodb-atlas');
+        $dataSource = $dataSource !== '' ? $dataSource : 'mongodb-atlas';
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
-        if (empty($clusterUrl)) {
-            return ['success' => false, 'error' => 'No cluster URL provided'];
+        if ($clusterUrl === '') {
+            return ['success' => false, 'error' => 'No Data API endpoint URL provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'api-key' => $apiKey,
-                'Content-Type' => 'application/json',
+                'apiKey' => $apiKey,
+                'Content-Type' => 'application/ejson',
                 'Accept' => 'application/json',
             ])->timeout(10)->post($clusterUrl . '/action/find', [
+                'dataSource' => $dataSource,
                 'database' => 'admin',
                 'collection' => 'system.version',
                 'filter' => [],
                 'limit' => 1,
             ]);
 
-            $json = $response->json();
+            if (!$response->successful()) {
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach MongoDB Atlas API at {$clusterUrl}. Check the URL.",
+                    'error' => 'MongoDB Atlas Data API error: ' . (is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
@@ -157,7 +175,7 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'success' => true,
                 'message' => "Connected to MongoDB Atlas Data API at {$clusterUrl}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -167,6 +185,7 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return [
             'api_key' => 'nullable|string',
             'cluster_url' => 'nullable|url',
+            'data_source' => 'nullable|string',
         ];
     }
 
@@ -204,15 +223,29 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'mongodb_update_one' => [
                 'class' => MongoDBUpdateOne::class,
                 'type' => 'write',
-                'name' => 'Update Document',
+                'name' => 'Update One Document',
                 'description' => 'Update a single document in a MongoDB collection.',
+                'icon' => 'ph:pencil',
+            ],
+            'mongodb_update_many' => [
+                'class' => MongoDBUpdateMany::class,
+                'type' => 'write',
+                'name' => 'Update Many Documents',
+                'description' => 'Update multiple documents in a MongoDB collection.',
                 'icon' => 'ph:pencil',
             ],
             'mongodb_delete_one' => [
                 'class' => MongoDBDeleteOne::class,
                 'type' => 'write',
-                'name' => 'Delete Document',
+                'name' => 'Delete One Document',
                 'description' => 'Delete a single document from a MongoDB collection.',
+                'icon' => 'ph:trash',
+            ],
+            'mongodb_delete_many' => [
+                'class' => MongoDBDeleteMany::class,
+                'type' => 'write',
+                'name' => 'Delete Many Documents',
+                'description' => 'Delete multiple documents from a MongoDB collection.',
                 'icon' => 'ph:trash',
             ],
             'mongodb_aggregate' => [
@@ -222,31 +255,20 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'Run an aggregation pipeline on a MongoDB collection.',
                 'icon' => 'ph:funnel',
             ],
-            'mongodb_list_collections' => [
-                'class' => MongoDBListCollections::class,
-                'type' => 'read',
-                'name' => 'List Collections',
-                'description' => 'List collections in a MongoDB database.',
-                'icon' => 'ph:list',
-            ],
-            'mongodb_get_current_user' => [
-                'class' => MongoDBGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Verify connectivity and get current user info.',
-                'icon' => 'ph:user',
-            ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/mongodb.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'cluster_url', 'type' => 'url', 'label' => 'Cluster URL', 'required' => true],
+            ['key' => 'cluster_url', 'type' => 'url', 'label' => 'Data API Endpoint URL', 'required' => true],
+            ['key' => 'data_source', 'type' => 'text', 'label' => 'Data Source', 'required' => false],
         ];
     }
 
@@ -257,19 +279,28 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context with optional account.
+     */
+    private function resolveService(array $context = []): MongoDBService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new MongoDBService(
+            return new MongoDBService(
                 apiKey: $creds->get('mongodb', 'api_key', '', $account),
                 clusterUrl: $creds->get('mongodb', 'cluster_url', '', $account),
+                dataSource: $creds->get('mongodb', 'data_source', 'mongodb-atlas', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(MongoDBService::class));
+        return app(MongoDBService::class);
     }
 }

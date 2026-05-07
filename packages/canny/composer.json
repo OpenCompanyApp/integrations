@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-canny",
+    "description": "Canny integration for Laravel AI agents - boards, posts, users, votes, comments, changelog, insights, and Autopilot.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Canny\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Canny\\CannyServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

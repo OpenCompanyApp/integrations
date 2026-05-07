@@ -99,7 +99,7 @@ class RecaptchaToolProvider implements ToolProvider, HasIntegrationCapabilities
             'description' => 'Google reCAPTCHA Enterprise verification',
             'icon' => 'ph:shield-check',
             'logo' => 'logos:google-recaptcha',
-            'category' => 'authentication',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developers.google.com/recaptcha',
         ];

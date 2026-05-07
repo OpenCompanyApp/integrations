@@ -105,7 +105,7 @@ class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Vonage (Nexmo) communications integration for Laravel — SMS, verify, and account management.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

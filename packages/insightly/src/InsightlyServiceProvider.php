@@ -21,16 +21,18 @@ class InsightlyServiceProvider extends ServiceProvider
     {
         $this->app->singleton(InsightlyService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $apiKey = $creds->get('insightly', 'api_key', '')
+                ?: $creds->get('insightly', 'access_token', '');
 
             return new InsightlyService(
-                accessToken: $creds->get('insightly', 'access_token', ''),
+                apiKey: $apiKey,
                 baseUrl: $creds->get('insightly', 'base_url', 'https://api.na1.insightly.com'),
             );
         });
     }
 
     /**
-     * Boot the service provider — register tools with the ToolProviderRegistry.
+     * Boot the service provider and register tools with the ToolProviderRegistry.
      */
     public function boot(): void
     {

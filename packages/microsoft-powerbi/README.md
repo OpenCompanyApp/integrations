@@ -1,16 +1,18 @@
-# Microsoft Power BI Integration
+# Legacy Microsoft Power BI Integration
 
-List reports, datasets, workspaces, and user info from Microsoft Power BI.
+This package is deprecated. Use `opencompanyapp/integration-microsoft-power-bi`,
+which owns the canonical `powerbi` app namespace and the maintained Microsoft
+Power BI REST API surface.
 
 ## Installation
 
 ```json
 {
     "repositories": [
-        {"type": "path", "url": "../integrations/packages/microsoft-powerbi"}
+        {"type": "path", "url": "../integrations/packages/microsoft-power-bi"}
     ],
     "require": {
-        "opencompanyapp/integration-microsoft-powerbi": "@dev"
+        "opencompanyapp/integration-microsoft-power-bi": "@dev"
     }
 }
 ```
@@ -20,22 +22,17 @@ List reports, datasets, workspaces, and user info from Microsoft Power BI.
 Add to `config/ai-tools.php`:
 
 ```php
-'microsoft_powerbi' => [
+'powerbi' => [
     'access_token' => env('POWERBI_ACCESS_TOKEN'),
-    'url'          => env('POWERBI_URL', 'https://api.powerbi.com/v1.0/myorg'),
+    'url'          => env('POWERBI_URL', 'https://api.powerbi.com'),
 ],
 ```
 
 ## Tools
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `powerbi_list_reports` | read | List all reports |
-| `powerbi_get_report` | read | Get a report by ID |
-| `powerbi_list_datasets` | read | List all datasets |
-| `powerbi_get_dataset` | read | Get a dataset by ID |
-| `powerbi_list_workspaces` | read | List all workspaces (groups) |
-| `powerbi_get_current_user` | read | Get current user profile |
+See `packages/microsoft-power-bi/lua-docs/powerbi.md` for the maintained tool
+list. The Power BI REST API does not expose a general current-user profile
+endpoint in this integration.
 
 ## Authentication
 

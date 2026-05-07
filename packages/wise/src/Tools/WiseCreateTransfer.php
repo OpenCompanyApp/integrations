@@ -9,8 +9,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool to create a new Wise transfer.
  *
- * Initiates a money transfer between accounts. Requires source account,
- * target account, and amount. Optionally includes a payment reference.
+ * Initiates a money transfer from a Wise quote to a recipient account.
+ *
+ * Requires the target account, V2 quote UUID, and customer transaction ID used
+ * for idempotency. Optionally includes a refund source account and reference.
  */
 class WiseCreateTransfer implements Tool
 {
@@ -51,10 +53,12 @@ class WiseCreateTransfer implements Tool
     public function parameters(): array
     {
         return [
-            'source_account' => ['type' => 'integer', 'description' => 'Source account ID (borderless account balance to debit from).', 'required' => true],
+            'source_account' => ['type' => 'integer', 'description' => 'Optional refund recipient source account ID.'],
             'target_account' => ['type' => 'integer', 'description' => 'Target account ID (recipient account to credit).', 'required' => true],
-            'amount' => ['type' => 'number', 'description' => 'Amount to transfer in the source currency.', 'required' => true],
+            'quote_uuid' => ['type' => 'string', 'description' => 'V2 quote UUID for this transfer.', 'required' => true],
+            'customer_transaction_id' => ['type' => 'string', 'description' => 'UUID used for idempotency when creating the transfer.', 'required' => true],
             'reference' => ['type' => 'string', 'description' => 'Payment reference or description for the transfer.'],
+            'details' => ['type' => 'object', 'description' => 'Additional transfer details returned by Wise transfer-requirements.'],
         ];
     }
 
@@ -71,29 +75,32 @@ class WiseCreateTransfer implements Tool
                 return ToolResult::error('Wise integration is not configured.');
             }
 
-            $sourceAccount = $args['source_account'] ?? null;
             $targetAccount = $args['target_account'] ?? null;
-            $amount = $args['amount'] ?? null;
+            $quoteUuid = $args['quote_uuid'] ?? null;
+            $customerTransactionId = $args['customer_transaction_id'] ?? null;
 
-            if (empty($sourceAccount)) {
-                return ToolResult::error('Parameter "source_account" is required.');
-            }
             if (empty($targetAccount)) {
                 return ToolResult::error('Parameter "target_account" is required.');
             }
-            if (empty($amount)) {
-                return ToolResult::error('Parameter "amount" is required.');
+            if (empty($quoteUuid)) {
+                return ToolResult::error('Parameter "quote_uuid" is required.');
+            }
+            if (empty($customerTransactionId)) {
+                return ToolResult::error('Parameter "customer_transaction_id" is required.');
             }
 
             $data = [
-                'sourceAccount' => $sourceAccount,
                 'targetAccount' => $targetAccount,
-                'amount' => (float) $amount,
-                'details' => new \stdClass(),
+                'quoteUuid' => $quoteUuid,
+                'customerTransactionId' => $customerTransactionId,
+                'details' => isset($args['details']) && is_array($args['details']) ? $args['details'] : [],
             ];
 
+            if (isset($args['source_account'])) {
+                $data['sourceAccount'] = $args['source_account'];
+            }
             if (isset($args['reference'])) {
-                $data['details']->reference = $args['reference'];
+                $data['details']['reference'] = $args['reference'];
             }
 
             $transfer = $this->service->createTransfer($data);

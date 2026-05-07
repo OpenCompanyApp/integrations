@@ -1,0 +1,24 @@
+{
+  "name": "opencompanyapp/integration-microsoft-sharepoint",
+  "description": "Microsoft SharePoint integration for AI agents using Microsoft Graph sites, lists, drives, and sharing APIs.",
+  "license": "MIT",
+  "type": "library",
+  "require": {
+    "php": "^8.2",
+    "opencompanyapp/integration-core": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "OpenCompany\\Integrations\\MicrosoftSharePoint\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "OpenCompany\\Integrations\\MicrosoftSharePoint\\MicrosoftSharePointServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

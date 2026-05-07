@@ -2,7 +2,7 @@
 
 > Sendy newsletter integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage subscribers, campaigns, and brands. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to email newsletter management. Subscribe and unsubscribe contacts, check subscriber counts, and create campaigns — all through the [Sendy](https://sendy.co) API.
+Give your AI agents access to email newsletter management. Subscribe, unsubscribe, delete and inspect contacts, list brands and lists, check active subscriber counts, and create or schedule campaigns through the [Sendy](https://sendy.co/api) API.
 
 ## About OpenCompany
 
@@ -43,9 +43,13 @@ return [
 |------|------|-------------|
 | `sendy_subscribe` | write | Subscribe an email to a mailing list |
 | `sendy_unsubscribe` | write | Unsubscribe an email from a mailing list |
-| `sendy_list_subscribers` | read | Get subscriber count for a list |
-| `sendy_create_campaign` | write | Create a new email campaign |
-| `sendy_get_current_user` | read | Get brand/account information |
+| `sendy_delete_subscriber` | write | Delete a subscriber from a list |
+| `sendy_subscription_status` | read | Get a subscriber's list status |
+| `sendy_list_subscribers` | read | Get active subscriber count for a list |
+| `sendy_get_lists` | read | Get lists for a brand |
+| `sendy_get_brands` | read | Get all brands visible to the API key |
+| `sendy_create_campaign` | write | Create, send, or schedule an email campaign |
+| `sendy_get_current_user` | read | Compatibility alias for get brands |
 
 ## Quick Start
 
@@ -69,7 +73,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 5 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 9 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -96,8 +100,15 @@ $result = $service->subscribe('list-id', 'user@example.com', 'John Doe');
 // Unsubscribe
 $result = $service->unsubscribe('list-id', 'user@example.com');
 
-// Get subscriber count
+// Get active subscriber count
 $count = $service->listSubscribers('list-id');
+
+// Check subscriber status
+$status = $service->getSubscriptionStatus('list-id', 'user@example.com');
+
+// Get brands and lists
+$brands = $service->getBrands();
+$lists = $service->getLists('1', includeHidden: true);
 
 // Create a campaign
 $result = $service->createCampaign([
@@ -108,6 +119,7 @@ $result = $service->createCampaign([
     'subject' => 'Monthly update',
     'html_text' => '<h1>Hello!</h1>',
     'list_ids' => 'list-id',
+    'send_campaign' => 1,
 ]);
 ```
 

@@ -7,268 +7,323 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * ChurnZero customer success API service.
+ * HTTP client for ChurnZero's HTTP API endpoint.
  *
- * Handles HTTP communication with the ChurnZero API using Bearer token
- * authentication. Provides methods for accounts, contacts, alerts,
- * usage tracking, and user management.
- *
- * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
+ * ChurnZero's public HTTP API is action based: requests are sent to the
+ * configured /i endpoint with appKey plus action-specific query parameters.
  */
 class ChurnZeroService
 {
     /**
-     * Create a new ChurnZeroService instance.
-     *
-     * @param  string  $apiKey  ChurnZero API key used as Bearer token.
-     * @param  string  $baseUrl  Base URL for the ChurnZero API (defaults to https://api.churnzero.net/v1).
+     * @param  string  $appKey  ChurnZero application key.
+     * @param  string  $endpoint  ChurnZero HTTP API endpoint, usually https://analytics.churnzero.net/i.
      */
     public function __construct(
-        private string $apiKey = '',
-        private string $baseUrl = 'https://api.churnzero.net/v1',
+        private string $appKey = '',
+        private string $endpoint = 'https://analytics.churnzero.net/i',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->endpoint = $this->normalizeEndpoint($this->endpoint);
     }
 
     /**
-     * Check whether the service is configured with an API key.
+     * Check whether the service has an application key.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey);
+        return $this->appKey !== '';
     }
 
-    // ─── Accounts ─────────────────────────────────────────────────────────
+    /**
+     * Set a ChurnZero account or contact attribute.
+     *
+     * @param  string  $entity  Either "account" or "contact".
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @param  string|null  $contactExternalId  Contact identifier from the source system.
+     * @param  string  $name  Attribute name configured in ChurnZero.
+     * @param  string|int|float|bool|null  $value  Attribute value to write.
+     * @return array<string, mixed>
+     */
+    public function setAttribute(
+        string $entity,
+        string $accountExternalId,
+        ?string $contactExternalId,
+        string $name,
+        string|int|float|bool|null $value,
+    ): array {
+        $params = $this->baseEntityParams('setAttribute', $entity, $accountExternalId, $contactExternalId);
+        $params['name'] = $name;
+        $params['value'] = $this->formatValue($value);
+
+        return $this->sendAction($params);
+    }
 
     /**
-     * List accounts with optional filtering and pagination.
+     * Set multiple ChurnZero attributes by issuing one documented setAttribute action per value.
      *
-     * @param  string|null  $search  Search term to filter accounts.
-     * @param  int  $page  Page number for pagination (default 1).
-     * @param  int  $perPage  Number of results per page (default 25, max 100).
-     * @return array<string, mixed> API response containing accounts and pagination info.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
+     * @param  string  $entity  Either "account" or "contact".
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @param  string|null  $contactExternalId  Contact identifier from the source system.
+     * @param  array<string, mixed>  $attributes  Attribute name/value pairs.
+     * @return array<string, mixed>
      */
-    public function listAccounts(?string $search = null, int $page = 1, int $perPage = 25): array
+    public function setAttributes(string $entity, string $accountExternalId, ?string $contactExternalId, array $attributes): array
     {
-        $params = [
-            'page' => $page,
-            'perPage' => min($perPage, 100),
+        if ($attributes === []) {
+            throw new \RuntimeException('At least one ChurnZero attribute is required.');
+        }
+
+        $results = [];
+        foreach ($attributes as $name => $value) {
+            if (! is_string($name) || $name === '') {
+                throw new \RuntimeException('ChurnZero attribute names must be non-empty strings.');
+            }
+
+            $results[$name] = $this->setAttribute($entity, $accountExternalId, $contactExternalId, $name, $value);
+        }
+
+        return [
+            'status' => 'success',
+            'entity' => $this->normalizeEntity($entity),
+            'accountExternalId' => $accountExternalId,
+            'contactExternalId' => $contactExternalId,
+            'attribute_count' => count($results),
+            'results' => $results,
         ];
-        if ($search !== null) {
-            $params['search'] = $search;
-        }
-
-        return $this->request('GET', '/accounts', $params);
     }
 
     /**
-     * Get a single account by ID.
+     * Track a ChurnZero event for an account and optionally a contact.
      *
-     * @param  string  $id  The account ID.
-     * @return array<string, mixed> The account data.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @param  string  $eventName  Event name; ChurnZero creates it if needed.
+     * @param  string|null  $contactExternalId  Contact identifier from the source system.
+     * @param  string|null  $description  Optional event description.
+     * @param  int|float|null  $quantity  Optional numeric quantity for the event.
+     * @param  array<string, mixed>  $customFields  Optional event custom fields.
+     * @return array<string, mixed>
      */
-    public function getAccount(string $id): array
-    {
-        return $this->request('GET', '/accounts/' . urlencode($id));
-    }
-
-    // ─── Contacts ─────────────────────────────────────────────────────────
-
-    /**
-     * List contacts with optional filtering and pagination.
-     *
-     * @param  string|null  $accountId  Filter contacts by account ID.
-     * @param  string|null  $search  Search term to filter contacts.
-     * @param  int  $page  Page number for pagination (default 1).
-     * @param  int  $perPage  Number of results per page (default 25, max 100).
-     * @return array<string, mixed> API response containing contacts and pagination info.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
-     */
-    public function listContacts(?string $accountId = null, ?string $search = null, int $page = 1, int $perPage = 25): array
-    {
+    public function trackEvent(
+        string $accountExternalId,
+        string $eventName,
+        ?string $contactExternalId = null,
+        ?string $description = null,
+        int|float|null $quantity = null,
+        array $customFields = [],
+    ): array {
         $params = [
-            'page' => $page,
-            'perPage' => min($perPage, 100),
+            'action' => 'trackEvent',
+            'accountExternalId' => $accountExternalId,
+            'eventName' => $eventName,
         ];
-        if ($accountId !== null) {
-            $params['accountId'] = $accountId;
+
+        if ($contactExternalId !== null && $contactExternalId !== '') {
+            $params['contactExternalId'] = $contactExternalId;
         }
-        if ($search !== null) {
-            $params['search'] = $search;
+        if ($description !== null && $description !== '') {
+            $params['description'] = $description;
+        }
+        if ($quantity !== null) {
+            $params['quantity'] = $quantity;
+        }
+        if ($customFields !== []) {
+            $params['customfields'] = json_encode($customFields, JSON_THROW_ON_ERROR);
         }
 
-        return $this->request('GET', '/contacts', $params);
+        return $this->sendAction($params);
     }
 
     /**
-     * Get a single contact by ID.
+     * Increment a numeric ChurnZero account or contact attribute.
      *
-     * @param  string  $id  The contact ID.
-     * @return array<string, mixed> The contact data.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
+     * @param  string  $entity  Either "account" or "contact".
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @param  string|null  $contactExternalId  Contact identifier from the source system.
+     * @param  string  $name  Numeric attribute name configured in ChurnZero.
+     * @param  int|float  $value  Amount to add; may be negative.
+     * @return array<string, mixed>
      */
-    public function getContact(string $id): array
-    {
-        return $this->request('GET', '/contacts/' . urlencode($id));
+    public function incrementAttribute(
+        string $entity,
+        string $accountExternalId,
+        ?string $contactExternalId,
+        string $name,
+        int|float $value,
+    ): array {
+        $params = $this->baseEntityParams('incrementAttribute', $entity, $accountExternalId, $contactExternalId);
+        $params['name'] = $name;
+        $params['value'] = $value;
+
+        return $this->sendAction($params);
     }
 
-    // ─── Alerts ───────────────────────────────────────────────────────────
+    /**
+     * Delete a ChurnZero account by external ID.
+     *
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @return array<string, mixed>
+     */
+    public function deleteAccount(string $accountExternalId): array
+    {
+        return $this->sendAction([
+            'action' => 'deleteAccount',
+            'accountExternalId' => $accountExternalId,
+        ]);
+    }
 
     /**
-     * List alerts with optional filtering and pagination.
+     * Delete a ChurnZero contact by account and contact external IDs.
      *
-     * @param  string|null  $accountId  Filter alerts by account ID.
-     * @param  string|null  $status  Filter by alert status (e.g., "open", "dismissed").
-     * @param  int  $page  Page number for pagination (default 1).
-     * @param  int  $perPage  Number of results per page (default 25, max 100).
-     * @return array<string, mixed> API response containing alerts and pagination info.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @param  string  $contactExternalId  Contact identifier from the source system.
+     * @return array<string, mixed>
      */
-    public function listAlerts(?string $accountId = null, ?string $status = null, int $page = 1, int $perPage = 25): array
+    public function deleteContact(string $accountExternalId, string $contactExternalId): array
     {
-        $params = [
-            'page' => $page,
-            'perPage' => min($perPage, 100),
+        return $this->sendAction([
+            'action' => 'deleteContact',
+            'accountExternalId' => $accountExternalId,
+            'contactExternalId' => $contactExternalId,
+        ]);
+    }
+
+    /**
+     * Send a raw ChurnZero action to the configured /i endpoint.
+     *
+     * @param  array<string, mixed>  $params  Action query parameters excluding appKey.
+     * @return array<string, mixed>
+     */
+    public function sendAction(array $params): array
+    {
+        if (! $this->isConfigured()) {
+            throw new \RuntimeException('ChurnZero app key is not configured.');
+        }
+
+        if (($params['action'] ?? '') === '') {
+            throw new \RuntimeException('ChurnZero action is required.');
+        }
+
+        $query = array_filter(
+            array_merge(['appKey' => $this->appKey], $params),
+            static fn ($value): bool => $value !== null && $value !== ''
+        );
+
+        $response = $this->rawRequest($query);
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return [
+            'status_code' => $response->status(),
+            'body' => $response->body(),
         ];
-        if ($accountId !== null) {
-            $params['accountId'] = $accountId;
-        }
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', '/alerts', $params);
-    }
-
-    // ─── Usage ────────────────────────────────────────────────────────────
-
-    /**
-     * List usage data with optional filtering and pagination.
-     *
-     * @param  string|null  $accountId  Filter usage by account ID.
-     * @param  string|null  $feature  Filter by usage feature/module name.
-     * @param  int  $page  Page number for pagination (default 1).
-     * @param  int  $perPage  Number of results per page (default 25, max 100).
-     * @return array<string, mixed> API response containing usage data and pagination info.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
-     */
-    public function listUsage(?string $accountId = null, ?string $feature = null, int $page = 1, int $perPage = 25): array
-    {
-        $params = [
-            'page' => $page,
-            'perPage' => min($perPage, 100),
-        ];
-        if ($accountId !== null) {
-            $params['accountId'] = $accountId;
-        }
-        if ($feature !== null) {
-            $params['feature'] = $feature;
-        }
-
-        return $this->request('GET', '/usage', $params);
-    }
-
-    // ─── User ─────────────────────────────────────────────────────────────
-
-    /**
-     * Get the currently authenticated user.
-     *
-     * @return array<string, mixed> The user profile data.
-     *
-     * @see https://support.churnzero.net/hc/en-us/articles/360009701791-ChurnZero-API
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/user');
-    }
-
-    // ─── Internal helpers ─────────────────────────────────────────────────
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path (e.g. "/accounts").
-     * @param  array<string, mixed>  $data  Query parameters or request body.
-     * @return array<string, mixed> Parsed JSON response.
-     *
-     * @throws \RuntimeException On API errors or connection failures.
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
-        }
-
-        return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the ChurnZero API using Bearer token auth.
+     * Send a GET request to the ChurnZero action endpoint.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PUT/DELETE).
-     * @return Response The raw HTTP response.
-     *
-     * @throws \RuntimeException On API errors, connection failures, or missing API key.
+     * @param  array<string, mixed>  $query  Full query string including appKey.
+     * @return Response
      */
-    private function rawRequest(string $method, string $path, array $data = []): Response
+    private function rawRequest(array $query): Response
     {
-        if (! $this->apiKey) {
-            throw new \RuntimeException('ChurnZero API key is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
         try {
-            $http = Http::withToken($this->apiKey)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $data),
-                'POST'   => $http->post($url, $data),
-                'PUT'    => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $response = Http::acceptJson()
+                ->timeout(30)
+                ->get($this->endpoint, $query);
 
             if (! $response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+                $body = $response->json() ?? $response->body();
 
-                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("ChurnZero API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("ChurnZero API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
-                }
-
-                $errors = $response->json('errors') ?? $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("ChurnZero API error: {$method} {$path}", [
+                Log::error('ChurnZero API error.', [
                     'status' => $response->status(),
-                    'error'  => $errors,
+                    'endpoint' => $this->endpoint,
+                    'action' => $query['action'] ?? null,
+                    'body' => $body,
                 ]);
-                throw new \RuntimeException("ChurnZero API error ({$response->status()}): " . (is_string($errors) ? $errors : json_encode($errors)));
+
+                throw new \RuntimeException('ChurnZero API error (' . $response->status() . '): ' . (is_string($body) ? $body : json_encode($body)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("ChurnZero API connection error: {$method} {$path}", [
+        } catch (\Throwable $e) {
+            if ($e instanceof \RuntimeException && str_starts_with($e->getMessage(), 'ChurnZero API error')) {
+                throw $e;
+            }
+
+            Log::error('ChurnZero API connection error.', [
+                'endpoint' => $this->endpoint,
+                'action' => $query['action'] ?? null,
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to ChurnZero API: {$e->getMessage()}");
+
+            throw new \RuntimeException('Failed to connect to ChurnZero API: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Build common action parameters for account/contact attribute operations.
+     *
+     * @param  string  $action  ChurnZero action name.
+     * @param  string  $entity  Either "account" or "contact".
+     * @param  string  $accountExternalId  Account identifier from the source system.
+     * @param  string|null  $contactExternalId  Contact identifier from the source system.
+     * @return array<string, mixed>
+     */
+    private function baseEntityParams(string $action, string $entity, string $accountExternalId, ?string $contactExternalId): array
+    {
+        $normalizedEntity = $this->normalizeEntity($entity);
+
+        if ($normalizedEntity === 'contact' && ($contactExternalId === null || $contactExternalId === '')) {
+            throw new \RuntimeException('contactExternalId is required for ChurnZero contact attributes.');
+        }
+
+        $params = [
+            'action' => $action,
+            'entity' => $normalizedEntity,
+            'accountExternalId' => $accountExternalId,
+        ];
+
+        if ($contactExternalId !== null && $contactExternalId !== '') {
+            $params['contactExternalId'] = $contactExternalId;
+        }
+
+        return $params;
+    }
+
+    /**
+     * Normalize and validate ChurnZero entity values.
+     */
+    private function normalizeEntity(string $entity): string
+    {
+        $entity = strtolower($entity);
+        if (! in_array($entity, ['account', 'contact'], true)) {
+            throw new \RuntimeException('ChurnZero entity must be either account or contact.');
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Convert PHP scalar values into query-safe ChurnZero values.
+     */
+    private function formatValue(string|int|float|bool|null $value): string|int|float|null
+    {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        return $value;
+    }
+
+    /**
+     * Normalize a configured endpoint or host to the HTTP API /i endpoint.
+     */
+    private function normalizeEndpoint(string $endpoint): string
+    {
+        $endpoint = rtrim($endpoint, '/');
+
+        return str_ends_with($endpoint, '/i') ? $endpoint : $endpoint . '/i';
     }
 }

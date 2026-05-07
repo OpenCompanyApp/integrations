@@ -95,7 +95,7 @@ class PinterestToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Visual discovery and marketing platform — manage pins, boards, and ad campaigns.',
             'icon' => 'ph:pinterest-logo',
             'logo' => 'simple-icons:pinterest',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.pinterest.com/docs/getting-started/introduction/',
         ];

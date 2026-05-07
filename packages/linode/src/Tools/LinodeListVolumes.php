@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Linode\LinodeService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Linode block storage volumes in the account.
+ */
 class LinodeListVolumes implements Tool
 {
+    /**
+     * @param  LinodeService  $service  The Linode API client.
+     */
     public function __construct(
         private LinodeService $service,
     ) {}
@@ -30,6 +36,11 @@ class LinodeListVolumes implements Tool
         ];
     }
 
+    /**
+     * List volumes using optional Linode pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

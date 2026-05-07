@@ -5,11 +5,21 @@ namespace OpenCompany\Integrations\ServiceM8;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the ServiceM8 REST API.
+ *
+ * Maps tools to ServiceM8's api_1.0 object endpoints and handles OAuth bearer
+ * authentication, errors, and JSON parsing.
+ */
 class ServiceM8Service
 {
+    /**
+     * @param  string  $accessToken  ServiceM8 OAuth access token.
+     * @param  string  $baseUrl  ServiceM8 API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.servicem8.com/v1',
+        private string $baseUrl = 'https://api.servicem8.com/api_1.0',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -30,7 +40,7 @@ class ServiceM8Service
      */
     public function listJobs(array $params = []): array
     {
-        return $this->request('GET', '/jobs', $params);
+        return $this->request('GET', '/job.json', $params);
     }
 
     /**
@@ -41,7 +51,7 @@ class ServiceM8Service
      */
     public function getJob(string $uuid): array
     {
-        return $this->request('GET', '/jobs/' . urlencode($uuid));
+        return $this->request('GET', '/job/' . urlencode($uuid) . '.json');
     }
 
     /**
@@ -52,7 +62,7 @@ class ServiceM8Service
      */
     public function createJob(array $data): array
     {
-        return $this->request('POST', '/jobs', $data);
+        return $this->request('POST', '/job.json', $data);
     }
 
     /**
@@ -63,7 +73,7 @@ class ServiceM8Service
      */
     public function listClients(array $params = []): array
     {
-        return $this->request('GET', '/clients', $params);
+        return $this->request('GET', '/company.json', $params);
     }
 
     /**
@@ -74,7 +84,7 @@ class ServiceM8Service
      */
     public function getClient(string $uuid): array
     {
-        return $this->request('GET', '/clients/' . urlencode($uuid));
+        return $this->request('GET', '/company/' . urlencode($uuid) . '.json');
     }
 
     /**
@@ -85,24 +95,24 @@ class ServiceM8Service
      */
     public function listActivities(array $params = []): array
     {
-        return $this->request('GET', '/activities', $params);
+        return $this->request('GET', '/jobactivity.json', $params);
     }
 
     /**
-     * Get the currently authenticated ServiceM8 user.
+     * List staff members visible to the authenticated token.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/staff.json');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API endpoint path (e.g. "/jobs").
+     * @param  string  $path    API endpoint path (e.g. "/job.json").
      * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return array<string, mixed>
      */

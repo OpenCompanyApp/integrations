@@ -93,7 +93,7 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Design-driven CMS — manage sites, collections, and items',
             'icon' => 'ph:browser',
             'logo' => 'simple-icons:webflow',
-            'category' => 'cms',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.webflow.com/data/docs',
         ];

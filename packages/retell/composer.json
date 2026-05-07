@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-retell",
-    "description": "Retell AI integration for Laravel — manage calls, agents, and phone calls via the Retell AI API.",
+    "description": "Legacy compatibility wrapper for opencompanyapp/integration-retell-ai.",
     "license": "MIT",
     "authors": [
         {
@@ -16,6 +16,7 @@
     "replace": {
         "opencompanyapp/ai-tool-retell": "self.version"
     },
+    "abandoned": "opencompanyapp/integration-retell-ai",
     "autoload": {
         "psr-4": {
             "OpenCompany\\Integrations\\Retell\\": "src/"

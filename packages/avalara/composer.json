@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-avalara",
-    "description": "Avalara integration for Laravel — automate tax calculation, transactions, and compliance.",
+    "description": "Avalara AvaTax REST API integration for Laravel agents.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,14 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "avalara", "tax", "sales", "compliance", "opencompany"],
+    "keywords": [
+        "tools",
+        "avalara",
+        "avatax",
+        "tax",
+        "compliance",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

@@ -114,7 +114,7 @@ class FormstackToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Online form builder and submission management',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:formstack',
-            'category' => 'forms',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.formstack.com/docs/api/v2',
         ];

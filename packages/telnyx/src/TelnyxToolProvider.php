@@ -96,7 +96,7 @@ class TelnyxToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Programmable voice, SMS, and phone number management',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:telnyx',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.telnyx.com/docs/api/v2/overview',
         ];

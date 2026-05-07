@@ -18,7 +18,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 class WhatsAppListTemplates implements Tool
 {
     /**
-     * Create a new WhatsAppListTemplates tool instance.
+     * @param  WhatsAppService  $service  WhatsApp API client.
      */
     public function __construct(
         private WhatsAppService $service,
@@ -49,24 +49,26 @@ class WhatsAppListTemplates implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of templates to return (default: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the value from a previous response to get the next page.'],
+            'after' => ['type' => 'string', 'description' => 'Cursor for pagination.'],
+            'status' => ['type' => 'string', 'description' => 'Optional template status filter such as APPROVED, PENDING, or REJECTED.'],
+            'name' => ['type' => 'string', 'description' => 'Optional template name filter.'],
         ];
     }
 
     /**
-     * Execute the tool — list templates from the API.
+     * Execute the tool and list templates from the WABA API.
      *
-     * @param  array{limit?: int, after?: string}  $args
+     * @param  array<string, mixed>  $args
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('WhatsApp integration is not configured.');
+            if (! $this->service->hasAccessToken()) {
+                return ToolResult::error('WhatsApp access token is not configured.');
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $result = $this->service->listTemplates($limit, $args['after'] ?? null);
+            $result = $this->service->listTemplates($limit, $args['after'] ?? null, $args['status'] ?? null, $args['name'] ?? null);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

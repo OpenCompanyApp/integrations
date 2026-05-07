@@ -107,7 +107,7 @@ class DocuSignToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'DocuSign integration for Laravel — manage envelopes, templates, and documents.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

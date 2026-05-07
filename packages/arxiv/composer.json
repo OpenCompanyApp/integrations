@@ -1,0 +1,38 @@
+{
+    "name": "opencompanyapp/integration-arxiv",
+    "description": "arXiv integration for Laravel AI agents - search preprints via the Atom API and harvest metadata via OAI-PMH.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Arxiv\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Arxiv\\ArxivServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "arxiv",
+        "papers",
+        "research",
+        "preprints",
+        "opencompany"
+    ]
+}

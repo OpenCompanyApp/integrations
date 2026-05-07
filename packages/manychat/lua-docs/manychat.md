@@ -1,224 +1,156 @@
-# ManyChat — Lua API Reference
+# Manychat - Lua API Reference
 
-## list_flows
+Namespace: `app.integrations.manychat`
 
-List all flows (pages) in your ManyChat account.
+Use this integration for Manychat Account Public API operations. Responses are decoded Manychat JSON. Most endpoints return a top-level `status` and `data` object or list.
 
-### Parameters
-
-No parameters required.
-
-### Response
-
-Returns an array of flow objects with IDs, names, and status.
-
----
-
-## get_flow
-
-Get details of a specific ManyChat flow (page) by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_id` | string | yes | The flow (page) ID to retrieve |
-
-### Response
-
-Returns the full flow configuration including nodes, connections, and messaging content.
-
----
-
-## send_message
-
-Send a message to a subscriber via ManyChat's Social messaging API.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `subscriber_id` | string | yes | The ManyChat subscriber ID to send the message to |
-| `message` | object | yes | The message payload (text, buttons, cards, etc.) |
-| `message_type` | string | no | Channel: `"instagram"`, `"messenger"`, `"whatsapp"`, or `"sms"` |
-
-### Message Format
-
-The `message` object supports various content types:
+## Account And Flows
 
 ```lua
--- Simple text message
-message = {
-    text = "Hello from ManyChat!"
-}
+local page = app.integrations.manychat.get_page_info({})
+local flows = app.integrations.manychat.list_flows({})
+```
 
--- Text with buttons
-message = {
-    text = "Choose an option:",
-    buttons = {
-        {
-            type = "url",
-            caption = "Visit Website",
-            url = "https://example.com"
-        },
-        {
-            type = "postback",
-            caption = "Get Started",
-            payload = "GET_STARTED"
-        }
+`get_flow` is a compatibility helper. Manychat documents `getFlows`, not a single-flow endpoint, so this tool searches the list response by namespace or ID.
+
+```lua
+local flow = app.integrations.manychat.get_flow({page_id = "content20260101000000"})
+```
+
+## Tags
+
+```lua
+local tags = app.integrations.manychat.list_tags({})
+
+local created = app.integrations.manychat.create_tag({
+  name = "VIP"
+})
+
+app.integrations.manychat.remove_tag({tag_id = 123})
+app.integrations.manychat.remove_tag_by_name({tag_name = "VIP"})
+```
+
+## Fields
+
+```lua
+local custom_fields = app.integrations.manychat.list_custom_fields({})
+
+local field = app.integrations.manychat.create_custom_field({
+  caption = "Lead status",
+  type = "text",
+  description = "CRM qualification status"
+})
+
+local bot_fields = app.integrations.manychat.list_bot_fields({})
+
+app.integrations.manychat.set_bot_field({
+  field_id = 456,
+  field_value = "open"
+})
+```
+
+## Sending
+
+Use `send_content` for direct content payloads and `send_flow` to trigger an existing automation flow.
+
+```lua
+local sent = app.integrations.manychat.send_content({
+  subscriber_id = 123456,
+  data = {
+    version = "v2",
+    content = {
+      type = "text",
+      messages = {
+        {type = "text", text = "Hello from an agent"}
+      }
     }
-}
-```
-
----
-
-## list_tags
-
-List all tags in your ManyChat account.
-
-### Parameters
-
-No parameters required.
-
-### Response
-
-Returns an array of tag objects with IDs and names.
-
----
-
-## create_tag
-
-Create a new tag in ManyChat.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | The name for the new tag |
-
-### Response
-
-Returns the created tag object with ID and name.
-
----
-
-## get_current_user
-
-Get the currently authenticated ManyChat user profile.
-
-### Parameters
-
-No parameters required.
-
-### Response
-
-Returns account details including user name, email, plan type, and connected channels.
-
----
-
-## Examples
-
-### List all flows
-
-```lua
-local result = app.integrations.manychat.list_flows({})
-
-for _, flow in ipairs(result.data or {}) do
-    print(flow.id .. ": " .. flow.name)
-end
-```
-
-### Get a specific flow
-
-```lua
-local result = app.integrations.manychat.get_flow({
-    page_id = "123456"
+  }
 })
 
-print("Flow: " .. result.data.name)
-```
-
-### Send a text message
-
-```lua
-local result = app.integrations.manychat.send_message({
-    subscriber_id = "789012",
-    message = {
-        text = "Hello! This is a message from our AI assistant."
-    }
-})
-
-print("Message sent: " .. tostring(result.success))
-```
-
-### Send a message with buttons
-
-```lua
-local result = app.integrations.manychat.send_message({
-    subscriber_id = "789012",
-    message = {
-        text = "What would you like to do?",
-        buttons = {
-            {
-                type = "url",
-                caption = "Visit Shop",
-                url = "https://shop.example.com"
-            },
-            {
-                type = "postback",
-                caption = "Talk to Agent",
-                payload = "AGENT_HANDOFF"
-            }
-        }
-    }
+local flow = app.integrations.manychat.send_flow({
+  subscriber_id = 123456,
+  flow_ns = "content20260101000000"
 })
 ```
 
-### List all tags
+`send_message` remains as a compatibility alias for older scripts. New scripts should use `send_content`.
+
+## Subscribers
 
 ```lua
-local result = app.integrations.manychat.list_tags({})
-
-for _, tag in ipairs(result.data or {}) do
-    print(tag.id .. ": " .. tag.name)
-end
-```
-
-### Create a new tag
-
-```lua
-local result = app.integrations.manychat.create_tag({
-    name = "VIP Customer"
+local subscriber = app.integrations.manychat.get_subscriber_info({
+  subscriber_id = 123456
 })
 
-print("Created tag: " .. result.data.name)
+local matches = app.integrations.manychat.find_subscriber_by_name({
+  name = "Example User"
+})
+
+app.integrations.manychat.add_subscriber_tag({
+  subscriber_id = 123456,
+  tag_id = 111
+})
+
+app.integrations.manychat.remove_subscriber_tag({
+  subscriber_id = 123456,
+  tag_id = 111
+})
+
+app.integrations.manychat.set_subscriber_custom_field({
+  subscriber_id = 123456,
+  field_id = 222,
+  field_value = "qualified"
+})
 ```
 
-### Get current user info
+Create or update subscribers with the payload shape documented by Manychat:
 
 ```lua
-local result = app.integrations.manychat.get_current_user({})
+local created = app.integrations.manychat.create_subscriber({
+  data = {
+    first_name = "Example",
+    last_name = "User",
+    email = "user@example.test",
+    has_opt_in_email = true
+  }
+})
 
-print("Account: " .. result.data.first_name .. " " .. result.data.last_name)
-print("Plan: " .. (result.data.plan or "unknown"))
+local updated = app.integrations.manychat.update_subscriber({
+  data = {
+    subscriber_id = 123456,
+    email = "new-address@example.test",
+    has_opt_in_email = true
+  }
+})
 ```
 
----
+## Generic API Helpers
+
+Use generic helpers only for documented Manychat endpoints that do not yet have a dedicated tool. `path` must be relative to the configured API base URL; absolute URLs are rejected.
+
+```lua
+local topics = app.integrations.manychat.api_get({
+  path = "/fb/page/getOtnTopics"
+})
+
+local tagged = app.integrations.manychat.api_post({
+  path = "/fb/subscriber/addTagByName",
+  body = {
+    subscriber_id = 123456,
+    tag_name = "VIP"
+  }
+})
+```
 
 ## Multi-Account Usage
 
-If you have multiple ManyChat accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.manychat.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.manychat.default.function_name({...})
-
--- Named accounts
-app.integrations.manychat.work.function_name({...})
-app.integrations.manychat.client_a.function_name({...})
+app.integrations.manychat.list_flows({})
+app.integrations.manychat.default.list_flows({})
+app.integrations.manychat.work.add_subscriber_tag({
+  subscriber_id = 123456,
+  tag_id = 111
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+The function names are identical across accounts; only stored API keys differ.

@@ -88,7 +88,7 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration, 
 
     public function appName(): string
     {
-        return 'google_drive';
+        return 'google-drive';
     }
 
     public function appMeta(): array
@@ -111,6 +111,8 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration, 
             'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/drive.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-drive',
         ];
     }    public function configSchema(): array
     {
@@ -323,7 +325,10 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration, 
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleDriveService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleDriveService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleDriveService::class);
 
         return new $class($service);
     }

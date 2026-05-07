@@ -14,7 +14,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 class MollieListCustomers implements Tool
 {
     /**
-     * Create a new MollieListCustomers tool instance.
+     * @param  MollieService  $service  The Mollie API client.
      */
     public function __construct(
         private MollieService $service,

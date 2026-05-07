@@ -1,208 +1,136 @@
-# Tally Forms — Lua API Reference
+# Tally Lua API Reference
 
-## list_forms
+Namespace: `app.integrations.tally`
 
-List all Tally forms accessible to the authenticated user. Returns form IDs, titles, status, and submission counts.
+Use Tally for form discovery, submission review, workspace administration, organization invites, and webhook delivery management. Results are Tally JSON responses with minimal reshaping; tool parameters are `snake_case` even when Tally's API uses camelCase fields.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `limit` | integer | no | Number of forms per page (default: 20, max: 100) |
-
-### Example
-
-```lua
-local forms = app.integrations.tally.list_forms({ limit = 10 })
-
-for _, form in ipairs(forms.data) do
-  print(form.title .. " (" .. form.status .. ") - " .. form.numberOfResponses .. " responses")
-end
-```
-
----
-
-## get_form
-
-Get full details of a specific Tally form, including form structure, fields, and settings.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The Tally form ID (e.g., `"mVlBRN"`) |
-
-### Example
-
-```lua
-local form = app.integrations.tally.get_form({ form_id = "mVlBRN" })
-print("Form: " .. form.title)
-print("Status: " .. form.status)
-print("Fields: " .. #form.questions)
-```
-
----
-
-## list_submissions
-
-List all submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The Tally form ID |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `limit` | integer | no | Number of submissions per page (default: 20, max: 100) |
-
-### Example
-
-```lua
-local result = app.integrations.tally.list_submissions({
-  form_id = "mVlBRN",
-  limit = 50
-})
-
-for _, submission in ipairs(result.data) do
-  print("Submitted at: " .. submission.createdAt)
-  for _, response in ipairs(submission.questions) do
-    print("  " .. response.question .. ": " .. tostring(response.value))
-  end
-end
-```
-
----
-
-## get_submission
-
-Get full details of a specific form submission by its ID, including all field responses and metadata.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `submission_id` | string | yes | The Tally submission ID |
-
-### Example
-
-```lua
-local sub = app.integrations.tally.get_submission({ submission_id = "sub_abc123" })
-print("Submitted: " .. sub.createdAt)
-for _, response in ipairs(sub.questions) do
-  print(response.question .. ": " .. tostring(response.value))
-end
-```
-
----
-
-## list_workspaces
-
-List all workspaces accessible to the authenticated Tally user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local workspaces = app.integrations.tally.list_workspaces({})
-for _, ws in ipairs(workspaces.data) do
-  print("Workspace: " .. ws.name .. " (ID: " .. ws.id .. ")")
-end
-```
-
----
-
-## get_current_user
-
-Get the authenticated user's profile information, including name and email.
-
-### Parameters
-
-None.
-
-### Example
+## Common Reads
 
 ```lua
 local user = app.integrations.tally.get_current_user({})
-print("Logged in as: " .. user.name .. " (" .. user.email .. ")")
+
+local forms = app.integrations.tally.list_forms({
+  limit = 50,
+  workspace_ids = { "ws_example" }
+})
+
+local form = app.integrations.tally.get_form({ form_id = "form_example" })
+local questions = app.integrations.tally.list_questions({ form_id = "form_example" })
+local blocks = app.integrations.tally.list_blocks({ form_id = "form_example" })
 ```
 
----
+`list_forms` accepts `page`, `limit`, and `workspace_ids`. Tally returns paginated objects with fields such as `items`, `page`, `limit`, `total`, and `hasMore`.
 
-## Common Workflows
-
-### List all forms and their recent submissions
+## Forms And Structure
 
 ```lua
-local forms = app.integrations.tally.list_forms({ limit = 20 })
+local created = app.integrations.tally.create_form({
+  workspace_id = "ws_example",
+  status = "draft",
+  blocks = {
+    { type = "TITLE", payload = { text = "Contact us" } }
+  }
+})
 
-for _, form in ipairs(forms.data) do
-  print("== " .. form.title .. " ==")
+app.integrations.tally.update_form({
+  form_id = created.id,
+  name = "Contact form",
+  status = "published"
+})
 
-  if form.numberOfResponses and form.numberOfResponses > 0 then
-    local submissions = app.integrations.tally.list_submissions({
-      form_id = form.id,
-      limit = 5
-    })
+app.integrations.tally.update_question({
+  form_id = created.id,
+  question_id = "question_example",
+  title = "What should we know?"
+})
 
-    for _, sub in ipairs(submissions.data) do
-      print("  " .. sub.createdAt)
-    end
-  else
-    print("  No submissions yet")
-  end
-end
+app.integrations.tally.update_blocks({
+  form_id = created.id,
+  blocks = {
+    { id = "block_example", type = "TITLE", payload = { text = "Updated" } }
+  }
+})
 ```
 
-### Find a form by title and get its submissions
+Creating and updating forms accepts Tally block and settings payloads. Fetch an existing form or blocks first when making structural edits so the agent preserves fields that should remain unchanged.
+
+## Submissions
 
 ```lua
-local forms = app.integrations.tally.list_forms({ limit = 100 })
-local target = nil
+local submissions = app.integrations.tally.list_submissions({
+  form_id = "form_example",
+  filter = "completed",
+  start_date = "2026-01-01T00:00:00Z",
+  limit = 100
+})
 
-for _, form in ipairs(forms.data) do
-  if form.title == "Contact Form" then
-    target = form
-    break
-  end
-end
-
-if target then
-  local subs = app.integrations.tally.list_submissions({
-    form_id = target.id,
-    limit = 50
-  })
-
-  print("Found " .. #subs.data .. " submissions")
-end
+local submission = app.integrations.tally.get_submission({
+  form_id = "form_example",
+  submission_id = "submission_example"
+})
 ```
 
-## Notes
+Submission access is form-scoped in the current Tally API. Always pass both `form_id` and `submission_id` for single-submission reads or deletes. `list_submissions` accepts `page`, `limit`, `filter` (`all`, `completed`, `partial`), `start_date`, `end_date`, and `after_id`.
 
-- Form IDs are short alphanumeric strings (e.g., `"mVlBRN"`)
-- Pagination is page-based; increase `page` to get more results
-- Submission responses are in the `questions` array of each submission object
-- Rate limits may apply; use pagination rather than requesting large limits
+## Workspaces And Organizations
 
----
+```lua
+local workspaces = app.integrations.tally.list_workspaces({ page = 1 })
+local workspace = app.integrations.tally.get_workspace({ workspace_id = "ws_example" })
+
+app.integrations.tally.create_organization_invite({
+  organization_id = "org_example",
+  workspace_ids = { "ws_example" },
+  emails = "person@example.test"
+})
+
+local invites = app.integrations.tally.list_organization_invites({
+  organization_id = "org_example"
+})
+```
+
+Workspace tools can create, get, update, and delete workspaces. Organization tools can list users, remove users, list invites, create invites, and cancel pending invites.
+
+## Webhooks
+
+```lua
+local hook = app.integrations.tally.create_webhook({
+  form_id = "form_example",
+  url = "https://example.test/tally/webhook",
+  event_types = { "FORM_RESPONSE" },
+  signing_secret = "dummy-secret"
+})
+
+local events = app.integrations.tally.list_webhook_events({
+  webhook_id = hook.id,
+  page = 1
+})
+
+app.integrations.tally.retry_webhook_event({
+  webhook_id = hook.id,
+  event_id = "event_example"
+})
+```
+
+Webhook tools manage subscriptions and delivery events. `http_headers` should be an array of objects with `name` and `value` keys when custom delivery headers are needed.
+
+## Generic API Tools
+
+```lua
+local raw = app.integrations.tally.api_get({
+  path = "/forms",
+  params = { limit = 10 }
+})
+```
+
+Use `api_get`, `api_post`, `api_patch`, and `api_delete` only for documented Tally endpoints that are not yet wrapped by a named helper. Prefer named tools because they validate required IDs and map snake_case parameters for you.
 
 ## Multi-Account Usage
 
-If you have multiple Tally accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.tally.list_forms({})
-
--- Explicit default (portable across setups)
 app.integrations.tally.default.list_forms({})
-
--- Named accounts
 app.integrations.tally.work.list_forms({})
-app.integrations.tally.personal.list_forms({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only stored credentials differ.

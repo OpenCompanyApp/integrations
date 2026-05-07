@@ -2,53 +2,21 @@
 
 namespace OpenCompany\Integrations\Front\Tools;
 
-use OpenCompany\Integrations\Front\FrontService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class FrontListConversations implements Tool
+/**
+ * List Front conversations accessible to the API token.
+ */
+class FrontListConversations extends AbstractFrontTool
 {
-    public function __construct(
-        private FrontService $service,
-    ) {}
-
-    public function name(): string
-    {
-        return 'front_list_conversations';
-    }
-
-    public function description(): string
-    {
-        return 'List and search conversations in Front. Filter by status or search by keyword. Returns paginated results with conversation IDs, subjects, and metadata.';
-    }
-
-    public function parameters(): array
-    {
-        return [
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based).'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of conversations per page (max 100).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by conversation status: open, archived, assigned, unassigned, starred, snoozed.'],
-            'q' => ['type' => 'string', 'description' => 'Search query to filter conversations by subject, content, or contact.'],
-        ];
-    }
-
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Front integration is not configured.');
-            }
-
-            $result = $this->service->listConversations(
-                page: isset($args['page']) ? (int) $args['page'] : null,
-                limit: isset($args['limit']) ? (int) $args['limit'] : null,
-                status: $args['status'] ?? null,
-                q: $args['q'] ?? null,
-            );
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const NAME = 'front_list_conversations';
+    protected const DESCRIPTION = 'List Front conversations. Use q for simple filters, or front_search_conversations for advanced search syntax.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/conversations';
+    protected const QUERY_KEYS = ['q', 'limit', 'page_token', 'page', 'status'];
+    protected const PARAMETERS = [
+        'q' => ['type' => 'string', 'description' => 'Optional Front search query object or legacy search text.'],
+        'limit' => ['type' => 'integer', 'description' => 'Max results per page, up to 100.'],
+        'page_token' => ['type' => 'string', 'description' => 'Pagination token from a previous response.'],
+        'page' => ['type' => 'integer', 'description' => 'Legacy page number for older host usage. Prefer page_token when available.'],
+        'status' => ['type' => 'string', 'description' => 'Legacy status filter for older host usage. Prefer q or search syntax.'],
+    ];
 }

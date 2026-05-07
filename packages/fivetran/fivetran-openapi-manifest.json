@@ -1,0 +1,1299 @@
+{
+    "source_url": "https://fivetran.com/assets-docs/openapi/file_v1.json",
+    "openapi": "3.0.1",
+    "title": "OpenAPI Definition",
+    "version": "v1",
+    "base_url": "https://api.fivetran.com",
+    "auth": "basic",
+    "method_count": 161,
+    "operations": [
+        {
+            "operation_id": "delete_user",
+            "class": "FivetranDeleteUser",
+            "slug": "fivetran_delete_user",
+            "method": "delete",
+            "path": "/v1/users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_user_memberships_in_groups",
+            "class": "FivetranGetUserMembershipsInGroups",
+            "slug": "fivetran_get_user_memberships_in_groups",
+            "method": "get",
+            "path": "/v1/users/{userId}/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_user_membership_in_group",
+            "class": "FivetranAddUserMembershipInGroup",
+            "slug": "fivetran_add_user_membership_in_group",
+            "method": "post",
+            "path": "/v1/users/{userId}/groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "group_details",
+            "class": "FivetranGroupDetails",
+            "slug": "fivetran_group_details",
+            "method": "get",
+            "path": "/v1/groups/{groupId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_group",
+            "class": "FivetranDeleteGroup",
+            "slug": "fivetran_delete_group",
+            "method": "delete",
+            "path": "/v1/groups/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_group",
+            "class": "FivetranModifyGroup",
+            "slug": "fivetran_modify_group",
+            "method": "patch",
+            "path": "/v1/groups/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_account_info",
+            "class": "FivetranGetAccountInfo",
+            "slug": "fivetran_get_account_info",
+            "method": "get",
+            "path": "/v1/account/info",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_hybrid_deployment_agent_list",
+            "class": "FivetranGetHybridDeploymentAgentList",
+            "slug": "fivetran_get_hybrid_deployment_agent_list",
+            "method": "get",
+            "path": "/v1/hybrid-deployment-agents",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_hybrid_deployment_agent",
+            "class": "FivetranCreateHybridDeploymentAgent",
+            "slug": "fivetran_create_hybrid_deployment_agent",
+            "method": "post",
+            "path": "/v1/hybrid-deployment-agents",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_memberships_in_groups",
+            "class": "FivetranGetTeamMembershipsInGroups",
+            "slug": "fivetran_get_team_memberships_in_groups",
+            "method": "get",
+            "path": "/v1/teams/{teamId}/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_team_membership_in_group",
+            "class": "FivetranAddTeamMembershipInGroup",
+            "slug": "fivetran_add_team_membership_in_group",
+            "method": "post",
+            "path": "/v1/teams/{teamId}/groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "metadata_connectors",
+            "class": "FivetranMetadataConnectors",
+            "slug": "fivetran_metadata_connectors",
+            "method": "get",
+            "path": "/v1/metadata/connector-types",
+            "type": "read"
+        },
+        {
+            "operation_id": "re_auth_hybrid_deployment_agent",
+            "class": "FivetranReAuthHybridDeploymentAgent",
+            "slug": "fivetran_re_auth_hybrid_deployment_agent",
+            "method": "patch",
+            "path": "/v1/hybrid-deployment-agents/{agentId}/re-auth",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_membership_in_group",
+            "class": "FivetranGetTeamMembershipInGroup",
+            "slug": "fivetran_get_team_membership_in_group",
+            "method": "get",
+            "path": "/v1/teams/{teamId}/groups/{groupId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_team_membership_in_group",
+            "class": "FivetranDeleteTeamMembershipInGroup",
+            "slug": "fivetran_delete_team_membership_in_group",
+            "method": "delete",
+            "path": "/v1/teams/{teamId}/groups/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_team_membership_in_group",
+            "class": "FivetranUpdateTeamMembershipInGroup",
+            "slug": "fivetran_update_team_membership_in_group",
+            "method": "patch",
+            "path": "/v1/teams/{teamId}/groups/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "rotate_system_key",
+            "class": "FivetranRotateSystemKey",
+            "slug": "fivetran_rotate_system_key",
+            "method": "post",
+            "path": "/v1/system-keys/{keyId}/rotate",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_connection_fingerprints_list",
+            "class": "FivetranGetConnectionFingerprintsList",
+            "slug": "fivetran_get_connection_fingerprints_list",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/fingerprints",
+            "type": "read"
+        },
+        {
+            "operation_id": "approve_connection_fingerprint",
+            "class": "FivetranApproveConnectionFingerprint",
+            "slug": "fivetran_approve_connection_fingerprint",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/fingerprints",
+            "type": "write"
+        },
+        {
+            "operation_id": "transformation_package_metadata_list",
+            "class": "FivetranTransformationPackageMetadataList",
+            "slug": "fivetran_transformation_package_metadata_list",
+            "method": "get",
+            "path": "/v1/transformations/package-metadata",
+            "type": "read"
+        },
+        {
+            "operation_id": "connection_column_config",
+            "class": "FivetranConnectionColumnConfig",
+            "slug": "fivetran_connection_column_config",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/schemas/{schema}/tables/{table}/columns",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_destination_fingerprints_list",
+            "class": "FivetranGetDestinationFingerprintsList",
+            "slug": "fivetran_get_destination_fingerprints_list",
+            "method": "get",
+            "path": "/v1/destinations/{destinationId}/fingerprints",
+            "type": "read"
+        },
+        {
+            "operation_id": "approve_destination_fingerprint",
+            "class": "FivetranApproveDestinationFingerprint",
+            "slug": "fivetran_approve_destination_fingerprint",
+            "method": "post",
+            "path": "/v1/destinations/{destinationId}/fingerprints",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_connection_table_config",
+            "class": "FivetranModifyConnectionTableConfig",
+            "slug": "fivetran_modify_connection_table_config",
+            "method": "patch",
+            "path": "/v1/connections/{connectionId}/schemas/{schemaName}/tables/{tableName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_connection_certificate_details",
+            "class": "FivetranGetConnectionCertificateDetails",
+            "slug": "fivetran_get_connection_certificate_details",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/certificates/{hash}",
+            "type": "read"
+        },
+        {
+            "operation_id": "revoke_connection_certificate",
+            "class": "FivetranRevokeConnectionCertificate",
+            "slug": "fivetran_revoke_connection_certificate",
+            "method": "delete",
+            "path": "/v1/connections/{connectionId}/certificates/{hash}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_group_webhook",
+            "class": "FivetranCreateGroupWebhook",
+            "slug": "fivetran_create_group_webhook",
+            "method": "post",
+            "path": "/v1/webhooks/group/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_membership_in_connection",
+            "class": "FivetranGetTeamMembershipInConnection",
+            "slug": "fivetran_get_team_membership_in_connection",
+            "method": "get",
+            "path": "/v1/teams/{teamId}/connections/{connectionId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_team_membership_in_connection",
+            "class": "FivetranDeleteTeamMembershipInConnection",
+            "slug": "fivetran_delete_team_membership_in_connection",
+            "method": "delete",
+            "path": "/v1/teams/{teamId}/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_team_membership_in_connection",
+            "class": "FivetranUpdateTeamMembershipInConnection",
+            "slug": "fivetran_update_team_membership_in_connection",
+            "method": "patch",
+            "path": "/v1/teams/{teamId}/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_user_from_group",
+            "class": "FivetranDeleteUserFromGroup",
+            "slug": "fivetran_delete_user_from_group",
+            "method": "delete",
+            "path": "/v1/groups/{groupId}/users/{userId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "connection_details",
+            "class": "FivetranConnectionDetails",
+            "slug": "fivetran_connection_details",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_connection",
+            "class": "FivetranDeleteConnection",
+            "slug": "fivetran_delete_connection",
+            "method": "delete",
+            "path": "/v1/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_connection",
+            "class": "FivetranModifyConnection",
+            "slug": "fivetran_modify_connection",
+            "method": "patch",
+            "path": "/v1/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "test_transformation_project",
+            "class": "FivetranTestTransformationProject",
+            "slug": "fivetran_test_transformation_project",
+            "method": "post",
+            "path": "/v1/transformation-projects/{projectId}/test",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_connections_in_group",
+            "class": "FivetranListAllConnectionsInGroup",
+            "slug": "fivetran_list_all_connections_in_group",
+            "method": "get",
+            "path": "/v1/groups/{groupId}/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_multiple_columns_connection_config",
+            "class": "FivetranDeleteMultipleColumnsConnectionConfig",
+            "slug": "fivetran_delete_multiple_columns_connection_config",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/schemas/drop-columns",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_destination_certificate_details",
+            "class": "FivetranGetDestinationCertificateDetails",
+            "slug": "fivetran_get_destination_certificate_details",
+            "method": "get",
+            "path": "/v1/destinations/{destinationId}/certificates/{hash}",
+            "type": "read"
+        },
+        {
+            "operation_id": "revoke_destination_certificate",
+            "class": "FivetranRevokeDestinationCertificate",
+            "slug": "fivetran_revoke_destination_certificate",
+            "method": "delete",
+            "path": "/v1/destinations/{destinationId}/certificates/{hash}",
+            "type": "write"
+        },
+        {
+            "operation_id": "connection_schema_config",
+            "class": "FivetranConnectionSchemaConfig",
+            "slug": "fivetran_connection_schema_config",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/schemas",
+            "type": "read"
+        },
+        {
+            "operation_id": "pre_create_connection_schema_config",
+            "class": "FivetranPreCreateConnectionSchemaConfig",
+            "slug": "fivetran_pre_create_connection_schema_config",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/schemas",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_connection_schema_config",
+            "class": "FivetranModifyConnectionSchemaConfig",
+            "slug": "fivetran_modify_connection_schema_config",
+            "method": "patch",
+            "path": "/v1/connections/{connectionId}/schemas",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_destination_certificates_list",
+            "class": "FivetranGetDestinationCertificatesList",
+            "slug": "fivetran_get_destination_certificates_list",
+            "method": "get",
+            "path": "/v1/destinations/{destinationId}/certificates",
+            "type": "read"
+        },
+        {
+            "operation_id": "approve_destination_certificate",
+            "class": "FivetranApproveDestinationCertificate",
+            "slug": "fivetran_approve_destination_certificate",
+            "method": "post",
+            "path": "/v1/destinations/{destinationId}/certificates",
+            "type": "write"
+        },
+        {
+            "operation_id": "regenerate_secrets_proxy_agent",
+            "class": "FivetranRegenerateSecretsProxyAgent",
+            "slug": "fivetran_regenerate_secrets_proxy_agent",
+            "method": "post",
+            "path": "/v1/proxy/{agentId}/regenerate-secrets",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_connector_sdk_packages",
+            "class": "FivetranListConnectorSdkPackages",
+            "slug": "fivetran_list_connector_sdk_packages",
+            "method": "get",
+            "path": "/v1/connector-sdk/packages",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_connector_sdk_package",
+            "class": "FivetranCreateConnectorSdkPackage",
+            "slug": "fivetran_create_connector_sdk_package",
+            "method": "post",
+            "path": "/v1/connector-sdk/packages",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_connections",
+            "class": "FivetranListConnections",
+            "slug": "fivetran_list_connections",
+            "method": "get",
+            "path": "/v1/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_connection",
+            "class": "FivetranCreateConnection",
+            "slug": "fivetran_create_connection",
+            "method": "post",
+            "path": "/v1/connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_webhooks",
+            "class": "FivetranListAllWebhooks",
+            "slug": "fivetran_list_all_webhooks",
+            "method": "get",
+            "path": "/v1/webhooks",
+            "type": "read"
+        },
+        {
+            "operation_id": "approve_certificate",
+            "class": "FivetranApproveCertificate",
+            "slug": "fivetran_approve_certificate",
+            "method": "post",
+            "path": "/v1/certificates",
+            "type": "write"
+        },
+        {
+            "operation_id": "group_ssh_public_key",
+            "class": "FivetranGroupSshPublicKey",
+            "slug": "fivetran_group_ssh_public_key",
+            "method": "get",
+            "path": "/v1/groups/{groupId}/public-key",
+            "type": "read"
+        },
+        {
+            "operation_id": "transformation_package_metadata_details",
+            "class": "FivetranTransformationPackageMetadataDetails",
+            "slug": "fivetran_transformation_package_metadata_details",
+            "method": "get",
+            "path": "/v1/transformations/package-metadata/{package_definition_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_proxy_agent_connections",
+            "class": "FivetranGetProxyAgentConnections",
+            "slug": "fivetran_get_proxy_agent_connections",
+            "method": "get",
+            "path": "/v1/proxy/{agentId}/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_all_groups",
+            "class": "FivetranListAllGroups",
+            "slug": "fivetran_list_all_groups",
+            "method": "get",
+            "path": "/v1/groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_group",
+            "class": "FivetranCreateGroup",
+            "slug": "fivetran_create_group",
+            "method": "post",
+            "path": "/v1/groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "reset_hybrid_deployment_agent_credentials",
+            "class": "FivetranResetHybridDeploymentAgentCredentials",
+            "slug": "fivetran_reset_hybrid_deployment_agent_credentials",
+            "method": "post",
+            "path": "/v1/hybrid-deployment-agents/{agentId}/reset-credentials",
+            "type": "write"
+        },
+        {
+            "operation_id": "run_setup_tests_log_service",
+            "class": "FivetranRunSetupTestsLogService",
+            "slug": "fivetran_run_setup_tests_log_service",
+            "method": "post",
+            "path": "/v1/external-logging/{logId}/test",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_column_connection_config",
+            "class": "FivetranDeleteColumnConnectionConfig",
+            "slug": "fivetran_delete_column_connection_config",
+            "method": "delete",
+            "path": "/v1/connections/{connectionId}/schemas/{schemaName}/tables/{tableName}/columns/{columnName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_connection_column_config",
+            "class": "FivetranModifyConnectionColumnConfig",
+            "slug": "fivetran_modify_connection_column_config",
+            "method": "patch",
+            "path": "/v1/connections/{connectionId}/schemas/{schemaName}/tables/{tableName}/columns/{columnName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_connection_fingerprint_details",
+            "class": "FivetranGetConnectionFingerprintDetails",
+            "slug": "fivetran_get_connection_fingerprint_details",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/fingerprints/{hash}",
+            "type": "read"
+        },
+        {
+            "operation_id": "revoke_connection_fingerprint",
+            "class": "FivetranRevokeConnectionFingerprint",
+            "slug": "fivetran_revoke_connection_fingerprint",
+            "method": "delete",
+            "path": "/v1/connections/{connectionId}/fingerprints/{hash}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_private_link_details",
+            "class": "FivetranGetPrivateLinkDetails",
+            "slug": "fivetran_get_private_link_details",
+            "method": "get",
+            "path": "/v1/private-links/{privateLinkId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_private_link",
+            "class": "FivetranDeletePrivateLink",
+            "slug": "fivetran_delete_private_link",
+            "method": "delete",
+            "path": "/v1/private-links/{privateLinkId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_private_link",
+            "class": "FivetranModifyPrivateLink",
+            "slug": "fivetran_modify_private_link",
+            "method": "patch",
+            "path": "/v1/private-links/{privateLinkId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_system_keys",
+            "class": "FivetranGetSystemKeys",
+            "slug": "fivetran_get_system_keys",
+            "method": "get",
+            "path": "/v1/system-keys",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_system_key",
+            "class": "FivetranCreateSystemKey",
+            "slug": "fivetran_create_system_key",
+            "method": "post",
+            "path": "/v1/system-keys",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_roles",
+            "class": "FivetranListAllRoles",
+            "slug": "fivetran_list_all_roles",
+            "method": "get",
+            "path": "/v1/roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "metadata_public_connectors",
+            "class": "FivetranMetadataPublicConnectors",
+            "slug": "fivetran_metadata_public_connectors",
+            "method": "get",
+            "path": "/public/connector-types",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_connection_certificates_list",
+            "class": "FivetranGetConnectionCertificatesList",
+            "slug": "fivetran_get_connection_certificates_list",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/certificates",
+            "type": "read"
+        },
+        {
+            "operation_id": "approve_connection_certificate",
+            "class": "FivetranApproveConnectionCertificate",
+            "slug": "fivetran_approve_connection_certificate",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/certificates",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_destinations",
+            "class": "FivetranListDestinations",
+            "slug": "fivetran_list_destinations",
+            "method": "get",
+            "path": "/v1/destinations",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_destination",
+            "class": "FivetranCreateDestination",
+            "slug": "fivetran_create_destination",
+            "method": "post",
+            "path": "/v1/destinations",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_user_memberships_in_connections",
+            "class": "FivetranGetUserMembershipsInConnections",
+            "slug": "fivetran_get_user_memberships_in_connections",
+            "method": "get",
+            "path": "/v1/users/{userId}/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_user_membership_in_connection",
+            "class": "FivetranAddUserMembershipInConnection",
+            "slug": "fivetran_add_user_membership_in_connection",
+            "method": "post",
+            "path": "/v1/users/{userId}/connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_destination_fingerprint_details",
+            "class": "FivetranGetDestinationFingerprintDetails",
+            "slug": "fivetran_get_destination_fingerprint_details",
+            "method": "get",
+            "path": "/v1/destinations/{destinationId}/fingerprints/{hash}",
+            "type": "read"
+        },
+        {
+            "operation_id": "revoke_destination_fingerprint",
+            "class": "FivetranRevokeDestinationFingerprint",
+            "slug": "fivetran_revoke_destination_fingerprint",
+            "method": "delete",
+            "path": "/v1/destinations/{destinationId}/fingerprints/{hash}",
+            "type": "write"
+        },
+        {
+            "operation_id": "sync_connection",
+            "class": "FivetranSyncConnection",
+            "slug": "fivetran_sync_connection",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/sync",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_connection_database_schema_config",
+            "class": "FivetranModifyConnectionDatabaseSchemaConfig",
+            "slug": "fivetran_modify_connection_database_schema_config",
+            "method": "patch",
+            "path": "/v1/connections/{connectionId}/schemas/{schemaName}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_system_key_details",
+            "class": "FivetranGetSystemKeyDetails",
+            "slug": "fivetran_get_system_key_details",
+            "method": "get",
+            "path": "/v1/system-keys/{keyId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_system_key",
+            "class": "FivetranDeleteSystemKey",
+            "slug": "fivetran_delete_system_key",
+            "method": "delete",
+            "path": "/v1/system-keys/{keyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_system_key",
+            "class": "FivetranUpdateSystemKey",
+            "slug": "fivetran_update_system_key",
+            "method": "patch",
+            "path": "/v1/system-keys/{keyId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "resync_connection",
+            "class": "FivetranResyncConnection",
+            "slug": "fivetran_resync_connection",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/resync",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_log_service_details",
+            "class": "FivetranGetLogServiceDetails",
+            "slug": "fivetran_get_log_service_details",
+            "method": "get",
+            "path": "/v1/external-logging/{logId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_log_service",
+            "class": "FivetranDeleteLogService",
+            "slug": "fivetran_delete_log_service",
+            "method": "delete",
+            "path": "/v1/external-logging/{logId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_log_service",
+            "class": "FivetranUpdateLogService",
+            "slug": "fivetran_update_log_service",
+            "method": "patch",
+            "path": "/v1/external-logging/{logId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_transformation_projects",
+            "class": "FivetranListAllTransformationProjects",
+            "slug": "fivetran_list_all_transformation_projects",
+            "method": "get",
+            "path": "/v1/transformation-projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_transformation_project",
+            "class": "FivetranCreateTransformationProject",
+            "slug": "fivetran_create_transformation_project",
+            "method": "post",
+            "path": "/v1/transformation-projects",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_user_in_team",
+            "class": "FivetranGetUserInTeam",
+            "slug": "fivetran_get_user_in_team",
+            "method": "get",
+            "path": "/v1/teams/{teamId}/users/{userId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_user_from_team",
+            "class": "FivetranDeleteUserFromTeam",
+            "slug": "fivetran_delete_user_from_team",
+            "method": "delete",
+            "path": "/v1/teams/{teamId}/users/{userId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_user_membership",
+            "class": "FivetranUpdateUserMembership",
+            "slug": "fivetran_update_user_membership",
+            "method": "patch",
+            "path": "/v1/teams/{teamId}/users/{userId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "team_details",
+            "class": "FivetranTeamDetails",
+            "slug": "fivetran_team_details",
+            "method": "get",
+            "path": "/v1/teams/{teamId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_team",
+            "class": "FivetranDeleteTeam",
+            "slug": "fivetran_delete_team",
+            "method": "delete",
+            "path": "/v1/teams/{teamId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_team",
+            "class": "FivetranModifyTeam",
+            "slug": "fivetran_modify_team",
+            "method": "patch",
+            "path": "/v1/teams/{teamId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "transformation_details",
+            "class": "FivetranTransformationDetails",
+            "slug": "fivetran_transformation_details",
+            "method": "get",
+            "path": "/v1/transformations/{transformationId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_transformation",
+            "class": "FivetranDeleteTransformation",
+            "slug": "fivetran_delete_transformation",
+            "method": "delete",
+            "path": "/v1/transformations/{transformationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_transformation",
+            "class": "FivetranUpdateTransformation",
+            "slug": "fivetran_update_transformation",
+            "method": "patch",
+            "path": "/v1/transformations/{transformationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_account_webhook",
+            "class": "FivetranCreateAccountWebhook",
+            "slug": "fivetran_create_account_webhook",
+            "method": "post",
+            "path": "/v1/webhooks/account",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_connector_sdk_package",
+            "class": "FivetranGetConnectorSdkPackage",
+            "slug": "fivetran_get_connector_sdk_package",
+            "method": "get",
+            "path": "/v1/connector-sdk/packages/{package_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_connector_sdk_package",
+            "class": "FivetranDeleteConnectorSdkPackage",
+            "slug": "fivetran_delete_connector_sdk_package",
+            "method": "delete",
+            "path": "/v1/connector-sdk/packages/{package_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_connector_sdk_package",
+            "class": "FivetranUpdateConnectorSdkPackage",
+            "slug": "fivetran_update_connector_sdk_package",
+            "method": "patch",
+            "path": "/v1/connector-sdk/packages/{package_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_account_log_service_details",
+            "class": "FivetranGetAccountLogServiceDetails",
+            "slug": "fivetran_get_account_log_service_details",
+            "method": "get",
+            "path": "/v1/external-logging/account",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_account_log_service",
+            "class": "FivetranAddAccountLogService",
+            "slug": "fivetran_add_account_log_service",
+            "method": "post",
+            "path": "/v1/external-logging/account",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_account_log_service",
+            "class": "FivetranDeleteAccountLogService",
+            "slug": "fivetran_delete_account_log_service",
+            "method": "delete",
+            "path": "/v1/external-logging/account",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_account_log_service",
+            "class": "FivetranUpdateAccountLogService",
+            "slug": "fivetran_update_account_log_service",
+            "method": "patch",
+            "path": "/v1/external-logging/account",
+            "type": "write"
+        },
+        {
+            "operation_id": "upgrade_transformation_package",
+            "class": "FivetranUpgradeTransformationPackage",
+            "slug": "fivetran_upgrade_transformation_package",
+            "method": "post",
+            "path": "/v1/transformations/{transformationId}/upgrade",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_proxy_agent_details",
+            "class": "FivetranGetProxyAgentDetails",
+            "slug": "fivetran_get_proxy_agent_details",
+            "method": "get",
+            "path": "/v1/proxy/{agentId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_proxy_agent",
+            "class": "FivetranDeleteProxyAgent",
+            "slug": "fivetran_delete_proxy_agent",
+            "method": "delete",
+            "path": "/v1/proxy/{agentId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "connect_card",
+            "class": "FivetranConnectCard",
+            "slug": "fivetran_connect_card",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/connect-card",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_users_in_group",
+            "class": "FivetranListAllUsersInGroup",
+            "slug": "fivetran_list_all_users_in_group",
+            "method": "get",
+            "path": "/v1/groups/{groupId}/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_user_to_group",
+            "class": "FivetranAddUserToGroup",
+            "slug": "fivetran_add_user_to_group",
+            "method": "post",
+            "path": "/v1/groups/{groupId}/users",
+            "type": "write"
+        },
+        {
+            "operation_id": "user_details",
+            "class": "FivetranUserDetails",
+            "slug": "fivetran_user_details",
+            "method": "get",
+            "path": "/v1/users/{userId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "modify_user",
+            "class": "FivetranModifyUser",
+            "slug": "fivetran_modify_user",
+            "method": "patch",
+            "path": "/v1/users/{userId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_teams",
+            "class": "FivetranListAllTeams",
+            "slug": "fivetran_list_all_teams",
+            "method": "get",
+            "path": "/v1/teams",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_team",
+            "class": "FivetranCreateTeam",
+            "slug": "fivetran_create_team",
+            "method": "post",
+            "path": "/v1/teams",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_log_services",
+            "class": "FivetranListLogServices",
+            "slug": "fivetran_list_log_services",
+            "method": "get",
+            "path": "/v1/external-logging",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_log_service",
+            "class": "FivetranAddLogService",
+            "slug": "fivetran_add_log_service",
+            "method": "post",
+            "path": "/v1/external-logging",
+            "type": "write"
+        },
+        {
+            "operation_id": "connection_state",
+            "class": "FivetranConnectionState",
+            "slug": "fivetran_connection_state",
+            "method": "get",
+            "path": "/v1/connections/{connectionId}/state",
+            "type": "read"
+        },
+        {
+            "operation_id": "modify_connection_state",
+            "class": "FivetranModifyConnectionState",
+            "slug": "fivetran_modify_connection_state",
+            "method": "patch",
+            "path": "/v1/connections/{connectionId}/state",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_all_users",
+            "class": "FivetranListAllUsers",
+            "slug": "fivetran_list_all_users",
+            "method": "get",
+            "path": "/v1/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_user",
+            "class": "FivetranCreateUser",
+            "slug": "fivetran_create_user",
+            "method": "post",
+            "path": "/v1/users",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_user_membership_in_account",
+            "class": "FivetranDeleteUserMembershipInAccount",
+            "slug": "fivetran_delete_user_membership_in_account",
+            "method": "delete",
+            "path": "/v1/users/{userId}/role",
+            "type": "write"
+        },
+        {
+            "operation_id": "download_connector_sdk_package",
+            "class": "FivetranDownloadConnectorSdkPackage",
+            "slug": "fivetran_download_connector_sdk_package",
+            "method": "get",
+            "path": "/v1/connector-sdk/packages/{package_id}/download",
+            "type": "read"
+        },
+        {
+            "operation_id": "test_webhook",
+            "class": "FivetranTestWebhook",
+            "slug": "fivetran_test_webhook",
+            "method": "post",
+            "path": "/v1/webhooks/{webhookId}/test",
+            "type": "write"
+        },
+        {
+            "operation_id": "run_transformation",
+            "class": "FivetranRunTransformation",
+            "slug": "fivetran_run_transformation",
+            "method": "post",
+            "path": "/v1/transformations/{transformationId}/run",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_memberships_in_connections",
+            "class": "FivetranGetTeamMembershipsInConnections",
+            "slug": "fivetran_get_team_memberships_in_connections",
+            "method": "get",
+            "path": "/v1/teams/{teamId}/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_team_membership_in_connection",
+            "class": "FivetranAddTeamMembershipInConnection",
+            "slug": "fivetran_add_team_membership_in_connection",
+            "method": "post",
+            "path": "/v1/teams/{teamId}/connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "resync_tables",
+            "class": "FivetranResyncTables",
+            "slug": "fivetran_resync_tables",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/schemas/tables/resync",
+            "type": "write"
+        },
+        {
+            "operation_id": "reload_connection_schema_config",
+            "class": "FivetranReloadConnectionSchemaConfig",
+            "slug": "fivetran_reload_connection_schema_config",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/schemas/reload",
+            "type": "write"
+        },
+        {
+            "operation_id": "transformations_list",
+            "class": "FivetranTransformationsList",
+            "slug": "fivetran_transformations_list",
+            "method": "get",
+            "path": "/v1/transformations",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_transformation",
+            "class": "FivetranCreateTransformation",
+            "slug": "fivetran_create_transformation",
+            "method": "post",
+            "path": "/v1/transformations",
+            "type": "write"
+        },
+        {
+            "operation_id": "hvr_register_hub",
+            "class": "FivetranHvrRegisterHub",
+            "slug": "fivetran_hvr_register_hub",
+            "method": "post",
+            "path": "/v1/hvr/register-hub",
+            "type": "write"
+        },
+        {
+            "operation_id": "cancel_transformation",
+            "class": "FivetranCancelTransformation",
+            "slug": "fivetran_cancel_transformation",
+            "method": "post",
+            "path": "/v1/transformations/{transformationId}/cancel",
+            "type": "write"
+        },
+        {
+            "operation_id": "transformation_project_details",
+            "class": "FivetranTransformationProjectDetails",
+            "slug": "fivetran_transformation_project_details",
+            "method": "get",
+            "path": "/v1/transformation-projects/{projectId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_transformation_project",
+            "class": "FivetranDeleteTransformationProject",
+            "slug": "fivetran_delete_transformation_project",
+            "method": "delete",
+            "path": "/v1/transformation-projects/{projectId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_transformation_project",
+            "class": "FivetranModifyTransformationProject",
+            "slug": "fivetran_modify_transformation_project",
+            "method": "patch",
+            "path": "/v1/transformation-projects/{projectId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "group_service_account",
+            "class": "FivetranGroupServiceAccount",
+            "slug": "fivetran_group_service_account",
+            "method": "get",
+            "path": "/v1/groups/{groupId}/service-account",
+            "type": "read"
+        },
+        {
+            "operation_id": "webhook_details",
+            "class": "FivetranWebhookDetails",
+            "slug": "fivetran_webhook_details",
+            "method": "get",
+            "path": "/v1/webhooks/{webhookId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_webhook",
+            "class": "FivetranDeleteWebhook",
+            "slug": "fivetran_delete_webhook",
+            "method": "delete",
+            "path": "/v1/webhooks/{webhookId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_webhook",
+            "class": "FivetranModifyWebhook",
+            "slug": "fivetran_modify_webhook",
+            "method": "patch",
+            "path": "/v1/webhooks/{webhookId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_user_membership_in_group",
+            "class": "FivetranGetUserMembershipInGroup",
+            "slug": "fivetran_get_user_membership_in_group",
+            "method": "get",
+            "path": "/v1/users/{userId}/groups/{groupId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_user_membership_in_group",
+            "class": "FivetranDeleteUserMembershipInGroup",
+            "slug": "fivetran_delete_user_membership_in_group",
+            "method": "delete",
+            "path": "/v1/users/{userId}/groups/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_user_membership_in_group",
+            "class": "FivetranUpdateUserMembershipInGroup",
+            "slug": "fivetran_update_user_membership_in_group",
+            "method": "patch",
+            "path": "/v1/users/{userId}/groups/{groupId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "run_setup_tests",
+            "class": "FivetranRunSetupTests",
+            "slug": "fivetran_run_setup_tests",
+            "method": "post",
+            "path": "/v1/connections/{connectionId}/test",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_hybrid_deployment_agent",
+            "class": "FivetranGetHybridDeploymentAgent",
+            "slug": "fivetran_get_hybrid_deployment_agent",
+            "method": "get",
+            "path": "/v1/hybrid-deployment-agents/{agentId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_hybrid_deployment_agent",
+            "class": "FivetranDeleteHybridDeploymentAgent",
+            "slug": "fivetran_delete_hybrid_deployment_agent",
+            "method": "delete",
+            "path": "/v1/hybrid-deployment-agents/{agentId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_proxy_agent",
+            "class": "FivetranGetProxyAgent",
+            "slug": "fivetran_get_proxy_agent",
+            "method": "get",
+            "path": "/v1/proxy",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_proxy_agent",
+            "class": "FivetranCreateProxyAgent",
+            "slug": "fivetran_create_proxy_agent",
+            "method": "post",
+            "path": "/v1/proxy",
+            "type": "write"
+        },
+        {
+            "operation_id": "run_destination_setup_tests",
+            "class": "FivetranRunDestinationSetupTests",
+            "slug": "fivetran_run_destination_setup_tests",
+            "method": "post",
+            "path": "/v1/destinations/{destinationId}/test",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_private_links",
+            "class": "FivetranGetPrivateLinks",
+            "slug": "fivetran_get_private_links",
+            "method": "get",
+            "path": "/v1/private-links",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_private_link",
+            "class": "FivetranCreatePrivateLink",
+            "slug": "fivetran_create_private_link",
+            "method": "post",
+            "path": "/v1/private-links",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_users_in_team",
+            "class": "FivetranListUsersInTeam",
+            "slug": "fivetran_list_users_in_team",
+            "method": "get",
+            "path": "/v1/teams/{teamId}/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "add_user_to_team",
+            "class": "FivetranAddUserToTeam",
+            "slug": "fivetran_add_user_to_team",
+            "method": "post",
+            "path": "/v1/teams/{teamId}/users",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_user_membership_in_connections",
+            "class": "FivetranGetUserMembershipInConnections",
+            "slug": "fivetran_get_user_membership_in_connections",
+            "method": "get",
+            "path": "/v1/users/{userId}/connections/{connectionId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_user_membership_in_connection",
+            "class": "FivetranDeleteUserMembershipInConnection",
+            "slug": "fivetran_delete_user_membership_in_connection",
+            "method": "delete",
+            "path": "/v1/users/{userId}/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_user_membership_in_connection",
+            "class": "FivetranUpdateUserMembershipInConnection",
+            "slug": "fivetran_update_user_membership_in_connection",
+            "method": "patch",
+            "path": "/v1/users/{userId}/connections/{connectionId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "destination_details",
+            "class": "FivetranDestinationDetails",
+            "slug": "fivetran_destination_details",
+            "method": "get",
+            "path": "/v1/destinations/{destinationId}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_destination",
+            "class": "FivetranDeleteDestination",
+            "slug": "fivetran_delete_destination",
+            "method": "delete",
+            "path": "/v1/destinations/{destinationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "modify_destination",
+            "class": "FivetranModifyDestination",
+            "slug": "fivetran_modify_destination",
+            "method": "patch",
+            "path": "/v1/destinations/{destinationId}",
+            "type": "write"
+        },
+        {
+            "operation_id": "metadata_connector_config",
+            "class": "FivetranMetadataConnectorConfig",
+            "slug": "fivetran_metadata_connector_config",
+            "method": "get",
+            "path": "/v1/metadata/connector-types/{service}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_team_membership_in_account",
+            "class": "FivetranDeleteTeamMembershipInAccount",
+            "slug": "fivetran_delete_team_membership_in_account",
+            "method": "delete",
+            "path": "/v1/teams/{teamId}/role",
+            "type": "write"
+        }
+    ]
+}

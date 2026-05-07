@@ -109,7 +109,7 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Open-source marketing automation platform — manage contacts, emails, segments, and forms.',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:mautic',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.mautic.org/#rest-api',
         ];

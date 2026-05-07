@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-datacite",
+    "description": "DataCite integration for Laravel AI agents - DOI metadata, clients, providers, prefixes, events, reports, activities, and GraphQL.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\DataCite\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\DataCite\\DataCiteServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "datacite",
+        "doi",
+        "metadata",
+        "research-data",
+        "graphql",
+        "opencompany"
+    ]
+}

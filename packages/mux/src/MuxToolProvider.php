@@ -97,7 +97,7 @@ class MuxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
             'description' => 'Video streaming infrastructure — manage on-demand assets, live streams, and realtime viewer data.',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:mux',
-            'category' => 'media',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.mux.com/api-reference',
         ];

@@ -3,22 +3,26 @@
 namespace OpenCompany\Integrations\ChargeOver;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListCustomers;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetCustomer;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListSubscriptions;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListInvoices;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetInvoice;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListTransactions;
-use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetCustomer;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetCurrentUser;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetInvoice;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverGetTransaction;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListCustomers;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListInvoices;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListSubscriptions;
+use OpenCompany\Integrations\ChargeOver\Tools\ChargeOverListTransactions;
 
 /**
+ * Registers the ChargeOver integration provider and exposes billing tools.
+ */
+class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -27,9 +31,9 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
     {
         return [
           'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
+            'strategy' => 'basic_auth',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'stored_secret_pair',
             'setup_flows' =>
             [
               0 => 'manual_token',
@@ -38,10 +42,12 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
             'refreshable' => false,
             'token_keys' =>
             [
-              0 => 'access_token',
+              0 => 'api_username',
+              1 => 'api_password',
             ],
             'notes' =>
             [
+              0 => 'ChargeOver REST API v3 uses HTTP Basic Auth with an API username/key and API password/secret.',
             ],
           ],
           'host_availability' => [
@@ -92,19 +98,29 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Recurring billing and subscription management platform',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargeover',
-            'category' => 'payments',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.chargeover.com/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
-                'key' => 'access_token',
+                'key' => 'api_username',
+                'type' => 'string',
+                'label' => 'API Username',
+                'placeholder' => 'Enter your ChargeOver API username or key',
+                'hint' => 'Create API credentials in ChargeOver, then use the API username/key as the Basic Auth username.',
+                'required' => true,
+            ],
+            [
+                'key' => 'api_password',
                 'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your ChargeOver API token',
-                'hint' => 'Generate an API token in your ChargeOver admin under Settings > API',
+                'label' => 'API Password',
+                'placeholder' => 'Enter your ChargeOver API password or secret',
+                'hint' => 'Use the matching API password/secret as the Basic Auth password.',
                 'required' => true,
             ],
             [
@@ -128,7 +144,8 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
 
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
+        $apiUsername = $config['api_username'] ?? $config['access_token'] ?? '';
+        $apiPassword = $config['api_password'] ?? '';
         $subdomain = $config['subdomain'] ?? '';
         $baseUrl = rtrim($config['url'] ?? '', '/');
 
@@ -136,8 +153,10 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
             $baseUrl = 'https://' . $subdomain . '.chargeover.com';
         }
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        $baseUrl = preg_replace('#/api/v3/?$#', '', $baseUrl) ?? '';
+
+        if (empty($apiUsername) || empty($apiPassword)) {
+            return ['success' => false, 'error' => 'No API username or password provided'];
         }
 
         if (empty($baseUrl)) {
@@ -145,10 +164,10 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/api/v3/me');
+            $response = Http::acceptJson()
+                ->withBasicAuth($apiUsername, $apiPassword)
+                ->timeout(10)
+                ->get($baseUrl . '/api/v3/customer', ['limit' => 1, 'offset' => 0]);
 
             if ($response->successful()) {
                 return [
@@ -169,6 +188,8 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function validationRules(): array
     {
         return [
+            'api_username' => 'nullable|string',
+            'api_password' => 'nullable|string',
             'access_token' => 'nullable|string',
             'subdomain' => 'nullable|string',
             'url' => 'nullable|url',
@@ -195,8 +216,8 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
             'chargeover_list_subscriptions' => [
                 'class' => ChargeOverListSubscriptions::class,
                 'type' => 'read',
-                'name' => 'List Subscriptions',
-                'description' => 'List subscriptions from ChargeOver.',
+                'name' => 'List Packages',
+                'description' => 'List packages/subscriptions from ChargeOver.',
                 'icon' => 'ph:arrows-clockwise',
             ],
             'chargeover_list_invoices' => [
@@ -220,11 +241,18 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
                 'description' => 'List transactions (payments) from ChargeOver.',
                 'icon' => 'ph:money',
             ],
+            'chargeover_get_transaction' => [
+                'class' => ChargeOverGetTransaction::class,
+                'type' => 'read',
+                'name' => 'Get Transaction',
+                'description' => 'Get details for a specific ChargeOver transaction.',
+                'icon' => 'ph:receipt',
+            ],
             'chargeover_get_current_user' => [
                 'class' => ChargeOverGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user / account info.',
+                'name' => 'Test API Access',
+                'description' => 'Verify API access with a lightweight customer list request.',
                 'icon' => 'ph:identification-badge',
             ],
         ];
@@ -233,10 +261,13 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/chargeover.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'api_username', 'type' => 'string', 'label' => 'API Username', 'required' => true],
+            ['key' => 'api_password', 'type' => 'secret', 'label' => 'API Password', 'required' => true],
             ['key' => 'subdomain', 'type' => 'string', 'label' => 'Subdomain', 'required' => false],
             ['key' => 'url', 'type' => 'url', 'label' => 'Custom URL', 'required' => false, 'default' => ''],
         ];
@@ -252,10 +283,11 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new ChargeOverService(
-                accessToken: $creds->get('chargeover', 'access_token', '', $account),
+                apiUsername: $creds->get('chargeover', 'api_username', $creds->get('chargeover', 'access_token', '', $account), $account),
+                apiPassword: $creds->get('chargeover', 'api_password', '', $account),
                 subdomain: $creds->get('chargeover', 'subdomain', '', $account),
                 baseUrl: $creds->get('chargeover', 'url', '', $account),
             );

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-typefully",
-    "description": "Typefully integration for Laravel — create drafts, list scheduled and published drafts, manage your Typefully account.",
+    "description": "Typefully integration for Laravel — manage social sets, drafts, media, tags, queues, and multi-platform publishing.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "typefully", "twitter", "newsletter", "opencompany"],
+    "keywords": ["tools", "typefully", "social-media", "publishing", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

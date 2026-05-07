@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-pipedrive",
-    "description": "Pipedrive CRM integration for OpenCompany — manage deals, persons, organizations, and users.",
+    "description": "Pipedrive CRM integration for OpenCompany - manage deals, contacts, activities, leads, projects, products, and webhooks.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,12 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "pipedrive", "crm", "opencompany"],
+    "keywords": [
+        "tools",
+        "pipedrive",
+        "crm",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

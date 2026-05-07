@@ -6,8 +6,14 @@ use OpenCompany\Integrations\FreshworksCrm\FreshworksCrmService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch the authenticated Freshworks CRM user.
+ */
 class FreshworksCrmGetCurrentUser implements Tool
 {
+    /**
+     * @param  FreshworksCrmService  $service  The Freshworks CRM API client.
+     */
     public function __construct(
         private FreshworksCrmService $service,
     ) {}
@@ -27,6 +33,11 @@ class FreshworksCrmGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the current Freshworks CRM user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

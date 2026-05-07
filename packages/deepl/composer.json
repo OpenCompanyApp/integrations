@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-deepl",
-    "description": "DeepL translation integration for Laravel — translate text, manage glossaries, list languages, and check usage.",
+    "description": "DeepL translation integration for Laravel - translate text, manage glossaries, list languages, and check usage.",
     "license": "MIT",
     "authors": [
         {

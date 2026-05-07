@@ -105,7 +105,7 @@ class RadarToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Radar integration for Laravel — geofencing, location tracking, and event management.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

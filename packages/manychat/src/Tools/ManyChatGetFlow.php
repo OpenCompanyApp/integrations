@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ManyChatGetFlow implements Tool
 {
+    /**
+     * @param  ManyChatService  $service  The Manychat API client.
+     */
     public function __construct(
         private ManyChatService $service,
     ) {}
@@ -31,10 +34,15 @@ class ManyChatGetFlow implements Tool
     public function parameters(): array
     {
         return [
-            'page_id' => ['type' => 'string', 'required' => true, 'description' => 'The flow (page) ID to retrieve.'],
+            'page_id' => ['type' => 'string', 'required' => true, 'description' => 'Flow namespace or ID to find in the getFlows response.'],
         ];
     }
 
+    /**
+     * Find a flow from the documented getFlows response.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

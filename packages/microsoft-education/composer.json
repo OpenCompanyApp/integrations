@@ -1,0 +1,35 @@
+{
+    "name": "opencompanyapp/integration-microsoft-education",
+    "description": "Microsoft Education integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftEducation\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftEducation\\MicrosoftEducationServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "education",
+        "schools",
+        "classes",
+        "assignments",
+        "submissions",
+        "graph",
+        "opencompany"
+    ]
+}

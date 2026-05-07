@@ -1,169 +1,130 @@
-# Recruitee — Lua API Reference
+# Recruitee Lua API Reference
 
-## list_offers
+Namespace: `app.integrations.recruitee`
 
-List job offers (open positions) from Recruitee with optional status filtering and pagination.
+Recruitee tools call the company-scoped Core API at `https://api.recruitee.com/c/{company_id}`. The configured company ID may also be a company subdomain. Tool results are the normalized JSON returned by Recruitee; common top-level keys include `offers`, `candidates`, `departments`, `locations`, or a single resource key depending on the endpoint.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `status` | string | no | Filter by status: `"open"`, `"closed"`, or `"draft"`. Omit for all. |
-| `page` | integer | no | Page number for pagination (default: 1). |
-| `limit` | integer | no | Results per page (default: 20, max: 100). |
-
-### Example
+## Offers
 
 ```lua
--- List all open positions
-local result = app.integrations.recruitee.list_offers({
-  status = "open"
+local offers = app.integrations.recruitee.list_offers({
+  status = "published",
+  limit = 25
 })
 
-for _, offer in ipairs(result.offers) do
-  print(offer.title .. " (" .. offer.status .. ")")
-end
-```
+local offer = app.integrations.recruitee.get_offer({ id = 12345 })
 
-```lua
--- Paginate through all offers
-local result = app.integrations.recruitee.list_offers({
-  page = 2,
-  limit = 50
+local created = app.integrations.recruitee.create_offer({
+  offer = {
+    title = "Support Engineer",
+    kind = "job"
+  }
+})
+
+local updated = app.integrations.recruitee.update_offer({
+  id = 12345,
+  offer = {
+    status = "published"
+  }
 })
 ```
 
----
+`delete_offer({ id = ... })` permanently deletes the offer in Recruitee.
 
-## get_offer
-
-Get details for a specific job offer.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The offer ID to retrieve. |
-
-### Example
+## Candidates
 
 ```lua
-local result = app.integrations.recruitee.get_offer({
-  id = 12345
+local candidates = app.integrations.recruitee.list_candidates({
+  limit = 25
 })
 
-print(result.offer.title)
-print(result.offer.description)
-print(result.offer.status)
-print(result.offer.location)
+local search = app.integrations.recruitee.search_candidates({
+  limit = 50,
+  page = 1,
+  sort_by = "created_at_desc"
+})
+
+local candidate = app.integrations.recruitee.get_candidate({ id = 67890 })
+
+local created = app.integrations.recruitee.create_candidate({
+  candidate = {
+    name = "Example Candidate",
+    emails = { "candidate@example.test" }
+  },
+  offers = { 12345 }
+})
 ```
 
----
+`update_candidate({ id = ..., candidate = {...} })` wraps the body as `{ candidate = ... }`.
 
-## list_candidates
+`update_candidate_cv({ id = ..., candidate = {...} })` calls `PATCH /candidates/{id}/update_cv`.
 
-List candidates from Recruitee with pagination.
+`delete_candidate({ id = ... })` permanently deletes the candidate in Recruitee.
 
-### Parameters
+`list_candidate_notes({ id = ... })` returns notes for one candidate.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number for pagination (default: 1). |
-| `limit` | integer | no | Results per page (default: 20, max: 100). |
-
-### Example
+## Company Metadata
 
 ```lua
--- List recent candidates
-local result = app.integrations.recruitee.list_candidates({
+local departments = app.integrations.recruitee.list_departments()
+
+local locations = app.integrations.recruitee.list_locations({
+  scope = "active",
+  view_mode = "brief",
   limit = 10
 })
-
-for _, candidate in ipairs(result.candidates) do
-  print(candidate.name .. " <" .. candidate.email .. ">")
-end
 ```
 
----
+`get_current_user()` calls `/users/me` for host deployments that expose it.
 
-## get_candidate
-
-Get details for a specific candidate.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The candidate ID to retrieve. |
-
-### Example
+## Attachments
 
 ```lua
-local result = app.integrations.recruitee.get_candidate({
-  id = 67890
+local uploaded = app.integrations.recruitee.upload_attachment({
+  attachment = {
+    remote_file_url = "https://example.test/resume.pdf",
+    candidate_id = 67890
+  }
+})
+```
+
+The attachment body is passed as `{ attachment = ... }`.
+
+## Generic Core API Helpers
+
+Use the generic helpers for documented Recruitee endpoints that do not yet have a dedicated wrapper. Paths must be relative to `/c/{company_id}`.
+
+```lua
+local result = app.integrations.recruitee.api_get({
+  path = "/locations",
+  params = { limit = 10 }
 })
 
-print(result.candidate.name)
-print(result.candidate.email)
-print(result.candidate.phone)
+local patched = app.integrations.recruitee.api_patch({
+  path = "/offers/12345",
+  body = {
+    offer = {
+      title = "Senior Support Engineer"
+    }
+  }
+})
 ```
 
----
+Available helpers:
 
-## list_departments
+| Function | Purpose |
+|----------|---------|
+| `api_get` | GET with optional query params |
+| `api_post` | POST with JSON body |
+| `api_patch` | PATCH with JSON body |
+| `api_delete` | DELETE with optional JSON body |
 
-List all departments in Recruitee.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.recruitee.list_departments()
-
-for _, dept in ipairs(result.departments) do
-  print(dept.name .. " (ID: " .. dept.id .. ")")
-end
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Recruitee user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.recruitee.get_current_user()
-
-print("Logged in as: " .. result.first_name .. " " .. result.last_name)
-print("Email: " .. result.email)
-print("Role: " .. result.role)
-```
-
----
+Absolute URLs are rejected; use a relative path such as `/candidates/67890/notes`.
 
 ## Multi-Account Usage
 
-If you have multiple Recruitee accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.recruitee.list_offers({...})
-
--- Explicit default (portable across setups)
-app.integrations.recruitee.default.list_offers({...})
-
--- Named accounts
-app.integrations.recruitee.production.list_offers({...})
-app.integrations.recruitee.staging.list_offers({...})
+app.integrations.recruitee.list_offers({ limit = 10 })
+app.integrations.recruitee.default.list_offers({ limit = 10 })
+app.integrations.recruitee.production.list_offers({ limit = 10 })
 ```
-
-All functions are identical across accounts — only the credentials differ.

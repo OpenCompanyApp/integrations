@@ -43,6 +43,33 @@ local project = app.integrations.vercel.vercel_get_project({
 
 ## Deployments
 
+### Create Deployment
+
+```lua
+local deployment = app.integrations.vercel.vercel_create_deployment({
+    name = "my-project",
+    git_source = {
+        type = "github",
+        ref = "main",
+        repoId = 12345
+    },
+    target = "preview",
+    team_id = "team_xxx" -- optional
+})
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Project name to deploy |
+| `files` | array | No | File objects for direct-upload deployments |
+| `git_source` | object | No | Git source reference |
+| `target` | string | No | `production` or `preview` |
+| `framework` | string | No | Framework preset slug |
+| `regions` | array | No | Region codes |
+| `project_settings` | object | No | Deployment project settings override |
+| `team_id` | string | No | Scope to a specific team |
+| `slug` | string | No | Scope to a specific team slug |
+
 ### List Deployments
 
 ```lua
@@ -133,6 +160,7 @@ List endpoints (`list_projects`, `list_deployments`, `list_domains`, `list_teams
 ## Notes
 
 - All API calls use the Vercel v2 REST API (`https://api.vercel.com/v2`).
+- The integration calls Vercel's versioned REST endpoints under `https://api.vercel.com`, including `/v10/projects`, `/v9/projects/{idOrName}`, `/v6/deployments`, `/v13/deployments`, `/v5/domains`, `/v2/teams`, and `/v2/user`.
 - Token scopes determine which resources are accessible. A **Full Account** token provides access to all endpoints.
 - The `team_id` parameter is optional for personal accounts but required when accessing team-scoped resources.
 

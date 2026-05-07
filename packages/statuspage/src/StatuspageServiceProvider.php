@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Atlassian Statuspage integration with Laravel.
+ *
+ * Binds the Statuspage API client and adds the tool provider to the discovery registry.
+ */
 class StatuspageServiceProvider extends ServiceProvider
 {
     public function register(): void

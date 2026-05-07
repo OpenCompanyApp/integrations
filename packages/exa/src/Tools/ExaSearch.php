@@ -15,6 +15,9 @@ use OpenCompany\Integrations\Exa\ExaService;
  */
 class ExaSearch implements Tool
 {
+    /**
+     * @param  ExaService  $service  The Exa API client.
+     */
     public function __construct(
         private ExaService $service,
     ) {}
@@ -47,8 +50,8 @@ class ExaSearch implements Tool
             ],
             'type' => [
                 'type' => 'string',
-                'enum' => ['keyword', 'neural', 'auto'],
-                'description' => 'Search type: "keyword" for exact matches, "neural" for semantic search, "auto" to let Exa decide (default: "auto").',
+                'enum' => ['auto', 'instant', 'fast', 'deep-lite', 'deep', 'deep-reasoning', 'keyword', 'neural'],
+                'description' => 'Search type. Current options include auto, instant, fast, deep-lite, deep, deep-reasoning, keyword, and neural.',
             ],
             'category' => [
                 'type' => 'string',
@@ -58,6 +61,24 @@ class ExaSearch implements Tool
             'start_published_date' => [
                 'type' => 'string',
                 'description' => 'Only return results published after this date (ISO 8601, e.g., "2024-01-01T00:00:00Z").',
+            ],
+            'end_published_date' => [
+                'type' => 'string',
+                'description' => 'Only return results published before this date (ISO 8601).',
+            ],
+            'include_domains' => [
+                'type' => 'array',
+                'description' => 'Domains to include.',
+                'items' => ['type' => 'string'],
+            ],
+            'exclude_domains' => [
+                'type' => 'array',
+                'description' => 'Domains to exclude.',
+                'items' => ['type' => 'string'],
+            ],
+            'output_schema' => [
+                'type' => 'object',
+                'description' => 'Optional JSON schema for structured output with deep search types.',
             ],
         ];
     }
@@ -96,6 +117,22 @@ class ExaSearch implements Tool
 
             if (isset($args['start_published_date'])) {
                 $body['startPublishedDate'] = $args['start_published_date'];
+            }
+
+            if (isset($args['end_published_date'])) {
+                $body['endPublishedDate'] = $args['end_published_date'];
+            }
+
+            if (isset($args['include_domains'])) {
+                $body['includeDomains'] = $args['include_domains'];
+            }
+
+            if (isset($args['exclude_domains'])) {
+                $body['excludeDomains'] = $args['exclude_domains'];
+            }
+
+            if (isset($args['output_schema']) && is_array($args['output_schema'])) {
+                $body['outputSchema'] = $args['output_schema'];
             }
 
             $result = $this->service->search($body);

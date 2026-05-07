@@ -2,68 +2,25 @@
 
 namespace OpenCompany\Integrations\Recruitee\Tools;
 
-use OpenCompany\Integrations\Recruitee\RecruiteeService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class RecruiteeGetCandidate implements Tool
+/**
+ * Get a single Recruitee candidate by ID.
+ */
+class RecruiteeGetCandidate extends AbstractRecruiteeTool
 {
-    /**
-     * Create a new RecruiteeGetCandidate tool instance.
-     */
-    public function __construct(
-        private RecruiteeService $service,
-    ) {}
+    public const NAME = 'recruitee_get_candidate';
+    public const DESCRIPTION = 'Get details for a specific Recruitee candidate.';
+    public const PARAMETERS = [
+        'id' => ['type' => 'integer', 'required' => true, 'description' => 'Candidate ID.'],
+    ];
 
     /**
-     * Get the tool name (slug).
-     */
-    public function name(): string
-    {
-        return 'recruitee_get_candidate';
-    }
-
-    /**
-     * Get the tool description.
-     */
-    public function description(): string
-    {
-        return 'Get details for a specific candidate in Recruitee. Returns the full candidate profile including contact info, resume, and application history.';
-    }
-
-    /**
-     * Get the tool parameter definitions.
+     * Get one candidate.
      *
-     * @return array<string, array<string, mixed>>
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    public function parameters(): array
+    protected function call(array $args): array
     {
-        return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The candidate ID to retrieve.'],
-        ];
-    }
-
-    /**
-     * Execute the tool.
-     *
-     * @param  array<string, mixed>  $args
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Recruitee integration is not configured.');
-            }
-
-            if (!isset($args['id'])) {
-                return ToolResult::error('The "id" parameter is required.');
-            }
-
-            $result = $this->service->getCandidate((int) $args['id']);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->service->getCandidate($this->requiredInt($args, 'id', 'candidate ID'));
     }
 }

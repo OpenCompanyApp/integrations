@@ -1,215 +1,68 @@
-# Affinity CRM — Lua API Reference
+# Affinity Lua API Reference
 
-## list_contacts
+Namespace: `app.integrations.affinity`
 
-List contacts from Affinity CRM.
+This integration targets Affinity API v2. List tools usually accept `cursor`,
+`limit`, `fieldIds`, `fieldTypes`, or a `params` object. Write tools accept a
+`payload` object.
 
-### Parameters
+## Common Patterns
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of contacts to return (default: 100, max: 500) |
-| `page` | integer | no | Page number for pagination (starts at 1) |
-
-### Example
+List persons:
 
 ```lua
 local result = app.integrations.affinity.list_contacts({
-  limit = 50,
-  page = 1
+  limit = 100
 })
-
-for _, contact in ipairs(result) do
-  print(contact.first_name .. " " .. contact.last_name)
-end
 ```
 
----
-
-## get_contact
-
-Get details for a specific contact by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Affinity contact ID |
-
-### Example
+Get company field values:
 
 ```lua
-local result = app.integrations.affinity.get_contact({
-  id = 12345
+local result = app.integrations.affinity.list_organization_field_values({
+  company_id = "company_test",
+  fieldTypes = "global,relationship-intelligence"
 })
-
-print(result.first_name .. " " .. result.last_name)
-if result.emails then
-  for _, email in ipairs(result.emails) do
-    print("  Email: " .. email.email)
-  end
-end
 ```
 
----
-
-## create_contact
-
-Create a new contact in Affinity.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `first_name` | string | no* | The contact's first name |
-| `last_name` | string | no* | The contact's last name |
-| `emails` | array | no | List of email addresses, e.g. `{"john@example.com"}` |
-| `organization_ids` | array | no | List of organization IDs to link |
-
-*At least one of `first_name` or `last_name` is required.
-
-### Example
+Update a list-entry field:
 
 ```lua
-local result = app.integrations.affinity.create_contact({
-  first_name = "Jane",
-  last_name = "Smith",
-  emails = {"jane@example.com", "jane@company.com"},
-  organization_ids = {42}
+local result = app.integrations.affinity.update_list_entry_field({
+  list_id = "list_test",
+  list_entry_id = "entry_test",
+  field_id = "field_test",
+  value = "Qualified"
 })
-
-print("Created contact ID: " .. result.id)
 ```
 
----
-
-## list_organizations
-
-List organizations from Affinity CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of organizations to return (default: 100, max: 500) |
-| `page` | integer | no | Page number for pagination (starts at 1) |
-
-### Example
+Semantic search:
 
 ```lua
-local result = app.integrations.affinity.list_organizations({
-  limit = 50
+local result = app.integrations.affinity.semantic_search({
+  payload = {
+    ["entity-type"] = "person",
+    query = "founders in fintech"
+  }
 })
-
-for _, org in ipairs(result) do
-  print(org.name .. " — " .. (org.domain or "no domain"))
-end
 ```
 
----
+## Coverage
 
-## get_organization
+Tools include persons, companies, opportunities, lists, list entries, saved
+views, notes, calls, emails, meetings, chat messages, transcripts, semantic
+search, and raw API helpers.
 
-Get details for a specific organization by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The Affinity organization ID |
-
-### Example
+## Raw API Helpers
 
 ```lua
-local result = app.integrations.affinity.get_organization({
-  id = 42
+local result = app.integrations.affinity.api_get({
+  path = "/persons",
+  params = {
+    limit = 50
+  }
 })
-
-print(result.name)
-if result.domain then
-  print("Domain: " .. result.domain)
-end
 ```
 
----
-
-## create_organization
-
-Create a new organization in Affinity.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | The organization's name |
-| `domain` | string | no | Website domain (e.g., `"example.com"`) |
-
-### Example
-
-```lua
-local result = app.integrations.affinity.create_organization({
-  name = "Acme Corp",
-  domain = "acme.com"
-})
-
-print("Created organization ID: " .. result.id)
-```
-
----
-
-## list_lists
-
-List all lists in Affinity CRM.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.affinity.list_lists()
-
-for _, list in ipairs(result) do
-  print(list.name .. " (type: " .. list.type .. ")")
-end
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Affinity user's profile.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.affinity.get_current_user()
-
-print("Logged in as: " .. result.first_name .. " " .. result.last_name)
-print("Email: " .. result.email)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Affinity accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.affinity.list_contacts({})
-
--- Explicit default (portable across setups)
-app.integrations.affinity.default.list_contacts({})
-
--- Named accounts
-app.integrations.affinity.work.list_contacts({})
-app.integrations.affinity.client.list_contacts({})
-```
-
-All functions are identical across accounts — only the credentials differ.
+The `path` must be relative. `/persons` is normalized to `/v2/persons`; pass an
+explicit `/v1/...` path for documented legacy endpoints.

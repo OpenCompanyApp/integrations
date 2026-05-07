@@ -36,7 +36,7 @@ class CloseGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the profile of the currently authenticated Close CRM user — name, email, organization, and other account details.';
+        return 'Get the profile of the currently authenticated Close CRM user: name, email, organization, and other account details.';
     }
 
     /**

@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Supabase\SupabaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Supabase projects visible to the authenticated account.
+ */
 class SupabaseListProjects implements Tool
 {
     /**
@@ -48,8 +51,7 @@ class SupabaseListProjects implements Tool
     /**
      * Execute the tool with the given arguments.
      *
-     * @param  array $args The tool arguments (unused).
-     * @return ToolResult The result of the tool execution.
+     * @param  array<string, mixed>  $args  Tool arguments (none).
      */
     public function execute(array $args): ToolResult
     {

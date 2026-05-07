@@ -1,8 +1,8 @@
 # Integration: NASA
 
-> NASA API integration for Laravel — Astronomy Picture of the Day, Mars rover photos, asteroid tracking, and image search. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> NASA API integration for Laravel: APOD, Mars rover photos, asteroid tracking, DONKI space weather, EPIC Earth imagery, Earth assets, Image Library, and EONET events. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to [NASA's Open APIs](https://api.nasa.gov). Fetch the Astronomy Picture of the Day, browse Mars rover photos, track near-Earth asteroids, and search the NASA Image and Video Library — all through a clean tool interface.
+Give your AI agents access to [NASA's Open APIs](https://api.nasa.gov). Fetch the Astronomy Picture of the Day, browse Mars rover photos, track near-Earth asteroids, query space-weather events, inspect Earth imagery, search the NASA Image and Video Library, and monitor EONET natural events through a clean tool interface.
 
 ## About OpenCompany
 
@@ -50,12 +50,23 @@ Get your free key at [api.nasa.gov](https://api.nasa.gov).
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `nasa_get_apod` | read | Astronomy Picture of the Day — single date or date range |
+| `nasa_get_apod` | read | Astronomy Picture of the Day: single date, range, or random count |
 | `nasa_get_mars_rover_photos` | read | Photos from Curiosity, Opportunity, Spirit, or Perseverance |
 | `nasa_get_asteroids` | read | Near Earth Objects (asteroids) for a date range |
+| `nasa_browse_asteroids` | read | Browse the overall Near Earth Object dataset |
 | `nasa_get_asteroid` | read | Detailed info for a specific asteroid by NASA ID |
+| `nasa_get_donki_events` | read | DONKI space-weather event endpoints |
+| `nasa_get_epic_images` | read | EPIC latest image metadata, date metadata, or available dates |
+| `nasa_get_earth_imagery` | read | Earth imagery for a coordinate |
+| `nasa_get_earth_assets` | read | Available Earth asset dates for a coordinate |
 | `nasa_search_images` | read | Search the NASA Image and Video Library |
-| `nasa_get_current_user` | read | API configuration status (public API, no user auth) |
+| `nasa_get_image_asset` | read | Image Library asset manifest by NASA ID |
+| `nasa_get_image_metadata` | read | Image Library metadata document by NASA ID |
+| `nasa_get_image_captions` | read | Image Library caption locations by NASA ID |
+| `nasa_get_eonet_events` | read | EONET v3 natural events |
+| `nasa_get_eonet_event` | read | One EONET v3 event by ID |
+| `nasa_get_eonet_categories` | read | EONET v3 event categories |
+| `nasa_get_eonet_sources` | read | EONET v3 event sources |
 
 ## Quick Start
 
@@ -79,7 +90,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 17 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -112,8 +123,17 @@ $photos = $service->getMarsRoverPhotos('curiosity', sol: 1000);
 // Asteroids near Earth this week
 $asteroids = $service->getAsteroids(startDate: '2025-06-01', endDate: '2025-06-08');
 
+// Browse asteroid IDs
+$browse = $service->browseAsteroids(page: 0, size: 20);
+
 // Specific asteroid details
 $asteroid = $service->getAsteroid('2534304');
+
+// DONKI solar flare events
+$flares = $service->getDonkiEvents('FLR', ['startDate' => '2025-06-01']);
+
+// EPIC latest natural-color image metadata
+$epic = $service->getEpicImages('natural');
 
 // Search NASA images
 $images = $service->searchImages('black hole');

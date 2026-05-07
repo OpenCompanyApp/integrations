@@ -6,8 +6,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Statuspage\StatuspageService;
 
+/**
+ * List incidents for the configured Statuspage page.
+ *
+ * Includes active, scheduled, and resolved incidents depending on API filters.
+ */
 class StatuspageListIncidents implements Tool
 {
+    /**
+     * @param  StatuspageService  $service  The Statuspage API client.
+     */
     public function __construct(
         private StatuspageService $service,
     ) {}
@@ -27,9 +35,15 @@ class StatuspageListIncidents implements Tool
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of incidents to return per page.'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based).'],
+            'q' => ['type' => 'string', 'description' => 'Optional search query supported by the Statuspage API.'],
         ];
     }
 
+    /**
+     * List Statuspage incidents using optional query parameters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -43,6 +57,9 @@ class StatuspageListIncidents implements Tool
             }
             if (isset($args['page'])) {
                 $params['page'] = (int) $args['page'];
+            }
+            if (isset($args['q'])) {
+                $params['q'] = $args['q'];
             }
 
             $result = $this->service->listIncidents($params);

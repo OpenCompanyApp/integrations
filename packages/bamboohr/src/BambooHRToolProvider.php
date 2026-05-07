@@ -93,7 +93,7 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Human resources management — employees, departments, and time-off',
             'icon' => 'ph:users-three',
             'logo' => 'simple-icons:bamboohr',
-            'category' => 'hr',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://documentation.bamboohr.com/docs',
         ];

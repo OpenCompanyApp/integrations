@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-abuseipdb",
+    "description": "AbuseIPDB integration for Laravel AI agents - IP reputation checks, reports, blacklist feeds, CIDR checks, bulk reports, and report clearing.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\AbuseIpdb\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\AbuseIpdb\\AbuseIpdbServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "abuseipdb",
+        "ip-reputation",
+        "threat-intelligence",
+        "blacklist",
+        "security",
+        "opencompany"
+    ]
+}

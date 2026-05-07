@@ -91,7 +91,7 @@ class TogetherAiToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Cloud AI inference platform with open-source models, chat completions, and fine-tuning',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:togetherai',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.together.ai',
         ];

@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Cursor Admin API integration with Laravel.
+ */
 class CursorServiceProvider extends ServiceProvider
 {
     /**
@@ -18,7 +21,7 @@ class CursorServiceProvider extends ServiceProvider
 
             return new CursorService(
                 apiKey: $creds->get('cursor', 'api_key', ''),
-                baseUrl: $creds->get('cursor', 'url', 'https://api2.cursor.sh'),
+                baseUrl: $creds->get('cursor', 'url', 'https://api.cursor.com'),
             );
         });
     }

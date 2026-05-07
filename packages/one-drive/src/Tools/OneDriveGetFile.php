@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class OneDriveGetFile implements Tool
 {
+    /**
+     * @param  OneDriveService  $service  Microsoft Graph OneDrive API client.
+     */
     public function __construct(
         private OneDriveService $service,
     ) {}
@@ -35,6 +38,11 @@ class OneDriveGetFile implements Tool
         ];
     }
 
+    /**
+     * Fetch file or folder metadata.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id)
+     */
     public function execute(array $args): ToolResult
     {
         try {

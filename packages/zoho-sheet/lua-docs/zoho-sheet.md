@@ -1,6 +1,6 @@
 # Zoho Sheet — Lua API Reference
 
-## list_spreadsheets
+## zoho_sheet_list_spreadsheets
 
 List all spreadsheets accessible to the authenticated user.
 
@@ -14,7 +14,7 @@ List all spreadsheets accessible to the authenticated user.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.list_spreadsheets({
+local result = app.integrations["zoho-sheet"].zoho_sheet_list_spreadsheets({
   page = 1,
   per_page = 25
 })
@@ -26,7 +26,7 @@ end
 
 ---
 
-## get_spreadsheet
+## zoho_sheet_get_spreadsheet
 
 Get details of a specific spreadsheet.
 
@@ -39,7 +39,7 @@ Get details of a specific spreadsheet.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.get_spreadsheet({
+local result = app.integrations["zoho-sheet"].zoho_sheet_get_spreadsheet({
   id = "abc123"
 })
 
@@ -49,7 +49,7 @@ print("Worksheets: " .. #result.worksheets)
 
 ---
 
-## list_worksheets
+## zoho_sheet_list_worksheets
 
 List all worksheets within a spreadsheet.
 
@@ -62,7 +62,7 @@ List all worksheets within a spreadsheet.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.list_worksheets({
+local result = app.integrations["zoho-sheet"].zoho_sheet_list_worksheets({
   id = "abc123"
 })
 
@@ -73,7 +73,7 @@ end
 
 ---
 
-## get_worksheet
+## zoho_sheet_get_worksheet
 
 Get details of a specific worksheet.
 
@@ -87,7 +87,7 @@ Get details of a specific worksheet.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.get_worksheet({
+local result = app.integrations["zoho-sheet"].zoho_sheet_get_worksheet({
   id = "abc123",
   worksheet_id = "Sheet1"
 })
@@ -98,7 +98,7 @@ print("Rows: " .. result.row_count)
 
 ---
 
-## list_rows
+## zoho_sheet_list_rows
 
 List rows in a worksheet with pagination.
 
@@ -114,7 +114,7 @@ List rows in a worksheet with pagination.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.list_rows({
+local result = app.integrations["zoho-sheet"].zoho_sheet_list_rows({
   id = "abc123",
   worksheet_id = "Sheet1",
   page = 1,
@@ -128,7 +128,7 @@ end
 
 ---
 
-## create_row
+## zoho_sheet_create_row
 
 Create a new row in a worksheet.
 
@@ -143,7 +143,7 @@ Create a new row in a worksheet.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.create_row({
+local result = app.integrations["zoho-sheet"].zoho_sheet_create_row({
   id = "abc123",
   worksheet_id = "Sheet1",
   data = {
@@ -158,7 +158,7 @@ print("Row created successfully")
 
 ---
 
-## get_current_user
+## zoho_sheet_get_current_user
 
 Get the authenticated user's profile information.
 
@@ -169,7 +169,7 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_sheet.get_current_user({})
+local result = app.integrations["zoho-sheet"].zoho_sheet_get_current_user({})
 
 print("User: " .. result.display_name)
 print("Email: " .. result.email)
@@ -183,14 +183,14 @@ If you have multiple Zoho Sheet accounts configured, use account-specific namesp
 
 ```lua
 -- Default account (always works)
-app.integrations.zoho_sheet.function_name({...})
+app.integrations["zoho-sheet"].function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.zoho_sheet.default.function_name({...})
+app.integrations["zoho-sheet"].default.function_name({...})
 
 -- Named accounts
-app.integrations.zoho_sheet.work.function_name({...})
-app.integrations.zoho_sheet.personal.function_name({...})
+app.integrations["zoho-sheet"].work.function_name({...})
+app.integrations["zoho-sheet"].personal.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

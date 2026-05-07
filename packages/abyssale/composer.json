@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-abyssale",
-    "description": "Abyssale image generation integration for Laravel — manage templates, formats, and generate images.",
+    "description": "Abyssale creative automation integration for Laravel — designs, generation, files, exports, projects, and dynamic images.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "abyssale", "media", "image-generation", "opencompany"],
+    "keywords": ["tools", "abyssale", "rendering", "image-generation", "creative-automation", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

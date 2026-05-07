@@ -6,10 +6,15 @@ use OpenCompany\Integrations\MailerSend\MailerSendService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List MailerSend sending domains.
+ */
 class MailerSendListDomains implements Tool
 {
     /**
      * Create a new MailerSendListDomains tool instance.
+     *
+     *   MailerSendService  $service  The MailerSend API client.
      */
     public function __construct(
         private MailerSendService $service,

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-cal",
-    "description": "Cal.com scheduling integration for Laravel — manage event types, bookings, and user info.",
+    "description": "Cal.com API v2 integration for Laravel agents with bookings, event types, profile, and generic REST tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,15 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "cal", "cal.com", "scheduling", "opencompany"],
+    "keywords": ["tools", "cal", "cal.com", "api-v2", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
     "replace": {
-        "opencompanyapp/ai-tool-cal": "self.version"
+        "opencompanyapp/ai-tool-cal": "self.version",
+        "opencompanyapp/integration-cal-com": "self.version",
+        "opencompanyapp/ai-tool-cal-com": "self.version"
     },
     "autoload": {
         "psr-4": {

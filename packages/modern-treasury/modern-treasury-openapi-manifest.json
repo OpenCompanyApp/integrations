@@ -1,0 +1,1246 @@
+{
+    "source": "https://github.com/Modern-Treasury/modern-treasury-openapi/blob/main/openapi/mt_openapi_spec_v1.yaml",
+    "openapi": "3.0.1",
+    "method_count": 177,
+    "operations": [
+        {
+            "operation_id": "listLedgerAccountBalanceMonitors",
+            "method": "GET",
+            "path": "/api/ledger_account_balance_monitors",
+            "tool": "modern_treasury_list_ledger_account_balance_monitors",
+            "class": "ModernTreasuryListLedgerAccountBalanceMonitors"
+        },
+        {
+            "operation_id": "createLedgerAccountBalanceMonitor",
+            "method": "POST",
+            "path": "/api/ledger_account_balance_monitors",
+            "tool": "modern_treasury_create_ledger_account_balance_monitor",
+            "class": "ModernTreasuryCreateLedgerAccountBalanceMonitor"
+        },
+        {
+            "operation_id": "getLedgerAccountBalanceMonitor",
+            "method": "GET",
+            "path": "/api/ledger_account_balance_monitors/{id}",
+            "tool": "modern_treasury_get_ledger_account_balance_monitor",
+            "class": "ModernTreasuryGetLedgerAccountBalanceMonitor"
+        },
+        {
+            "operation_id": "updateLedgerAccountBalanceMonitor",
+            "method": "PATCH",
+            "path": "/api/ledger_account_balance_monitors/{id}",
+            "tool": "modern_treasury_update_ledger_account_balance_monitor",
+            "class": "ModernTreasuryUpdateLedgerAccountBalanceMonitor"
+        },
+        {
+            "operation_id": "deleteLedgerAccountBalanceMonitor",
+            "method": "DELETE",
+            "path": "/api/ledger_account_balance_monitors/{id}",
+            "tool": "modern_treasury_delete_ledger_account_balance_monitor",
+            "class": "ModernTreasuryDeleteLedgerAccountBalanceMonitor"
+        },
+        {
+            "operation_id": "listLedgerAccountCategories",
+            "method": "GET",
+            "path": "/api/ledger_account_categories",
+            "tool": "modern_treasury_list_ledger_account_categories",
+            "class": "ModernTreasuryListLedgerAccountCategories"
+        },
+        {
+            "operation_id": "createLedgerAccountCategory",
+            "method": "POST",
+            "path": "/api/ledger_account_categories",
+            "tool": "modern_treasury_create_ledger_account_category",
+            "class": "ModernTreasuryCreateLedgerAccountCategory"
+        },
+        {
+            "operation_id": "getLedgerAccountCategory",
+            "method": "GET",
+            "path": "/api/ledger_account_categories/{id}",
+            "tool": "modern_treasury_get_ledger_account_category",
+            "class": "ModernTreasuryGetLedgerAccountCategory"
+        },
+        {
+            "operation_id": "updateLedgerAccountCategory",
+            "method": "PATCH",
+            "path": "/api/ledger_account_categories/{id}",
+            "tool": "modern_treasury_update_ledger_account_category",
+            "class": "ModernTreasuryUpdateLedgerAccountCategory"
+        },
+        {
+            "operation_id": "deleteLedgerAccountCategory",
+            "method": "DELETE",
+            "path": "/api/ledger_account_categories/{id}",
+            "tool": "modern_treasury_delete_ledger_account_category",
+            "class": "ModernTreasuryDeleteLedgerAccountCategory"
+        },
+        {
+            "operation_id": "addLedgerAccountToLedgerAccountCategory",
+            "method": "PUT",
+            "path": "/api/ledger_account_categories/{id}/ledger_accounts/{ledger_account_id}",
+            "tool": "modern_treasury_add_ledger_account_to_ledger_account_category",
+            "class": "ModernTreasuryAddLedgerAccountToLedgerAccountCategory"
+        },
+        {
+            "operation_id": "removeLedgerAccountFromLedgerAccountCategory",
+            "method": "DELETE",
+            "path": "/api/ledger_account_categories/{id}/ledger_accounts/{ledger_account_id}",
+            "tool": "modern_treasury_remove_ledger_account_from_ledger_account_category",
+            "class": "ModernTreasuryRemoveLedgerAccountFromLedgerAccountCategory"
+        },
+        {
+            "operation_id": "addLedgerAccountCategoryToLedgerAccountCategory",
+            "method": "PUT",
+            "path": "/api/ledger_account_categories/{id}/ledger_account_categories/{sub_category_id}",
+            "tool": "modern_treasury_add_ledger_account_category_to_ledger_account_category",
+            "class": "ModernTreasuryAddLedgerAccountCategoryToLedgerAccountCategory"
+        },
+        {
+            "operation_id": "deleteLedgerAccountCategoryFromLedgerAccountCategory",
+            "method": "DELETE",
+            "path": "/api/ledger_account_categories/{id}/ledger_account_categories/{sub_category_id}",
+            "tool": "modern_treasury_delete_ledger_account_category_from_ledger_account_category",
+            "class": "ModernTreasuryDeleteLedgerAccountCategoryFromLedgerAccountCategory"
+        },
+        {
+            "operation_id": "patchLedgerAccountSettlementEntries",
+            "method": "PATCH",
+            "path": "/api/ledger_account_settlements/{id}/ledger_entries",
+            "tool": "modern_treasury_patch_ledger_account_settlement_entries",
+            "class": "ModernTreasuryPatchLedgerAccountSettlementEntries"
+        },
+        {
+            "operation_id": "deleteLedgerAccountSettlementEntries",
+            "method": "DELETE",
+            "path": "/api/ledger_account_settlements/{id}/ledger_entries",
+            "tool": "modern_treasury_delete_ledger_account_settlement_entries",
+            "class": "ModernTreasuryDeleteLedgerAccountSettlementEntries"
+        },
+        {
+            "operation_id": "createLedgerAccountSettlement",
+            "method": "POST",
+            "path": "/api/ledger_account_settlements",
+            "tool": "modern_treasury_create_ledger_account_settlement",
+            "class": "ModernTreasuryCreateLedgerAccountSettlement"
+        },
+        {
+            "operation_id": "listLedgerAccountSettlements",
+            "method": "GET",
+            "path": "/api/ledger_account_settlements",
+            "tool": "modern_treasury_list_ledger_account_settlements",
+            "class": "ModernTreasuryListLedgerAccountSettlements"
+        },
+        {
+            "operation_id": "getLedgerAccountSettlement",
+            "method": "GET",
+            "path": "/api/ledger_account_settlements/{id}",
+            "tool": "modern_treasury_get_ledger_account_settlement",
+            "class": "ModernTreasuryGetLedgerAccountSettlement"
+        },
+        {
+            "operation_id": "updateLedgerAccountSettlement",
+            "method": "PATCH",
+            "path": "/api/ledger_account_settlements/{id}",
+            "tool": "modern_treasury_update_ledger_account_settlement",
+            "class": "ModernTreasuryUpdateLedgerAccountSettlement"
+        },
+        {
+            "operation_id": "createLedgerAccountStatement",
+            "method": "POST",
+            "path": "/api/ledger_account_statements",
+            "tool": "modern_treasury_create_ledger_account_statement",
+            "class": "ModernTreasuryCreateLedgerAccountStatement"
+        },
+        {
+            "operation_id": "getLedgerAccountStatement",
+            "method": "GET",
+            "path": "/api/ledger_account_statements/{id}",
+            "tool": "modern_treasury_get_ledger_account_statement",
+            "class": "ModernTreasuryGetLedgerAccountStatement"
+        },
+        {
+            "operation_id": "listLedgerAccounts",
+            "method": "GET",
+            "path": "/api/ledger_accounts",
+            "tool": "modern_treasury_list_ledger_accounts",
+            "class": "ModernTreasuryListLedgerAccounts"
+        },
+        {
+            "operation_id": "createLedgerAccount",
+            "method": "POST",
+            "path": "/api/ledger_accounts",
+            "tool": "modern_treasury_create_ledger_account",
+            "class": "ModernTreasuryCreateLedgerAccount"
+        },
+        {
+            "operation_id": "getLedgerAccount",
+            "method": "GET",
+            "path": "/api/ledger_accounts/{id}",
+            "tool": "modern_treasury_get_ledger_account",
+            "class": "ModernTreasuryGetLedgerAccount"
+        },
+        {
+            "operation_id": "updateLedgerAccount",
+            "method": "PATCH",
+            "path": "/api/ledger_accounts/{id}",
+            "tool": "modern_treasury_update_ledger_account",
+            "class": "ModernTreasuryUpdateLedgerAccount"
+        },
+        {
+            "operation_id": "deleteLedgerAccount",
+            "method": "DELETE",
+            "path": "/api/ledger_accounts/{id}",
+            "tool": "modern_treasury_delete_ledger_account",
+            "class": "ModernTreasuryDeleteLedgerAccount"
+        },
+        {
+            "operation_id": "listLedgerEntries",
+            "method": "GET",
+            "path": "/api/ledger_entries",
+            "tool": "modern_treasury_list_ledger_entries",
+            "class": "ModernTreasuryListLedgerEntries"
+        },
+        {
+            "operation_id": "updateLedgerEntry",
+            "method": "PATCH",
+            "path": "/api/ledger_entries/{id}",
+            "tool": "modern_treasury_update_ledger_entry",
+            "class": "ModernTreasuryUpdateLedgerEntry"
+        },
+        {
+            "operation_id": "getLedgerEntry",
+            "method": "GET",
+            "path": "/api/ledger_entries/{id}",
+            "tool": "modern_treasury_get_ledger_entry",
+            "class": "ModernTreasuryGetLedgerEntry"
+        },
+        {
+            "operation_id": "CreateLedgerTransactionPartialPost",
+            "method": "POST",
+            "path": "/api/ledger_transactions/{id}/partial_post",
+            "tool": "modern_treasury_create_ledger_transaction_partial_post",
+            "class": "ModernTreasuryCreateLedgerTransactionPartialPost"
+        },
+        {
+            "operation_id": "CreateLedgerTransactionReversal",
+            "method": "POST",
+            "path": "/api/ledger_transactions/{id}/reversal",
+            "tool": "modern_treasury_create_ledger_transaction_reversal",
+            "class": "ModernTreasuryCreateLedgerTransactionReversal"
+        },
+        {
+            "operation_id": "listLedgerTransactionVersions",
+            "method": "GET",
+            "path": "/api/ledger_transaction_versions",
+            "tool": "modern_treasury_list_ledger_transaction_versions",
+            "class": "ModernTreasuryListLedgerTransactionVersions"
+        },
+        {
+            "operation_id": "listLedgerTransactions",
+            "method": "GET",
+            "path": "/api/ledger_transactions",
+            "tool": "modern_treasury_list_ledger_transactions",
+            "class": "ModernTreasuryListLedgerTransactions"
+        },
+        {
+            "operation_id": "createLedgerTransaction",
+            "method": "POST",
+            "path": "/api/ledger_transactions",
+            "tool": "modern_treasury_create_ledger_transaction",
+            "class": "ModernTreasuryCreateLedgerTransaction"
+        },
+        {
+            "operation_id": "getLedgerTransaction",
+            "method": "GET",
+            "path": "/api/ledger_transactions/{id}",
+            "tool": "modern_treasury_get_ledger_transaction",
+            "class": "ModernTreasuryGetLedgerTransaction"
+        },
+        {
+            "operation_id": "updateLedgerTransaction",
+            "method": "PATCH",
+            "path": "/api/ledger_transactions/{id}",
+            "tool": "modern_treasury_update_ledger_transaction",
+            "class": "ModernTreasuryUpdateLedgerTransaction"
+        },
+        {
+            "operation_id": "listLedgerTransactionVersionsNested",
+            "method": "GET",
+            "path": "/api/ledger_transactions/{id}/versions",
+            "tool": "modern_treasury_list_ledger_transaction_versions_nested",
+            "class": "ModernTreasuryListLedgerTransactionVersionsNested"
+        },
+        {
+            "operation_id": "listLedgers",
+            "method": "GET",
+            "path": "/api/ledgers",
+            "tool": "modern_treasury_list_ledgers",
+            "class": "ModernTreasuryListLedgers"
+        },
+        {
+            "operation_id": "createLedger",
+            "method": "POST",
+            "path": "/api/ledgers",
+            "tool": "modern_treasury_create_ledger",
+            "class": "ModernTreasuryCreateLedger"
+        },
+        {
+            "operation_id": "getLedger",
+            "method": "GET",
+            "path": "/api/ledgers/{id}",
+            "tool": "modern_treasury_get_ledger",
+            "class": "ModernTreasuryGetLedger"
+        },
+        {
+            "operation_id": "updateLedger",
+            "method": "PATCH",
+            "path": "/api/ledgers/{id}",
+            "tool": "modern_treasury_update_ledger",
+            "class": "ModernTreasuryUpdateLedger"
+        },
+        {
+            "operation_id": "deleteLedger",
+            "method": "DELETE",
+            "path": "/api/ledgers/{id}",
+            "tool": "modern_treasury_delete_ledger",
+            "class": "ModernTreasuryDeleteLedger"
+        },
+        {
+            "operation_id": "listConnectionLegalEntities",
+            "method": "GET",
+            "path": "/api/connection_legal_entities",
+            "tool": "modern_treasury_list_connection_legal_entities",
+            "class": "ModernTreasuryListConnectionLegalEntities"
+        },
+        {
+            "operation_id": "createConnectionLegalEntity",
+            "method": "POST",
+            "path": "/api/connection_legal_entities",
+            "tool": "modern_treasury_create_connection_legal_entity",
+            "class": "ModernTreasuryCreateConnectionLegalEntity"
+        },
+        {
+            "operation_id": "getConnectionLegalEntity",
+            "method": "GET",
+            "path": "/api/connection_legal_entities/{id}",
+            "tool": "modern_treasury_get_connection_legal_entity",
+            "class": "ModernTreasuryGetConnectionLegalEntity"
+        },
+        {
+            "operation_id": "updateConnectionLegalEntity",
+            "method": "PATCH",
+            "path": "/api/connection_legal_entities/{id}",
+            "tool": "modern_treasury_update_connection_legal_entity",
+            "class": "ModernTreasuryUpdateConnectionLegalEntity"
+        },
+        {
+            "operation_id": "listConnections",
+            "method": "GET",
+            "path": "/api/connections",
+            "tool": "modern_treasury_list_connections",
+            "class": "ModernTreasuryListConnections"
+        },
+        {
+            "operation_id": "listLegalEntities",
+            "method": "GET",
+            "path": "/api/legal_entities",
+            "tool": "modern_treasury_list_legal_entities",
+            "class": "ModernTreasuryListLegalEntities"
+        },
+        {
+            "operation_id": "createLegalEntity",
+            "method": "POST",
+            "path": "/api/legal_entities",
+            "tool": "modern_treasury_create_legal_entity",
+            "class": "ModernTreasuryCreateLegalEntity"
+        },
+        {
+            "operation_id": "getLegalEntity",
+            "method": "GET",
+            "path": "/api/legal_entities/{id}",
+            "tool": "modern_treasury_get_legal_entity",
+            "class": "ModernTreasuryGetLegalEntity"
+        },
+        {
+            "operation_id": "updateLegalEntity",
+            "method": "PATCH",
+            "path": "/api/legal_entities/{id}",
+            "tool": "modern_treasury_update_legal_entity",
+            "class": "ModernTreasuryUpdateLegalEntity"
+        },
+        {
+            "operation_id": "listJournalEntries",
+            "method": "GET",
+            "path": "/api/journal_entries",
+            "tool": "modern_treasury_list_journal_entries",
+            "class": "ModernTreasuryListJournalEntries"
+        },
+        {
+            "operation_id": "getJournalEntry",
+            "method": "GET",
+            "path": "/api/journal_entries/{id}",
+            "tool": "modern_treasury_get_journal_entry",
+            "class": "ModernTreasuryGetJournalEntry"
+        },
+        {
+            "operation_id": "listJournalReports",
+            "method": "GET",
+            "path": "/api/journal_reports",
+            "tool": "modern_treasury_list_journal_reports",
+            "class": "ModernTreasuryListJournalReports"
+        },
+        {
+            "operation_id": "getJournalReport",
+            "method": "GET",
+            "path": "/api/journal_reports/{id}",
+            "tool": "modern_treasury_get_journal_report",
+            "class": "ModernTreasuryGetJournalReport"
+        },
+        {
+            "operation_id": "updateJournalReport",
+            "method": "PATCH",
+            "path": "/api/journal_reports/{id}",
+            "tool": "modern_treasury_update_journal_report",
+            "class": "ModernTreasuryUpdateJournalReport"
+        },
+        {
+            "operation_id": "listJournalSources",
+            "method": "GET",
+            "path": "/api/journal_sources",
+            "tool": "modern_treasury_list_journal_sources",
+            "class": "ModernTreasuryListJournalSources"
+        },
+        {
+            "operation_id": "getJournalSource",
+            "method": "GET",
+            "path": "/api/journal_sources/{id}",
+            "tool": "modern_treasury_get_journal_source",
+            "class": "ModernTreasuryGetJournalSource"
+        },
+        {
+            "operation_id": "updateAccountCapability",
+            "method": "PATCH",
+            "path": "/api/internal_accounts/{internal_account_id}/account_capabilities/{id}",
+            "tool": "modern_treasury_update_account_capability",
+            "class": "ModernTreasuryUpdateAccountCapability"
+        },
+        {
+            "operation_id": "listAccountDetails",
+            "method": "GET",
+            "path": "/api/{accounts_type}/{account_id}/account_details",
+            "tool": "modern_treasury_list_account_details",
+            "class": "ModernTreasuryListAccountDetails"
+        },
+        {
+            "operation_id": "createAccountDetail",
+            "method": "POST",
+            "path": "/api/{accounts_type}/{account_id}/account_details",
+            "tool": "modern_treasury_create_account_detail",
+            "class": "ModernTreasuryCreateAccountDetail"
+        },
+        {
+            "operation_id": "getAccountDetail",
+            "method": "GET",
+            "path": "/api/{accounts_type}/{account_id}/account_details/{id}",
+            "tool": "modern_treasury_get_account_detail",
+            "class": "ModernTreasuryGetAccountDetail"
+        },
+        {
+            "operation_id": "deleteAccountDetail",
+            "method": "DELETE",
+            "path": "/api/{accounts_type}/{account_id}/account_details/{id}",
+            "tool": "modern_treasury_delete_account_detail",
+            "class": "ModernTreasuryDeleteAccountDetail"
+        },
+        {
+            "operation_id": "listBalanceReports",
+            "method": "GET",
+            "path": "/api/internal_accounts/{internal_account_id}/balance_reports",
+            "tool": "modern_treasury_list_balance_reports",
+            "class": "ModernTreasuryListBalanceReports"
+        },
+        {
+            "operation_id": "createBalanceReport",
+            "method": "POST",
+            "path": "/api/internal_accounts/{internal_account_id}/balance_reports",
+            "tool": "modern_treasury_create_balance_report",
+            "class": "ModernTreasuryCreateBalanceReport"
+        },
+        {
+            "operation_id": "getBalanceReport",
+            "method": "GET",
+            "path": "/api/internal_accounts/{internal_account_id}/balance_reports/{id}",
+            "tool": "modern_treasury_get_balance_report",
+            "class": "ModernTreasuryGetBalanceReport"
+        },
+        {
+            "operation_id": "deleteBalanceReport",
+            "method": "DELETE",
+            "path": "/api/internal_accounts/{internal_account_id}/balance_reports/{id}",
+            "tool": "modern_treasury_delete_balance_report",
+            "class": "ModernTreasuryDeleteBalanceReport"
+        },
+        {
+            "operation_id": "listBulkRequests",
+            "method": "GET",
+            "path": "/api/bulk_requests",
+            "tool": "modern_treasury_list_bulk_requests",
+            "class": "ModernTreasuryListBulkRequests"
+        },
+        {
+            "operation_id": "createBulkRequest",
+            "method": "POST",
+            "path": "/api/bulk_requests",
+            "tool": "modern_treasury_create_bulk_request",
+            "class": "ModernTreasuryCreateBulkRequest"
+        },
+        {
+            "operation_id": "getBulkRequest",
+            "method": "GET",
+            "path": "/api/bulk_requests/{id}",
+            "tool": "modern_treasury_get_bulk_request",
+            "class": "ModernTreasuryGetBulkRequest"
+        },
+        {
+            "operation_id": "listBulkResults",
+            "method": "GET",
+            "path": "/api/bulk_results",
+            "tool": "modern_treasury_list_bulk_results",
+            "class": "ModernTreasuryListBulkResults"
+        },
+        {
+            "operation_id": "getBulkResult",
+            "method": "GET",
+            "path": "/api/bulk_results/{id}",
+            "tool": "modern_treasury_get_bulk_result",
+            "class": "ModernTreasuryGetBulkResult"
+        },
+        {
+            "operation_id": "collectAccountDetails",
+            "method": "POST",
+            "path": "/api/counterparties/{id}/collect_account",
+            "tool": "modern_treasury_collect_account_details",
+            "class": "ModernTreasuryCollectAccountDetails"
+        },
+        {
+            "operation_id": "listCounterparties",
+            "method": "GET",
+            "path": "/api/counterparties",
+            "tool": "modern_treasury_list_counterparties",
+            "class": "ModernTreasuryListCounterparties"
+        },
+        {
+            "operation_id": "createCounterparty",
+            "method": "POST",
+            "path": "/api/counterparties",
+            "tool": "modern_treasury_create_counterparty",
+            "class": "ModernTreasuryCreateCounterparty"
+        },
+        {
+            "operation_id": "getCounterparty",
+            "method": "GET",
+            "path": "/api/counterparties/{id}",
+            "tool": "modern_treasury_get_counterparty",
+            "class": "ModernTreasuryGetCounterparty"
+        },
+        {
+            "operation_id": "updateCounterparty",
+            "method": "PATCH",
+            "path": "/api/counterparties/{id}",
+            "tool": "modern_treasury_update_counterparty",
+            "class": "ModernTreasuryUpdateCounterparty"
+        },
+        {
+            "operation_id": "deleteCounterparty",
+            "method": "DELETE",
+            "path": "/api/counterparties/{id}",
+            "tool": "modern_treasury_delete_counterparty",
+            "class": "ModernTreasuryDeleteCounterparty"
+        },
+        {
+            "operation_id": "listDocuments",
+            "method": "GET",
+            "path": "/api/documents",
+            "tool": "modern_treasury_list_documents",
+            "class": "ModernTreasuryListDocuments"
+        },
+        {
+            "operation_id": "createDocument",
+            "method": "POST",
+            "path": "/api/documents",
+            "tool": "modern_treasury_create_document",
+            "class": "ModernTreasuryCreateDocument"
+        },
+        {
+            "operation_id": "listDocumentsNested",
+            "method": "GET",
+            "path": "/api/{documentable_type}/{documentable_id}/documents",
+            "tool": "modern_treasury_list_documents_nested",
+            "class": "ModernTreasuryListDocumentsNested"
+        },
+        {
+            "operation_id": "createDocumentNested",
+            "method": "POST",
+            "path": "/api/{documentable_type}/{documentable_id}/documents",
+            "tool": "modern_treasury_create_document_nested",
+            "class": "ModernTreasuryCreateDocumentNested"
+        },
+        {
+            "operation_id": "getDocumentNested",
+            "method": "GET",
+            "path": "/api/{documentable_type}/{documentable_id}/documents/{id}",
+            "tool": "modern_treasury_get_document_nested",
+            "class": "ModernTreasuryGetDocumentNested"
+        },
+        {
+            "operation_id": "getDocument",
+            "method": "GET",
+            "path": "/api/documents/{id}",
+            "tool": "modern_treasury_get_document",
+            "class": "ModernTreasuryGetDocument"
+        },
+        {
+            "operation_id": "downloadDocumentNested",
+            "method": "GET",
+            "path": "/api/{documentable_type}/{documentable_id}/documents/{id}/download",
+            "tool": "modern_treasury_download_document_nested",
+            "class": "ModernTreasuryDownloadDocumentNested"
+        },
+        {
+            "operation_id": "downloadDocument",
+            "method": "GET",
+            "path": "/api/documents/{id}/download",
+            "tool": "modern_treasury_download_document",
+            "class": "ModernTreasuryDownloadDocument"
+        },
+        {
+            "operation_id": "listEvents",
+            "method": "GET",
+            "path": "/api/events",
+            "tool": "modern_treasury_list_events",
+            "class": "ModernTreasuryListEvents"
+        },
+        {
+            "operation_id": "getEvent",
+            "method": "GET",
+            "path": "/api/events/{id}",
+            "tool": "modern_treasury_get_event",
+            "class": "ModernTreasuryGetEvent"
+        },
+        {
+            "operation_id": "listExpectedPayments",
+            "method": "GET",
+            "path": "/api/expected_payments",
+            "tool": "modern_treasury_list_expected_payments",
+            "class": "ModernTreasuryListExpectedPayments"
+        },
+        {
+            "operation_id": "createExpectedPayment",
+            "method": "POST",
+            "path": "/api/expected_payments",
+            "tool": "modern_treasury_create_expected_payment",
+            "class": "ModernTreasuryCreateExpectedPayment"
+        },
+        {
+            "operation_id": "getExpectedPayment",
+            "method": "GET",
+            "path": "/api/expected_payments/{id}",
+            "tool": "modern_treasury_get_expected_payment",
+            "class": "ModernTreasuryGetExpectedPayment"
+        },
+        {
+            "operation_id": "updateExpectedPayment",
+            "method": "PATCH",
+            "path": "/api/expected_payments/{id}",
+            "tool": "modern_treasury_update_expected_payment",
+            "class": "ModernTreasuryUpdateExpectedPayment"
+        },
+        {
+            "operation_id": "deleteExpectedPayment",
+            "method": "DELETE",
+            "path": "/api/expected_payments/{id}",
+            "tool": "modern_treasury_delete_expected_payment",
+            "class": "ModernTreasuryDeleteExpectedPayment"
+        },
+        {
+            "operation_id": "verifyExternalAccount",
+            "method": "POST",
+            "path": "/api/external_accounts/{id}/verify",
+            "tool": "modern_treasury_verify_external_account",
+            "class": "ModernTreasuryVerifyExternalAccount"
+        },
+        {
+            "operation_id": "completeVerificationExternalAccount",
+            "method": "POST",
+            "path": "/api/external_accounts/{id}/complete_verification",
+            "tool": "modern_treasury_complete_verification_external_account",
+            "class": "ModernTreasuryCompleteVerificationExternalAccount"
+        },
+        {
+            "operation_id": "listExternalAccounts",
+            "method": "GET",
+            "path": "/api/external_accounts",
+            "tool": "modern_treasury_list_external_accounts",
+            "class": "ModernTreasuryListExternalAccounts"
+        },
+        {
+            "operation_id": "createExternalAccount",
+            "method": "POST",
+            "path": "/api/external_accounts",
+            "tool": "modern_treasury_create_external_account",
+            "class": "ModernTreasuryCreateExternalAccount"
+        },
+        {
+            "operation_id": "getExternalAccount",
+            "method": "GET",
+            "path": "/api/external_accounts/{id}",
+            "tool": "modern_treasury_get_external_account",
+            "class": "ModernTreasuryGetExternalAccount"
+        },
+        {
+            "operation_id": "updateExternalAccount",
+            "method": "PATCH",
+            "path": "/api/external_accounts/{id}",
+            "tool": "modern_treasury_update_external_account",
+            "class": "ModernTreasuryUpdateExternalAccount"
+        },
+        {
+            "operation_id": "deleteExternalAccount",
+            "method": "DELETE",
+            "path": "/api/external_accounts/{id}",
+            "tool": "modern_treasury_delete_external_account",
+            "class": "ModernTreasuryDeleteExternalAccount"
+        },
+        {
+            "operation_id": "listQuotes",
+            "method": "GET",
+            "path": "/api/foreign_exchange_quotes",
+            "tool": "modern_treasury_list_quotes",
+            "class": "ModernTreasuryListQuotes"
+        },
+        {
+            "operation_id": "createQuote",
+            "method": "POST",
+            "path": "/api/foreign_exchange_quotes",
+            "tool": "modern_treasury_create_quote",
+            "class": "ModernTreasuryCreateQuote"
+        },
+        {
+            "operation_id": "getQuote",
+            "method": "GET",
+            "path": "/api/foreign_exchange_quotes/{id}",
+            "tool": "modern_treasury_get_quote",
+            "class": "ModernTreasuryGetQuote"
+        },
+        {
+            "operation_id": "listHolds",
+            "method": "GET",
+            "path": "/api/holds",
+            "tool": "modern_treasury_list_holds",
+            "class": "ModernTreasuryListHolds"
+        },
+        {
+            "operation_id": "createHold",
+            "method": "POST",
+            "path": "/api/holds",
+            "tool": "modern_treasury_create_hold",
+            "class": "ModernTreasuryCreateHold"
+        },
+        {
+            "operation_id": "showHold",
+            "method": "GET",
+            "path": "/api/holds/{id}",
+            "tool": "modern_treasury_show_hold",
+            "class": "ModernTreasuryShowHold"
+        },
+        {
+            "operation_id": "updateHold",
+            "method": "PATCH",
+            "path": "/api/holds/{id}",
+            "tool": "modern_treasury_update_hold",
+            "class": "ModernTreasuryUpdateHold"
+        },
+        {
+            "operation_id": "listIncomingPaymentDetails",
+            "method": "GET",
+            "path": "/api/incoming_payment_details",
+            "tool": "modern_treasury_list_incoming_payment_details",
+            "class": "ModernTreasuryListIncomingPaymentDetails"
+        },
+        {
+            "operation_id": "getIncomingPaymentDetail",
+            "method": "GET",
+            "path": "/api/incoming_payment_details/{id}",
+            "tool": "modern_treasury_get_incoming_payment_detail",
+            "class": "ModernTreasuryGetIncomingPaymentDetail"
+        },
+        {
+            "operation_id": "updateIncomingPaymentDetail",
+            "method": "PATCH",
+            "path": "/api/incoming_payment_details/{id}",
+            "tool": "modern_treasury_update_incoming_payment_detail",
+            "class": "ModernTreasuryUpdateIncomingPaymentDetail"
+        },
+        {
+            "operation_id": "listInternalAccounts",
+            "method": "GET",
+            "path": "/api/internal_accounts",
+            "tool": "modern_treasury_list_internal_accounts",
+            "class": "ModernTreasuryListInternalAccounts"
+        },
+        {
+            "operation_id": "createInternalAccount",
+            "method": "POST",
+            "path": "/api/internal_accounts",
+            "tool": "modern_treasury_create_internal_account",
+            "class": "ModernTreasuryCreateInternalAccount"
+        },
+        {
+            "operation_id": "getInternalAccount",
+            "method": "GET",
+            "path": "/api/internal_accounts/{id}",
+            "tool": "modern_treasury_get_internal_account",
+            "class": "ModernTreasuryGetInternalAccount"
+        },
+        {
+            "operation_id": "updateInternalAccount",
+            "method": "PATCH",
+            "path": "/api/internal_accounts/{id}",
+            "tool": "modern_treasury_update_internal_account",
+            "class": "ModernTreasuryUpdateInternalAccount"
+        },
+        {
+            "operation_id": "requestInternalAccountClosure",
+            "method": "POST",
+            "path": "/api/internal_accounts/{id}/request_closure",
+            "tool": "modern_treasury_request_internal_account_closure",
+            "class": "ModernTreasuryRequestInternalAccountClosure"
+        },
+        {
+            "operation_id": "listInvoiceLineItems",
+            "method": "GET",
+            "path": "/api/invoices/{invoice_id}/invoice_line_items",
+            "tool": "modern_treasury_list_invoice_line_items",
+            "class": "ModernTreasuryListInvoiceLineItems"
+        },
+        {
+            "operation_id": "createInvoiceLineItem",
+            "method": "POST",
+            "path": "/api/invoices/{invoice_id}/invoice_line_items",
+            "tool": "modern_treasury_create_invoice_line_item",
+            "class": "ModernTreasuryCreateInvoiceLineItem"
+        },
+        {
+            "operation_id": "getInvoiceLineItem",
+            "method": "GET",
+            "path": "/api/invoices/{invoice_id}/invoice_line_items/{id}",
+            "tool": "modern_treasury_get_invoice_line_item",
+            "class": "ModernTreasuryGetInvoiceLineItem"
+        },
+        {
+            "operation_id": "updateInvoiceLineItem",
+            "method": "PATCH",
+            "path": "/api/invoices/{invoice_id}/invoice_line_items/{id}",
+            "tool": "modern_treasury_update_invoice_line_item",
+            "class": "ModernTreasuryUpdateInvoiceLineItem"
+        },
+        {
+            "operation_id": "deleteInvoiceLineItem",
+            "method": "DELETE",
+            "path": "/api/invoices/{invoice_id}/invoice_line_items/{id}",
+            "tool": "modern_treasury_delete_invoice_line_item",
+            "class": "ModernTreasuryDeleteInvoiceLineItem"
+        },
+        {
+            "operation_id": "listInvoices",
+            "method": "GET",
+            "path": "/api/invoices",
+            "tool": "modern_treasury_list_invoices",
+            "class": "ModernTreasuryListInvoices"
+        },
+        {
+            "operation_id": "createInvoice",
+            "method": "POST",
+            "path": "/api/invoices",
+            "tool": "modern_treasury_create_invoice",
+            "class": "ModernTreasuryCreateInvoice"
+        },
+        {
+            "operation_id": "addPaymentOrderToInvoice",
+            "method": "PUT",
+            "path": "/api/invoices/{id}/payment_orders/{payment_order_id}",
+            "tool": "modern_treasury_add_payment_order_to_invoice",
+            "class": "ModernTreasuryAddPaymentOrderToInvoice"
+        },
+        {
+            "operation_id": "getInvoice",
+            "method": "GET",
+            "path": "/api/invoices/{id}",
+            "tool": "modern_treasury_get_invoice",
+            "class": "ModernTreasuryGetInvoice"
+        },
+        {
+            "operation_id": "updateInvoice",
+            "method": "PATCH",
+            "path": "/api/invoices/{id}",
+            "tool": "modern_treasury_update_invoice",
+            "class": "ModernTreasuryUpdateInvoice"
+        },
+        {
+            "operation_id": "listLineItems",
+            "method": "GET",
+            "path": "/api/{itemizable_type}/{itemizable_id}/line_items",
+            "tool": "modern_treasury_list_line_items",
+            "class": "ModernTreasuryListLineItems"
+        },
+        {
+            "operation_id": "getLineItem",
+            "method": "GET",
+            "path": "/api/{itemizable_type}/{itemizable_id}/line_items/{id}",
+            "tool": "modern_treasury_get_line_item",
+            "class": "ModernTreasuryGetLineItem"
+        },
+        {
+            "operation_id": "updateLineItem",
+            "method": "PATCH",
+            "path": "/api/{itemizable_type}/{itemizable_id}/line_items/{id}",
+            "tool": "modern_treasury_update_line_item",
+            "class": "ModernTreasuryUpdateLineItem"
+        },
+        {
+            "operation_id": "listPaymentActions",
+            "method": "GET",
+            "path": "/api/payment_actions",
+            "tool": "modern_treasury_list_payment_actions",
+            "class": "ModernTreasuryListPaymentActions"
+        },
+        {
+            "operation_id": "createPaymentAction",
+            "method": "POST",
+            "path": "/api/payment_actions",
+            "tool": "modern_treasury_create_payment_action",
+            "class": "ModernTreasuryCreatePaymentAction"
+        },
+        {
+            "operation_id": "getPaymentAction",
+            "method": "GET",
+            "path": "/api/payment_actions/{id}",
+            "tool": "modern_treasury_get_payment_action",
+            "class": "ModernTreasuryGetPaymentAction"
+        },
+        {
+            "operation_id": "updatePaymentAction",
+            "method": "PATCH",
+            "path": "/api/payment_actions/{id}",
+            "tool": "modern_treasury_update_payment_action",
+            "class": "ModernTreasuryUpdatePaymentAction"
+        },
+        {
+            "operation_id": "createAsyncPaymentOrder",
+            "method": "POST",
+            "path": "/api/payment_orders/create_async",
+            "tool": "modern_treasury_create_async_payment_order",
+            "class": "ModernTreasuryCreateAsyncPaymentOrder"
+        },
+        {
+            "operation_id": "listPaymentOrders",
+            "method": "GET",
+            "path": "/api/payment_orders",
+            "tool": "modern_treasury_list_payment_orders",
+            "class": "ModernTreasuryListPaymentOrders"
+        },
+        {
+            "operation_id": "createPaymentOrder",
+            "method": "POST",
+            "path": "/api/payment_orders",
+            "tool": "modern_treasury_create_payment_order",
+            "class": "ModernTreasuryCreatePaymentOrder"
+        },
+        {
+            "operation_id": "getPaymentOrder",
+            "method": "GET",
+            "path": "/api/payment_orders/{id}",
+            "tool": "modern_treasury_get_payment_order",
+            "class": "ModernTreasuryGetPaymentOrder"
+        },
+        {
+            "operation_id": "updatePaymentOrder",
+            "method": "PATCH",
+            "path": "/api/payment_orders/{id}",
+            "tool": "modern_treasury_update_payment_order",
+            "class": "ModernTreasuryUpdatePaymentOrder"
+        },
+        {
+            "operation_id": "listPaymentReferences",
+            "method": "GET",
+            "path": "/api/payment_references",
+            "tool": "modern_treasury_list_payment_references",
+            "class": "ModernTreasuryListPaymentReferences"
+        },
+        {
+            "operation_id": "getPaymentReference",
+            "method": "GET",
+            "path": "/api/payment_references/{id}",
+            "tool": "modern_treasury_get_payment_reference",
+            "class": "ModernTreasuryGetPaymentReference"
+        },
+        {
+            "operation_id": "pingAPI",
+            "method": "GET",
+            "path": "/api/ping",
+            "tool": "modern_treasury_ping_api",
+            "class": "ModernTreasuryPingAPI"
+        },
+        {
+            "operation_id": "listReturns",
+            "method": "GET",
+            "path": "/api/returns",
+            "tool": "modern_treasury_list_returns",
+            "class": "ModernTreasuryListReturns"
+        },
+        {
+            "operation_id": "createReturn",
+            "method": "POST",
+            "path": "/api/returns",
+            "tool": "modern_treasury_create_return",
+            "class": "ModernTreasuryCreateReturn"
+        },
+        {
+            "operation_id": "getReturn",
+            "method": "GET",
+            "path": "/api/returns/{id}",
+            "tool": "modern_treasury_get_return",
+            "class": "ModernTreasuryGetReturn"
+        },
+        {
+            "operation_id": "listReversals",
+            "method": "GET",
+            "path": "/api/payment_orders/{payment_order_id}/reversals",
+            "tool": "modern_treasury_list_reversals",
+            "class": "ModernTreasuryListReversals"
+        },
+        {
+            "operation_id": "createReversal",
+            "method": "POST",
+            "path": "/api/payment_orders/{payment_order_id}/reversals",
+            "tool": "modern_treasury_create_reversal",
+            "class": "ModernTreasuryCreateReversal"
+        },
+        {
+            "operation_id": "getReversal",
+            "method": "GET",
+            "path": "/api/payment_orders/{payment_order_id}/reversals/{reversal_id}",
+            "tool": "modern_treasury_get_reversal",
+            "class": "ModernTreasuryGetReversal"
+        },
+        {
+            "operation_id": "listRoutingDetails",
+            "method": "GET",
+            "path": "/api/{accounts_type}/{account_id}/routing_details",
+            "tool": "modern_treasury_list_routing_details",
+            "class": "ModernTreasuryListRoutingDetails"
+        },
+        {
+            "operation_id": "createRoutingDetail",
+            "method": "POST",
+            "path": "/api/{accounts_type}/{account_id}/routing_details",
+            "tool": "modern_treasury_create_routing_detail",
+            "class": "ModernTreasuryCreateRoutingDetail"
+        },
+        {
+            "operation_id": "getRoutingDetail",
+            "method": "GET",
+            "path": "/api/{accounts_type}/{account_id}/routing_details/{id}",
+            "tool": "modern_treasury_get_routing_detail",
+            "class": "ModernTreasuryGetRoutingDetail"
+        },
+        {
+            "operation_id": "deleteRoutingDetail",
+            "method": "DELETE",
+            "path": "/api/{accounts_type}/{account_id}/routing_details/{id}",
+            "tool": "modern_treasury_delete_routing_detail",
+            "class": "ModernTreasuryDeleteRoutingDetail"
+        },
+        {
+            "operation_id": "createAsyncIncomingPaymentDetail",
+            "method": "POST",
+            "path": "/api/simulations/incoming_payment_details/create_async",
+            "tool": "modern_treasury_create_async_incoming_payment_detail",
+            "class": "ModernTreasuryCreateAsyncIncomingPaymentDetail"
+        },
+        {
+            "operation_id": "updateLegalEntityStatus",
+            "method": "PATCH",
+            "path": "/api/simulations/legal_entities/{id}/update_status",
+            "tool": "modern_treasury_update_legal_entity_status",
+            "class": "ModernTreasuryUpdateLegalEntityStatus"
+        },
+        {
+            "operation_id": "listTransactionLineItemsNested",
+            "method": "GET",
+            "path": "/api/transactions/{transaction_id}/line_items",
+            "tool": "modern_treasury_list_transaction_line_items_nested",
+            "class": "ModernTreasuryListTransactionLineItemsNested"
+        },
+        {
+            "operation_id": "listTransactionLineItems",
+            "method": "GET",
+            "path": "/api/transaction_line_items",
+            "tool": "modern_treasury_list_transaction_line_items",
+            "class": "ModernTreasuryListTransactionLineItems"
+        },
+        {
+            "operation_id": "createTransactionLineItem",
+            "method": "POST",
+            "path": "/api/transaction_line_items",
+            "tool": "modern_treasury_create_transaction_line_item",
+            "class": "ModernTreasuryCreateTransactionLineItem"
+        },
+        {
+            "operation_id": "listTransactionLineItem",
+            "method": "GET",
+            "path": "/api/transaction_line_items/{id}",
+            "tool": "modern_treasury_list_transaction_line_item",
+            "class": "ModernTreasuryListTransactionLineItem"
+        },
+        {
+            "operation_id": "deleteTransactionLineItem",
+            "method": "DELETE",
+            "path": "/api/transaction_line_items/{id}",
+            "tool": "modern_treasury_delete_transaction_line_item",
+            "class": "ModernTreasuryDeleteTransactionLineItem"
+        },
+        {
+            "operation_id": "listTransactions",
+            "method": "GET",
+            "path": "/api/transactions",
+            "tool": "modern_treasury_list_transactions",
+            "class": "ModernTreasuryListTransactions"
+        },
+        {
+            "operation_id": "createTransaction",
+            "method": "POST",
+            "path": "/api/transactions",
+            "tool": "modern_treasury_create_transaction",
+            "class": "ModernTreasuryCreateTransaction"
+        },
+        {
+            "operation_id": "getTransaction",
+            "method": "GET",
+            "path": "/api/transactions/{id}",
+            "tool": "modern_treasury_get_transaction",
+            "class": "ModernTreasuryGetTransaction"
+        },
+        {
+            "operation_id": "updateTransaction",
+            "method": "PATCH",
+            "path": "/api/transactions/{id}",
+            "tool": "modern_treasury_update_transaction",
+            "class": "ModernTreasuryUpdateTransaction"
+        },
+        {
+            "operation_id": "deleteTransaction",
+            "method": "DELETE",
+            "path": "/api/transactions/{id}",
+            "tool": "modern_treasury_delete_transaction",
+            "class": "ModernTreasuryDeleteTransaction"
+        },
+        {
+            "operation_id": "validateRoutingNumber",
+            "method": "GET",
+            "path": "/api/validations/routing_numbers",
+            "tool": "modern_treasury_validate_routing_number",
+            "class": "ModernTreasuryValidateRoutingNumber"
+        },
+        {
+            "operation_id": "listVirtualAccounts",
+            "method": "GET",
+            "path": "/api/virtual_accounts",
+            "tool": "modern_treasury_list_virtual_accounts",
+            "class": "ModernTreasuryListVirtualAccounts"
+        },
+        {
+            "operation_id": "createVirtualAccount",
+            "method": "POST",
+            "path": "/api/virtual_accounts",
+            "tool": "modern_treasury_create_virtual_account",
+            "class": "ModernTreasuryCreateVirtualAccount"
+        },
+        {
+            "operation_id": "getVirtualAccount",
+            "method": "GET",
+            "path": "/api/virtual_accounts/{id}",
+            "tool": "modern_treasury_get_virtual_account",
+            "class": "ModernTreasuryGetVirtualAccount"
+        },
+        {
+            "operation_id": "updateVirtualAccount",
+            "method": "PATCH",
+            "path": "/api/virtual_accounts/{id}",
+            "tool": "modern_treasury_update_virtual_account",
+            "class": "ModernTreasuryUpdateVirtualAccount"
+        },
+        {
+            "operation_id": "deleteVirtualAccount",
+            "method": "DELETE",
+            "path": "/api/virtual_accounts/{id}",
+            "tool": "modern_treasury_delete_virtual_account",
+            "class": "ModernTreasuryDeleteVirtualAccount"
+        },
+        {
+            "operation_id": "listAccountCollectionFlows",
+            "method": "GET",
+            "path": "/api/account_collection_flows",
+            "tool": "modern_treasury_list_account_collection_flows",
+            "class": "ModernTreasuryListAccountCollectionFlows"
+        },
+        {
+            "operation_id": "createAccountCollectionFlow",
+            "method": "POST",
+            "path": "/api/account_collection_flows",
+            "tool": "modern_treasury_create_account_collection_flow",
+            "class": "ModernTreasuryCreateAccountCollectionFlow"
+        },
+        {
+            "operation_id": "getAccountCollectionFlow",
+            "method": "GET",
+            "path": "/api/account_collection_flows/{id}",
+            "tool": "modern_treasury_get_account_collection_flow",
+            "class": "ModernTreasuryGetAccountCollectionFlow"
+        },
+        {
+            "operation_id": "updateAccountCollectionFlow",
+            "method": "PATCH",
+            "path": "/api/account_collection_flows/{id}",
+            "tool": "modern_treasury_update_account_collection_flow",
+            "class": "ModernTreasuryUpdateAccountCollectionFlow"
+        },
+        {
+            "operation_id": "listPaymentFlows",
+            "method": "GET",
+            "path": "/api/payment_flows",
+            "tool": "modern_treasury_list_payment_flows",
+            "class": "ModernTreasuryListPaymentFlows"
+        },
+        {
+            "operation_id": "createPaymentFlow",
+            "method": "POST",
+            "path": "/api/payment_flows",
+            "tool": "modern_treasury_create_payment_flow",
+            "class": "ModernTreasuryCreatePaymentFlow"
+        },
+        {
+            "operation_id": "getPaymentFlow",
+            "method": "GET",
+            "path": "/api/payment_flows/{id}",
+            "tool": "modern_treasury_get_payment_flow",
+            "class": "ModernTreasuryGetPaymentFlow"
+        },
+        {
+            "operation_id": "updatePaymentFlow",
+            "method": "PATCH",
+            "path": "/api/payment_flows/{id}",
+            "tool": "modern_treasury_update_payment_flow",
+            "class": "ModernTreasuryUpdatePaymentFlow"
+        }
+    ]
+}

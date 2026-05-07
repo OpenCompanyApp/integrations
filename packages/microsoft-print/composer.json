@@ -1,0 +1,35 @@
+{
+    "name": "opencompanyapp/integration-microsoft-print",
+    "description": "Microsoft Universal Print integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftPrint\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftPrint\\MicrosoftPrintServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "universal-print",
+        "print",
+        "printers",
+        "printer-shares",
+        "print-jobs",
+        "graph",
+        "opencompany"
+    ]
+}

@@ -1,212 +1,132 @@
-# Microsoft OneDrive — Lua API Reference
+# Microsoft OneDrive Lua API Reference
 
-## list_files
+Namespace: `app.integrations["one-drive"]`
 
-List files and folders in the root of the user's OneDrive.
+This integration wraps Microsoft OneDrive through Microsoft Graph v1.0. Use it to inspect the signed-in user's drive, manage DriveItems, upload and download content, create sharing links, list permissions, track changes, and call relative Graph paths when a named tool does not exist.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `top` | integer | no | Maximum number of items to return (default: 100, max: 999) |
-| `skip_token` | string | no | Pagination token from a previous response |
-
-### Response
-
-Returns an object with `items`, `count`, and optionally `next_link` and `has_more`.
-
-Each item contains:
-- `id` — Drive item ID (use with get_file / download_file)
-- `name` — File or folder name
-- `type` — `"file"` or `"folder"`
-- `size` — Size in bytes
-- `created_at` — ISO 8601 creation date
-- `modified_at` — ISO 8601 last modified date
-- `web_url` — URL to view in browser
-- `mime_type` — MIME type (files only)
-
-### Examples
+## Drive And Items
 
 ```lua
--- List all files in root
-local result = app.integrations.one_drive.list_files({})
+local drive = app.integrations["one-drive"].onedrive_get_drive({})
 
-for _, item in ipairs(result.items) do
-  print(item.name .. " (" .. item.type .. ", " .. item.size .. " bytes)")
-end
+local root = app.integrations["one-drive"].onedrive_list_files({
+  top = 50
+})
 
--- Paginate through results
-local result = app.integrations.one_drive.list_files({ top = 50 })
+local children = app.integrations["one-drive"].onedrive_list_children({
+  parent_id = "01ABCDEFOLDERID",
+  top = 25
+})
 
-if result.has_more then
-  -- Extract skip token from next_link and fetch more
-  local next = app.integrations.one_drive.list_files({
-    top = 50,
-    skip_token = "extracted_token"
-  })
-end
+local item = app.integrations["one-drive"].onedrive_get_file({
+  id = "01ABCDEITEMID"
+})
 ```
 
----
+`list_files` is a root-folder convenience wrapper. `list_children` can list root children when `parent_id` is omitted, or children of a specific folder item when `parent_id` is provided.
 
-## get_file
-
-Get detailed metadata for a specific file or folder.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The unique drive item ID |
-
-### Response
-
-Returns detailed item metadata including download URL, parent reference, file hashes, and folder child count.
-
-### Examples
+## Create, Update, Copy, Delete
 
 ```lua
-local result = app.integrations.one_drive.get_file({ id = "01ABCD1234..." })
+local folder = app.integrations["one-drive"].onedrive_create_folder({
+  name = "Reports",
+  conflict_behavior = "rename"
+})
 
-print("Name: " .. result.name)
-print("Size: " .. result.size .. " bytes")
-print("Type: " .. result.mime_type)
-print("Download URL: " .. (result.download_url or "none"))
+local renamed = app.integrations["one-drive"].onedrive_update_item({
+  id = "01ABCDEITEMID",
+  name = "Q4 report.xlsx"
+})
+
+local copy = app.integrations["one-drive"].onedrive_copy_item({
+  id = "01ABCDEITEMID",
+  name = "Q4 report copy.xlsx"
+})
+
+local deleted = app.integrations["one-drive"].onedrive_delete_item({
+  id = "01ABCDEITEMID"
+})
 ```
 
----
+`update_item` also accepts `parent_reference` for Graph move operations and `payload` for official DriveItem update fields. `copy_item` is asynchronous; Microsoft Graph usually returns a monitor URL.
 
-## upload_file
-
-Upload a file to OneDrive. Creates or replaces the file at the specified path.
-
-> Supports files up to 4 MB via the simple upload API.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `path` | string | yes | Destination path relative to root (e.g., `"Documents/report.txt"`) |
-| `content` | string | yes | The file content to upload |
-| `content_type` | string | no | MIME type (default: `"application/octet-stream"`) |
-
-### Examples
+## Upload And Download
 
 ```lua
--- Upload a text file
-local result = app.integrations.one_drive.upload_file({
-  path = "Documents/hello.txt",
-  content = "Hello from the AI agent!",
+local uploaded = app.integrations["one-drive"].onedrive_upload_file({
+  path = "Reports/summary.txt",
+  content = "Quarterly summary",
   content_type = "text/plain"
 })
 
-print("Uploaded: " .. result.name .. " (" .. result.size .. " bytes)")
-
--- Upload JSON data
-local result = app.integrations.one_drive.upload_file({
-  path = "Data/output.json",
-  content = '{"status": "ok", "count": 42}',
-  content_type = "application/json"
+local file = app.integrations["one-drive"].onedrive_download_file({
+  id = uploaded.id
 })
 ```
 
----
+Simple upload is intended for small files. For large upload sessions, use the generic API tools with the documented Graph upload-session endpoint.
 
-## download_file
-
-Download a file's content by its drive item ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The unique drive item ID |
-
-### Response
-
-Returns an object with:
-- `content` — The raw file content as a string
-- `size` — Content length in bytes
-- `item_id` — The requested item ID
-
-### Examples
+## Search, Delta, Thumbnails
 
 ```lua
-local result = app.integrations.one_drive.download_file({ id = "01ABCD1234..." })
+local matches = app.integrations["one-drive"].onedrive_search({
+  query = "quarterly report"
+})
 
-print("Downloaded " .. result.size .. " bytes")
-print("Content: " .. result.content)
+local changes = app.integrations["one-drive"].onedrive_delta({})
+
+local thumbs = app.integrations["one-drive"].onedrive_list_thumbnails({
+  id = "01ABCDEITEMID"
+})
 ```
 
----
+Delta responses may include `@odata.nextLink` or `@odata.deltaLink`. Continue by calling the relative path from those links with `api_get`.
 
-## list_shared
-
-List files and folders shared with the current user.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `top` | integer | no | Maximum number of items to return (default: 100, max: 999) |
-| `skip_token` | string | no | Pagination token from a previous response |
-
-### Examples
+## Sharing And Permissions
 
 ```lua
-local result = app.integrations.one_drive.list_shared({})
+local link = app.integrations["one-drive"].onedrive_create_sharing_link({
+  id = "01ABCDEITEMID",
+  type = "view",
+  scope = "organization"
+})
 
-for _, item in ipairs(result.items) do
-  print("Shared: " .. item.name .. " (" .. item.type .. ")")
-end
+local permissions = app.integrations["one-drive"].onedrive_list_permissions({
+  id = "01ABCDEITEMID"
+})
+
+app.integrations["one-drive"].onedrive_delete_permission({
+  item_id = "01ABCDEITEMID",
+  permission_id = "perm-id"
+})
 ```
 
----
+Sharing capabilities depend on tenant policy and token scopes. Prefer organization-scoped links unless anonymous links are explicitly allowed.
 
-## get_current_user
+## Generic Graph API Tools
 
-Get the profile of the currently authenticated Microsoft user.
-
-### Parameters
-
-None.
-
-### Response
-
-Returns user profile information:
-- `id` — Microsoft user ID
-- `display_name` — Full name
-- `email` — Email address
-- `job_title` — Job title
-- `office_location` — Office location
-- `phone` — Business phone number
-
-### Examples
+Use `api_get`, `api_post`, `api_patch`, and `api_delete` for documented Microsoft Graph paths that are not wrapped yet. Absolute URLs are rejected; pass paths such as `/me/drive/root/delta`, not full URLs.
 
 ```lua
-local result = app.integrations.one_drive.get_current_user({})
+local raw = app.integrations["one-drive"].onedrive_api_get({
+  path = "/me/drive/recent"
+})
 
-print("User: " .. result.display_name)
-print("Email: " .. result.email)
-print("Title: " .. (result.job_title or "N/A"))
+local created = app.integrations["one-drive"].onedrive_api_post({
+  path = "/me/drive/root/children",
+  payload = {
+    name = "Archive",
+    folder = {}
+  }
+})
 ```
 
----
+## Account
 
-## Multi-Account Usage
-
-If you have multiple OneDrive accounts configured, use account-specific namespaces:
+`get_current_user` returns the signed-in Microsoft Graph user profile. Multi-account namespaces expose the same tools:
 
 ```lua
--- Default account (always works)
-app.integrations.one_drive.list_files({})
-
--- Explicit default (portable across setups)
-app.integrations.one_drive.default.list_files({})
-
--- Named accounts
-app.integrations.one_drive.work.list_files({})
-app.integrations.one_drive.personal.list_files({})
+app.integrations["one-drive"].onedrive_list_files({})
+app.integrations["one-drive"].default.onedrive_list_files({})
+app.integrations["one-drive"].work.onedrive_list_files({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a DigitalOcean DNS domain by name.
+ */
 class DigitalOceanGetDomain implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -29,6 +35,11 @@ class DigitalOceanGetDomain implements Tool
         ];
     }
 
+    /**
+     * Fetch a domain by its fully qualified domain name.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (name).
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -73,16 +73,6 @@ class PowerBIService
     }
 
     /**
-     * Get the current authenticated user's profile.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/users/me');
-    }
-
-    /**
      * Make an API request and return parsed JSON.
      *
      * @return array<string, mixed>

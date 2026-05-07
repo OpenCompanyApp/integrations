@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Mollie integration with Laravel's service container.
+ *
+ * Binds MollieService using host credentials and registers the tool provider
+ * with the shared ToolProviderRegistry during boot.
+ */
 class MollieServiceProvider extends ServiceProvider
 {
     /**

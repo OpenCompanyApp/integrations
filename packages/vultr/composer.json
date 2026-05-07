@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-vultr",
-    "description": "Vultr integration for Laravel — manage instances, plans, regions, snapshots, and SSH keys.",
+    "description": "Vultr integration for Laravel - full generated coverage of the official Vultr REST API.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,16 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "vultr", "cloud", "instances", "opencompany"],
+    "keywords": [
+        "tools",
+        "vultr",
+        "cloud",
+        "compute",
+        "kubernetes",
+        "databases",
+        "networking",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

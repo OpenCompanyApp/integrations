@@ -110,7 +110,7 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'IT service management platform — manage incidents, tasks, and users.',
             'icon' => 'ph:cloud-lightning',
             'logo' => 'simple-icons:servicenow',
-            'category' => 'itsm',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.servicenow.com/dev.do#!/reference/api/now/rest',
         ];

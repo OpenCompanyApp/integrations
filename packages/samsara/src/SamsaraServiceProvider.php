@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Samsara integration with Laravel's service container.
+ */
 class SamsaraServiceProvider extends ServiceProvider
 {
     /**
@@ -18,7 +21,7 @@ class SamsaraServiceProvider extends ServiceProvider
 
             return new SamsaraService(
                 accessToken: $creds->get('samsara', 'access_token', ''),
-                baseUrl: $creds->get('samsara', 'url', 'https://api.samsara.com/v2'),
+                baseUrl: $creds->get('samsara', 'url', 'https://api.samsara.com'),
             );
         });
     }

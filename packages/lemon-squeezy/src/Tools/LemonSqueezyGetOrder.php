@@ -6,8 +6,16 @@ use OpenCompany\Integrations\LemonSqueezy\LemonSqueezyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a Lemon Squeezy order by ID.
+ *
+ * Returns the normalized JSON:API order payload from the Lemon Squeezy API.
+ */
 class LemonSqueezyGetOrder implements Tool
 {
+    /**
+     * @param  LemonSqueezyService  $service  The Lemon Squeezy API client
+     */
     public function __construct(
         private LemonSqueezyService $service,
     ) {}
@@ -29,6 +37,11 @@ class LemonSqueezyGetOrder implements Tool
         ];
     }
 
+    /**
+     * Get one Lemon Squeezy order.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id)
+     */
     public function execute(array $args): ToolResult
     {
         try {

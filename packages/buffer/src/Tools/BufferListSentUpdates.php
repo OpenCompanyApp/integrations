@@ -34,6 +34,9 @@ class BufferListSentUpdates implements Tool
             'profileId' => ['type' => 'string', 'required' => true, 'description' => 'The social profile ID to list sent updates for.'],
             'count' => ['type' => 'integer', 'description' => 'Number of updates to return per page.'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination.'],
+            'since' => ['type' => 'integer', 'description' => 'Only return updates sent after this Unix timestamp.'],
+            'utc' => ['type' => 'boolean', 'description' => 'Return times relative to UTC.'],
+            'filter' => ['type' => 'string', 'description' => 'Sent update filter, such as all or default.'],
         ];
     }
 
@@ -48,6 +51,9 @@ class BufferListSentUpdates implements Tool
                 profileId: $args['profileId'],
                 count: isset($args['count']) ? (int) $args['count'] : null,
                 page: isset($args['page']) ? (int) $args['page'] : null,
+                since: isset($args['since']) ? (int) $args['since'] : null,
+                utc: isset($args['utc']) ? (bool) $args['utc'] : null,
+                filter: $args['filter'] ?? null,
             );
 
             return ToolResult::success($result);

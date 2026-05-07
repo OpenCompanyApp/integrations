@@ -2,57 +2,28 @@
 
 namespace OpenCompany\Integrations\Airtable\Tools;
 
-use OpenCompany\Integrations\Airtable\AirtableService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get the currently authenticated Airtable user profile.
- *
- * Returns information about the authenticated user, useful for verifying
- * credentials and displaying account details.
+ * Get the currently authenticated Airtable user.
  */
-class AirtableGetCurrentUser implements Tool
+class AirtableGetCurrentUser extends AbstractAirtableTool
 {
-    /**
-     * @param  AirtableService  $service  The Airtable API client
-     */
-    public function __construct(
-        private AirtableService $service,
-    ) {}
+    protected array $parameters = array (
+);
 
-    public function name(): string
-    {
-        return 'airtable_get_current_user';
-    }
+    protected array $required = array (
+);
 
-    public function description(): string
-    {
-        return 'Get the profile of the currently authenticated Airtable user. Useful for verifying credentials and displaying account information.';
-    }
+    protected array $queryParams = array (
+);
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected array $bodyParams = array (
+);
 
-    /**
-     * Get the current authenticated user.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Airtable integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $result = $this->service->getCurrentUser();
+    protected string $path = '/whoami';
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolName = 'airtable_get_current_user';
+
+    protected string $toolDescription = 'Get the currently authenticated Airtable user.';
 }

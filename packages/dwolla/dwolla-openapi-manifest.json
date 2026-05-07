@@ -1,0 +1,1001 @@
+{
+  "source": {
+    "type": "openapi",
+    "url": "https://raw.githubusercontent.com/Dwolla/dwolla-openapi/main/openapi.yml",
+    "docs_url": "https://developers.dwolla.com/docs/sdks-tools",
+    "repo": "https://github.com/Dwolla/dwolla-openapi"
+  },
+  "openapi": "3.1.0",
+  "version": "2.0",
+  "title": "Dwolla API",
+  "base_url": "https://api.dwolla.com",
+  "sandbox_base_url": "https://api-sandbox.dwolla.com",
+  "path_count": 59,
+  "method_count": 82,
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/token",
+      "operation_id": "createApplicationAccessToken",
+      "tool": "dwolla_create_application_access_token",
+      "class": "DwollaCreateApplicationAccessToken",
+      "tags": [
+        "tokens"
+      ],
+      "content_type": "application/x-www-form-urlencoded",
+      "auth": "basic"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "operation_id": "getRoot",
+      "tool": "dwolla_get_root",
+      "class": "DwollaGetRoot",
+      "tags": [
+        "root"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/{id}",
+      "operation_id": "getAccount",
+      "tool": "dwolla_get_account",
+      "class": "DwollaGetAccount",
+      "tags": [
+        "accounts"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/funding-sources",
+      "operation_id": "createFundingSource",
+      "tool": "dwolla_create_funding_source",
+      "class": "DwollaCreateFundingSource",
+      "tags": [
+        "accounts"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/{id}/funding-sources",
+      "operation_id": "listFundingSources",
+      "tool": "dwolla_list_funding_sources",
+      "class": "DwollaListFundingSources",
+      "tags": [
+        "accounts"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/{id}/transfers",
+      "operation_id": "listAndSearchTransfers",
+      "tool": "dwolla_list_and_search_transfers",
+      "class": "DwollaListAndSearchTransfers",
+      "tags": [
+        "accounts"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/{id}/mass-payments",
+      "operation_id": "listMassPayments",
+      "tool": "dwolla_list_mass_payments",
+      "class": "DwollaListMassPayments",
+      "tags": [
+        "accounts"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers",
+      "operation_id": "listAndSearchCustomers",
+      "tool": "dwolla_list_and_search_customers",
+      "class": "DwollaListAndSearchCustomers",
+      "tags": [
+        "customers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers",
+      "operation_id": "createCustomer",
+      "tool": "dwolla_create_customer",
+      "class": "DwollaCreateCustomer",
+      "tags": [
+        "customers"
+      ],
+      "content_type": "application/vnd.dwolla.v1.hal+json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}",
+      "operation_id": "getCustomer",
+      "tool": "dwolla_get_customer",
+      "class": "DwollaGetCustomer",
+      "tags": [
+        "customers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}",
+      "operation_id": "update",
+      "tool": "dwolla_update",
+      "class": "DwollaUpdate",
+      "tags": [
+        "customers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/business-classifications",
+      "operation_id": "listBusinessClassifications",
+      "tool": "dwolla_list_business_classifications",
+      "class": "DwollaListBusinessClassifications",
+      "tags": [
+        "customers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/business-classifications/{id}",
+      "operation_id": "retrieveBusinessClassification",
+      "tool": "dwolla_retrieve_business_classification",
+      "class": "DwollaRetrieveBusinessClassification",
+      "tags": [
+        "customers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/beneficial-owners",
+      "operation_id": "listBeneficialOwnersForCustomer",
+      "tool": "dwolla_list_beneficial_owners_for_customer",
+      "class": "DwollaListBeneficialOwnersForCustomer",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/beneficial-owners",
+      "operation_id": "createBeneficialOwnerForCustomer",
+      "tool": "dwolla_create_beneficial_owner_for_customer",
+      "class": "DwollaCreateBeneficialOwnerForCustomer",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/beneficial-owners/{id}",
+      "operation_id": "retrieveBeneficialOwner",
+      "tool": "dwolla_retrieve_beneficial_owner",
+      "class": "DwollaRetrieveBeneficialOwner",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/beneficial-owners/{id}",
+      "operation_id": "updateBeneficialOwner",
+      "tool": "dwolla_update_beneficial_owner",
+      "class": "DwollaUpdateBeneficialOwner",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "DELETE",
+      "path": "/beneficial-owners/{id}",
+      "operation_id": "deleteBeneficialOwner",
+      "tool": "dwolla_delete_beneficial_owner",
+      "class": "DwollaDeleteBeneficialOwner",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/beneficial-ownership",
+      "operation_id": "getBeneficialOwnershipStatusForCustomer",
+      "tool": "dwolla_get_beneficial_ownership_status_for_customer",
+      "class": "DwollaGetBeneficialOwnershipStatusForCustomer",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/beneficial-ownership",
+      "operation_id": "certifyBeneficialOwnershipForCustomer",
+      "tool": "dwolla_certify_beneficial_ownership_for_customer",
+      "class": "DwollaCertifyBeneficialOwnershipForCustomer",
+      "tags": [
+        "beneficial owners"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/documents",
+      "operation_id": "listCustomerDocuments",
+      "tool": "dwolla_list_customer_documents",
+      "class": "DwollaListCustomerDocuments",
+      "tags": [
+        "documents"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/documents",
+      "operation_id": "createCustomerDocument",
+      "tool": "dwolla_create_customer_document",
+      "class": "DwollaCreateCustomerDocument",
+      "tags": [
+        "documents"
+      ],
+      "content_type": "multipart/form-data",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/beneficial-owners/{id}/documents",
+      "operation_id": "listBeneficialOwnerDocuments",
+      "tool": "dwolla_list_beneficial_owner_documents",
+      "class": "DwollaListBeneficialOwnerDocuments",
+      "tags": [
+        "documents"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/beneficial-owners/{id}/documents",
+      "operation_id": "createBeneficialOwnerDocument",
+      "tool": "dwolla_create_beneficial_owner_document",
+      "class": "DwollaCreateBeneficialOwnerDocument",
+      "tags": [
+        "documents"
+      ],
+      "content_type": "multipart/form-data",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/{id}",
+      "operation_id": "retrieveDocument",
+      "tool": "dwolla_retrieve_document",
+      "class": "DwollaRetrieveDocument",
+      "tags": [
+        "documents"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/kba",
+      "operation_id": "initiateKbaForCustomer",
+      "tool": "dwolla_initiate_kba_for_customer",
+      "class": "DwollaInitiateKbaForCustomer",
+      "tags": [
+        "kba"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/kba/{id}",
+      "operation_id": "getKbaQuestions",
+      "tool": "dwolla_get_kba_questions",
+      "class": "DwollaGetKbaQuestions",
+      "tags": [
+        "kba"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/kba/{id}",
+      "operation_id": "verifyKbaQuestions",
+      "tool": "dwolla_verify_kba_questions",
+      "class": "DwollaVerifyKbaQuestions",
+      "tags": [
+        "kba"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/funding-sources",
+      "operation_id": "listCustomerFundingSources",
+      "tool": "dwolla_list_customer_funding_sources",
+      "class": "DwollaListCustomerFundingSources",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/funding-sources",
+      "operation_id": "createCustomerFundingSource",
+      "tool": "dwolla_create_customer_funding_source",
+      "class": "DwollaCreateCustomerFundingSource",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/vnd.dwolla.v1.hal+json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/funding-sources/{id}",
+      "operation_id": "getFundingSource",
+      "tool": "dwolla_get_funding_source",
+      "class": "DwollaGetFundingSource",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/funding-sources/{id}",
+      "operation_id": "updateOrRemoveFundingSource",
+      "tool": "dwolla_update_or_remove_funding_source",
+      "class": "DwollaUpdateOrRemoveFundingSource",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/funding-sources/{id}/micro-deposits",
+      "operation_id": "getMicroDeposits",
+      "tool": "dwolla_get_micro_deposits",
+      "class": "DwollaGetMicroDeposits",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/funding-sources/{id}/micro-deposits",
+      "operation_id": "initiateOrVerifyMicroDeposits",
+      "tool": "dwolla_initiate_or_verify_micro_deposits",
+      "class": "DwollaInitiateOrVerifyMicroDeposits",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/funding-sources/{id}/balance",
+      "operation_id": "getFundingSourceBalance",
+      "tool": "dwolla_get_funding_source_balance",
+      "class": "DwollaGetFundingSourceBalance",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/funding-sources/{id}/ach-routing",
+      "operation_id": "getVanRouting",
+      "tool": "dwolla_get_van_routing",
+      "class": "DwollaGetVanRouting",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/on-demand-authorizations",
+      "operation_id": "createOnDemandTransferAuthorization",
+      "tool": "dwolla_create_on_demand_transfer_authorization",
+      "class": "DwollaCreateOnDemandTransferAuthorization",
+      "tags": [
+        "funding sources"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/transfers",
+      "operation_id": "initiateTransfer",
+      "tool": "dwolla_initiate_transfer",
+      "class": "DwollaInitiateTransfer",
+      "tags": [
+        "transfers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/transfers/{id}",
+      "operation_id": "getTransfer",
+      "tool": "dwolla_get_transfer",
+      "class": "DwollaGetTransfer",
+      "tags": [
+        "transfers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/transfers/{id}",
+      "operation_id": "cancelTransfer",
+      "tool": "dwolla_cancel_transfer",
+      "class": "DwollaCancelTransfer",
+      "tags": [
+        "transfers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/transfers",
+      "operation_id": "listCustomerTransfers",
+      "tool": "dwolla_list_customer_transfers",
+      "class": "DwollaListCustomerTransfers",
+      "tags": [
+        "transfers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/transfers/{id}/fees",
+      "operation_id": "listTransferFees",
+      "tool": "dwolla_list_transfer_fees",
+      "class": "DwollaListTransferFees",
+      "tags": [
+        "transfers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/transfers/{id}/failure",
+      "operation_id": "getTransferFailureReason",
+      "tool": "dwolla_get_transfer_failure_reason",
+      "class": "DwollaGetTransferFailureReason",
+      "tags": [
+        "transfers"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/mass-payments",
+      "operation_id": "initiateMassPayment",
+      "tool": "dwolla_initiate_mass_payment",
+      "class": "DwollaInitiateMassPayment",
+      "tags": [
+        "mass payments"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/mass-payments/{id}",
+      "operation_id": "getMassPayment",
+      "tool": "dwolla_get_mass_payment",
+      "class": "DwollaGetMassPayment",
+      "tags": [
+        "mass payments"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/mass-payments/{id}",
+      "operation_id": "updateMassPayment",
+      "tool": "dwolla_update_mass_payment",
+      "class": "DwollaUpdateMassPayment",
+      "tags": [
+        "mass payments"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/mass-payments/{id}/items",
+      "operation_id": "listMassPaymentItems",
+      "tool": "dwolla_list_mass_payment_items",
+      "class": "DwollaListMassPaymentItems",
+      "tags": [
+        "mass payments"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/mass-payment-items/{itemId}",
+      "operation_id": "getMassPaymentItem",
+      "tool": "dwolla_get_mass_payment_item",
+      "class": "DwollaGetMassPaymentItem",
+      "tags": [
+        "mass payments"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/mass-payments",
+      "operation_id": "listCustomerMassPayments",
+      "tool": "dwolla_list_customer_mass_payments",
+      "class": "DwollaListCustomerMassPayments",
+      "tags": [
+        "mass payments"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/labels/{id}",
+      "operation_id": "getLabel",
+      "tool": "dwolla_get_label",
+      "class": "DwollaGetLabel",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "DELETE",
+      "path": "/labels/{id}",
+      "operation_id": "removeLabel",
+      "tool": "dwolla_remove_label",
+      "class": "DwollaRemoveLabel",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/labels",
+      "operation_id": "listCustomerLabels",
+      "tool": "dwolla_list_customer_labels",
+      "class": "DwollaListCustomerLabels",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/labels",
+      "operation_id": "createCustomerLabel",
+      "tool": "dwolla_create_customer_label",
+      "class": "DwollaCreateCustomerLabel",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/labels/{id}/ledger-entries",
+      "operation_id": "listLabelLedgerEntries",
+      "tool": "dwolla_list_label_ledger_entries",
+      "class": "DwollaListLabelLedgerEntries",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/labels/{id}/ledger-entries",
+      "operation_id": "createLabelLedgerEntry",
+      "tool": "dwolla_create_label_ledger_entry",
+      "class": "DwollaCreateLabelLedgerEntry",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger-entries/{ledgerEntryId}",
+      "operation_id": "getLabelLedgerEntry",
+      "tool": "dwolla_get_label_ledger_entry",
+      "class": "DwollaGetLabelLedgerEntry",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/label-reallocations",
+      "operation_id": "createLabelReallocation",
+      "tool": "dwolla_create_label_reallocation",
+      "class": "DwollaCreateLabelReallocation",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/label-reallocations/{reallocationId}",
+      "operation_id": "retrieveLabelReallocation",
+      "tool": "dwolla_retrieve_label_reallocation",
+      "class": "DwollaRetrieveLabelReallocation",
+      "tags": [
+        "labels"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/events",
+      "operation_id": "listEvents",
+      "tool": "dwolla_list_events",
+      "class": "DwollaListEvents",
+      "tags": [
+        "events"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/events/{id}",
+      "operation_id": "getEvent",
+      "tool": "dwolla_get_event",
+      "class": "DwollaGetEvent",
+      "tags": [
+        "events"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/webhook-subscriptions",
+      "operation_id": "listWebhookSubscriptions",
+      "tool": "dwolla_list_webhook_subscriptions",
+      "class": "DwollaListWebhookSubscriptions",
+      "tags": [
+        "webhook subscriptions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/webhook-subscriptions",
+      "operation_id": "createWebhookSubscription",
+      "tool": "dwolla_create_webhook_subscription",
+      "class": "DwollaCreateWebhookSubscription",
+      "tags": [
+        "webhook subscriptions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/webhook-subscriptions/{id}",
+      "operation_id": "getWebhookSubscription",
+      "tool": "dwolla_get_webhook_subscription",
+      "class": "DwollaGetWebhookSubscription",
+      "tags": [
+        "webhook subscriptions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/webhook-subscriptions/{id}",
+      "operation_id": "updateWebhookSubscription",
+      "tool": "dwolla_update_webhook_subscription",
+      "class": "DwollaUpdateWebhookSubscription",
+      "tags": [
+        "webhook subscriptions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "DELETE",
+      "path": "/webhook-subscriptions/{id}",
+      "operation_id": "delete",
+      "tool": "dwolla_delete",
+      "class": "DwollaDelete",
+      "tags": [
+        "webhook subscriptions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/webhook-subscriptions/{id}/webhooks",
+      "operation_id": "listWebhooks",
+      "tool": "dwolla_list_webhooks",
+      "class": "DwollaListWebhooks",
+      "tags": [
+        "webhook subscriptions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/webhooks/{id}",
+      "operation_id": "getWebhook",
+      "tool": "dwolla_get_webhook",
+      "class": "DwollaGetWebhook",
+      "tags": [
+        "webhooks"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/webhooks/{id}/retries",
+      "operation_id": "listWebhookRetries",
+      "tool": "dwolla_list_webhook_retries",
+      "class": "DwollaListWebhookRetries",
+      "tags": [
+        "webhooks"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/webhooks/{id}/retries",
+      "operation_id": "retryWebhook",
+      "tool": "dwolla_retry_webhook",
+      "class": "DwollaRetryWebhook",
+      "tags": [
+        "webhooks"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/sandbox-simulations",
+      "operation_id": "simulateBankTransferProcessing",
+      "tool": "dwolla_simulate_bank_transfer_processing",
+      "class": "DwollaSimulateBankTransferProcessing",
+      "tags": [
+        "sandbox simulations"
+      ],
+      "content_type": "application/vnd.dwolla.v1.hal+json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/exchange-partners",
+      "operation_id": "listExchangePartners",
+      "tool": "dwolla_list_exchange_partners",
+      "class": "DwollaListExchangePartners",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/exchange-partners/{id}",
+      "operation_id": "getExchangePartner",
+      "tool": "dwolla_get_exchange_partner",
+      "class": "DwollaGetExchangePartner",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/exchanges",
+      "operation_id": "listAccountExchanges",
+      "tool": "dwolla_list_account_exchanges",
+      "class": "DwollaListAccountExchanges",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/exchanges",
+      "operation_id": "createAccountExchange",
+      "tool": "dwolla_create_account_exchange",
+      "class": "DwollaCreateAccountExchange",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/exchanges/{id}",
+      "operation_id": "getExchange",
+      "tool": "dwolla_get_exchange",
+      "class": "DwollaGetExchange",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/exchanges",
+      "operation_id": "listCustomerExchanges",
+      "tool": "dwolla_list_customer_exchanges",
+      "class": "DwollaListCustomerExchanges",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/exchanges",
+      "operation_id": "createCustomerExchange",
+      "tool": "dwolla_create_customer_exchange",
+      "class": "DwollaCreateCustomerExchange",
+      "tags": [
+        "exchanges"
+      ],
+      "content_type": "application/vnd.dwolla.v1.hal+json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/customers/{id}/exchange-sessions",
+      "operation_id": "createCustomerExchangeSession",
+      "tool": "dwolla_create_customer_exchange_session",
+      "class": "DwollaCreateCustomerExchangeSession",
+      "tags": [
+        "exchange sessions"
+      ],
+      "content_type": "application/vnd.dwolla.v1.hal+json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/exchange-sessions/{id}",
+      "operation_id": "retrieveCustomerExchangeSession",
+      "tool": "dwolla_retrieve_customer_exchange_session",
+      "class": "DwollaRetrieveCustomerExchangeSession",
+      "tags": [
+        "exchange sessions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/exchanges/{id}/exchange-sessions",
+      "operation_id": "createReAuthExchangeSession",
+      "tool": "dwolla_create_re_auth_exchange_session",
+      "class": "DwollaCreateReAuthExchangeSession",
+      "tags": [
+        "exchange sessions"
+      ],
+      "content_type": "application/vnd.dwolla.v1.hal+json",
+      "auth": "bearer"
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}/available-exchange-connections",
+      "operation_id": "listAvailableExchangeConnections",
+      "tool": "dwolla_list_available_exchange_connections",
+      "class": "DwollaListAvailableExchangeConnections",
+      "tags": [
+        "exchange sessions"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    },
+    {
+      "method": "POST",
+      "path": "/client-tokens",
+      "operation_id": "createClientToken",
+      "tool": "dwolla_create_client_token",
+      "class": "DwollaCreateClientToken",
+      "tags": [
+        "client tokens"
+      ],
+      "content_type": "application/json",
+      "auth": "bearer"
+    }
+  ]
+}

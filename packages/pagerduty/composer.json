@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-pagerduty",
-    "description": "PagerDuty integration for Laravel — manage incidents, services, and teams.",
+    "description": "PagerDuty integration for Laravel - manage incidents, services, teams, schedules, users, and automation.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "pagerduty", "incidents", "monitoring", "opencompany"],
+    "keywords": [
+        "tools",
+        "pagerduty",
+        "incidents",
+        "monitoring",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

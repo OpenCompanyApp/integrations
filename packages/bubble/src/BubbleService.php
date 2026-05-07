@@ -2,145 +2,200 @@
 
 namespace OpenCompany\Integrations\Bubble;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * Service class for interacting with the Bubble API.
+ * HTTP client for Bubble's built-in Data API and Workflow API.
  *
- * Provides methods to list, get, create, update, and delete records
- * from any Bubble data type via the Bubble Data API.
- *
- * @see https://manual.bubble.io/core-resources/api/data-api
+ * Handles bearer-token authentication, the documented /api/1.1 API root, Data API
+ * record operations, exposed backend workflow calls, initialization calls, and Swagger discovery.
  */
 class BubbleService
 {
     /**
-     * @param  string  $apiKey  Bubble API token (generated in Settings → API).
-     * @param  string  $baseUrl  Full base URL of the Bubble app (e.g. "https://myapp.bubbleapps.io").
+     * @param  string  $apiKey  Bubble API token
+     * @param  string  $baseUrl  Bubble app URL, without /api/1.1
+     * @param  string  $apiPath  Bubble API path, usually /api/1.1 or /version-test/api/1.1
      */
     public function __construct(
         private string $apiKey = '',
         private string $baseUrl = '',
+        private string $apiPath = '/api/1.1',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->apiPath = '/' . trim($this->apiPath ?: '/api/1.1', '/');
+
+        if (str_ends_with($this->baseUrl, '/api/1.1')) {
+            $this->baseUrl = substr($this->baseUrl, 0, -8);
+        }
     }
 
-    /**
-     * Check whether the service is configured with valid credentials.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->baseUrl);
+        return $this->apiKey !== '' && $this->baseUrl !== '';
     }
 
     /**
-     * List records of a given type with optional constraints and pagination.
+     * Get the Bubble app Swagger specification.
      *
-     * @param  string  $type  The Bubble data type name (case-sensitive).
-     * @param  array  $constraints  Array of Bubble constraint objects for filtering.
-     * @param  int  $limit  Maximum number of records to return (1–100, default 100).
-     * @param  int  $cursor  Offset for pagination (0-based).
-     * @return array<string, mixed> The API response containing "response" (list of records) and "remaining" (int).
+     * @return array<string, mixed>
      */
-    public function listRecords(string $type, array $constraints = [], int $limit = 100, int $cursor = 0): array
+    public function getSwagger(): array
     {
-        $body = [];
-        if (!empty($constraints)) {
-            $body['constraints'] = $constraints;
-        }
-        if ($limit !== 100) {
-            $body['limit'] = $limit;
-        }
-        if ($cursor > 0) {
-            $body['cursor'] = $cursor;
-        }
-
-        return $this->request('GET', '/obj/' . urlencode($type), $body);
+        return $this->request('GET', $this->apiPath . '/meta');
     }
 
     /**
-     * Get a single record by its Bubble ID.
+     * List records of a given Bubble type.
      *
-     * @param  string  $type  The Bubble data type name.
-     * @param  string  $id  The unique identifier of the record.
-     * @return array<string, mixed> The record data.
+     * @param  string  $type  Bubble data type name
+     * @param  array<int, array<string, mixed>>  $constraints  Bubble constraint objects
+     * @param  int  $limit  Page size
+     * @param  int  $cursor  Cursor/offset
+     * @param  string|null  $sortField  Sort field
+     * @param  bool|null  $descending  Whether to sort descending
+     * @return array<string, mixed>
+     */
+    public function listRecords(string $type, array $constraints = [], int $limit = 100, int $cursor = 0, ?string $sortField = null, ?bool $descending = null): array
+    {
+        return $this->request('GET', $this->dataPath($type), array_filter([
+            'constraints' => $constraints === [] ? null : json_encode($constraints),
+            'limit' => $limit,
+            'cursor' => $cursor,
+            'sort_field' => $sortField,
+            'descending' => $descending,
+        ], static fn (mixed $value): bool => $value !== null));
+    }
+
+    /**
+     * Get one Bubble record.
+     *
+     * @param  string  $type  Bubble data type name
+     * @param  string  $id  Bubble unique ID
+     * @return array<string, mixed>
      */
     public function getRecord(string $type, string $id): array
     {
-        return $this->request('GET', '/obj/' . urlencode($type) . '/' . urlencode($id));
+        return $this->request('GET', $this->dataPath($type, $id));
     }
 
     /**
-     * Create a new record of the given type.
+     * Create a Bubble record.
      *
-     * @param  string  $type  The Bubble data type name.
-     * @param  array  $fields  Associative array of field names and values for the new record.
-     * @return array<string, mixed> The created record data, including its "id".
+     * @param  string  $type  Bubble data type name
+     * @param  array<string, mixed>  $fields  Field values
+     * @return array<string, mixed>
      */
     public function createRecord(string $type, array $fields): array
     {
-        return $this->request('POST', '/obj/' . urlencode($type), $fields);
+        return $this->request('POST', $this->dataPath($type), $fields);
     }
 
     /**
-     * Update an existing record by its Bubble ID.
+     * Update a Bubble record.
      *
-     * Only the fields provided in $fields will be updated; other fields remain unchanged.
-     *
-     * @param  string  $type  The Bubble data type name.
-     * @param  string  $id  The unique identifier of the record.
-     * @param  array  $fields  Associative array of field names and values to update.
-     * @return array<string, mixed> The updated record data.
+     * @param  string  $type  Bubble data type name
+     * @param  string  $id  Bubble unique ID
+     * @param  array<string, mixed>  $fields  Field values
+     * @return array<string, mixed>
      */
     public function updateRecord(string $type, string $id, array $fields): array
     {
-        return $this->request('PATCH', '/obj/' . urlencode($type) . '/' . urlencode($id), $fields);
+        return $this->request('PATCH', $this->dataPath($type, $id), $fields);
     }
 
     /**
-     * Delete a record by its Bubble ID.
+     * Replace a Bubble record.
      *
-     * @param  string  $type  The Bubble data type name.
-     * @param  string  $id  The unique identifier of the record.
+     * @param  string  $type  Bubble data type name
+     * @param  string  $id  Bubble unique ID
+     * @param  array<string, mixed>  $fields  Full field payload
+     * @return array<string, mixed>
      */
-    public function deleteRecord(string $type, string $id): void
+    public function replaceRecord(string $type, string $id, array $fields): array
     {
-        $this->request('DELETE', '/obj/' . urlencode($type) . '/' . urlencode($id));
+        return $this->request('PUT', $this->dataPath($type, $id), $fields);
+    }
+
+    /**
+     * Delete a Bubble record.
+     *
+     * @param  string  $type  Bubble data type name
+     * @param  string  $id  Bubble unique ID
+     * @return array<string, mixed>
+     */
+    public function deleteRecord(string $type, string $id): array
+    {
+        return $this->request('DELETE', $this->dataPath($type, $id));
+    }
+
+    /**
+     * Trigger an exposed Bubble API workflow using POST.
+     *
+     * @param  string  $workflow  API workflow name
+     * @param  array<string, mixed>  $payload  JSON body
+     * @param  bool  $initialize  Append /initialize for Detect data mode
+     * @return array<string, mixed>
+     */
+    public function triggerWorkflow(string $workflow, array $payload = [], bool $initialize = false): array
+    {
+        $path = $this->workflowPath($workflow) . ($initialize ? '/initialize' : '');
+
+        return $this->request('POST', $path, $payload);
+    }
+
+    /**
+     * Trigger an exposed Bubble API workflow using GET query parameters.
+     *
+     * @param  string  $workflow  API workflow name
+     * @param  array<string, mixed>  $params  Query parameters
+     * @return array<string, mixed>
+     */
+    public function triggerWorkflowGet(string $workflow, array $params = []): array
+    {
+        return $this->request('GET', $this->workflowPath($workflow), $params);
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
-     * @param  string  $path  API endpoint path (e.g. "/obj/User").
-     * @param  array<string, mixed>  $data  Query parameters or JSON body depending on method.
-     * @return array<string, mixed> Parsed JSON response.
+     * @param  string  $method  HTTP method
+     * @param  string  $path  API path
+     * @param  array<string, mixed>  $data  Query parameters or JSON body
+     * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['message' => trim($response->body())];
     }
 
     /**
-     * Make a raw HTTP request to the Bubble API.
+     * Dispatch a raw HTTP request to Bubble.
      *
-     * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Data to send (query params for GET, JSON body for POST/PATCH/DELETE).
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException If the API key or base URL is missing, or the API returns an error.
+     * @param  string  $method  HTTP method
+     * @param  string  $path  API path
+     * @param  array<string, mixed>  $data  Query parameters or JSON body
+     * @return Response
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Bubble API key is not configured.');
-        }
-
-        if (!$this->baseUrl) {
-            throw new \RuntimeException('Bubble app URL is not configured.');
+        if (! $this->isConfigured()) {
+            throw new RuntimeException('Bubble API key and app URL are required.');
         }
 
         $url = $this->baseUrl . $path;
@@ -148,42 +203,76 @@ class BubbleService
         try {
             $http = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
                 'PATCH' => $http->patch($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Bubble API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Bubble API endpoint not available (HTTP {$response->status()}). Check your app URL and data type name.");
-                }
-
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
-                Log::error("Bubble API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Bubble API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            if (! $response->successful()) {
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Bubble API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Bubble API: {$e->getMessage()}");
+
+            throw new RuntimeException("Failed to connect to Bubble API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a Data API path.
+     */
+    private function dataPath(string $type, ?string $id = null): string
+    {
+        $path = $this->apiPath . '/obj/' . rawurlencode($type);
+
+        return $id === null ? $path : $path . '/' . rawurlencode($id);
+    }
+
+    /**
+     * Build a Workflow API path.
+     */
+    private function workflowPath(string $workflow): string
+    {
+        return $this->apiPath . '/wf/' . rawurlencode($workflow);
+    }
+
+    /**
+     * Log and throw a normalized Bubble API error.
+     *
+     * @throws RuntimeException
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type');
+        $body = $response->body();
+
+        if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("Bubble API returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new RuntimeException("Bubble API endpoint not available (HTTP {$response->status()}). Check the app URL, version path, API settings, and data type or workflow name.");
+        }
+
+        $error = $response->json('message') ?? $response->json('error') ?? $body;
+
+        Log::error("Bubble API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new RuntimeException("Bubble API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
     }
 }

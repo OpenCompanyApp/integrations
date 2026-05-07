@@ -4,28 +4,29 @@ namespace OpenCompany\Integrations\Postmark;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkListMessages;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkGetMessage;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkSendEmail;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkListTemplates;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkGetTemplate;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkListServers;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkSendTemplate;
-use OpenCompany\Integrations\Postmark\Tools\PostmarkGetDeliveryStats;
 use OpenCompany\Integrations\Postmark\Tools\PostmarkGetCurrentUser;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkGetDeliveryStats;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkGetMessage;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkGetTemplate;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkListMessages;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkListServers;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkListTemplates;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkSendEmail;
+use OpenCompany\Integrations\Postmark\Tools\PostmarkSendTemplate;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers all Postmark tools and provides integration metadata, configuration schema, and connection testing.
  *
  * Exposes 9 tools covering messages, email sending, templates, delivery stats, and servers
  * via the ToolProvider contract.
  */
-class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
-
-/**
+class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -36,15 +37,16 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
           'auth' => [
             'strategy' => 'api_token',
             'legacy_auth_type' => 'api_token',
-            'credential_mode' => 'secret',
+            'credential_mode' => 'required_secret',
             'setup_flows' =>
             [
               0 => 'manual_secret',
             ],
             'requires_browser_for_setup' => false,
             'refreshable' => false,
-            'token_keys' =>
-            [
+            'token_keys' => [
+              0 => 'server_token',
+              1 => 'account_token',
             ],
             'notes' =>
             [
@@ -98,7 +100,7 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Email delivery, messages, templates, and servers',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:postmark',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://postmarkapp.com/developer',
         ];
@@ -114,6 +116,14 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'placeholder' => 'Your Postmark Server API token',
                 'hint' => 'Found in Postmark Dashboard → Server → API Tokens.',
                 'required' => true,
+            ],
+            [
+                'key' => 'account_token',
+                'type' => 'secret',
+                'label' => 'Account Token',
+                'placeholder' => 'Optional Postmark Account API token',
+                'hint' => 'Required only for account-level endpoints such as listing servers.',
+                'required' => false,
             ],
             [
                 'key' => 'base_url',
@@ -174,6 +184,7 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'server_token' => 'nullable|string',
+            'account_token' => 'nullable|string',
             'base_url'     => 'nullable|string',
         ];
     }
@@ -256,10 +267,13 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/postmark.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'server_token', 'type' => 'secret', 'label' => 'Server Token', 'required' => true],
+            ['key' => 'account_token', 'type' => 'secret', 'label' => 'Account Token', 'required' => false],
             ['key' => 'base_url', 'type' => 'text', 'label' => 'Base URL', 'required' => false],
         ];
     }
@@ -285,10 +299,11 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             return new PostmarkService(
                 serverToken: $creds->get('postmark', 'server_token', '', $account),
+                accountToken: $creds->get('postmark', 'account_token', '', $account),
                 baseUrl: $creds->get('postmark', 'base_url', 'https://api.postmarkapp.com', $account),
             );
         }

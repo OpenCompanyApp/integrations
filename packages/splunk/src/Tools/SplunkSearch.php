@@ -2,16 +2,13 @@
 
 namespace OpenCompany\Integrations\Splunk\Tools;
 
-use OpenCompany\Integrations\Splunk\SplunkService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class SplunkSearch implements Tool
+/**
+ * Create an asynchronous Splunk search job.
+ */
+class SplunkSearch extends AbstractSplunkTool
 {
-    public function __construct(
-        private SplunkService $service,
-    ) {}
-
     public function name(): string
     {
         return 'splunk_search';
@@ -28,30 +25,24 @@ class SplunkSearch implements Tool
             'query' => ['type' => 'string', 'required' => true, 'description' => 'The SPL search query (e.g., "search index=main error | head 100").'],
             'earliest_time' => ['type' => 'string', 'description' => 'Earliest time for the search time range. Supports relative (e.g., "-24h", "-7d") or absolute (e.g., "2025-01-01T00:00:00") format.'],
             'latest_time' => ['type' => 'string', 'description' => 'Latest time for the search time range. Supports relative (e.g., "now") or absolute (e.g., "2025-01-31T23:59:59") format.'],
+            'exec_mode' => ['type' => 'string', 'description' => 'Splunk execution mode. Defaults to normal.'],
+            'options' => ['type' => 'object', 'description' => 'Additional search/jobs form parameters.'],
         ];
     }
 
+    /**
+     * Create a search job.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Splunk integration is not configured.');
-            }
-
-            $query = $args['query'] ?? '';
-            if (empty($query)) {
-                return ToolResult::error('Search query is required.');
-            }
-
-            $result = $this->service->search(
-                $query,
-                $args['earliest_time'] ?? null,
-                $args['latest_time'] ?? null,
-            );
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->search(
+            $this->requiredString($args, 'query'),
+            $this->string($args, 'earliest_time') ?: null,
+            $this->string($args, 'latest_time') ?: null,
+            $this->string($args, 'exec_mode', 'normal') ?: 'normal',
+            $this->arrayArg($args, 'options'),
+        ));
     }
 }

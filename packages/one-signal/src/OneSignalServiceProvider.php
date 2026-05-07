@@ -25,7 +25,7 @@ class OneSignalServiceProvider extends ServiceProvider
             return new OneSignalService(
                 apiKey: $creds->get('one-signal', 'api_key', ''),
                 appId: $creds->get('one-signal', 'app_id', ''),
-                baseUrl: $creds->get('one-signal', 'url', 'https://onesignal.com/api/v1'),
+                baseUrl: $creds->get('one-signal', 'url', 'https://api.onesignal.com'),
             );
         });
     }

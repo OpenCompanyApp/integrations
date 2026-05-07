@@ -14,7 +14,9 @@
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
     "replace": {
-        "opencompanyapp/ai-tool-toggl": "self.version"
+        "opencompanyapp/ai-tool-toggl": "self.version",
+        "opencompanyapp/integration-toggl-track": "self.version",
+        "opencompanyapp/ai-tool-toggl-track": "self.version"
     },
     "autoload": {
         "psr-4": {

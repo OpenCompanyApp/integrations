@@ -91,7 +91,7 @@ class FalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
             'description' => 'Generate images, videos, audio and more with AI models on fal.ai — fast queue-based inference platform',
             'icon' => 'ph:sparkle',
             'logo' => 'simple-icons:fal',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://fal.ai/docs',
         ];

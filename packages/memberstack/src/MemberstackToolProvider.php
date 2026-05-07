@@ -92,7 +92,7 @@ class MemberstackToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'Membership and authentication platform — manage members, plans, and access',
             'icon' => 'ph:shield-check',
             'logo' => 'simple-icons:memberstack',
-            'category' => 'authentication',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.memberstack.com/hc/en-us/articles/13392339792307-API',
         ];

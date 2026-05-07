@@ -7,12 +7,15 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: accelo_get_ticket
+ * Get an Accelo issue, also known as a ticket.
  *
- * Retrieves a single support ticket by its ID from Accelo.
+ * Retrieves a single support issue by its ID from Accelo.
  */
 class AcceloGetTicket implements Tool
 {
+    /**
+     * @param  AcceloService  $service  The Accelo API client.
+     */
     public function __construct(
         private AcceloService $service,
     ) {}
@@ -24,7 +27,7 @@ class AcceloGetTicket implements Tool
 
     public function description(): string
     {
-        return 'Get details of a specific support ticket in Accelo by its ID.';
+        return 'Get details of a specific support issue, also known as a ticket, in Accelo by its ID.';
     }
 
     public function parameters(): array
@@ -34,6 +37,11 @@ class AcceloGetTicket implements Tool
         ];
     }
 
+    /**
+     * Get an Accelo issue.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

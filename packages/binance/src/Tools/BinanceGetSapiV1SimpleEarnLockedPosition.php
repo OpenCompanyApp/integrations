@@ -1,0 +1,69 @@
+<?php
+
+namespace OpenCompany\Integrations\Binance\Tools;
+
+/**
+ * Get Locked Product Position (USER_DATA).
+ *
+ * Maps to the official Binance Spot endpoint GET /sapi/v1/simple-earn/locked/position.
+ */
+class BinanceGetSapiV1SimpleEarnLockedPosition extends AbstractBinanceTool
+{
+    protected const NAME = 'binance_get_sapi_v1_simple_earn_locked_position';
+    protected const DESCRIPTION = 'Get Locked Product Position (USER_DATA)
+
+Weight(IP): 150
+
+Official Binance Spot endpoint: GET /sapi/v1/simple-earn/locked/position.';
+    protected const PARAMETERS = [
+        'asset' => [
+            'type' => 'string',
+            'required' => false,
+            'description' => 'query parameter `asset`.',
+        ],
+        'position_id' => [
+            'type' => 'string',
+            'required' => false,
+            'description' => 'query parameter `positionId`.',
+        ],
+        'project_id' => [
+            'type' => 'string',
+            'required' => false,
+            'description' => 'query parameter `projectId`.',
+        ],
+        'current' => [
+            'type' => 'integer',
+            'required' => false,
+            'description' => 'Current querying page. Start from 1. Default:1',
+        ],
+        'size' => [
+            'type' => 'integer',
+            'required' => false,
+            'description' => 'Default:10 Max:100',
+        ],
+        'recv_window' => [
+            'type' => 'integer',
+            'required' => false,
+            'description' => 'The value cannot be greater than 60000',
+        ],
+        'timestamp' => [
+            'type' => 'integer',
+            'required' => false,
+            'description' => 'UTC timestamp in ms',
+        ],
+    ];
+    protected const METHOD = 'GET';
+    protected const PATH = '/sapi/v1/simple-earn/locked/position';
+    protected const PATH_PARAMS = [];
+    protected const QUERY_PARAMS = [
+        'asset' => 'asset',
+        'positionId' => 'position_id',
+        'projectId' => 'project_id',
+        'current' => 'current',
+        'size' => 'size',
+        'recvWindow' => 'recv_window',
+        'timestamp' => 'timestamp',
+    ];
+    protected const HEADER_PARAMS = [];
+    protected const AUTH_MODE = 'signed';
+}

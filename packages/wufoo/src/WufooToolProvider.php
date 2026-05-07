@@ -3,18 +3,32 @@
 namespace OpenCompany\Integrations\Wufoo;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Wufoo\Tools\WufooListForms;
-use OpenCompany\Integrations\Wufoo\Tools\WufooGetForm;
-use OpenCompany\Integrations\Wufoo\Tools\WufooListEntries;
-use OpenCompany\Integrations\Wufoo\Tools\WufooGetEntry;
-use OpenCompany\Integrations\Wufoo\Tools\WufooListReports;
-use OpenCompany\Integrations\Wufoo\Tools\WufooGetCurrentUser;
-
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Wufoo\Tools\WufooAddWebhook;
+use OpenCompany\Integrations\Wufoo\Tools\WufooApiDelete;
+use OpenCompany\Integrations\Wufoo\Tools\WufooApiGet;
+use OpenCompany\Integrations\Wufoo\Tools\WufooApiPost;
+use OpenCompany\Integrations\Wufoo\Tools\WufooApiPut;
+use OpenCompany\Integrations\Wufoo\Tools\WufooCountEntries;
+use OpenCompany\Integrations\Wufoo\Tools\WufooCountFormComments;
+use OpenCompany\Integrations\Wufoo\Tools\WufooCountReportEntries;
+use OpenCompany\Integrations\Wufoo\Tools\WufooDeleteWebhook;
+use OpenCompany\Integrations\Wufoo\Tools\WufooGetCurrentUser;
+use OpenCompany\Integrations\Wufoo\Tools\WufooGetEntry;
+use OpenCompany\Integrations\Wufoo\Tools\WufooGetForm;
+use OpenCompany\Integrations\Wufoo\Tools\WufooGetReport;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListEntries;
 use OpenCompany\Integrations\Wufoo\Tools\WufooListFields;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListFormComments;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListForms;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListReportEntries;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListReportFields;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListReports;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListReportWidgets;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListUsers;
 use OpenCompany\Integrations\Wufoo\Tools\WufooSubmitEntry;
 
 /**
@@ -22,8 +36,7 @@ use OpenCompany\Integrations\Wufoo\Tools\WufooSubmitEntry;
  */
 class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -31,53 +44,44 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => [
+                    'manual_secret',
+                ],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [
+                    'api_key',
+                ],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-
-
-
-/**
+    /**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -85,7 +89,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return 'wufoo';
     }
 
-/**
+    /**
      * Get application metadata for display and categorization.
      */
     public function appMeta(): array
@@ -98,7 +102,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-/**
+    /**
      * Get integration metadata including category and documentation links.
      */
     public function integrationMeta(): array
@@ -108,11 +112,13 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Online form builder — collect entries, manage forms and reports',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:wufoo',
-            'category' => 'forms',
+            'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://wufoo.com/docs/api-v3/',
+            'docs_url' => 'https://wufoo.github.io/docs/',
         ];
-    }/**
+    }
+
+    /**
      * Get the configuration schema for the Wufoo integration.
      *
      * Defines the fields needed to connect to the Wufoo API:
@@ -190,7 +196,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
+            'api_key' => 'required|string',
             'base_url' => 'nullable|url',
         ];
     }
@@ -200,50 +206,229 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
      *
      * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
      */
-        public function tools(): array
+    public function tools(): array
     {
         return [
             'wufoo_get_current_user' => [
                 'class' => WufooGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the authenticated Wufoo user\'s profile. Returns account details such as name, email, and organization.',
-                'icon' => 'ph:wrench',
+                'description' => 'Get the authenticated Wufoo user profile. This is kept as a compatibility alias for the users endpoint.',
+                'icon' => 'ph:user-circle',
             ],
-            'wufoo_get_entry' => [
-                'class' => WufooGetEntry::class,
+            'wufoo_list_users' => [
+                'class' => WufooListUsers::class,
                 'type' => 'read',
-                'name' => 'Get Entry',
-                'description' => 'Get a single Wufoo form entry by its identifier. Returns all field values and submission metadata for the entry.',
-                'icon' => 'ph:wrench',
-            ],
-            'wufoo_get_form' => [
-                'class' => WufooGetForm::class,
-                'type' => 'read',
-                'name' => 'Get Form',
-                'description' => 'Get details for a specific Wufoo form by its identifier. Returns the full form definition including fields, settings, and metadata.',
-                'icon' => 'ph:wrench',
-            ],
-            'wufoo_list_entries' => [
-                'class' => WufooListEntries::class,
-                'type' => 'read',
-                'name' => 'List Entries',
-                'description' => 'List entries submitted to a Wufoo form. Supports pagination and optional filters to narrow results. Use the page and pageSize parameters to paginate through large result sets.',
-                'icon' => 'ph:wrench',
+                'name' => 'List Users',
+                'description' => 'List Wufoo account users visible to the API key.',
+                'icon' => 'ph:users',
+                'parameters' => [
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as pretty.'],
+                ],
             ],
             'wufoo_list_forms' => [
                 'class' => WufooListForms::class,
                 'type' => 'read',
                 'name' => 'List Forms',
-                'description' => 'List all forms in your Wufoo account. Returns form identifiers, names, descriptions, and metadata that can be used with other Wufoo tools.',
-                'icon' => 'ph:wrench',
+                'description' => 'List all forms in your Wufoo account.',
+                'icon' => 'ph:clipboard-text',
+            ],
+            'wufoo_get_form' => [
+                'class' => WufooGetForm::class,
+                'type' => 'read',
+                'name' => 'Get Form',
+                'description' => 'Get details for a specific Wufoo form.',
+                'icon' => 'ph:clipboard-text',
+            ],
+            'wufoo_list_fields' => [
+                'class' => WufooListFields::class,
+                'type' => 'read',
+                'name' => 'List Fields',
+                'description' => 'List field definitions for a specific Wufoo form.',
+                'icon' => 'ph:list-checks',
+            ],
+            'wufoo_list_entries' => [
+                'class' => WufooListEntries::class,
+                'type' => 'read',
+                'name' => 'List Entries',
+                'description' => 'List entries submitted to a Wufoo form with pagination, sorting, and filters.',
+                'icon' => 'ph:table',
+            ],
+            'wufoo_count_entries' => [
+                'class' => WufooCountEntries::class,
+                'type' => 'read',
+                'name' => 'Count Entries',
+                'description' => 'Count entries submitted to a Wufoo form with optional filters.',
+                'icon' => 'ph:hash',
+                'parameters' => [
+                    'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as Filter1, Match, or pretty.'],
+                ],
+            ],
+            'wufoo_get_entry' => [
+                'class' => WufooGetEntry::class,
+                'type' => 'read',
+                'name' => 'Get Entry',
+                'description' => 'Find a single Wufoo form entry by form ID and entry ID using the documented form entries endpoint.',
+                'icon' => 'ph:article',
+            ],
+            'wufoo_submit_entry' => [
+                'class' => WufooSubmitEntry::class,
+                'type' => 'write',
+                'name' => 'Submit Entry',
+                'description' => 'Submit a new entry to a Wufoo form using API field IDs.',
+                'icon' => 'ph:paper-plane-tilt',
+            ],
+            'wufoo_list_form_comments' => [
+                'class' => WufooListFormComments::class,
+                'type' => 'read',
+                'name' => 'List Form Comments',
+                'description' => 'List comments made on entries for a Wufoo form.',
+                'icon' => 'ph:chat-circle-text',
+                'parameters' => [
+                    'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as entryId, pageStart, pageSize, or pretty.'],
+                ],
+            ],
+            'wufoo_count_form_comments' => [
+                'class' => WufooCountFormComments::class,
+                'type' => 'read',
+                'name' => 'Count Form Comments',
+                'description' => 'Count comments made on entries for a Wufoo form.',
+                'icon' => 'ph:hash',
+                'parameters' => [
+                    'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as pretty.'],
+                ],
             ],
             'wufoo_list_reports' => [
                 'class' => WufooListReports::class,
                 'type' => 'read',
                 'name' => 'List Reports',
-                'description' => 'List all reports in your Wufoo account. Returns report identifiers, names, descriptions, and the forms they are associated with.',
-                'icon' => 'ph:wrench',
+                'description' => 'List all reports in your Wufoo account.',
+                'icon' => 'ph:chart-bar',
+            ],
+            'wufoo_get_report' => [
+                'class' => WufooGetReport::class,
+                'type' => 'read',
+                'name' => 'Get Report',
+                'description' => 'Get details for a specific Wufoo report.',
+                'icon' => 'ph:chart-bar',
+                'parameters' => [
+                    'report_id' => ['type' => 'string', 'required' => true, 'description' => 'The report hash or title identifier.'],
+                ],
+            ],
+            'wufoo_list_report_entries' => [
+                'class' => WufooListReportEntries::class,
+                'type' => 'read',
+                'name' => 'List Report Entries',
+                'description' => 'List entries exposed by a Wufoo report.',
+                'icon' => 'ph:table',
+                'parameters' => [
+                    'report_id' => ['type' => 'string', 'required' => true, 'description' => 'The report hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as pageStart, pageSize, sort, sortDirection, Filter1, or Match.'],
+                ],
+            ],
+            'wufoo_count_report_entries' => [
+                'class' => WufooCountReportEntries::class,
+                'type' => 'read',
+                'name' => 'Count Report Entries',
+                'description' => 'Count entries exposed by a Wufoo report.',
+                'icon' => 'ph:hash',
+                'parameters' => [
+                    'report_id' => ['type' => 'string', 'required' => true, 'description' => 'The report hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as pretty.'],
+                ],
+            ],
+            'wufoo_list_report_fields' => [
+                'class' => WufooListReportFields::class,
+                'type' => 'read',
+                'name' => 'List Report Fields',
+                'description' => 'List field definitions used by a Wufoo report.',
+                'icon' => 'ph:list-checks',
+                'parameters' => [
+                    'report_id' => ['type' => 'string', 'required' => true, 'description' => 'The report hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as system or pretty.'],
+                ],
+            ],
+            'wufoo_list_report_widgets' => [
+                'class' => WufooListReportWidgets::class,
+                'type' => 'read',
+                'name' => 'List Report Widgets',
+                'description' => 'List widgets configured on a Wufoo report.',
+                'icon' => 'ph:squares-four',
+                'parameters' => [
+                    'report_id' => ['type' => 'string', 'required' => true, 'description' => 'The report hash or title identifier.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters such as pretty.'],
+                ],
+            ],
+            'wufoo_add_webhook' => [
+                'class' => WufooAddWebhook::class,
+                'type' => 'write',
+                'name' => 'Add Webhook',
+                'description' => 'Add a webhook to a Wufoo form.',
+                'icon' => 'ph:webhooks-logo',
+                'parameters' => [
+                    'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or title identifier.'],
+                    'url' => ['type' => 'string', 'required' => true, 'description' => 'The HTTPS endpoint Wufoo should call.'],
+                    'handshake_key' => ['type' => 'string', 'description' => 'Optional shared secret sent with webhook payloads.'],
+                    'metadata' => ['type' => 'boolean', 'description' => 'Whether Wufoo should include form and field metadata. Default: false.'],
+                ],
+            ],
+            'wufoo_delete_webhook' => [
+                'class' => WufooDeleteWebhook::class,
+                'type' => 'write',
+                'name' => 'Delete Webhook',
+                'description' => 'Delete a webhook from a Wufoo form.',
+                'icon' => 'ph:trash',
+                'parameters' => [
+                    'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or title identifier.'],
+                    'webhook_id' => ['type' => 'string', 'required' => true, 'description' => 'The webhook hash identifier.'],
+                ],
+            ],
+            'wufoo_api_get' => [
+                'class' => WufooApiGet::class,
+                'type' => 'read',
+                'name' => 'Wufoo API GET',
+                'description' => 'Call a documented Wufoo API v3 GET endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /forms.json.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional query parameters.'],
+                ],
+            ],
+            'wufoo_api_post' => [
+                'class' => WufooApiPost::class,
+                'type' => 'write',
+                'name' => 'Wufoo API POST',
+                'description' => 'Call a documented Wufoo API v3 POST endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /forms/{id}/entries.json.'],
+                    'body' => ['type' => 'object', 'description' => 'Form-encoded body fields.'],
+                ],
+            ],
+            'wufoo_api_put' => [
+                'class' => WufooApiPut::class,
+                'type' => 'write',
+                'name' => 'Wufoo API PUT',
+                'description' => 'Call a documented Wufoo API v3 PUT endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /forms/{id}/webhooks.json.'],
+                    'body' => ['type' => 'object', 'description' => 'Form-encoded body fields.'],
+                ],
+            ],
+            'wufoo_api_delete' => [
+                'class' => WufooApiDelete::class,
+                'type' => 'write',
+                'name' => 'Wufoo API DELETE',
+                'description' => 'Call a documented Wufoo API v3 DELETE endpoint.',
+                'icon' => 'ph:terminal-window',
+                'parameters' => [
+                    'path' => ['type' => 'string', 'required' => true, 'description' => 'Endpoint path, such as /forms/{id}/webhooks/{webhook_id}.json.'],
+                    'params' => ['type' => 'object', 'description' => 'Optional request parameters.'],
+                ],
             ],
         ];
     }

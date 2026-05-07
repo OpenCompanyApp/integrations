@@ -1,0 +1,204 @@
+{
+    "source": "https://bitwarden.com/help/api/",
+    "docs": "https://bitwarden.com/help/public-api/",
+    "openapi": "3.0.4",
+    "method_count": 28,
+    "operations": [
+        {
+            "operation_id": "Collections_Get",
+            "method": "GET",
+            "path": "/public/collections/{id}",
+            "tool": "bitwarden_collections_get",
+            "class": "BitwardenCollectionsGet"
+        },
+        {
+            "operation_id": "Collections_Put",
+            "method": "PUT",
+            "path": "/public/collections/{id}",
+            "tool": "bitwarden_collections_put",
+            "class": "BitwardenCollectionsPut"
+        },
+        {
+            "operation_id": "Collections_Delete",
+            "method": "DELETE",
+            "path": "/public/collections/{id}",
+            "tool": "bitwarden_collections_delete",
+            "class": "BitwardenCollectionsDelete"
+        },
+        {
+            "operation_id": "Collections_List",
+            "method": "GET",
+            "path": "/public/collections",
+            "tool": "bitwarden_collections_list",
+            "class": "BitwardenCollectionsList"
+        },
+        {
+            "operation_id": "Events_List",
+            "method": "GET",
+            "path": "/public/events",
+            "tool": "bitwarden_events_list",
+            "class": "BitwardenEventsList"
+        },
+        {
+            "operation_id": "Groups_Get",
+            "method": "GET",
+            "path": "/public/groups/{id}",
+            "tool": "bitwarden_groups_get",
+            "class": "BitwardenGroupsGet"
+        },
+        {
+            "operation_id": "Groups_Put",
+            "method": "PUT",
+            "path": "/public/groups/{id}",
+            "tool": "bitwarden_groups_put",
+            "class": "BitwardenGroupsPut"
+        },
+        {
+            "operation_id": "Groups_Delete",
+            "method": "DELETE",
+            "path": "/public/groups/{id}",
+            "tool": "bitwarden_groups_delete",
+            "class": "BitwardenGroupsDelete"
+        },
+        {
+            "operation_id": "Groups_GetMemberIds",
+            "method": "GET",
+            "path": "/public/groups/{id}/member-ids",
+            "tool": "bitwarden_groups_get_member_ids",
+            "class": "BitwardenGroupsGetMemberIds"
+        },
+        {
+            "operation_id": "Groups_PutMemberIds",
+            "method": "PUT",
+            "path": "/public/groups/{id}/member-ids",
+            "tool": "bitwarden_groups_put_member_ids",
+            "class": "BitwardenGroupsPutMemberIds"
+        },
+        {
+            "operation_id": "Groups_List",
+            "method": "GET",
+            "path": "/public/groups",
+            "tool": "bitwarden_groups_list",
+            "class": "BitwardenGroupsList"
+        },
+        {
+            "operation_id": "Groups_Post",
+            "method": "POST",
+            "path": "/public/groups",
+            "tool": "bitwarden_groups_post",
+            "class": "BitwardenGroupsPost"
+        },
+        {
+            "operation_id": "Members_Get",
+            "method": "GET",
+            "path": "/public/members/{id}",
+            "tool": "bitwarden_members_get",
+            "class": "BitwardenMembersGet"
+        },
+        {
+            "operation_id": "Members_Put",
+            "method": "PUT",
+            "path": "/public/members/{id}",
+            "tool": "bitwarden_members_put",
+            "class": "BitwardenMembersPut"
+        },
+        {
+            "operation_id": "Members_Remove",
+            "method": "DELETE",
+            "path": "/public/members/{id}",
+            "tool": "bitwarden_members_remove",
+            "class": "BitwardenMembersRemove"
+        },
+        {
+            "operation_id": "Members_GetGroupIds",
+            "method": "GET",
+            "path": "/public/members/{id}/group-ids",
+            "tool": "bitwarden_members_get_group_ids",
+            "class": "BitwardenMembersGetGroupIds"
+        },
+        {
+            "operation_id": "Members_PutGroupIds",
+            "method": "PUT",
+            "path": "/public/members/{id}/group-ids",
+            "tool": "bitwarden_members_put_group_ids",
+            "class": "BitwardenMembersPutGroupIds"
+        },
+        {
+            "operation_id": "Members_List",
+            "method": "GET",
+            "path": "/public/members",
+            "tool": "bitwarden_members_list",
+            "class": "BitwardenMembersList"
+        },
+        {
+            "operation_id": "Members_Post",
+            "method": "POST",
+            "path": "/public/members",
+            "tool": "bitwarden_members_post",
+            "class": "BitwardenMembersPost"
+        },
+        {
+            "operation_id": "Members_PostReinvite",
+            "method": "POST",
+            "path": "/public/members/{id}/reinvite",
+            "tool": "bitwarden_members_post_reinvite",
+            "class": "BitwardenMembersPostReinvite"
+        },
+        {
+            "operation_id": "Members_Revoke",
+            "method": "POST",
+            "path": "/public/members/{id}/revoke",
+            "tool": "bitwarden_members_revoke",
+            "class": "BitwardenMembersRevoke"
+        },
+        {
+            "operation_id": "Members_Restore",
+            "method": "POST",
+            "path": "/public/members/{id}/restore",
+            "tool": "bitwarden_members_restore",
+            "class": "BitwardenMembersRestore"
+        },
+        {
+            "operation_id": "Organization_GetSubscription",
+            "method": "GET",
+            "path": "/public/organization/subscription",
+            "tool": "bitwarden_organization_get_subscription",
+            "class": "BitwardenOrganizationGetSubscription"
+        },
+        {
+            "operation_id": "Organization_PostSubscription",
+            "method": "PUT",
+            "path": "/public/organization/subscription",
+            "tool": "bitwarden_organization_post_subscription",
+            "class": "BitwardenOrganizationPostSubscription"
+        },
+        {
+            "operation_id": "Organization_Import",
+            "method": "POST",
+            "path": "/public/organization/import",
+            "tool": "bitwarden_organization_import",
+            "class": "BitwardenOrganizationImport"
+        },
+        {
+            "operation_id": "Policies_Get",
+            "method": "GET",
+            "path": "/public/policies/{type}",
+            "tool": "bitwarden_policies_get",
+            "class": "BitwardenPoliciesGet"
+        },
+        {
+            "operation_id": "Policies_Put",
+            "method": "PUT",
+            "path": "/public/policies/{type}",
+            "tool": "bitwarden_policies_put",
+            "class": "BitwardenPoliciesPut"
+        },
+        {
+            "operation_id": "Policies_List",
+            "method": "GET",
+            "path": "/public/policies",
+            "tool": "bitwarden_policies_list",
+            "class": "BitwardenPoliciesList"
+        }
+    ]
+}

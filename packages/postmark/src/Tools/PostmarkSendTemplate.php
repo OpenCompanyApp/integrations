@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Postmark\PostmarkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Send an email using a Postmark template.
+ *
+ * Supports template IDs or aliases with a template model and standard message metadata.
+ */
 class PostmarkSendTemplate implements Tool
 {
+    /**
+     * @param  PostmarkService  $service  The Postmark API client
+     */
     public function __construct(
         private PostmarkService $service,
     ) {}
@@ -39,11 +47,24 @@ class PostmarkSendTemplate implements Tool
         ];
     }
 
+    /**
+     * Send a templated Postmark email.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (From, To, TemplateId or TemplateAlias, TemplateModel)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Postmark integration is not configured.');
+            }
+
+            if (empty($args['From'])) {
+                return ToolResult::error('From is required.');
+            }
+
+            if (empty($args['To'])) {
+                return ToolResult::error('To is required.');
             }
 
             if (empty($args['TemplateId']) && empty($args['TemplateAlias'])) {

@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Mattermost;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Mattermost REST API v4.
+ *
+ * Handles bearer-token authentication, JSON request dispatch, Mattermost error
+ * normalization, and endpoint helpers used by individual tools.
+ */
 class MattermostService
 {
+    /**
+     * @param  string  $accessToken  Mattermost personal access token or bot token.
+     * @param  string  $baseUrl  Mattermost server base URL without trailing slash.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://mattermost.example.com',
@@ -20,6 +30,61 @@ class MattermostService
     public function isConfigured(): bool
     {
         return !empty($this->accessToken);
+    }
+
+    /**
+     * Execute a raw GET request against the Mattermost API.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $query);
+    }
+
+    /**
+     * Execute a raw POST request against the Mattermost API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PUT request against the Mattermost API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $payload = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PATCH request against the Mattermost API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $payload = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw DELETE request against the Mattermost API.
+     *
+     * @param  array<string, mixed>  $payload  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
     }
 
     /**
@@ -120,7 +185,7 @@ class MattermostService
      *
      * @param  string  $method  HTTP method.
      * @param  string  $path    API path (e.g. /api/v4/channels).
-     * @param  array   $data    Query params or JSON body.
+     * @param  array<string, mixed>  $data    Query params or JSON body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -135,11 +200,31 @@ class MattermostService
     }
 
     /**
+     * Normalize a raw path to a Mattermost API v4 path.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '') {
+            throw new \RuntimeException('Mattermost API path is required.');
+        }
+
+        if (str_starts_with($path, $this->baseUrl)) {
+            $path = substr($path, strlen($this->baseUrl));
+        }
+
+        $path = '/' . ltrim($path, '/');
+
+        return str_starts_with($path, '/api/v4/') ? $path : '/api/v4' . $path;
+    }
+
+    /**
      * Make a raw HTTP request to the Mattermost API.
      *
      * @param  string  $method  HTTP method.
      * @param  string  $path    API path.
-     * @param  array   $data    Query params or JSON body.
+     * @param  array<string, mixed>  $data    Query params or JSON body.
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \RuntimeException
@@ -162,6 +247,7 @@ class MattermostService
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };

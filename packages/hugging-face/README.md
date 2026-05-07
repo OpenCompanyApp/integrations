@@ -1,14 +1,14 @@
 # Integration: Hugging Face
 
-> Hugging Face integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list models, datasets, Spaces, run inference, and manage your account. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Hugging Face integration for the [Laravel AI SDK](https://github.com/laravel/ai) - list models, datasets, Spaces, run inference, and manage your account. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to the Hugging Face Hub. Search models and datasets, run serverless inference, explore Spaces, and retrieve account info — all through the [Hugging Face API](https://huggingface.co/docs/hub/api).
+Give your AI agents access to the Hugging Face Hub. Search models and datasets, run serverless inference, explore Spaces, and retrieve account info - all through the [Hugging Face API](https://huggingface.co/docs/hub/api).
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Hugging Face tool lets AI agents search the model hub, run inference, and explore datasets and Spaces — giving agents direct access to the world's largest collection of AI models.
+This Hugging Face tool lets AI agents search the model hub, run inference, and explore datasets and Spaces - giving agents direct access to the world's largest collection of AI models.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -32,7 +32,8 @@ This tool requires a Hugging Face User Access Token.
 return [
     'hugging-face' => [
         'access_token' => env('HUGGINGFACE_ACCESS_TOKEN'),
-        'url'          => env('HUGGINGFACE_API_URL', 'https://huggingface.co/api'),
+        'url'           => env('HUGGINGFACE_API_URL', 'https://huggingface.co/api'),
+        'inference_url' => env('HUGGINGFACE_INFERENCE_URL', 'https://router.huggingface.co/hf-inference/models'),
     ],
 ];
 ```
@@ -44,9 +45,23 @@ return [
 | `huggingface_list_models` | read | Search and list AI models on the Hub |
 | `huggingface_get_model` | read | Get detailed info about a specific model |
 | `huggingface_list_datasets` | read | Search and list datasets on the Hub |
+| `huggingface_get_dataset` | read | Get detailed info about a specific dataset |
 | `huggingface_inference` | write | Run inference on a model via the Inference API |
 | `huggingface_list_spaces` | read | Search and list Spaces on the Hub |
+| `huggingface_get_space` | read | Get detailed info about a specific Space |
 | `huggingface_get_current_user` | read | Get the authenticated user's profile |
+| `huggingface_list_commits` | read | List commits for a model, dataset, or Space repository |
+| `huggingface_list_refs` | read | List branches and tags for a repository |
+| `huggingface_list_tree` | read | List repository files and folders |
+| `huggingface_get_scan_status` | read | Get repository security scan status |
+| `huggingface_list_model_tags` | read | List model tags grouped by type |
+| `huggingface_list_dataset_tags` | read | List dataset tags grouped by type |
+| `huggingface_list_space_hardware` | read | List available Space hardware options |
+| `huggingface_create_repo` | write | Create a model, dataset, or Space repository |
+| `huggingface_api_get` | read | Call an unwrapped relative Hub API GET endpoint |
+| `huggingface_api_post` | write | Call an unwrapped relative Hub API POST endpoint |
+| `huggingface_api_put` | write | Call an unwrapped relative Hub API PUT endpoint |
+| `huggingface_api_delete` | write | Call an unwrapped relative Hub API DELETE endpoint |
 
 ## Quick Start
 
@@ -70,7 +85,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 20 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -109,6 +124,9 @@ $datasets = $service->listDatasets(['search' => 'sentiment']);
 // List Spaces
 $spaces = $service->listSpaces(['search' => 'chat']);
 
+// List repository files
+$files = $service->listTree('models', 'bert-base-uncased');
+
 // Get current user
 $user = $service->getCurrentUser();
 ```
@@ -129,4 +147,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

@@ -1,164 +1,81 @@
 # Adyen Integration
 
-Adyen is a global payments platform that enables businesses to accept, process, and settle payments across online, mobile, and in-store channels.
+Adyen exposes official Checkout v72 and Management v3 operations generated from `Adyen/adyen-openapi`.
 
 ## Configuration
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `api_key` | secret | Yes | Your Adyen API key. Generate one in the Customer Area under **Developers → API Credentials**. |
-| `merchant_account` | text | Yes | Your Adyen merchant account code (e.g., `YourCompanyECOM`). |
-| `url` | url | No | API base URL. Use `https://checkout-test.adyen.com` for test, `https://checkout-live.adyen.com` for live. |
+| `api_key` | secret | Yes | Adyen API key sent as `X-API-Key`. |
+| `merchant_account` | text | No | Default merchant account or merchant ID. Used for Checkout `merchantAccount`, Management `merchantId` path parameters, and Management `merchantId` query parameters when omitted. |
+| `company_id` | text | No | Default company ID for company-scoped Management API paths. |
+| `url` | url | No | Checkout API base URL without version. Test default is `https://checkout-test.adyen.com`. Live URLs must use the Adyen live prefix URL without the version suffix. |
+| `management_url` | url | No | Management API base URL without version. Test default is `https://management-test.adyen.com`. |
 
-## Authentication
+## Usage Pattern
 
-All requests use the `x-API-key` header for authentication. The API key must have the appropriate permissions (role) for the endpoints you intend to use.
+Tool names are generated from the official service and operation ID:
 
-## Tools
+- `adyen_checkout_post_payments`
+- `adyen_checkout_get_payment_links_link_id`
+- `adyen_management_get_merchants_merchant_id_stores`
+- `adyen_management_post_merchants_merchant_id_webhooks`
 
-### adyen_list_transactions
-
-List transactions from the Adyen transaction feed.
-
-**Parameters:**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | No | Page number for pagination (starts at 1). |
-| `size` | integer | No | Number of transactions per page (default: 20). |
-
-**Example:**
+Path and query parameters are exposed as snake_case tool arguments. JSON request payloads are passed through the `body` argument using Adyen's official field names.
 
 ```lua
-adyen_list_transactions({ page = 1, size = 50 })
-```
-
----
-
-### adyen_get_transaction
-
-Get details of a specific transaction by its PSP reference.
-
-**Parameters:**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `psp_reference` | string | Yes | The PSP reference of the transaction. |
-
-**Example:**
-
-```lua
-adyen_get_transaction({ psp_reference = "8535296650153317" })
-```
-
----
-
-### adyen_make_payment
-
-Initiate a payment through Adyen. The merchant account is auto-injected.
-
-**Parameters:**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `amount` | object | Yes | Amount object with `value` (minor units) and `currency`. E.g., `{ value = "1000", currency = "EUR" }`. |
-| `payment_method` | object | Yes | Payment method details (type, card details, etc.). |
-| `reference` | string | No | Custom reference (e.g., order number). |
-| `return_url` | string | No | Redirect URL after payment. |
-| `shopper_reference` | string | No | Unique shopper ID for recurring payments. |
-| `shopper_email` | string | No | Shopper email address. |
-
-**Example:**
-
-```lua
-adyen_make_payment({
-    amount = { value = "1000", currency = "EUR" },
-    payment_method = { type = "scheme" },
-    reference = "ORDER-123"
+adyen_checkout_post_payments({
+  body = {
+    amount = { value = 1000, currency = "EUR" },
+    paymentMethod = { type = "scheme" },
+    reference = "ORDER-123",
+    returnUrl = "https://example.test/return"
+  }
 })
 ```
 
----
-
-### adyen_capture_payment
-
-Capture a previously authorized payment. The merchant account is auto-injected.
-
-**Parameters:**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `psp_reference` | string | Yes | The PSP reference of the authorized payment. |
-| `amount` | object | Yes | Capture amount with `value` (minor units) and `currency`. |
-
-**Example:**
+When `merchant_account` is configured, Checkout request bodies receive `merchantAccount` automatically if it is not already present.
 
 ```lua
-adyen_capture_payment({
-    psp_reference = "8535296650153317",
-    amount = { value = "1000", currency = "EUR" }
+adyen_checkout_post_payment_methods({
+  body = {
+    amount = { value = 1000, currency = "EUR" },
+    countryCode = "NL",
+    channel = "Web"
+  }
 })
 ```
 
----
-
-### adyen_refund_payment
-
-Refund a captured or settled payment. The merchant account is auto-injected.
-
-**Parameters:**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `psp_reference` | string | Yes | The PSP reference of the payment to refund. |
-| `amount` | object | Yes | Refund amount with `value` (minor units) and `currency`. |
-
-**Example:**
+Management paths accept explicit IDs or use configured defaults for common account identifiers.
 
 ```lua
-adyen_refund_payment({
-    psp_reference = "8535296650153317",
-    amount = { value = "1000", currency = "EUR" }
+adyen_management_get_merchants_merchant_id_stores({
+  merchant_id = "MerchantECOM",
+  page_size = 20
+})
+
+adyen_management_get_companies_company_id_users({
+  company_id = "ExampleCompany"
 })
 ```
 
----
-
-### adyen_list_stores
-
-List stores for the configured merchant account. The merchant account is auto-injected.
-
-**Parameters:**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | No | Maximum number of stores to return. |
-| `page` | string | No | Pagination cursor from a previous response. |
-
-**Example:**
+Additional documented query parameters can be passed exactly as named through `query`.
 
 ```lua
-adyen_list_stores({ limit = 20 })
+adyen_management_get_stores({
+  query = {
+    merchantId = "MerchantECOM",
+    pageSize = 50
+  }
+})
 ```
 
----
+## Return Shape
 
-### adyen_get_current_user
-
-Verify Adyen API connectivity and get merchant account information. Useful as a health check.
-
-**Parameters:** None.
-
-**Example:**
-
-```lua
-adyen_get_current_user()
-```
-
----
+Tools return the parsed JSON object from Adyen. `204 No Content` responses return an empty object. Errors are normalized into tool errors that include the Adyen HTTP status and message when available.
 
 ## Notes
 
-- Amount values are in **minor units**: `1000` = €10.00, `500` = $5.00.
-- The `psp_reference` is Adyen's unique identifier for each payment/transaction.
-- Always test with the `checkout-test.adyen.com` base URL before switching to live.
+- This package covers official Checkout v72 and Management v3 operations. Other Adyen API families such as Balance Platform, Transfers, Recurring, Payout, Terminal API, and webhooks are separate official specs and are not included in this package surface yet.
+- The integration does not invent unsupported transaction lookup tools. Use Adyen webhooks, reports, Balance Platform, or Transfers APIs for transaction-level records outside Checkout.
+- Do not put real card details, private shopper data, live merchant identifiers, or real API keys in tests or examples.

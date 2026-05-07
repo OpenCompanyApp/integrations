@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
  */
 class VimeoListAlbums implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -31,7 +34,7 @@ class VimeoListAlbums implements Tool
     public function parameters(): array
     {
         return [
-            'per_page' => ['type' => 'integer', 'description' => 'Number of albums per page (1–100, default: 25).'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of albums per page (1-100, default: 25).'],
             'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
             'query' => ['type' => 'string', 'description' => 'Full-text search query to filter albums by name or description.'],
             'sort' => ['type' => 'string', 'description' => 'Sort field: "alphabetical", "date", "duration", "manual", "modified_time", "name".'],
@@ -40,7 +43,9 @@ class VimeoListAlbums implements Tool
     }
 
     /**
-     * @param  array<string, mixed>  $args
+     * List albums.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

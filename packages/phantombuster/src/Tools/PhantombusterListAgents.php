@@ -2,16 +2,14 @@
 
 namespace OpenCompany\Integrations\Phantombuster\Tools;
 
-use OpenCompany\Integrations\Phantombuster\PhantombusterService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class PhantombusterListAgents implements Tool
+/**
+ * List Phantombuster agents in the current organization.
+ */
+class PhantombusterListAgents extends AbstractPhantombusterTool implements Tool
 {
-    public function __construct(
-        private PhantombusterService $service,
-    ) {}
-
     public function name(): string
     {
         return 'phantombuster_list_agents';
@@ -24,17 +22,34 @@ class PhantombusterListAgents implements Tool
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'input_types' => ['type' => 'array', 'description' => 'Filter by manifest input types.'],
+            'output_types' => ['type' => 'array', 'description' => 'Filter by manifest output types.'],
+            'agent_ids' => ['type' => 'array', 'description' => 'Limit to up to 100 agent IDs.'],
+            'with_argument' => ['type' => 'boolean', 'description' => 'Include default agent arguments.'],
+            'with_agent_slots_factor' => ['type' => 'boolean', 'description' => 'Include reserved agent slots factor.'],
+        ];
     }
 
+    /**
+     * List agents.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Phantombuster integration is not configured.');
+            if ($error = $this->requireConfigured()) {
+                return $error;
             }
 
-            $result = $this->service->listAgents();
+            $result = $this->service->listAgents($this->only($args, [
+                'input_types' => 'inputTypes',
+                'output_types' => 'outputTypes',
+                'agent_ids' => 'agentIds',
+                'with_argument' => 'withArgument',
+                'with_agent_slots_factor' => 'withAgentSlotsFactor',
+            ]));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

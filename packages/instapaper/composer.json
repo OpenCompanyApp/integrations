@@ -1,0 +1,24 @@
+{
+    "name": "opencompanyapp/integration-instapaper",
+    "description": "Instapaper integration for Laravel AI agents - bookmarks, folders, highlights, OAuth access tokens, and Simple API saves.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Instapaper\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Instapaper\\InstapaperServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Dub integration with Laravel's service container.
+ *
+ * Binds DubService using the host credential resolver and registers the Dub
+ * tool provider with the shared provider registry.
+ */
 class DubServiceProvider extends ServiceProvider
 {
     public function register(): void

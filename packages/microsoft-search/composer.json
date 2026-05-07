@@ -1,0 +1,34 @@
+{
+    "name": "opencompanyapp/integration-microsoft-search",
+    "description": "Microsoft Search integration through Microsoft Graph for OpenCompany agents.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftSearch\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftSearch\\MicrosoftSearchServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "microsoft",
+        "search",
+        "bookmarks",
+        "acronyms",
+        "qna",
+        "graph",
+        "opencompany"
+    ]
+}

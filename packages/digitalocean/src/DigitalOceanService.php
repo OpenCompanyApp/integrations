@@ -6,8 +6,18 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the DigitalOcean API v2.
+ *
+ * Handles bearer-token authentication, request dispatch, error normalization,
+ * and parsed JSON responses for DigitalOcean cloud resources.
+ */
 class DigitalOceanService
 {
+    /**
+     * @param  string  $accessToken  DigitalOcean personal access token or OAuth bearer token.
+     * @param  string  $baseUrl  DigitalOcean API v2 base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.digitalocean.com/v2',
@@ -109,11 +119,13 @@ class DigitalOceanService
     /**
      * List all domains in the account.
      *
+     * @param  int|null  $page  Page number (1-based).
+     * @param  int|null  $perPage  Number of items per page.
      * @return array<string, mixed>
      */
-    public function listDomains(): array
+    public function listDomains(?int $page = null, ?int $perPage = null): array
     {
-        return $this->request('GET', '/domains');
+        return $this->request('GET', '/domains', $this->paginationParams($page, $perPage));
     }
 
     /**
@@ -131,13 +143,18 @@ class DigitalOceanService
     // ──────────────────────────────────────────────
 
     /**
-     * List Spaces (object storage) in the account.
+     * List Spaces access keys available to the account.
      *
+     * DigitalOcean's bearer-token API exposes Spaces key management at
+     * /v2/spaces/keys. Bucket/object operations use the separate S3-compatible
+     * Spaces API and are intentionally not called from this OAuth-token client.
+     *
+     * @param  array<string, mixed>  $params  Query parameters (page, per_page, sort, sort_direction, name, bucket, permission).
      * @return array<string, mixed>
      */
-    public function listSpaces(): array
+    public function listSpaces(array $params = []): array
     {
-        return $this->request('GET', '/spaces');
+        return $this->request('GET', '/spaces/keys', array_filter($params, static fn ($value): bool => $value !== null && $value !== ''));
     }
 
     // ──────────────────────────────────────────────
@@ -147,11 +164,13 @@ class DigitalOceanService
     /**
      * List Kubernetes clusters.
      *
+     * @param  int|null  $page  Page number (1-based).
+     * @param  int|null  $perPage  Number of items per page.
      * @return array<string, mixed>
      */
-    public function listKubernetesClusters(): array
+    public function listKubernetesClusters(?int $page = null, ?int $perPage = null): array
     {
-        return $this->request('GET', '/kubernetes/clusters');
+        return $this->request('GET', '/kubernetes/clusters', $this->paginationParams($page, $perPage));
     }
 
     // ──────────────────────────────────────────────
@@ -232,5 +251,23 @@ class DigitalOceanService
             ]);
             throw new \RuntimeException("Failed to connect to DigitalOcean API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build DigitalOcean pagination query parameters.
+     *
+     * @return array<string, int>
+     */
+    private function paginationParams(?int $page, ?int $perPage): array
+    {
+        $params = [];
+        if ($page !== null) {
+            $params['page'] = $page;
+        }
+        if ($perPage !== null) {
+            $params['per_page'] = $perPage;
+        }
+
+        return $params;
     }
 }

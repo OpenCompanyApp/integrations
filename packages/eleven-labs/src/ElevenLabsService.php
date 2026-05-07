@@ -56,8 +56,8 @@ class ElevenLabsService
      * @param  string  $text             The text to synthesize.
      * @param  string  $voiceId          The voice identifier.
      * @param  string  $modelId          The model identifier (e.g., "eleven_multilingual_v2").
-     * @param  float|null  $stability       Voice stability (0.0 – 1.0).
-     * @param  float|null  $similarityBoost Similarity boost (0.0 – 1.0).
+     * @param  float|null  $stability       Voice stability (0.0 - 1.0).
+     * @param  float|null  $similarityBoost Similarity boost (0.0 - 1.0).
      * @return array{audio: string, content_type: string}
      */
     public function generateSpeech(

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-bigcommerce",
-    "description": "BigCommerce integration for Laravel — manage products, orders, and customers.",
+    "description": "BigCommerce integration for Laravel - manage catalog, orders, customers, carts, channels, sites, webhooks, and content.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,12 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "bigcommerce", "ecommerce", "opencompany"],
+    "keywords": [
+        "tools",
+        "bigcommerce",
+        "ecommerce",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

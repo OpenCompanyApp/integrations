@@ -2,51 +2,38 @@
 
 namespace OpenCompany\Integrations\CircleCI\Tools;
 
-use OpenCompany\Integrations\CircleCI\CircleCIService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get detailed information about a specific CircleCI workflow.
- *
- * Returns the workflow status, name, project slug, pipeline ID,
- * creation and stop times, and duration.
+ * Get details for a workflow.
  */
-class CircleCIGetWorkflow implements Tool
+class CircleCIGetWorkflow extends AbstractCircleCITool
 {
-    public function __construct(
-        private CircleCIService $service,
-    ) {}
+    protected string $toolName = 'circleci_get_workflow';
 
-    public function name(): string
-    {
-        return 'circleci_get_workflow';
-    }
+    protected string $toolDescription = 'Get details for a workflow.';
 
-    public function description(): string
-    {
-        return 'Get detailed information about a specific CircleCI workflow, including its status, timing, duration, and associated project.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The workflow ID (UUID).'],
-        ];
-    }
+    protected string $path = '/v2/workflow/{workflow_id}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CircleCI integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'workflow_id' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Workflow ID.',
+    ],
+];
 
-            $result = $this->service->getWorkflow($args['id']);
+    /** @var list<string> */
+    protected array $required = [
+    'workflow_id',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

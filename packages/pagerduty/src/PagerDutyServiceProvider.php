@@ -7,15 +7,15 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the PagerDuty integration.
+ * Registers the PagerDuty integration with Laravel's service container.
  *
- * Registers the PagerdutyService singleton and bootstraps the tool provider
- * with the ToolProviderRegistry when available.
+ * Binds the PagerDuty API client from host credentials and adds the generated
+ * tool provider to the shared integration registry when available.
  */
 class PagerdutyServiceProvider extends ServiceProvider
 {
     /**
-     * Register the PagerdutyService singleton.
+     * Register the PagerDuty API service singleton.
      */
     public function register(): void
     {
@@ -30,13 +30,12 @@ class PagerdutyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the service provider — register tools with the ToolProviderRegistry.
+     * Register PagerDuty tools with the shared registry.
      */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new PagerdutyToolProvider());
+            $this->app->make(ToolProviderRegistry::class)->register(new PagerDutyToolProvider());
         }
     }
 }

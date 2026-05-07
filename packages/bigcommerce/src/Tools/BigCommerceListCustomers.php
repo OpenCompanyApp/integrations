@@ -2,71 +2,66 @@
 
 namespace OpenCompany\Integrations\BigCommerce\Tools;
 
-use OpenCompany\Integrations\BigCommerce\BigCommerceService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List customers from the BigCommerce store.
- *
- * Supports filtering and pagination.
+ * List customers with BigCommerce v3 filters.
  */
-class BigCommerceListCustomers implements Tool
+class BigCommerceListCustomers extends AbstractBigCommerceEndpointTool
 {
-    public function __construct(
-        private BigCommerceService $service,
-    ) {}
+    protected string $toolName = 'bigcommerce_list_customers';
 
-    public function name(): string
-    {
-        return 'bigcommerce_list_customers';
-    }
+    protected string $toolDescription = 'List customers with BigCommerce v3 filters.';
 
-    public function description(): string
-    {
-        return 'List customers from the BigCommerce store. Supports filtering by name or email and pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of customers per page (default: 50, max: 250).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
-            'name' => ['type' => 'string', 'description' => 'Filter by customer name.'],
-            'email' => ['type' => 'string', 'description' => 'Filter by email address.'],
-            'sort' => ['type' => 'string', 'description' => 'Sort field (e.g., "name", "email", "date_created", "id").'],
-            'direction' => ['type' => 'string', 'description' => 'Sort direction: "asc" or "desc".'],
-        ];
-    }
+    protected string $path = '/v3/customers';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('BigCommerce integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = array (
+  'limit' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Maximum number of records to return.',
+  ),
+  'page' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Page number for paginated endpoints.',
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'required' => false,
+    'description' => 'Additional documented BigCommerce query parameters to pass through.',
+  ),
+  'email:in' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Comma-separated customer emails.',
+  ),
+  'name:like' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Name search filter.',
+  ),
+);
 
-            $params = [];
-            $stringParams = ['name', 'email', 'sort', 'direction'];
-            $intParams = ['limit', 'page'];
+    /** @var list<string> */
+    protected array $required = array (
+);
 
-            foreach ($stringParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = $args[$key];
-                }
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = array (
+  0 => 'limit',
+  1 => 'page',
+  2 => 'email:in',
+  3 => 'name:like',
+);
 
-            foreach ($intParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = (int) $args[$key];
-                }
-            }
-
-            $result = $this->service->listCustomers($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = array (
+);
 }

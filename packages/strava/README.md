@@ -1,132 +1,93 @@
 # Integration: Strava
 
-> Strava fitness/activity integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list activities, view athlete profiles, manage clubs. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to fitness and activity data. List recent workouts, retrieve detailed activity information, create manual activities, and explore athlete profiles and clubs — all through the [Strava API](https://developers.strava.com/).
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Strava integration lets AI agents query fitness activities, retrieve athlete profiles, and explore clubs — giving agents awareness of team health, fitness goals, and activity trends.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-strava
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+Strava integration for OpenCompany agent tooling. It exposes Strava API coverage
+for activities, athlete profiles, uploads, clubs, routes, segments, streams,
+and generic relative API helpers.
 
 ## Configuration
 
-This tool requires a Strava access token.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+This package uses a stored Strava OAuth access token. In OpenCompany and
+KosmoKrator, configure credentials through the integration settings UI. For
+standalone usage, bind a `CredentialResolver` value for:
 
 ```php
-return [
+[
     'strava' => [
         'access_token' => env('STRAVA_ACCESS_TOKEN'),
-        'url'          => env('STRAVA_URL', 'https://www.strava.com/api/v3'),
+        'url' => env('STRAVA_API_URL', 'https://www.strava.com/api/v3'),
     ],
-];
+]
 ```
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `strava_list_activities` | read | List recent activities for the authenticated athlete (paginated, with date filters) |
-| `strava_get_activity` | read | Get detailed information about a specific activity |
-| `strava_create_activity` | write | Create a manual activity (name, type, start date, elapsed time) |
-| `strava_get_athlete` | read | Get the authenticated athlete's profile |
-| `strava_list_clubs` | read | List clubs the authenticated athlete belongs to |
-| `strava_get_current_user` | read | Get the current authenticated user's profile (alias for Get Athlete) |
+| `strava_get_athlete` | read | Get authenticated athlete profile |
+| `strava_get_current_user` | read | Get authenticated user profile |
+| `strava_get_athlete_stats` | read | Get athlete activity stats |
+| `strava_get_athlete_zones` | read | Get athlete zones |
+| `strava_list_activities` | read | List activities |
+| `strava_get_activity` | read | Get one activity |
+| `strava_create_activity` | write | Create a manual activity |
+| `strava_update_activity` | write | Update an activity |
+| `strava_get_activity_streams` | read | Get activity streams |
+| `strava_list_activity_laps` | read | List activity laps |
+| `strava_get_activity_zones` | read | Get activity zones |
+| `strava_upload_activity` | write | Upload an activity file |
+| `strava_get_upload` | read | Get upload status |
+| `strava_list_clubs` | read | List athlete clubs |
+| `strava_get_club` | read | Get one club |
+| `strava_list_club_activities` | read | List club activities |
+| `strava_list_club_members` | read | List club members |
+| `strava_list_routes` | read | List athlete routes |
+| `strava_get_route` | read | Get one route |
+| `strava_export_route` | read | Export route as GPX or TCX |
+| `strava_get_route_streams` | read | Get route streams |
+| `strava_list_starred_segments` | read | List starred segments |
+| `strava_get_segment` | read | Get one segment |
+| `strava_star_segment` | write | Star or unstar a segment |
+| `strava_explore_segments` | read | Explore segments in bounds |
+| `strava_list_segment_efforts` | read | List segment efforts |
+| `strava_get_segment_effort` | read | Get one segment effort |
+| `strava_get_segment_streams` | read | Get segment streams |
+| `strava_api_get` | read | Call a relative API GET endpoint |
+| `strava_api_post` | write | Call a relative API POST endpoint |
+| `strava_api_put` | write | Call a relative API PUT endpoint |
+| `strava_api_delete` | write | Call a relative API DELETE endpoint |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Strava\StravaService;
-use OpenCompany\Integrations\Strava\Tools\StravaListActivities;
-use OpenCompany\Integrations\Strava\Tools\StravaGetAthlete;
-
-// Create tools
-$service = app(StravaService::class);
-$tools = [
-    new StravaListActivities($service),
-    new StravaGetAthlete($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('What were my last 5 runs?');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('strava');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Strava\Tools\StravaListActivities::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\Strava\StravaService;
 
 $service = app(StravaService::class);
 
-// List activities
-$activities = $service->listActivities(page: 1, perPage: 10);
-
-// Get a specific activity
-$activity = $service->getActivity(1234567890);
-
-// Create a manual activity
-$activity = $service->createActivity(
-    name: 'Morning Run',
-    type: 'Run',
-    startDateLocal: '2025-01-15T09:30:00',
-    elapsedTime: 1800,
-    extra: ['distance' => 5000, 'description' => 'Easy run in the park'],
-);
-
-// Get athlete profile
 $athlete = $service->getAthlete();
-
-// List clubs
+$activities = $service->listActivities(perPage: 10);
+$streams = $service->getActivityStreams(123456, ['time', 'distance', 'latlng']);
 $clubs = $service->listClubs();
+$routes = $service->listRoutes($athlete['id']);
+$segments = $service->listStarredSegments();
 ```
 
-## Dependencies
+## Notes For Agents
 
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
+Use first-class tools for common Strava resources. Use generic API helpers only
+for less common or newer endpoints, and pass relative paths such as `/athlete`,
+`/activities/{id}`, or `/segments/starred`. Absolute URLs are rejected so hosts
+keep control over credentials and API base URL handling.
+
+Strava scopes determine what is visible or writable. Private activity data,
+uploads, activity edits, and segment starring require the corresponding OAuth
+scopes.
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Strava](https://www.strava.com) account with API access
+- `opencompanyapp/integration-core`
+- A Strava account with API access
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

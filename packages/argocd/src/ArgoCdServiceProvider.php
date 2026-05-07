@@ -9,8 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 /**
  * Registers the Argo CD integration with Laravel's service container.
  *
- * Binds the ArgoCdService as a singleton and registers the tool provider
- * with the ToolProviderRegistry during boot.
+ * Binds the Argo CD API client using host-provided credentials and registers
+ * the Argo CD tool provider with the shared registry when available.
  */
 class ArgoCdServiceProvider extends ServiceProvider
 {
@@ -18,9 +18,10 @@ class ArgoCdServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ArgoCdService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+
             return new ArgoCdService(
-                token: $creds->get('argocd', 'api_key', ''),
-                baseUrl: $creds->get('argocd', 'base_url', 'https://api.argocd.io/v1'),
+                token: (string) $creds->get('argocd', 'api_key', ''),
+                baseUrl: (string) $creds->get('argocd', 'base_url', 'https://argocd.example.com'),
             );
         });
     }
@@ -28,8 +29,7 @@ class ArgoCdServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new ArgoCdToolProvider());
+            $this->app->make(ToolProviderRegistry::class)->register(new ArgoCdToolProvider);
         }
     }
 }

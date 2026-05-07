@@ -1,241 +1,158 @@
-# Attio CRM — Lua API Reference
+# Attio CRM Lua API Reference
 
-## list_records
+Namespace: `app.integrations.attio`
 
-List records for an object type in Attio with filtering, sorting, and pagination.
+This integration manages Attio CRM records, objects, attributes, lists, entries, notes, tasks, and webhooks through the Attio REST API. Tools return Attio's parsed JSON response directly, usually with the primary payload under `data`.
 
-### Parameters
+## Raw API Helpers
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `object_id` | string | yes | Object slug or ID (e.g. `"people"`, `"companies"`, `"deals"`) |
-| `limit` | integer | no | Max records to return (default: 20, max: 500) |
-| `offset` | integer | no | Records to skip for pagination (default: 0) |
-| `sorts` | array | no | Sort definitions. Each entry: `{attribute = {slug = "name"}, direction = "asc"}` |
-| `filters` | object | no | Filter definitions following Attio's filter grammar (see below) |
+Use raw helpers for newer or less common Attio endpoints:
 
-### Sort Syntax
-
-Each sort entry is a table with:
-
-- `attribute` — table with `slug` (string) for the attribute to sort on
-- `direction` — `"asc"` or `"desc"`
+| Tool | Method |
+|------|--------|
+| `api_get` | GET |
+| `api_post` | POST |
+| `api_patch` | PATCH |
+| `api_put` | PUT |
+| `api_delete` | DELETE |
 
 ```lua
-sorts = {
-  { attribute = { slug = "name" }, direction = "asc" }
-}
+local result = app.integrations.attio.api_get({
+  path = "/v2/lists"
+})
 ```
 
-### Filter Syntax
+## Records And Objects
 
-Filters use a JSON-like structure. Wrap multiple filters with `$and` or `$or`:
-
-```lua
--- Single filter
-filters = {
-  attribute = { slug = "name" },
-  condition = "contains",
-  value = "Acme"
-}
-
--- Compound filter
-filters = {
-  ["$and"] = {
-    {
-      attribute = { slug = "name" },
-      condition = "contains",
-      value = "Acme"
-    },
-    {
-      attribute = { slug = "stage" },
-      condition = "equals",
-      value = "lead"
-    }
-  }
-}
-```
-
-Common conditions: `equals`, `not_equals`, `contains`, `not_contains`, `starts_with`, `ends_with`, `is_empty`, `is_not_empty`, `greater_than`, `less_than`, `in`, `not_in`.
-
-### Example
+| Tool | Purpose |
+|------|---------|
+| `list_objects` | List object definitions |
+| `get_object` | Get one object definition |
+| `list_records` | Query records for an object |
+| `get_record` | Get one record |
+| `create_record` | Create a record |
+| `update_record` | Update record values |
+| `delete_record` | Delete a record |
+| `list_record_entries` | List list entries attached to a record |
 
 ```lua
-local result = app.integrations.attio.list_records({
+local companies = app.integrations.attio.list_records({
   object_id = "companies",
-  limit = 10,
-  offset = 0,
-  sorts = {
-    { attribute = { slug = "name" }, direction = "asc" }
-  },
-  filters = {
-    ["$and"] = {
-      {
-        attribute = { slug = "name" },
-        condition = "contains",
-        value = "Acme"
-      }
-    }
-  }
+  limit = 25,
+  filters = { name = "Acme" }
 })
 
-for _, record in ipairs(result.data) do
-  print(record.id.record_id .. ": " .. (record.values.name and record.values.name[1].value or "Unnamed"))
-end
-```
-
----
-
-## get_record
-
-Get a single record by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `object_id` | string | yes | Object slug or ID (e.g. `"people"`, `"companies"`) |
-| `id` | string | yes | The record UUID |
-
-### Example
-
-```lua
-local result = app.integrations.attio.get_record({
-  object_id = "companies",
-  id = "aa1b2c3d-..."
-})
-
-local company = result.data
-print(company.values.name[1].value)
-```
-
----
-
-## create_record
-
-Create a new record for a given object type.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `object_id` | string | yes | Object slug or ID (e.g. `"people"`, `"companies"`) |
-| `data` | object | yes | Attribute values keyed by attribute slug |
-
-### Example
-
-```lua
-local result = app.integrations.attio.create_record({
+local created = app.integrations.attio.create_record({
   object_id = "companies",
   data = {
-    name = "Acme Corp",
-    domains = { "acme.com" },
-    website = "https://acme.com"
+    name = "Example Corp",
+    website = "https://example.test"
   }
 })
 
-print("Created company: " .. result.data.id.record_id)
+local updated = app.integrations.attio.update_record({
+  object_id = "companies",
+  record_id = "891dcbfc-9141-415d-9b2a-2238a6cc012d",
+  values = {
+    website = "https://example.test"
+  }
+})
 ```
 
----
+## Attributes
 
-## list_objects
-
-List all object types defined in the workspace.
-
-### Parameters
-
-None.
-
-### Example
+| Tool | Purpose |
+|------|---------|
+| `list_attributes` | List attributes for an object or list |
+| `get_attribute` | Get one attribute |
+| `create_attribute` | Create an object or list attribute |
 
 ```lua
-local result = app.integrations.attio.list_objects()
-
-for _, obj in ipairs(result.data) do
-  print(obj.api_slug .. " — " .. obj.singular_noun)
-end
+local attrs = app.integrations.attio.list_attributes({
+  target = "objects",
+  identifier = "companies"
+})
 ```
 
----
+For `target`, use `objects` for object attributes or `lists` for list attributes.
 
-## get_object
+## Lists And Entries
 
-Get details for a specific object type, including its attributes.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | Object slug or UUID |
-
-### Example
+| Tool | Purpose |
+|------|---------|
+| `list_lists` | List Attio lists |
+| `get_list` | Get one list |
+| `create_list` | Create a list |
+| `update_list` | Update a list |
+| `list_entries` | Query entries in a list |
+| `create_entry` | Add a record to a list |
+| `get_entry` | Get one list entry |
+| `update_entry` | Update entry values |
+| `delete_entry` | Delete an entry |
 
 ```lua
-local result = app.integrations.attio.get_object({
-  id = "companies"
+local entries = app.integrations.attio.list_entries({
+  list_id = "sales-prospects",
+  limit = 50,
+  filter = { name = "Ada Lovelace" }
 })
 
-for _, attr in ipairs(result.data.attributes) do
-  print(attr.api_slug .. " (" .. attr.attribute_type .. ")")
-end
+local entry = app.integrations.attio.create_entry({
+  list_id = "sales-prospects",
+  parent_object = "people",
+  parent_record_id = "891dcbfc-9141-415d-9b2a-2238a6cc012d",
+  entry_values = {
+    status = "In Progress"
+  }
+})
 ```
 
----
+`update_entry` uses Attio's PUT endpoint, which overwrites multiselect values.
 
-## list_workspaces
+## Notes, Tasks, And Webhooks
 
-List all workspaces accessible to the authenticated user.
-
-### Parameters
-
-None.
-
-### Example
+| Tool | Purpose |
+|------|---------|
+| `list_notes` | List notes globally or for a record |
+| `create_note` | Create a note |
+| `list_tasks` | List tasks |
+| `create_task` | Create a task |
+| `update_task` | Update a task |
+| `delete_task` | Delete a task |
+| `list_webhooks` | List webhooks |
 
 ```lua
-local result = app.integrations.attio.list_workspaces()
+local notes = app.integrations.attio.list_notes({
+  parent_object = "people",
+  parent_record_id = "891dcbfc-9141-415d-9b2a-2238a6cc012d"
+})
 
-for _, ws in ipairs(result.data) do
-  print(ws.id.workspace_id .. ": " .. ws.name)
-end
+local task = app.integrations.attio.create_task({
+  content_plaintext = "Follow up",
+  deadline_at = "2026-05-15",
+  linked_records = {
+    {
+      target_object_id = "people",
+      target_record_id = "891dcbfc-9141-415d-9b2a-2238a6cc012d"
+    }
+  }
+})
 ```
 
----
+## Account Context
 
-## get_current_user
+`list_workspaces` and `get_current_user` help confirm which Attio account and workspace the token can access.
 
-Get the currently authenticated user profile.
-
-### Parameters
-
-None.
-
-### Example
+If multiple Attio accounts are configured, use account-specific namespaces:
 
 ```lua
-local result = app.integrations.attio.get_current_user()
-
-print("User: " .. result.data.first_name .. " " .. result.data.last_name)
-print("Email: " .. result.data.email)
+local result = app.integrations.attio.accounts.sales.list_records({
+  object_id = "companies"
+})
 ```
 
----
+## Safety Notes
 
-## Multi-Account Usage
-
-If you have multiple Attio workspaces configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.attio.list_records({ object_id = "companies" })
-
--- Explicit default (portable across setups)
-app.integrations.attio.default.list_records({ object_id = "companies" })
-
--- Named accounts
-app.integrations.attio.production.list_records({ object_id = "companies" })
-app.integrations.attio.staging.list_records({ object_id = "companies" })
-```
-
-All functions are identical across accounts — only the credentials differ.
+- Use fake examples such as `example.test` in generated docs and tests.
+- Record, entry, and task deletes are destructive.
+- Attio create/update payloads usually wrap fields under `data`; first-class tools do that wrapping when you pass first-class parameters.

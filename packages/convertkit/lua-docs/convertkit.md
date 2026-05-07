@@ -1,179 +1,100 @@
-# ConvertKit — Lua API Reference
+# Kit (ConvertKit) Lua API Reference
 
-## list_subscribers
+Namespace: `app.integrations.convertkit`
 
-List subscribers from your ConvertKit account with pagination and date filtering.
+This integration targets the current Kit API V4 at `https://api.kit.com/v4`.
+Most tools accept a `params` object for cursor pagination and filters, or a
+`payload` object for write requests. Individual common fields such as
+`email_address`, `first_name`, `tag_id`, or `subscriber_id` may also be passed at
+the top level.
 
-### Parameters
+## Common Patterns
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (starts at 1, default: 1) |
-| `per_page` | integer | no | Results per page (max 50, default: 50) |
-| `from` | string | no | Filter subscribers added after this date (ISO 8601, e.g. "2025-01-01") |
-| `to` | string | no | Filter subscribers added before this date (ISO 8601, e.g. "2025-12-31") |
-
-### Example
+List subscribers:
 
 ```lua
 local result = app.integrations.convertkit.list_subscribers({
-  page = 1,
-  per_page = 25,
-  from = "2025-01-01",
-  to = "2025-12-31"
-})
-
-for _, sub in ipairs(result.subscribers) do
-  print(sub.email_address .. " — " .. (sub.first_name or "N/A"))
-end
-```
-
----
-
-## get_subscriber
-
-Get details for a single subscriber by their ConvertKit subscriber ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `subscriber_id` | integer | yes | The ConvertKit subscriber ID |
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.get_subscriber({
-  subscriber_id = 12345
-})
-
-print(result.subscriber.email_address)
-print(result.subscriber.state)
-```
-
----
-
-## list_forms
-
-List all forms in your ConvertKit account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.list_forms({})
-
-for _, form in ipairs(result.forms) do
-  print(form.id .. ": " .. form.name)
-end
-```
-
----
-
-## list_tags
-
-List all tags in your ConvertKit account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.list_tags({})
-
-for _, tag in ipairs(result.tags) do
-  print(tag.id .. ": " .. tag.name)
-end
-```
-
----
-
-## create_tag
-
-Create a new tag in ConvertKit.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name for the new tag |
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.create_tag({
-  name = "VIP Customer"
-})
-
-print("Created tag: " .. result.tag.name .. " (ID: " .. result.tag.id .. ")")
-```
-
----
-
-## list_broadcasts
-
-List broadcasts (email blasts) from your ConvertKit account with pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (starts at 1, default: 1) |
-| `per_page` | integer | no | Results per page (default: 50) |
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.list_broadcasts({
-  page = 1,
+  email_address = "reader@example.test",
   per_page = 25
 })
-
-for _, broadcast in ipairs(result.broadcasts) do
-  print(broadcast.id .. ": " .. broadcast.subject)
-end
 ```
 
----
-
-## get_current_user
-
-Get the authenticated ConvertKit account information.
-
-### Parameters
-
-None.
-
-### Example
+Create or upsert a subscriber:
 
 ```lua
-local result = app.integrations.convertkit.get_current_user({})
-
-print("Account: " .. result.name)
-print("Email: " .. result.primary_email_address)
+local result = app.integrations.convertkit.create_subscriber({
+  email_address = "reader@example.test",
+  first_name = "Ada",
+  fields = {
+    plan = "pro"
+  }
+})
 ```
 
----
+Tag a subscriber by email address:
+
+```lua
+local result = app.integrations.convertkit.tag_subscriber_by_email({
+  tag_id = 42,
+  email_address = "reader@example.test"
+})
+```
+
+Create a broadcast from a full V4 payload:
+
+```lua
+local result = app.integrations.convertkit.create_broadcast({
+  payload = {
+    subject = "Weekly update",
+    preview_text = "What changed this week",
+    description = "Weekly update",
+    content = "<p>Hello readers</p>",
+    public = false,
+    published_at = "2026-01-01T00:00:00Z",
+    subscriber_filter = {}
+  }
+})
+```
+
+## Resource Coverage
+
+Tools are grouped around Kit V4 resources:
+
+- `get_current_account`, `get_current_user`, `get_creator_profile`, `get_email_stats`, `get_growth_stats`, `list_colors`, `update_colors`
+- `list_broadcasts`, `create_broadcast`, `get_broadcast`, `update_broadcast`, `delete_broadcast`, `get_broadcast_stats`, `list_broadcast_stats`, `get_broadcast_clicks`
+- `list_subscribers`, `create_subscriber`, `filter_subscribers`, `get_subscriber`, `update_subscriber`, `unsubscribe_subscriber`, `list_subscriber_stats`, `list_subscriber_tags`, `bulk_create_subscribers`
+- `list_forms`, `list_form_subscribers`, `add_subscriber_to_form`, `add_subscriber_to_form_by_email`, `bulk_add_subscribers_to_forms`
+- `list_tags`, `create_tag`, `update_tag`, `list_tag_subscribers`, `tag_subscriber`, `tag_subscriber_by_email`, `remove_tag_from_subscriber`, `remove_tag_from_subscriber_by_email`, `bulk_create_tags`, `bulk_tag_subscribers`, `bulk_remove_tags_from_subscribers`
+- `list_sequences`, `create_sequence`, `get_sequence`, `update_sequence`, `delete_sequence`, `list_sequence_subscribers`, `add_subscriber_to_sequence`, `add_subscriber_to_sequence_by_email`
+- `list_custom_fields`, `create_custom_field`, `update_custom_field`, `delete_custom_field`, `bulk_create_custom_fields`, `bulk_update_subscriber_custom_fields`
+- `list_email_templates`, `list_posts`, `get_post`, `list_purchases`, `create_purchase`, `get_purchase`, `list_segments`, `list_snippets`, `create_snippet`, `get_snippet`, `update_snippet`, `list_webhooks`, `create_webhook`, `delete_webhook`
+
+## Raw API Helpers
+
+Use raw helpers for newly released V4 endpoints that are not yet wrapped:
+
+```lua
+local result = app.integrations.convertkit.api_get({
+  path = "/segments",
+  params = {
+    per_page = 50
+  }
+})
+```
+
+The `path` must be relative, for example `/subscribers` or `/v4/subscribers`.
+Absolute URLs and parent-directory paths are rejected.
+
+## OAuth-Restricted Endpoints
+
+Kit documents some endpoints, including bulk operations and purchase creation,
+as requiring OAuth. If an API key receives an authorization error for one of
+these tools, configure `oauth_access_token` for the account.
 
 ## Multi-Account Usage
 
-If you have multiple ConvertKit accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.convertkit.list_subscribers({...})
-
--- Explicit default (portable across setups)
-app.integrations.convertkit.default.list_subscribers({...})
-
--- Named accounts
-app.integrations.convertkit.work.list_subscribers({...})
-app.integrations.convertkit.personal.list_subscribers({...})
+app.integrations.convertkit.list_subscribers({ per_page = 25 })
+app.integrations.convertkit.default.list_subscribers({ per_page = 25 })
+app.integrations.convertkit.work.list_subscribers({ per_page = 25 })
 ```
-
-All functions are identical across accounts — only the credentials differ.

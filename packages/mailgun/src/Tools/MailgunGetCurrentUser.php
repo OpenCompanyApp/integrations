@@ -2,43 +2,36 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class MailgunGetCurrentUser implements Tool
+/**
+ * Verify API credentials by listing one domain.
+ */
+class MailgunGetCurrentUser extends AbstractMailgunEndpointTool
 {
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_get_current_user';
 
-    public function name(): string
-    {
-        return 'mailgun_get_current_user';
-    }
+    protected string $toolDescription = 'Verify API credentials by listing one domain.';
 
-    public function description(): string
-    {
-        return 'Verify the Mailgun API connection and retrieve basic account info by listing domains.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/v4/domains';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of domains to return.',
+    ],
+];
 
-            $result = $this->service->getCurrentUser();
+    /** @var list<string> */
+    protected array $required = [];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

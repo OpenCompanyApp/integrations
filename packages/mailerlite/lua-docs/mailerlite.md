@@ -1,156 +1,129 @@
-# Mailerlite — Lua API Reference
+# MailerLite Lua API
 
-## mailerlite_add_subscriber_to_group
+Namespace: `app.integrations.mailerlite`
 
-Add a subscriber to a MailerLite group by providing the group ID and subscriber email..
+Use these tools to manage subscribers, groups, segments, fields, automations, campaigns, forms, webhooks, and batch requests through the current MailerLite API.
 
-### Parameters
+## Subscribers
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `group_id` | string | yes | The group ID to add the subscriber to. |
-| `email` | string | yes | Subscriber email address. |
-| `name` | string | no | Subscriber name (used if creating a new subscriber). |
+- `mailerlite_list_subscribers({ limit, cursor, status, include })`
+- `mailerlite_get_subscriber({ id })`
+- `mailerlite_create_subscriber({ email, fields, groups, status })`
+- `mailerlite_update_subscriber({ id, fields, groups, status, subscribed_at })`
+- `mailerlite_delete_subscriber({ id })`
+- `mailerlite_list_subscriber_activity({ id, ["filter[log_name]"], limit, page })`
 
-### Example
+`id` can be a subscriber ID or email address for subscriber fetch/update/delete calls. `include = "groups"` includes group data in subscriber lists.
+
+## Groups
+
+- `mailerlite_list_groups({ limit, page })`
+- `mailerlite_create_group({ name })`
+- `mailerlite_update_group({ group_id, name })`
+- `mailerlite_delete_group({ group_id })`
+- `mailerlite_list_group_subscribers({ group_id, ["filter[status]"], limit, cursor })`
+- `mailerlite_add_subscriber_to_group({ group_id, email, name })`
+- `mailerlite_assign_subscriber_to_group({ subscriber_id, group_id })`
+- `mailerlite_unassign_subscriber_from_group({ subscriber_id, group_id })`
+- `mailerlite_import_subscribers_to_group({ group_id, subscribers })`
+
+`mailerlite_add_subscriber_to_group` creates or updates a subscriber and includes the group in the subscriber payload. Use the assign/unassign tools when you already have the MailerLite subscriber ID.
+
+## Segments And Fields
+
+- `mailerlite_list_segments({ limit, page })`
+- `mailerlite_list_segment_subscribers({ segment_id, ["filter[status]"], limit, cursor })`
+- `mailerlite_update_segment({ segment_id, name })`
+- `mailerlite_delete_segment({ segment_id })`
+- `mailerlite_list_fields({ limit, page })`
+- `mailerlite_create_field({ name, type })`
+- `mailerlite_update_field({ field_id, name })`
+- `mailerlite_delete_field({ field_id })`
+
+Field `type` must be `text`, `number`, or `date`.
+
+## Automations
+
+- `mailerlite_list_automations({ ["filter[enabled]"], ["filter[name]"], ["filter[group]"], page, limit })`
+- `mailerlite_get_automation({ automation_id })`
+- `mailerlite_list_automation_activity({ automation_id, page, limit })`
+- `mailerlite_create_automation({ name })`
+- `mailerlite_create_automation({ payload = {...} })`
+- `mailerlite_delete_automation({ automation_id })`
+
+Automation creation creates a draft automation. Use `payload` when MailerLite requires fields beyond `name`.
+
+## Campaigns
+
+- `mailerlite_list_campaigns({ ["filter[status]"], ["filter[type]"], ["filter[name]"], sort, page, limit })`
+- `mailerlite_get_campaign({ campaign_id })`
+- `mailerlite_create_campaign({ payload = {...} })`
+- `mailerlite_update_campaign({ campaign_id, payload = {...} })`
+- `mailerlite_schedule_campaign({ campaign_id, payload = {...} })`
+- `mailerlite_cancel_campaign({ campaign_id })`
+- `mailerlite_delete_campaign({ campaign_id })`
+- `mailerlite_list_campaign_subscriber_activity({ campaign_id, page, limit })`
+
+Campaign create/update payloads are passed through to MailerLite so agents can supply the documented `type`, `name`, `emails`, `groups`, `segments`, and scheduling fields without the integration dropping nested data.
+
+## Forms
+
+- `mailerlite_list_forms({ type, ["filter[name]"], sort, page, limit })`
+- `mailerlite_get_form({ form_id })`
+- `mailerlite_update_form({ form_id, payload = {...} })`
+- `mailerlite_delete_form({ form_id })`
+- `mailerlite_list_form_subscribers({ form_id, page, limit })`
+
+Form `type` must be `popup`, `embedded`, or `promotion`.
+
+## Webhooks
+
+- `mailerlite_list_webhooks({ page, limit })`
+- `mailerlite_get_webhook({ webhook_id })`
+- `mailerlite_create_webhook({ name, events, url, enabled, batchable })`
+- `mailerlite_update_webhook({ webhook_id, name, events, url, enabled, batchable })`
+- `mailerlite_delete_webhook({ webhook_id })`
+
+Supported webhook event names include subscriber events such as `subscriber.created`, `subscriber.updated`, and campaign events such as `campaign.sent`, `campaign.open`, and `campaign.click`. MailerLite requires `batchable = true` for some high-volume events.
+
+## Utilities
+
+- `mailerlite_batch({ requests = {...} })`
+- `mailerlite_get_current_user({})`
+- `mailerlite_api_get({ path, params })`
+- `mailerlite_api_post({ path, payload })`
+- `mailerlite_api_put({ path, payload })`
+- `mailerlite_api_patch({ path, payload })`
+- `mailerlite_api_delete({ path, payload })`
+
+Batch request objects must use MailerLite's documented `method`, `path`, and optional `body` keys. Raw API helper paths must be relative paths like `/subscribers`; absolute URLs are rejected.
+
+## Examples
 
 ```lua
-local result = app.integrations.mailerlite.mailerlite_add_subscriber_to_group({
-  group_id = ""
-  email = ""
-  name = ""
+local created = app.integrations.mailerlite.mailerlite_create_subscriber({
+  email = "reader@example.test",
+  fields = {
+    name = "Ada Example",
+    company = "Example Co"
+  },
+  groups = {"1234567890"},
+  status = "active"
 })
 ```
 
-## mailerlite_create_subscriber
-
-Add a new subscriber to MailerLite. Provide an email address and optionally a name and custom fields..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | Subscriber email address. |
-| `name` | string | no | Subscriber name. |
-| `fields` | string | no | Custom fields as key-value pairs (e.g., { |
-
-### Example
-
 ```lua
-local result = app.integrations.mailerlite.mailerlite_create_subscriber({
-  email = ""
-  name = ""
-  fields = ""
+local activity = app.integrations.mailerlite.mailerlite_list_campaign_subscriber_activity({
+  campaign_id = "66200823885989563",
+  limit = 50
 })
 ```
 
-## mailerlite_delete_subscriber
-
-Delete a subscriber from MailerLite by their ID. This action is permanent..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The subscriber ID to delete. |
-
-### Example
-
 ```lua
-local result = app.integrations.mailerlite.mailerlite_delete_subscriber({
-  id = ""
-})
-```
-
-## mailerlite_get_current_user
-
-Get the currently authenticated MailerLite account information. Useful for verifying API credentials..
-
-### Example
-
-```lua
-local result = app.integrations.mailerlite.mailerlite_get_current_user({
-})
-```
-
-## mailerlite_get_subscriber
-
-Get details for a single MailerLite subscriber by their ID..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The subscriber ID. |
-
-### Example
-
-```lua
-local result = app.integrations.mailerlite.mailerlite_get_subscriber({
-  id = ""
-})
-```
-
-## mailerlite_list_groups
-
-List subscriber groups (segments) from MailerLite. Supports pagination..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1). |
-| `limit` | integer | no | Number of groups per page (default: 25). |
-
-### Example
-
-```lua
-local result = app.integrations.mailerlite.mailerlite_list_groups({
-  page = 0
-  limit = 0
-})
-```
-
-## mailerlite_list_subscribers
-
-List subscribers from MailerLite. Supports pagination and filtering by status (active, unsubscribed, etc.)..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1). |
-| `limit` | integer | no | Number of subscribers per page (default: 25, max: 100). |
-| `status` | string | no | Filter by status: active, unsubscribed, unconfirmed, bounced, junk. |
-
-### Example
-
-```lua
-local result = app.integrations.mailerlite.mailerlite_list_subscribers({
-  page = 0
-  limit = 0
-  status = ""
-})
-```
-
-## mailerlite_update_subscriber
-
-Update an existing subscriber in MailerLite. Provide the subscriber ID and fields to update..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The subscriber ID. |
-| `name` | string | no | Updated subscriber name. |
-| `fields` | string | no | Updated custom fields as key-value pairs. |
-
-### Example
-
-```lua
-local result = app.integrations.mailerlite.mailerlite_update_subscriber({
-  id = ""
-  name = ""
-  fields = ""
+local webhook = app.integrations.mailerlite.mailerlite_create_webhook({
+  name = "Subscriber events",
+  url = "https://example.test/mailerlite",
+  events = {"subscriber.created", "subscriber.updated"},
+  enabled = true
 })
 ```

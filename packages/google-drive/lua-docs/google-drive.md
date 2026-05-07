@@ -1,219 +1,99 @@
-# Google Drive — Lua API Reference
+# Google Drive
 
-## list_files
+Google Drive tools are exposed under `app.integrations.google_drive`. This package is generated from Google's official Drive API v3 Discovery document and exposes 64 REST methods.
 
-List files and folders in Google Drive. Supports filtering, pagination, and spaces.
+## Coverage
 
-### Parameters
+- Source: `https://www.googleapis.com/discovery/v1/apis/drive/v3/rest`
+- Read tools: 28
+- Write tools: 36
+- Media upload tools: 2
+- Media download-capable tools: 3
+- Base URL: `https://www.googleapis.com`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Max files per page (default: 100, max: 1000) |
-| `pageToken` | string | no | Token from previous response for pagination |
-| `q` | string | no | Query string for filtering files |
-| `spaces` | string | no | Comma-separated spaces: "drive", "appDataFolder", "photos" |
-| `trashed` | boolean | no | Include trashed files (true/false) |
-| `corpora` | string | no | Source: "user", "domain", "allDrives", or "drive" |
-| `fields` | string | no | Fields to include in partial response |
+## Usage Notes
 
-### Query Examples
+Pass IDs such as `fileId`, `driveId`, `commentId`, `replyId`, `permissionId`, `revisionId`, or `approvalId` as top-level arguments. Query parameters can be passed as top-level shortcuts or inside `query`. Request bodies go inside `body`. Upload endpoints accept `file_path`, optional `mime_type`, and optional Drive metadata in `body`; the integration sends multipart upload requests with `uploadType=multipart`.
 
-```
-name = 'hello'                           -- exact name match
-name contains 'report'                   -- name contains substring
-mimeType = 'application/vnd.google-apps.folder'  -- folders only
-mimeType != 'application/vnd.google-apps.folder' -- files only (no folders)
-fullText contains 'invoice'              -- full-text search
-modifiedTime > '2025-01-01T00:00:00'     -- modified after date
-'parentId' in parents                    -- files in a specific folder
-```
+For media downloads, pass `alt = "media" where Google documents media download support. Raw binary responses are returned as `{ body = ..., status = ... }` if they are not JSON.
+
+## Tools
+
+- `google_drive_approvals_list` - GET /drive/v3/files/{fileId}/approvals
+- `google_drive_approvals_decline` - POST /drive/v3/files/{fileId}/approvals/{approvalId}:decline
+- `google_drive_approvals_get` - GET /drive/v3/files/{fileId}/approvals/{approvalId}
+- `google_drive_approvals_start` - POST /drive/v3/files/{fileId}/approvals:start
+- `google_drive_approvals_cancel` - POST /drive/v3/files/{fileId}/approvals/{approvalId}:cancel
+- `google_drive_approvals_approve` - POST /drive/v3/files/{fileId}/approvals/{approvalId}:approve
+- `google_drive_approvals_comment` - POST /drive/v3/files/{fileId}/approvals/{approvalId}:comment
+- `google_drive_approvals_reassign` - POST /drive/v3/files/{fileId}/approvals/{approvalId}:reassign
+- `google_drive_comments_list` - GET /drive/v3/files/{fileId}/comments
+- `google_drive_comments_update` - PATCH /drive/v3/files/{fileId}/comments/{commentId}
+- `google_drive_comments_delete` - DELETE /drive/v3/files/{fileId}/comments/{commentId}
+- `google_drive_comments_create` - POST /drive/v3/files/{fileId}/comments
+- `google_drive_comments_get` - GET /drive/v3/files/{fileId}/comments/{commentId}
+- `google_drive_files_modify_labels` - POST /drive/v3/files/{fileId}/modifyLabels
+- `google_drive_files_delete` - DELETE /drive/v3/files/{fileId}
+- `google_drive_files_create` - POST /drive/v3/files (media upload)
+- `google_drive_files_generate_cse_token` - GET /drive/v3/files/generateCseToken
+- `google_drive_files_watch` - POST /drive/v3/files/{fileId}/watch
+- `google_drive_files_list` - GET /drive/v3/files
+- `google_drive_files_list_labels` - GET /drive/v3/files/{fileId}/listLabels
+- `google_drive_files_update` - PATCH /drive/v3/files/{fileId} (media upload)
+- `google_drive_files_download` - POST /drive/v3/files/{fileId}/download
+- `google_drive_files_generate_ids` - GET /drive/v3/files/generateIds
+- `google_drive_files_export` - GET /drive/v3/files/{fileId}/export (media download)
+- `google_drive_files_get` - GET /drive/v3/files/{fileId} (media download)
+- `google_drive_files_copy` - POST /drive/v3/files/{fileId}/copy
+- `google_drive_files_empty_trash` - DELETE /drive/v3/files/trash
+- `google_drive_about_get` - GET /drive/v3/about
+- `google_drive_channels_stop` - POST /drive/v3/channels/stop
+- `google_drive_permissions_delete` - DELETE /drive/v3/files/{fileId}/permissions/{permissionId}
+- `google_drive_permissions_list` - GET /drive/v3/files/{fileId}/permissions
+- `google_drive_permissions_update` - PATCH /drive/v3/files/{fileId}/permissions/{permissionId}
+- `google_drive_permissions_create` - POST /drive/v3/files/{fileId}/permissions
+- `google_drive_permissions_get` - GET /drive/v3/files/{fileId}/permissions/{permissionId}
+- `google_drive_apps_list` - GET /drive/v3/apps
+- `google_drive_apps_get` - GET /drive/v3/apps/{appId}
+- `google_drive_accessproposals_resolve` - POST /drive/v3/files/{fileId}/accessproposals/{proposalId}:resolve
+- `google_drive_accessproposals_list` - GET /drive/v3/files/{fileId}/accessproposals
+- `google_drive_accessproposals_get` - GET /drive/v3/files/{fileId}/accessproposals/{proposalId}
+- `google_drive_operations_get` - GET /drive/v3/operations/{name}
+- `google_drive_revisions_get` - GET /drive/v3/files/{fileId}/revisions/{revisionId} (media download)
+- `google_drive_revisions_delete` - DELETE /drive/v3/files/{fileId}/revisions/{revisionId}
+- `google_drive_revisions_list` - GET /drive/v3/files/{fileId}/revisions
+- `google_drive_revisions_update` - PATCH /drive/v3/files/{fileId}/revisions/{revisionId}
+- `google_drive_teamdrives_delete` - DELETE /drive/v3/teamdrives/{teamDriveId}
+- `google_drive_teamdrives_list` - GET /drive/v3/teamdrives
+- `google_drive_teamdrives_update` - PATCH /drive/v3/teamdrives/{teamDriveId}
+- `google_drive_teamdrives_create` - POST /drive/v3/teamdrives
+- `google_drive_teamdrives_get` - GET /drive/v3/teamdrives/{teamDriveId}
+- `google_drive_changes_list` - GET /drive/v3/changes
+- `google_drive_changes_get_start_page_token` - GET /drive/v3/changes/startPageToken
+- `google_drive_changes_watch` - POST /drive/v3/changes/watch
+- `google_drive_replies_create` - POST /drive/v3/files/{fileId}/comments/{commentId}/replies
+- `google_drive_replies_get` - GET /drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}
+- `google_drive_replies_list` - GET /drive/v3/files/{fileId}/comments/{commentId}/replies
+- `google_drive_replies_update` - PATCH /drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}
+- `google_drive_replies_delete` - DELETE /drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}
+- `google_drive_drives_create` - POST /drive/v3/drives
+- `google_drive_drives_get` - GET /drive/v3/drives/{driveId}
+- `google_drive_drives_hide` - POST /drive/v3/drives/{driveId}/hide
+- `google_drive_drives_delete` - DELETE /drive/v3/drives/{driveId}
+- `google_drive_drives_unhide` - POST /drive/v3/drives/{driveId}/unhide
+- `google_drive_drives_list` - GET /drive/v3/drives
+- `google_drive_drives_update` - PATCH /drive/v3/drives/{driveId}
 
 ## Examples
 
-### List recent files
-
 ```lua
-local result = app.integrations.google_drive.list_files({
-  pageSize = 20,
-  fields = "files(id,name,mimeType,modifiedTime,size)"
-})
+local files = app.integrations.google_drive.google_drive_files_list({ pageSize = 10, q = "trashed = false" })
 
-for _, file in ipairs(result.files) do
-  print(file.name .. " (" .. file.mimeType .. ")")
-end
-```
-
-### List only folders
-
-```lua
-local result = app.integrations.google_drive.list_files({
-  q = "mimeType = 'application/vnd.google-apps.folder'",
-  fields = "files(id,name)"
+local uploaded = app.integrations.google_drive.google_drive_files_create({
+  file_path = "/tmp/report.pdf",
+  mime_type = "application/pdf",
+  body = { name = "report.pdf" }
 })
 ```
 
-### Paginate through results
-
-```lua
-local page = app.integrations.google_drive.list_files({ pageSize = 50 })
-
-while page.files do
-  for _, file in ipairs(page.files) do
-    print(file.name)
-  end
-
-  if page.nextPageToken then
-    page = app.integrations.google_drive.list_files({
-      pageSize = 50,
-      pageToken = page.nextPageToken
-    })
-  else
-    break
-  end
-end
-```
-
----
-
-## get_file
-
-Get metadata for a specific file or folder by its Google Drive file ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `fileId` | string | yes | The Google Drive file ID |
-| `fields` | string | no | Fields to include in response |
-
-### Example
-
-```lua
-local file = app.integrations.google_drive.get_file({
-  fileId = "1aBcDeFgHiJkLmNoPqRsTuVwXyZ",
-  fields = "id,name,mimeType,size,modifiedTime,webViewLink"
-})
-
-print(file.name .. " — " .. file.webViewLink)
-```
-
----
-
-## create_file
-
-Create a new file metadata entry in Google Drive.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | File name (e.g., "Report.pdf") |
-| `mimeType` | string | no | MIME type (e.g., "text/plain", "application/pdf") |
-| `parents` | array | no | List of parent folder IDs |
-| `description` | string | no | Short file description |
-
-### Example
-
-```lua
-local file = app.integrations.google_drive.create_file({
-  name = "Meeting Notes.txt",
-  mimeType = "text/plain",
-  parents = { "1aBcDeFgHiJkLmNoPqRsTuVwXyZ" }
-})
-
-print("Created: " .. file.id .. " — " .. file.name)
-```
-
----
-
-## create_folder
-
-Create a new folder in Google Drive.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Folder name |
-| `parentId` | string | no | Parent folder ID (root if omitted) |
-
-### Example
-
-```lua
-local folder = app.integrations.google_drive.create_folder({
-  name = "Project 2026",
-  parentId = "1aBcDeFgHiJkLmNoPqRsTuVwXyZ"
-})
-
-print("Folder created: " .. folder.id .. " — " .. folder.name)
-```
-
----
-
-## list_changes
-
-List changes to files in Google Drive. Used for detecting file additions, modifications, and deletions.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Max changes per page (default: 100, max: 1000) |
-| `pageToken` | string | no | Token from previous response or startPageToken |
-| `fields` | string | no | Fields to include in response |
-
-### Example
-
-```lua
-local result = app.integrations.google_drive.list_changes({
-  pageToken = "12345",
-  pageSize = 50,
-  fields = "changes(fileId,file(name,mimeType)),nextPageToken,newStartPageToken"
-})
-
-for _, change in ipairs(result.changes) do
-  print(change.fileId .. ": " .. (change.file and change.file.name or "removed"))
-end
-```
-
----
-
-## get_current_user
-
-Get information about the authenticated user and their Drive storage quota.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `fields` | string | no | Fields to include (default: "user,storageQuota") |
-
-### Example
-
-```lua
-local info = app.integrations.google_drive.get_current_user({})
-
-print("User: " .. info.user.displayName)
-print("Email: " .. info.user.emailAddress)
-print("Storage: " .. (info.storageQuota.usage / 1073741824) .. " GB used of " .. (info.storageQuota.limit / 1073741824) .. " GB")
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Google Drive accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.google_drive.list_files({...})
-
--- Explicit default (portable across setups)
-app.integrations.google_drive.default.list_files({...})
-
--- Named accounts
-app.integrations.google_drive.work.list_files({...})
-app.integrations.google_drive.personal.list_files({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Responses are decoded Google Drive JSON responses, or `{ success = true, status = ... }` for successful empty responses.

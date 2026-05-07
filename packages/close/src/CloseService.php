@@ -2,9 +2,11 @@
 
 namespace OpenCompany\Integrations\Close;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
  * Close CRM API service.
@@ -38,7 +40,7 @@ class CloseService
         return ! empty($this->apiKey);
     }
 
-    // ─── Leads ────────────────────────────────────────────────────────────
+    // Leads
 
     /**
      * List leads with optional query and pagination.
@@ -60,7 +62,7 @@ class CloseService
             $params['_skip'] = $skip;
         }
 
-        return $this->request('GET', '/lead/', $params);
+        return $this->apiGet('/lead/', $params);
     }
 
     /**
@@ -73,7 +75,7 @@ class CloseService
      */
     public function getLead(string $id): array
     {
-        return $this->request('GET', '/lead/' . urlencode($id) . '/');
+        return $this->apiGet('/lead/' . rawurlencode($id) . '/');
     }
 
     /**
@@ -93,7 +95,7 @@ class CloseService
             $data['contacts'] = $contacts;
         }
 
-        return $this->request('POST', '/lead/', $data);
+        return $this->apiPost('/lead/', $data);
     }
 
     /**
@@ -107,7 +109,7 @@ class CloseService
      */
     public function updateLead(string $id, array $data): array
     {
-        return $this->request('PUT', '/lead/' . urlencode($id) . '/', $data);
+        return $this->apiPut('/lead/' . rawurlencode($id) . '/', $data);
     }
 
     /**
@@ -119,10 +121,10 @@ class CloseService
      */
     public function deleteLead(string $id): void
     {
-        $this->request('DELETE', '/lead/' . urlencode($id) . '/');
+        $this->apiDelete('/lead/' . rawurlencode($id) . '/');
     }
 
-    // ─── Contacts ─────────────────────────────────────────────────────────
+    // Contacts
 
     /**
      * List contacts with optional filtering and pagination.
@@ -144,10 +146,55 @@ class CloseService
             $params['_skip'] = $skip;
         }
 
-        return $this->request('GET', '/contact/', $params);
+        return $this->apiGet('/contact/', $params);
     }
 
-    // ─── Activities ───────────────────────────────────────────────────────
+    /**
+     * Get a single contact by ID.
+     *
+     * @param  string  $id  Close contact ID.
+     * @return array<string, mixed>
+     */
+    public function getContact(string $id): array
+    {
+        return $this->apiGet('/contact/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * Create a contact.
+     *
+     * @param  array<string, mixed>  $data  Contact fields including lead_id, name, emails, phones, title, and custom.
+     * @return array<string, mixed>
+     */
+    public function createContact(array $data): array
+    {
+        return $this->apiPost('/contact/', $data);
+    }
+
+    /**
+     * Update a contact.
+     *
+     * @param  string  $id  Close contact ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updateContact(string $id, array $data): array
+    {
+        return $this->apiPut('/contact/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete a contact.
+     *
+     * @param  string  $id  Close contact ID.
+     * @return array<string, mixed>
+     */
+    public function deleteContact(string $id): array
+    {
+        return $this->apiDelete('/contact/' . rawurlencode($id) . '/');
+    }
+
+    // Activities
 
     /**
      * List activities with optional filtering and pagination.
@@ -173,10 +220,77 @@ class CloseService
             $params['_skip'] = $skip;
         }
 
-        return $this->request('GET', '/activity/', $params);
+        return $this->apiGet('/activity/', $params);
     }
 
-    // ─── Tasks ────────────────────────────────────────────────────────────
+    /**
+     * List Note activities.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as lead_id, user_id, date filters, _limit, and _skip.
+     * @return array<string, mixed>
+     */
+    public function listNotes(array $params = []): array
+    {
+        return $this->apiGet('/activity/note/', $params);
+    }
+
+    /**
+     * Get a Note activity by ID.
+     *
+     * @param  string  $id  Close note activity ID.
+     * @return array<string, mixed>
+     */
+    public function getNote(string $id): array
+    {
+        return $this->apiGet('/activity/note/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * Create a Note activity.
+     *
+     * @param  array<string, mixed>  $data  Note fields including lead_id and note.
+     * @return array<string, mixed>
+     */
+    public function createNote(array $data): array
+    {
+        return $this->apiPost('/activity/note/', $data);
+    }
+
+    /**
+     * Update a Note activity.
+     *
+     * @param  string  $id  Close note activity ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updateNote(string $id, array $data): array
+    {
+        return $this->apiPut('/activity/note/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete a Note activity.
+     *
+     * @param  string  $id  Close note activity ID.
+     * @return array<string, mixed>
+     */
+    public function deleteNote(string $id): array
+    {
+        return $this->apiDelete('/activity/note/' . rawurlencode($id) . '/');
+    }
+
+    // Tasks
+
+    /**
+     * List tasks with optional filters.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as lead_id, assigned_to, is_complete, _type, _limit, and _skip.
+     * @return array<string, mixed>
+     */
+    public function listTasks(array $params = []): array
+    {
+        return $this->apiGet('/task/', $params);
+    }
 
     /**
      * Create a new task.
@@ -184,7 +298,7 @@ class CloseService
      * @param  string  $text  The task body / description.
      * @param  string|null  $leadId  Associate the task with a lead (optional).
      * @param  string|null  $assigneeId  User ID to assign the task to (optional).
-     * @param  string|null  $dueDate  Due date in ISO 8601 format (optional).
+     * @param  string|null  $date  Task date in YYYY-MM-DD format (optional).
      * @param  bool  $isComplete  Whether the task is already completed (default false).
      * @return array<string, mixed> The created task data.
      *
@@ -194,7 +308,7 @@ class CloseService
         string $text,
         ?string $leadId = null,
         ?string $assigneeId = null,
-        ?string $dueDate = null,
+        ?string $date = null,
         bool $isComplete = false,
     ): array {
         $data = [
@@ -205,16 +319,108 @@ class CloseService
             $data['lead_id'] = $leadId;
         }
         if ($assigneeId !== null) {
-            $data['assignee_id'] = $assigneeId;
+            $data['assigned_to'] = $assigneeId;
         }
-        if ($dueDate !== null) {
-            $data['due_date'] = $dueDate;
+        if ($date !== null) {
+            $data['date'] = $date;
         }
 
-        return $this->request('POST', '/task/', $data);
+        return $this->apiPost('/task/', $data);
     }
 
-    // ─── User ─────────────────────────────────────────────────────────────
+    /**
+     * Get a task by ID.
+     *
+     * @param  string  $id  Close task ID.
+     * @return array<string, mixed>
+     */
+    public function getTask(string $id): array
+    {
+        return $this->apiGet('/task/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * Update a task.
+     *
+     * @param  string  $id  Close task ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updateTask(string $id, array $data): array
+    {
+        return $this->apiPut('/task/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete a task.
+     *
+     * @param  string  $id  Close task ID.
+     * @return array<string, mixed>
+     */
+    public function deleteTask(string $id): array
+    {
+        return $this->apiDelete('/task/' . rawurlencode($id) . '/');
+    }
+
+    // Opportunities
+
+    /**
+     * List opportunities with optional filters.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as lead_id, status_id, user_id, _limit, and _skip.
+     * @return array<string, mixed>
+     */
+    public function listOpportunities(array $params = []): array
+    {
+        return $this->apiGet('/opportunity/', $params);
+    }
+
+    /**
+     * Get an opportunity by ID.
+     *
+     * @param  string  $id  Close opportunity ID.
+     * @return array<string, mixed>
+     */
+    public function getOpportunity(string $id): array
+    {
+        return $this->apiGet('/opportunity/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * Create an opportunity.
+     *
+     * @param  array<string, mixed>  $data  Opportunity fields including lead_id, status_id, value, value_period, and confidence.
+     * @return array<string, mixed>
+     */
+    public function createOpportunity(array $data): array
+    {
+        return $this->apiPost('/opportunity/', $data);
+    }
+
+    /**
+     * Update an opportunity.
+     *
+     * @param  string  $id  Close opportunity ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updateOpportunity(string $id, array $data): array
+    {
+        return $this->apiPut('/opportunity/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete an opportunity.
+     *
+     * @param  string  $id  Close opportunity ID.
+     * @return array<string, mixed>
+     */
+    public function deleteOpportunity(string $id): array
+    {
+        return $this->apiDelete('/opportunity/' . rawurlencode($id) . '/');
+    }
+
+    // Users
 
     /**
      * Get the currently authenticated user.
@@ -225,24 +431,243 @@ class CloseService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/user/');
+        return $this->apiGet('/me/');
     }
 
-    // ─── Internal helpers ─────────────────────────────────────────────────
+    /**
+     * List users in the organization.
+     *
+     * @param  array<string, mixed>  $params  Query parameters such as _limit, _skip, and query.
+     * @return array<string, mixed>
+     */
+    public function listUsers(array $params = []): array
+    {
+        return $this->apiGet('/user/', $params);
+    }
+
+    /**
+     * Get a user by ID.
+     *
+     * @param  string  $id  Close user ID.
+     * @return array<string, mixed>
+     */
+    public function getUser(string $id): array
+    {
+        return $this->apiGet('/user/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * List user availability statuses.
+     *
+     * @return array<string, mixed>
+     */
+    public function listUserAvailability(): array
+    {
+        return $this->apiGet('/user/availability/');
+    }
+
+    // Statuses and pipelines
+
+    /**
+     * List lead statuses.
+     *
+     * @return array<string, mixed>
+     */
+    public function listLeadStatuses(): array
+    {
+        return $this->apiGet('/status/lead/');
+    }
+
+    /**
+     * Create a lead status.
+     *
+     * @param  array<string, mixed>  $data  Status fields.
+     * @return array<string, mixed>
+     */
+    public function createLeadStatus(array $data): array
+    {
+        return $this->apiPost('/status/lead/', $data);
+    }
+
+    /**
+     * Update a lead status.
+     *
+     * @param  string  $id  Close lead status ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updateLeadStatus(string $id, array $data): array
+    {
+        return $this->apiPut('/status/lead/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete a lead status.
+     *
+     * @param  string  $id  Close lead status ID.
+     * @return array<string, mixed>
+     */
+    public function deleteLeadStatus(string $id): array
+    {
+        return $this->apiDelete('/status/lead/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * List opportunity statuses.
+     *
+     * @return array<string, mixed>
+     */
+    public function listOpportunityStatuses(): array
+    {
+        return $this->apiGet('/status/opportunity/');
+    }
+
+    /**
+     * Create an opportunity status.
+     *
+     * @param  array<string, mixed>  $data  Status fields.
+     * @return array<string, mixed>
+     */
+    public function createOpportunityStatus(array $data): array
+    {
+        return $this->apiPost('/status/opportunity/', $data);
+    }
+
+    /**
+     * Update an opportunity status.
+     *
+     * @param  string  $id  Close opportunity status ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updateOpportunityStatus(string $id, array $data): array
+    {
+        return $this->apiPut('/status/opportunity/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete an opportunity status.
+     *
+     * @param  string  $id  Close opportunity status ID.
+     * @return array<string, mixed>
+     */
+    public function deleteOpportunityStatus(string $id): array
+    {
+        return $this->apiDelete('/status/opportunity/' . rawurlencode($id) . '/');
+    }
+
+    /**
+     * List pipelines.
+     *
+     * @return array<string, mixed>
+     */
+    public function listPipelines(): array
+    {
+        return $this->apiGet('/pipeline/');
+    }
+
+    /**
+     * Create a pipeline.
+     *
+     * @param  array<string, mixed>  $data  Pipeline fields.
+     * @return array<string, mixed>
+     */
+    public function createPipeline(array $data): array
+    {
+        return $this->apiPost('/pipeline/', $data);
+    }
+
+    /**
+     * Update a pipeline.
+     *
+     * @param  string  $id  Close pipeline ID.
+     * @param  array<string, mixed>  $data  Fields to patch.
+     * @return array<string, mixed>
+     */
+    public function updatePipeline(string $id, array $data): array
+    {
+        return $this->apiPut('/pipeline/' . rawurlencode($id) . '/', $data);
+    }
+
+    /**
+     * Delete a pipeline.
+     *
+     * @param  string  $id  Close pipeline ID.
+     * @return array<string, mixed>
+     */
+    public function deletePipeline(string $id): array
+    {
+        return $this->apiDelete('/pipeline/' . rawurlencode($id) . '/');
+    }
+
+    // Generic request helpers
+
+    /**
+     * Run a GET request against a Close API path.
+     *
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Run a POST request against a Close API path.
+     *
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $query, $body);
+    }
+
+    /**
+     * Run a PUT request against a Close API path.
+     *
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PUT', $path, $query, $body);
+    }
+
+    /**
+     * Run a DELETE request against a Close API path.
+     *
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, $query);
+    }
+
+    // Internal helpers
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path  API endpoint path (e.g. "/lead/").
-     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return array<string, mixed> Parsed JSON response.
      *
-     * @throws \RuntimeException On API errors or connection failures.
+     * @throws RuntimeException On API errors or connection failures.
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $query = [], array $body = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $query, $body);
 
         if ($response->status() === 204) {
             return [];
@@ -259,18 +684,19 @@ class CloseService
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PUT/DELETE).
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return Response The raw HTTP response.
      *
-     * @throws \RuntimeException On API errors, connection failures, or missing API key.
+     * @throws RuntimeException On API errors, connection failures, or missing API key.
      */
-    private function rawRequest(string $method, string $path, array $data = []): Response
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
         if (! $this->apiKey) {
-            throw new \RuntimeException('Close API key is not configured.');
+            throw new RuntimeException('Close API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->buildUrl($path, $query);
 
         try {
             $http = Http::withBasicAuth($this->apiKey, '')
@@ -278,11 +704,11 @@ class CloseService
                 ->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $data),
-                'POST'   => $http->post($url, $data),
-                'PUT'    => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET'    => $http->get($url),
+                'POST'   => $http->post($url, $body),
+                'PUT'    => $http->put($url, $body),
+                'DELETE' => $http->delete($url),
+                default  => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (! $response->successful()) {
@@ -293,7 +719,7 @@ class CloseService
                     Log::warning("Close API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Close API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
+                    throw new RuntimeException("Close API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
                 }
 
                 $errors = $response->json('errors') ?? $response->json('error') ?? $body;
@@ -301,15 +727,33 @@ class CloseService
                     'status' => $response->status(),
                     'error'  => $errors,
                 ]);
-                throw new \RuntimeException("Close API error ({$response->status()}): " . (is_string($errors) ? $errors : json_encode($errors)));
+                throw new RuntimeException("Close API error ({$response->status()}): " . (is_string($errors) ? $errors : json_encode($errors)));
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("Close API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Close API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Close API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a request URL with deterministic query string encoding.
+     *
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function buildUrl(string $path, array $query = []): string
+    {
+        $url = $this->baseUrl . '/' . ltrim($path, '/');
+        $query = array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        if ($query === []) {
+            return $url;
+        }
+
+        return $url . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
     }
 }

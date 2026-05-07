@@ -1,196 +1,79 @@
-# Render — Lua API Reference
+# Render Lua Reference
 
-## list_services
+Namespace: `render`
 
-List all services in the Render account.
+This integration covers Render's official public OpenAPI registry from `https://api-docs.render.com/openapi/render-public-api-1.json`. Tools map directly to documented operations for services, deploys, jobs, cron runs, disks, databases, key value stores, projects, environments, env groups, owners, registry credentials, logs, metrics, webhooks, workflows, tasks, maintenance, and Blueprints.
 
-### Parameters
+All tools return Render's JSON response directly. Endpoints that stream or return non-JSON content return `{ body, content_type }`.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of services per page (default: 20, max: 100) |
-| `cursor` | string | no | Pagination cursor from a previous response |
+## Common Patterns
 
-### Example
+List services:
 
 ```lua
-local result = app.integrations.render2.list_services({
-  limit = 50
+local services = app.integrations.render.list_services({
+  limit = 20
 })
-
-for _, svc in ipairs(result.services) do
-  print(svc.name .. " (" .. svc.type .. ") - " .. svc.status)
-end
 ```
 
----
-
-## get_service
-
-Get details for a specific Render service.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `service_id` | string | yes | The service ID (e.g., `"srv-cabc12345678"`) |
-
-### Example
+Create a deploy:
 
 ```lua
-local result = app.integrations.render2.get_service({ service_id = "srv-cabc12345678" })
-local svc = result.service
-print(svc.name .. " - " .. svc.type .. " - " .. svc.url)
-```
-
----
-
-## create_service
-
-Create a new service on Render.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Service type: `"web_service"`, `"background_worker"`, `"cron_job"`, or `"private_service"` |
-| `name` | string | yes | Name for the service |
-| `repo` | string | yes | Git repository URL (e.g., `"https://github.com/user/repo"`) |
-| `branch` | string | no | Git branch to deploy (default: `"main"`) |
-| `region` | string | no | Region: `"oregon"`, `"ohio"`, `"frankfurt"`, `"singapore"` |
-| `plan` | string | no | Plan: `"starter"`, `"standard"`, `"pro"`, `"pro_plus"` |
-| `runtime` | string | no | Runtime: `"node"`, `"python"`, `"ruby"`, `"docker"` |
-| `build_command` | string | no | Shell command to build |
-| `start_command` | string | no | Shell command to start |
-| `env_vars` | object | no | Environment variables as key-value pairs |
-
-### Example
-
-```lua
-local result = app.integrations.render2.create_service({
-  type = "web_service",
-  name = "my-api",
-  repo = "https://github.com/myorg/my-api",
-  branch = "main",
-  region = "oregon",
-  plan = "starter",
-  build_command = "npm run build",
-  start_command = "npm start",
-  env_vars = {
-    NODE_ENV = "production"
+local deploy = app.integrations.render.create_deploy({
+  service_id = "srv-example",
+  body = {
+    clearCache = "do_not_clear"
   }
 })
-
-print("Created service: " .. result.service.id)
 ```
 
----
-
-## list_deploys
-
-List deploys for a specific Render service.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `service_id` | string | yes | The service ID |
-| `limit` | integer | no | Number of deploys per page (default: 20, max: 100) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-
-### Example
+Cancel a deploy:
 
 ```lua
-local result = app.integrations.render2.list_deploys({
-  service_id = "srv-cabc12345678",
-  limit = 10
+app.integrations.render.cancel_deploy({
+  service_id = "srv-example",
+  deploy_id = "dep-example"
 })
-
-for _, deploy in ipairs(result.deploys) do
-  print(deploy.id .. " - " .. deploy.status .. " - " .. (deploy.commit.message or ""))
-end
 ```
 
----
-
-## get_deploy
-
-Get details for a specific deploy.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deploy_id` | string | yes | The deploy ID (e.g., `"dep-cabc12345678"`) |
-
-### Example
+Read service environment variables:
 
 ```lua
-local result = app.integrations.render2.get_deploy({ deploy_id = "dep-cabc12345678" })
-local d = result.deploy
-print(d.status .. " - " .. d.commit.id .. ": " .. d.commit.message)
-```
-
----
-
-## list_jobs
-
-List jobs for a specific Render service.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `service_id` | string | yes | The service ID |
-| `limit` | integer | no | Number of jobs per page (default: 20, max: 100) |
-| `cursor` | string | no | Pagination cursor from a previous response |
-
-### Example
-
-```lua
-local result = app.integrations.render2.list_jobs({
-  service_id = "srv-cabc12345678",
-  limit = 10
+local env = app.integrations.render.get_env_vars_for_service({
+  service_id = "srv-example",
+  limit = 50
 })
-
-for _, job in ipairs(result.jobs) do
-  print(job.id .. " - " .. job.status .. " - " .. job.startCommand)
-end
 ```
 
----
-
-## get_current_user
-
-Get the current authenticated account information.
-
-### Parameters
-
-None.
-
-### Example
+Create a Postgres export:
 
 ```lua
-local result = app.integrations.render2.get_current_user({})
-print("Account: " .. result.email .. " (" .. result.id .. ")")
+local export = app.integrations.render.create_postgres_export({
+  postgres_id = "dpg-example",
+  body = {
+    format = "custom"
+  }
+})
 ```
 
----
-
-## Multi-Account Usage
-
-If you have multiple Render accounts configured, use account-specific namespaces:
+Query CPU metrics:
 
 ```lua
--- Default account (always works)
-app.integrations.render2.list_services({})
-
--- Explicit default (portable across setups)
-app.integrations.render2.default.list_services({})
-
--- Named accounts
-app.integrations.render2.production.list_services({})
-app.integrations.render2.staging.list_services({})
+local cpu = app.integrations.render.get_cpu({
+  resource = "srv-example",
+  startTime = "2026-01-01T00:00:00Z",
+  endTime = "2026-01-01T01:00:00Z"
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Tool Families
+
+- Account and owners: `get_current_user`, `list_owners`, `retrieve_owner`, `retrieve_owner_members`, owner audit logs, workspace member updates
+- Services: `list_services`, `create_service`, `get_service`, `update_service`, `delete_service`, `suspend_service`, `resume_service`, `restart_service`, `scale_service`, autoscaling, previews, routes, headers, custom domains, env vars, and secret files
+- Deploys and jobs: `list_deploys`, `create_deploy`, `get_deploy`, `cancel_deploy`, `rollback_deploy`, `list_jobs`, `post_job`, `retrieve_job`, `cancel_job`, cron job run tools
+- Datastores: disks and snapshots, Postgres, Redis, key value stores, connection info, database users, exports, recovery, failover, suspend, resume, and restart operations
+- Projects and environments: projects, environments, resources, environment groups, env-group variables, and env-group secret files
+- Logs and metrics: logs, log subscriptions, log streams, metrics streams, CPU, memory, HTTP, bandwidth, disk, instance, task-run, and filter-value metrics
+- Automation and integrations: Blueprints, registry credentials, webhooks and webhook events, workflows, workflow versions, tasks, task runs, and maintenance
+
+For operations with a request body, pass `body = { ... }` or pass body fields directly when there is no ambiguity. Path and query parameters follow Render's documented names; snake_case aliases work for camelCase parameters such as `service_id`, `deploy_id`, `owner_id`, `start_time`, and `end_time`.

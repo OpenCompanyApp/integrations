@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Gotify\GotifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Gotify messages with a client token.
+ */
 class GotifyListMessages implements Tool
 {
+    /**
+     * @param  GotifyService  $service  The Gotify API client.
+     */
     public function __construct(
         private GotifyService $service,
     ) {}
@@ -30,15 +36,21 @@ class GotifyListMessages implements Tool
         ];
     }
 
+    /**
+     * List messages visible to the configured client token.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (limit, since).
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gotify integration is not configured.');
+            if (!$this->service->isClientConfigured()) {
+                return ToolResult::error('Gotify client token is not configured. Listing messages requires a client token.');
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
             $since = isset($args['since']) ? (int) $args['since'] : null;
+            $limit = min(max($limit, 1), 200);
 
             $result = $this->service->listMessages($limit, $since);
 

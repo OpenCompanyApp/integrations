@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Client for the IPstack geolocation REST API.
  *
- * Authentication uses an API key passed as a query parameter (access_key=...).
+ * Authentication uses an API key passed as a query parameter.
  * Base URL: https://api.ipstack.com
  */
 class IpstackService
@@ -17,7 +17,7 @@ class IpstackService
     /**
      * Create a new IPstack service instance.
      *
-     * @param  string  $apiKey  API key for IPstack authentication (passed as access_key query param).
+     * @param  string  $apiKey  API key for IPstack authentication.
      * @param  string  $baseUrl  Base URL for the IPstack API (default: https://api.ipstack.com).
      */
     public function __construct(
@@ -39,126 +39,73 @@ class IpstackService
      * Look up geolocation data for a single IP address.
      *
      * @param  string  $ip  The IP address to look up (e.g., "134.201.250.155").
-     * @param  array<string, mixed>  $fields  Optional fields to include (e.g., ['main', 'location', 'timezone']).
-     * @param  string|null  $language  Response language (e.g., "en", "de", "fr").
+     * @param  array<string>  $fields  Optional fields to include.
+     * @param  array<string, mixed>  $options  Optional language, hostname, and security parameters.
      * @return array<string, mixed> The geolocation data for the IP address.
      *
      * @see https://ipstack.com/documentation#single
      */
-    public function lookupIp(string $ip, array $fields = [], ?string $language = null): array
+    public function lookupIp(string $ip, array $fields = [], array $options = []): array
     {
-        $params = [];
-        if (!empty($fields)) {
-            $params['fields'] = implode(',', $fields);
-        }
-        if ($language !== null) {
-            $params['language'] = $language;
-        }
-
-        return $this->request('GET', "/{$ip}", $params);
+        return $this->request('GET', "/{$ip}", $this->lookupParams($fields, $options));
     }
 
     /**
      * Look up geolocation data for multiple IP addresses in a single request.
      *
-     * @param  array<string>  $ips  Array of IP addresses to look up (max 50).
-     * @param  array<string, mixed>  $fields  Optional fields to include.
-     * @param  string|null  $language  Response language.
+     * @param  array<string>  $ips  Array of IP addresses or domains to look up (max 50).
+     * @param  array<string>  $fields  Optional fields to include.
+     * @param  array<string, mixed>  $options  Optional language, hostname, and security parameters.
      * @return array<string, mixed> Array of geolocation results.
      *
      * @see https://ipstack.com/documentation#bulk
      */
-    public function lookupBulk(array $ips, array $fields = [], ?string $language = null): array
+    public function lookupBulk(array $ips, array $fields = [], array $options = []): array
     {
-        $params = [];
-        if (!empty($fields)) {
-            $params['fields'] = implode(',', $fields);
-        }
-        if ($language !== null) {
-            $params['language'] = $language;
-        }
-
-        return $this->request('GET', '/bulk', array_merge($params, ['ips' => implode(',', $ips)]));
+        return $this->request('GET', '/' . implode(',', $ips), $this->lookupParams($fields, $options));
     }
 
     /**
-     * Check if an IP address is in a specific country or region.
-     *
-     * Returns the full geolocation result with a convenience `location_match` flag.
-     *
-     * @param  string  $ip  The IP address to check.
-     * @param  string|null  $countryCode  ISO 3166-1 alpha-2 country code to match (e.g., "US").
-     * @param  string|null  $regionCode  Region code to match (e.g., "CA").
-     * @return array<string, mixed> Geolocation data with location_match indicator.
-     */
-    public function checkLocation(string $ip, ?string $countryCode = null, ?string $regionCode = null): array
-    {
-        $result = $this->lookupIp($ip, ['main', 'location', 'country']);
-
-        $match = true;
-        if ($countryCode !== null) {
-            $match = ($result['country_code'] ?? '') === strtoupper($countryCode);
-        }
-        if ($regionCode !== null && $match) {
-            $match = ($result['region_code'] ?? '') === strtoupper($regionCode);
-        }
-
-        $result['location_match'] = $match;
-
-        return $result;
-    }
-
-    /**
-     * Get timezone information for an IP address.
-     *
-     * @param  string  $ip  The IP address to look up.
-     * @return array<string, mixed> Timezone data including ID, current time, and UTC offset.
-     *
-     * @see https://ipstack.com/documentation#timezone
-     */
-    public function getTimezone(string $ip): array
-    {
-        return $this->lookupIp($ip, ['main', 'timezone']);
-    }
-
-    /**
-     * Get currency information for an IP address.
-     *
-     * @param  string  $ip  The IP address to look up.
-     * @return array<string, mixed> Currency data including code, name, symbol, and exchange rates.
-     *
-     * @see https://ipstack.com/documentation#currency
-     */
-    public function getCurrency(string $ip): array
-    {
-        return $this->lookupIp($ip, ['main', 'currency']);
-    }
-
-    /**
-     * Get connection information for an IP address.
-     *
-     * @param  string  $ip  The IP address to look up.
-     * @return array<string, mixed> Connection data including ASN, ISP, and organization.
-     *
-     * @see https://ipstack.com/documentation#connection
-     */
-    public function getConnection(string $ip): array
-    {
-        return $this->lookupIp($ip, ['main', 'connection']);
-    }
-
-    /**
-     * Get geolocation data for the requesting IP address (current user).
+     * Get geolocation data for the requesting IP address.
      *
      * Uses the "check" endpoint which automatically detects the caller's IP.
      *
+     * @param  array<string>  $fields  Optional fields to include.
+     * @param  array<string, mixed>  $options  Optional language, hostname, and security parameters.
      * @return array<string, mixed> Geolocation data for the current IP.
      *
      * @see https://ipstack.com/documentation#check
      */
-    public function getCurrentUser(): array
+    public function lookupRequester(array $fields = [], array $options = []): array
     {
-        return $this->request('GET', '/check');
+        return $this->request('GET', '/check', $this->lookupParams($fields, $options));
+    }
+
+    /**
+     * Normalize optional lookup query parameters.
+     *
+     * @param  array<string>  $fields  Optional fields to include.
+     * @param  array<string, mixed>  $options  Optional language, hostname, and security parameters.
+     * @return array<string, mixed>
+     */
+    private function lookupParams(array $fields = [], array $options = []): array
+    {
+        $params = [];
+
+        if (!empty($fields)) {
+            $params['fields'] = implode(',', $fields);
+        }
+        if (!empty($options['language'])) {
+            $params['language'] = $options['language'];
+        }
+        if (!empty($options['hostname'])) {
+            $params['hostname'] = 1;
+        }
+        if (!empty($options['security'])) {
+            $params['security'] = 1;
+        }
+
+        return $params;
     }
 
     /**

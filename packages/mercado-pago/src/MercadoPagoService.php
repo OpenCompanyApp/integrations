@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\MercadoPago;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Mercado Pago REST API.
+ *
+ * Handles bearer access-token authentication, JSON request dispatch, error
+ * normalization, and response parsing for Mercado Pago tools.
+ */
 class MercadoPagoService
 {
+    /**
+     * @param  string  $accessToken  Mercado Pago access token.
+     * @param  string  $baseUrl      Base URL for the Mercado Pago v1 API.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.mercadopago.com/v1',
@@ -36,6 +46,7 @@ class MercadoPagoService
     /**
      * Get a single payment by its ID.
      *
+     * @param  string  $paymentId  Mercado Pago payment ID.
      * @return array<string, mixed>
      */
     public function getPayment(string $paymentId): array
@@ -68,6 +79,7 @@ class MercadoPagoService
     /**
      * Get a single customer by their ID.
      *
+     * @param  string  $customerId  Mercado Pago customer ID.
      * @return array<string, mixed>
      */
     public function getCustomer(string $customerId): array
@@ -99,6 +111,9 @@ class MercadoPagoService
     /**
      * Make an API request and return parsed JSON.
      *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path    API path relative to the base URL.
+     * @param  array<string, mixed>  $data  Query parameters or JSON body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -110,6 +125,13 @@ class MercadoPagoService
 
     /**
      * Make a raw HTTP request to the Mercado Pago API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path    API path relative to the base URL.
+     * @param  array<string, mixed>  $data  Query parameters or JSON body.
+     * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \RuntimeException
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {

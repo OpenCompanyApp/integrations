@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Canva;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Canva\Tools\CanvaListDesigns;
-use OpenCompany\Integrations\Canva\Tools\CanvaGetDesign;
-use OpenCompany\Integrations\Canva\Tools\CanvaCreateDesign;
-use OpenCompany\Integrations\Canva\Tools\CanvaListFolders;
-use OpenCompany\Integrations\Canva\Tools\CanvaGetFolder;
-use OpenCompany\Integrations\Canva\Tools\CanvaUploadAsset;
-use OpenCompany\Integrations\Canva\Tools\CanvaGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Canva Connect.
+ *
+ * Exposes official Canva Connect API operations from CanvaOperations and
+ * resolves default or named account credentials for tool instances.
+ */
+class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +25,27 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'oauth_bearer',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => true,
+                'token_keys' => ['access_token', 'client_id', 'client_secret'],
+                'notes' => ['Most operations require a user-scoped Canva Connect OAuth access token. OAuth token endpoints can use client credentials or payload credentials.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +58,7 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'label' => 'Canva',
-            'description' => 'Graphic design platform',
+            'description' => 'Canva Connect API',
             'icon' => 'ph:paint-brush',
             'logo' => 'simple-icons:canva',
         ];
@@ -89,70 +68,51 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'name' => 'Canva',
-            'description' => 'Graphic design platform — create and manage designs, folders, and assets',
+            'description' => 'Create, import, export, resize, comment on, and organize Canva designs and assets.',
             'icon' => 'ph:paint-brush',
             'logo' => 'simple-icons:canva',
-            'category' => 'design',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://www.canva.dev/docs/connect/',
         ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Canva Connect API access token',
-                'hint' => 'Generate an access token from the <a href="https://www.canva.com/developers/apps/" target="_blank">Canva Developer Portal</a> for your Connect integration',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.canva.com',
-                'hint' => 'The Canva Connect API base URL. Change only if using a custom endpoint.',
-                'default' => 'https://api.canva.com',
-            ],
-        ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Test a Canva bearer token against the current user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Configuration values to test.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.canva.com', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.canva.com/rest'), '/');
 
-        if (empty($accessToken)) {
+        if ($accessToken === '') {
             return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/v1/users/me');
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl.'/v1/users/me');
 
             $json = $response->json();
-
-            if ($response->successful() && isset($json['user'])) {
-                return [
-                    'success' => true,
-                    'message' => "Connected to Canva API as {$json['user']['display_name']}.",
-                ];
+            if ($response->successful() && is_array($json)) {
+                return ['success' => true, 'message' => 'Connected to Canva Connect API.'];
             }
 
             if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Canva API at {$baseUrl}. Check the URL.",
-                ];
+                return ['success' => false, 'error' => "Could not reach Canva API at {$baseUrl}. Check the URL."];
             }
 
-            return [
-                'success' => false,
-                'error' => "Canva API returned an error (HTTP {$response->status()}).",
-            ];
+            return ['success' => false, 'error' => "Canva API returned an error (HTTP {$response->status()})."];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -162,74 +122,46 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     {
         return [
             'access_token' => 'nullable|string',
+            'client_id' => 'nullable|string',
+            'client_secret' => 'nullable|string',
             'url' => 'nullable|url',
         ];
     }
 
-    public function tools(): array
+    public function credentialFields(): array
     {
         return [
-            'canva_list_designs' => [
-                'class' => CanvaListDesigns::class,
-                'type' => 'read',
-                'name' => 'List Designs',
-                'description' => 'List designs the user has access to.',
-                'icon' => 'ph:paint-brush',
-            ],
-            'canva_get_design' => [
-                'class' => CanvaGetDesign::class,
-                'type' => 'read',
-                'name' => 'Get Design',
-                'description' => 'Get details of a specific design.',
-                'icon' => 'ph:paint-brush',
-            ],
-            'canva_create_design' => [
-                'class' => CanvaCreateDesign::class,
-                'type' => 'write',
-                'name' => 'Create Design',
-                'description' => 'Create a new design in Canva.',
-                'icon' => 'ph:plus',
-            ],
-            'canva_list_folders' => [
-                'class' => CanvaListFolders::class,
-                'type' => 'read',
-                'name' => 'List Folders',
-                'description' => 'List folders the user has access to.',
-                'icon' => 'ph:folder',
-            ],
-            'canva_get_folder' => [
-                'class' => CanvaGetFolder::class,
-                'type' => 'read',
-                'name' => 'Get Folder',
-                'description' => 'Get details of a specific folder.',
-                'icon' => 'ph:folder',
-            ],
-            'canva_upload_asset' => [
-                'class' => CanvaUploadAsset::class,
-                'type' => 'write',
-                'name' => 'Upload Asset',
-                'description' => 'Upload an asset to Canva from a URL.',
-                'icon' => 'ph:upload',
-            ],
-            'canva_get_current_user' => [
-                'class' => CanvaGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:user',
-            ],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'client_id', 'type' => 'text', 'label' => 'OAuth Client ID', 'required' => false],
+            ['key' => 'client_secret', 'type' => 'secret', 'label' => 'OAuth Client Secret', 'required' => false],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Canva API URL', 'required' => false, 'default' => 'https://api.canva.com/rest'],
         ];
+    }
+
+    /**
+     * Registered Canva operation tools keyed by tool slug.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
+    public function tools(): array
+    {
+        $tools = [];
+        foreach (CanvaService::operations() as $definition) {
+            $tools[(string) $definition['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$definition['class'],
+                'type' => (string) $definition['type'],
+                'name' => (string) $definition['name'],
+                'description' => (string) $definition['description'],
+                'icon' => $definition['type'] === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/canva.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Canva API URL', 'required' => false, 'default' => 'https://api.canva.com'],
-        ];
+        return __DIR__.'/../lua-docs/canva.md';
     }
 
     public function isIntegration(): bool
@@ -237,21 +169,36 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return true;
     }
 
+    /**
+     * Create a Canva tool instance.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a Canva service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): CanvaService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new CanvaService(
+            return new CanvaService(
                 accessToken: $creds->get('canva', 'access_token', '', $account),
-                baseUrl: $creds->get('canva', 'url', 'https://api.canva.com', $account),
+                baseUrl: $creds->get('canva', 'url', 'https://api.canva.com/rest', $account),
+                clientId: $creds->get('canva', 'client_id', '', $account),
+                clientSecret: $creds->get('canva', 'client_secret', '', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(CanvaService::class));
+        return app(CanvaService::class);
     }
 }

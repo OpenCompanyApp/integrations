@@ -42,6 +42,11 @@ class ElevenLabsGetHistory implements Tool
         ];
     }
 
+    /**
+     * Browse ElevenLabs generation history.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -79,7 +79,7 @@ class WiseListTransfers implements Tool
                 $params['offset'] = (int) $args['offset'];
             }
             if (isset($args['profile_id'])) {
-                $params['profileId'] = $args['profile_id'];
+                $params['profile'] = $args['profile_id'];
             }
             if (isset($args['status'])) {
                 $params['status'] = $args['status'];

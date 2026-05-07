@@ -3,73 +3,17 @@
 namespace OpenCompany\Integrations\Airtop;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Airtop\Tools\AirtopCreateSession;
-use OpenCompany\Integrations\Airtop\Tools\AirtopCreateWindow;
-use OpenCompany\Integrations\Airtop\Tools\AirtopGetCurrentUser;
-use OpenCompany\Integrations\Airtop\Tools\AirtopGetPageContent;
-use OpenCompany\Integrations\Airtop\Tools\AirtopGetSession;
-use OpenCompany\Integrations\Airtop\Tools\AirtopGetWindow;
-use OpenCompany\Integrations\Airtop\Tools\AirtopListSessions;
-use OpenCompany\Integrations\Airtop\Tools\AirtopNavigate;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
-     * Describe host and authentication capabilities for catalog and setup flows.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationCapabilities(): array
-    {
-        return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
-            ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-            ],
-            'notes' =>
-            [
-            ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
-        ];
-    }
-
+ * Tool catalog and configuration metadata for official Airtop API operations.
+ */
+class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
     public function appName(): string
     {
         return 'airtop';
@@ -79,7 +23,7 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'label' => 'Airtop',
-            'description' => 'Browser automation',
+            'description' => 'Cloud browser automation',
             'icon' => 'ph:globe',
             'logo' => 'simple-icons:airtop',
         ];
@@ -89,14 +33,58 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'name' => 'Airtop',
-            'description' => 'Cloud browser automation — create sessions, navigate pages, and extract content',
+            'description' => 'Official Airtop API tools for browser sessions, windows, automation, extraction, files, profiles, and async request status.',
             'icon' => 'ph:globe',
             'logo' => 'simple-icons:airtop',
-            'category' => 'automation',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.airtop.ai',
+            'source_url' => 'https://docs.airtop.ai/openapi.json',
         ];
-    }    public function configSchema(): array
+    }
+
+    /**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => ['Requests use the Authorization: Bearer API key header.'],
+            ],
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
+            ],
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
+            ],
+        ];
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -104,47 +92,53 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Airtop API key',
-                'hint' => 'Generate an API key in your Airtop account settings',
+                'hint' => 'Generate an API key in your Airtop account settings.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://app.airtop.ai/api/v1',
-                'hint' => 'Override only if using a custom Airtop endpoint',
-                'default' => 'https://app.airtop.ai/api/v1',
+                'placeholder' => 'https://api.airtop.ai/api',
+                'hint' => 'Override only if using a custom Airtop-compatible endpoint.',
+                'default' => 'https://api.airtop.ai/api',
             ],
         ];
     }
 
+    /**
+     * Verify credentials with the official list sessions endpoint.
+     *
+     * @param  array<string, mixed>  $config  Connection form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://app.airtop.ai/api/v1', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.airtop.ai/api'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/user');
+                'Authorization' => 'Bearer '.$apiKey,
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl.'/v1/sessions');
 
-            $json = $response->json();
+            if (! $response->successful()) {
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Airtop API at {$baseUrl}. Check the URL.",
+                    'error' => 'Airtop API error: '.(is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
             return [
                 'success' => true,
-                'message' => 'Connected to Airtop API as ' . ($json['email'] ?? 'user') . '.',
+                'message' => 'Connected to Airtop API.',
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -161,74 +155,31 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
     public function tools(): array
     {
-        return [
-            'airtop_create_session' => [
-                'class' => AirtopCreateSession::class,
-                'type' => 'write',
-                'name' => 'Create Session',
-                'description' => 'Create a new browser session.',
-                'icon' => 'ph:monitor',
-            ],
-            'airtop_get_session' => [
-                'class' => AirtopGetSession::class,
-                'type' => 'read',
-                'name' => 'Get Session',
-                'description' => 'Get details of a browser session.',
-                'icon' => 'ph:monitor',
-            ],
-            'airtop_create_window' => [
-                'class' => AirtopCreateWindow::class,
-                'type' => 'write',
-                'name' => 'Create Window',
-                'description' => 'Open a new browser window in a session.',
-                'icon' => 'ph:browser',
-            ],
-            'airtop_get_window' => [
-                'class' => AirtopGetWindow::class,
-                'type' => 'read',
-                'name' => 'Get Window',
-                'description' => 'Get details of a browser window.',
-                'icon' => 'ph:browser',
-            ],
-            'airtop_navigate' => [
-                'class' => AirtopNavigate::class,
-                'type' => 'write',
-                'name' => 'Navigate',
-                'description' => 'Navigate a browser window to a URL.',
-                'icon' => 'ph:arrow-right',
-            ],
-            'airtop_get_page_content' => [
-                'class' => AirtopGetPageContent::class,
-                'type' => 'read',
-                'name' => 'Get Page Content',
-                'description' => 'Extract the content of a loaded page.',
-                'icon' => 'ph:file-text',
-            ],
-            'airtop_list_sessions' => [
-                'class' => AirtopListSessions::class,
-                'type' => 'read',
-                'name' => 'List Sessions',
-                'description' => 'List all browser sessions.',
-                'icon' => 'ph:list',
-            ],
-            'airtop_get_current_user' => [
-                'class' => AirtopGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user profile.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (AirtopService::operations() as $operation) {
+            $tools[(string) $operation['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$operation['class'],
+                'type' => $operation['type'],
+                'name' => $operation['name'],
+                'description' => $operation['description'],
+                'icon' => $operation['type'] === 'read' ? 'ph:eye' : 'ph:globe',
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/airtop.md';
-    }    public function credentialFields(): array
+        return __DIR__.'/../lua-docs/airtop.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://app.airtop.ai/api/v1'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.airtop.ai/api'],
         ];
     }
 
@@ -239,19 +190,27 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Airtop service for a default or account-scoped context.
+     *
+     * @param  array<string, mixed>  $context  Optional host context including account.
+     */
+    private function resolveService(array $context = []): AirtopService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new AirtopService(
+            return new AirtopService(
                 apiKey: $creds->get('airtop', 'api_key', '', $account),
-                baseUrl: $creds->get('airtop', 'url', 'https://app.airtop.ai/api/v1', $account),
+                baseUrl: $creds->get('airtop', 'url', 'https://api.airtop.ai/api', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(AirtopService::class));
+        return app(AirtopService::class);
     }
 }

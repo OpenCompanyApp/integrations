@@ -3,25 +3,47 @@
 namespace OpenCompany\Integrations\Box;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Box\Tools\BoxListFiles;
-use OpenCompany\Integrations\Box\Tools\BoxGetFile;
-use OpenCompany\Integrations\Box\Tools\BoxUploadFile;
-use OpenCompany\Integrations\Box\Tools\BoxDownloadFile;
-use OpenCompany\Integrations\Box\Tools\BoxDeleteFile;
-use OpenCompany\Integrations\Box\Tools\BoxCreateFolder;
-use OpenCompany\Integrations\Box\Tools\BoxGetFolder;
-use OpenCompany\Integrations\Box\Tools\BoxShareFile;
-use OpenCompany\Integrations\Box\Tools\BoxSearch;
-use OpenCompany\Integrations\Box\Tools\BoxGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for official Box Platform API operations.
+ */
+class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    public function appName(): string
+    {
+        return 'box';
+    }
+
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Box',
+            'description' => 'Cloud content management',
+            'icon' => 'ph:folder',
+            'logo' => 'simple-icons:box',
+        ];
+    }
+
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Box',
+            'description' => 'Official Box Platform API tools for files, folders, users, groups, collaborations, metadata, tasks, retention, legal holds, sign requests, webhooks, and events.',
+            'icon' => 'ph:folder',
+            'logo' => 'simple-icons:box',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://developer.box.com/reference/',
+            'source_url' => 'https://raw.githubusercontent.com/box/box-openapi/main/openapi.json',
+        ];
+    }
+
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -29,95 +51,39 @@ class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'oauth2_manual_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'oauth2_manual_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Token acquisition may happen outside this package; the host stores the resulting Box access token.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
-              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-    /**
-     * Get the integration app name.
-     */
-    public function appName(): string
-    {
-        return 'box';
-    }
-
-    /**
-     * Metadata shown in app and catalog discovery UIs.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'Box',
-            'description' => 'Box integration for Laravel — manage files, folders, sharing, and search via the Box…',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-        ];
-    }
-
-    /**
-     * Canonical integration metadata used by settings and generated catalogs.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Box',
-            'description' => 'Box integration for Laravel — manage files, folders, sharing, and search via the Box API.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-            'category' => 'other',
-            'badge' => 'verified',
-        ];
-    }
-/**
-     * Get the configuration schema for the integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function configSchema(): array
     {
         return [
@@ -126,7 +92,7 @@ class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
                 'type' => 'secret',
                 'label' => 'Access Token',
                 'placeholder' => 'Enter your Box access token',
-                'hint' => 'Generate a developer token in the <a href="https://app.box.com/developers/console" target="_blank">Box Developer Console</a>, or use an OAuth2 token',
+                'hint' => 'Use a Box OAuth2 access token or developer token.',
                 'required' => true,
             ],
             [
@@ -134,42 +100,49 @@ class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.box.com/2.0',
-                'hint' => 'Use the default Box API URL, or a custom API gateway URL',
                 'default' => 'https://api.box.com/2.0',
+            ],
+            [
+                'key' => 'upload_url',
+                'type' => 'url',
+                'label' => 'Upload API Base URL',
+                'placeholder' => 'https://upload.box.com/api/2.0',
+                'default' => 'https://upload.box.com/api/2.0',
             ],
         ];
     }
 
     /**
-     * Test the connection to Box using the provided config.
+     * Verify credentials with the official current user endpoint.
      *
-     * @param  array<string, mixed>  $config
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $config  Connection form values.
+     * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.box.com/2.0', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.box.com/2.0'), '/');
 
-        if (empty($accessToken)) {
+        if ($accessToken === '') {
             return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-            ])->timeout(10)->get($baseUrl . '/users/me');
+                'Authorization' => 'Bearer '.$accessToken,
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl.'/users/me');
 
-            $json = $response->json();
+            if (! $response->successful()) {
+                $error = $response->json('message') ?? $response->json('error_description') ?? $response->json('error') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Box API at {$baseUrl}. Check the URL.",
+                    'error' => 'Box API error: '.(is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
-            $userName = ($json['name'] ?? 'Unknown') . ' (' . ($json['login'] ?? '') . ')';
+            $userName = ($response->json('name') ?? 'Unknown').' ('.($response->json('login') ?? '').')';
 
             return [
                 'success' => true,
@@ -180,150 +153,75 @@ class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         }
     }
 
-    /**
-     * Get validation rules for the configuration.
-     *
-     * @return array<string, mixed>
-     */
     public function validationRules(): array
     {
         return [
             'access_token' => 'nullable|string',
             'url' => 'nullable|url',
+            'upload_url' => 'nullable|url',
         ];
     }
 
-    /**
-     * Get all available tools for this integration.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function tools(): array
     {
-        return [
-            'box_list_files' => [
-                'class' => BoxListFiles::class,
-                'type' => 'read',
-                'name' => 'List Files',
-                'description' => 'List files and folders in a Box folder.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'box_get_file' => [
-                'class' => BoxGetFile::class,
-                'type' => 'read',
-                'name' => 'Get File',
-                'description' => 'Get metadata for a Box file.',
-                'icon' => 'ph:file',
-            ],
-            'box_upload_file' => [
-                'class' => BoxUploadFile::class,
-                'type' => 'write',
-                'name' => 'Upload File',
-                'description' => 'Upload a file to Box.',
-                'icon' => 'ph:upload-simple',
-            ],
-            'box_download_file' => [
-                'class' => BoxDownloadFile::class,
-                'type' => 'read',
-                'name' => 'Download File',
-                'description' => 'Download a file from Box.',
-                'icon' => 'ph:download-simple',
-            ],
-            'box_delete_file' => [
-                'class' => BoxDeleteFile::class,
-                'type' => 'write',
-                'name' => 'Delete File',
-                'description' => 'Delete a file from Box.',
-                'icon' => 'ph:trash',
-            ],
-            'box_create_folder' => [
-                'class' => BoxCreateFolder::class,
-                'type' => 'write',
-                'name' => 'Create Folder',
-                'description' => 'Create a new folder in Box.',
-                'icon' => 'ph:folder-plus',
-            ],
-            'box_get_folder' => [
-                'class' => BoxGetFolder::class,
-                'type' => 'read',
-                'name' => 'Get Folder',
-                'description' => 'Get metadata for a Box folder.',
-                'icon' => 'ph:folder',
-            ],
-            'box_share_file' => [
-                'class' => BoxShareFile::class,
-                'type' => 'write',
-                'name' => 'Share File',
-                'description' => 'Create a shared link for a Box file.',
-                'icon' => 'ph:share',
-            ],
-            'box_search' => [
-                'class' => BoxSearch::class,
-                'type' => 'read',
-                'name' => 'Search',
-                'description' => 'Search for files and folders in Box.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'box_get_current_user' => [
-                'class' => BoxGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Box user.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (BoxService::operations() as $operation) {
+            $tools[(string) $operation['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$operation['class'],
+                'type' => $operation['type'],
+                'name' => $operation['name'],
+                'description' => $operation['description'],
+                'icon' => $operation['type'] === 'read' ? 'ph:eye' : 'ph:folder',
+            ];
+        }
+
+        return $tools;
     }
 
-    /**
-     * Get the path to the Lua documentation file.
-     */
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/box.md';
+        return __DIR__.'/../lua-docs/box.md';
     }
 
-    /**
-     * Get the credential fields for the integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
             ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.box.com/2.0'],
+            ['key' => 'upload_url', 'type' => 'url', 'label' => 'Upload API Base URL', 'required' => false, 'default' => 'https://upload.box.com/api/2.0'],
         ];
     }
 
-    /**
-     * Confirm this is an integration provider.
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance, optionally with account-specific credentials.
-     *
-     * @param  class-string<Tool>  $class
-     * @param  array<string, mixed>  $context
-     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Box service for a default or account-scoped context.
+     *
+     * @param  array<string, mixed>  $context  Optional host context including account.
+     */
+    private function resolveService(array $context = []): BoxService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new BoxService(
+            return new BoxService(
                 accessToken: $creds->get('box', 'access_token', '', $account),
                 baseUrl: $creds->get('box', 'url', 'https://api.box.com/2.0', $account),
+                uploadUrl: $creds->get('box', 'upload_url', 'https://upload.box.com/api/2.0', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(BoxService::class));
+        return app(BoxService::class);
     }
 }

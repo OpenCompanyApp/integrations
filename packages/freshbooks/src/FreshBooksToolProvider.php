@@ -93,7 +93,7 @@ class FreshBooksToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Cloud-based accounting, invoicing, and expense management',
             'icon' => 'ph:invoice',
             'logo' => 'simple-icons:freshbooks',
-            'category' => 'accounting',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://www.freshbooks.com/api',
         ];

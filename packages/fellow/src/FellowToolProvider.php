@@ -3,21 +3,41 @@
 namespace OpenCompany\Integrations\Fellow;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Fellow\Tools\FellowListMeetings;
-use OpenCompany\Integrations\Fellow\Tools\FellowGetMeeting;
-use OpenCompany\Integrations\Fellow\Tools\FellowCreateNote;
-use OpenCompany\Integrations\Fellow\Tools\FellowListActionItems;
-use OpenCompany\Integrations\Fellow\Tools\FellowListGoals;
-use OpenCompany\Integrations\Fellow\Tools\FellowGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Fellow\Tools\FellowApiDelete;
+use OpenCompany\Integrations\Fellow\Tools\FellowApiGet;
+use OpenCompany\Integrations\Fellow\Tools\FellowApiPatch;
+use OpenCompany\Integrations\Fellow\Tools\FellowApiPost;
+use OpenCompany\Integrations\Fellow\Tools\FellowArchiveActionItem;
+use OpenCompany\Integrations\Fellow\Tools\FellowCreateWebhook;
+use OpenCompany\Integrations\Fellow\Tools\FellowDeleteNote;
+use OpenCompany\Integrations\Fellow\Tools\FellowDeleteRecording;
+use OpenCompany\Integrations\Fellow\Tools\FellowDeleteWebhook;
+use OpenCompany\Integrations\Fellow\Tools\FellowGetActionItem;
+use OpenCompany\Integrations\Fellow\Tools\FellowGetCurrentUser;
+use OpenCompany\Integrations\Fellow\Tools\FellowGetNote;
+use OpenCompany\Integrations\Fellow\Tools\FellowGetRecording;
+use OpenCompany\Integrations\Fellow\Tools\FellowGetWebhook;
+use OpenCompany\Integrations\Fellow\Tools\FellowListActionItems;
+use OpenCompany\Integrations\Fellow\Tools\FellowListNotes;
+use OpenCompany\Integrations\Fellow\Tools\FellowListRecordings;
+use OpenCompany\Integrations\Fellow\Tools\FellowListWebhooks;
+use OpenCompany\Integrations\Fellow\Tools\FellowMarkActionItemComplete;
+use OpenCompany\Integrations\Fellow\Tools\FellowUpdateWebhook;
 
 /**
+ * Tool provider for Fellow's Developer API.
+ *
+ * Exposes the documented v1 notes, action items, recordings, webhooks, user,
+ * and generic relative-path endpoints with multi-account credentials.
+ */
+class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,114 +45,61 @@ class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['api_key'],
+                'notes' => ['Fellow sends API keys in the X-API-KEY header.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => ['workspace_subdomain'],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-    /**
-     * Return the machine name for this integration.
-     */
     public function appName(): string
     {
         return 'fellow';
     }
 
-    /**
-     * Metadata shown in app and catalog discovery UIs.
-     *
-     * @return array<string, mixed>
-     */
     public function appMeta(): array
     {
         return [
             'label' => 'Fellow',
-            'description' => 'Fellow meeting management integration for Laravel — list meetings, manage notes…',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
+            'description' => 'Meeting notes, action items, recordings, and webhooks',
+            'icon' => 'ph:calendar-check',
+            'logo' => 'ph:calendar-check',
         ];
     }
 
-    /**
-     * Canonical integration metadata used by settings and generated catalogs.
-     *
-     * @return array<string, mixed>
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Fellow',
-            'description' => 'Fellow meeting management integration for Laravel — list meetings, manage notes, action items, and goals.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-            'category' => 'other',
+            'description' => 'Fellow Developer API for meeting notes, action items, recordings, webhooks, and workspace user data',
+            'icon' => 'ph:calendar-check',
+            'logo' => 'ph:calendar-check',
+            'category' => 'productivity',
             'badge' => 'verified',
+            'docs_url' => 'https://developers.fellow.ai/reference',
         ];
     }
-/**
-     * Return the configuration schema for the integration settings UI.
-     *
-     * @return array<int, array<string, mixed>>
-     */
+
     public function configSchema(): array
     {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Fellow API access token',
-                'hint' => 'Generate an access token in your Fellow account settings under "Integrations"',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.fellow.app/v2',
-                'hint' => 'Override only if using a custom Fellow instance',
-                'default' => 'https://api.fellow.app/v2',
-            ],
-        ];
+        return $this->credentialFields();
     }
 
     /**
@@ -143,26 +110,27 @@ class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.fellow.app/v2', '/');
+        $apiKey = $config['api_key'] ?? $config['access_token'] ?? '';
+        $baseUrl = $this->baseUrlFromConfig($config);
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        if ($apiKey === '') {
+            return ['success' => false, 'error' => 'API key is required.'];
+        }
+
+        if ($baseUrl === '') {
+            return ['success' => false, 'error' => 'Workspace subdomain or API URL is required.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+                'X-API-KEY' => $apiKey,
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl.'/me');
 
             if ($response->successful()) {
-                $user = $response->json();
-                $name = trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
-
                 return [
                     'success' => true,
-                    'message' => "Connected to Fellow API as {$name}.",
+                    'message' => 'Connected to Fellow Developer API.',
                 ];
             }
 
@@ -170,103 +138,63 @@ class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
             return [
                 'success' => false,
-                'error' => 'Fellow API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'error' => 'Fellow API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)),
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Return validation rules for the integration configuration.
-     *
-     * @return array<string, string>
-     */
     public function validationRules(): array
     {
         return [
+            'api_key' => 'required_without:access_token|string',
             'access_token' => 'nullable|string',
+            'subdomain' => 'required_without:url|string',
             'url' => 'nullable|url',
         ];
     }
 
-    /**
-     * Return all tools provided by this integration.
-     *
-     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
-     */
     public function tools(): array
     {
         return [
-            'fellow_list_meetings' => [
-                'class' => FellowListMeetings::class,
-                'type' => 'read',
-                'name' => 'List Meetings',
-                'description' => 'List meetings with optional date filters and pagination.',
-                'icon' => 'ph:calendar',
-            ],
-            'fellow_get_meeting' => [
-                'class' => FellowGetMeeting::class,
-                'type' => 'read',
-                'name' => 'Get Meeting',
-                'description' => 'Get details of a specific meeting.',
-                'icon' => 'ph:calendar-check',
-            ],
-            'fellow_create_note' => [
-                'class' => FellowCreateNote::class,
-                'type' => 'write',
-                'name' => 'Create Note',
-                'description' => 'Create a note for a specific meeting.',
-                'icon' => 'ph:note-pencil',
-            ],
-            'fellow_list_action_items' => [
-                'class' => FellowListActionItems::class,
-                'type' => 'read',
-                'name' => 'List Action Items',
-                'description' => 'List action items with pagination.',
-                'icon' => 'ph:check-square',
-            ],
-            'fellow_list_goals' => [
-                'class' => FellowListGoals::class,
-                'type' => 'read',
-                'name' => 'List Goals',
-                'description' => 'List goals from Fellow.',
-                'icon' => 'ph:target',
-            ],
-            'fellow_get_current_user' => [
-                'class' => FellowGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Fellow user profile.',
-                'icon' => 'ph:user-circle',
-            ],
+            'fellow_get_current_user' => ['class' => FellowGetCurrentUser::class, 'type' => 'read', 'name' => 'Get Current User', 'description' => 'Get the authenticated Fellow user and workspace.', 'icon' => 'ph:user-circle'],
+            'fellow_list_notes' => ['class' => FellowListNotes::class, 'type' => 'read', 'name' => 'List Notes', 'description' => 'List Fellow notes with optional filters and pagination.', 'icon' => 'ph:note'],
+            'fellow_get_note' => ['class' => FellowGetNote::class, 'type' => 'read', 'name' => 'Get Note', 'description' => 'Retrieve a Fellow note by ID.', 'icon' => 'ph:note'],
+            'fellow_delete_note' => ['class' => FellowDeleteNote::class, 'type' => 'write', 'name' => 'Delete Note', 'description' => 'Delete a Fellow note by ID. Requires privileged API access.', 'icon' => 'ph:trash'],
+            'fellow_list_action_items' => ['class' => FellowListActionItems::class, 'type' => 'read', 'name' => 'List Action Items', 'description' => 'List Fellow action items with optional filters and pagination.', 'icon' => 'ph:check-square'],
+            'fellow_get_action_item' => ['class' => FellowGetActionItem::class, 'type' => 'read', 'name' => 'Get Action Item', 'description' => 'Retrieve a Fellow action item by ID.', 'icon' => 'ph:check-square'],
+            'fellow_mark_action_item_complete' => ['class' => FellowMarkActionItemComplete::class, 'type' => 'write', 'name' => 'Mark Action Item Complete', 'description' => 'Mark a Fellow action item complete or incomplete.', 'icon' => 'ph:check-circle'],
+            'fellow_archive_action_item' => ['class' => FellowArchiveActionItem::class, 'type' => 'write', 'name' => 'Archive Action Item', 'description' => 'Archive a Fellow action item as won\'t do.', 'icon' => 'ph:archive'],
+            'fellow_list_recordings' => ['class' => FellowListRecordings::class, 'type' => 'read', 'name' => 'List Recordings', 'description' => 'List Fellow recordings with optional filters and pagination.', 'icon' => 'ph:record'],
+            'fellow_get_recording' => ['class' => FellowGetRecording::class, 'type' => 'read', 'name' => 'Get Recording', 'description' => 'Retrieve a Fellow recording by ID.', 'icon' => 'ph:record'],
+            'fellow_delete_recording' => ['class' => FellowDeleteRecording::class, 'type' => 'write', 'name' => 'Delete Recording', 'description' => 'Delete a Fellow recording by ID. Requires privileged API access.', 'icon' => 'ph:trash'],
+            'fellow_list_webhooks' => ['class' => FellowListWebhooks::class, 'type' => 'read', 'name' => 'List Webhooks', 'description' => 'List Fellow webhooks.', 'icon' => 'ph:webhooks-logo'],
+            'fellow_create_webhook' => ['class' => FellowCreateWebhook::class, 'type' => 'write', 'name' => 'Create Webhook', 'description' => 'Create a Fellow webhook endpoint.', 'icon' => 'ph:webhooks-logo'],
+            'fellow_get_webhook' => ['class' => FellowGetWebhook::class, 'type' => 'read', 'name' => 'Get Webhook', 'description' => 'Retrieve a Fellow webhook by ID.', 'icon' => 'ph:webhooks-logo'],
+            'fellow_update_webhook' => ['class' => FellowUpdateWebhook::class, 'type' => 'write', 'name' => 'Update Webhook', 'description' => 'Update a Fellow webhook endpoint.', 'icon' => 'ph:webhooks-logo'],
+            'fellow_delete_webhook' => ['class' => FellowDeleteWebhook::class, 'type' => 'write', 'name' => 'Delete Webhook', 'description' => 'Delete a Fellow webhook endpoint.', 'icon' => 'ph:webhooks-logo'],
+            'fellow_api_get' => ['class' => FellowApiGet::class, 'type' => 'read', 'name' => 'Fellow API GET', 'description' => 'Call a relative Fellow API GET path.', 'icon' => 'ph:brackets-curly'],
+            'fellow_api_post' => ['class' => FellowApiPost::class, 'type' => 'write', 'name' => 'Fellow API POST', 'description' => 'Call a relative Fellow API POST path.', 'icon' => 'ph:brackets-curly'],
+            'fellow_api_patch' => ['class' => FellowApiPatch::class, 'type' => 'write', 'name' => 'Fellow API PATCH', 'description' => 'Call a relative Fellow API PATCH path.', 'icon' => 'ph:brackets-curly'],
+            'fellow_api_delete' => ['class' => FellowApiDelete::class, 'type' => 'write', 'name' => 'Fellow API DELETE', 'description' => 'Call a relative Fellow API DELETE path.', 'icon' => 'ph:brackets-curly'],
         ];
     }
 
-    /**
-     * Return the path to the Lua API docs file.
-     */
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/fellow.md';
+        return __DIR__.'/../lua-docs/fellow.md';
     }
 
-    /**
-     * Return the credential fields for the integration.
-     *
-     * @return array<int, array{key: string, type: string, label: string, required: bool, default?: string}>
-     */
     public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API URL', 'required' => false, 'default' => 'https://api.fellow.app/v2'],
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'subdomain', 'type' => 'text', 'label' => 'Workspace Subdomain', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false],
         ];
     }
 
-    /**
-     * Confirm this is a registered integration.
-     */
     public function isIntegration(): bool
     {
         return true;
@@ -280,19 +208,52 @@ class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      */
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Fellow service for default or account-scoped credentials.
+     *
+     * @param  array<string, mixed>  $context  Runtime context.
+     */
+    private function resolveService(array $context = []): FellowService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new FellowService(
-                accessToken: $creds->get('fellow', 'access_token', '', $account),
-                baseUrl: $creds->get('fellow', 'url', 'https://api.fellow.app/v2', $account),
+            return new FellowService(
+                apiKey: $creds->get('fellow', 'api_key', $creds->get('fellow', 'access_token', '', $account), $account),
+                subdomain: $creds->get('fellow', 'subdomain', '', $account),
+                baseUrl: $creds->get('fellow', 'url', '', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(FellowService::class));
+        return app(FellowService::class);
+    }
+
+    /**
+     * Build a Fellow API base URL from settings.
+     *
+     * @param  array<string, mixed>  $config
+     */
+    private function baseUrlFromConfig(array $config): string
+    {
+        if (! empty($config['url'])) {
+            return rtrim((string) $config['url'], '/');
+        }
+
+        $subdomain = trim((string) ($config['subdomain'] ?? ''));
+
+        if ($subdomain === '') {
+            return '';
+        }
+
+        $subdomain = preg_replace('/\.fellow\.app$/', '', $subdomain) ?? $subdomain;
+        $subdomain = preg_replace('#^https?://#', '', $subdomain) ?? $subdomain;
+        $subdomain = trim($subdomain, '/');
+
+        return "https://{$subdomain}.fellow.app/api/v1";
     }
 }

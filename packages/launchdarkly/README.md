@@ -1,14 +1,14 @@
 # Integration: LaunchDarkly
 
-> LaunchDarkly feature flags integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list and toggle flags, manage projects and environments. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> LaunchDarkly feature-management integration for the [Laravel AI SDK](https://github.com/laravel/ai) - manage projects, environments, flags, segments, members, teams, and raw REST API calls. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to feature flag management. List flags, check their status, toggle them on or off, and manage projects and environments — all through the [LaunchDarkly](https://launchdarkly.com) API.
+Give your AI agents access to LaunchDarkly release management. List flags, check their status, toggle them on or off, manage project and environment configuration, inspect segments and members, and call newer LaunchDarkly REST endpoints as needed.
 
 ## About OpenCompany
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace - with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This LaunchDarkly tool lets AI agents inspect feature flag states, toggle flags across environments, and manage project configuration — giving agents the ability to control feature rollouts.
+This LaunchDarkly package lets AI agents inspect feature flag states, toggle flags across environments, manage project configuration, and use LaunchDarkly account APIs with host-controlled credentials.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -40,15 +40,19 @@ return [
 
 ## Available Tools
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `launchdarkly_list_flags` | read | List feature flags in a project (paginated) |
-| `launchdarkly_get_flag` | read | Get details of a specific feature flag |
-| `launchdarkly_toggle_flag` | write | Turn a feature flag on or off in an environment |
-| `launchdarkly_list_environments` | read | List environments for a project |
-| `launchdarkly_list_projects` | read | List all LaunchDarkly projects |
-| `launchdarkly_get_project` | read | Get details of a specific LaunchDarkly project |
-| `launchdarkly_get_current_user` | read | Get the currently authenticated user |
+This package exposes 38 tools:
+
+| Area | Tools |
+|------|-------|
+| Raw API | `launchdarkly_api_get`, `launchdarkly_api_post`, `launchdarkly_api_patch`, `launchdarkly_api_put`, `launchdarkly_api_delete` |
+| Projects | `launchdarkly_list_projects`, `launchdarkly_get_project`, `launchdarkly_create_project`, `launchdarkly_update_project`, `launchdarkly_delete_project` |
+| Environments | `launchdarkly_list_environments`, `launchdarkly_get_environment`, `launchdarkly_create_environment`, `launchdarkly_update_environment`, `launchdarkly_delete_environment` |
+| Feature flags | `launchdarkly_list_flags`, `launchdarkly_get_flag`, `launchdarkly_create_feature_flag`, `launchdarkly_update_feature_flag`, `launchdarkly_toggle_flag`, `launchdarkly_copy_feature_flag`, `launchdarkly_delete_feature_flag` |
+| Segments | `launchdarkly_list_segments`, `launchdarkly_get_segment`, `launchdarkly_create_segment`, `launchdarkly_update_segment`, `launchdarkly_delete_segment` |
+| Members | `launchdarkly_get_current_user`, `launchdarkly_list_members`, `launchdarkly_get_member`, `launchdarkly_invite_members`, `launchdarkly_update_member`, `launchdarkly_delete_member` |
+| Teams | `launchdarkly_list_teams`, `launchdarkly_get_team`, `launchdarkly_create_team`, `launchdarkly_update_team`, `launchdarkly_delete_team` |
+
+The legacy convenience tools return normalized payloads. Endpoint-mapped tools return LaunchDarkly's parsed JSON response directly.
 
 ## Quick Start
 
@@ -72,7 +76,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -128,4 +132,4 @@ $user = $service->getCurrentUser();
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)

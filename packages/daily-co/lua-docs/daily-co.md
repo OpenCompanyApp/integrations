@@ -1,215 +1,125 @@
-# Daily.co — Lua API Reference
+# Daily.co
 
-## list_rooms
+Namespace: `app.integrations["daily-co"]`
 
-List video rooms with optional pagination.
+Daily.co tools use the Daily REST API at `https://api.daily.co/v1`. Configure
+`api_key`; set `url` only for a test proxy or custom endpoint. Tool descriptions
+include the official REST endpoint and the matching method name from Daily's
+generated Ruby SDK.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of rooms to return (default: 20, max: 100) |
-| `ending_before` | string | no | Room ID for cursor-based pagination (returns rooms before this ID) |
-| `starting_after` | string | no | Room ID for cursor-based pagination (returns rooms after this ID) |
-
-### Example
+## Rooms
 
 ```lua
-local result = app.integrations["daily-co"].list_rooms({
+local rooms = app.integrations["daily-co"].list_rooms({
   limit = 10
 })
 
-for _, room in ipairs(result.data) do
-  print(room.id .. ": " .. room.name .. " (" .. room.url .. ")")
-end
-```
-
----
-
-## get_room
-
-Get details of a specific room by name.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | The room name |
-
-### Example
-
-```lua
-local result = app.integrations["daily-co"].get_room({
-  name = "standup"
-})
-
-print("Room: " .. result.name)
-print("URL: " .. result.url)
-print("Privacy: " .. result.privacy)
-```
-
----
-
-## create_room
-
-Create a new video room.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | no | A unique name for the room (auto-generated if omitted) |
-| `privacy` | string | no | Room privacy: `"private"` (default) or `"public"` |
-| `properties` | object | no | Room configuration (e.g., max_participants, enable_recording, exp) |
-
-### Properties Syntax
-
-```lua
-properties = {
-  max_participants = 10,
-  enable_recording = "cloud",
-  exp = 1700000000
-}
-```
-
-### Example
-
-```lua
-local result = app.integrations["daily-co"].create_room({
-  name = "team-sync",
-  privacy = "public",
-  properties = {
-    max_participants = 25,
-    enable_recording = "cloud"
+local room = app.integrations["daily-co"].create_room({
+  payload = {
+    name = "team-sync",
+    privacy = "public",
+    properties = {
+      max_participants = 25,
+      enable_recording = "cloud"
+    }
   }
 })
 
-print("Created room: " .. result.name)
-print("URL: " .. result.url)
+local config = app.integrations["daily-co"].get_room({
+  room_name = "team-sync"
+})
 ```
 
----
+Room tools also cover deletion, room presence, session data, ejection,
+permissions, app messages, SIP call transfer, dial-out, live streaming,
+recording, and transcription actions.
 
-## delete_room
-
-Delete a video room by name.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | The room name to delete |
-
-### Example
+## Meeting Tokens And Meetings
 
 ```lua
-local result = app.integrations["daily-co"].delete_room({
-  name = "old-room"
+local token = app.integrations["daily-co"].create_meeting_token({
+  payload = {
+    properties = {
+      room_name = "team-sync",
+      user_name = "Ada",
+      is_owner = true
+    }
+  }
 })
 
-print("Room deleted successfully")
+local valid = app.integrations["daily-co"].validate_meeting_token({
+  meeting_token = token.token
+})
+
+local meetings = app.integrations["daily-co"].list_meetings({
+  limit = 20,
+  room = "team-sync"
+})
+
+local participants = app.integrations["daily-co"].get_meeting_participants({
+  meeting = "meeting-id"
+})
 ```
 
----
-
-## list_meetings
-
-List meetings with optional filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `room` | string | no | Filter by room name |
-| `limit` | integer | no | Maximum results (default: 20, max: 100) |
-| `starting_after` | string | no | Meeting ID for cursor-based pagination |
-| `ending_before` | string | no | Meeting ID for cursor-based pagination |
-
-### Example
+## Recordings And Transcripts
 
 ```lua
-local result = app.integrations["daily-co"].list_meetings({
-  room = "standup",
-  limit = 10
+local recordings = app.integrations["daily-co"].list_recordings({
+  limit = 20,
+  room = "team-sync"
 })
 
-for _, meeting in ipairs(result.data) do
-  print(meeting.id .. ": " .. meeting.room .. " at " .. meeting.start_time)
-end
+local recording = app.integrations["daily-co"].get_recording_info({
+  recording_id = "recording-id"
+})
+
+local link = app.integrations["daily-co"].get_recording_link({
+  recording_id = "recording-id"
+})
+
+local transcripts = app.integrations["daily-co"].list_transcripts({
+  limit = 20
+})
 ```
 
----
-
-## get_meeting
-
-Get details of a specific meeting by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `meeting_id` | string | yes | The meeting UUID |
-
-### Example
+## Domain, Logs, Presence, Phone Numbers, And Webhooks
 
 ```lua
-local result = app.integrations["daily-co"].get_meeting({
-  meeting_id = "abc123-def456"
+local domain = app.integrations["daily-co"].get_domain_config({})
+
+local logs = app.integrations["daily-co"].list_api_logs({
+  limit = 20,
+  source = "api"
 })
 
-print("Meeting ID: " .. result.id)
-print("Room: " .. result.room)
-print("Start: " .. result.start_time)
-print("Duration: " .. (result.duration or "ongoing"))
+local presence = app.integrations["daily-co"].get_presence({})
+
+local webhooks = app.integrations["daily-co"].list_webhooks({})
 ```
 
----
+The package also exposes batch room create/delete, domain config updates,
+available/purchased phone number operations, and webhook CRUD.
 
-## list_recordings
+## Argument Shape
 
-List recordings with optional filters.
+Path parameters are top-level snake_case arguments. For example,
+`/rooms/{room_name}` uses `room_name`.
 
-### Parameters
+Write operations accept a `payload` object for the JSON body. Tools also accept:
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `room` | string | no | Filter by room name |
-| `limit` | integer | no | Maximum results (default: 20, max: 100) |
-| `starting_after` | string | no | Recording ID for cursor-based pagination |
-| `ending_before` | string | no | Recording ID for cursor-based pagination |
+- `query`: extra documented query parameters
+- top-level extra arguments: sent to the JSON body for writes and query string
+  for reads
 
-### Example
-
-```lua
-local result = app.integrations["daily-co"].list_recordings({
-  room = "standup",
-  limit = 10
-})
-
-for _, rec in ipairs(result.data) do
-  print(rec.id .. ": " .. rec.room .. " (" .. rec.status .. ")")
-  if rec.download_link then
-    print("  Download: " .. rec.download_link)
-  end
-end
-```
-
----
+Responses are parsed Daily JSON. Empty responses return
+`{ success = true, status = 204 }`.
 
 ## Multi-Account Usage
 
-If you have multiple Daily.co accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["daily-co"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["daily-co"].default.function_name({...})
-
--- Named accounts
-app.integrations["daily-co"].production.function_name({...})
-app.integrations["daily-co"].staging.function_name({...})
+app.integrations["daily-co"].list_rooms({ limit = 10 })
+app.integrations["daily-co"].default.list_rooms({ limit = 10 })
+app.integrations["daily-co"].production.list_rooms({ limit = 10 })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tool names. Only credentials differ.

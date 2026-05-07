@@ -83,7 +83,7 @@ class ZohoSheetToolProvider implements ToolProvider, ConfigurableIntegration, Ha
      */
     public function appName(): string
     {
-        return 'zoho_sheet';
+        return 'zoho-sheet';
     }
 
 /**
@@ -303,10 +303,17 @@ class ZohoSheetToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $credential = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('zoho-sheet', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_sheet', $key, $default, $account);
+            };
 
             $service = new ZohoSheetService(
-                accessToken: $creds->get('zoho_sheet', 'access_token', '', $account),
-                baseUrl: $creds->get('zoho_sheet', 'url', 'https://sheet.zoho.com', $account),
+                accessToken: $credential('access_token'),
+                baseUrl: $credential('url', 'https://sheet.zoho.com'),
             );
 
             return new $class($service);

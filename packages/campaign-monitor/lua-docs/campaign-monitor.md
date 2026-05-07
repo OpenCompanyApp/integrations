@@ -1,179 +1,88 @@
-# Campaign Monitor — Lua API Reference
+# Campaign Monitor Lua API Reference
 
-## list_campaigns
+Namespace: `app.integrations.campaign-monitor`
 
-List all email campaigns in your Campaign Monitor account.
+This integration targets Campaign Monitor API v3.3 at
+`https://api.createsend.com/api/v3.3`. Most tools accept a `params` object for
+query strings or a `payload` object for write requests. Write request fields use
+Campaign Monitor's documented PascalCase names.
 
-### Parameters
+## Common Patterns
 
-None.
-
-### Example
+List clients:
 
 ```lua
-local result = app.integrations["campaign-monitor"].list_campaigns()
-
-for _, campaign in ipairs(result) do
-  print(campaign.Subject .. " (" .. campaign.Status .. ")")
-end
+local clients = app.integrations["campaign-monitor"].list_clients({})
 ```
 
----
-
-## get_campaign
-
-Get detailed information about a specific email campaign.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `campaign_id` | string | yes | The campaign ID |
-
-### Example
+List sent campaigns for a client:
 
 ```lua
-local result = app.integrations["campaign-monitor"].get_campaign({
-  campaign_id = "abc123"
-})
-
-print("Subject: " .. result.Subject)
-print("Status: " .. result.Status)
-```
-
----
-
-## list_lists
-
-List all subscriber lists in your Campaign Monitor account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["campaign-monitor"].list_lists()
-
-for _, list in ipairs(result) do
-  print(list.Name .. " (" .. list.ListID .. ")")
-end
-```
-
----
-
-## get_list
-
-Get detailed information about a specific subscriber list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The subscriber list ID |
-
-### Example
-
-```lua
-local result = app.integrations["campaign-monitor"].get_list({
-  list_id = "abc123"
-})
-
-print("List: " .. result.Title)
-print("Subscribers: " .. result.TotalActiveSubscribers)
-```
-
----
-
-## list_subscribers
-
-List active subscribers on a Campaign Monitor list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The subscriber list ID |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `page_size` | integer | no | Number of subscribers per page (default: 100, max: 1000) |
-
-### Example
-
-```lua
-local result = app.integrations["campaign-monitor"].list_subscribers({
-  list_id = "abc123",
+local campaigns = app.integrations["campaign-monitor"].list_campaigns({
+  client_id = "client_test",
   page = 1,
-  page_size = 50
+  pagesize = 50
 })
-
-for _, sub in ipairs(result.Results) do
-  print(sub.EmailAddress .. " - " .. sub.Name)
-end
 ```
 
----
-
-## add_subscriber
-
-Add a new subscriber to a Campaign Monitor list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The subscriber list ID |
-| `email` | string | yes | The subscriber's email address |
-| `name` | string | yes | The subscriber's full name |
-| `resubscribe` | boolean | no | Re-subscribe if previously unsubscribed (default: true) |
-
-### Example
+Add or update a subscriber:
 
 ```lua
 local result = app.integrations["campaign-monitor"].add_subscriber({
-  list_id = "abc123",
-  email = "john@example.com",
-  name = "John Doe"
+  list_id = "list_test",
+  EmailAddress = "reader@example.test",
+  Name = "Ada Reader",
+  Resubscribe = true,
+  ConsentToTrack = "Yes"
 })
-
-print(result.message)
 ```
 
----
-
-## get_current_user
-
-Get the authenticated user's Campaign Monitor account details.
-
-### Parameters
-
-None.
-
-### Example
+Send a transactional classic email:
 
 ```lua
-local result = app.integrations["campaign-monitor"].get_current_user()
-
-print("Account: " .. result.EmailAddress)
-print("Name: " .. result.Name)
+local result = app.integrations["campaign-monitor"].send_classic_email({
+  clientID = "client_test",
+  payload = {
+    Subject = "Receipt",
+    From = "Billing <billing@example.test>",
+    To = { "reader@example.test" },
+    Html = "<p>Thanks</p>",
+    Text = "Thanks",
+    ConsentToTrack = "No"
+  }
+})
 ```
 
----
+## Resource Coverage
+
+Tools cover:
+
+- Account setup: `get_current_user`, `list_clients`, `create_client`, `get_client`, `update_client`, `delete_client`, `list_countries`, `list_time_zones`, `get_system_date`
+- Client resources: `list_lists`, `list_lists_for_email`, `list_client_segments`, `list_client_templates`, `list_client_suppression_list`, `unsuppress_email`, `list_client_tags`, `list_campaigns`, `list_draft_campaigns`, `list_scheduled_campaigns`
+- Campaigns and reports: `create_campaign`, `get_campaign`, `send_campaign`, `unschedule_campaign`, `delete_campaign`, `get_campaign_summary`, `get_campaign_email_client_usage`, `get_campaign_lists_and_segments`, `list_campaign_recipients`, `list_campaign_bounces`, `list_campaign_opens`, `list_campaign_clicks`, `list_campaign_unsubscribes`, `list_campaign_spam_complaints`
+- Lists and custom fields: `create_list`, `get_list`, `update_list`, `delete_list`, `get_list_stats`, `list_custom_fields`, `create_custom_field`, `update_custom_field`, `delete_custom_field`
+- Subscribers: `list_subscribers`, `list_unconfirmed_subscribers`, `list_unsubscribed_subscribers`, `list_deleted_subscribers`, `list_bounced_subscribers`, `add_subscriber`, `import_subscribers`, `get_subscriber`, `update_subscriber`, `delete_subscriber`, `unsubscribe_subscriber`, `get_subscriber_history`
+- Segments: `create_segment`, `get_segment`, `update_segment`, `delete_segment`, `list_segment_subscribers`
+- Webhooks: `list_webhooks`, `create_webhook`, `get_webhook`, `test_webhook`, `activate_webhook`, `deactivate_webhook`, `delete_webhook`
+- Transactional: `list_smart_emails`, `get_smart_email`, `send_smart_email`, `send_classic_email`, `list_classic_email_groups`, `get_transactional_statistics`, `list_transactional_messages`, `get_transactional_message`, `resend_transactional_message`
+
+## Raw API Helpers
+
+Use raw helpers for documented endpoints not yet wrapped:
+
+```lua
+local result = app.integrations["campaign-monitor"].api_get({
+  path = "/clients.json"
+})
+```
+
+The `path` must be relative. Absolute URLs and parent-directory paths are
+rejected.
 
 ## Multi-Account Usage
 
-If you have multiple Campaign Monitor accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["campaign-monitor"].list_lists({})
-
--- Explicit default (portable across setups)
-app.integrations["campaign-monitor"].default.list_lists({})
-
--- Named accounts
-app.integrations["campaign-monitor"].marketing.list_lists({})
-app.integrations["campaign-monitor"].transactional.list_lists({})
+app.integrations["campaign-monitor"].list_clients({})
+app.integrations["campaign-monitor"].default.list_clients({})
+app.integrations["campaign-monitor"].work.list_clients({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

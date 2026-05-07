@@ -1,0 +1,11 @@
+{
+  "source_url": "https://docs.browserbase.com/reference/api/openapi.v1.yaml",
+  "docs_url": "https://docs.browserbase.com/reference/api/overview",
+  "openapi": "3.0.0",
+  "path_count": 28,
+  "method_count": 34,
+  "read_count": 22,
+  "write_count": 12,
+  "base_url": "https://api.browserbase.com",
+  "auth_header": "X-BB-API-Key"
+}

@@ -2,60 +2,49 @@
 
 namespace OpenCompany\Integrations\CircleCI\Tools;
 
-use OpenCompany\Integrations\CircleCI\CircleCIService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List projects in a CircleCI organization.
- *
- * Returns all projects that are set up in CircleCI for the given
- * organization, including repository information and VCS details.
+ * List projects for an organization.
  */
-class CircleCIListProjects implements Tool
+class CircleCIListProjects extends AbstractCircleCITool
 {
-    public function __construct(
-        private CircleCIService $service,
-    ) {}
+    protected string $toolName = 'circleci_list_projects';
 
-    public function name(): string
-    {
-        return 'circleci_list_projects';
-    }
+    protected string $toolDescription = 'List projects for an organization.';
 
-    public function description(): string
-    {
-        return 'List all projects in a CircleCI organization. Returns project slugs, repository URLs, and VCS provider information.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'orgSlug' => ['type' => 'string', 'required' => true, 'description' => 'Organization slug (e.g., "gh/my-org" for GitHub, "bb/my-org" for Bitbucket).'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of projects to return.'],
-        ];
-    }
+    protected string $path = '/v2/projects';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CircleCI integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'org_slug' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Organization slug, such as gh/org or circleci/org-id.',
+    ],
+    'page_token' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Pagination token from the previous response.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented CircleCI query parameters to pass through.',
+    ],
+];
 
-            $params = [
-                'org-slug' => $args['orgSlug'],
-            ];
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'org_slug' => 'org-slug',
+    'page_token' => 'page-token',
+];
 
-            $result = $this->service->listProjects($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

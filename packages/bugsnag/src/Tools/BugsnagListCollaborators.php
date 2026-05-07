@@ -2,56 +2,43 @@
 
 namespace OpenCompany\Integrations\Bugsnag\Tools;
 
-use OpenCompany\Integrations\Bugsnag\BugsnagService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BugsnagListCollaborators implements Tool
+/**
+ * List collaborators for a Bugsnag organization.
+ */
+class BugsnagListCollaborators extends AbstractBugsnagTool
 {
-    public function __construct(
-        private BugsnagService $service,
-    ) {}
+    protected array $parameters = array (
+  'organization_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'Bugsnag organization ID.',
+    'required' => true,
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'description' => 'Additional query parameters.',
+  ),
+);
 
-    public function name(): string
-    {
-        return 'bugsnag_list_collaborators';
-    }
+    protected array $required = array (
+  0 => 'organization_id',
+);
 
-    public function description(): string
-    {
-        return 'List collaborators (team members) for a Bugsnag organization.';
-    }
+    protected array $queryParams = array (
+  0 => 'query',
+);
 
-    public function parameters(): array
-    {
-        return [
-            'org_id' => ['type' => 'string', 'required' => true, 'description' => 'The organization ID.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of collaborators to return (default: 30).'],
-            'offset' => ['type' => 'integer', 'description' => 'Number of collaborators to skip for pagination (default: 0).'],
-        ];
-    }
+    protected array $bodyParams = array (
+);
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Bugsnag integration is not configured.');
-            }
+    protected string $method = 'GET';
 
-            $orgId = $args['org_id'] ?? '';
+    protected string $path = '/organizations/{organization_id}/collaborators';
 
-            if (empty($orgId)) {
-                return ToolResult::error('Organization ID is required.');
-            }
+    protected string $api = 'data';
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 30;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
+    protected string $toolName = 'bugsnag_list_collaborators';
 
-            $result = $this->service->listCollaborators($orgId, $limit, $offset);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'List collaborators for a Bugsnag organization.';
 }

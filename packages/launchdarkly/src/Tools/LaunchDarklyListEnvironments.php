@@ -6,8 +6,14 @@ use OpenCompany\Integrations\LaunchDarkly\LaunchDarklyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List LaunchDarkly project environments.
+ */
 class LaunchDarklyListEnvironments implements Tool
 {
+    /**
+     * @param  LaunchDarklyService  $service  LaunchDarkly API client.
+     */
     public function __construct(
         private LaunchDarklyService $service,
     ) {}
@@ -29,6 +35,11 @@ class LaunchDarklyListEnvironments implements Tool
         ];
     }
 
+    /**
+     * List and normalize environments for a project.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

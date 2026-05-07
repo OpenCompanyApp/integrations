@@ -6,6 +6,9 @@ use OpenCompany\Integrations\SignNow\SignNowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List SignNow templates available to the authenticated user.
+ */
 class SignNowListTemplates implements Tool
 {
     /**

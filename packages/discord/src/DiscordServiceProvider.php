@@ -19,6 +19,7 @@ class DiscordServiceProvider extends ServiceProvider
             return new DiscordService(
                 accessToken: $creds->get('discord', 'access_token', ''),
                 baseUrl: $creds->get('discord', 'base_url', 'https://discord.com/api/v10'),
+                authScheme: $creds->get('discord', 'token_type', 'Bearer'),
             );
         });
     }

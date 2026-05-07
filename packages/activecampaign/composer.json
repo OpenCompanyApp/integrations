@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-activecampaign",
-    "description": "ActiveCampaign integration for Laravel — manage contacts, lists, deals, automations, and notes.",
+    "description": "ActiveCampaign integration for Laravel — contacts, tags, fields, campaigns, accounts, deals, automations, and API helpers.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "activecampaign", "crm", "email-marketing", "opencompany"],
+    "keywords": ["tools", "activecampaign", "productivity", "crm", "email-marketing", "automation", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

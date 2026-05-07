@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ChargeOver\ChargeOverService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List ChargeOver payment, refund, and credit transactions.
+ */
 class ChargeOverListTransactions implements Tool
 {
+    /**
+     * @param  ChargeOverService  $service  The ChargeOver API client.
+     */
     public function __construct(
         private ChargeOverService $service,
     ) {}
@@ -19,17 +25,25 @@ class ChargeOverListTransactions implements Tool
 
     public function description(): string
     {
-        return 'List transactions (payments) from ChargeOver. Returns payment records including amounts, methods, dates, and associated customers and invoices.';
+        return 'List transactions from ChargeOver, including payments, refunds, and credits. Supports limit/offset pagination, where filters, sorting, and applied_to expansion.';
     }
 
     public function parameters(): array
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of transactions to return per page (default: 10, max: 500).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based, default: 1).'],
+            'offset' => ['type' => 'integer', 'description' => 'Record offset for pagination (default: 0).'],
+            'where' => ['type' => 'string', 'description' => 'ChargeOver where expression, e.g. transaction_status.state:EQUALS:succeeded.'],
+            'order' => ['type' => 'string', 'description' => 'Sort expression, e.g. transaction_id:DESC.'],
+            'expand' => ['type' => 'string', 'description' => 'Optional expansion such as applied_to.'],
         ];
     }
 
+    /**
+     * List transactions through the ChargeOver API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (limit, offset, where, order, expand).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -38,9 +52,15 @@ class ChargeOverListTransactions implements Tool
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            $result = $this->service->listTransactions($limit, $page);
+            $result = $this->service->listTransactions(
+                $limit,
+                $offset,
+                $args['where'] ?? null,
+                $args['order'] ?? null,
+                $args['expand'] ?? null,
+            );
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

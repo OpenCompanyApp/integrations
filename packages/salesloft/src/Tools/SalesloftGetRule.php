@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Salesloft\SalesloftService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get one legacy Salesloft automation rule.
+ */
 class SalesloftGetRule implements Tool
 {
     public function __construct(

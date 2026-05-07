@@ -11,6 +11,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class BaserowGetTable implements Tool
 {
+    /**
+     * @param  BaserowService  $service  The Baserow API client.
+     */
     public function __construct(
         private BaserowService $service,
     ) {}

@@ -49,7 +49,7 @@ class OpenrouterListGenerations implements Tool
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of generations to return per page.'],
             'offset' => ['type' => 'integer', 'description' => 'Number of generations to skip for pagination.'],
-            'order' => ['type' => 'string', 'description' => 'Sort order — "asc" or "desc" (default: "desc").'],
+            'order' => ['type' => 'string', 'description' => 'Sort order: "asc" or "desc" (default: "desc").'],
         ];
     }
 

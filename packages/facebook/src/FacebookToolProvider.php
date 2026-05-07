@@ -92,7 +92,7 @@ class FacebookToolProvider implements ToolProvider, ConfigurableIntegration, Has
             'description' => 'Manage Facebook Pages, publish posts, and view page insights via the Graph API.',
             'icon' => 'ph:facebook-logo',
             'logo' => 'simple-icons:facebook',
-            'category' => 'social',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.facebook.com/docs/graph-api/',
         ];

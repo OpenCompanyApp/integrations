@@ -21,11 +21,18 @@ class ZohoBooksServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZohoBooksService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('zoho-books', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_books', $key, $default);
+            };
 
             return new ZohoBooksService(
-                accessToken: $creds->get('zoho_books', 'access_token', ''),
-                organizationId: $creds->get('zoho_books', 'organization_id', ''),
-                baseUrl: $creds->get('zoho_books', 'url', 'https://www.zohoapis.com/books/v3'),
+                accessToken: $get('access_token'),
+                organizationId: $get('organization_id'),
+                baseUrl: $get('url', 'https://www.zohoapis.com/books/v3'),
             );
         });
     }

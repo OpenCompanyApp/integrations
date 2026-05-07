@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-chargeover",
-    "description": "ChargeOver integration for Laravel — manage customers, subscriptions, invoices and transactions.",
+    "description": "ChargeOver REST API v3 integration for Laravel — manage customers, subscription packages, invoices and transactions.",
     "license": "MIT",
     "authors": [
         {

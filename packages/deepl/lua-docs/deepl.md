@@ -1,47 +1,30 @@
-# DeepL Integration
+# DeepL Lua Docs
 
-## Tools
+Namespace: `deepl`
 
-### deepl_translate_text
-Translate text using DeepL.
+DeepL tools call the official DeepL API. Configure an API key and base URL before use. Use `https://api.deepl.com` for paid plans or `https://api-free.deepl.com` for the free tier.
 
-**Parameters:**
-- `text` (string, required) — The text to translate.
-- `target_lang` (string, required) — Target language code (e.g., "EN", "DE", "FR", "ES", "JA", "ZH").
-- `source_lang` (string, optional) — Source language code. Auto-detected if omitted.
+This integration mirrors DeepL's official OpenAPI document, including tools for text translation, document translation, v2 and v3 glossaries, glossary language pairs, write/rephrase, usage, supported languages, admin developer keys, admin analytics, style rules, translation memories, and voice realtime sessions.
 
-### deepl_list_languages
-List supported languages.
+Common tools:
 
-**Parameters:**
-- `type` (string, optional) — Filter: "source" or "target".
+```lua
+local translated = deepl.deepl_translate_text({
+  body = {
+    text = { "Hello world" },
+    target_lang = "DE"
+  }
+})
 
-### deepl_get_usage
-Check DeepL API usage and limits.
+local usage = deepl.deepl_get_usage({})
 
-**Parameters:** None.
+local languages = deepl.deepl_list_languages({
+  type = "target"
+})
+```
 
-### deepl_list_glossaries
-List all glossaries.
+Request bodies can be passed as a `body` object. DeepL operations that support both JSON and form bodies default to JSON; pass `content_type = "application/x-www-form-urlencoded"` when you need form encoding. Document upload uses `multipart/form-data` according to the upstream API.
 
-**Parameters:** None.
+The previous `deepl_get_current_user` tool has been removed because DeepL does not expose a current-user endpoint in the official OpenAPI definition. Use `deepl_get_usage` for account usage and limits.
 
-### deepl_get_glossary
-Get details of a specific glossary.
-
-**Parameters:**
-- `id` (string, required) — The glossary ID.
-
-### deepl_create_glossary
-Create a new glossary.
-
-**Parameters:**
-- `name` (string, required) — Glossary name.
-- `source_lang` (string, required) — Source language code.
-- `target_lang` (string, required) — Target language code.
-- `entries` (string, required) — Tab-separated entries (source\ttarget), one per line.
-
-### deepl_get_current_user
-Get current DeepL account information and usage statistics.
-
-**Parameters:** None.
+Use fake text, glossary ids, and API keys in examples and tests. Do not store real DeepL API keys in committed fixtures.

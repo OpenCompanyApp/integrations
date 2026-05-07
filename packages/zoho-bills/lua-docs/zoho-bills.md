@@ -16,7 +16,7 @@ List invoices from Zoho Bills with optional filters.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.list_invoices({
+local result = app.integrations["zoho-bills"].zoho_bills_list_invoices({
   status = "overdue",
   per_page = 10
 })
@@ -41,7 +41,7 @@ Retrieve a single invoice by ID.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.get_invoice({
+local result = app.integrations["zoho-bills"].zoho_bills_get_invoice({
   id = "inv_12345"
 })
 
@@ -78,7 +78,7 @@ Create a new invoice in Zoho Bills.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.create_invoice({
+local result = app.integrations["zoho-bills"].zoho_bills_create_invoice({
   customer_id = "cnt_12345",
   line_items = {
     { item_id = "itm_001", quantity = 2, rate = 50.00 },
@@ -108,7 +108,7 @@ List customers (contacts) from Zoho Bills.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.list_customers({
+local result = app.integrations["zoho-bills"].zoho_bills_list_customers({
   type = "customer",
   per_page = 50
 })
@@ -133,7 +133,7 @@ Retrieve a single customer (contact) by ID.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.get_customer({
+local result = app.integrations["zoho-bills"].zoho_bills_get_customer({
   id = "cnt_12345"
 })
 
@@ -157,7 +157,7 @@ List items (products and services) from Zoho Bills.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.list_items({
+local result = app.integrations["zoho-bills"].zoho_bills_list_items({
   per_page = 100
 })
 
@@ -179,7 +179,7 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.zoho_bills.get_current_user({})
+local result = app.integrations["zoho-bills"].zoho_bills_get_current_user({})
 
 print("User: " .. result.user.name)
 print("Email: " .. result.user.email)
@@ -194,14 +194,14 @@ If you have multiple Zoho Bills accounts configured, use account-specific namesp
 
 ```lua
 -- Default account (always works)
-app.integrations.zoho_bills.function_name({...})
+app.integrations["zoho-bills"].zoho_bills_function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.zoho_bills.default.function_name({...})
+app.integrations["zoho-bills"].default.zoho_bills_function_name({...})
 
 -- Named accounts
-app.integrations.zoho_bills.production.function_name({...})
-app.integrations.zoho_bills.sandbox.function_name({...})
+app.integrations["zoho-bills"].production.zoho_bills_function_name({...})
+app.integrations["zoho-bills"].sandbox.zoho_bills_function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

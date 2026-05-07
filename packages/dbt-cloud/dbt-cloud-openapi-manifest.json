@@ -1,0 +1,1845 @@
+{
+    "source_urls": [
+        "https://raw.githubusercontent.com/dbt-labs/dbt-cloud-openapi-spec/master/openapi-v2.yaml",
+        "https://raw.githubusercontent.com/dbt-labs/dbt-cloud-openapi-spec/master/openapi-v3.yaml"
+    ],
+    "specs": {
+        "v2": {
+            "source_url": "https://raw.githubusercontent.com/dbt-labs/dbt-cloud-openapi-spec/master/openapi-v2.yaml",
+            "openapi": "3.0.3",
+            "title": "dbt Cloud API v2",
+            "version": "2.0.0",
+            "method_count": 52
+        },
+        "v3": {
+            "source_url": "https://raw.githubusercontent.com/dbt-labs/dbt-cloud-openapi-spec/master/openapi-v3.yaml",
+            "openapi": "3.0.3",
+            "title": "dbt Cloud API v3",
+            "version": "3.0.0",
+            "method_count": 150
+        }
+    },
+    "base_url": "https://cloud.getdbt.com",
+    "auth": "bearer",
+    "method_count": 202,
+    "operations": [
+        {
+            "version": "v2",
+            "operation_id": "List Accounts",
+            "class": "DbtCloudV2ListAccounts",
+            "slug": "dbt_cloud_v2_list_accounts",
+            "method": "get",
+            "path": "/api/v2/accounts/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Account",
+            "class": "DbtCloudV2RetrieveAccount",
+            "slug": "dbt_cloud_v2_retrieve_account",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update Account",
+            "class": "DbtCloudV2UpdateAccount",
+            "slug": "dbt_cloud_v2_update_account",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Partial Update Account",
+            "class": "DbtCloudV2PartialUpdateAccount",
+            "slug": "dbt_cloud_v2_partial_update_account",
+            "method": "patch",
+            "path": "/api/v2/accounts/{account_id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List SSH Tunnels",
+            "class": "DbtCloudV2ListSshTunnels",
+            "slug": "dbt_cloud_v2_list_ssh_tunnels",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/encryptions/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Create SSH Tunnel",
+            "class": "DbtCloudV2CreateSshTunnel",
+            "slug": "dbt_cloud_v2_create_ssh_tunnel",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/encryptions/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve SSH Tunnel",
+            "class": "DbtCloudV2RetrieveSshTunnel",
+            "slug": "dbt_cloud_v2_retrieve_ssh_tunnel",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/encryptions/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update SSH Tunnel",
+            "class": "DbtCloudV2UpdateSshTunnel",
+            "slug": "dbt_cloud_v2_update_ssh_tunnel",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/encryptions/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Destroy SSH Tunnel",
+            "class": "DbtCloudV2DestroySshTunnel",
+            "slug": "dbt_cloud_v2_destroy_ssh_tunnel",
+            "method": "delete",
+            "path": "/api/v2/accounts/{account_id}/encryptions/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Environments",
+            "class": "DbtCloudV2ListEnvironments",
+            "slug": "dbt_cloud_v2_list_environments",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/environments/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Create Environment",
+            "class": "DbtCloudV2CreateEnvironment",
+            "slug": "dbt_cloud_v2_create_environment",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/environments/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Environment",
+            "class": "DbtCloudV2RetrieveEnvironment",
+            "slug": "dbt_cloud_v2_retrieve_environment",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/environments/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update Environment",
+            "class": "DbtCloudV2UpdateEnvironment",
+            "slug": "dbt_cloud_v2_update_environment",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/environments/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Destroy Environment",
+            "class": "DbtCloudV2DestroyEnvironment",
+            "slug": "dbt_cloud_v2_destroy_environment",
+            "method": "delete",
+            "path": "/api/v2/accounts/{account_id}/environments/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Invites",
+            "class": "DbtCloudV2ListInvites",
+            "slug": "dbt_cloud_v2_list_invites",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/invites/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Invite",
+            "class": "DbtCloudV2RetrieveInvite",
+            "slug": "dbt_cloud_v2_retrieve_invite",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/invites/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Jobs",
+            "class": "DbtCloudV2ListJobs",
+            "slug": "dbt_cloud_v2_list_jobs",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/jobs/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Create Job",
+            "class": "DbtCloudV2CreateJob",
+            "slug": "dbt_cloud_v2_create_job",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/jobs/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Job Artifact",
+            "class": "DbtCloudV2RetrieveJobArtifact",
+            "slug": "dbt_cloud_v2_retrieve_job_artifact",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/jobs/{job_id}/artifacts/{remainder}",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retry Failed Job",
+            "class": "DbtCloudV2RetryFailedJob",
+            "slug": "dbt_cloud_v2_retry_failed_job",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/jobs/{job_id}/rerun/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Trigger Job Run",
+            "class": "DbtCloudV2TriggerJobRun",
+            "slug": "dbt_cloud_v2_trigger_job_run",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/jobs/{job_id}/run/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Job",
+            "class": "DbtCloudV2RetrieveJob",
+            "slug": "dbt_cloud_v2_retrieve_job",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/jobs/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update Job",
+            "class": "DbtCloudV2UpdateJob",
+            "slug": "dbt_cloud_v2_update_job",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/jobs/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Destroy Job",
+            "class": "DbtCloudV2DestroyJob",
+            "slug": "dbt_cloud_v2_destroy_job",
+            "method": "delete",
+            "path": "/api/v2/accounts/{account_id}/jobs/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Account License Allocations",
+            "class": "DbtCloudV2ListAccountLicenseAllocations",
+            "slug": "dbt_cloud_v2_list_account_license_allocations",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/licenses/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Notifications",
+            "class": "DbtCloudV2ListNotifications",
+            "slug": "dbt_cloud_v2_list_notifications",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/notifications/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Create Notification",
+            "class": "DbtCloudV2CreateNotification",
+            "slug": "dbt_cloud_v2_create_notification",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/notifications/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Notification",
+            "class": "DbtCloudV2RetrieveNotification",
+            "slug": "dbt_cloud_v2_retrieve_notification",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/notifications/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update Notification",
+            "class": "DbtCloudV2UpdateNotification",
+            "slug": "dbt_cloud_v2_update_notification",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/notifications/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Destroy Notification",
+            "class": "DbtCloudV2DestroyNotification",
+            "slug": "dbt_cloud_v2_destroy_notification",
+            "method": "delete",
+            "path": "/api/v2/accounts/{account_id}/notifications/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update License Permissions",
+            "class": "DbtCloudV2UpdateLicensePermissions",
+            "slug": "dbt_cloud_v2_update_license_permissions",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/permissions/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Projects",
+            "class": "DbtCloudV2ListProjects",
+            "slug": "dbt_cloud_v2_list_projects",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/projects/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Create Project",
+            "class": "DbtCloudV2CreateProject",
+            "slug": "dbt_cloud_v2_create_project",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/projects/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Project",
+            "class": "DbtCloudV2RetrieveProject",
+            "slug": "dbt_cloud_v2_retrieve_project",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/projects/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update Project",
+            "class": "DbtCloudV2UpdateProject",
+            "slug": "dbt_cloud_v2_update_project",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/projects/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Destroy Project",
+            "class": "DbtCloudV2DestroyProject",
+            "slug": "dbt_cloud_v2_destroy_project",
+            "method": "delete",
+            "path": "/api/v2/accounts/{account_id}/projects/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Repositories",
+            "class": "DbtCloudV2ListRepositories",
+            "slug": "dbt_cloud_v2_list_repositories",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/repositories/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Create Repository",
+            "class": "DbtCloudV2CreateRepository",
+            "slug": "dbt_cloud_v2_create_repository",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/repositories/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Repository",
+            "class": "DbtCloudV2RetrieveRepository",
+            "slug": "dbt_cloud_v2_retrieve_repository",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/repositories/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Destroy Repository",
+            "class": "DbtCloudV2DestroyRepository",
+            "slug": "dbt_cloud_v2_destroy_repository",
+            "method": "delete",
+            "path": "/api/v2/accounts/{account_id}/repositories/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Runs",
+            "class": "DbtCloudV2ListRuns",
+            "slug": "dbt_cloud_v2_list_runs",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/runs/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Run",
+            "class": "DbtCloudV2RetrieveRun",
+            "slug": "dbt_cloud_v2_retrieve_run",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/runs/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Run Artifacts",
+            "class": "DbtCloudV2ListRunArtifacts",
+            "slug": "dbt_cloud_v2_list_run_artifacts",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/runs/{run_id}/artifacts/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Run Artifact",
+            "class": "DbtCloudV2RetrieveRunArtifact",
+            "slug": "dbt_cloud_v2_retrieve_run_artifact",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/runs/{run_id}/artifacts/{remainder}",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Cancel Run",
+            "class": "DbtCloudV2CancelRun",
+            "slug": "dbt_cloud_v2_cancel_run",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/runs/{run_id}/cancel/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Run Failure Details",
+            "class": "DbtCloudV2RetrieveRunFailureDetails",
+            "slug": "dbt_cloud_v2_retrieve_run_failure_details",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/runs/{run_id}/retry/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retry Run",
+            "class": "DbtCloudV2RetryRun",
+            "slug": "dbt_cloud_v2_retry_run",
+            "method": "post",
+            "path": "/api/v2/accounts/{account_id}/runs/{run_id}/retry/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve Run Step",
+            "class": "DbtCloudV2RetrieveRunStep",
+            "slug": "dbt_cloud_v2_retrieve_run_step",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/steps/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "List Users",
+            "class": "DbtCloudV2ListUsers",
+            "slug": "dbt_cloud_v2_list_users",
+            "method": "get",
+            "path": "/api/v2/accounts/{account_id}/users/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Unsubscribe from Notifications",
+            "class": "DbtCloudV2UnsubscribeFromNotifications",
+            "slug": "dbt_cloud_v2_unsubscribe_from_notifications",
+            "method": "post",
+            "path": "/api/v2/notifications/unsubscribe/",
+            "type": "write"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Retrieve User",
+            "class": "DbtCloudV2RetrieveUser",
+            "slug": "dbt_cloud_v2_retrieve_user",
+            "method": "get",
+            "path": "/api/v2/users/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v2",
+            "operation_id": "Update User",
+            "class": "DbtCloudV2UpdateUser",
+            "slug": "dbt_cloud_v2_update_user",
+            "method": "post",
+            "path": "/api/v2/users/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Accounts",
+            "class": "DbtCloudV3ListAccounts",
+            "slug": "dbt_cloud_v3_list_accounts",
+            "method": "get",
+            "path": "/api/v3/accounts/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Assign User to Groups",
+            "class": "DbtCloudV3AssignUserToGroups",
+            "slug": "dbt_cloud_v3_assign_user_to_groups",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/assign-groups/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Recent Audit Log Events",
+            "class": "DbtCloudV3ListRecentAuditLogEvents",
+            "slug": "dbt_cloud_v3_list_recent_audit_log_events",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/audit-logs/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get Recent Audit Log Events CSV",
+            "class": "DbtCloudV3GetRecentAuditLogEventsCsv",
+            "slug": "dbt_cloud_v3_get_recent_audit_log_events_csv",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/audit-logs/download/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get Bulk Audit Log Export Status",
+            "class": "DbtCloudV3GetBulkAuditLogExportStatus",
+            "slug": "dbt_cloud_v3_get_bulk_audit_log_export_status",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/audit-logs/export/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Submit Bulk Audit Log Export Request",
+            "class": "DbtCloudV3SubmitBulkAuditLogExportRequest",
+            "slug": "dbt_cloud_v3_submit_bulk_audit_log_export_request",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/audit-logs/export/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Download Bulk Audit Log Export",
+            "class": "DbtCloudV3DownloadBulkAuditLogExport",
+            "slug": "dbt_cloud_v3_download_bulk_audit_log_export",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/audit-logs/export/{job_identifier}/download/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Account Connections",
+            "class": "DbtCloudV3ListAccountConnections",
+            "slug": "dbt_cloud_v3_list_account_connections",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/connections/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Account Connection",
+            "class": "DbtCloudV3CreateAccountConnection",
+            "slug": "dbt_cloud_v3_create_account_connection",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/connections/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Account Connection",
+            "class": "DbtCloudV3RetrieveAccountConnection",
+            "slug": "dbt_cloud_v3_retrieve_account_connection",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/connections/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Account Connection",
+            "class": "DbtCloudV3UpdateAccountConnection",
+            "slug": "dbt_cloud_v3_update_account_connection",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/connections/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete Account Connection Delete",
+            "class": "DbtCloudV3DeleteAccountConnectionDelete",
+            "slug": "dbt_cloud_v3_delete_account_connection_delete",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/connections/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete Environment SAO Cache",
+            "class": "DbtCloudV3DeleteEnvironmentSaoCache",
+            "slug": "dbt_cloud_v3_delete_environment_sao_cache",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/environments/{environment_id}/sao-cache/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Favorite Asset Responses",
+            "class": "DbtCloudV3ListFavoriteAssetResponses",
+            "slug": "dbt_cloud_v3_list_favorite_asset_responses",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/favorite-assets/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Assign Group Permissions",
+            "class": "DbtCloudV3AssignGroupPermissions",
+            "slug": "dbt_cloud_v3_assign_group_permissions",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/group-permissions/{group_id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Groups",
+            "class": "DbtCloudV3ListGroups",
+            "slug": "dbt_cloud_v3_list_groups",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/groups/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Group",
+            "class": "DbtCloudV3CreateGroup",
+            "slug": "dbt_cloud_v3_create_group",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/groups/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Group",
+            "class": "DbtCloudV3RetrieveGroup",
+            "slug": "dbt_cloud_v3_retrieve_group",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/groups/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Group",
+            "class": "DbtCloudV3UpdateGroup",
+            "slug": "dbt_cloud_v3_update_group",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/groups/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Send user invites",
+            "class": "DbtCloudV3SendUserInvites",
+            "slug": "dbt_cloud_v3_send_user_invites",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/invites/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List IP Restrictions",
+            "class": "DbtCloudV3ListIpRestrictions",
+            "slug": "dbt_cloud_v3_list_ip_restrictions",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Save IP Restriction",
+            "class": "DbtCloudV3SaveIpRestriction",
+            "slug": "dbt_cloud_v3_save_ip_restriction",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Enable IP Restrictions",
+            "class": "DbtCloudV3EnableIpRestrictions",
+            "slug": "dbt_cloud_v3_enable_ip_restrictions",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions-set/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Validate Client IP Against IP Restrictions",
+            "class": "DbtCloudV3ValidateClientIpAgainstIpRestrictions",
+            "slug": "dbt_cloud_v3_validate_client_ip_against_ip_restrictions",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions-set/{id}/validate/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Validate Client IP Against IP Restrictions Excluding Specified IP Rule",
+            "class": "DbtCloudV3ValidateClientIpAgainstIpRestrictionsExcludingSpecifiedIpRule",
+            "slug": "dbt_cloud_v3_validate_client_ip_against_ip_restrictions_excluding_specified_ip_rule",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions-set/{id}/validate/{rule_id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve IP Restriction",
+            "class": "DbtCloudV3RetrieveIpRestriction",
+            "slug": "dbt_cloud_v3_retrieve_ip_restriction",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions/{id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update IP Restriction",
+            "class": "DbtCloudV3UpdateIpRestriction",
+            "slug": "dbt_cloud_v3_update_ip_restriction",
+            "method": "put",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions/{id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete IP Restriction",
+            "class": "DbtCloudV3DeleteIpRestriction",
+            "slug": "dbt_cloud_v3_delete_ip_restriction",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/ip-restrictions/{id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List License Maps",
+            "class": "DbtCloudV3ListLicenseMaps",
+            "slug": "dbt_cloud_v3_list_license_maps",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/license-maps/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create License Map",
+            "class": "DbtCloudV3CreateLicenseMap",
+            "slug": "dbt_cloud_v3_create_license_map",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/license-maps/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve License Map",
+            "class": "DbtCloudV3RetrieveLicenseMap",
+            "slug": "dbt_cloud_v3_retrieve_license_map",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/license-maps/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update License Map",
+            "class": "DbtCloudV3UpdateLicenseMap",
+            "slug": "dbt_cloud_v3_update_license_map",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/license-maps/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy License Map",
+            "class": "DbtCloudV3DestroyLicenseMap",
+            "slug": "dbt_cloud_v3_destroy_license_map",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/license-maps/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List OAuthConfigurations",
+            "class": "DbtCloudV3ListOauthConfigurations",
+            "slug": "dbt_cloud_v3_list_oauth_configurations",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/oauth-configurations/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create OAuthConfiguration",
+            "class": "DbtCloudV3CreateOauthConfiguration",
+            "slug": "dbt_cloud_v3_create_oauth_configuration",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/oauth-configurations/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve OAuth Configuration",
+            "class": "DbtCloudV3RetrieveOauthConfiguration",
+            "slug": "dbt_cloud_v3_retrieve_oauth_configuration",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/oauth-configurations/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update OAuth Configuration",
+            "class": "DbtCloudV3UpdateOauthConfiguration",
+            "slug": "dbt_cloud_v3_update_oauth_configuration",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/oauth-configurations/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy OAuth Configuration",
+            "class": "DbtCloudV3DestroyOauthConfiguration",
+            "slug": "dbt_cloud_v3_destroy_oauth_configuration",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/oauth-configurations/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Projects",
+            "class": "DbtCloudV3ListProjects",
+            "slug": "dbt_cloud_v3_list_projects",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Project",
+            "class": "DbtCloudV3CreateProject",
+            "slug": "dbt_cloud_v3_create_project",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Project",
+            "class": "DbtCloudV3RetrieveProject",
+            "slug": "dbt_cloud_v3_retrieve_project",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Project",
+            "class": "DbtCloudV3UpdateProject",
+            "slug": "dbt_cloud_v3_update_project",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Project",
+            "class": "DbtCloudV3DestroyProject",
+            "slug": "dbt_cloud_v3_destroy_project",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Adapter",
+            "class": "DbtCloudV3CreateAdapter",
+            "slug": "dbt_cloud_v3_create_adapter",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/adapters/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Adapter",
+            "class": "DbtCloudV3RetrieveAdapter",
+            "slug": "dbt_cloud_v3_retrieve_adapter",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/adapters/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Adapter",
+            "class": "DbtCloudV3UpdateAdapter",
+            "slug": "dbt_cloud_v3_update_adapter",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/adapters/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Adapter",
+            "class": "DbtCloudV3DestroyAdapter",
+            "slug": "dbt_cloud_v3_destroy_adapter",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/adapters/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Connections",
+            "class": "DbtCloudV3ListConnections",
+            "slug": "dbt_cloud_v3_list_connections",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/connections/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Connection",
+            "class": "DbtCloudV3CreateConnection",
+            "slug": "dbt_cloud_v3_create_connection",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/connections/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Connection",
+            "class": "DbtCloudV3RetrieveConnection",
+            "slug": "dbt_cloud_v3_retrieve_connection",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/connections/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Connection",
+            "class": "DbtCloudV3UpdateConnection",
+            "slug": "dbt_cloud_v3_update_connection",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/connections/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Connection",
+            "class": "DbtCloudV3DestroyConnection",
+            "slug": "dbt_cloud_v3_destroy_connection",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/connections/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Credentials",
+            "class": "DbtCloudV3ListCredentials",
+            "slug": "dbt_cloud_v3_list_credentials",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/credentials/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Credentials",
+            "class": "DbtCloudV3CreateCredentials",
+            "slug": "dbt_cloud_v3_create_credentials",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/credentials/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get Credentials",
+            "class": "DbtCloudV3GetCredentials",
+            "slug": "dbt_cloud_v3_get_credentials",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/credentials/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Credentials",
+            "class": "DbtCloudV3UpdateCredentials",
+            "slug": "dbt_cloud_v3_update_credentials",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/credentials/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Partial Update Credentials",
+            "class": "DbtCloudV3PartialUpdateCredentials",
+            "slug": "dbt_cloud_v3_partial_update_credentials",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/credentials/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete Credentials",
+            "class": "DbtCloudV3DeleteCredentials",
+            "slug": "dbt_cloud_v3_delete_credentials",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/credentials/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Projects Environment Variable",
+            "class": "DbtCloudV3CreateProjectsEnvironmentVariable",
+            "slug": "dbt_cloud_v3_create_projects_environment_variable",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Projects Environment Variable",
+            "class": "DbtCloudV3UpdateProjectsEnvironmentVariable",
+            "slug": "dbt_cloud_v3_update_projects_environment_variable",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Projects Environment Variable",
+            "class": "DbtCloudV3DestroyProjectsEnvironmentVariable",
+            "slug": "dbt_cloud_v3_destroy_projects_environment_variable",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Projects Environment Variables Bulk",
+            "class": "DbtCloudV3CreateProjectsEnvironmentVariablesBulk",
+            "slug": "dbt_cloud_v3_create_projects_environment_variables_bulk",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/bulk/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Projects Environment Variables Bulk",
+            "class": "DbtCloudV3UpdateProjectsEnvironmentVariablesBulk",
+            "slug": "dbt_cloud_v3_update_projects_environment_variables_bulk",
+            "method": "put",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/bulk/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Projects Environment Variables Bulk",
+            "class": "DbtCloudV3DestroyProjectsEnvironmentVariablesBulk",
+            "slug": "dbt_cloud_v3_destroy_projects_environment_variables_bulk",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/bulk/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Projects Environment Variables Environment",
+            "class": "DbtCloudV3RetrieveProjectsEnvironmentVariablesEnvironment",
+            "slug": "dbt_cloud_v3_retrieve_projects_environment_variables_environment",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/environment/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Projects Environment Variables Job",
+            "class": "DbtCloudV3RetrieveProjectsEnvironmentVariablesJob",
+            "slug": "dbt_cloud_v3_retrieve_projects_environment_variables_job",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/job/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Projects Environment Variables User",
+            "class": "DbtCloudV3RetrieveProjectsEnvironmentVariablesUser",
+            "slug": "dbt_cloud_v3_retrieve_projects_environment_variables_user",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environment-variables/user/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Environments",
+            "class": "DbtCloudV3ListEnvironments",
+            "slug": "dbt_cloud_v3_list_environments",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environments/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Environment",
+            "class": "DbtCloudV3CreateEnvironment",
+            "slug": "dbt_cloud_v3_create_environment",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environments/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Environment",
+            "class": "DbtCloudV3RetrieveEnvironment",
+            "slug": "dbt_cloud_v3_retrieve_environment",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environments/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Environment",
+            "class": "DbtCloudV3UpdateEnvironment",
+            "slug": "dbt_cloud_v3_update_environment",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environments/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Environment",
+            "class": "DbtCloudV3DestroyEnvironment",
+            "slug": "dbt_cloud_v3_destroy_environment",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/environments/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Extended Attributes",
+            "class": "DbtCloudV3CreateExtendedAttributes",
+            "slug": "dbt_cloud_v3_create_extended_attributes",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/extended-attributes/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Extended Attributes",
+            "class": "DbtCloudV3RetrieveExtendedAttributes",
+            "slug": "dbt_cloud_v3_retrieve_extended_attributes",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/extended-attributes/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Extended Attributes",
+            "class": "DbtCloudV3UpdateExtendedAttributes",
+            "slug": "dbt_cloud_v3_update_extended_attributes",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/extended-attributes/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Extended Attributes",
+            "class": "DbtCloudV3DestroyExtendedAttributes",
+            "slug": "dbt_cloud_v3_destroy_extended_attributes",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/extended-attributes/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Lineage Integrations",
+            "class": "DbtCloudV3ListLineageIntegrations",
+            "slug": "dbt_cloud_v3_list_lineage_integrations",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Lineage Integration",
+            "class": "DbtCloudV3CreateLineageIntegration",
+            "slug": "dbt_cloud_v3_create_lineage_integration",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get Lineage Integration",
+            "class": "DbtCloudV3GetLineageIntegration",
+            "slug": "dbt_cloud_v3_get_lineage_integration",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Lineage Integration",
+            "class": "DbtCloudV3UpdateLineageIntegration",
+            "slug": "dbt_cloud_v3_update_lineage_integration",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete Lineage Integration",
+            "class": "DbtCloudV3DeleteLineageIntegration",
+            "slug": "dbt_cloud_v3_delete_lineage_integration",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List collections from BI tool",
+            "class": "DbtCloudV3ListCollectionsFromBiTool",
+            "slug": "dbt_cloud_v3_list_collections_from_bi_tool",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/{id}/collections/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List collections from BI tool_2",
+            "class": "DbtCloudV3ListCollectionsFromBiTool2",
+            "slug": "dbt_cloud_v3_list_collections_from_bi_tool_2",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/{id}/collections/{collection_id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Lineage Integration Selections",
+            "class": "DbtCloudV3UpdateLineageIntegrationSelections",
+            "slug": "dbt_cloud_v3_update_lineage_integration_selections",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/integrations/lineage/{id}/selections",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Managed Repository",
+            "class": "DbtCloudV3CreateManagedRepository",
+            "slug": "dbt_cloud_v3_create_managed_repository",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/managed-repositories/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Projects Managed Repositories Download",
+            "class": "DbtCloudV3RetrieveProjectsManagedRepositoriesDownload",
+            "slug": "dbt_cloud_v3_retrieve_projects_managed_repositories_download",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/managed-repositories/{repository_id}/download/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Profiles",
+            "class": "DbtCloudV3ListProfiles",
+            "slug": "dbt_cloud_v3_list_profiles",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/profiles/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Profile",
+            "class": "DbtCloudV3CreateProfile",
+            "slug": "dbt_cloud_v3_create_profile",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/profiles/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Profile",
+            "class": "DbtCloudV3RetrieveProfile",
+            "slug": "dbt_cloud_v3_retrieve_profile",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/profiles/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Profile",
+            "class": "DbtCloudV3UpdateProfile",
+            "slug": "dbt_cloud_v3_update_profile",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/profiles/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete Profile",
+            "class": "DbtCloudV3DeleteProfile",
+            "slug": "dbt_cloud_v3_delete_profile",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/profiles/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Repositories",
+            "class": "DbtCloudV3ListRepositories",
+            "slug": "dbt_cloud_v3_list_repositories",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/repositories/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Repository",
+            "class": "DbtCloudV3CreateRepository",
+            "slug": "dbt_cloud_v3_create_repository",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/repositories/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Repository",
+            "class": "DbtCloudV3RetrieveRepository",
+            "slug": "dbt_cloud_v3_retrieve_repository",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/repositories/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Repository",
+            "class": "DbtCloudV3UpdateRepository",
+            "slug": "dbt_cloud_v3_update_repository",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/repositories/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Repository",
+            "class": "DbtCloudV3DestroyRepository",
+            "slug": "dbt_cloud_v3_destroy_repository",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/projects/{project_id}/repositories/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve SCIM configuration",
+            "class": "DbtCloudV3RetrieveScimConfiguration",
+            "slug": "dbt_cloud_v3_retrieve_scim_configuration",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim-config/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create SCIM configuration",
+            "class": "DbtCloudV3CreateScimConfiguration",
+            "slug": "dbt_cloud_v3_create_scim_configuration",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/scim-config/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve SCIM tokens",
+            "class": "DbtCloudV3RetrieveScimTokens",
+            "slug": "dbt_cloud_v3_retrieve_scim_tokens",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim-config/tokens/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create SCIM token",
+            "class": "DbtCloudV3CreateScimToken",
+            "slug": "dbt_cloud_v3_create_scim_token",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/scim-config/tokens/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve SCIM token",
+            "class": "DbtCloudV3RetrieveScimToken",
+            "slug": "dbt_cloud_v3_retrieve_scim_token",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim-config/tokens/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete SCIM token",
+            "class": "DbtCloudV3DeleteScimToken",
+            "slug": "dbt_cloud_v3_delete_scim_token",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/scim-config/tokens/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List SCIM Groups",
+            "class": "DbtCloudV3ListScimGroups",
+            "slug": "dbt_cloud_v3_list_scim_groups",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Groups",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create SCIM Group",
+            "class": "DbtCloudV3CreateScimGroup",
+            "slug": "dbt_cloud_v3_create_scim_group",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Groups",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get SCIM Group",
+            "class": "DbtCloudV3GetScimGroup",
+            "slug": "dbt_cloud_v3_get_scim_group",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Groups/{group_id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update SCIM Group",
+            "class": "DbtCloudV3UpdateScimGroup",
+            "slug": "dbt_cloud_v3_update_scim_group",
+            "method": "put",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Groups/{group_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Patch SCIM Group",
+            "class": "DbtCloudV3PatchScimGroup",
+            "slug": "dbt_cloud_v3_patch_scim_group",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Groups/{group_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete SCIM Group",
+            "class": "DbtCloudV3DeleteScimGroup",
+            "slug": "dbt_cloud_v3_delete_scim_group",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Groups/{group_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get SCIM Resource Types",
+            "class": "DbtCloudV3GetScimResourceTypes",
+            "slug": "dbt_cloud_v3_get_scim_resource_types",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/ResourceTypes",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get SCIM Resource Type Details",
+            "class": "DbtCloudV3GetScimResourceTypeDetails",
+            "slug": "dbt_cloud_v3_get_scim_resource_type_details",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/ResourceTypes/{resource_type}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get SCIM Schemas",
+            "class": "DbtCloudV3GetScimSchemas",
+            "slug": "dbt_cloud_v3_get_scim_schemas",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Schemas",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get SCIM Schema Details",
+            "class": "DbtCloudV3GetScimSchemaDetails",
+            "slug": "dbt_cloud_v3_get_scim_schema_details",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Schemas/{schema_uri}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Scim V2 Serviceproviderconfig",
+            "class": "DbtCloudV3RetrieveScimV2Serviceproviderconfig",
+            "slug": "dbt_cloud_v3_retrieve_scim_v2_serviceproviderconfig",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/ServiceProviderConfig",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List SCIM Users",
+            "class": "DbtCloudV3ListScimUsers",
+            "slug": "dbt_cloud_v3_list_scim_users",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Users",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create SCIM User",
+            "class": "DbtCloudV3CreateScimUser",
+            "slug": "dbt_cloud_v3_create_scim_user",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Users",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get SCIM User",
+            "class": "DbtCloudV3GetScimUser",
+            "slug": "dbt_cloud_v3_get_scim_user",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Users/{user_id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Replace SCIM User",
+            "class": "DbtCloudV3ReplaceScimUser",
+            "slug": "dbt_cloud_v3_replace_scim_user",
+            "method": "put",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Users/{user_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update SCIM User",
+            "class": "DbtCloudV3UpdateScimUser",
+            "slug": "dbt_cloud_v3_update_scim_user",
+            "method": "patch",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Users/{user_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete SCIM User",
+            "class": "DbtCloudV3DeleteScimUser",
+            "slug": "dbt_cloud_v3_delete_scim_user",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/scim/v2/Users/{user_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Semantic Layer Credentials",
+            "class": "DbtCloudV3ListSemanticLayerCredentials",
+            "slug": "dbt_cloud_v3_list_semantic_layer_credentials",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/semantic-layer-credentials/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Service Tokens",
+            "class": "DbtCloudV3ListServiceTokens",
+            "slug": "dbt_cloud_v3_list_service_tokens",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/service-tokens/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Service Token",
+            "class": "DbtCloudV3CreateServiceToken",
+            "slug": "dbt_cloud_v3_create_service_token",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/service-tokens/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Service Token",
+            "class": "DbtCloudV3RetrieveServiceToken",
+            "slug": "dbt_cloud_v3_retrieve_service_token",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/service-tokens/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Service Token",
+            "class": "DbtCloudV3UpdateServiceToken",
+            "slug": "dbt_cloud_v3_update_service_token",
+            "method": "put",
+            "path": "/api/v3/accounts/{account_id}/service-tokens/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Service Token",
+            "class": "DbtCloudV3DestroyServiceToken",
+            "slug": "dbt_cloud_v3_destroy_service_token",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/service-tokens/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Service Tokens Permission",
+            "class": "DbtCloudV3RetrieveServiceTokensPermission",
+            "slug": "dbt_cloud_v3_retrieve_service_tokens_permission",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/service-tokens/{service_token_id}/permissions/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Users",
+            "class": "DbtCloudV3ListUsers",
+            "slug": "dbt_cloud_v3_list_users",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/users/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve User",
+            "class": "DbtCloudV3RetrieveUser",
+            "slug": "dbt_cloud_v3_retrieve_user",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/users/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Account Scoped PATs",
+            "class": "DbtCloudV3ListAccountScopedPats",
+            "slug": "dbt_cloud_v3_list_account_scoped_pats",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/users/{user_id}/account-apikeys/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Account Scoped PAT",
+            "class": "DbtCloudV3CreateAccountScopedPat",
+            "slug": "dbt_cloud_v3_create_account_scoped_pat",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/users/{user_id}/account-apikeys/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get Account Scoped PAT",
+            "class": "DbtCloudV3GetAccountScopedPat",
+            "slug": "dbt_cloud_v3_get_account_scoped_pat",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/users/{user_id}/account-apikeys/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Rotate Account Scoped PAT",
+            "class": "DbtCloudV3RotateAccountScopedPat",
+            "slug": "dbt_cloud_v3_rotate_account_scoped_pat",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/users/{user_id}/account-apikeys/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete Account Scoped PAT",
+            "class": "DbtCloudV3DeleteAccountScopedPat",
+            "slug": "dbt_cloud_v3_delete_account_scoped_pat",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/users/{user_id}/account-apikeys/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Webhooks Event",
+            "class": "DbtCloudV3RetrieveWebhooksEvent",
+            "slug": "dbt_cloud_v3_retrieve_webhooks_event",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/event/{event_id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Webhooks Event Receipts",
+            "class": "DbtCloudV3ListWebhooksEventReceipts",
+            "slug": "dbt_cloud_v3_list_webhooks_event_receipts",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/event/{event_id}/receipts",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Webhooks Receipt",
+            "class": "DbtCloudV3RetrieveWebhooksReceipt",
+            "slug": "dbt_cloud_v3_retrieve_webhooks_receipt",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/receipt/{receipt_id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Webhooks Subscription",
+            "class": "DbtCloudV3RetrieveWebhooksSubscription",
+            "slug": "dbt_cloud_v3_retrieve_webhooks_subscription",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscription/{subscription_id}",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update Webhooks Subscription",
+            "class": "DbtCloudV3UpdateWebhooksSubscription",
+            "slug": "dbt_cloud_v3_update_webhooks_subscription",
+            "method": "put",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscription/{subscription_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Destroy Webhooks Subscription",
+            "class": "DbtCloudV3DestroyWebhooksSubscription",
+            "slug": "dbt_cloud_v3_destroy_webhooks_subscription",
+            "method": "delete",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscription/{subscription_id}",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Webhooks Subscription Event Receipt",
+            "class": "DbtCloudV3ListWebhooksSubscriptionEventReceipt",
+            "slug": "dbt_cloud_v3_list_webhooks_subscription_event_receipt",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscription/{subscription_id}/event/{event_id}/receipt",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Webhooks Events",
+            "class": "DbtCloudV3ListWebhooksEvents",
+            "slug": "dbt_cloud_v3_list_webhooks_events",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscription/{subscription_id}/events",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Test Webhooks Subscription",
+            "class": "DbtCloudV3TestWebhooksSubscription",
+            "slug": "dbt_cloud_v3_test_webhooks_subscription",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscription/{subscription_id}/test",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List Webhooks Subscriptions",
+            "class": "DbtCloudV3ListWebhooksSubscriptions",
+            "slug": "dbt_cloud_v3_list_webhooks_subscriptions",
+            "method": "get",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscriptions",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create Webhooks Subscription",
+            "class": "DbtCloudV3CreateWebhooksSubscription",
+            "slug": "dbt_cloud_v3_create_webhooks_subscription",
+            "method": "post",
+            "path": "/api/v3/accounts/{account_id}/webhooks/subscriptions",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Retrieve Adapter Schema",
+            "class": "DbtCloudV3RetrieveAdapterSchema",
+            "slug": "dbt_cloud_v3_retrieve_adapter_schema",
+            "method": "get",
+            "path": "/api/v3/adapter-schema/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "List User Credentials",
+            "class": "DbtCloudV3ListUserCredentials",
+            "slug": "dbt_cloud_v3_list_user_credentials",
+            "method": "get",
+            "path": "/api/v3/users/{user_id}/credentials/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Create User Credentials",
+            "class": "DbtCloudV3CreateUserCredentials",
+            "slug": "dbt_cloud_v3_create_user_credentials",
+            "method": "post",
+            "path": "/api/v3/users/{user_id}/credentials/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Get User Credentials",
+            "class": "DbtCloudV3GetUserCredentials",
+            "slug": "dbt_cloud_v3_get_user_credentials",
+            "method": "get",
+            "path": "/api/v3/users/{user_id}/credentials/{id}/",
+            "type": "read"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Update User Credentials",
+            "class": "DbtCloudV3UpdateUserCredentials",
+            "slug": "dbt_cloud_v3_update_user_credentials",
+            "method": "post",
+            "path": "/api/v3/users/{user_id}/credentials/{id}/",
+            "type": "write"
+        },
+        {
+            "version": "v3",
+            "operation_id": "Delete User Credentials",
+            "class": "DbtCloudV3DeleteUserCredentials",
+            "slug": "dbt_cloud_v3_delete_user_credentials",
+            "method": "delete",
+            "path": "/api/v3/users/{user_id}/credentials/{id}/",
+            "type": "write"
+        }
+    ]
+}

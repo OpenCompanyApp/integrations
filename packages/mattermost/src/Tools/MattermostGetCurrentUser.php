@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class MattermostGetCurrentUser implements Tool
 {
+    /**
+     * @param  MattermostService  $service  Mattermost API client.
+     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -33,6 +36,11 @@ class MattermostGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get the current Mattermost user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

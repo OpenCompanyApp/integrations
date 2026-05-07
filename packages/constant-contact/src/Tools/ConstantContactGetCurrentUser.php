@@ -9,8 +9,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool: Get Current User
  *
- * Retrieves the authenticated user's Constant Contact account information.
- * Useful for verifying the connection and checking account details.
+ * Retrieves Constant Contact account summary information.
+ *
+ * The slug is kept for backward compatibility with older hosts.
  */
 class ConstantContactGetCurrentUser implements Tool
 {
@@ -34,7 +35,7 @@ class ConstantContactGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the authenticated user\'s Constant Contact account information, including name, email, and organization details.';
+        return 'Get Constant Contact account summary information. The slug is retained for backward compatibility.';
     }
 
     /**

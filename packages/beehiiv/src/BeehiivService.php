@@ -2,220 +2,181 @@
 
 namespace OpenCompany\Integrations\Beehiiv;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Service class for interacting with the Beehiiv API v2.
+ * HTTP client for the official beehiiv API v2.
  *
- * Handles authentication via Bearer token and provides methods for all
- * Beehiiv API endpoints including posts, subscribers, and stats.
+ * Handles authentication, operation request mapping, and response parsing for generated tools.
  */
 class BeehiivService
 {
     /**
-     * Create a new BeehiivService instance.
-     *
-     * @param  string  $apiKey  The Beehiiv API key for Bearer token authentication.
-     * @param  string  $publicationId  The Beehiiv publication ID.
-     * @param  string  $baseUrl  The Beehiiv API base URL.
+     * @param  string  $apiKey  beehiiv API key for Bearer token authentication.
+     * @param  string  $publicationId  Optional default publication ID for publication-scoped operations.
+     * @param  string  $baseUrl  beehiiv API base URL.
      */
     public function __construct(
         private string $apiKey = '',
         private string $publicationId = '',
         private string $baseUrl = 'https://api.beehiiv.com/v2',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl !== '' ? $this->baseUrl : 'https://api.beehiiv.com/v2', '/');
     }
 
-    /**
-     * Check whether the service is properly configured with an API key.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->publicationId);
+        return $this->apiKey !== '';
     }
 
-    /**
-     * Get the configured publication ID.
-     */
     public function getPublicationId(): string
     {
         return $this->publicationId;
     }
 
     /**
-     * List publications (used for connection testing).
+     * Return all official beehiiv operations exposed by this integration.
      *
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function listPublications(): array
+    public static function operations(): array
     {
-        return $this->request('GET', '/publications');
+        return BeehiivOperations::all();
     }
 
     /**
-     * List posts for the configured publication.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (status, limit, page, etc.).
-     * @return array<string, mixed>
-     */
-    public function listPosts(array $params = []): array
-    {
-        return $this->request('GET', "/publications/{$this->publicationId}/posts", $params);
-    }
-
-    /**
-     * Get a single post by ID.
+     * Return one operation definition by slug.
      *
      * @return array<string, mixed>
      */
-    public function getPost(string $postId): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', "/publications/{$this->publicationId}/posts/{$postId}");
-    }
-
-    /**
-     * Create a new post.
-     *
-     * @param  array<string, mixed>  $data  Post data (title, content, status, etc.).
-     * @return array<string, mixed>
-     */
-    public function createPost(array $data): array
-    {
-        return $this->request('POST', "/publications/{$this->publicationId}/posts", $data);
-    }
-
-    /**
-     * Update an existing post.
-     *
-     * @param  array<string, mixed>  $data  Fields to update.
-     * @return array<string, mixed>
-     */
-    public function updatePost(string $postId, array $data): array
-    {
-        return $this->request('PATCH', "/publications/{$this->publicationId}/posts/{$postId}", $data);
-    }
-
-    /**
-     * Delete a post.
-     *
-     * @return array<string, mixed>
-     */
-    public function deletePost(string $postId): array
-    {
-        return $this->request('DELETE', "/publications/{$this->publicationId}/posts/{$postId}");
-    }
-
-    /**
-     * List subscribers for the configured publication.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (limit, page, status, etc.).
-     * @return array<string, mixed>
-     */
-    public function listSubscribers(array $params = []): array
-    {
-        return $this->request('GET', "/publications/{$this->publicationId}/subscriptions", $params);
-    }
-
-    /**
-     * Get a single subscriber by subscription ID.
-     *
-     * @return array<string, mixed>
-     */
-    public function getSubscriber(string $subscriptionId): array
-    {
-        return $this->request('GET', "/publications/{$this->publicationId}/subscriptions/{$subscriptionId}");
-    }
-
-    /**
-     * Create a new subscriber.
-     *
-     * @param  array<string, mixed>  $data  Subscriber data (email, reactivate_existing, etc.).
-     * @return array<string, mixed>
-     */
-    public function createSubscriber(array $data): array
-    {
-        return $this->request('POST', "/publications/{$this->publicationId}/subscriptions", $data);
-    }
-
-    /**
-     * Get publication stats.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (intent, etc.).
-     * @return array<string, mixed>
-     */
-    public function getStats(array $params = []): array
-    {
-        return $this->request('GET', "/publications/{$this->publicationId}/stats", $params);
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Request data (query params for GET, body for POST/PATCH/DELETE).
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) return $definition;
         }
-
-        return $response->json() ?? [];
+        throw new \RuntimeException("Unsupported beehiiv operation: {$operation}");
     }
 
     /**
-     * Make a raw HTTP request to the Beehiiv API.
+     * Execute an official beehiiv operation using normalized tool arguments.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Request data.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException If the API key is missing or the request fails.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    public function call(string $operation, array $args = []): array
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Beehiiv API key is not configured.');
+        $definition = $this->operation($operation);
+        [$path, $pathArgs] = $this->preparePath($definition, $args);
+        $query = $this->prepareQuery($definition, $args);
+        foreach ($pathArgs as $param) unset($query[$param]);
+        $body = $this->prepareBody($definition, $args);
+        return $this->request((string) $definition['method'], $path, $query, $body);
+    }
+
+    /**
+     * Build request path and replace path variables.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: list<string>}
+     */
+    private function preparePath(array $definition, array $args): array
+    {
+        $path = (string) $definition['path'];
+        $pathArgs = [];
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'path') continue;
+            $original = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? null;
+            if ($value === null && strtolower($original) === 'publicationid' && $this->publicationId !== '') {
+                $value = $this->publicationId;
+            }
+            if ($value === null || $value === '') {
+                throw new \RuntimeException("{$param} is required for {$definition['slug']}.");
+            }
+            $path = str_replace('{'.$original.'}', rawurlencode((string) $value), $path);
+            $pathArgs[] = $param;
         }
+        return [$path, $pathArgs];
+    }
 
-        $url = $this->baseUrl . $path;
+    /**
+     * Build query parameters.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    private function prepareQuery(array $definition, array $args): array
+    {
+        $query = [];
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'query') continue;
+            $param = (string) $parameter['param'];
+            if (array_key_exists($param, $args)) $query[(string) $parameter['name']] = $args[$param];
+        }
+        if (isset($args['query']) && is_array($args['query'])) {
+            foreach ($args['query'] as $key => $value) $query[(string) $key] = $value;
+        }
+        return $query;
+    }
 
+    /**
+     * Build JSON body for write operations.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>|list<mixed>|null
+     */
+    private function prepareBody(array $definition, array $args): array|null
+    {
+        if (array_key_exists('body', $args) && is_array($args['body'])) return $args['body'];
+        return null;
+    }
+
+    /**
+     * Send an HTTP request and parse JSON response.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array|null $body = null): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $body);
+        if ($response->status() === 204) return [];
+        $json = $response->json();
+        return is_array($json) ? $json : [];
+    }
+
+    /**
+     * Send a raw HTTP request to the beehiiv API.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     */
+    private function rawRequest(string $method, string $path, array $query = [], array|null $body = null): Response
+    {
+        if (!$this->apiKey) throw new \RuntimeException('beehiiv API key is not configured.');
+        $url = $this->baseUrl.$path;
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PATCH' => $http->patch($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
+            $http = Http::withHeaders(['Authorization' => 'Bearer '.$this->apiKey, 'Accept' => 'application/json', 'Content-Type' => 'application/json'])->timeout(30);
+            $options = [];
+            if ($query !== []) $options['query'] = $query;
+            if ($body !== null) $options['json'] = $body;
+            $response = $http->send(strtoupper($method), $url, $options);
             if (!$response->successful()) {
                 $error = $response->json('message') ?? $response->json('error') ?? $response->body();
-                Log::error("Beehiiv API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Beehiiv API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                Log::error("beehiiv API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
+                throw new \RuntimeException("beehiiv API error ({$response->status()}): ".(is_string($error) ? $error : json_encode($error)));
             }
-
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Beehiiv API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Beehiiv API: {$e->getMessage()}");
+            Log::error("beehiiv API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            throw new \RuntimeException("Failed to connect to beehiiv API: {$e->getMessage()}");
         }
     }
 }

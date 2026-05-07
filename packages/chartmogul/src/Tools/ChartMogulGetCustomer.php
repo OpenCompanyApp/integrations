@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ChartMogul\ChartMogulService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch a single ChartMogul customer by UUID.
+ */
 class ChartMogulGetCustomer implements Tool
 {
+    /**
+     * @param  ChartMogulService  $service  The ChartMogul API client.
+     */
     public function __construct(
         private ChartMogulService $service,
     ) {}
@@ -29,11 +35,20 @@ class ChartMogulGetCustomer implements Tool
         ];
     }
 
+    /**
+     * Get a customer by UUID through the ChartMogul API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id).
+     */
     public function execute(array $args): ToolResult
     {
         try {
             if (!$this->service->isConfigured()) {
                 return ToolResult::error('ChartMogul integration is not configured.');
+            }
+
+            if (!isset($args['id']) || $args['id'] === '') {
+                return ToolResult::error('Customer UUID is required.');
             }
 
             $result = $this->service->getCustomer($args['id']);

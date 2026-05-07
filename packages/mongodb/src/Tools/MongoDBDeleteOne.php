@@ -6,8 +6,16 @@ use OpenCompany\Integrations\MongoDB\MongoDBService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Delete one document from a MongoDB Atlas Data API collection.
+ *
+ * Wraps the official deleteOne action and returns the deleted count.
+ */
 class MongoDBDeleteOne implements Tool
 {
+    /**
+     * @param  MongoDBService  $service  MongoDB Atlas Data API client.
+     */
     public function __construct(
         private MongoDBService $service,
     ) {}
@@ -31,6 +39,11 @@ class MongoDBDeleteOne implements Tool
         ];
     }
 
+    /**
+     * Delete one document matching the supplied filter.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (database, collection, filter).
+     */
     public function execute(array $args): ToolResult
     {
         try {

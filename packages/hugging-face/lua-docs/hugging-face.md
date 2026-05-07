@@ -1,245 +1,100 @@
-# Hugging Face — Lua API Reference
+# Hugging Face Lua API Reference
 
-## list_models
+Namespace: `app.integrations["hugging-face"]`
 
-Search and list AI models on the Hugging Face Hub.
+This integration wraps the Hugging Face Hub API and the serverless Inference API. Repository IDs keep their owner slash, for example `meta-llama/Llama-3.3-70B-Instruct`.
 
-### Parameters
+## Discovery
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `search` | string | no | Search query to filter models |
-| `author` | string | no | Filter by organization or user |
-| `task` | string | no | Filter by pipeline task (e.g. `"text-generation"`, `"image-classification"`) |
-| `tags` | array | no | Filter by tags (e.g. `{"pytorch", "safetensors"}`) |
-| `sort` | string | no | Sort order: `"downloads"`, `"likes"`, `"lastModified"`, `"created"` |
-| `direction` | string | no | Sort direction: `"asc"` or `"desc"` |
-| `limit` | integer | no | Results per page (default: 20, max: 500) |
-| `offset` | integer | no | Offset for pagination |
-
-### Common Tasks
-
-`text-generation`, `text2text-generation`, `text-classification`, `token-classification`, `question-answering`, `summarization`, `translation`, `image-classification`, `image-generation`, `automatic-speech-recognition`, `feature-extraction`, `sentence-similarity`
-
-### Examples
+Use `list_models`, `list_datasets`, and `list_spaces` for Hub search. Common filters include `search`, `author`, `tags`, `sort`, `direction`, `limit`, and `offset`. `list_models` also accepts `task`, which maps to the Hub `pipeline_tag` filter.
 
 ```lua
--- Top text-generation models
-local result = app.integrations["hugging-face"].list_models({
+local models = app.integrations["hugging-face"].list_models({
   task = "text-generation",
   sort = "downloads",
   limit = 10
 })
-
-for _, model in ipairs(result) do
-  print(model.id .. " — " .. model.downloads .. " downloads")
-end
 ```
 
-```lua
--- Search for a specific model
-local result = app.integrations["hugging-face"].list_models({
-  search = "bert-base",
-  sort = "downloads",
-  limit = 5
-})
-```
-
----
-
-## get_model
-
-Get detailed information about a specific model.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model_id` | string | yes | The model ID (e.g. `"meta-llama/Llama-3.3-70B-Instruct"`) |
-
-### Example
+Use `get_model`, `get_dataset`, and `get_space` when you already have a repo ID and need metadata, tags, card data, likes, downloads, or file siblings.
 
 ```lua
 local model = app.integrations["hugging-face"].get_model({
   model_id = "meta-llama/Llama-3.3-70B-Instruct"
 })
 
-print(model.id)
-print(model.pipeline_tag)
-print(model.downloads .. " downloads")
-print(model.likes .. " likes")
+local dataset = app.integrations["hugging-face"].get_dataset({
+  dataset_id = "mozilla-foundation/common_voice_17_0"
+})
 ```
 
----
+## Repository Utilities
 
-## list_datasets
-
-Search and list datasets on the Hugging Face Hub.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `search` | string | no | Search query to filter datasets |
-| `author` | string | no | Filter by organization or user |
-| `tags` | array | no | Filter by tags |
-| `sort` | string | no | Sort order: `"downloads"`, `"likes"`, `"lastModified"`, `"created"` |
-| `direction` | string | no | Sort direction: `"asc"` or `"desc"` |
-| `limit` | integer | no | Results per page (default: 20, max: 500) |
-| `offset` | integer | no | Offset for pagination |
-
-### Example
+The repo tools accept `repo_type` as `models`, `datasets`, or `spaces`. Singular values like `model` are also accepted.
 
 ```lua
-local datasets = app.integrations["hugging-face"].list_datasets({
-  search = "sentiment",
-  sort = "downloads",
-  limit = 10
+local refs = app.integrations["hugging-face"].list_refs({
+  repo_type = "models",
+  repo_id = "bert-base-uncased"
 })
 
-for _, ds in ipairs(datasets) do
-  print(ds.id .. " — " .. ds.downloads .. " downloads")
-end
-```
-
----
-
-## inference
-
-Run inference on a model via the Hugging Face Inference API.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model_id` | string | yes | The model ID to run inference on |
-| `inputs` | string | no | Input text for the model (for text tasks) |
-| `parameters` | object | no | Model-specific parameters (e.g. `max_new_tokens`, `temperature`) |
-| `data` | string | no | Base64-encoded data for image/audio tasks |
-
-### Common Parameters for Text Generation
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `max_new_tokens` | integer | Maximum tokens to generate |
-| `temperature` | number | Sampling temperature (0.0–2.0) |
-| `top_p` | number | Nucleus sampling threshold |
-| `top_k` | integer | Top-k sampling |
-| `repetition_penalty` | number | Penalty for repeated tokens |
-| `do_sample` | boolean | Enable sampling (true) or greedy decoding (false) |
-
-### Examples
-
-```lua
--- Text generation
-local result = app.integrations["hugging-face"].inference({
-  model_id = "meta-llama/Llama-3.3-70B-Instruct",
-  inputs = "What is the meaning of life?",
-  parameters = {
-    max_new_tokens = 100,
-    temperature = 0.7
-  }
+local commits = app.integrations["hugging-face"].list_commits({
+  repo_type = "datasets",
+  repo_id = "mozilla-foundation/common_voice_17_0",
+  revision = "main"
 })
 
-for _, item in ipairs(result) do
-  print(item.generated_text)
-end
+local files = app.integrations["hugging-face"].list_tree({
+  repo_type = "spaces",
+  repo_id = "organization/demo-space",
+  revision = "main",
+  path = "src"
+})
 ```
 
+Use `get_scan_status` to inspect Hub security scan status for a model, dataset, or Space repository.
+
+## Metadata Helpers
+
+`list_model_tags` and `list_dataset_tags` return Hub tag dictionaries grouped by type. Use these before building filter-heavy searches. `list_space_hardware` returns the hardware options exposed by the Hub.
+
+## Create Repositories
+
+`create_repo` calls the official Hub repository creation endpoint. Use `type` values `model`, `dataset`, or `space`.
+
 ```lua
--- Summarization
+local repo = app.integrations["hugging-face"].create_repo({
+  name = "demo-space",
+  type = "space",
+  private = true,
+  sdk = "gradio"
+})
+```
+
+## Inference
+
+`inference` sends requests to the configured serverless model router. The response shape depends on the model task.
+
+```lua
 local result = app.integrations["hugging-face"].inference({
   model_id = "facebook/bart-large-cnn",
-  inputs = "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building..."
+  inputs = "Long text to summarize...",
+  parameters = {
+    max_new_tokens = 128
+  }
 })
-
-for _, item in ipairs(result) do
-  print(item.summary_text)
-end
 ```
 
+## Generic Hub API Calls
+
+Use `api_get`, `api_post`, `api_put`, and `api_delete` for official relative Hub API paths that are not wrapped yet. Absolute URLs are rejected; pass paths such as `/models-tags-by-type`, not full URLs.
+
 ```lua
--- Text classification (sentiment)
-local result = app.integrations["hugging-face"].inference({
-  model_id = "distilbert-base-uncased-finetuned-sst-2-english",
-  inputs = "I love using Hugging Face!"
+local tags = app.integrations["hugging-face"].api_get({
+  path = "/models-tags-by-type"
 })
-
-for _, item in ipairs(result) do
-  for _, label in ipairs(item) do
-    print(label.label .. ": " .. label.score)
-  end
-end
 ```
 
----
+## Account
 
-## list_spaces
-
-Search and list Spaces on the Hugging Face Hub.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `search` | string | no | Search query to filter Spaces |
-| `author` | string | no | Filter by organization or user |
-| `tags` | array | no | Filter by tags |
-| `sort` | string | no | Sort order: `"downloads"`, `"likes"`, `"lastModified"`, `"created"` |
-| `direction` | string | no | Sort direction: `"asc"` or `"desc"` |
-| `limit` | integer | no | Results per page (default: 20, max: 500) |
-| `offset` | integer | no | Offset for pagination |
-
-### Example
-
-```lua
-local spaces = app.integrations["hugging-face"].list_spaces({
-  search = "chat",
-  sort = "likes",
-  limit = 10
-})
-
-for _, space in ipairs(spaces) do
-  print(space.id .. " — " .. (space.likes or 0) .. " likes")
-end
-```
-
----
-
-## get_current_user
-
-Get the authenticated user's profile information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local user = app.integrations["hugging-face"].get_current_user({})
-
-print("Name: " .. user.fullname)
-print("Username: " .. user.name)
-print("Type: " .. user.type)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Hugging Face accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations["hugging-face"].list_models({})
-
--- Explicit default (portable across setups)
-app.integrations["hugging-face"].default.list_models({})
-
--- Named accounts
-app.integrations["hugging-face"].work.list_models({})
-app.integrations["hugging-face"].research.list_models({})
-```
-
-All functions are identical across accounts — only the credentials differ.
+`get_current_user` calls the current `/whoami-v2` endpoint and returns the authenticated account metadata.

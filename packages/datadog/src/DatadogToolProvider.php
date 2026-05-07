@@ -117,7 +117,7 @@ class DatadogToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Cloud monitoring, alerting, and analytics platform',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:datadog',
-            'category' => 'monitoring',
+            'category' => 'analytics',
             'badge' => 'verified',
             'docs_url' => 'https://docs.datadoghq.com/api/',
         ];

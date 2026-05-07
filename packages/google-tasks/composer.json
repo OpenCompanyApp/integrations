@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-tasks",
-    "description": "Google Tasks integration for Laravel — manage task lists and tasks via the Google Tasks API.",
+    "description": "Google Tasks integration for Laravel AI agents - generated Tasks API v1 coverage for task lists and tasks.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google-tasks", "tasks", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-tasks": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,11 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "tasks",
+        "workspace",
+        "opencompany"
+    ]
 }

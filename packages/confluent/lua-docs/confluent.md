@@ -1,234 +1,50 @@
-# Confluent Cloud Kafka — Lua API Reference
+# Confluent Cloud - Lua API Reference
 
-## list_topics
+Namespace: `app.integrations.confluent`
 
-List Kafka topics in a Confluent cluster.
+This package exposes 486 generated tools from Confluent's official Cloud API OpenAPI document at `https://docs.confluent.io/cloud/current/openapi.yaml`. It covers the published Confluent Cloud API groups, including IAM, organizations, Kafka, Schema Registry, Connect, Flink, networking, billing, catalog, stream sharing, provider integrations, Tableflow, artifacts, and related Cloud resources.
 
-### Parameters
+## Authentication
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cluster_id` | string | no | Override the default Kafka cluster ID |
+Confluent Cloud API keys use HTTP Basic authentication with `api_key` and `api_secret`. OAuth, STS, external, partner, or resource-specific bearer credentials can be supplied as `access_token`. The legacy `api_token` field is still accepted as a bearer token for hosts that already configured it.
 
-### Example
+## Common Operations
 
 ```lua
-local result = app.integrations.confluent.list_topics({})
+local environments = app.integrations.confluent.list_environments({ page_size = 10 })
+local clusters = app.integrations.confluent.list_clusters({ environment = "env-abc123" })
 
-for _, topic in ipairs(result.data or {}) do
-  print(topic.topic_name .. " (partitions: " .. topic.partitions_count .. ")")
-end
-```
-
----
-
-## get_topic
-
-Get full details of a specific Kafka topic.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `topic_name` | string | yes | The name of the topic to retrieve |
-| `cluster_id` | string | no | Override the default Kafka cluster ID |
-
-### Example
-
-```lua
-local result = app.integrations.confluent.get_topic({
+local topics = app.integrations.confluent.list_topics({ cluster_id = "lkc-abc123" })
+local topic = app.integrations.confluent.get_topic({
+  cluster_id = "lkc-abc123",
   topic_name = "orders"
 })
 
-print("Topic: " .. result.topic_name)
-print("Partitions: " .. result.partitions_count)
-print("Replication: " .. (result.replication_factor or "default"))
-```
-
----
-
-## create_topic
-
-Create a new Kafka topic in a Confluent cluster.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `topic_name` | string | yes | The name for the new topic |
-| `partitions_count` | integer | yes | Number of partitions (e.g., 6) |
-| `replication_factor` | integer | no | Replication factor (e.g., 3 for production) |
-| `configs` | object | no | JSON-encoded topic configs: retention.ms, cleanup.policy, etc. |
-| `cluster_id` | string | no | Override the default Kafka cluster ID |
-
-### Topic Config Options
-
-Common configuration options:
-
-```json
-{
-  "retention.ms": "604800000",
-  "cleanup.policy": "delete",
-  "max.message.bytes": "1048576"
-}
-```
-
-### Example
-
-```lua
-local result = app.integrations.confluent.create_topic({
-  topic_name = "events",
-  partitions_count = 6,
-  replication_factor = 3,
-  configs = '{"retention.ms":"604800000","cleanup.policy":"delete"}'
+app.integrations.confluent.create_topic({
+  cluster_id = "lkc-abc123",
+  topic_name = "orders",
+  partitions_count = 6
 })
-
-print("Created topic: " .. result.topic_name)
 ```
 
----
+## Generated Tool Shape
 
-## list_clusters
+Tool names follow the upstream operation name, normalized to snake_case with a `confluent_` prefix in metadata and exposed without the prefix in Lua. Existing common names such as `list_topics`, `get_topic`, `create_topic`, `list_clusters`, `get_cluster`, and `list_environments` are preserved where they map to official endpoints.
 
-List Kafka clusters in your Confluent Cloud environment.
+Path parameters with a single resource id accept `id` for convenience. Specific generated parameter names such as `cluster_id`, `topic_name`, `environment`, `id`, `name`, and API-group-specific identifiers are also accepted when the upstream path needs them.
 
-### Parameters
+Request bodies can be passed as `body = { ... }`. For convenience, generated tools also collect loose arguments that are not path, query, or header parameters into the JSON body.
 
-None.
+## Coverage Notes
 
-### Example
-
-```lua
-local result = app.integrations.confluent.list_clusters({})
-
-for _, cluster in ipairs(result.data or {}) do
-  print(cluster.cluster_id .. ": " .. (cluster.display_name or "unnamed"))
-end
-```
-
----
-
-## get_cluster
-
-Get details of a specific Kafka cluster.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `cluster_id` | string | no | The cluster ID to retrieve (uses default if not specified) |
-
-### Example
-
-```lua
-local result = app.integrations.confluent.get_cluster({
-  cluster_id = "lkc-abc123"
-})
-
-print("Cluster: " .. (result.display_name or result.cluster_id))
-print("Brokers: " .. (result.broker_count or "unknown"))
-print("Controller: " .. (result.controller_id or "unknown"))
-```
-
----
-
-## list_environments
-
-List Confluent Cloud environments.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.confluent.list_environments({})
-
-for _, env in ipairs(result.data or {}) do
-  print(env.id .. ": " .. (env.display_name or "unnamed"))
-end
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Confluent Cloud user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.confluent.get_current_user({})
-
-print("User: " .. (result.handle or "unknown"))
-print("Name: " .. (result.full_name or "unknown"))
-print("Email: " .. (result.email or "unknown"))
-```
-
----
+Confluent documents different API groups with different versions rather than a single API version. This integration intentionally uses the combined official Cloud API source and does not expose undocumented endpoints such as the old hand-written `/users/me` health check.
 
 ## Multi-Account Usage
 
-If you have multiple Confluent accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.confluent.list_topics({})
-
--- Explicit default (portable across setups)
-app.integrations.confluent.default.list_topics({})
-
--- Named accounts
-app.integrations.confluent.production.list_topics({})
-app.integrations.confluent.staging.list_topics({})
+app.integrations.confluent.list_environments({})
+app.integrations.confluent.production.list_topics({ cluster_id = "lkc-prod" })
+app.integrations.confluent.staging.list_topics({ cluster_id = "lkc-staging" })
 ```
 
-All functions are identical across accounts — only the credentials differ.
-
----
-
-## Common Patterns
-
-### Create a topic with production settings
-
-```lua
-local result = app.integrations.confluent.create_topic({
-  topic_name = "user-events",
-  partitions_count = 12,
-  replication_factor = 3,
-  configs = '{"retention.ms":"259200000","cleanup.policy":"compact,delete"}'
-})
-
-print("Created topic: " .. result.topic_name)
-```
-
-### List all topics and their partition counts
-
-```lua
-local result = app.integrations.confluent.list_topics({})
-
-local topics = result.data or {}
-print("Found " .. #topics .. " topics:")
-
-for _, topic in ipairs(topics) do
-  print("  - " .. topic.topic_name .. " (" .. topic.partitions_count .. " partitions)")
-end
-```
-
-### Check cluster health and verify credentials
-
-```lua
--- Verify credentials
-local user = app.integrations.confluent.get_current_user({})
-print("Connected as: " .. (user.full_name or user.handle))
-
--- Get cluster details
-local cluster = app.integrations.confluent.get_cluster({})
-print("Cluster: " .. (cluster.display_name or cluster.cluster_id))
-print("Status: " .. (cluster.status or "unknown"))
-```
+All functions are identical across accounts; only the resolved credentials differ.

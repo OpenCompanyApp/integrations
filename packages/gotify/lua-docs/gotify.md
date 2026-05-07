@@ -1,229 +1,232 @@
-# Gotify — Lua API Reference
+# Gotify Lua API Reference
 
-## list_messages
+Namespace: `app.integrations.gotify`
 
-List messages from the Gotify application.
+Gotify has two token types:
 
-### Parameters
+- `app_token`: application token; can only send messages with `create_message`.
+- `client_token`: client token; required for listing/deleting messages and managing applications, clients, or current user data.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of messages to return (default: 100, max: 200) |
-| `since` | integer | no | Return messages with ID greater than this value (for polling) |
+The public `get_health` and `get_version` tools only need the Gotify server URL.
 
-### Response
+## Messages
 
-Returns a table with:
+### create_message
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `messages` | array | List of message objects |
-| `paging` | table | Pagination info with `size` and `limit` |
+Send a notification through Gotify. Requires `app_token`.
 
-Each message object contains:
+Required: `message`
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | integer | Unique message ID |
-| `appid` | integer | Application ID |
-| `message` | string | Message body (may contain Markdown) |
-| `title` | string | Message title |
-| `priority` | integer | Message priority (0–10) |
-| `date` | string | ISO 8601 timestamp |
-| `extras` | table | Optional extra fields |
-
-### Examples
+Optional: `title`, `priority`, `extras`
 
 ```lua
--- List the 10 most recent messages
-local result = app.integrations.gotify.list_messages({
-  limit = 10
-})
-
-for _, msg in ipairs(result.messages) do
-  print("[" .. msg.id .. "] " .. msg.title .. " (priority: " .. msg.priority .. ")")
-  print(msg.message)
-end
-```
-
-```lua
--- Poll for new messages since ID 1234
-local result = app.integrations.gotify.list_messages({
-  since = 1234,
-  limit = 50
-})
-
-print("New messages: " .. #result.messages)
-```
-
----
-
-## create_message
-
-Send a notification message via Gotify.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | string | yes | Message title |
-| `message` | string | yes | Message body (supports Markdown) |
-| `priority` | integer | no | Priority from 0 (lowest) to 10 (highest). Default: 5 |
-
-### Priority Levels
-
-| Range | Level |
-|-------|-------|
-| 0–4 | Low priority |
-| 5 | Normal (default) |
-| 6–10 | High priority |
-
-### Examples
-
-```lua
--- Send a simple notification
-local result = app.integrations.gotify.create_message({
+local sent = app.integrations.gotify.create_message({
   title = "Deploy Complete",
-  message = "Version 2.1.0 deployed to production successfully.",
-  priority = 5
+  message = "Version 2.1.0 deployed successfully.",
+  priority = 5,
 })
 
-print("Message sent with ID: " .. result.id)
+print(sent.id)
 ```
 
-```lua
--- Send a high-priority alert
-app.integrations.gotify.create_message({
-  title = "⚠️ Server Alert",
-  message = "CPU usage above 90% on web-01.example.com",
-  priority = 8
-})
-```
+Use `extras` for Gotify client display hints such as markdown rendering:
 
 ```lua
--- Send a Markdown-formatted message
 app.integrations.gotify.create_message({
   title = "Weekly Report",
-  message = [[## Summary
-
-- **Pageviews**: 12,450 (+15%)
-- **Visitors**: 3,200 (+8%)
-- **Bounce Rate**: 42%
-
-Full report: [Dashboard](https://example.com/dashboard)]],
-  priority = 5
+  message = "## Summary\n\n- Pageviews: 12450",
+  extras = {
+    ["client::display"] = {
+      contentType = "text/markdown",
+    },
+  },
 })
 ```
 
----
+### list_messages
 
-## delete_message
+List messages visible to the configured `client_token`.
 
-Delete a message by its ID.
+Optional: `limit` (default 100, max 200), `since`
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The ID of the message to delete |
-
-### Examples
+Gotify's `since` parameter returns messages with an ID less than the supplied value.
 
 ```lua
--- Delete a specific message
-app.integrations.gotify.delete_message({
-  id = 42
-})
-```
+local result = app.integrations.gotify.list_messages({ limit = 25 })
 
-```lua
--- Delete all listed messages
-local result = app.integrations.gotify.list_messages({ limit = 100 })
-
-for _, msg in ipairs(result.messages) do
-  app.integrations.gotify.delete_message({ id = msg.id })
+for _, msg in ipairs(result.messages or {}) do
+  print("[" .. msg.id .. "] " .. msg.title)
 end
-
-print("Deleted " .. #result.messages .. " messages")
 ```
 
----
+### delete_message
 
-## get_health
-
-Check the health status of the Gotify server.
-
-### Parameters
-
-None.
-
-### Response
-
-Returns a table with health information:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `health` | string | Health status (e.g., `"green"`) |
-| `database` | string | Database status (e.g., `"green"`) |
-
-### Examples
+Delete one message by ID. Requires `client_token`.
 
 ```lua
--- Check server health
+app.integrations.gotify.delete_message({ id = 42 })
+```
+
+### delete_messages
+
+Delete all messages visible to the configured `client_token`.
+
+```lua
+app.integrations.gotify.delete_messages()
+```
+
+### list_application_messages
+
+List messages sent by one application. Requires `client_token`.
+
+Required: `application_id`
+
+Optional: `limit`, `since`
+
+```lua
+local result = app.integrations.gotify.list_application_messages({
+  application_id = 7,
+  limit = 50,
+})
+```
+
+### delete_application_messages
+
+Delete all messages sent by one application. Requires `client_token`.
+
+```lua
+app.integrations.gotify.delete_application_messages({
+  application_id = 7,
+})
+```
+
+## Applications
+
+### list_applications
+
+List Gotify applications visible to the configured `client_token`.
+
+```lua
+local apps = app.integrations.gotify.list_applications()
+```
+
+### create_application
+
+Create a Gotify application and receive its generated application token. Requires `client_token`.
+
+Required: `name`
+
+Optional: `description`
+
+```lua
+local app = app.integrations.gotify.create_application({
+  name = "CI",
+  description = "Build notifications",
+})
+
+print(app.token)
+```
+
+### update_application
+
+Update an application name and description. Requires `client_token`.
+
+```lua
+app.integrations.gotify.update_application({
+  id = 7,
+  name = "CI Alerts",
+  description = "Build and deploy notifications",
+})
+```
+
+### delete_application
+
+Delete an application. Requires `client_token`; Gotify servers may also require elevated authentication for this endpoint.
+
+```lua
+app.integrations.gotify.delete_application({ id = 7 })
+```
+
+## Clients
+
+### list_clients
+
+List Gotify clients visible to the configured `client_token`.
+
+```lua
+local clients = app.integrations.gotify.list_clients()
+```
+
+### create_client
+
+Create a Gotify client and receive its generated client token. Requires `client_token`.
+
+```lua
+local client = app.integrations.gotify.create_client({
+  name = "Automation",
+})
+
+print(client.token)
+```
+
+### update_client
+
+Update a client name. Requires `client_token`.
+
+```lua
+app.integrations.gotify.update_client({
+  id = 12,
+  name = "Automation Worker",
+})
+```
+
+### delete_client
+
+Delete a client. Requires `client_token`; Gotify servers may also require elevated authentication for this endpoint.
+
+```lua
+app.integrations.gotify.delete_client({ id = 12 })
+```
+
+## Server And User
+
+### get_health
+
+Check Gotify server health.
+
+```lua
 local health = app.integrations.gotify.get_health()
-
-if health.health == "green" then
-  print("Gotify server is healthy")
-else
-  print("Gotify server status: " .. health.health)
-end
+print(health.health)
 ```
 
----
+### get_version
 
-## get_current_user
-
-Get information about the currently authenticated Gotify user.
-
-### Parameters
-
-None.
-
-### Response
-
-Returns a user object:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | integer | User ID |
-| `name` | string | Username |
-| `admin` | boolean | Whether the user is an admin |
-
-### Examples
+Get Gotify server version metadata.
 
 ```lua
--- Get current user info
-local user = app.integrations.gotify.get_current_user()
-
-print("Logged in as: " .. user.name .. (user.admin and " (admin)" or ""))
+local version = app.integrations.gotify.get_version()
+print(version.version)
 ```
 
----
+### get_current_user
+
+Get the current user for the configured `client_token`.
+
+```lua
+local user = app.integrations.gotify.get_current_user()
+print(user.name)
+```
+
+## Scope Notes
+
+This package covers Gotify's core server-side REST API for messages, applications, clients, health, version, and current-user lookup. Browser OIDC flows, password changes, admin user management, plugin configuration, image upload, and websocket streaming are intentionally not exposed as ordinary request/response tools because they require browser sessions, elevated authentication, multipart file handling, plugin-specific schemas, or long-lived streaming behavior.
 
 ## Multi-Account Usage
 
-If you have multiple Gotify servers or application tokens configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations.gotify.create_message({ title = "Hello", message = "World" })
-
--- Explicit default (portable across setups)
-app.integrations.gotify.default.create_message({ title = "Hello", message = "World" })
-
--- Named accounts
-app.integrations.gotify.work.create_message({ title = "Build passed", message = "CI build #42 passed" })
-app.integrations.gotify.personal.create_message({ title = "Reminder", message = "Check backups" })
+app.integrations.gotify.create_message({ message = "Default account" })
+app.integrations.gotify.default.create_message({ message = "Explicit default" })
+app.integrations.gotify.ops.create_message({ message = "Named account" })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same functions. Only credentials and server URL change.

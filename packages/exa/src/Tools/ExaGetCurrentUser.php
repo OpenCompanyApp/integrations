@@ -13,6 +13,9 @@ use OpenCompany\Integrations\Exa\ExaService;
  */
 class ExaGetCurrentUser implements Tool
 {
+    /**
+     * @param  ExaService  $service  The Exa API client.
+     */
     public function __construct(
         private ExaService $service,
     ) {}

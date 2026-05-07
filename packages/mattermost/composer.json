@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-mattermost",
-    "description": "Mattermost integration for Laravel — list channels, posts, teams, create messages, and manage workspace communication.",
+    "description": "Mattermost integration for Laravel - manage users, teams, channels, posts, reactions, and workspace communication.",
     "license": "MIT",
     "authors": [
         {

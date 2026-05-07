@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Paddle transactions with optional filters.
+ *
+ * Supports cursor-based pagination and filters by transaction status
+ * or customer ID.
+ */
 class PaddleListTransactions implements Tool
 {
     /**
      * Create a new PaddleListTransactions tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

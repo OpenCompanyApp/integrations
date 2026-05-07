@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-one-signal",
-    "description": "OneSignal integration for Laravel — send push notifications, manage devices and apps.",
+    "description": "OneSignal integration for Laravel: messages, users, subscriptions, segments, templates, outcomes, devices, and apps.",
     "license": "MIT",
     "authors": [
         {

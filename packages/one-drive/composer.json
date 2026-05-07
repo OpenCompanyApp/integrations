@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-one-drive",
-    "description": "Microsoft OneDrive integration for Laravel — list, get, upload, and download files via Microsoft Graph API.",
+    "description": "Microsoft OneDrive integration for Laravel. Manage files, folders, sharing, delta sync, and Graph DriveItem calls.",
     "license": "MIT",
     "authors": [
         {

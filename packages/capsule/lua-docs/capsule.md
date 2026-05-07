@@ -1,219 +1,127 @@
-# Capsule CRM — Lua API Reference
+# Capsule CRM Lua API Reference
 
-## list_contacts
+Namespace: `app.integrations.capsule`
 
-List contacts (people and organisations) from Capsule CRM.
+Capsule CRM tools use the v2 REST API. The integration returns the JSON shape that Capsule returns, usually wrapped in keys such as `party`, `parties`, `opportunity`, `opportunities`, `kase`, `kases`, `task`, `tasks`, `tags`, or `definitions`.
 
-### Parameters
+## Parties
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `per_page` | integer | no | Number of contacts per page, max 100 (default: 50) |
-
-### Examples
+Parties are Capsule contacts and organisations.
 
 ```lua
--- List first page of contacts
-local result = app.integrations.capsule.list_contacts({})
-
--- List second page with 25 results
-local result = app.integrations.capsule.list_contacts({
-  page = 2,
-  per_page = 25
+local parties = app.integrations.capsule.list_contacts({
+  page = 1,
+  per_page = 50
 })
 
-for _, contact in ipairs(result.parties) do
-  print(contact.id .. ": " .. (contact.firstName or "") .. " " .. (contact.lastName or ""))
-end
-```
+local party = app.integrations.capsule.get_contact({ id = 123 })
 
----
-
-## get_contact
-
-Retrieve a single contact (person or organisation) by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The contact (party) ID |
-
-### Examples
-
-```lua
-local result = app.integrations.capsule.get_contact({ id = 12345 })
-local party = result.party
-
-print(party.firstName .. " " .. party.lastName)
-print("Type: " .. party.type)
-```
-
----
-
-## create_contact
-
-Create a new person or organisation in Capsule CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | no | Contact type: "person" (default) or "organisation" |
-| `firstName` | string | yes | First name of the contact |
-| `lastName` | string | yes | Last name of the contact |
-| `emailAddresses` | array | no | Email addresses, e.g. `{{address = "user@example.com"}}` |
-
-### Examples
-
-```lua
--- Create a person contact with email
-local result = app.integrations.capsule.create_contact({
+app.integrations.capsule.create_contact({
   type = "person",
   firstName = "Jane",
   lastName = "Doe",
   emailAddresses = {
-    { address = "jane@example.com" }
+    { address = "jane@example.test" }
   }
 })
 
-print("Created contact ID: " .. result.party.id)
-
--- Create an organisation
-local result = app.integrations.capsule.create_contact({
-  type = "organisation",
-  firstName = "Acme Corp",
-  lastName = ""
+app.integrations.capsule.update_contact({
+  id = 123,
+  party = {
+    firstName = "Janet"
+  }
 })
 ```
 
----
-
-## list_opportunities
-
-List sales opportunities from Capsule CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `per_page` | integer | no | Number of opportunities per page, max 100 (default: 50) |
-| `status` | string | no | Filter by status: OPEN, WON, LOST, or CLOSED |
-
-### Examples
+## Opportunities
 
 ```lua
--- List all open opportunities
-local result = app.integrations.capsule.list_opportunities({
-  status = "OPEN"
-})
-
-for _, opp in ipairs(result.opportunities) do
-  print(opp.id .. ": " .. opp.name .. " - " .. (opp.value or "no value"))
-end
-
--- Paginated list of all opportunities
-local result = app.integrations.capsule.list_opportunities({
+local opportunities = app.integrations.capsule.list_opportunities({
+  status = "OPEN",
   page = 1,
   per_page = 100
 })
-```
 
----
-
-## get_opportunity
-
-Retrieve a single sales opportunity by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The opportunity ID |
-
-### Examples
-
-```lua
-local result = app.integrations.capsule.get_opportunity({ id = 67890 })
-local opp = result.opportunity
-
-print(opp.name)
-print("Value: " .. (opp.value or "N/A"))
-print("Status: " .. opp.status)
-```
-
----
-
-## list_tasks
-
-List tasks from Capsule CRM.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `per_page` | integer | no | Number of tasks per page, max 100 (default: 50) |
-| `status` | string | no | Filter by status: OPEN or COMPLETED |
-
-### Examples
-
-```lua
--- List open tasks
-local result = app.integrations.capsule.list_tasks({
-  status = "OPEN"
+local party_opportunities = app.integrations.capsule.list_party_opportunities({
+  party_id = 123,
+  params = { embed = "party,milestone,tags,fields" }
 })
 
-for _, task in ipairs(result.tasks) do
-  print(task.id .. ": " .. task.description)
-end
-
--- Completed tasks, page 2
-local result = app.integrations.capsule.list_tasks({
-  status = "COMPLETED",
-  page = 2,
-  per_page = 25
+app.integrations.capsule.create_opportunity({
+  opportunity = {
+    name = "New deal",
+    party = { id = 123 },
+    value = { amount = 25000, currency = "USD" }
+  }
 })
 ```
 
----
+## Cases
 
-## get_current_user
-
-Get the currently authenticated Capsule CRM user. Use this to verify credentials or identify the connected account.
-
-### Parameters
-
-None.
-
-### Examples
+Capsule calls projects "kases" in the API path.
 
 ```lua
-local result = app.integrations.capsule.get_current_user({})
-local user = result.user
+local cases = app.integrations.capsule.list_cases({
+  params = { page = 1, perPage = 50, embed = "party,tags,fields" }
+})
 
-print("Connected as: " .. user.firstName .. " " .. user.lastName)
-print("Email: " .. user.emailAddress)
+app.integrations.capsule.create_case({
+  kase = {
+    name = "Implementation",
+    party = { id = 123 }
+  }
+})
 ```
 
----
-
-## Multi-Account Usage
-
-If you have multiple Capsule CRM accounts configured, use account-specific namespaces:
+## Tasks
 
 ```lua
--- Default account (always works)
-app.integrations.capsule.list_contacts({})
+local tasks = app.integrations.capsule.list_tasks({
+  status = "OPEN",
+  page = 1,
+  per_page = 50
+})
 
--- Explicit default (portable across setups)
-app.integrations.capsule.default.list_contacts({})
-
--- Named accounts
-app.integrations.capsule.work.list_contacts({})
-app.integrations.capsule.personal.list_contacts({})
+app.integrations.capsule.create_task({
+  task = {
+    description = "Follow up",
+    dueOn = "2026-05-15"
+  }
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Tracks, Tags, And Custom Fields
+
+Tags and custom fields use an `entity` argument. Valid entity values are `parties`, `opportunities`, and `kases`; aliases such as `contacts`, `cases`, and `projects` are normalized.
+
+```lua
+local tracks = app.integrations.capsule.list_tracks({})
+
+local tags = app.integrations.capsule.list_tags({
+  entity = "parties"
+})
+
+local fields = app.integrations.capsule.list_custom_fields({
+  entity = "opportunities"
+})
+```
+
+Use tag and field mutation tools only when managing account schema, not when adding values to a record. To add tag or custom field values to a party, opportunity, or case, update that record with the correct Capsule payload.
+
+## Raw API Helpers
+
+Use `api_get`, `api_post`, `api_put`, and `api_delete` for relative paths below the configured Capsule API v2 base URL. Full URLs and parent-directory paths are rejected.
+
+```lua
+local response = app.integrations.capsule.api_get({
+  path = "/parties",
+  query = { q = "Acme" }
+})
+```
+
+## Multi-Account
+
+```lua
+app.integrations.capsule.production.list_contacts({})
+app.integrations.capsule.staging.list_contacts({})
+```

@@ -6,6 +6,17 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Bitly\Tools\BitlyAddCustomBitlink;
+use OpenCompany\Integrations\Bitly\Tools\BitlyApiDelete;
+use OpenCompany\Integrations\Bitly\Tools\BitlyApiGet;
+use OpenCompany\Integrations\Bitly\Tools\BitlyApiPatch;
+use OpenCompany\Integrations\Bitly\Tools\BitlyApiPost;
+use OpenCompany\Integrations\Bitly\Tools\BitlyCreateOrganizationWebhook;
+use OpenCompany\Integrations\Bitly\Tools\BitlyCreateQrCode;
+use OpenCompany\Integrations\Bitly\Tools\BitlyExpandBitlink;
+use OpenCompany\Integrations\Bitly\Tools\BitlyGetClickCountries;
+use OpenCompany\Integrations\Bitly\Tools\BitlyGetClickReferrers;
+use OpenCompany\Integrations\Bitly\Tools\BitlyGetClickSummary;
 use OpenCompany\Integrations\Bitly\Tools\BitlyShortenLink;
 use OpenCompany\Integrations\Bitly\Tools\BitlyGetLink;
 use OpenCompany\Integrations\Bitly\Tools\BitlyUpdateLink;
@@ -14,6 +25,9 @@ use OpenCompany\Integrations\Bitly\Tools\BitlyListGroups;
 use OpenCompany\Integrations\Bitly\Tools\BitlyGetGroup;
 use OpenCompany\Integrations\Bitly\Tools\BitlyCreateBitlink;
 use OpenCompany\Integrations\Bitly\Tools\BitlyGetCurrentUser;
+use OpenCompany\Integrations\Bitly\Tools\BitlyGetQrCode;
+use OpenCompany\Integrations\Bitly\Tools\BitlyListGroupBitlinks;
+use OpenCompany\Integrations\Bitly\Tools\BitlyListOrganizationWebhooks;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 
@@ -115,7 +129,7 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'URL shortening and link management platform',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:bitly',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://dev.bitly.com/api-reference',
         ];
@@ -238,6 +252,27 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'Get click metrics for a Bitlink.',
                 'icon' => 'ph:cursor-click',
             ],
+            'bitly_get_click_summary' => [
+                'class' => BitlyGetClickSummary::class,
+                'type' => 'read',
+                'name' => 'Get Click Summary',
+                'description' => 'Get total click summary data for a Bitlink.',
+                'icon' => 'ph:chart-bar',
+            ],
+            'bitly_get_click_countries' => [
+                'class' => BitlyGetClickCountries::class,
+                'type' => 'read',
+                'name' => 'Get Click Countries',
+                'description' => 'Get click metrics grouped by country.',
+                'icon' => 'ph:globe',
+            ],
+            'bitly_get_click_referrers' => [
+                'class' => BitlyGetClickReferrers::class,
+                'type' => 'read',
+                'name' => 'Get Click Referrers',
+                'description' => 'Get click metrics grouped by referrer.',
+                'icon' => 'ph:arrow-square-out',
+            ],
             'bitly_list_groups' => [
                 'class' => BitlyListGroups::class,
                 'type' => 'read',
@@ -252,6 +287,13 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'Retrieve details for a specific group.',
                 'icon' => 'ph:users-three',
             ],
+            'bitly_list_group_bitlinks' => [
+                'class' => BitlyListGroupBitlinks::class,
+                'type' => 'read',
+                'name' => 'List Group Bitlinks',
+                'description' => 'List Bitlinks in a group.',
+                'icon' => 'ph:list-bullets',
+            ],
             'bitly_create_bitlink' => [
                 'class' => BitlyCreateBitlink::class,
                 'type' => 'write',
@@ -259,12 +301,82 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'Create a new Bitlink with title and tags.',
                 'icon' => 'ph:plus-circle',
             ],
+            'bitly_expand_bitlink' => [
+                'class' => BitlyExpandBitlink::class,
+                'type' => 'read',
+                'name' => 'Expand Bitlink',
+                'description' => 'Expand a Bitlink to its long URL.',
+                'icon' => 'ph:arrows-out',
+            ],
+            'bitly_add_custom_bitlink' => [
+                'class' => BitlyAddCustomBitlink::class,
+                'type' => 'write',
+                'name' => 'Add Custom Bitlink',
+                'description' => 'Add a custom back-half to a Bitlink.',
+                'icon' => 'ph:textbox',
+            ],
+            'bitly_create_qr_code' => [
+                'class' => BitlyCreateQrCode::class,
+                'type' => 'write',
+                'name' => 'Create QR Code',
+                'description' => 'Create a Bitly QR Code.',
+                'icon' => 'ph:qr-code',
+            ],
+            'bitly_get_qr_code' => [
+                'class' => BitlyGetQrCode::class,
+                'type' => 'read',
+                'name' => 'Get QR Code',
+                'description' => 'Get a Bitly QR Code by ID.',
+                'icon' => 'ph:qr-code',
+            ],
+            'bitly_list_organization_webhooks' => [
+                'class' => BitlyListOrganizationWebhooks::class,
+                'type' => 'read',
+                'name' => 'List Organization Webhooks',
+                'description' => 'List webhooks for a Bitly organization.',
+                'icon' => 'ph:webhooks-logo',
+            ],
+            'bitly_create_organization_webhook' => [
+                'class' => BitlyCreateOrganizationWebhook::class,
+                'type' => 'write',
+                'name' => 'Create Organization Webhook',
+                'description' => 'Create a webhook for a Bitly organization.',
+                'icon' => 'ph:webhooks-logo',
+            ],
             'bitly_get_current_user' => [
                 'class' => BitlyGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the authenticated user\'s profile.',
                 'icon' => 'ph:user',
+            ],
+            'bitly_api_get' => [
+                'class' => BitlyApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call any Bitly API v4 GET endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'bitly_api_post' => [
+                'class' => BitlyApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call any Bitly API v4 POST endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'bitly_api_patch' => [
+                'class' => BitlyApiPatch::class,
+                'type' => 'write',
+                'name' => 'API PATCH',
+                'description' => 'Call any Bitly API v4 PATCH endpoint.',
+                'icon' => 'ph:terminal-window',
+            ],
+            'bitly_api_delete' => [
+                'class' => BitlyApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call any Bitly API v4 DELETE endpoint.',
+                'icon' => 'ph:terminal-window',
             ],
         ];
     }

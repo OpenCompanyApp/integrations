@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class RetellAIGetCall implements Tool
 {
+    /**
+     * @param  RetellAIService  $service  The Retell AI API client.
+     */
     public function __construct(
         private RetellAIService $service,
     ) {}
@@ -35,6 +38,11 @@ class RetellAIGetCall implements Tool
         ];
     }
 
+    /**
+     * Get one call by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -42,7 +50,7 @@ class RetellAIGetCall implements Tool
                 return ToolResult::error('Retell AI integration is not configured.');
             }
 
-            $callId = $args['call_id'];
+            $callId = $args['call_id'] ?? '';
 
             if (empty($callId)) {
                 return ToolResult::error('call_id is required.');

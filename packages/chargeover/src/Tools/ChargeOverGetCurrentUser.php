@@ -6,8 +6,14 @@ use OpenCompany\Integrations\ChargeOver\ChargeOverService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Verify ChargeOver API access with a lightweight authenticated request.
+ */
 class ChargeOverGetCurrentUser implements Tool
 {
+    /**
+     * @param  ChargeOverService  $service  The ChargeOver API client.
+     */
     public function __construct(
         private ChargeOverService $service,
     ) {}
@@ -19,7 +25,7 @@ class ChargeOverGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get information about the currently authenticated ChargeOver user and account. Useful for verifying connectivity and understanding which account the integration is connected to.';
+        return 'Verify ChargeOver API access with a lightweight authenticated customer query. ChargeOver does not expose a dedicated /me endpoint in REST API v3.';
     }
 
     public function parameters(): array
@@ -27,6 +33,11 @@ class ChargeOverGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Verify API access through the ChargeOver API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

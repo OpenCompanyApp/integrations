@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-buffer",
-    "description": "Buffer integration for Laravel — manage social media profiles and scheduled updates.",
+    "description": "Buffer integration for Laravel - manage profiles, schedules, updates, links, and GraphQL API operations.",
     "license": "MIT",
     "authors": [
         {

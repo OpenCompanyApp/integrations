@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Dub;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Dub\Tools\DubListLinks;
-use OpenCompany\Integrations\Dub\Tools\DubGetLink;
-use OpenCompany\Integrations\Dub\Tools\DubCreateLink;
-use OpenCompany\Integrations\Dub\Tools\DubListDomains;
-use OpenCompany\Integrations\Dub\Tools\DubGetDomain;
-use OpenCompany\Integrations\Dub\Tools\DubListTags;
-use OpenCompany\Integrations\Dub\Tools\DubGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and configuration metadata for Dub.
+ *
+ * Exposes official Dub API operations from DubOperations and resolves default
+ * or named account credentials for tool instances.
+ */
+class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +25,27 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Dub uses API keys in the Authorization: Bearer header.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -78,8 +57,8 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'Dub.co',
-            'description' => 'Link management',
+            'label' => 'Dub',
+            'description' => 'Link attribution, short links, QR codes, analytics, and affiliate operations',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:dub',
         ];
@@ -88,67 +67,45 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Dub.co',
-            'description' => 'Short link management and analytics platform',
+            'name' => 'Dub',
+            'description' => 'Manage Dub links, analytics, folders, tags, domains, events, customers, partners, commissions, payouts, and tracking.',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:dub',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://dub.co/docs/api-reference',
         ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Dub.co API token',
-                'hint' => 'Generate an API token in your Dub.co workspace settings under "API Tokens"',
-                'required' => true,
-            ],
-            [
-                'key' => 'base_url',
-                'type' => 'url',
-                'label' => 'Base URL',
-                'placeholder' => 'https://api.dub.co',
-                'hint' => 'Use <code>https://api.dub.co</code> for the cloud API, or your self-hosted URL',
-                'default' => 'https://api.dub.co',
-            ],
-        ];
     }
 
+    public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Test Dub credentials with a lightweight links request.
+     *
+     * @param  array<string, mixed>  $config  Configuration values to test.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['base_url'] ?? 'https://api.dub.co', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['base_url'] ?? 'https://api.dub.co'), '/');
 
-        if (empty($accessToken)) {
+        if ($accessToken === '') {
             return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl.'/links', ['pageSize' => 1]);
 
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Dub.co API at {$baseUrl}. Check the URL.",
-                ];
-            }
-
-            $userName = ($json['name'] ?? 'Unknown') ;
-            $workspace = $json['default_workspace'] ?? '';
-
-            return [
-                'success' => true,
-                'message' => "Connected to Dub.co API as {$userName}" . ($workspace ? " (workspace: {$workspace})" : '') . ".",
-            ];
+            return $response->successful()
+                ? ['success' => true, 'message' => 'Connected to Dub API.']
+                : ['success' => false, 'error' => "Dub API returned HTTP {$response->status()}."];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -162,65 +119,7 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         ];
     }
 
-    public function tools(): array
-    {
-        return [
-            'dub_list_links' => [
-                'class' => DubListLinks::class,
-                'type' => 'read',
-                'name' => 'List Links',
-                'description' => 'List short links with optional filtering.',
-                'icon' => 'ph:list',
-            ],
-            'dub_get_link' => [
-                'class' => DubGetLink::class,
-                'type' => 'read',
-                'name' => 'Get Link',
-                'description' => 'Get details of a specific short link.',
-                'icon' => 'ph:link',
-            ],
-            'dub_create_link' => [
-                'class' => DubCreateLink::class,
-                'type' => 'write',
-                'name' => 'Create Link',
-                'description' => 'Create a new short link.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'dub_list_domains' => [
-                'class' => DubListDomains::class,
-                'type' => 'read',
-                'name' => 'List Domains',
-                'description' => 'List configured domains.',
-                'icon' => 'ph:globe',
-            ],
-            'dub_get_domain' => [
-                'class' => DubGetDomain::class,
-                'type' => 'read',
-                'name' => 'Get Domain',
-                'description' => 'Get details of a specific domain.',
-                'icon' => 'ph:globe',
-            ],
-            'dub_list_tags' => [
-                'class' => DubListTags::class,
-                'type' => 'read',
-                'name' => 'List Tags',
-                'description' => 'List link tags.',
-                'icon' => 'ph:tag',
-            ],
-            'dub_get_current_user' => [
-                'class' => DubGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user profile.',
-                'icon' => 'ph:user',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/dub.md';
-    }    public function credentialFields(): array
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -228,26 +127,65 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         ];
     }
 
+    /**
+     * Registered Dub operation tools keyed by tool slug.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
+    public function tools(): array
+    {
+        $tools = [];
+        foreach (DubService::operations() as $definition) {
+            $tools[(string) $definition['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$definition['class'],
+                'type' => (string) $definition['type'],
+                'name' => (string) $definition['name'],
+                'description' => (string) $definition['description'],
+                'icon' => $definition['type'] === 'read' ? 'ph:list' : 'ph:pencil-simple',
+            ];
+        }
+
+        return $tools;
+    }
+
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__.'/../lua-docs/dub.md';
+    }
+
     public function isIntegration(): bool
     {
         return true;
     }
 
+    /**
+     * Create a Dub tool instance.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a Dub service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): DubService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new DubService(
+            return new DubService(
                 accessToken: $creds->get('dub', 'access_token', '', $account),
                 baseUrl: $creds->get('dub', 'base_url', 'https://api.dub.co', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(DubService::class));
+        return app(DubService::class);
     }
 }

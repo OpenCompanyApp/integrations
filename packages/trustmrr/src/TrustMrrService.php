@@ -2,17 +2,33 @@
 
 namespace OpenCompany\Integrations\TrustMrr;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the TrustMRR API.
+ *
+ * Handles bearer-token authentication, rate-limit errors, and JSON response parsing
+ * for the documented startup listing and startup detail endpoints.
+ */
 class TrustMrrService
 {
-    private const BASE_URL = 'https://trustmrr.com/api/v1';
-
+    /**
+     * @param  string  $apiKey  TrustMRR API key.
+     * @param  string  $baseUrl  Base URL for the TrustMRR API.
+     */
     public function __construct(
         private string $apiKey = '',
-    ) {}
+        private string $baseUrl = 'https://trustmrr.com/api/v1',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
+    /**
+     * Determine whether API credentials are available.
+     */
     public function isConfigured(): bool
     {
         return ! empty($this->apiKey);
@@ -32,16 +48,19 @@ class TrustMrrService
     /**
      * Get full details for a single startup by slug.
      *
+     * @param  string  $slug  Startup slug from the list endpoint.
      * @return array<string, mixed>
      */
     public function getStartup(string $slug): array
     {
-        return $this->request('GET', "/startups/{$slug}");
+        return $this->request('GET', '/startups/' . rawurlencode($slug));
     }
 
     /**
      * Make an authenticated API request.
      *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path  API path relative to the base URL.
      * @param  array<string, mixed>  $params
      * @return array<string, mixed>
      */
@@ -59,11 +78,11 @@ class TrustMrrService
                 'Accept' => 'application/json',
             ])->timeout(15);
 
-            $url = self::BASE_URL . $path;
+            $url = $this->baseUrl . $path;
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $params),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if ($response->status() === 429) {
@@ -72,7 +91,7 @@ class TrustMrrService
                 if ($reset) {
                     $msg .= " Resets at: {$reset}";
                 }
-                throw new \RuntimeException($msg);
+                throw new RuntimeException($msg);
             }
 
             if (! $response->successful()) {
@@ -84,17 +103,17 @@ class TrustMrrService
                     'error' => $error,
                 ]);
 
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     'TrustMRR API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error))
                 );
             }
 
             return $response->json() ?? [];
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("TrustMRR API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to TrustMRR API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to TrustMRR API: {$e->getMessage()}");
         }
     }
 }

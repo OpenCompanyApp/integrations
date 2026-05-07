@@ -2,81 +2,27 @@
 
 namespace OpenCompany\Integrations\Avalara;
 
-use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraListTransactions;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraGetTransaction;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraCreateTransaction;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraListCompanies;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraGetCompany;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraListTaxCodes;
-use OpenCompany\Integrations\Avalara\Tools\AvalaraGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class AvalaraToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
-     * Describe host and authentication capabilities for catalog and setup flows.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationCapabilities(): array
+ * Tool catalog and credential configuration for the Avalara AvaTax integration.
+ */
+class AvalaraToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    public function appName(): string
     {
-        return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
-            ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
-            ],
-            'notes' =>
-            [
-            ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
-        ];
+        return 'avalara';
     }
-
-    public function appName(): string { return 'avalara'; }
 
     public function appMeta(): array
     {
         return [
             'label' => 'Avalara',
-            'description' => 'Tax automation & compliance',
+            'description' => 'Tax automation and compliance',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:avalara',
         ];
@@ -86,47 +32,87 @@ class AvalaraToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     {
         return [
             'name' => 'Avalara',
-            'description' => 'Automated tax calculation, reporting, and compliance',
+            'description' => 'Official AvaTax REST API tools for tax calculation, transactions, companies, certificates, compliance, and returns data.',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:avalara',
-            'category' => 'sales',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.avalara.com/api-reference/avatax/rest/v2/',
+            'source_url' => 'https://rest.avatax.com/swagger/v2/swagger.json',
         ];
-    }    public function configSchema(): array
+    }
+
+    /**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
     {
         return [
-            [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Avalara API access token',
-                'hint' => 'Generate a bearer token from your Avalara account under Settings > License and API Keys.',
-                'required' => true,
+            'auth' => [
+                'strategy' => 'bearer_or_basic',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token_or_license_key',
+                'setup_flows' => ['manual_token', 'manual_basic'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token', 'account_id', 'license_key'],
+                'notes' => ['Supports Avalara bearer tokens or Basic authentication with Account ID and License Key.'],
+            ],
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token_or_basic'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token_or_basic', 'runtime_mode' => 'normal'],
+            ],
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
         ];
     }
 
+    public function configSchema(): array
+    {
+        return [
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'placeholder' => 'Avalara OAuth bearer token', 'hint' => 'Optional when Account ID and License Key are provided.', 'required' => false],
+            ['key' => 'account_id', 'type' => 'text', 'label' => 'Account ID', 'placeholder' => '123456789', 'hint' => 'Used with License Key for Basic authentication.', 'required' => false],
+            ['key' => 'license_key', 'type' => 'secret', 'label' => 'License Key', 'placeholder' => 'Avalara license key', 'hint' => 'Used with Account ID for Basic authentication.', 'required' => false],
+            ['key' => 'company_id', 'type' => 'text', 'label' => 'Default Company ID', 'placeholder' => '123456', 'hint' => 'Optional default for company-scoped tools.', 'required' => false],
+            ['key' => 'base_url', 'type' => 'text', 'label' => 'Base URL', 'placeholder' => 'https://rest.avatax.com', 'hint' => 'Use https://sandbox-rest.avatax.com for sandbox credentials.', 'required' => false],
+        ];
+    }
+
+    /**
+     * Test Avalara credentials with the official ping endpoint.
+     *
+     * @param  array<string, mixed>  $config  Avalara credentials and optional base URL.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
+        $service = new AvalaraService(
+            accessToken: (string) ($config['access_token'] ?? ''),
+            accountId: (string) ($config['account_id'] ?? ''),
+            licenseKey: (string) ($config['license_key'] ?? ''),
+            companyId: (string) ($config['company_id'] ?? ''),
+            baseUrl: (string) ($config['base_url'] ?? 'https://rest.avatax.com'),
+        );
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+        if (!$service->isConfigured()) {
+            return ['success' => false, 'error' => 'Provide either an access token or Account ID plus License Key.'];
         }
 
         try {
-            $baseUrl = 'https://api.avalara.com/v2';
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/me');
-
-            if ($response->successful()) {
+            $result = $service->ping();
+            if (($result['authenticated'] ?? false) === true) {
                 return ['success' => true, 'message' => 'Connected to Avalara successfully.'];
             }
-            return ['success' => false, 'error' => "Authentication failed (HTTP {$response->status()}). Check your access token."];
-        } catch (\Exception $e) {
+
+            return ['success' => false, 'error' => 'Avalara ping succeeded but credentials were not authenticated.'];
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -134,82 +120,78 @@ class AvalaraToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function validationRules(): array
     {
         return [
-            'access_token' => 'nullable|string',
+            'access_token' => 'nullable|string|required_without_all:account_id,license_key',
+            'account_id' => 'nullable|string|required_with:license_key',
+            'license_key' => 'nullable|string|required_with:account_id',
+            'company_id' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
     public function tools(): array
     {
-        return [
-            'avalara_list_transactions' => [
-                'class' => AvalaraListTransactions::class,
-                'type' => 'read', 'name' => 'List Transactions',
-                'description' => 'List transactions with optional filtering and pagination.',
-                'icon' => 'ph:list',
-            ],
-            'avalara_get_transaction' => [
-                'class' => AvalaraGetTransaction::class,
-                'type' => 'read', 'name' => 'Get Transaction',
-                'description' => 'Retrieve details of a single transaction.',
-                'icon' => 'ph:eye',
-            ],
-            'avalara_create_transaction' => [
-                'class' => AvalaraCreateTransaction::class,
-                'type' => 'write', 'name' => 'Create Transaction',
-                'description' => 'Create a new transaction (sales order or invoice) for tax calculation.',
-                'icon' => 'ph:plus',
-            ],
-            'avalara_list_companies' => [
-                'class' => AvalaraListCompanies::class,
-                'type' => 'read', 'name' => 'List Companies',
-                'description' => 'List companies configured in Avalara.',
-                'icon' => 'ph:buildings',
-            ],
-            'avalara_get_company' => [
-                'class' => AvalaraGetCompany::class,
-                'type' => 'read', 'name' => 'Get Company',
-                'description' => 'Retrieve details of a single company.',
-                'icon' => 'ph:building',
-            ],
-            'avalara_list_tax_codes' => [
-                'class' => AvalaraListTaxCodes::class,
-                'type' => 'read', 'name' => 'List Tax Codes',
-                'description' => 'List tax codes available in Avalara.',
-                'icon' => 'ph:tag',
-            ],
-            'avalara_get_current_user' => [
-                'class' => AvalaraGetCurrentUser::class,
-                'type' => 'read', 'name' => 'Get Current User',
-                'description' => 'Retrieve the current authenticated user information.',
-                'icon' => 'ph:info',
-            ],
-        ];
+        $tools = [];
+
+        foreach (AvalaraService::operations() as $operation) {
+            $tools[(string) $operation['slug']] = [
+                'class' => __NAMESPACE__.'\\Tools\\'.$operation['class'],
+                'type' => $operation['type'],
+                'name' => $operation['name'],
+                'description' => $operation['description'],
+                'icon' => $operation['type'] === 'read' ? 'ph:eye' : 'ph:receipt',
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/avalara.md';
-    }    public function credentialFields(): array
+        return __DIR__.'/../lua-docs/avalara.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => false],
+            ['key' => 'account_id', 'type' => 'text', 'label' => 'Account ID', 'required' => false],
+            ['key' => 'license_key', 'type' => 'secret', 'label' => 'License Key', 'required' => false],
+            ['key' => 'company_id', 'type' => 'text', 'label' => 'Default Company ID', 'required' => false],
+            ['key' => 'base_url', 'type' => 'text', 'label' => 'Base URL', 'required' => false],
         ];
     }
 
-    public function isIntegration(): bool { return true; }
+    public function isIntegration(): bool
+    {
+        return true;
+    }
 
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the service for the default or named account context.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): AvalaraService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
-            $service = new AvalaraService(
+            $creds = app(CredentialResolver::class);
+
+            return new AvalaraService(
                 accessToken: $creds->get('avalara', 'access_token', '', $account),
+                accountId: $creds->get('avalara', 'account_id', '', $account),
+                licenseKey: $creds->get('avalara', 'license_key', '', $account),
+                companyId: $creds->get('avalara', 'company_id', '', $account),
+                baseUrl: $creds->get('avalara', 'base_url', 'https://rest.avatax.com', $account),
             );
-            return new $class($service);
         }
 
-        return new $class(app(AvalaraService::class));
+        return app(AvalaraService::class);
     }
 }

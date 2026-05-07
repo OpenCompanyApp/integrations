@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-copper",
-    "description": "Copper CRM integration for Laravel — manage contacts, companies, opportunities, and pipelines.",
+    "description": "Copper CRM integration for Laravel: manage people, companies, opportunities, leads, projects, tasks, activities, and webhooks.",
     "license": "MIT",
     "authors": [
         {

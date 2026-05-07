@@ -1,150 +1,91 @@
-# Phantombuster — Lua API Reference
+# Phantombuster Lua API Reference
 
-## list_agents
+Namespace: `app.integrations.phantombuster`
 
-List all Phantombuster agents in your account.
+Use this integration to manage Phantombuster agents, launches, containers,
+outputs, scripts, branches, and organization metadata. Returned values are the
+parsed JSON response from the Phantombuster API. Raw container output is returned
+as `{ body = "..." }` when the API responds with plain text.
 
-### Parameters
+## Agents
 
-None.
+| Function | Purpose |
+|----------|---------|
+| `list_agents({ input_types?, output_types?, agent_ids?, with_argument?, with_agent_slots_factor? })` | List agents in the current organization. |
+| `get_agent({ id, with_manifest?, with_agent_object?, with_code?, with_slaves?, with_sub_slaves? })` | Get one agent by ID. |
+| `launch_agent({ id, argument?, arguments?, bonus_argument?, save_argument?, payload? })` | Launch one agent and return its launch container response. |
+| `save_agent({ id?, name?, script?, branch?, environment?, launch_type?, argument?, payload? })` | Create or update an agent. |
+| `stop_agent({ id })` | Stop a running agent. |
+| `delete_agent({ id })` | Delete an agent. |
+| `list_deleted_agents({})` | List deleted agents. |
+| `fetch_agent_output({ id, from_output_pos?, prev_container_id?, prev_status?, prev_runtime_event_index? })` | Fetch incremental output from the latest relevant container for an agent. |
 
-### Response
-
-Returns an array of agent objects with `id`, `name`, `status`, and other metadata.
-
-### Example
-
-```lua
-local result = app.integrations.phantombuster.list_agents({})
-
-for _, agent in ipairs(result.agents or {}) do
-  print(agent.name .. " (id: " .. agent.id .. ") - " .. agent.status)
-end
-```
-
----
-
-## get_agent
-
-Get details for a specific Phantombuster agent.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The agent ID |
-
-### Example
+Example:
 
 ```lua
-local result = app.integrations.phantombuster.get_agent({
-  id = "1234567890123456789"
+local agents = app.integrations.phantombuster.list_agents({
+  with_argument = true
 })
 
-print("Agent: " .. result.name)
-print("Status: " .. result.status)
-```
-
----
-
-## launch_agent
-
-Launch a Phantombuster agent to start an automation. Returns a container ID you can use to track execution.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The agent ID to launch |
-
-### Example
-
-```lua
-local result = app.integrations.phantombuster.launch_agent({
-  id = "1234567890123456789"
+local launch = app.integrations.phantombuster.launch_agent({
+  id = agents.agents[1].id,
+  bonus_argument = { profileUrl = "https://example.test/profile" }
 })
 
-print("Launched! Container ID: " .. result.container.id)
+print(launch.containerId or launch.id)
 ```
 
----
+## Containers
 
-## list_containers
+| Function | Purpose |
+|----------|---------|
+| `list_containers({ agent_id, before_ended_at?, limit?, mode?, with_runtime_events? })` | List containers for one agent. |
+| `get_container({ id, with_result_object?, with_output?, with_runtime_events?, with_newer_and_older_container_id? })` | Get a container by ID. |
+| `fetch_container_output({ id, mode? })` | Fetch container output. `mode` can be `json` or `raw`. |
+| `fetch_container_result_object({ id })` | Fetch the result object associated with a container. |
 
-List all Phantombuster containers (execution runs). Returns run history with status, timestamps, and agent associations.
+`list_containers` requires an agent ID because Phantombuster's v2
+`/containers/fetch-all` endpoint is scoped to one agent.
 
-### Parameters
+## Scripts, Branches, And Organization
 
-None.
+| Function | Purpose |
+|----------|---------|
+| `list_scripts({})` | List scripts available to the current user. |
+| `get_script({ id })` | Get one script by ID. |
+| `save_script({ payload })` | Create or update a script with the official `/scripts/save` payload. |
+| `delete_script({ id })` | Delete a script. |
+| `list_branches({})` | List script branches for the current organization. |
+| `get_organization({ with_global_object?, with_proxies?, with_crm_integrations?, with_custom_prompts? })` | Fetch current organization metadata. |
+| `get_ip_location({ ip })` | Resolve country metadata for an IP address. |
 
-### Example
+Use `payload` for large or fast-changing official Phantombuster request bodies.
+Keep examples and tests on fake values such as `example.test`.
 
-```lua
-local result = app.integrations.phantombuster.list_containers({})
+## Generic API Helpers
 
-for _, container in ipairs(result.containers or {}) do
-  print("Container " .. container.id .. " — " .. container.status .. " — " .. container.agentId)
-end
-```
+| Function | Purpose |
+|----------|---------|
+| `api_get({ path, params? })` | Send GET to a relative API path. |
+| `api_post({ path, payload? })` | Send POST to a relative API path. |
+| `api_put({ path, payload? })` | Send PUT to a relative API path. |
+| `api_delete({ path, payload? })` | Send DELETE to a relative API path. |
 
----
+Generic helpers reject absolute URLs. Use paths like `/agents/fetch-all`,
+`/containers/fetch-output`, or `/orgs/fetch` so hosts retain control of the API
+base URL and credentials.
 
-## get_container
+## Current User
 
-Get details for a specific Phantombuster container (execution run), including status, output, and logs.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The container ID |
-
-### Example
-
-```lua
-local result = app.integrations.phantombuster.get_container({
-  id = "9876543210987654321"
-})
-
-print("Status: " .. result.status)
-print("Output: " .. (result.output or "no output yet"))
-```
-
----
-
-## get_current_user
-
-Get the authenticated Phantombuster user profile, including account info and plan details.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.phantombuster.get_current_user({})
-
-print("Email: " .. result.email)
-print("Plan: " .. result.plan)
-```
-
----
+`get_current_user({})` fetches the authenticated Phantombuster user from `/user`.
+Use it to verify which account a configured API key represents.
 
 ## Multi-Account Usage
 
-If you have multiple Phantombuster accounts configured, use account-specific namespaces:
+All functions work the same way under account-specific namespaces:
 
 ```lua
--- Default account (always works)
-app.integrations.phantombuster.function_name({})
-
--- Explicit default (portable across setups)
-app.integrations.phantombuster.default.function_name({})
-
--- Named accounts
-app.integrations.phantombuster.work.function_name({})
-app.integrations.phantombuster.client.function_name({})
+app.integrations.phantombuster.list_agents({})
+app.integrations.phantombuster.default.list_agents({})
+app.integrations.phantombuster.client.list_agents({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

@@ -3,19 +3,30 @@
 namespace OpenCompany\Integrations\Perplexity;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Perplexity\Tools\PerplexityChat;
-use OpenCompany\Integrations\Perplexity\Tools\PerplexityAsk;
-use OpenCompany\Integrations\Perplexity\Tools\PerplexityListModels;
-use OpenCompany\Integrations\Perplexity\Tools\PerplexityGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityAgent;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityAsk;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityChat;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityContextualizedEmbeddings;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityCreateAsyncSonar;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityEmbeddings;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityGetAsyncSonar;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityListModels;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexityListAsyncSonar;
+use OpenCompany\Integrations\Perplexity\Tools\PerplexitySearch;
 
 /**
+ * Tool provider for the Perplexity integration.
+ *
+ * Defines Sonar, Search, Agent, and Embeddings tools plus credential setup and multi-account resolution.
+ */
+class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -23,46 +34,36 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -74,8 +75,8 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'Perplexity AI',
-            'description' => 'AI-powered search and answers',
+            'label' => 'Perplexity',
+            'description' => 'Sonar answers, web search, agents, and embeddings.',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:perplexity',
         ];
@@ -84,15 +85,17 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Perplexity AI',
-            'description' => 'AI-powered search, chat completions, and answers with citations',
+            'name' => 'Perplexity',
+            'description' => 'Sonar chat completions, web search, async research, Agent API responses, and embeddings.',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:perplexity',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.perplexity.ai/',
+            'docs_url' => 'https://docs.perplexity.ai/api-reference/sonar-post',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -114,6 +117,12 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
+    /**
+     * Verify Perplexity credentials with the documented models endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
@@ -127,14 +136,12 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl.'/models');
+            ])->timeout(10)->get($baseUrl.'/v1/models');
 
-            $json = $response->json();
-
-            if ($json === null) {
+            if (! $response->successful()) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Perplexity API at {$baseUrl}. Check the URL.",
+                    'error' => "Perplexity API returned HTTP {$response->status()}. Check your API key and URL.",
                 ];
             }
 
@@ -161,30 +168,72 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
             'perplexity_chat' => [
                 'class' => PerplexityChat::class,
                 'type' => 'read',
-                'name' => 'Chat',
-                'description' => 'Send messages to Perplexity AI for chat completions with citations.',
+                'name' => 'Sonar Chat',
+                'description' => 'Create a Sonar chat completion with citations and search metadata.',
                 'icon' => 'ph:chat-circle-text',
             ],
             'perplexity_ask' => [
                 'class' => PerplexityAsk::class,
                 'type' => 'read',
                 'name' => 'Ask',
-                'description' => 'Ask a question and get an answer with cited sources.',
+                'description' => 'Ask a one-shot question through Sonar chat.',
                 'icon' => 'ph:question',
+            ],
+            'perplexity_search' => [
+                'class' => PerplexitySearch::class,
+                'type' => 'read',
+                'name' => 'Search Web',
+                'description' => 'Search the web and retrieve relevant page contents.',
+                'icon' => 'ph:magnifying-glass',
+            ],
+            'perplexity_create_async_sonar' => [
+                'class' => PerplexityCreateAsyncSonar::class,
+                'type' => 'read',
+                'name' => 'Create Async Sonar',
+                'description' => 'Submit a long-running asynchronous Sonar request.',
+                'icon' => 'ph:hourglass-high',
+            ],
+            'perplexity_list_async_sonar' => [
+                'class' => PerplexityListAsyncSonar::class,
+                'type' => 'read',
+                'name' => 'List Async Sonar',
+                'description' => 'List asynchronous Sonar requests.',
+                'icon' => 'ph:list-checks',
+            ],
+            'perplexity_get_async_sonar' => [
+                'class' => PerplexityGetAsyncSonar::class,
+                'type' => 'read',
+                'name' => 'Get Async Sonar',
+                'description' => 'Get one asynchronous Sonar request by id.',
+                'icon' => 'ph:clock-counter-clockwise',
+            ],
+            'perplexity_agent' => [
+                'class' => PerplexityAgent::class,
+                'type' => 'read',
+                'name' => 'Agent Response',
+                'description' => 'Create a response with the Perplexity Agent API.',
+                'icon' => 'ph:sparkle',
+            ],
+            'perplexity_embeddings' => [
+                'class' => PerplexityEmbeddings::class,
+                'type' => 'read',
+                'name' => 'Embeddings',
+                'description' => 'Create embeddings for one or more texts.',
+                'icon' => 'ph:circles-three-plus',
+            ],
+            'perplexity_contextualized_embeddings' => [
+                'class' => PerplexityContextualizedEmbeddings::class,
+                'type' => 'read',
+                'name' => 'Contextualized Embeddings',
+                'description' => 'Create contextualized embeddings for grouped document chunks.',
+                'icon' => 'ph:brackets-square',
             ],
             'perplexity_list_models' => [
                 'class' => PerplexityListModels::class,
                 'type' => 'read',
                 'name' => 'List Models',
-                'description' => 'List available Perplexity AI models.',
+                'description' => 'List Agent API models.',
                 'icon' => 'ph:list',
-            ],
-            'perplexity_get_current_user' => [
-                'class' => PerplexityGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Current User',
-                'description' => 'Get the current authenticated user\'s information.',
-                'icon' => 'ph:user',
             ],
         ];
     }
@@ -192,7 +241,9 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function luaDocsPath(): ?string
     {
         return __DIR__.'/../lua-docs/perplexity.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -207,19 +258,27 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Perplexity service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool execution context.
+     */
+    private function resolveService(array $context = []): PerplexityService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new PerplexityService(
+            return new PerplexityService(
                 apiKey: $creds->get('perplexity', 'api_key', '', $account),
                 baseUrl: $creds->get('perplexity', 'url', 'https://api.perplexity.ai', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(PerplexityService::class));
+        return app(PerplexityService::class);
     }
 }

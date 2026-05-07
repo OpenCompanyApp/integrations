@@ -5,8 +5,19 @@ namespace OpenCompany\Integrations\Railway;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Railway public GraphQL API.
+ *
+ * Handles bearer-token authentication, GraphQL request dispatch, error
+ * normalization, and parsed data responses for Railway projects, services, and
+ * deployments.
+ */
 class RailwayService
 {
+    /**
+     * @param  string  $accessToken  Railway account or workspace API token.
+     * @param  string  $baseUrl  Railway GraphQL API endpoint.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://backboard.railway.app/graphql/v2',
@@ -124,7 +135,7 @@ GRAPHQL;
      * Create a new project.
      *
      * @param  string  $name  The project name
-     *  string|null  $description  Optional project description
+     * @param  string|null  $description  Optional project description
      * @return array<string, mixed>
      */
     public function createProject(string $name, ?string $description = null): array

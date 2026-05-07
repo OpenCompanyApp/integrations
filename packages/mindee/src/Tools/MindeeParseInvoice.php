@@ -56,6 +56,10 @@ class MindeeParseInvoice implements Tool
                 'type' => 'string',
                 'description' => 'Optional filename for the document (used when providing base64 content).',
             ],
+            'options' => [
+                'type' => 'object',
+                'description' => 'Additional query parameters for the Mindee endpoint.',
+            ],
         ];
     }
 
@@ -74,12 +78,13 @@ class MindeeParseInvoice implements Tool
 
             $document = $args['document'] ?? '';
             $fileName = $args['file_name'] ?? null;
+            $options = is_array($args['options'] ?? null) ? $args['options'] : [];
 
             if (empty($document)) {
                 return ToolResult::error('The document parameter is required. Provide a file path or base64-encoded content.');
             }
 
-            $result = $this->service->parseInvoice($document, $fileName);
+            $result = $this->service->parseInvoice($document, $fileName, $options);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

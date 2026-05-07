@@ -19,7 +19,7 @@ class AircallServiceProvider extends ServiceProvider
      * Register the AircallService singleton.
      *
      * Resolves credentials from the CredentialResolver and constructs
-     * the AircallService with the access token and base URL.
+     * the AircallService with Basic Auth or OAuth bearer credentials.
      */
     public function register(): void
     {
@@ -28,7 +28,9 @@ class AircallServiceProvider extends ServiceProvider
 
             return new AircallService(
                 accessToken: $creds->get('aircall', 'access_token', ''),
-                baseUrl: $creds->get('aircall', 'url', 'https://api.aircall.io/v1'),
+                baseUrl: $creds->get('aircall', 'url', 'https://api.aircall.io'),
+                apiId: $creds->get('aircall', 'api_id', ''),
+                apiToken: $creds->get('aircall', 'api_token', $creds->get('aircall', 'api_key', '')),
             );
         });
     }

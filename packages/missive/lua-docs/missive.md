@@ -1,189 +1,142 @@
-# Missive — Lua API Reference
+# Missive Lua Reference
 
-## list_conversations
+Namespace: `missive`
 
-List conversations from Missive with optional filters and pagination.
+Missive tools target the public REST API at `https://public.missiveapp.com/v1`.
+Configure a personal access token; the integration sends it as
+`Authorization: Bearer <access_token>`.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `inbox` | string | no | Filter by inbox ID |
-| `assignee` | string | no | Filter by assignee user ID or email |
-| `state` | string | no | Filter by state: `"open"`, `"closed"`, or `"spam"` |
-| `limit` | integer | no | Max results (default: 25, max: 100) |
-| `offset` | integer | no | Offset for pagination |
-
-### Examples
+## Conversations
 
 ```lua
--- List open conversations
-local result = app.integrations.missive.list_conversations({
+local conversations = app.integrations.missive.list_conversations({
   state = "open",
-  limit = 10
+  limit = 25
 })
 
-for _, conv in ipairs(result.conversations) do
-  print(conv.subject .. " - " .. conv.state)
-end
-```
-
-```lua
--- List conversations assigned to a specific user
-local result = app.integrations.missive.list_conversations({
-  assignee = "user@example.com",
-  state = "open"
-})
-```
-
----
-
-## get_conversation
-
-Get a single conversation by ID, including messages and metadata.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The conversation UUID |
-
-### Example
-
-```lua
-local result = app.integrations.missive.get_conversation({
-  id = "abc123-def456-..."
+local conversation = app.integrations.missive.get_conversation({
+  id = "conv_123"
 })
 
-print(result.conversation.subject)
-for _, msg in ipairs(result.conversation.messages) do
-  print(msg.from .. ": " .. msg.body)
-end
-```
+local messages = app.integrations.missive.list_conversation_messages({
+  conversation_id = "conv_123",
+  params = { limit = 20 }
+})
 
----
-
-## create_comment
-
-Add a comment to a Missive conversation. Use this for internal notes or replies.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `conversation_id` | string | yes | The UUID of the conversation |
-| `body` | string | yes | Comment body text (supports Markdown) |
-| `assignees` | array | no | List of user IDs or emails to assign |
-
-### Example
-
-```lua
-local result = app.integrations.missive.create_comment({
-  conversation_id = "abc123-def456-...",
-  body = "Reviewed the proposal — approved. Ready to proceed.",
-  assignees = {"colleague@example.com"}
+local comments = app.integrations.missive.list_conversation_comments({
+  conversation_id = "conv_123"
 })
 ```
 
----
+Additional conversation helpers:
 
-## list_tasks
+- `list_conversation_drafts({ conversation_id, params? })`
+- `list_conversation_posts({ conversation_id, params? })`
+- `merge_conversation({ conversation_id, body })`
+- `create_comment({ conversation_id, body, assignees? })`
 
-List tasks from Missive with optional filters and pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `state` | string | no | Filter by state: `"open"` or `"completed"` |
-| `assignee` | string | no | Filter by assignee user ID or email |
-| `limit` | integer | no | Max results (default: 25, max: 100) |
-| `offset` | integer | no | Offset for pagination |
-
-### Examples
+## Drafts, Messages, And Posts
 
 ```lua
--- List open tasks
-local result = app.integrations.missive.list_tasks({
-  state = "open"
+local draft = app.integrations.missive.create_draft({
+  body = {
+    subject = "Follow up",
+    body = "Thanks for the details.",
+    to_fields = { { address = "person@example.test" } }
+  }
 })
 
-for _, task in ipairs(result.tasks) do
-  print(task.title .. " (due: " .. (task.due_date or "no date") .. ")")
-end
+local found = app.integrations.missive.list_messages({
+  params = { email_message_id = "<message-id@example.test>" }
+})
 ```
 
+Tools: `create_draft`, `delete_draft`, `list_messages`, `create_post`,
+and `delete_post`. Draft, post, and send payloads are passed as `body` objects
+matching Missive's documented request schema.
+
+## Tasks
+
 ```lua
--- List completed tasks for a user
-local result = app.integrations.missive.list_tasks({
-  state = "completed",
-  assignee = "user@example.com",
+local tasks = app.integrations.missive.list_tasks({
+  state = "open",
   limit = 20
 })
+
+local task = app.integrations.missive.get_task({ task_id = "task_123" })
+
+local updated = app.integrations.missive.update_task({
+  task_id = "task_123",
+  body = { state = "completed" }
+})
 ```
 
----
-
-## create_task
-
-Create a new task in Missive.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | string | yes | The task title |
-| `description` | string | no | Detailed description (supports Markdown) |
-| `assignee` | string | no | User ID or email to assign the task to |
-| `due_date` | string | no | Due date in ISO 8601 format (e.g., `"2025-12-31"`) |
-
-### Example
+## Contacts
 
 ```lua
-local result = app.integrations.missive.create_task({
-  title = "Follow up with client",
-  description = "Reply to the pricing inquiry from the conversation thread.",
-  assignee = "teammate@example.com",
-  due_date = "2025-12-31"
+local contacts = app.integrations.missive.list_contacts({
+  params = {
+    search = "Example",
+    limit = 50
+  }
 })
 
-print("Created task: " .. result.task.id)
+local created = app.integrations.missive.create_contacts({
+  body = {
+    contacts = {
+      { email = "person@example.test", first_name = "Example" }
+    }
+  }
+})
 ```
 
----
+Contact tools include `get_contact`, `update_contacts`, `list_contact_books`,
+and `list_contact_groups`. Bulk update IDs are comma-separated strings.
 
-## get_current_user
-
-Get the profile of the currently authenticated Missive user.
-
-### Parameters
-
-None.
-
-### Example
+## Organization Metadata
 
 ```lua
-local result = app.integrations.missive.get_current_user({})
-
-print("Logged in as: " .. result.user.name .. " (" .. result.user.email .. ")")
+local organizations = app.integrations.missive.list_organizations({})
+local users = app.integrations.missive.list_users({
+  params = { organization = "org_123" }
+})
+local teams = app.integrations.missive.list_teams({})
+local labels = app.integrations.missive.list_shared_labels({})
 ```
 
----
+`create_teams({ body })` creates one or more teams using Missive's documented
+team payload shape.
 
-## Multi-Account Usage
-
-If you have multiple Missive accounts configured, use account-specific namespaces:
+## Responses, Analytics, And Hooks
 
 ```lua
--- Default account (always works)
-app.integrations.missive.function_name({...})
+local responses = app.integrations.missive.list_responses({})
 
--- Explicit default (portable across setups)
-app.integrations.missive.default.function_name({...})
+local report = app.integrations.missive.create_analytics_report({
+  body = {
+    organization = "org_123",
+    start = "2026-05-01",
+    ["end"] = "2026-05-06",
+    time_zone = "UTC"
+  }
+})
 
--- Named accounts
-app.integrations.missive.work.function_name({...})
-app.integrations.missive.personal.function_name({...})
+local hooks = app.integrations.missive.list_hooks({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+Response tools support list, get, create, update, and delete. Analytics reports
+are asynchronous: create a report first, then call `get_analytics_report` with
+the returned report ID. Hook tools support list, create, and delete.
+
+## Generic API
+
+Use generic helpers for documented Missive endpoints without dedicated wrappers:
+
+```lua
+local raw = app.integrations.missive.api_get({
+  path = "/contacts",
+  params = { limit = 10 }
+})
+```
+
+Available generic tools: `api_get`, `api_post`, `api_patch`, and `api_delete`.

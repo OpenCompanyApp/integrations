@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-crisp",
-    "description": "Crisp integration for Laravel — manage conversations, contacts, campaigns, and messaging.",
+    "description": "Crisp REST API integration for Laravel agents using the official node-crisp-api operation surface.",
     "license": "MIT",
     "authors": [
         {
@@ -8,10 +8,16 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "crisp", "chat", "messaging", "opencompany"],
+    "keywords": [
+        "tools",
+        "crisp",
+        "messaging",
+        "helpdesk",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "opencompanyapp/integration-core": "^2.0"
     },
     "replace": {
         "opencompanyapp/ai-tool-crisp": "self.version"

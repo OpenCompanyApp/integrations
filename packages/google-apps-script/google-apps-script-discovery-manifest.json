@@ -1,0 +1,137 @@
+{
+    "source": "https://script.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Apps Script API",
+    "version": "v1",
+    "method_count": 16,
+    "generated_package": "google-apps-script",
+    "methods": [
+        {
+            "discovery_id": "projects.getContent",
+            "tool": "google_apps_script_projects_get_content",
+            "class": "GoogleAppsScriptProjectsGetContent",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}/content",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.get",
+            "tool": "google_apps_script_projects_get",
+            "class": "GoogleAppsScriptProjectsGet",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.create",
+            "tool": "google_apps_script_projects_create",
+            "class": "GoogleAppsScriptProjectsCreate",
+            "http_method": "POST",
+            "path": "/v1/projects",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.updateContent",
+            "tool": "google_apps_script_projects_update_content",
+            "class": "GoogleAppsScriptProjectsUpdateContent",
+            "http_method": "PUT",
+            "path": "/v1/projects/{scriptId}/content",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.getMetrics",
+            "tool": "google_apps_script_projects_get_metrics",
+            "class": "GoogleAppsScriptProjectsGetMetrics",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}/metrics",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.deployments.delete",
+            "tool": "google_apps_script_projects_deployments_delete",
+            "class": "GoogleAppsScriptProjectsDeploymentsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/projects/{scriptId}/deployments/{deploymentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.deployments.create",
+            "tool": "google_apps_script_projects_deployments_create",
+            "class": "GoogleAppsScriptProjectsDeploymentsCreate",
+            "http_method": "POST",
+            "path": "/v1/projects/{scriptId}/deployments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.deployments.update",
+            "tool": "google_apps_script_projects_deployments_update",
+            "class": "GoogleAppsScriptProjectsDeploymentsUpdate",
+            "http_method": "PUT",
+            "path": "/v1/projects/{scriptId}/deployments/{deploymentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.deployments.list",
+            "tool": "google_apps_script_projects_deployments_list",
+            "class": "GoogleAppsScriptProjectsDeploymentsList",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}/deployments",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.deployments.get",
+            "tool": "google_apps_script_projects_deployments_get",
+            "class": "GoogleAppsScriptProjectsDeploymentsGet",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}/deployments/{deploymentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.versions.create",
+            "tool": "google_apps_script_projects_versions_create",
+            "class": "GoogleAppsScriptProjectsVersionsCreate",
+            "http_method": "POST",
+            "path": "/v1/projects/{scriptId}/versions",
+            "type": "write"
+        },
+        {
+            "discovery_id": "projects.versions.list",
+            "tool": "google_apps_script_projects_versions_list",
+            "class": "GoogleAppsScriptProjectsVersionsList",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}/versions",
+            "type": "read"
+        },
+        {
+            "discovery_id": "projects.versions.get",
+            "tool": "google_apps_script_projects_versions_get",
+            "class": "GoogleAppsScriptProjectsVersionsGet",
+            "http_method": "GET",
+            "path": "/v1/projects/{scriptId}/versions/{versionNumber}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "processes.listScriptProcesses",
+            "tool": "google_apps_script_processes_list_script_processes",
+            "class": "GoogleAppsScriptProcessesListScriptProcesses",
+            "http_method": "GET",
+            "path": "/v1/processes:listScriptProcesses",
+            "type": "read"
+        },
+        {
+            "discovery_id": "processes.list",
+            "tool": "google_apps_script_processes_list",
+            "class": "GoogleAppsScriptProcessesList",
+            "http_method": "GET",
+            "path": "/v1/processes",
+            "type": "read"
+        },
+        {
+            "discovery_id": "scripts.run",
+            "tool": "google_apps_script_scripts_run",
+            "class": "GoogleAppsScriptScriptsRun",
+            "http_method": "POST",
+            "path": "/v1/scripts/{scriptId}:run",
+            "type": "write"
+        }
+    ]
+}

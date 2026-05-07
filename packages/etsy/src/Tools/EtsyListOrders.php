@@ -2,15 +2,18 @@
 
 namespace OpenCompany\Integrations\Etsy\Tools;
 
-use OpenCompany\Integrations\Etsy\EtsyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Etsy\EtsyService;
 
 /**
  * List orders (receipts) for the Etsy shop with pagination.
  */
 class EtsyListOrders implements Tool
 {
+    /**
+     * @param  EtsyService  $service  The Etsy Open API client.
+     */
     public function __construct(
         private EtsyService $service,
     ) {}
@@ -30,11 +33,11 @@ class EtsyListOrders implements Tool
         return [
             'limit' => [
                 'type' => 'integer',
-                'description' => 'Number of receipts to return per page (1–100, default: 25).',
+                'description' => 'Number of receipts to return per page (1-100, default: 25).',
             ],
             'offset' => [
                 'type' => 'integer',
-                'description' => 'Offset for pagination — pass the offset from a previous response to get the next page.',
+                'description' => 'Offset for pagination - pass the offset from a previous response to get the next page.',
             ],
             'was_paid' => [
                 'type' => 'boolean',
@@ -47,6 +50,11 @@ class EtsyListOrders implements Tool
         ];
     }
 
+    /**
+     * List shop receipts with optional paid, shipped, and pagination filters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

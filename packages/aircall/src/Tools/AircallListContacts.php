@@ -2,87 +2,18 @@
 
 namespace OpenCompany\Integrations\Aircall\Tools;
 
-use OpenCompany\Integrations\Aircall\AircallService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Tool for listing contacts from the Aircall API.
- *
- * Supports search queries and pagination. Returns contact details including
- * name, company, phone numbers, emails, and associated call statistics.
- *
- * @see https://developer.aircall.io/api-references/#list-contacts
+ * List contacts.
  */
-class AircallListContacts implements Tool
+class AircallListContacts extends AbstractAircallEndpointTool
 {
-    /**
-     * Create a new AircallListContacts tool instance.
-     *
-     * @param  AircallService  $service  The Aircall API service instance.
-     */
-    public function __construct(
-        private AircallService $service,
-    ) {}
-
-    /**
-     * Get the tool name identifier.
-     */
-    public function name(): string
-    {
-        return 'aircall_list_contacts';
-    }
-
-    /**
-     * Get the tool description for AI agents.
-     */
-    public function description(): string
-    {
-        return 'List contacts from Aircall with optional search and pagination. Search by name, phone number, or email. Returns contact details including phone numbers and emails.';
-    }
-
-    /**
-     * Get the tool parameter definitions.
-     *
-     * @return array<string, array<string, mixed>>
-     */
-    public function parameters(): array
-    {
-        return [
-            'per_page' => ['type' => 'integer', 'description' => 'Number of results per page (default: 20, max: 50).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
-            'order' => ['type' => 'string', 'description' => 'Sort order: "asc" or "desc" (default: "desc").'],
-            'q' => ['type' => 'string', 'description' => 'Search query — search contacts by name, phone number, or email.'],
-        ];
-    }
-
-    /**
-     * Execute the list contacts tool.
-     *
-     * @param  array  $args  The tool arguments matching the defined parameters.
-     * @return ToolResult The result containing contact records or an error message.
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Aircall integration is not configured.');
-            }
-
-            $filters = [];
-            $filterKeys = ['per_page', 'page', 'order', 'q'];
-
-            foreach ($filterKeys as $key) {
-                if (isset($args[$key])) {
-                    $filters[$key] = $args[$key];
-                }
-            }
-
-            $result = $this->service->listContacts($filters);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'aircall_list_contacts';
+    protected const TOOL_DESCRIPTION = 'List contacts.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/v1/contacts';
+    protected const PATH_KEYS = array ();
+    protected const QUERY_KEYS = array (  0 => 'page',  1 => 'per_page',  2 => 'order',  3 => 'q',  4 => 'phone_number',  5 => 'email',);
+    protected const BODY_KEYS = array ();
+    protected const PARAMETERS = array (  'params' =>   array (    'type' => 'object',    'description' => 'Query parameters.',  ),  'page' =>   array (    'type' => 'string',    'description' => 'Query parameter: page.',  ),  'per_page' =>   array (    'type' => 'string',    'description' => 'Query parameter: per_page.',  ),  'order' =>   array (    'type' => 'string',    'description' => 'Query parameter: order.',  ),  'q' =>   array (    'type' => 'string',    'description' => 'Query parameter: q.',  ),  'phone_number' =>   array (    'type' => 'string',    'description' => 'Query parameter: phone_number.',  ),  'email' =>   array (    'type' => 'string',    'description' => 'Query parameter: email.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Netlify sites available to the account.
+ */
 class NetlifyListSites implements Tool
 {
+    /**
+     * @param  NetlifyService  $service  The Netlify REST API client.
+     */
     public function __construct(
         private NetlifyService $service,
     ) {}
@@ -31,6 +37,11 @@ class NetlifyListSites implements Tool
         ];
     }
 
+    /**
+     * List and normalize sites.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (name, page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {

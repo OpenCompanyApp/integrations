@@ -2,78 +2,18 @@
 
 namespace OpenCompany\Integrations\ConvertKit\Tools;
 
-use OpenCompany\Integrations\ConvertKit\ConvertKitService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List subscribers in ConvertKit with pagination and date filtering.
- *
- * Returns a paginated list of subscribers from the ConvertKit account.
- * Supports customizable page size, page number, and date range filters.
+ * List subscribers with cursor pagination and filters.
  */
-class ConvertKitListSubscribers implements Tool
+class ConvertKitListSubscribers extends AbstractConvertKitEndpointTool
 {
-    /**
-     * Create a new ConvertKitListSubscribers tool instance.
-     */
-    public function __construct(
-        private ConvertKitService $service,
-    ) {}
-
-    /**
-     * Return the tool name used for routing.
-     */
-    public function name(): string
-    {
-        return 'convertkit_list_subscribers';
-    }
-
-    /**
-     * Return a human-readable description of what this tool does.
-     */
-    public function description(): string
-    {
-        return 'List subscribers from your ConvertKit account. Supports pagination and date range filtering.';
-    }
-
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array<string, mixed>> Parameter definitions
-     */
-    public function parameters(): array
-    {
-        return [
-            'page' => ['type' => 'integer', 'description' => 'Page number (starts at 1).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Results per page (max 50, default 50).'],
-            'from' => ['type' => 'string', 'description' => 'Filter subscribers added after this date (ISO 8601, e.g. "2025-01-01").'],
-            'to' => ['type' => 'string', 'description' => 'Filter subscribers added before this date (ISO 8601, e.g. "2025-12-31").'],
-        ];
-    }
-
-    /**
-     * Execute the tool: list subscribers from ConvertKit.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('ConvertKit integration is not configured.');
-            }
-
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
-            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 50;
-            $from = $args['from'] ?? null;
-            $to = $args['to'] ?? null;
-
-            $result = $this->service->listSubscribers($page, $perPage, $from, $to);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected const TOOL_NAME = 'convertkit_list_subscribers';
+    protected const TOOL_DESCRIPTION = 'List subscribers with cursor pagination and filters.';
+    protected const METHOD = 'GET';
+    protected const PATH = '/subscribers';
+    protected const PATH_KEYS = array ();
+    protected const QUERY_KEYS = array (  0 => 'after',  1 => 'before',  2 => 'per_page',  3 => 'include_total_count',  4 => 'email_address',  5 => 'created_after',  6 => 'created_before',  7 => 'updated_after',  8 => 'updated_before',  9 => 'state',);
+    protected const BODY_KEYS = array ();
+    protected const PARAMETERS = array (  'params' =>   array (    'type' => 'object',    'description' => 'Query parameters such as after, before, per_page, or include_total_count.',  ),  'after' =>   array (    'type' => 'string',    'description' => 'Query parameter: after.',  ),  'before' =>   array (    'type' => 'string',    'description' => 'Query parameter: before.',  ),  'per_page' =>   array (    'type' => 'string',    'description' => 'Query parameter: per page.',  ),  'include_total_count' =>   array (    'type' => 'string',    'description' => 'Query parameter: include total count.',  ),  'email_address' =>   array (    'type' => 'string',    'description' => 'Query parameter: email address.',  ),  'created_after' =>   array (    'type' => 'string',    'description' => 'Query parameter: created after.',  ),  'created_before' =>   array (    'type' => 'string',    'description' => 'Query parameter: created before.',  ),  'updated_after' =>   array (    'type' => 'string',    'description' => 'Query parameter: updated after.',  ),  'updated_before' =>   array (    'type' => 'string',    'description' => 'Query parameter: updated before.',  ),  'state' =>   array (    'type' => 'string',    'description' => 'Query parameter: state.',  ),);
+    protected const DYNAMIC_PATH = false;
 }

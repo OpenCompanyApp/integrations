@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-neon",
-    "description": "Neon serverless Postgres integration for Laravel — manage projects, branches, and databases.",
+    "description": "Neon serverless Postgres integration for Laravel - manage projects, branches, and databases.",
     "license": "MIT",
     "authors": [
         {

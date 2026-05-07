@@ -2,72 +2,95 @@
 
 namespace OpenCompany\Integrations\Shopify\Tools;
 
-use OpenCompany\Integrations\Shopify\ShopifyService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List products from the Shopify store.
- *
- * Supports filtering by status, product type, vendor,
- * and pagination via limit and page_info parameters.
+ * List Shopify Products.
  */
-class ShopifyListProducts implements Tool
+class ShopifyListProducts extends AbstractShopifyRestTool
 {
-    public function __construct(
-        private ShopifyService $service,
-    ) {}
+    protected string $toolName = 'shopify_list_products';
 
-    public function name(): string
-    {
-        return 'shopify_list_products';
-    }
+    protected string $toolDescription = 'List Shopify Products.';
 
-    public function description(): string
-    {
-        return 'List products from the Shopify store. Supports filtering by status, product type, vendor, and pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of products to return per page (default: 50, max: 250).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by status: "active", "draft", or "archived".'],
-            'product_type' => ['type' => 'string', 'description' => 'Filter by product type.'],
-            'vendor' => ['type' => 'string', 'description' => 'Filter by vendor name.'],
-            'collection_id' => ['type' => 'string', 'description' => 'Filter by collection ID.'],
-            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from a previous response).'],
-        ];
-    }
+    protected string $path = '/products.json';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Shopify integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum number of records to return.',
+    ],
+    'page_info' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Cursor pagination token from Shopify Link headers.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Shopify query parameters to pass through.',
+    ],
+    'status' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify status filter when supported.',
+    ],
+    'product_type' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify product_type filter when supported.',
+    ],
+    'vendor' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify vendor filter when supported.',
+    ],
+    'collection_id' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify collection_id filter when supported.',
+    ],
+    'published_status' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify published_status filter when supported.',
+    ],
+    'fields' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify fields filter when supported.',
+    ],
+    'ids' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify ids filter when supported.',
+    ],
+    'since_id' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify since_id filter when supported.',
+    ],
+];
 
-            $params = [];
-            $stringParams = ['status', 'product_type', 'vendor', 'collection_id', 'page_info'];
-            $intParams = ['limit'];
+    /** @var list<string> */
+    protected array $required = [];
 
-            foreach ($stringParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = $args[$key];
-                }
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'page_info',
+    'status',
+    'product_type',
+    'vendor',
+    'collection_id',
+    'published_status',
+    'fields',
+    'ids',
+    'since_id',
+];
 
-            foreach ($intParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = (int) $args[$key];
-                }
-            }
-
-            $result = $this->service->listProducts($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

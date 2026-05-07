@@ -2,188 +2,244 @@
 
 namespace OpenCompany\Integrations\Airtop;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the official Airtop API.
+ *
+ * Handles Bearer authentication, operation request mapping, and response
+ * parsing for generated OpenAPI operation tools.
+ */
 class AirtopService
 {
+    /**
+     * @param  string  $apiKey  Airtop API key for Bearer token authentication.
+     * @param  string  $baseUrl  Airtop API base URL without a trailing slash.
+     */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://app.airtop.ai/api/v1',
+        private string $baseUrl = 'https://api.airtop.ai/api',
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl !== '' ? $this->baseUrl : 'https://api.airtop.ai/api', '/');
     }
 
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
-     * Create a new browser session.
+     * Return all official Airtop operations exposed by this integration.
      *
-     * @param  array<string, mixed>  $options  Optional session configuration (e.g., profile, proxy).
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function createSession(array $options = []): array
+    public static function operations(): array
     {
-        return $this->request('POST', '/sessions', $options);
+        return AirtopOperations::all();
     }
 
     /**
-     * Get details of an existing browser session.
-     *
-     * @param  string  $id  The session ID.
-     * @return array<string, mixed>
-     */
-    public function getSession(string $id): array
-    {
-        return $this->request('GET', '/sessions/' . urlencode($id));
-    }
-
-    /**
-     * Create a new browser window within a session.
-     *
-     * @param  string  $sessionId  The session ID to create the window in.
-     * @param  array<string, mixed>  $options  Optional window configuration (e.g., url, width, height).
-     * @return array<string, mixed>
-     */
-    public function createWindow(string $sessionId, array $options = []): array
-    {
-        return $this->request('POST', '/sessions/' . urlencode($sessionId) . '/windows', $options);
-    }
-
-    /**
-     * Get details of a browser window.
-     *
-     * @param  string  $sessionId  The session ID.
-     * @param  string  $windowId   The window ID.
-     * @return array<string, mixed>
-     */
-    public function getWindow(string $sessionId, string $windowId): array
-    {
-        return $this->request('GET', '/sessions/' . urlencode($sessionId) . '/windows/' . urlencode($windowId));
-    }
-
-    /**
-     * Navigate a browser window to a URL.
-     *
-     * @param  string  $sessionId  The session ID.
-     * @param  string  $windowId   The window ID.
-     * @param  string  $url        The URL to navigate to.
-     * @param  array<string, mixed>  $options  Optional navigation parameters.
-     * @return array<string, mixed>
-     */
-    public function navigate(string $sessionId, string $windowId, string $url, array $options = []): array
-    {
-        return $this->request('POST', '/sessions/' . urlencode($sessionId) . '/windows/' . urlencode($windowId) . '/navigate', array_merge($options, [
-            'url' => $url,
-        ]));
-    }
-
-    /**
-     * Get the content of a page in a browser window.
-     *
-     * @param  string  $sessionId  The session ID.
-     * @param  string  $windowId   The window ID.
-     * @return array<string, mixed>
-     */
-    public function getPageContent(string $sessionId, string $windowId): array
-    {
-        return $this->request('GET', '/sessions/' . urlencode($sessionId) . '/windows/' . urlencode($windowId) . '/content');
-    }
-
-    /**
-     * List all browser sessions.
+     * Return one operation definition by slug.
      *
      * @return array<string, mixed>
      */
-    public function listSessions(): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', '/sessions');
+        foreach (self::operations() as $definition) {
+            if ($definition['slug'] === $operation) {
+                return $definition;
+            }
+        }
+
+        throw new \RuntimeException("Unsupported Airtop operation: {$operation}");
     }
 
     /**
-     * Get the current authenticated user's profile.
+     * Execute an official Airtop operation using normalized tool arguments.
      *
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function call(string $operation, array $args = []): array
     {
-        return $this->request('GET', '/user');
+        $definition = $this->operation($operation);
+        [$path, $pathArgs] = $this->preparePath($definition, $args);
+        $query = $this->prepareQuery($definition, $args);
+        foreach ($pathArgs as $param) {
+            unset($query[$param]);
+        }
+        $body = $this->prepareBody($definition, $args);
+
+        return $this->request($definition, $path, $query, $body);
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Build request path and replace path variables.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path   API endpoint path.
-     * @param  array<string, mixed>  $data  Request body or query parameters.
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: list<string>}
+     */
+    private function preparePath(array $definition, array $args): array
+    {
+        $path = (string) $definition['path'];
+        $pathArgs = [];
+
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'path') {
+                continue;
+            }
+
+            $original = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? null;
+
+            if ($value === null || $value === '') {
+                throw new \RuntimeException("{$param} is required for {$definition['slug']}.");
+            }
+
+            $path = str_replace('{'.$original.'}', rawurlencode((string) $value), $path);
+            $pathArgs[] = $param;
+        }
+
+        return [$path, $pathArgs];
+    }
+
+    /**
+     * Build query parameters.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function prepareQuery(array $definition, array $args): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $query = [];
 
-        return $response->json() ?? [];
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) !== 'query') {
+                continue;
+            }
+
+            $param = (string) $parameter['param'];
+            if (array_key_exists($param, $args)) {
+                $query[(string) $parameter['name']] = $args[$param];
+            }
+        }
+
+        if (isset($args['query']) && is_array($args['query'])) {
+            foreach ($args['query'] as $key => $value) {
+                $query[(string) $key] = $value;
+            }
+        }
+
+        return $query;
     }
 
     /**
-     * Make a raw HTTP request to the Airtop API.
+     * Build JSON body for write operations.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path   API endpoint path.
-     * @param  array<string, mixed>  $data  Request body or query parameters.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>|list<mixed>|null
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function prepareBody(array $definition, array $args): array|null
     {
-        if (!$this->apiKey) {
+        $bodyParameter = null;
+        foreach ($definition['parameters'] as $parameter) {
+            if (($parameter['in'] ?? null) === 'body') {
+                $bodyParameter = $parameter;
+                break;
+            }
+        }
+
+        if ($bodyParameter === null) {
+            return null;
+        }
+
+        if (! array_key_exists('body', $args)) {
+            if (! ($bodyParameter['required'] ?? false)) {
+                return null;
+            }
+
+            throw new \RuntimeException("body is required for {$definition['slug']}.");
+        }
+
+        if (! is_array($args['body'])) {
+            throw new \RuntimeException('body must be an object or array.');
+        }
+
+        return $args['body'];
+    }
+
+    /**
+     * Send an HTTP request and parse the JSON response.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    private function request(array $definition, string $path, array $query = [], array|null $body = null): array
+    {
+        $response = $this->rawRequest($definition, $path, $query, $body);
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        $json = $response->json();
+
+        return is_array($json) ? $json : [];
+    }
+
+    /**
+     * Send a raw HTTP request to the Airtop API.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>|list<mixed>|null  $body  JSON body.
+     */
+    private function rawRequest(array $definition, string $path, array $query = [], array|null $body = null): Response
+    {
+        if (! $this->isConfigured()) {
             throw new \RuntimeException('Airtop API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $method = (string) $definition['method'];
+        $url = $this->baseUrl.$path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            $options = [];
+            if ($query !== []) {
+                $options['query'] = $query;
+            }
+            if ($body !== null) {
+                $options['json'] = $body;
+            }
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Airtop API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Airtop API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service may be down.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
+            $response = $http->send($method, $url, $options);
+            if (! $response->successful()) {
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
                 Log::error("Airtop API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Airtop API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException('Airtop API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Airtop API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
+            Log::error("Airtop API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+
             throw new \RuntimeException("Failed to connect to Airtop API: {$e->getMessage()}");
         }
     }

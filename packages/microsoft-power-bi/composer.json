@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-microsoft-power-bi",
-    "description": "Microsoft Power BI integration for Laravel — list workspaces, datasets, reports, and get current user profile.",
+    "description": "Microsoft Power BI integration for Laravel — list workspaces, datasets, and reports.",
     "license": "MIT",
     "authors": [
         {
@@ -14,7 +14,8 @@
         "opencompanyapp/integration-core": "^2.0 || @dev"
     },
     "replace": {
-        "opencompanyapp/ai-tool-microsoft-power-bi": "self.version"
+        "opencompanyapp/ai-tool-microsoft-power-bi": "self.version",
+        "opencompanyapp/integration-microsoft-powerbi": "self.version"
     },
     "autoload": {
         "psr-4": {

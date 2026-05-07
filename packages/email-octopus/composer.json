@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-email-octopus",
-    "description": "EmailOctopus integration for Laravel — manage contacts, campaigns, and account info.",
+    "description": "EmailOctopus integration for Laravel - lists, contacts, fields, tags, campaigns, reports, and automations.",
     "license": "MIT",
     "authors": [
         {

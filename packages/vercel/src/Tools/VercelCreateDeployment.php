@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class VercelCreateDeployment implements Tool
 {
+    /**
+     * @param  VercelService  $service  The Vercel REST API client.
+     */
     public function __construct(
         private VercelService $service,
     ) {}
@@ -38,14 +41,25 @@ class VercelCreateDeployment implements Tool
             'framework' => ['type' => 'string', 'description' => 'Framework preset slug (e.g., "nextjs", "remix", "nuxtjs").'],
             'regions' => ['type' => 'array', 'description' => 'List of region codes to deploy to (e.g., ["iad1", "sfo1"]).'],
             'project_settings' => ['type' => 'object', 'description' => 'Override project settings for this deployment (buildCommand, outputDirectory, installCommand, etc.).'],
+            'team_id' => ['type' => 'string', 'description' => 'Optional team ID to create the deployment under.'],
+            'slug' => ['type' => 'string', 'description' => 'Optional team slug to create the deployment under.'],
         ];
     }
 
+    /**
+     * Create a deployment using files or a Git source.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
             if (!$this->service->isConfigured()) {
                 return ToolResult::error('Vercel integration is not configured.');
+            }
+
+            if (empty($args['name'])) {
+                return ToolResult::error('Missing required parameter: name');
             }
 
             $body = [
@@ -76,7 +90,12 @@ class VercelCreateDeployment implements Tool
                 $body['projectSettings'] = $args['project_settings'];
             }
 
-            $result = $this->service->createDeployment($body);
+            $params = array_filter([
+                'teamId' => $args['team_id'] ?? null,
+                'slug' => $args['slug'] ?? null,
+            ], static fn ($value): bool => $value !== null && $value !== '');
+
+            $result = $this->service->createDeployment($body, $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

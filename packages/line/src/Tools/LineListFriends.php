@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Line\LineService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List LINE follower user IDs.
+ *
+ * Uses the documented followers/ids endpoint.
+ */
 class LineListFriends implements Tool
 {
+    /**
+     * @param  LineService  $service  The LINE Messaging API client
+     */
     public function __construct(
         private LineService $service,
     ) {}
@@ -30,6 +38,11 @@ class LineListFriends implements Tool
         ];
     }
 
+    /**
+     * List follower IDs.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

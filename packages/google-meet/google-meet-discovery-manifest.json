@@ -1,0 +1,153 @@
+{
+    "source": "https://meet.googleapis.com/$discovery/rest?version=v2",
+    "service": "Google Meet API",
+    "version": "v2",
+    "method_count": 18,
+    "generated_package": "google-meet",
+    "methods": [
+        {
+            "discovery_id": "spaces.create",
+            "tool": "google_meet_spaces_create",
+            "class": "GoogleMeetSpacesCreate",
+            "http_method": "POST",
+            "path": "/v2/spaces",
+            "type": "write"
+        },
+        {
+            "discovery_id": "spaces.get",
+            "tool": "google_meet_spaces_get",
+            "class": "GoogleMeetSpacesGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "spaces.endActiveConference",
+            "tool": "google_meet_spaces_end_active_conference",
+            "class": "GoogleMeetSpacesEndActiveConference",
+            "http_method": "POST",
+            "path": "/v2/{+name}:endActiveConference",
+            "type": "write"
+        },
+        {
+            "discovery_id": "spaces.patch",
+            "tool": "google_meet_spaces_patch",
+            "class": "GoogleMeetSpacesPatch",
+            "http_method": "PATCH",
+            "path": "/v2/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "conferenceRecords.list",
+            "tool": "google_meet_conference_records_list",
+            "class": "GoogleMeetConferenceRecordsList",
+            "http_method": "GET",
+            "path": "/v2/conferenceRecords",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.get",
+            "tool": "google_meet_conference_records_get",
+            "class": "GoogleMeetConferenceRecordsGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.recordings.list",
+            "tool": "google_meet_conference_records_recordings_list",
+            "class": "GoogleMeetConferenceRecordsRecordingsList",
+            "http_method": "GET",
+            "path": "/v2/{+parent}/recordings",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.recordings.get",
+            "tool": "google_meet_conference_records_recordings_get",
+            "class": "GoogleMeetConferenceRecordsRecordingsGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.participants.get",
+            "tool": "google_meet_conference_records_participants_get",
+            "class": "GoogleMeetConferenceRecordsParticipantsGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.participants.list",
+            "tool": "google_meet_conference_records_participants_list",
+            "class": "GoogleMeetConferenceRecordsParticipantsList",
+            "http_method": "GET",
+            "path": "/v2/{+parent}/participants",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.participants.participantSessions.list",
+            "tool": "google_meet_conference_records_participants_participant_sessions_list",
+            "class": "GoogleMeetConferenceRecordsParticipantsParticipantSessionsList",
+            "http_method": "GET",
+            "path": "/v2/{+parent}/participantSessions",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.participants.participantSessions.get",
+            "tool": "google_meet_conference_records_participants_participant_sessions_get",
+            "class": "GoogleMeetConferenceRecordsParticipantsParticipantSessionsGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.transcripts.list",
+            "tool": "google_meet_conference_records_transcripts_list",
+            "class": "GoogleMeetConferenceRecordsTranscriptsList",
+            "http_method": "GET",
+            "path": "/v2/{+parent}/transcripts",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.transcripts.get",
+            "tool": "google_meet_conference_records_transcripts_get",
+            "class": "GoogleMeetConferenceRecordsTranscriptsGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.transcripts.entries.get",
+            "tool": "google_meet_conference_records_transcripts_entries_get",
+            "class": "GoogleMeetConferenceRecordsTranscriptsEntriesGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.transcripts.entries.list",
+            "tool": "google_meet_conference_records_transcripts_entries_list",
+            "class": "GoogleMeetConferenceRecordsTranscriptsEntriesList",
+            "http_method": "GET",
+            "path": "/v2/{+parent}/entries",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.smartNotes.get",
+            "tool": "google_meet_conference_records_smart_notes_get",
+            "class": "GoogleMeetConferenceRecordsSmartNotesGet",
+            "http_method": "GET",
+            "path": "/v2/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "conferenceRecords.smartNotes.list",
+            "tool": "google_meet_conference_records_smart_notes_list",
+            "class": "GoogleMeetConferenceRecordsSmartNotesList",
+            "http_method": "GET",
+            "path": "/v2/{+parent}/smartNotes",
+            "type": "read"
+        }
+    ]
+}

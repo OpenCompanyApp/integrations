@@ -1,185 +1,88 @@
-# Replicate — Lua API Reference
+# Replicate Lua Reference
 
-## list_predictions
+Namespace: `replicate`
 
-List recent Replicate predictions.
+This integration covers Replicate's official HTTP API OpenAPI schema from `https://api.replicate.com/openapi.json`. Tools map directly to documented operations for account, collections, deployments, files, hardware, models, predictions, search, trainings, and webhook signing secrets.
 
-### Parameters
+All tools return Replicate's JSON response directly. File downloads return `{ body, content_type }` when Replicate responds with non-JSON content.
 
-None.
+## Common Patterns
 
-### Example
+Read account details:
 
 ```lua
-local result = app.integrations["replicate"].list_predictions({})
-
-for _, prediction in ipairs(result.results) do
-  print(prediction.id .. " - " .. prediction.status)
-end
+local account = app.integrations.replicate.get_account({})
 ```
 
----
-
-## get_prediction
-
-Get detailed information about a specific prediction.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `prediction_id` | string | yes | The unique prediction identifier |
-
-### Example
+Create a prediction by version:
 
 ```lua
-local prediction = app.integrations["replicate"].get_prediction({
-  prediction_id = "abc123def456"
+local prediction = app.integrations.replicate.create_prediction({
+  version = "replicate-version-id",
+  input = { prompt = "a quiet forest trail" }
 })
-
-print("Status: " .. prediction.status)
-print("Model: " .. prediction.version)
-if prediction.output then
-  print("Output: " .. vim.inspect(prediction.output))
-end
 ```
 
----
-
-## create_prediction
-
-Create a new prediction using a model version.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `version` | string | yes | The model version ID (hex string) |
-| `input` | object | yes | Model input values (varies by model) |
-| `webhook` | string | no | URL to receive POST notifications on completion |
-| `webhook_events` | array | no | List of webhook events (e.g., `{"output", "completed"}`) |
-
-### Example
+Create a prediction using an official model:
 
 ```lua
-local prediction = app.integrations["replicate"].create_prediction({
-  version = "5c7d5dc6dd8bf75c1acaa8565735e7986bc5fc6681734b58f0b7ef5f02a3ca2e",
-  input = {
-    prompt = "A beautiful sunset over the ocean",
-    num_outputs = 1
-  },
-  webhook = "https://example.com/webhook",
-  webhook_events = { "completed" }
+local prediction = app.integrations.replicate.create_model_prediction({
+  model_owner = "black-forest-labs",
+  model_name = "flux-schnell",
+  input = { prompt = "a quiet forest trail" }
 })
-
-print("Prediction ID: " .. prediction.id)
-print("Status: " .. prediction.status)
 ```
 
----
-
-## list_models
-
-List available Replicate models.
-
-### Parameters
-
-None.
-
-### Example
+Create a prediction using a deployment:
 
 ```lua
-local result = app.integrations["replicate"].list_models({})
-
-for _, model in ipairs(result.results) do
-  print(model.owner .. "/" .. model.name .. ": " .. model.description)
-end
-```
-
----
-
-## get_model
-
-Get detailed information about a specific model.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model_owner` | string | yes | The model owner (user or organization) |
-| `model_name` | string | yes | The model name |
-
-### Example
-
-```lua
-local model = app.integrations["replicate"].get_model({
-  model_owner = "stability-ai",
-  model_name = "stable-diffusion"
+local prediction = app.integrations.replicate.create_deployment_prediction({
+  deployment_owner = "example-org",
+  deployment_name = "image-worker",
+  input = { prompt = "a quiet forest trail" }
 })
-
-print("Owner: " .. model.owner)
-print("Name: " .. model.name)
-print("Description: " .. model.description)
-if model.latest_version then
-  print("Latest version: " .. model.latest_version.id)
-end
 ```
 
----
-
-## list_collections
-
-List curated model collections on Replicate.
-
-### Parameters
-
-None.
-
-### Example
+Cancel a prediction:
 
 ```lua
-local result = app.integrations["replicate"].list_collections({})
-
-for _, collection in ipairs(result.results) do
-  print(collection.slug .. ": " .. collection.description)
-end
+app.integrations.replicate.cancel_prediction({
+  prediction_id = "prediction-id"
+})
 ```
 
----
-
-## get_current_user
-
-Get the current user's profile and billing information.
-
-### Parameters
-
-None.
-
-### Example
+Search public models:
 
 ```lua
-local user = app.integrations["replicate"].get_current_user({})
-
-print("Name: " .. user.name)
-print("Username: " .. user.username)
+local result = app.integrations.replicate.search_models({
+  body = "image generation"
+})
 ```
 
----
-
-## Multi-Account Usage
-
-If you have multiple Replicate accounts configured, use account-specific namespaces:
+Upload a file:
 
 ```lua
--- Default account (always works)
-app.integrations["replicate"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["replicate"].default.function_name({...})
-
--- Named accounts
-app.integrations["replicate"].production.function_name({...})
-app.integrations["replicate"].staging.function_name({...})
+local file = app.integrations.replicate.create_file({
+  body = {
+    content = "/tmp/example.png",
+    filename = "example.png",
+    type = "image/png",
+    metadata = { source = "agent" }
+  }
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+## Tool Families
+
+- Account: `get_account`
+- Collections: `list_collections`, `get_collection`
+- Deployments: `list_deployments`, `create_deployment`, `get_deployment`, `update_deployment`, `delete_deployment`, `create_deployment_prediction`
+- Files: `list_files`, `create_file`, `get_file`, `delete_file`, `download_file`
+- Hardware: `list_hardware`
+- Models: `list_models`, `create_model`, `search_models`, `get_model`, `update_model`, `delete_model`, `list_model_examples`, `create_model_prediction`, `get_model_readme`, `list_model_versions`, `get_model_version`, `delete_model_version`
+- Predictions: `list_predictions`, `create_prediction`, `get_prediction`, `cancel_prediction`
+- Search: `search`
+- Trainings: `list_trainings`, `create_training`, `get_training`, `cancel_training`
+- Webhooks: `get_default_webhook_secret`
+
+For operations with a request body, pass either `body = { ... }` or pass body fields directly when there is no ambiguity. Headers from the OpenAPI schema, such as `Prefer` and `Cancel-After`, can be passed by their exact name or snake_case form.

@@ -2,76 +2,65 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get total stats for the configured Mailgun domain.
- *
- * Supports filtering by event type, date range, and resolution.
+ * Get total stats for a domain.
  */
-class MailgunGetStats implements Tool
+class MailgunGetStats extends AbstractMailgunEndpointTool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_get_stats';
 
-    public function name(): string
-    {
-        return 'mailgun_get_stats';
-    }
+    protected string $toolDescription = 'Get total stats for a domain.';
 
-    public function description(): string
-    {
-        return 'Get total stats for the Mailgun domain. Filter by event type, date range, and resolution (hour, day, month).';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'event'      => ['type' => 'string', 'description' => 'Event type (e.g. accepted, delivered, failed, bounced).'],
-            'start'      => ['type' => 'string', 'description' => 'Start date (RFC 2822 or Unix timestamp).'],
-            'end'        => ['type' => 'string', 'description' => 'End date (RFC 2822 or Unix timestamp).'],
-            'resolution' => ['type' => 'string', 'description' => 'Time resolution: hour, day, or month.'],
-        ];
-    }
+    protected string $path = '/{domain}/stats/total';
 
-    /**
-     * Get total stats for the Mailgun domain.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (event, start, end, resolution)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'domain' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Mailgun domain. Defaults to the configured sending domain.',
+    ],
+    'event' => [
+        'type' => 'array',
+        'required' => false,
+        'description' => 'Events to include.',
+    ],
+    'start' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Start date.',
+    ],
+    'end' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'End date.',
+    ],
+    'resolution' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Resolution: hour, day, or month.',
+    ],
+    'duration' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Duration window.',
+    ],
+];
 
-            $params = [];
+    /** @var list<string> */
+    protected array $required = [];
 
-            if (! empty($args['event'])) {
-                $params['event'] = $args['event'];
-            }
-            if (! empty($args['start'])) {
-                $params['start'] = $args['start'];
-            }
-            if (! empty($args['end'])) {
-                $params['end'] = $args['end'];
-            }
-            if (! empty($args['resolution'])) {
-                $params['resolution'] = $args['resolution'];
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'event',
+    'start',
+    'end',
+    'resolution',
+    'duration',
+];
 
-            $result = $this->service->getStats($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

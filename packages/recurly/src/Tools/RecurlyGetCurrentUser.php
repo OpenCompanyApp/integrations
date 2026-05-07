@@ -6,6 +6,12 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * Verify Recurly credentials with a lightweight API request.
+ *
+ * Recurly does not expose a current-user endpoint, so this fetches
+ * the first billing account as a health check.
+ */
 class RecurlyGetCurrentUser implements Tool
 {
     /**

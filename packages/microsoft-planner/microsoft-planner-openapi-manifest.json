@@ -1,0 +1,1773 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/planner-overview?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 293,
+  "path_prefixes": [
+    "/planner",
+    "/me/planner",
+    "/groups/{group-id}/planner",
+    "/users/{user-id}/planner"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner",
+      "operationId": "groups.GetPlanner",
+      "tool": "microsoft_planner_groups_get_planner"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner",
+      "operationId": "groups.UpdatePlanner",
+      "tool": "microsoft_planner_groups_update_planner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner",
+      "operationId": "groups.DeletePlanner",
+      "tool": "microsoft_planner_groups_delete_planner"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans",
+      "operationId": "groups.planner.ListPlans",
+      "tool": "microsoft_planner_groups_planner_list_plans"
+    },
+    {
+      "method": "POST",
+      "path": "/groups/{group-id}/planner/plans",
+      "operationId": "groups.planner.CreatePlans",
+      "tool": "microsoft_planner_groups_planner_create_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/$count",
+      "operationId": "groups.planner.plans.GetCount-dff1",
+      "tool": "microsoft_planner_groups_planner_plans_get_count_dff1"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}",
+      "operationId": "groups.planner.GetPlans",
+      "tool": "microsoft_planner_groups_planner_get_plans"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}",
+      "operationId": "groups.planner.UpdatePlans",
+      "tool": "microsoft_planner_groups_planner_update_plans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}",
+      "operationId": "groups.planner.DeletePlans",
+      "tool": "microsoft_planner_groups_planner_delete_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "groups.planner.plans.ListBuckets",
+      "tool": "microsoft_planner_groups_planner_plans_list_buckets"
+    },
+    {
+      "method": "POST",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "groups.planner.plans.CreateBuckets",
+      "tool": "microsoft_planner_groups_planner_plans_create_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/$count",
+      "operationId": "groups.planner.plans.buckets.GetCount-66eb",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_get_count_66eb"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "groups.planner.plans.GetBuckets",
+      "tool": "microsoft_planner_groups_planner_plans_get_buckets"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "groups.planner.plans.UpdateBuckets",
+      "tool": "microsoft_planner_groups_planner_plans_update_buckets"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "groups.planner.plans.DeleteBuckets",
+      "tool": "microsoft_planner_groups_planner_plans_delete_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "groups.planner.plans.buckets.ListTasks",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "groups.planner.plans.buckets.CreateTasks",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/$count",
+      "operationId": "groups.planner.plans.buckets.tasks.GetCount-384e",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_get_count_384e"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "groups.planner.plans.buckets.GetTasks",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "groups.planner.plans.buckets.UpdateTasks",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "groups.planner.plans.buckets.DeleteTasks",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "groups.planner.plans.buckets.tasks.GetDetails",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "groups.planner.plans.buckets.tasks.UpdateDetails",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "groups.planner.plans.buckets.tasks.DeleteDetails",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "groups.planner.plans.buckets.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_buckets_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/details",
+      "operationId": "groups.planner.plans.GetDetails",
+      "tool": "microsoft_planner_groups_planner_plans_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/details",
+      "operationId": "groups.planner.plans.UpdateDetails",
+      "tool": "microsoft_planner_groups_planner_plans_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/details",
+      "operationId": "groups.planner.plans.DeleteDetails",
+      "tool": "microsoft_planner_groups_planner_plans_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "groups.planner.plans.ListTasks",
+      "tool": "microsoft_planner_groups_planner_plans_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "groups.planner.plans.CreateTasks",
+      "tool": "microsoft_planner_groups_planner_plans_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/$count",
+      "operationId": "groups.planner.plans.tasks.GetCount-d84b",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_get_count_d84b"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "groups.planner.plans.GetTasks",
+      "tool": "microsoft_planner_groups_planner_plans_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "groups.planner.plans.UpdateTasks",
+      "tool": "microsoft_planner_groups_planner_plans_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "groups.planner.plans.DeleteTasks",
+      "tool": "microsoft_planner_groups_planner_plans_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "groups.planner.plans.tasks.GetDetails",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "groups.planner.plans.tasks.UpdateDetails",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "groups.planner.plans.tasks.DeleteDetails",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/groups/{group-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "groups.planner.plans.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_groups_planner_plans_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner",
+      "operationId": "me.GetPlanner",
+      "tool": "microsoft_planner_me_get_planner"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner",
+      "operationId": "me.UpdatePlanner",
+      "tool": "microsoft_planner_me_update_planner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner",
+      "operationId": "me.DeletePlanner",
+      "tool": "microsoft_planner_me_delete_planner"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans",
+      "operationId": "me.planner.ListPlans",
+      "tool": "microsoft_planner_me_planner_list_plans"
+    },
+    {
+      "method": "POST",
+      "path": "/me/planner/plans",
+      "operationId": "me.planner.CreatePlans",
+      "tool": "microsoft_planner_me_planner_create_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/$count",
+      "operationId": "me.planner.plans.GetCount-036a",
+      "tool": "microsoft_planner_me_planner_plans_get_count_036a"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}",
+      "operationId": "me.planner.GetPlans",
+      "tool": "microsoft_planner_me_planner_get_plans"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}",
+      "operationId": "me.planner.UpdatePlans",
+      "tool": "microsoft_planner_me_planner_update_plans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}",
+      "operationId": "me.planner.DeletePlans",
+      "tool": "microsoft_planner_me_planner_delete_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "me.planner.plans.ListBuckets",
+      "tool": "microsoft_planner_me_planner_plans_list_buckets"
+    },
+    {
+      "method": "POST",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "me.planner.plans.CreateBuckets",
+      "tool": "microsoft_planner_me_planner_plans_create_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/$count",
+      "operationId": "me.planner.plans.buckets.GetCount-3740",
+      "tool": "microsoft_planner_me_planner_plans_buckets_get_count_3740"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "me.planner.plans.GetBuckets",
+      "tool": "microsoft_planner_me_planner_plans_get_buckets"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "me.planner.plans.UpdateBuckets",
+      "tool": "microsoft_planner_me_planner_plans_update_buckets"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "me.planner.plans.DeleteBuckets",
+      "tool": "microsoft_planner_me_planner_plans_delete_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "me.planner.plans.buckets.ListTasks",
+      "tool": "microsoft_planner_me_planner_plans_buckets_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "me.planner.plans.buckets.CreateTasks",
+      "tool": "microsoft_planner_me_planner_plans_buckets_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/$count",
+      "operationId": "me.planner.plans.buckets.tasks.GetCount-2767",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_get_count_2767"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "me.planner.plans.buckets.GetTasks",
+      "tool": "microsoft_planner_me_planner_plans_buckets_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "me.planner.plans.buckets.UpdateTasks",
+      "tool": "microsoft_planner_me_planner_plans_buckets_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "me.planner.plans.buckets.DeleteTasks",
+      "tool": "microsoft_planner_me_planner_plans_buckets_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.plans.buckets.tasks.GetDetails",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.plans.buckets.tasks.UpdateDetails",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.plans.buckets.tasks.DeleteDetails",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.plans.buckets.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_buckets_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/details",
+      "operationId": "me.planner.plans.GetDetails",
+      "tool": "microsoft_planner_me_planner_plans_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/details",
+      "operationId": "me.planner.plans.UpdateDetails",
+      "tool": "microsoft_planner_me_planner_plans_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/details",
+      "operationId": "me.planner.plans.DeleteDetails",
+      "tool": "microsoft_planner_me_planner_plans_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "me.planner.plans.ListTasks",
+      "tool": "microsoft_planner_me_planner_plans_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "me.planner.plans.CreateTasks",
+      "tool": "microsoft_planner_me_planner_plans_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/$count",
+      "operationId": "me.planner.plans.tasks.GetCount-d046",
+      "tool": "microsoft_planner_me_planner_plans_tasks_get_count_d046"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "me.planner.plans.GetTasks",
+      "tool": "microsoft_planner_me_planner_plans_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "me.planner.plans.UpdateTasks",
+      "tool": "microsoft_planner_me_planner_plans_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "me.planner.plans.DeleteTasks",
+      "tool": "microsoft_planner_me_planner_plans_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.plans.tasks.GetDetails",
+      "tool": "microsoft_planner_me_planner_plans_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.plans.tasks.UpdateDetails",
+      "tool": "microsoft_planner_me_planner_plans_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.plans.tasks.DeleteDetails",
+      "tool": "microsoft_planner_me_planner_plans_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.plans.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_plans_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks",
+      "operationId": "me.planner.ListTasks",
+      "tool": "microsoft_planner_me_planner_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/me/planner/tasks",
+      "operationId": "me.planner.CreateTasks",
+      "tool": "microsoft_planner_me_planner_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks/$count",
+      "operationId": "me.planner.tasks.GetCount-5b5d",
+      "tool": "microsoft_planner_me_planner_tasks_get_count_5b5d"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks/{plannerTask-id}",
+      "operationId": "me.planner.GetTasks",
+      "tool": "microsoft_planner_me_planner_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/tasks/{plannerTask-id}",
+      "operationId": "me.planner.UpdateTasks",
+      "tool": "microsoft_planner_me_planner_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/tasks/{plannerTask-id}",
+      "operationId": "me.planner.DeleteTasks",
+      "tool": "microsoft_planner_me_planner_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "me.planner.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "me.planner.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.tasks.GetDetails",
+      "tool": "microsoft_planner_me_planner_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.tasks.UpdateDetails",
+      "tool": "microsoft_planner_me_planner_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/tasks/{plannerTask-id}/details",
+      "operationId": "me.planner.tasks.DeleteDetails",
+      "tool": "microsoft_planner_me_planner_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/me/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "me.planner.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_me_planner_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner",
+      "operationId": "planner.planner.GetPlanner",
+      "tool": "microsoft_planner_planner_get_planner"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner",
+      "operationId": "planner.planner.UpdatePlanner",
+      "tool": "microsoft_planner_planner_update_planner"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets",
+      "operationId": "planner.ListBuckets",
+      "tool": "microsoft_planner_list_buckets"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/buckets",
+      "operationId": "planner.CreateBuckets",
+      "tool": "microsoft_planner_create_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/$count",
+      "operationId": "planner.buckets.GetCount-9ddb",
+      "tool": "microsoft_planner_buckets_get_count_9ddb"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}",
+      "operationId": "planner.GetBuckets",
+      "tool": "microsoft_planner_get_buckets"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/buckets/{plannerBucket-id}",
+      "operationId": "planner.UpdateBuckets",
+      "tool": "microsoft_planner_update_buckets"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/buckets/{plannerBucket-id}",
+      "operationId": "planner.DeleteBuckets",
+      "tool": "microsoft_planner_delete_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks",
+      "operationId": "planner.buckets.ListTasks",
+      "tool": "microsoft_planner_buckets_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks",
+      "operationId": "planner.buckets.CreateTasks",
+      "tool": "microsoft_planner_buckets_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/$count",
+      "operationId": "planner.buckets.tasks.GetCount-145a",
+      "tool": "microsoft_planner_buckets_tasks_get_count_145a"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.buckets.GetTasks",
+      "tool": "microsoft_planner_buckets_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.buckets.UpdateTasks",
+      "tool": "microsoft_planner_buckets_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.buckets.DeleteTasks",
+      "tool": "microsoft_planner_buckets_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.buckets.tasks.GetDetails",
+      "tool": "microsoft_planner_buckets_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.buckets.tasks.UpdateDetails",
+      "tool": "microsoft_planner_buckets_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.buckets.tasks.DeleteDetails",
+      "tool": "microsoft_planner_buckets_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.buckets.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_buckets_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans",
+      "operationId": "planner.ListPlans",
+      "tool": "microsoft_planner_list_plans"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/plans",
+      "operationId": "planner.CreatePlans",
+      "tool": "microsoft_planner_create_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/$count",
+      "operationId": "planner.plans.GetCount-e322",
+      "tool": "microsoft_planner_plans_get_count_e322"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}",
+      "operationId": "planner.GetPlans",
+      "tool": "microsoft_planner_get_plans"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}",
+      "operationId": "planner.UpdatePlans",
+      "tool": "microsoft_planner_update_plans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}",
+      "operationId": "planner.DeletePlans",
+      "tool": "microsoft_planner_delete_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "planner.plans.ListBuckets",
+      "tool": "microsoft_planner_plans_list_buckets"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "planner.plans.CreateBuckets",
+      "tool": "microsoft_planner_plans_create_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/$count",
+      "operationId": "planner.plans.buckets.GetCount-240a",
+      "tool": "microsoft_planner_plans_buckets_get_count_240a"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "planner.plans.GetBuckets",
+      "tool": "microsoft_planner_plans_get_buckets"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "planner.plans.UpdateBuckets",
+      "tool": "microsoft_planner_plans_update_buckets"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "planner.plans.DeleteBuckets",
+      "tool": "microsoft_planner_plans_delete_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "planner.plans.buckets.ListTasks",
+      "tool": "microsoft_planner_plans_buckets_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "planner.plans.buckets.CreateTasks",
+      "tool": "microsoft_planner_plans_buckets_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/$count",
+      "operationId": "planner.plans.buckets.tasks.GetCount-8a6a",
+      "tool": "microsoft_planner_plans_buckets_tasks_get_count_8a6a"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.plans.buckets.GetTasks",
+      "tool": "microsoft_planner_plans_buckets_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.plans.buckets.UpdateTasks",
+      "tool": "microsoft_planner_plans_buckets_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.plans.buckets.DeleteTasks",
+      "tool": "microsoft_planner_plans_buckets_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.plans.buckets.tasks.GetDetails",
+      "tool": "microsoft_planner_plans_buckets_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.plans.buckets.tasks.UpdateDetails",
+      "tool": "microsoft_planner_plans_buckets_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.plans.buckets.tasks.DeleteDetails",
+      "tool": "microsoft_planner_plans_buckets_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.plans.buckets.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_plans_buckets_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/details",
+      "operationId": "planner.plans.GetDetails",
+      "tool": "microsoft_planner_plans_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/details",
+      "operationId": "planner.plans.UpdateDetails",
+      "tool": "microsoft_planner_plans_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/details",
+      "operationId": "planner.plans.DeleteDetails",
+      "tool": "microsoft_planner_plans_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "planner.plans.ListTasks",
+      "tool": "microsoft_planner_plans_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "planner.plans.CreateTasks",
+      "tool": "microsoft_planner_plans_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/$count",
+      "operationId": "planner.plans.tasks.GetCount-09d1",
+      "tool": "microsoft_planner_plans_tasks_get_count_09d1"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.plans.GetTasks",
+      "tool": "microsoft_planner_plans_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.plans.UpdateTasks",
+      "tool": "microsoft_planner_plans_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "planner.plans.DeleteTasks",
+      "tool": "microsoft_planner_plans_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.plans.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.plans.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.plans.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.plans.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.plans.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.plans.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.plans.tasks.GetDetails",
+      "tool": "microsoft_planner_plans_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.plans.tasks.UpdateDetails",
+      "tool": "microsoft_planner_plans_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "planner.plans.tasks.DeleteDetails",
+      "tool": "microsoft_planner_plans_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.plans.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.plans.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.plans.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_plans_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks",
+      "operationId": "planner.ListTasks",
+      "tool": "microsoft_planner_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/planner/tasks",
+      "operationId": "planner.CreateTasks",
+      "tool": "microsoft_planner_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks/$count",
+      "operationId": "planner.tasks.GetCount-bfd2",
+      "tool": "microsoft_planner_tasks_get_count_bfd2"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks/{plannerTask-id}",
+      "operationId": "planner.GetTasks",
+      "tool": "microsoft_planner_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/tasks/{plannerTask-id}",
+      "operationId": "planner.UpdateTasks",
+      "tool": "microsoft_planner_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/tasks/{plannerTask-id}",
+      "operationId": "planner.DeleteTasks",
+      "tool": "microsoft_planner_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "planner.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "planner.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks/{plannerTask-id}/details",
+      "operationId": "planner.tasks.GetDetails",
+      "tool": "microsoft_planner_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/tasks/{plannerTask-id}/details",
+      "operationId": "planner.tasks.UpdateDetails",
+      "tool": "microsoft_planner_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/tasks/{plannerTask-id}/details",
+      "operationId": "planner.tasks.DeleteDetails",
+      "tool": "microsoft_planner_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "planner.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner",
+      "operationId": "users.GetPlanner",
+      "tool": "microsoft_planner_users_get_planner"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner",
+      "operationId": "users.UpdatePlanner",
+      "tool": "microsoft_planner_users_update_planner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner",
+      "operationId": "users.DeletePlanner",
+      "tool": "microsoft_planner_users_delete_planner"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans",
+      "operationId": "users.planner.ListPlans",
+      "tool": "microsoft_planner_users_planner_list_plans"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{user-id}/planner/plans",
+      "operationId": "users.planner.CreatePlans",
+      "tool": "microsoft_planner_users_planner_create_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/$count",
+      "operationId": "users.planner.plans.GetCount-b724",
+      "tool": "microsoft_planner_users_planner_plans_get_count_b724"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}",
+      "operationId": "users.planner.GetPlans",
+      "tool": "microsoft_planner_users_planner_get_plans"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}",
+      "operationId": "users.planner.UpdatePlans",
+      "tool": "microsoft_planner_users_planner_update_plans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}",
+      "operationId": "users.planner.DeletePlans",
+      "tool": "microsoft_planner_users_planner_delete_plans"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "users.planner.plans.ListBuckets",
+      "tool": "microsoft_planner_users_planner_plans_list_buckets"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets",
+      "operationId": "users.planner.plans.CreateBuckets",
+      "tool": "microsoft_planner_users_planner_plans_create_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/$count",
+      "operationId": "users.planner.plans.buckets.GetCount-f7f0",
+      "tool": "microsoft_planner_users_planner_plans_buckets_get_count_f7f0"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "users.planner.plans.GetBuckets",
+      "tool": "microsoft_planner_users_planner_plans_get_buckets"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "users.planner.plans.UpdateBuckets",
+      "tool": "microsoft_planner_users_planner_plans_update_buckets"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}",
+      "operationId": "users.planner.plans.DeleteBuckets",
+      "tool": "microsoft_planner_users_planner_plans_delete_buckets"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "users.planner.plans.buckets.ListTasks",
+      "tool": "microsoft_planner_users_planner_plans_buckets_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks",
+      "operationId": "users.planner.plans.buckets.CreateTasks",
+      "tool": "microsoft_planner_users_planner_plans_buckets_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/$count",
+      "operationId": "users.planner.plans.buckets.tasks.GetCount-de1b",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_get_count_de1b"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "users.planner.plans.buckets.GetTasks",
+      "tool": "microsoft_planner_users_planner_plans_buckets_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "users.planner.plans.buckets.UpdateTasks",
+      "tool": "microsoft_planner_users_planner_plans_buckets_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}",
+      "operationId": "users.planner.plans.buckets.DeleteTasks",
+      "tool": "microsoft_planner_users_planner_plans_buckets_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.plans.buckets.tasks.GetDetails",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.plans.buckets.tasks.UpdateDetails",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.plans.buckets.tasks.DeleteDetails",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/buckets/{plannerBucket-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.plans.buckets.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_buckets_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/details",
+      "operationId": "users.planner.plans.GetDetails",
+      "tool": "microsoft_planner_users_planner_plans_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/details",
+      "operationId": "users.planner.plans.UpdateDetails",
+      "tool": "microsoft_planner_users_planner_plans_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/details",
+      "operationId": "users.planner.plans.DeleteDetails",
+      "tool": "microsoft_planner_users_planner_plans_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "users.planner.plans.ListTasks",
+      "tool": "microsoft_planner_users_planner_plans_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks",
+      "operationId": "users.planner.plans.CreateTasks",
+      "tool": "microsoft_planner_users_planner_plans_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/$count",
+      "operationId": "users.planner.plans.tasks.GetCount-082b",
+      "tool": "microsoft_planner_users_planner_plans_tasks_get_count_082b"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "users.planner.plans.GetTasks",
+      "tool": "microsoft_planner_users_planner_plans_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "users.planner.plans.UpdateTasks",
+      "tool": "microsoft_planner_users_planner_plans_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}",
+      "operationId": "users.planner.plans.DeleteTasks",
+      "tool": "microsoft_planner_users_planner_plans_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.plans.tasks.GetDetails",
+      "tool": "microsoft_planner_users_planner_plans_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.plans.tasks.UpdateDetails",
+      "tool": "microsoft_planner_users_planner_plans_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.plans.tasks.DeleteDetails",
+      "tool": "microsoft_planner_users_planner_plans_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/plans/{plannerPlan-id}/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.plans.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_plans_tasks_delete_progress_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks",
+      "operationId": "users.planner.ListTasks",
+      "tool": "microsoft_planner_users_planner_list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{user-id}/planner/tasks",
+      "operationId": "users.planner.CreateTasks",
+      "tool": "microsoft_planner_users_planner_create_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks/$count",
+      "operationId": "users.planner.tasks.GetCount-8740",
+      "tool": "microsoft_planner_users_planner_tasks_get_count_8740"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}",
+      "operationId": "users.planner.GetTasks",
+      "tool": "microsoft_planner_users_planner_get_tasks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}",
+      "operationId": "users.planner.UpdateTasks",
+      "tool": "microsoft_planner_users_planner_update_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}",
+      "operationId": "users.planner.DeleteTasks",
+      "tool": "microsoft_planner_users_planner_delete_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.tasks.GetAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_get_assigned_to_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.tasks.UpdateAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_update_assigned_to_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/assignedToTaskBoardFormat",
+      "operationId": "users.planner.tasks.DeleteAssignedToTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_delete_assigned_to_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.tasks.GetBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_get_bucket_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.tasks.UpdateBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_update_bucket_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/bucketTaskBoardFormat",
+      "operationId": "users.planner.tasks.DeleteBucketTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_delete_bucket_task_board_format"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.tasks.GetDetails",
+      "tool": "microsoft_planner_users_planner_tasks_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.tasks.UpdateDetails",
+      "tool": "microsoft_planner_users_planner_tasks_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/details",
+      "operationId": "users.planner.tasks.DeleteDetails",
+      "tool": "microsoft_planner_users_planner_tasks_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.tasks.GetProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_get_progress_task_board_format"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.tasks.UpdateProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_update_progress_task_board_format"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user-id}/planner/tasks/{plannerTask-id}/progressTaskBoardFormat",
+      "operationId": "users.planner.tasks.DeleteProgressTaskBoardFormat",
+      "tool": "microsoft_planner_users_planner_tasks_delete_progress_task_board_format"
+    }
+  ]
+}

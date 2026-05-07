@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Line\LineService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Broadcast LINE messages.
+ *
+ * Sends one message set to all users who added the official account as a friend.
+ */
 class LineBroadcastMessage implements Tool
 {
+    /**
+     * @param  LineService  $service  The LINE Messaging API client
+     */
     public function __construct(
         private LineService $service,
     ) {}
@@ -30,6 +38,11 @@ class LineBroadcastMessage implements Tool
         ];
     }
 
+    /**
+     * Broadcast messages.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments
+     */
     public function execute(array $args): ToolResult
     {
         try {

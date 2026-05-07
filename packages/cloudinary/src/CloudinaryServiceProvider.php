@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Cloudinary integration with Laravel's service container.
+ */
 class CloudinaryServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +23,8 @@ class CloudinaryServiceProvider extends ServiceProvider
                 accessToken: $creds->get('cloudinary', 'access_token', ''),
                 cloudName: $creds->get('cloudinary', 'cloud_name', ''),
                 baseUrl: $creds->get('cloudinary', 'base_url', 'https://api.cloudinary.com/v1_1'),
+                apiKey: $creds->get('cloudinary', 'api_key', ''),
+                apiSecret: $creds->get('cloudinary', 'api_secret', ''),
             );
         });
     }

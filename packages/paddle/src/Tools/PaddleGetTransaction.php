@@ -6,10 +6,18 @@ use OpenCompany\Integrations\Paddle\PaddleService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Retrieve a Paddle transaction by ID.
+ *
+ * Returns the decoded Paddle transaction response with totals,
+ * customer references, status, items, and related metadata.
+ */
 class PaddleGetTransaction implements Tool
 {
     /**
      * Create a new PaddleGetTransaction tool instance.
+     *
+     * @param  PaddleService  $service  The Paddle API service.
      */
     public function __construct(
         private PaddleService $service,

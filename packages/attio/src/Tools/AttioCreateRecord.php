@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Attio\AttioService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a new Attio record for a given object type.
+ */
 class AttioCreateRecord implements Tool
 {
     /**

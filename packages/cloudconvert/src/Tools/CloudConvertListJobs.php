@@ -2,55 +2,67 @@
 
 namespace OpenCompany\Integrations\CloudConvert\Tools;
 
-use OpenCompany\Integrations\CloudConvert\CloudConvertService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class CloudConvertListJobs implements Tool
+/**
+ * List CloudConvert jobs with documented filters.
+ */
+class CloudConvertListJobs extends AbstractCloudConvertTool
 {
-    public function __construct(
-        private CloudConvertService $service,
-    ) {}
+    protected string $toolName = 'cloudconvert_list_jobs';
 
-    public function name(): string
-    {
-        return 'cloudconvert_list_jobs';
-    }
+    protected string $toolDescription = 'List CloudConvert jobs with documented filters.';
 
-    public function description(): string
-    {
-        return 'List CloudConvert jobs with optional filtering by status or tag, and pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'per_page' => ['type' => 'integer', 'description' => 'Number of jobs per page (default: 20, max: 100).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number (default: 1).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by status: waiting, processing, finished, error.'],
-            'tag' => ['type' => 'string', 'description' => 'Filter by job tag.'],
-        ];
-    }
+    protected string $path = '/jobs';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('CloudConvert integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'status' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by processing, finished, or error.',
+    ],
+    'tag' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by job tag.',
+    ],
+    'include' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Include tasks.',
+    ],
+    'per_page' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Results per page, defaults to 100.',
+    ],
+    'page' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Result page.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented CloudConvert query parameters to pass through.',
+    ],
+];
 
-            $result = $this->service->listJobs(
-                perPage: (int) ($args['per_page'] ?? 20),
-                page: (int) ($args['page'] ?? 1),
-                status: $args['status'] ?? null,
-                tag: $args['tag'] ?? null,
-            );
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            $data = $result['data'] ?? $result;
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'status' => 'filter[status]',
+    'tag' => 'filter[tag]',
+    'include',
+    'per_page',
+    'page',
+];
 
-            return ToolResult::success($data);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

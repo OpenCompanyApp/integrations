@@ -18,15 +18,22 @@ class XAdsServiceProvider extends ServiceProvider
     {
         $this->app->singleton(XAdsService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('x-ads', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('x_ads', $key, $default);
+            };
 
             return new XAdsService(
-                apiKey: $creds->get('x_ads', 'api_key', ''),
-                apiSecret: $creds->get('x_ads', 'api_secret', ''),
-                accessToken: $creds->get('x_ads', 'access_token', ''),
-                accessTokenSecret: $creds->get('x_ads', 'access_token_secret', ''),
-                accountId: $creds->get('x_ads', 'account_id', ''),
-                apiVersion: $creds->get('x_ads', 'api_version', '12'),
-                baseUrl: $creds->get('x_ads', 'base_url', 'https://ads-api.x.com'),
+                apiKey: $get('api_key'),
+                apiSecret: $get('api_secret'),
+                accessToken: $get('access_token'),
+                accessTokenSecret: $get('access_token_secret'),
+                accountId: $get('account_id'),
+                apiVersion: $get('api_version', '12'),
+                baseUrl: $get('base_url', 'https://ads-api.x.com'),
             );
         });
     }

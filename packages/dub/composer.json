@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-dub",
-    "description": "Dub.co link management integration for Laravel — manage short links, domains, and tags.",
+    "description": "Dub API integration for Laravel covering links, analytics, domains, tags, partners, and tracking.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "dub", "links", "marketing", "opencompany"],
+    "keywords": ["tools", "dub", "links", "analytics", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

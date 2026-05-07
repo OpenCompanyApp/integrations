@@ -1,288 +1,37 @@
-# Google Forms — Lua API Reference
+# Google Forms
 
-## list_forms
+Google Forms tools are exposed under `app.integrations.google_forms`. This package is generated from Google's official Forms API v1 Discovery document and exposes 10 REST methods.
 
-List Google Forms owned by the authenticated user.
+## Coverage
 
-### Parameters
+- Source: `https://forms.googleapis.com/$discovery/rest?version=v1`
+- Read tools: 4
+- Write tools: 6
+- Base URL: `https://forms.googleapis.com`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Max forms per page (default: 20, max: 100) |
-| `pageToken` | string | no | Token from a previous response to fetch the next page |
-| `filter` | string | no | Filter expression, e.g. `"creator_email = 'user@example.com'"` |
+## Usage Notes
 
-### Examples
+Pass `formId`, `responseId`, and `watchId` path parameters as top-level arguments. Query parameters can be passed as top-level shortcuts or inside `query`. Create, batch update, publish settings, watch create, and watch renew methods accept the official JSON request object inside `body`.
 
-```lua
-local result = app.integrations.google-forms.list_forms()
+## Tools
 
-for _, form in ipairs(result.forms) do
-  print(form.formId .. ": " .. (form.info.title or "Untitled"))
-end
-```
+- `google_forms_forms_create` - POST /v1/forms
+- `google_forms_forms_get` - GET /v1/forms/{formId}
+- `google_forms_forms_set_publish_settings` - POST /v1/forms/{formId}:setPublishSettings
+- `google_forms_forms_batch_update` - POST /v1/forms/{formId}:batchUpdate
+- `google_forms_forms_responses_list` - GET /v1/forms/{formId}/responses
+- `google_forms_forms_responses_get` - GET /v1/forms/{formId}/responses/{responseId}
+- `google_forms_forms_watches_renew` - POST /v1/forms/{formId}/watches/{watchId}:renew
+- `google_forms_forms_watches_create` - POST /v1/forms/{formId}/watches
+- `google_forms_forms_watches_list` - GET /v1/forms/{formId}/watches
+- `google_forms_forms_watches_delete` - DELETE /v1/forms/{formId}/watches/{watchId}
 
-### Paginated
-
-```lua
-local result = app.integrations.google-forms.list_forms({ pageSize = 10 })
-
-if result.nextPageToken then
-  local next = app.integrations.google-forms.list_forms({ pageToken = result.nextPageToken })
-end
-```
-
----
-
-## get_form
-
-Get the full details of a specific Google Form, including questions and settings.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The form ID |
-
-### Examples
+## Examples
 
 ```lua
-local form = app.integrations.google-forms.get_form({ id = "FORM_ID" })
+local form = app.integrations.google_forms.google_forms_forms_get({ formId = "1FAIpQL..." })
 
-print("Title: " .. form.info.title)
-print("Questions:")
-
-for _, item in ipairs(form.items) do
-  print("  - " .. item.title .. " (" .. item.questionItem.question.questionId .. ")")
-end
+local responses = app.integrations.google_forms.google_forms_forms_responses_list({ formId = "1FAIpQL...", pageSize = 10 })
 ```
 
----
-
-## create_form
-
-Create a new Google Form.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `info` | object | no | Full form info object (JSON) for advanced creation |
-| `title` | string | no | Title shown at the top of the form |
-| `description` | string | no | Description shown below the title |
-| `documentTitle` | string | no | Title shown in Google Drive |
-
-### Examples
-
-```lua
-local result = app.integrations.google-forms.create_form({
-  title = "Customer Feedback Survey",
-  description = "Please share your experience with our service.",
-  documentTitle = "Q1 2026 Customer Feedback"
-})
-
-print("Created form: " .. result.formId)
-print("Edit URL: " .. result.responderUri)
-```
-
-### With pre-configured questions
-
-```lua
-local result = app.integrations.google-forms.create_form({
-  info = {
-    title = "Event RSVP",
-    description = "Please confirm your attendance.",
-    documentTitle = "Annual Meetup RSVP",
-    items = {
-      {
-        title = "Will you attend?",
-        questionItem = {
-          question = {
-            required = true,
-            choiceQuestion = {
-              type = "RADIO",
-              options = {
-                { value = "Yes" },
-                { value = "No" },
-                { value = "Maybe" }
-              }
-            }
-          }
-        }
-      },
-      {
-        title = "Dietary restrictions?",
-        questionItem = {
-          question = {
-            required = false,
-            textQuestion = {
-              paragraph = false
-            }
-          }
-        }
-      }
-    }
-  }
-})
-```
-
----
-
-## list_responses
-
-List responses submitted to a Google Form.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The form ID |
-| `pageSize` | integer | no | Max responses per page |
-| `pageToken` | string | no | Token from a previous response to fetch the next page |
-| `filter` | string | no | Filter expression, e.g. `"timestamp >= 1234567890"` |
-
-### Examples
-
-```lua
-local result = app.integrations.google-forms.list_responses({ id = "FORM_ID" })
-
-for _, response in ipairs(result.responses) do
-  print("Response " .. response.responseId .. " at " .. response.lastSubmittedTime)
-
-  for qid, answer in pairs(response.answers) do
-    print("  Q: " .. qid)
-    for _, a in ipairs(answer.textAnswers.answers) do
-      print("    A: " .. a.value)
-    end
-  end
-end
-```
-
-### Filter by date
-
-```lua
-local result = app.integrations.google-forms.list_responses({
-  id = "FORM_ID",
-  filter = "timestamp >= 1711929600"
-})
-```
-
----
-
-## get_response
-
-Get a specific form response by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The form ID |
-| `id` | string | yes | The response ID |
-
-### Examples
-
-```lua
-local response = app.integrations.google-forms.get_response({
-  form_id = "FORM_ID",
-  id = "RESPONSE_ID"
-})
-
-for qid, answer in pairs(response.answers) do
-  print(qid .. ": " .. answer.textAnswers.answers[1].value)
-end
-```
-
----
-
-## create_response
-
-Submit a response to a Google Form.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The form ID |
-| `answers` | object | yes | Map of question IDs to answer objects |
-
-### Answer Format
-
-Each answer should follow this structure:
-
-```json
-{
-  "QUESTION_ID": {
-    "textAnswers": {
-      "answers": [
-        { "value": "your answer" }
-      ]
-    }
-  }
-}
-```
-
-### Examples
-
-```lua
-local result = app.integrations.google-forms.create_response({
-  id = "FORM_ID",
-  answers = {
-    ["QUESTION_ID_1"] = {
-      textAnswers = {
-        answers = {
-          { value = "Yes" }
-        }
-      }
-    },
-    ["QUESTION_ID_2"] = {
-      textAnswers = {
-        answers = {
-          { value = "Great experience, thank you!" }
-        }
-      }
-    }
-  }
-})
-
-print("Submitted response: " .. result.responseId)
-```
-
----
-
-## get_current_user
-
-Get the authenticated Google user's profile.
-
-### Parameters
-
-None.
-
-### Examples
-
-```lua
-local user = app.integrations.google-forms.get_current_user()
-
-print("Email: " .. user.email)
-print("Name: " .. (user.displayName or "N/A"))
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Google Forms accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.google-forms.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.google-forms.default.function_name({...})
-
--- Named accounts
-app.integrations.google-forms.work.function_name({...})
-app.integrations.google-forms.personal.function_name({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Responses are decoded Google Forms JSON responses, or `{ success = true, status = ... }` for successful empty responses such as watch deletes.

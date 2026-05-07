@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-apollo",
-    "description": "Apollo.io integration for Laravel — search contacts, enrich data, manage organizations.",
+    "description": "Apollo.io integration for Laravel agents with people, organization, contact, account, and usage API tools.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "apollo", "sales", "opencompany"],
+    "keywords": ["tools", "apollo", "b2b-data", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

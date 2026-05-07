@@ -84,7 +84,7 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
 
     public function appName(): string
     {
-        return 'google_tasks';
+        return 'google-tasks';
     }
 
     public function appMeta(): array
@@ -107,6 +107,8 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
             'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/tasks.googleapis.com',
+            'catalog_visibility' => 'hidden',
+            'replaced_by' => 'google-tasks',
         ];
     }    public function configSchema(): array
     {
@@ -286,7 +288,10 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleTasksService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleTasksService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleTasksService::class);
 
         return new $class($service);
     }

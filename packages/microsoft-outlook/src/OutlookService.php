@@ -56,7 +56,7 @@ class OutlookService
      */
     public function getMessage(string $id, array $params = []): array
     {
-        return $this->request('GET', '/me/messages/' . urlencode($id), $params);
+        return $this->request('GET', '/me/messages/' . rawurlencode($id), $params);
     }
 
     /**
@@ -112,11 +112,12 @@ class OutlookService
     /**
      * Get the signed-in user's profile (displayName, mail, id, etc.).
      *
+     * @param  array<string, mixed>  $params  Query parameters ($select, etc.).
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function getCurrentUser(array $params = []): array
     {
-        return $this->request('GET', '/me');
+        return $this->request('GET', '/me', $params);
     }
 
     // ─── Internals ─────────────────────────────────────────────────────

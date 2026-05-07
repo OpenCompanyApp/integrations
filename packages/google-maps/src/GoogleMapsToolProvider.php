@@ -104,7 +104,7 @@ class GoogleMapsToolProvider implements ToolProvider, ConfigurableIntegration, H
             'description' => 'Google Maps Platform integration for Laravel — geocoding, reverse geocoding, place search, directions, and distance matrix.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

@@ -15,7 +15,9 @@ class BrandfetchServiceProvider extends ServiceProvider
 
             return new BrandfetchService(
                 accessToken: $creds->get('brandfetch', 'access_token', ''),
-                baseUrl: $creds->get('brandfetch', 'url', 'https://api.brandfetch.com'),
+                baseUrl: $creds->get('brandfetch', 'url', 'https://api.brandfetch.io'),
+                clientId: $creds->get('brandfetch', 'client_id', ''),
+                cdnUrl: $creds->get('brandfetch', 'cdn_url', 'https://cdn.brandfetch.io'),
             );
         });
     }

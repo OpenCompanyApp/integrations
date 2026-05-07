@@ -1,43 +1,5 @@
 # PayPal — Lua API Reference
 
-## list_orders
-
-List PayPal checkout orders with optional filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page_size` | integer | no | Number of orders per page (default: 20, max: 100) |
-| `start_id` | string | no | Order ID to start from (for pagination) |
-| `start_time` | string | no | Start time filter (ISO 8601, e.g., `"2025-01-01T00:00:00Z"`) |
-| `end_time` | string | no | End time filter (ISO 8601, e.g., `"2025-12-31T23:59:59Z"`) |
-| `status` | string | no | Filter by status: `CREATED`, `SAVED`, `APPROVED`, `VOIDED`, `COMPLETED`, `PAYER_ACTION_REQUIRED` |
-
-### Examples
-
-```lua
--- List recent orders
-local result = app.integrations.paypal.list_orders({
-  page_size = 10
-})
-
-for _, order in ipairs(result.orders or {}) do
-  print(order.id .. " — " .. order.status)
-end
-```
-
-```lua
--- Filter by status and date range
-local result = app.integrations.paypal.list_orders({
-  status = "COMPLETED",
-  start_time = "2025-01-01T00:00:00Z",
-  end_time = "2025-12-31T23:59:59Z"
-})
-```
-
----
-
 ## get_order
 
 Get details of a specific PayPal checkout order.
@@ -147,6 +109,31 @@ local result = app.integrations.paypal.create_order({
     email_address = "john@example.com"
   }
 })
+```
+
+---
+
+## capture_order
+
+Capture a previously approved PayPal checkout order.
+
+PayPal Orders v2 supports creating, retrieving, and capturing orders by ID. It does not provide a general list-orders endpoint, so agents should store the order ID returned by `create_order` or retrieve it from the host application's own payment records.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `order_id` | string | yes | The approved PayPal order ID |
+| `payment_source` | array | no | Optional payment source data for the capture request |
+
+### Example
+
+```lua
+local result = app.integrations.paypal.capture_order({
+  order_id = "5O190127TN364715T"
+})
+
+print("Capture status: " .. result.status)
 ```
 
 ---
@@ -271,14 +258,14 @@ If you have multiple PayPal accounts configured, use account-specific namespaces
 
 ```lua
 -- Default account (always works)
-app.integrations.paypal.list_orders({})
+app.integrations.paypal.get_current_user({})
 
 -- Explicit default (portable across setups)
-app.integrations.paypal.default.list_orders({})
+app.integrations.paypal.default.get_current_user({})
 
 -- Named accounts
-app.integrations.paypal.business.list_orders({})
-app.integrations.paypal.personal.list_orders({})
+app.integrations.paypal.business.get_current_user({})
+app.integrations.paypal.personal.get_current_user({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

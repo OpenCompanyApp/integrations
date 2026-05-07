@@ -30,7 +30,7 @@ class CloseServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the service provider — register tools with the ToolProviderRegistry.
+     * Boot the service provider and register tools with the ToolProviderRegistry.
      */
     public function boot(): void
     {

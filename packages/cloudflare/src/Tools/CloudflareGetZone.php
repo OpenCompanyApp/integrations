@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Cloudflare\CloudflareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a Cloudflare zone.
+ *
+ * Returns compact zone metadata for one zone identifier.
+ */
 class CloudflareGetZone implements Tool
 {
+    /**
+     * @param  CloudflareService  $service  Cloudflare API client.
+     */
     public function __construct(
         private CloudflareService $service,
     ) {}
@@ -29,6 +37,11 @@ class CloudflareGetZone implements Tool
         ];
     }
 
+    /**
+     * Fetch a zone by identifier.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

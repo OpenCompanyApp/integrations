@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class MattermostGetPost implements Tool
 {
+    /**
+     * @param  MattermostService  $service  Mattermost API client.
+     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -35,6 +38,11 @@ class MattermostGetPost implements Tool
         ];
     }
 
+    /**
+     * Get a Mattermost post by ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

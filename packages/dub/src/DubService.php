@@ -2,233 +2,225 @@
 
 namespace OpenCompany\Integrations\Dub;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Dub API.
+ *
+ * Handles official operation lookup, bearer authentication, request shaping,
+ * response parsing, and normalized API error handling.
+ */
 class DubService
 {
+    private const DEFAULT_BASE_URL = 'https://api.dub.co';
+
+    /**
+     * @param  string  $accessToken  Dub API bearer token.
+     * @param  string  $baseUrl  Dub API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.dub.co',
+        private string $baseUrl = self::DEFAULT_BASE_URL,
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->baseUrl ?: self::DEFAULT_BASE_URL, '/');
     }
 
+    /**
+     * Check whether the service has been configured with an access token.
+     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return trim($this->accessToken) !== '';
     }
 
     /**
-     * List links (short URLs).
+     * Return the official Dub operation map.
      *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $pageSize  Number of results per page.
-     * @param  string|null  $search  Search query to filter links.
-     * @param  string|null  $domain  Filter by domain.
-     * @param  string|null  $tagId  Filter by tag ID.
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function listLinks(int $page = 1, int $pageSize = 50, ?string $search = null, ?string $domain = null, ?string $tagId = null): array
+    public static function operations(): array
     {
-        $params = [
-            'page' => $page,
-            'pageSize' => $pageSize,
-        ];
-
-        if ($search !== null) {
-            $params['search'] = $search;
-        }
-        if ($domain !== null) {
-            $params['domain'] = $domain;
-        }
-        if ($tagId !== null) {
-            $params['tagId'] = $tagId;
-        }
-
-        return $this->request('GET', '/links', $params);
+        return DubOperations::all();
     }
 
     /**
-     * Get a single link by ID.
-     *
-     * @param  string  $id  The link ID.
-     * @return array<string, mixed>
-     */
-    public function getLink(string $id): array
-    {
-        return $this->request('GET', '/links/' . urlencode($id));
-    }
-
-    /**
-     * Create a new short link.
-     *
-     * @param  string  $url  The destination URL.
-     * @param  string|null  $domain  The domain for the short link.
-     * @param  string|null  $key  The custom key (back-half) for the short link.
-     * @param  string|null  $title  Optional title for the link.
-     * @param  string|null  $description  Optional description.
-     * @param  array<string>|null  $tags  Optional array of tag names.
-     * @return array<string, mixed>
-     */
-    public function createLink(string $url, ?string $domain = null, ?string $key = null, ?string $title = null, ?string $description = null, ?array $tags = null): array
-    {
-        $data = ['url' => $url];
-
-        if ($domain !== null) {
-            $data['domain'] = $domain;
-        }
-        if ($key !== null) {
-            $data['key'] = $key;
-        }
-        if ($title !== null) {
-            $data['title'] = $title;
-        }
-        if ($description !== null) {
-            $data['description'] = $description;
-        }
-        if ($tags !== null) {
-            $data['tags'] = $tags;
-        }
-
-        return $this->request('POST', '/links', $data);
-    }
-
-    /**
-     * List domains.
-     *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $pageSize  Number of results per page.
-     * @return array<string, mixed>
-     */
-    public function listDomains(int $page = 1, int $pageSize = 50): array
-    {
-        return $this->request('GET', '/domains', [
-            'page' => $page,
-            'pageSize' => $pageSize,
-        ]);
-    }
-
-    /**
-     * Get a single domain by ID.
-     *
-     * @param  string  $id  The domain ID (slug or UUID).
-     * @return array<string, mixed>
-     */
-    public function getDomain(string $id): array
-    {
-        return $this->request('GET', '/domains/' . urlencode($id));
-    }
-
-    /**
-     * List tags.
-     *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $pageSize  Number of results per page.
-     * @param  string|null  $search  Search query to filter tags.
-     * @return array<string, mixed>
-     */
-    public function listTags(int $page = 1, int $pageSize = 50, ?string $search = null): array
-    {
-        $params = [
-            'page' => $page,
-            'pageSize' => $pageSize,
-        ];
-
-        if ($search !== null) {
-            $params['search'] = $search;
-        }
-
-        return $this->request('GET', '/tags', $params);
-    }
-
-    /**
-     * Get the currently authenticated user.
+     * Return metadata for one Dub operation by tool slug or operation key.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', '/users/me');
+        foreach (self::operations() as $definition) {
+            if (($definition['slug'] ?? null) === $operation || ($definition['operation'] ?? null) === $operation) {
+                return $definition;
+            }
+        }
+
+        throw new RuntimeException("Unsupported Dub operation: {$operation}");
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Execute an official Dub API operation.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query params or request body.
+     * @param  array<string, mixed>  $args  Tool arguments.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    public function call(string $operation, array $args = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $definition = $this->operation($operation);
+        [$path, $query, $payload] = $this->shapeRequest($definition, $args);
 
-        if ($response->status() === 204) {
-            return [];
-        }
-
-        return $response->json() ?? [];
+        return $this->request(
+            method: (string) $definition['method'],
+            path: $path,
+            query: $query,
+            payload: $payload,
+        );
     }
 
     /**
-     * Make a raw HTTP request to the Dub.co API.
+     * Shape tool arguments into path, query, and JSON body data.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query params or request body.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>}
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function shapeRequest(array $definition, array $args): array
     {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Dub.co access token is not configured.');
-        }
+        $path = (string) $definition['path'];
+        $query = isset($args['query']) && is_array($args['query']) ? $args['query'] : [];
+        $payload = isset($args['payload']) && is_array($args['payload']) ? $args['payload'] : [];
+        $consumed = ['query' => true, 'payload' => true];
 
-        $url = $this->baseUrl . $path;
+        foreach ($definition['parameters'] as $parameter) {
+            $name = (string) $parameter['name'];
+            $param = (string) $parameter['param'];
+            $value = $args[$param] ?? $args[$name] ?? null;
+            $consumed[$param] = true;
+            $consumed[$name] = true;
 
-        try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'PATCH' => $http->patch($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Dub.co API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Dub.co API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service may be down.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
-                Log::error("Dub.co API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Dub.co API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            if (($parameter['required'] ?? false) && ($value === null || $value === '')) {
+                throw new RuntimeException($param.' is required.');
             }
 
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Dub.co API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Dub.co API: {$e->getMessage()}");
+            if ($value !== null && $value !== '') {
+                $path = str_replace('{'.$name.'}', rawurlencode((string) $value), $path);
+            }
         }
+
+        if (str_contains($path, '{')) {
+            throw new RuntimeException('Missing required Dub path parameter.');
+        }
+
+        if (($definition['request_body'] ?? false) === true) {
+            foreach ($args as $key => $value) {
+                if (!isset($consumed[$key])) {
+                    $payload[$key] = $value;
+                }
+            }
+        } else {
+            foreach ($args as $key => $value) {
+                if (!isset($consumed[$key])) {
+                    $query[$key] = $value;
+                }
+            }
+        }
+
+        return [$path, $query, $payload];
+    }
+
+    /**
+     * Dispatch an authenticated Dub request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array $payload = []): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $payload);
+
+        return $this->decodeResponse($response);
+    }
+
+    /**
+     * Make a raw HTTP request to the Dub API.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     *
+     * @throws RuntimeException
+     */
+    private function rawRequest(string $method, string $path, array $query = [], array $payload = []): Response
+    {
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Dub access token is not configured.');
+        }
+
+        $options = [];
+        if ($query !== []) {
+            $options['query'] = $query;
+        }
+        if ($payload !== []) {
+            $options['json'] = $payload;
+        }
+
+        try {
+            $response = Http::withToken($this->accessToken)
+                ->acceptJson()
+                ->timeout(30)
+                ->send(strtoupper($method), $this->baseUrl.$path, $options);
+        } catch (\Throwable $e) {
+            Log::error("Dub API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+
+            throw new RuntimeException('Failed to connect to Dub API: '.$e->getMessage());
+        }
+
+        if (!$response->successful()) {
+            $this->throwApiError($method, $path, $response);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Throw a normalized Dub API error.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $json = $response->json();
+        $message = is_array($json)
+            ? (string) data_get($json, 'error.message', data_get($json, 'message', data_get($json, 'error', '')))
+            : trim($response->body());
+
+        Log::error("Dub API error: {$method} {$path}", [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        throw new RuntimeException('Dub API error ('.$response->status().'): '.($message !== '' ? $message : 'Unexpected API error.'));
+    }
+
+    /**
+     * Decode JSON, text, or empty Dub responses.
+     *
+     * @return array<string, mixed>
+     */
+    private function decodeResponse(Response $response): array
+    {
+        $body = trim($response->body());
+        if ($body === '' || $body === 'null') {
+            return ['success' => true, 'status' => $response->status()];
+        }
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['value' => $body, 'status' => $response->status()];
     }
 }

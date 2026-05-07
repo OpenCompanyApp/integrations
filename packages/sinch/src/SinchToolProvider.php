@@ -101,7 +101,7 @@ public function integrationMeta(): array
             'description' => 'Send SMS messages, manage phone numbers, groups, and batches via Sinch.',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:sinch',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.sinch.com/docs/sms/',
         ];

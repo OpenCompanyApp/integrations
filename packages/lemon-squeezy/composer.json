@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-lemon-squeezy",
-    "description": "Lemon Squeezy integration for Laravel — list products, orders, customers, and subscriptions.",
+    "description": "Lemon Squeezy integration for Laravel: manage stores, products, variants, orders, subscriptions, customers, discounts, licenses, checkouts, and webhooks.",
     "license": "MIT",
     "authors": [
         {

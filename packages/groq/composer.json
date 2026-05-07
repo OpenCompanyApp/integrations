@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-groq",
-    "description": "Groq fast AI inference integration for Laravel — list models, create completions, manage messages and files.",
+    "description": "Groq integration for Laravel: chat completions, responses, audio, models, batches, files, and fine tuning.",
     "license": "MIT",
     "authors": [
         {

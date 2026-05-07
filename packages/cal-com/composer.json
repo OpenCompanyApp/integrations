@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-cal-com",
-    "description": "Cal.com v2 scheduling integration for OpenCompany — event types, bookings, teams, and users.",
+    "description": "Legacy compatibility alias for opencompanyapp/integration-cal.",
     "license": "MIT",
     "authors": [
         {
@@ -8,11 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "cal-com", "cal.com", "scheduling", "opencompany"],
+    "keywords": ["tools", "cal-com", "cal.com", "legacy", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "opencompanyapp/integration-core": "^2.0 || @dev",
+        "opencompanyapp/integration-cal": "^2.0 || @dev"
     },
+    "abandoned": "opencompanyapp/integration-cal",
     "replace": {
         "opencompanyapp/ai-tool-cal-com": "self.version"
     },

@@ -16,6 +16,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AuthZeroCreateUser implements Tool
 {
+    /**
+     * @param  AuthZeroService  $service  The Auth0 Management API client.
+     */
     public function __construct(
         private AuthZeroService $service,
     ) {}
@@ -40,6 +43,11 @@ class AuthZeroCreateUser implements Tool
         ];
     }
 
+    /**
+     * Create a new Auth0 database-connection user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

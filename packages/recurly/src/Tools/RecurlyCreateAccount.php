@@ -6,6 +6,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * Create a billing account in Recurly.
+ *
+ * Accepts a unique account code and optional customer contact fields.
+ */
 class RecurlyCreateAccount implements Tool
 {
     /**

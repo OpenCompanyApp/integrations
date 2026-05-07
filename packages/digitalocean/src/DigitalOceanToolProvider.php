@@ -4,6 +4,8 @@ namespace OpenCompany\Integrations\DigitalOcean;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\DigitalOcean\Tools\DigitalOceanCreateDroplet;
@@ -17,11 +19,15 @@ use OpenCompany\Integrations\DigitalOcean\Tools\DigitalOceanListKubernetes;
 use OpenCompany\Integrations\DigitalOcean\Tools\DigitalOceanListSpaces;
 use OpenCompany\Integrations\DigitalOcean\Tools\DigitalOceanRebootDroplet;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Exposes DigitalOcean cloud-management tools to host applications.
+ *
+ * Handles catalog metadata, credential setup, connection checks, and
+ * multi-account service resolution for DigitalOcean API v2.
+ */
 class DigitalOceanToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -95,11 +101,14 @@ class DigitalOceanToolProvider implements ToolProvider, ConfigurableIntegration,
             'description' => 'Cloud infrastructure — droplets, domains, Spaces storage, and Kubernetes',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:digitalocean',
-            'category' => 'cloud',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://docs.digitalocean.com/reference/api/api-reference/',
+            'docs_url' => 'https://docs.digitalocean.com/reference/api/reference/',
+            'source_url' => 'https://github.com/digitalocean/openapi',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -121,6 +130,12 @@ class DigitalOceanToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
+    /**
+     * Verify DigitalOcean credentials with a lightweight account request.
+     *
+     * @param  array<string, mixed>  $config  Credential form values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -252,7 +267,9 @@ class DigitalOceanToolProvider implements ToolProvider, ConfigurableIntegration,
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/digitalocean.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -270,7 +287,7 @@ class DigitalOceanToolProvider implements ToolProvider, ConfigurableIntegration,
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new DigitalOceanService(
                 accessToken: $creds->get('digitalocean', 'access_token', '', $account),

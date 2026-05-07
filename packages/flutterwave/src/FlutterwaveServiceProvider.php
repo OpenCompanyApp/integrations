@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Flutterwave integration with Laravel's service container.
+ *
+ * Binds the Flutterwave service using stored credentials and registers the
+ * tool provider with the shared registry when available.
+ */
 class FlutterwaveServiceProvider extends ServiceProvider
 {
     /**

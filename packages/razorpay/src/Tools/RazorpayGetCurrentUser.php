@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to get current user information from Razorpay.
+ * Tool to verify Razorpay connectivity.
  *
- * Uses the GET /items endpoint to retrieve the authenticated user's
- * account details and configuration.
+ * Uses a lightweight payments list request because Razorpay does not expose
+ * a general current-user endpoint in the payments API.
  */
 class RazorpayGetCurrentUser implements Tool
 {
@@ -34,7 +34,7 @@ class RazorpayGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get current user information from Razorpay. Returns details about the authenticated Razorpay account.';
+        return 'Verify the Razorpay API connection with a lightweight payments request.';
     }
 
     /**
@@ -48,7 +48,7 @@ class RazorpayGetCurrentUser implements Tool
     }
 
     /**
-     * Execute the tool and return the current user information.
+     * Execute the tool and return the connection-check response.
      *
      * @param  array<string, mixed>  $args  The tool arguments (unused).
      */

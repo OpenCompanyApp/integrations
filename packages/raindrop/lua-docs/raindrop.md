@@ -1,200 +1,462 @@
-# Raindrop.io — Lua API Reference
+# Raindrop.io Integration
 
-## list_bookmarks
+Namespace: `app.integrations.raindrop`.
 
-List bookmarks with optional collection and search filters.
+This integration follows the official Raindrop.io REST API documentation. Use top-level snake_case arguments for path parameters, `query` for query-string filters, and `payload` for JSON or multipart request bodies.
 
-### Parameters
+### raindrop_backups_download_file
+Download file.
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `collection_id` | integer | no | Collection ID to filter by. `0` = all, `-1` = unsorted, `-99` = trash |
-| `search` | string | no | Search query to filter bookmarks |
-| `page` | integer | no | Page number (starts at 1, default: 1) |
-| `per_page` | integer | no | Results per page (max 50, default: 25) |
+- Method/path: `GET /backup/{ID}.{format}`
+- Parameters: `id`, `format`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
 
-### Examples
+### raindrop_backups_generate_new
+Generate new.
 
-#### List all bookmarks (first page)
+- Method/path: `GET /backup`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_backups_get_all
+Get all.
+
+- Method/path: `GET /backups`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_collections_create_collection
+Create collection.
+
+- Method/path: `POST /collection`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_empty_trash
+Empty Trash.
+
+- Method/path: `DELETE /collection/-99`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_expand_collapse_all
+Expand/collapse all collections.
+
+- Method/path: `PUT /collections`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_get_child_collections
+Get child collections.
+
+- Method/path: `GET /collections/childrens`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_collections_get_collection
+Get collection.
+
+- Method/path: `GET /collection/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_collections_get_root_collections
+Get root collections.
+
+- Method/path: `GET /collections`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_collections_get_system_collections_count
+Get system collections count.
+
+- Method/path: `GET /user/stats`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_collections_merge_collections
+Merge collections.
+
+- Method/path: `PUT /collections/merge`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_remove_all_empty_collections
+Remove all empty collections.
+
+- Method/path: `PUT /collections/clean`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_remove_collection
+Remove collection.
+
+- Method/path: `DELETE /collection/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_remove_multiple_collections
+Remove multiple collections.
+
+- Method/path: `DELETE /collections`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_reorder_all
+Reorder all collections.
+
+- Method/path: `PUT /collections`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_update_collection
+Update collection.
+
+- Method/path: `PUT /collection/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_collections_upload_cover
+Upload cover.
+
+- Method/path: `PUT /collection/{id}/cover`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `multipart/form-data`
+
+### raindrop_export_export_in_format
+Export in format.
+
+- Method/path: `GET /raindrops/{collectionId}/export.{format}`
+- Parameters: `collection_id`, `format`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_filters_get_filters
+Get filters.
+
+- Method/path: `GET /filters/{collectionId}`
+- Parameters: `collection_id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_highlights_add
+Add highlight.
+
+- Method/path: `PUT /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_highlights_get_all_highlights
+Get all highlights.
+
+- Method/path: `GET /highlights`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_highlights_get_all_highlights_in_a_collection
+Get all highlights in a collection.
+
+- Method/path: `GET /highlights/{collectionId}`
+- Parameters: `collection_id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_highlights_get_raindrop_highlights
+Get highlights of raindrop.
+
+- Method/path: `GET /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_highlights_remove
+Remove highlight.
+
+- Method/path: `PUT /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_highlights_update
+Update highlight.
+
+- Method/path: `PUT /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_import_check_url_s_existence
+Check URL(s) existence.
+
+- Method/path: `POST /import/url/exists`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_import_parse_html_import_file
+Parse HTML import file.
+
+- Method/path: `POST /import/file`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `multipart/form-data`
+
+### raindrop_import_parse_url
+Parse URL.
+
+- Method/path: `GET /import/url/parse`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_raindrops_multiple_create_many_raindrops
+Create many raindrops.
+
+- Method/path: `POST /raindrops`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_multiple_get_raindrops
+Get raindrops.
+
+- Method/path: `GET /raindrops/{collectionId}`
+- Parameters: `collection_id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_raindrops_multiple_remove_many_raindrops
+Remove many raindrops.
+
+- Method/path: `DELETE /raindrops/{collectionId}`
+- Parameters: `collection_id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_multiple_update_many_raindrops
+Update many raindrops.
+
+- Method/path: `PUT /raindrops/{collectionId}`
+- Parameters: `collection_id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_single_create_raindrop
+Create raindrop.
+
+- Method/path: `POST /raindrop`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_single_get_permanent_copy
+Get permanent copy.
+
+- Method/path: `GET /raindrop/{id}/cache`
+- Parameters: `id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_raindrops_single_get_raindrop
+Get raindrop.
+
+- Method/path: `GET /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_raindrops_single_remove_raindrop
+Remove raindrop.
+
+- Method/path: `DELETE /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_single_suggest_collection_and_tags_for_existing_bookmark
+Suggest collection and tags for existing bookmark.
+
+- Method/path: `GET /raindrop/{id}/suggest`
+- Parameters: `id`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_raindrops_single_suggest_collection_and_tags_for_new_bookmark
+Suggest collection and tags for new bookmark.
+
+- Method/path: `POST /raindrop/suggest`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_single_update_raindrop
+Update raindrop.
+
+- Method/path: `PUT /raindrop/{id}`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_raindrops_single_upload_cover
+Upload cover.
+
+- Method/path: `PUT /raindrop/{id}/cover`
+- Parameters: `id`
+- Query: `query` object
+- Body: `payload` object
+- Content type: `multipart/form-data`
+
+### raindrop_raindrops_single_upload_file
+Upload file.
+
+- Method/path: `PUT /raindrop/file`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `multipart/form-data`
+
+### raindrop_tags_get_tags
+Get tags.
+
+- Method/path: `GET /tags/{collectionId}`
+- Parameters: `collection_id` (optional)
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_tags_merge
+Merge tags.
+
+- Method/path: `PUT /tags/{collectionId}`
+- Parameters: `collection_id` (optional)
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_tags_remove
+Remove tag(s).
+
+- Method/path: `DELETE /tags/{collectionId}`
+- Parameters: `collection_id` (optional)
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_tags_rename
+Rename tag.
+
+- Method/path: `PUT /tags/{collectionId}`
+- Parameters: `collection_id` (optional)
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+### raindrop_user_authenticated_connect_social_network_account
+Connect social network account.
+
+- Method/path: `GET /user/connect/{provider}`
+- Parameters: `provider`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_user_authenticated_disconnect_social_network_account
+Disconnect social network account.
+
+- Method/path: `GET /user/connect/{provider}/revoke`
+- Parameters: `provider`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_user_authenticated_get_user
+Get user.
+
+- Method/path: `GET /user`
+- Parameters: none
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_user_authenticated_get_user_by_name
+Get user by name.
+
+- Method/path: `GET /user/{name}`
+- Parameters: `name`
+- Query: `query` object
+- Body: none
+- Content type: `application/json response only`
+
+### raindrop_user_authenticated_update_user
+Update user.
+
+- Method/path: `PUT /user`
+- Parameters: none
+- Query: `query` object
+- Body: `payload` object
+- Content type: `application/json`
+
+## Examples
 
 ```lua
-local result = app.integrations.raindrop.list_bookmarks({})
-
-for _, item in ipairs(result.items) do
-  print(item.title .. " -> " .. item.link)
-end
+local bookmarks = app.integrations.raindrop.raindrops_multiple_get_raindrops({ collection_id = 0, query = { perpage = 25 } })
+local created = app.integrations.raindrop.raindrops_single_create_raindrop({ payload = { link = 'https://example.test', title = 'Example' } })
 ```
-
-#### Search bookmarks
-
-```lua
-local result = app.integrations.raindrop.list_bookmarks({
-  search = "laravel"
-})
-```
-
-#### Bookmarks in a specific collection
-
-```lua
-local result = app.integrations.raindrop.list_bookmarks({
-  collection_id = 12345,
-  page = 2,
-  per_page = 50
-})
-```
-
----
-
-## get_bookmark
-
-Get full details of a single bookmark.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The bookmark ID |
-
-### Example
-
-```lua
-local result = app.integrations.raindrop.get_bookmark({ id = 12345 })
-local bm = result.item
-print(bm.title)
-print(bm.link)
-print(bm.excerpt)
-```
-
----
-
-## create_bookmark
-
-Save a new bookmark.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `link` | string | yes | The URL to bookmark |
-| `title` | string | no | Title override (auto-detected if omitted) |
-| `tags` | array | no | Tags to assign (array of strings) |
-| `collection_id` | integer | no | Target collection ID (0 = Unsorted) |
-| `excerpt` | string | no | Short description or note |
-
-### Example
-
-```lua
-local result = app.integrations.raindrop.create_bookmark({
-  link = "https://laravel.com/docs",
-  title = "Laravel Documentation",
-  tags = { "php", "framework", "docs" },
-  collection_id = 42,
-  excerpt = "Official Laravel documentation"
-})
-```
-
----
-
-## update_bookmark
-
-Update an existing bookmark's fields.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The bookmark ID |
-| `link` | string | no | New URL |
-| `title` | string | no | New title |
-| `tags` | array | no | Replace tags |
-| `collection_id` | integer | no | Move to a different collection |
-| `excerpt` | string | no | New description or note |
-
-### Example
-
-```lua
-local result = app.integrations.raindrop.update_bookmark({
-  id = 12345,
-  title = "Updated Title",
-  tags = { "updated", "important" }
-})
-```
-
----
-
-## list_collections
-
-List all bookmark collections (folders).
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.raindrop.list_collections({})
-
-for _, col in ipairs(result.items) do
-  print(col.title .. " (ID: " .. col._id .. ", count: " .. col.count .. ")")
-end
-```
-
----
-
-## get_collection
-
-Get details of a specific collection.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The collection ID |
-
-### Example
-
-```lua
-local result = app.integrations.raindrop.get_collection({ id = 42 })
-local col = result.item
-print(col.title .. " — " .. col.count .. " bookmarks")
-```
-
----
-
-## get_current_user
-
-Get the authenticated user's profile.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.raindrop.get_current_user({})
-local user = result.user
-print(user.fullName .. " (" .. user.email .. ")")
-print("Plan: " .. user.pro .. " | Storage: " .. user.usedSpace .. " bytes")
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Raindrop.io accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.raindrop.list_bookmarks({})
-
--- Explicit default (portable across setups)
-app.integrations.raindrop.default.list_bookmarks({})
-
--- Named accounts
-app.integrations.raindrop.work.list_bookmarks({})
-app.integrations.raindrop.personal.list_bookmarks({})
-```
-
-All functions are identical across accounts — only the credentials differ.

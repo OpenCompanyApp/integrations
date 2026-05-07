@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class BaserowUpdateRow implements Tool
 {
+    /**
+     * @param  BaserowService  $service  The Baserow API client.
+     */
     public function __construct(
         private BaserowService $service,
     ) {}
@@ -37,6 +40,11 @@ class BaserowUpdateRow implements Tool
         ];
     }
 
+    /**
+     * Update a row in a Baserow table.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

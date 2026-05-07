@@ -1,6 +1,6 @@
 # Exchange Rate — Lua API Reference
 
-No API key needed. Supports 340+ currencies: fiat, crypto, and precious metals.
+No API key needed. Uses the public Fawaz Ahmed exchange-api datasets and supports fiat, crypto, and precious metals.
 
 ## convert_currency
 
@@ -21,6 +21,25 @@ local result = app.integrations.exchangerate.convert_currency({
 })
 
 print("100 USD = " .. result.result .. " EUR")
+```
+
+## pair_rate
+
+Get the direct exchange rate for one currency pair without downloading the full base-currency matrix.
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `from` | string | yes | Source currency code (e.g. `"usd"`, `"btc"`, `"xau"`) |
+| `to` | string | yes | Target currency code (e.g. `"eur"`, `"jpy"`) |
+| `date` | string | no | Date for the rate: `"YYYY-MM-DD"` or `"latest"` (default) |
+
+```lua
+local result = app.integrations.exchangerate.pair_rate({
+  from = "usd",
+  to = "eur"
+})
+
+print(result.rate)
 ```
 
 ## history
@@ -62,7 +81,7 @@ for _, c in ipairs(result.currencies) do
 end
 ```
 
-## exchange_rates
+## rates
 
 Get all exchange rates for a base currency.
 
@@ -73,7 +92,7 @@ Get all exchange rates for a base currency.
 | `date` | string | no | Date for the rate: `"YYYY-MM-DD"` or `"latest"` (default) |
 
 ```lua
-local result = app.integrations.exchangerate.exchange_rates({
+local result = app.integrations.exchangerate.rates({
   base = "usd",
   currencies = "eur,gbp,jpy"
 })

@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Paystack\PaystackService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a new customer on a Paystack integration.
+ *
+ * Supports the required email address plus optional name and phone fields.
+ */
 class PaystackCreateCustomer implements Tool
 {
+    /**
+     * @param  PaystackService  $service  The Paystack API service.
+     */
     public function __construct(
         private PaystackService $service,
     ) {}
@@ -32,6 +40,11 @@ class PaystackCreateCustomer implements Tool
         ];
     }
 
+    /**
+     * Create a customer with the provided profile fields.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

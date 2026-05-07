@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Gotify\GotifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the current Gotify user with a client token.
+ */
 class GotifyGetCurrentUser implements Tool
 {
+    /**
+     * @param  GotifyService  $service  The Gotify API client.
+     */
     public function __construct(
         private GotifyService $service,
     ) {}
@@ -27,11 +33,16 @@ class GotifyGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the currently authenticated Gotify user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gotify integration is not configured.');
+            if (!$this->service->isClientConfigured()) {
+                return ToolResult::error('Gotify client token is not configured. Current-user lookup requires a client token.');
             }
 
             $result = $this->service->getCurrentUser();

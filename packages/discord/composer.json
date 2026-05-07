@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-discord",
-    "description": "Discord integration for OpenCompany — channels, messages, guilds, and users.",
+    "description": "Discord integration for OpenCompany - channels, messages, guilds, moderation, invites, roles, and webhooks.",
     "license": "MIT",
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
     "keywords": ["tools", "discord", "messaging", "opencompany"],

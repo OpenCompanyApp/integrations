@@ -108,7 +108,7 @@ class AwsToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
             'description' => 'AWS cloud integration for Laravel — manage S3 buckets, EC2 instances, Lambda functions, DynamoDB tables, CloudWatch metrics, SNS topics, and IAM users.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

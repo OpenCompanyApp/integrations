@@ -4,20 +4,12 @@ namespace OpenCompany\Integrations\Tally\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Tally\TallyService;
 
 /**
  * Get the currently authenticated Tally user's profile information.
  */
-class TallyGetCurrentUser implements Tool
+class TallyGetCurrentUser extends AbstractTallyTool implements Tool
 {
-    /**
-     * @param  TallyService  $service  The Tally API service instance.
-     */
-    public function __construct(
-        private TallyService $service,
-    ) {}
-
     public function name(): string
     {
         return 'tally_get_current_user';
@@ -40,16 +32,6 @@ class TallyGetCurrentUser implements Tool
      */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Tally integration is not configured.');
-            }
-
-            $result = $this->service->getCurrentUser();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->getCurrentUser());
     }
 }

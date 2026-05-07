@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Cloudflare;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Cloudflare API v4.
+ *
+ * Handles bearer-token authentication, JSON request dispatch, Cloudflare error
+ * normalization, and endpoint helpers used by individual tools.
+ */
 class CloudflareService
 {
+    /**
+     * @param  string  $accessToken  Cloudflare API token.
+     * @param  string  $baseUrl  Cloudflare API base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.cloudflare.com/client/v4',
@@ -17,6 +27,61 @@ class CloudflareService
     public function isConfigured(): bool
     {
         return !empty($this->accessToken);
+    }
+
+    /**
+     * Execute a raw GET request against the Cloudflare API.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $query);
+    }
+
+    /**
+     * Execute a raw POST request against the Cloudflare API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PATCH request against the Cloudflare API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $payload = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PUT request against the Cloudflare API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $payload = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw DELETE request against the Cloudflare API.
+     *
+     * @param  array<string, mixed>  $payload  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
     }
 
     /**
@@ -66,6 +131,56 @@ class CloudflareService
     }
 
     /**
+     * Get a DNS record.
+     *
+     * @param  string  $zoneId  The zone identifier.
+     * @param  string  $dnsRecordId  DNS record identifier.
+     * @return array<string, mixed>
+     */
+    public function getDnsRecord(string $zoneId, string $dnsRecordId): array
+    {
+        return $this->request('GET', '/zones/' . urlencode($zoneId) . '/dns_records/' . urlencode($dnsRecordId));
+    }
+
+    /**
+     * Update a DNS record, replacing the record object.
+     *
+     * @param  string  $zoneId  The zone identifier.
+     * @param  string  $dnsRecordId  DNS record identifier.
+     * @param  array<string, mixed>  $data  DNS record data.
+     * @return array<string, mixed>
+     */
+    public function updateDnsRecord(string $zoneId, string $dnsRecordId, array $data): array
+    {
+        return $this->request('PUT', '/zones/' . urlencode($zoneId) . '/dns_records/' . urlencode($dnsRecordId), $data);
+    }
+
+    /**
+     * Patch a DNS record.
+     *
+     * @param  string  $zoneId  The zone identifier.
+     * @param  string  $dnsRecordId  DNS record identifier.
+     * @param  array<string, mixed>  $data  DNS record fields to update.
+     * @return array<string, mixed>
+     */
+    public function patchDnsRecord(string $zoneId, string $dnsRecordId, array $data): array
+    {
+        return $this->request('PATCH', '/zones/' . urlencode($zoneId) . '/dns_records/' . urlencode($dnsRecordId), $data);
+    }
+
+    /**
+     * Delete a DNS record.
+     *
+     * @param  string  $zoneId  The zone identifier.
+     * @param  string  $dnsRecordId  DNS record identifier.
+     * @return array<string, mixed>
+     */
+    public function deleteDnsRecord(string $zoneId, string $dnsRecordId): array
+    {
+        return $this->request('DELETE', '/zones/' . urlencode($zoneId) . '/dns_records/' . urlencode($dnsRecordId));
+    }
+
+    /**
      * List page rules for a zone.
      *
      * @param  string  $zoneId  The zone identifier.
@@ -108,9 +223,9 @@ class CloudflareService
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method (GET, POST, PATCH, PUT, DELETE).
      * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Request data (query params for GET, body for POST/PUT).
+     * @param  array<string, mixed>  $data  Request data (query params for GET, body for writes).
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -126,9 +241,28 @@ class CloudflareService
     }
 
     /**
+     * Normalize a user-supplied API path to a relative Cloudflare v4 path.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '') {
+            throw new \RuntimeException('Cloudflare API path is required.');
+        }
+
+        $base = $this->baseUrl;
+        if (str_starts_with($path, $base)) {
+            $path = substr($path, strlen($base));
+        }
+
+        return '/' . ltrim($path, '/');
+    }
+
+    /**
      * Make a raw HTTP request to the Cloudflare API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method (GET, POST, PATCH, PUT, DELETE).
      * @param  string  $path  API endpoint path.
      * @param  array<string, mixed>  $data  Request data.
      * @return \Illuminate\Http\Client\Response
@@ -152,6 +286,7 @@ class CloudflareService
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),

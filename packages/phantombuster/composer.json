@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-phantombuster",
-    "description": "Phantombuster integration for Laravel — manage agents, launch tasks, and monitor containers.",
+    "description": "Phantombuster integration for Laravel: agents, containers, scripts, organization metadata, and outputs.",
     "license": "MIT",
     "authors": [
         {

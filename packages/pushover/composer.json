@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-pushover",
-    "description": "Pushover integration for Laravel — send push notifications, list sounds, validate users.",
+    "description": "Pushover integration for Laravel — messages, sounds, validation, receipts, subscriptions, groups, teams, glances, limits, and license credits.",
     "license": "MIT",
     "authors": [
         {

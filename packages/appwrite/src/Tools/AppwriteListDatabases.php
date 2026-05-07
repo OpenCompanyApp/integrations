@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Appwrite\AppwriteService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List databases in the current Appwrite project.
+ */
 class AppwriteListDatabases implements Tool
 {
     /**
@@ -43,16 +46,18 @@ class AppwriteListDatabases implements Tool
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of databases to return (default: 25).'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
+            'queries' => ['type' => 'array', 'description' => 'Appwrite Query strings for filtering and pagination.', 'items' => ['type' => 'string']],
             'search' => ['type' => 'string', 'description' => 'Search term to filter databases by name.'],
+            'total' => ['type' => 'boolean', 'description' => 'Whether Appwrite should calculate total count.'],
+            'limit' => ['type' => 'integer', 'description' => 'Compatibility helper that is converted to an Appwrite limit() query.'],
+            'offset' => ['type' => 'integer', 'description' => 'Compatibility helper that is converted to an Appwrite offset() query.'],
         ];
     }
 
     /**
      * Execute the tool with the given arguments.
      *
-     * @param  array $args The tool arguments.
+     * @param  array<string, mixed>  $args The tool arguments.
      * @return ToolResult The result of the tool execution.
      */
     public function execute(array $args): ToolResult
@@ -62,15 +67,23 @@ class AppwriteListDatabases implements Tool
                 return ToolResult::error('Appwrite integration is not configured.');
             }
 
-            $params = [];
+            $queries = isset($args['queries']) && is_array($args['queries']) ? $args['queries'] : [];
             if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
+                $queries[] = 'limit('.(int) $args['limit'].')';
             }
             if (isset($args['offset'])) {
-                $params['offset'] = (int) $args['offset'];
+                $queries[] = 'offset('.(int) $args['offset'].')';
+            }
+
+            $params = [];
+            if ($queries !== []) {
+                $params['queries'] = $queries;
             }
             if (isset($args['search'])) {
                 $params['search'] = $args['search'];
+            }
+            if (isset($args['total'])) {
+                $params['total'] = (bool) $args['total'];
             }
 
             $result = $this->service->listDatabases($params);

@@ -24,6 +24,10 @@ use OpenCompany\Integrations\Zoom\Tools\ZoomGetWebinar;
 use OpenCompany\Integrations\Zoom\Tools\ZoomListPastMeetings;
 use OpenCompany\Integrations\Zoom\Tools\ZoomListWebinars;
 use OpenCompany\Integrations\Zoom\Tools\ZoomUpdateMeeting;
+
+/**
+ * Tool catalog and configuration metadata for the Zoom integration.
+ */
 class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -102,7 +106,7 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Video conferencing, online meetings, and group messaging platform',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:zoom',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.zoom.us/docs/api/',
         ];
@@ -149,6 +153,15 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 return [
                     'success' => false,
                     'error' => "Could not reach Zoom API at {$baseUrl}. Check the URL.",
+                ];
+            }
+
+            if (! $response->successful()) {
+                $error = $json['message'] ?? $json['error'] ?? $response->body();
+
+                return [
+                    'success' => false,
+                    'error' => 'Zoom API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
@@ -225,6 +238,69 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'name' => 'List Users',
                 'description' => 'List users in the Zoom account. Returns user IDs, emails, names, types (1=basic, 2=licensed), and status. Use this to find user IDs for other operations.',
                 'icon' => 'ph:wrench',
+            ],
+            'zoom_create_user' => [
+                'class' => ZoomCreateUser::class,
+                'type' => 'write',
+                'name' => 'Create User',
+                'description' => 'Create a new Zoom user in the account.',
+                'icon' => 'ph:user-plus',
+            ],
+            'zoom_create_webinar' => [
+                'class' => ZoomCreateWebinar::class,
+                'type' => 'write',
+                'name' => 'Create Webinar',
+                'description' => 'Create a Zoom webinar for a user.',
+                'icon' => 'ph:broadcast',
+            ],
+            'zoom_delete_meeting' => [
+                'class' => ZoomDeleteMeeting::class,
+                'type' => 'write',
+                'name' => 'Delete Meeting',
+                'description' => 'Delete a Zoom meeting by ID.',
+                'icon' => 'ph:trash',
+            ],
+            'zoom_get_account' => [
+                'class' => ZoomGetAccount::class,
+                'type' => 'read',
+                'name' => 'Get Account',
+                'description' => 'Get the current Zoom account information.',
+                'icon' => 'ph:buildings',
+            ],
+            'zoom_get_user_settings' => [
+                'class' => ZoomGetUserSettings::class,
+                'type' => 'read',
+                'name' => 'Get User Settings',
+                'description' => 'Get settings for a Zoom user.',
+                'icon' => 'ph:gear',
+            ],
+            'zoom_get_webinar' => [
+                'class' => ZoomGetWebinar::class,
+                'type' => 'read',
+                'name' => 'Get Webinar',
+                'description' => 'Get details of a Zoom webinar by ID.',
+                'icon' => 'ph:broadcast',
+            ],
+            'zoom_list_past_meetings' => [
+                'class' => ZoomListPastMeetings::class,
+                'type' => 'read',
+                'name' => 'List Past Meetings',
+                'description' => 'List past instances of a Zoom meeting.',
+                'icon' => 'ph:clock-counter-clockwise',
+            ],
+            'zoom_list_webinars' => [
+                'class' => ZoomListWebinars::class,
+                'type' => 'read',
+                'name' => 'List Webinars',
+                'description' => 'List webinars for a Zoom user.',
+                'icon' => 'ph:broadcast',
+            ],
+            'zoom_update_meeting' => [
+                'class' => ZoomUpdateMeeting::class,
+                'type' => 'write',
+                'name' => 'Update Meeting',
+                'description' => 'Update an existing Zoom meeting.',
+                'icon' => 'ph:pencil-simple',
             ],
         ];
     }

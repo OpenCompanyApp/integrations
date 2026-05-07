@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Wildix integration with Laravel's service container.
+ *
+ * Binds WildixService using host credentials and registers WildixToolProvider
+ * with the shared ToolProviderRegistry when available.
+ */
 class WildixServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -15,7 +21,7 @@ class WildixServiceProvider extends ServiceProvider
 
             return new WildixService(
                 accessToken: $creds->get('wildix', 'access_token', ''),
-                baseUrl: $creds->get('wildix', 'url', 'https://api.wildix.com'),
+                baseUrl: $creds->get('wildix', 'url', ''),
             );
         });
     }

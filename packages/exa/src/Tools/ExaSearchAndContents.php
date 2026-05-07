@@ -15,6 +15,9 @@ use OpenCompany\Integrations\Exa\ExaService;
  */
 class ExaSearchAndContents implements Tool
 {
+    /**
+     * @param  ExaService  $service  The Exa API client.
+     */
     public function __construct(
         private ExaService $service,
     ) {}
@@ -47,8 +50,8 @@ class ExaSearchAndContents implements Tool
             ],
             'type' => [
                 'type' => 'string',
-                'enum' => ['keyword', 'neural', 'auto'],
-                'description' => 'Search type: "keyword", "neural", or "auto" (default: "auto").',
+                'enum' => ['auto', 'instant', 'fast', 'deep-lite', 'deep', 'deep-reasoning', 'keyword', 'neural'],
+                'description' => 'Search type. Current options include auto, instant, fast, deep-lite, deep, deep-reasoning, keyword, and neural.',
             ],
             'category' => [
                 'type' => 'string',
@@ -76,6 +79,18 @@ class ExaSearchAndContents implements Tool
                     ],
                 ],
                 'description' => 'Highlight configuration for extracting key passages.',
+            ],
+            'summary' => [
+                'type' => 'object',
+                'description' => 'Summary configuration for LLM-generated summaries.',
+            ],
+            'max_age_hours' => [
+                'type' => 'integer',
+                'description' => 'Maximum cached content age in hours for returned contents.',
+            ],
+            'output_schema' => [
+                'type' => 'object',
+                'description' => 'Optional JSON schema for structured output with deep search types.',
             ],
         ];
     }
@@ -117,13 +132,29 @@ class ExaSearchAndContents implements Tool
                 $body['startPublishedDate'] = $args['start_published_date'];
             }
 
-            // Content parameters
+            $contents = [];
             if (isset($args['text'])) {
-                $body['text'] = (bool) $args['text'];
+                $contents['text'] = (bool) $args['text'];
             }
 
             if (isset($args['highlights']) && is_array($args['highlights'])) {
-                $body['highlights'] = $args['highlights'];
+                $contents['highlights'] = $args['highlights'];
+            }
+
+            if (isset($args['summary']) && is_array($args['summary'])) {
+                $contents['summary'] = $args['summary'];
+            }
+
+            if (isset($args['max_age_hours'])) {
+                $contents['maxAgeHours'] = (int) $args['max_age_hours'];
+            }
+
+            if ($contents !== []) {
+                $body['contents'] = $contents;
+            }
+
+            if (isset($args['output_schema']) && is_array($args['output_schema'])) {
+                $body['outputSchema'] = $args['output_schema'];
             }
 
             $result = $this->service->search($body);

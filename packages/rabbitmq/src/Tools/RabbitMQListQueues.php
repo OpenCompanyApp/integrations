@@ -44,7 +44,10 @@ class RabbitMQListQueues implements Tool
      */
     public function parameters(): array
     {
-        return [];
+        return [
+            'vhost' => ['type' => 'string', 'description' => 'Optional virtual host name.'],
+            'params' => ['type' => 'object', 'description' => 'Optional query parameters: page, page_size, name, use_regex, disable_stats, enable_queue_totals.'],
+        ];
     }
 
     /**
@@ -60,9 +63,9 @@ class RabbitMQListQueues implements Tool
                 return ToolResult::error('RabbitMQ integration is not configured.');
             }
 
-            $queues = $this->service->listQueues();
+            $queues = $this->service->listQueues(isset($args['vhost']) ? (string) $args['vhost'] : null, $args['params'] ?? []);
 
-            return ToolResult::success($this->formatQueues($queues));
+            return ToolResult::success(array_is_list($queues) ? $this->formatQueues($queues) : $queues);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

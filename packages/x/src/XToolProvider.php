@@ -38,7 +38,7 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
             'description' => 'Full generated coverage of the official X API for posts, users, DMs, lists, media, streams, webhooks, compliance, trends, spaces, and usage.',
             'icon' => 'simple-icons:x',
             'logo' => 'simple-icons:x',
-            'category' => 'social',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://docs.x.com/x-api',
         ];
@@ -16989,14 +16989,48 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);
+            $bearerToken = (string) $creds->get('x', 'bearer_token', '', $account);
+            $accessToken = (string) $creds->get('x', 'access_token', '', $account);
+            $apiKey = (string) $creds->get('x', 'api_key', '', $account);
+            $apiSecret = (string) $creds->get('x', 'api_secret', '', $account);
+            $accessTokenSecret = (string) $creds->get('x', 'access_token_secret', '', $account);
+            $baseUrl = (string) $creds->get('x', 'base_url', '', $account);
+
+            if ($bearerToken === '') {
+                $bearerToken = (string) $creds->get('twitter', 'bearer_token', '', $account);
+            }
+
+            if ($bearerToken === '') {
+                $bearerToken = (string) $creds->get('twitter', 'access_token', '', $account);
+            }
+
+            if ($accessToken === '') {
+                $accessToken = (string) $creds->get('twitter', 'oauth_access_token', '', $account);
+            }
+
+            if ($apiKey === '') {
+                $apiKey = (string) $creds->get('twitter', 'api_key', '', $account);
+            }
+
+            if ($apiSecret === '') {
+                $apiSecret = (string) $creds->get('twitter', 'api_secret', '', $account);
+            }
+
+            if ($accessTokenSecret === '') {
+                $accessTokenSecret = (string) $creds->get('twitter', 'access_token_secret', '', $account);
+            }
+
+            if ($baseUrl === '') {
+                $baseUrl = (string) $creds->get('twitter', 'url', 'https://api.x.com/2', $account);
+            }
 
             return new XService(
-                bearerToken: $creds->get('x', 'bearer_token', '', $account),
-                accessToken: $creds->get('x', 'access_token', '', $account),
-                apiKey: $creds->get('x', 'api_key', '', $account),
-                apiSecret: $creds->get('x', 'api_secret', '', $account),
-                accessTokenSecret: $creds->get('x', 'access_token_secret', '', $account),
-                baseUrl: $creds->get('x', 'base_url', 'https://api.x.com/2', $account),
+                bearerToken: $bearerToken,
+                accessToken: $accessToken,
+                apiKey: $apiKey,
+                apiSecret: $apiSecret,
+                accessTokenSecret: $accessTokenSecret,
+                baseUrl: $baseUrl,
             );
         }
 

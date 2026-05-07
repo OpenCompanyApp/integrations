@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * CapsuleGetOpportunity — retrieve a single sales opportunity by ID.
+ * Retrieve a single sales opportunity by ID.
  *
  * Returns full opportunity details including associated party,
  * value, milestone, and custom field data.
  */
 class CapsuleGetOpportunity implements Tool
 {
+    /**
+     * @param  CapsuleService  $service  The Capsule CRM API client.
+     */
     public function __construct(
         private CapsuleService $service,
     ) {}
@@ -35,6 +38,11 @@ class CapsuleGetOpportunity implements Tool
         ];
     }
 
+    /**
+     * Get a Capsule CRM opportunity.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

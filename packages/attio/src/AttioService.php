@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\Attio;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Attio REST API.
+ *
+ * Handles bearer-token authentication, JSON request dispatch, path
+ * normalization, and focused helpers used by Attio tools.
+ */
 class AttioService
 {
     /**
@@ -26,6 +32,61 @@ class AttioService
     public function isConfigured(): bool
     {
         return !empty($this->accessToken);
+    }
+
+    /**
+     * Execute a raw GET request against the Attio API.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $query);
+    }
+
+    /**
+     * Execute a raw POST request against the Attio API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PATCH request against the Attio API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $payload = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PUT request against the Attio API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPut(string $path, array $payload = []): array
+    {
+        return $this->request('PUT', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw DELETE request against the Attio API.
+     *
+     * @param  array<string, mixed>  $payload  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
     }
 
     /**
@@ -137,15 +198,39 @@ class AttioService
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+        $json = $response->json();
+
+        if (!is_array($json)) {
+            return [];
+        }
+
+        return $json;
+    }
+
+    /**
+     * Normalize a user-supplied API path to a relative Attio v2 path.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+
+        if ($path === '') {
+            throw new \RuntimeException('Attio API path is required.');
+        }
+
+        if (str_starts_with($path, $this->baseUrl)) {
+            $path = substr($path, strlen($this->baseUrl));
+        }
+
+        return '/' . ltrim($path, '/');
     }
 
     /**
      * Make a raw HTTP request to the Attio API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
+     * @param  string  $method  HTTP method (GET, POST, PATCH, PUT, DELETE).
      * @param  string  $path  API path relative to the base URL.
-     * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PATCH/DELETE).
+     * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PATCH/PUT/DELETE).
      * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
      * @throws \RuntimeException If the access token is missing, the connection fails, or the API returns an error.
@@ -168,6 +253,7 @@ class AttioService
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PATCH' => $http->patch($url, $data),
+                'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };

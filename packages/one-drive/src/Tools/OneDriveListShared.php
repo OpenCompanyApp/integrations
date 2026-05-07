@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class OneDriveListShared implements Tool
 {
+    /**
+     * @param  OneDriveService  $service  Microsoft Graph OneDrive API client.
+     */
     public function __construct(
         private OneDriveService $service,
     ) {}
@@ -36,6 +39,11 @@ class OneDriveListShared implements Tool
         ];
     }
 
+    /**
+     * List items shared with the signed-in user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (top, skip_token)
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -22,7 +22,7 @@ Each list contains:
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.list_lists()
+local result = app.integrations["microsoft-todo"].todo_list_lists({})
 
 for _, list in ipairs(result.lists) do
   print(list.displayName .. " (" .. list.id .. ")")
@@ -44,7 +44,7 @@ Get a specific Microsoft To Do task list by ID.
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.get_list({
+local result = app.integrations["microsoft-todo"].todo_get_list({
   id = "AQMkAGI1NzQz..."
 })
 
@@ -61,13 +61,13 @@ Create a new Microsoft To Do task list.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `displayName` | string | yes | The name of the new task list |
+| `display_name` | string | yes | The name of the new task list |
 
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.create_list({
-  displayName = "Work Tasks"
+local result = app.integrations["microsoft-todo"].todo_create_list({
+  display_name = "Work Tasks"
 })
 
 print("Created list: " .. result.displayName .. " (ID: " .. result.id .. ")")
@@ -102,7 +102,7 @@ Each task contains:
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.list_tasks({
+local result = app.integrations["microsoft-todo"].todo_list_tasks({
   list_id = "AQMkAGI1NzQz..."
 })
 
@@ -128,7 +128,7 @@ Get a specific task from a Microsoft To Do task list.
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.get_task({
+local result = app.integrations["microsoft-todo"].todo_get_task({
   list_id = "AQMkAGI1NzQz...",
   id = "AAMkAGI1NzQz..."
 })
@@ -159,7 +159,7 @@ Create a new task in a Microsoft To Do task list.
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.create_task({
+local result = app.integrations["microsoft-todo"].todo_create_task({
   list_id = "AQMkAGI1NzQz...",
   title = "Review pull request",
   body = "Check the new authentication module",
@@ -193,7 +193,7 @@ Returns an object with:
 ### Example
 
 ```lua
-local result = app.integrations.microsoft_todo.get_current_user()
+local result = app.integrations["microsoft-todo"].todo_get_current_user({})
 
 print("Connected as: " .. result.displayName)
 print("Email: " .. (result.mail or result.userPrincipalName))

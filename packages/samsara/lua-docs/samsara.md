@@ -1,242 +1,61 @@
-# Samsara — Lua API Reference
+# Samsara
 
-## list_vehicles
+Namespace: `samsara`
 
-List fleet vehicles from Samsara. Returns vehicle details including name, VIN, make, model, year, and GPS location.
+Samsara exposes fleet telematics, driver workflow, routing, address book, tag, document, maintenance, sensor, and user APIs. This package uses bearer-token authentication against the current REST API base URL `https://api.samsara.com` and keeps responses in Samsara's original JSON shape.
 
-### Parameters
+## Coverage
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of vehicles to return per page (default: 100, max: 512) |
-| `after` | string | no | Pagination cursor — pass the `pagination.endCursor` value from a previous response to fetch the next page |
+Core tools:
 
-### Examples
+- Vehicles and drivers: list/get vehicles, list/get drivers, vehicle stats snapshot/history/feed
+- Trailers and equipment: list/get/create/update/delete where supported, stats snapshot/history/feed
+- Routes: list/get/create/update/delete route plans
+- Addresses and tags: list/get/create/update/delete address book entries and tags
+- Documents: list/get/create documents and list/get document types
+- Maintenance: defects, defect history, defect types
+- Sensors and users: list sensors, current user, list/get users
+- Raw helpers: `samsara_api_get`, `samsara_api_post`, `samsara_api_patch`, `samsara_api_delete`
 
-```lua
--- List first page of vehicles
-local result = app.integrations.samsara.list_vehicles({limit = 50})
+## Usage Notes
 
-for _, vehicle in ipairs(result.data) do
-  print(vehicle.name .. " — " .. (vehicle.vin or "no VIN"))
-end
+Samsara tokens are permissioned by endpoint category and by account license. A 401 usually means the token is missing or invalid. A 403 usually means the token exists but lacks the required endpoint permission or Samsara license.
 
--- Fetch next page
-if result.pagination and result.pagination.hasNextPage then
-  local next = app.integrations.samsara.list_vehicles({
-    limit = 50,
-    after = result.pagination.endCursor
-  })
-end
-```
+Most list endpoints use cursor pagination with `after`, `limit`, and a `pagination.endCursor` value in the response. Many stats endpoints require `types`; pass either a comma-separated string or an array of strings. The integration preserves repeated query parameters when arrays are provided.
 
----
-
-## get_vehicle
-
-Get detailed information about a specific vehicle by its Samsara ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Samsara vehicle ID (e.g., `"123456789012345"`) |
-
-### Examples
+## Examples
 
 ```lua
-local vehicle = app.integrations.samsara.get_vehicle({id = "123456789012345"})
-print(vehicle.name)
-print("VIN: " .. vehicle.vin)
-print("Location: " .. vehicle.gps.latitude .. ", " .. vehicle.gps.longitude)
+local vehicles = app.integrations.samsara.samsara_list_vehicles({
+  limit = 100
+})
+
+local stats = app.integrations.samsara.samsara_get_vehicle_stats({
+  types = { "gps", "obdOdometerMeters" },
+  vehicleIds = { "vehicle-id" }
+})
+
+local route = app.integrations.samsara.samsara_create_route({
+  payload = {
+    name = "Morning deliveries",
+    driverId = "driver-id",
+    stops = {}
+  }
+})
+
+local documents = app.integrations.samsara.samsara_list_documents({
+  startTime = "2026-01-01T00:00:00Z",
+  endTime = "2026-01-31T23:59:59Z"
+})
 ```
 
----
-
-## list_drivers
-
-List fleet drivers from Samsara. Returns driver details including name, username, email, phone, and driver license info.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of drivers to return per page (default: 100, max: 512) |
-| `after` | string | no | Pagination cursor — pass the `pagination.endCursor` value from a previous response to fetch the next page |
-
-### Examples
+Use raw helpers for newly released Samsara endpoints while staying scoped to the configured API host:
 
 ```lua
--- List all drivers
-local result = app.integrations.samsara.list_drivers()
-
-for _, driver in ipairs(result.data) do
-  print(driver.name .. " — " .. (driver.username or "no username"))
-end
+local users = app.integrations.samsara.samsara_api_get({
+  path = "/users",
+  limit = 50
+})
 ```
 
----
-
-## get_driver
-
-Get detailed information about a specific driver by their Samsara ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Samsara driver ID (e.g., `"123456789012345"`) |
-
-### Examples
-
-```lua
-local driver = app.integrations.samsara.get_driver({id = "987654321098765"})
-print(driver.name)
-print("Email: " .. (driver.email or "N/A"))
-print("License: " .. (driver.licenseNumber or "N/A"))
-```
-
----
-
-## list_sensors
-
-List IoT sensors from Samsara. Returns sensor details including name, type, model, connectivity, and current readings.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of sensors to return per page (default: 100, max: 512) |
-| `after` | string | no | Pagination cursor — pass the `pagination.endCursor` value from a previous response to fetch the next page |
-
-### Examples
-
-```lua
--- List all sensors
-local result = app.integrations.samsara.list_sensors()
-
-for _, sensor in ipairs(result.data) do
-  print(sensor.name .. " — " .. sensor.model)
-end
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Samsara user profile. No parameters required.
-
-### Examples
-
-```lua
-local user = app.integrations.samsara.get_current_user({})
-print("Logged in as: " .. user.email)
-print("Organization: " .. (user.organizationName or "N/A"))
-```
-
----
-
-## Common Workflows
-
-### Get all vehicles across all pages
-
-```lua
-local all_vehicles = {}
-local cursor = nil
-local has_more = true
-
-while has_more do
-  local params = {limit = 512}
-  if cursor then
-    params.after = cursor
-  end
-
-  local result = app.integrations.samsara.list_vehicles(params)
-
-  if result.data then
-    for _, v in ipairs(result.data) do
-      table.insert(all_vehicles, v)
-    end
-  end
-
-  if result.pagination and result.pagination.hasNextPage then
-    cursor = result.pagination.endCursor
-  else
-    has_more = false
-  end
-end
-
-print("Total vehicles: " .. #all_vehicles)
-```
-
-### Find a vehicle by VIN
-
-```lua
-local target_vin = "1HGBH41JXMN109186"
-local found = nil
-local cursor = nil
-
-repeat
-  local params = {limit = 512}
-  if cursor then params.after = cursor end
-
-  local result = app.integrations.samsara.list_vehicles(params)
-
-  if result.data then
-    for _, v in ipairs(result.data) do
-      if v.vin == target_vin then
-        found = v
-        break
-      end
-    end
-  end
-
-  if not found and result.pagination and result.pagination.hasNextPage then
-    cursor = result.pagination.endCursor
-  else
-    cursor = nil
-  end
-until found or not cursor
-
-if found then
-  print("Found: " .. found.name .. " (ID: " .. found.id .. ")")
-else
-  print("Vehicle with VIN " .. target_vin .. " not found")
-end
-```
-
-### Verify API connectivity
-
-```lua
-local user = app.integrations.samsara.get_current_user({})
-print("Connected to Samsara as " .. user.email)
-```
-
----
-
-## Notes
-
-- All list endpoints support cursor-based pagination using `after` and `limit` parameters
-- The maximum page size is 512 items; use pagination to retrieve larger datasets
-- API token must have appropriate scopes for each endpoint (e.g., `vehicles:read`, `drivers:read`, `sensors:read`)
-- Rate limits apply — see the [Samsara API docs](https://developers.samsara.com/docs/rate-limits) for current limits
-
----
-
-## Multi-Account Usage
-
-If you have multiple Samsara accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.samsara.list_vehicles({limit = 50})
-
--- Explicit default (portable across setups)
-app.integrations.samsara.default.list_vehicles({limit = 50})
-
--- Named accounts
-app.integrations.samsara.us_fleet.list_vehicles({limit = 50})
-app.integrations.samsara.eu_fleet.list_vehicles({limit = 50})
-```
-
-All functions are identical across accounts — only the credentials differ.
+For feeds such as vehicle, trailer, or equipment stats, keep the `pagination.endCursor` and pass it as `after` on the next request. If `hasNextPage` is false, wait before polling again.

@@ -1,226 +1,77 @@
-# Google Chat — Lua API Reference
+# Google Chat
 
-## list_spaces
+Google Chat tools are exposed under `app.integrations.google_chat`. This package is generated from Google's official Chat API v1 Discovery document and exposes 45 REST methods.
 
-List Google Chat spaces the authenticated user belongs to.
+## Coverage
 
-### Parameters
+- Source: `https://chat.googleapis.com/$discovery/rest?version=v1`
+- Read tools: 21
+- Write tools: 24
+- Base URL: `https://chat.googleapis.com`
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `pageSize` | integer | no | Maximum number of spaces to return (1–1000, default 100) |
-| `pageToken` | string | no | Page token from a previous response for pagination |
+## Usage Notes
 
-### Example
+Pass resource names such as `spaces/AAAA`, `spaces/AAAA/messages/BBBB`, `users/me/spaces/AAAA`, or `customEmojis/ID` exactly as Google Chat documents them. Path parameters named `name` and `parent` use reserved expansion, so slash-delimited resource names are preserved. Query parameters can be passed as top-level shortcuts or inside `query`. Create, update, patch, watch, and move methods accept the official JSON request object inside `body`.
 
-```lua
-local result = app.integrations.google_chat.list_spaces({
-  pageSize = 50
-})
+`google_chat_media_upload` accepts `file_path`, optional `mime_type`, and optional metadata in `body`. The integration sends a Google multipart upload request with `uploadType=multipart`.
 
-for _, space in ipairs(result.spaces) do
-  print(space.displayName .. " (" .. space.name .. ")")
-end
+## Tools
 
--- Fetch next page if available
-if result.nextPageToken then
-  local next = app.integrations.google_chat.list_spaces({
-    pageSize = 50,
-    pageToken = result.nextPageToken
-  })
-end
-```
+- `google_chat_spaces_setup` - POST /v1/spaces:setup
+- `google_chat_spaces_complete_import` - POST /v1/{+name}:completeImport
+- `google_chat_spaces_find_group_chats` - GET /v1/spaces:findGroupChats
+- `google_chat_spaces_patch` - PATCH /v1/{+name}
+- `google_chat_spaces_search` - GET /v1/spaces:search
+- `google_chat_spaces_create` - POST /v1/spaces
+- `google_chat_spaces_delete` - DELETE /v1/{+name}
+- `google_chat_spaces_find_direct_message` - GET /v1/spaces:findDirectMessage
+- `google_chat_spaces_list` - GET /v1/spaces
+- `google_chat_spaces_get` - GET /v1/{+name}
+- `google_chat_spaces_space_events_get` - GET /v1/{+name}
+- `google_chat_spaces_space_events_list` - GET /v1/{+parent}/spaceEvents
+- `google_chat_spaces_members_create` - POST /v1/{+parent}/members
+- `google_chat_spaces_members_patch` - PATCH /v1/{+name}
+- `google_chat_spaces_members_get` - GET /v1/{+name}
+- `google_chat_spaces_members_delete` - DELETE /v1/{+name}
+- `google_chat_spaces_members_list` - GET /v1/{+parent}/members
+- `google_chat_spaces_messages_get` - GET /v1/{+name}
+- `google_chat_spaces_messages_delete` - DELETE /v1/{+name}
+- `google_chat_spaces_messages_list` - GET /v1/{+parent}/messages
+- `google_chat_spaces_messages_create` - POST /v1/{+parent}/messages
+- `google_chat_spaces_messages_patch` - PATCH /v1/{+name}
+- `google_chat_spaces_messages_update` - PUT /v1/{+name}
+- `google_chat_spaces_messages_attachments_get` - GET /v1/{+name}
+- `google_chat_spaces_messages_reactions_list` - GET /v1/{+parent}/reactions
+- `google_chat_spaces_messages_reactions_delete` - DELETE /v1/{+name}
+- `google_chat_spaces_messages_reactions_create` - POST /v1/{+parent}/reactions
+- `google_chat_custom_emojis_create` - POST /v1/customEmojis
+- `google_chat_custom_emojis_get` - GET /v1/{+name}
+- `google_chat_custom_emojis_delete` - DELETE /v1/{+name}
+- `google_chat_custom_emojis_list` - GET /v1/customEmojis
+- `google_chat_media_upload` - POST /v1/{+parent}/attachments:upload (media upload)
+- `google_chat_media_download` - GET /v1/media/{+resourceName}
+- `google_chat_users_spaces_get_space_read_state` - GET /v1/{+name}
+- `google_chat_users_spaces_update_space_read_state` - PATCH /v1/{+name}
+- `google_chat_users_spaces_space_notification_setting_get` - GET /v1/{+name}
+- `google_chat_users_spaces_space_notification_setting_patch` - PATCH /v1/{+name}
+- `google_chat_users_spaces_threads_get_thread_read_state` - GET /v1/{+name}
+- `google_chat_users_sections_delete` - DELETE /v1/{+name}
+- `google_chat_users_sections_list` - GET /v1/{+parent}/sections
+- `google_chat_users_sections_position` - POST /v1/{+name}:position
+- `google_chat_users_sections_patch` - PATCH /v1/{+name}
+- `google_chat_users_sections_create` - POST /v1/{+parent}/sections
+- `google_chat_users_sections_items_list` - GET /v1/{+parent}/items
+- `google_chat_users_sections_items_move` - POST /v1/{+name}:move
 
----
-
-## get_space
-
-Get details about a specific Google Chat space.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Resource name of the space (e.g., `"spaces/AAAAAAAAAAA"`) |
-
-### Example
-
-```lua
-local space = app.integrations.google_chat.get_space({
-  name = "spaces/AAAAAAAAAAA"
-})
-
-print("Space: " .. space.displayName)
-print("Type: " .. space.spaceType)
-```
-
----
-
-## list_messages
-
-List messages in a Google Chat space.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `parent` | string | yes | Resource name of the space (e.g., `"spaces/AAAAAAAAAAA"`) |
-| `pageSize` | integer | no | Maximum number of messages (1–1000, default 1000) |
-| `pageToken` | string | no | Page token from a previous response for pagination |
-
-### Example
+## Examples
 
 ```lua
-local result = app.integrations.google_chat.list_messages({
-  parent = "spaces/AAAAAAAAAAA",
-  pageSize = 50
-})
+local spaces = app.integrations.google_chat.google_chat_spaces_list({ pageSize = 10 })
 
-for _, msg in ipairs(result.messages) do
-  print(msg.sender.displayName .. ": " .. (msg.text or "[card message]"))
-end
-```
-
----
-
-## get_message
-
-Get a specific message from a Google Chat space.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `parent` | string | yes | Resource name of the space (e.g., `"spaces/AAAAAAAAAAA"`) |
-| `name` | string | yes | Resource name of the message, relative to the space (e.g., `"messages/BBBBBBBBBBB"`) |
-
-### Example
-
-```lua
-local msg = app.integrations.google_chat.get_message({
-  parent = "spaces/AAAAAAAAAAA",
-  name = "messages/BBBBBBBBBBB"
-})
-
-print(msg.text)
-```
-
----
-
-## create_message
-
-Send a message to a Google Chat space. Either `text` or `cardsV2` must be provided.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `parent` | string | yes | Resource name of the space (e.g., `"spaces/AAAAAAAAAAA"`) |
-| `text` | string | no | Plain-text body of the message |
-| `cardsV2` | array | no | Array of card v2 widgets for rich messages |
-
-### Example — Plain text
-
-```lua
-local msg = app.integrations.google_chat.create_message({
-  parent = "spaces/AAAAAAAAAAA",
-  text = "Hello from the AI agent!"
-})
-
-print("Sent message: " .. msg.name)
-```
-
-### Example — Card message
-
-```lua
-local msg = app.integrations.google_chat.create_message({
-  parent = "spaces/AAAAAAAAAAA",
-  cardsV2 = {
-    {
-      cardId = "status-card",
-      card = {
-        sections = {
-          {
-            widgets = {
-              {
-                textParagraph = {
-                  text = "<b>Build Status</b>: Passed ✅"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+local message = app.integrations.google_chat.google_chat_spaces_messages_create({
+  parent = "spaces/AAAAexample",
+  body = { text = "Deployment complete" }
 })
 ```
 
----
-
-## list_memberships
-
-List members (human users and bots) in a Google Chat space.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `parent` | string | yes | Resource name of the space (e.g., `"spaces/AAAAAAAAAAA"`) |
-| `pageSize` | integer | no | Maximum number of memberships (1–1000, default 1000) |
-| `pageToken` | string | no | Page token from a previous response for pagination |
-
-### Example
-
-```lua
-local result = app.integrations.google_chat.list_memberships({
-  parent = "spaces/AAAAAAAAAAA"
-})
-
-for _, member in ipairs(result.memberships) do
-  print(member.member.displayName .. " — " .. member.role)
-end
-```
-
----
-
-## get_current_user
-
-Get the authenticated user's membership details in a Google Chat space.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `parent` | string | yes | Resource name of the space (e.g., `"spaces/AAAAAAAAAAA"`) |
-
-### Example
-
-```lua
-local me = app.integrations.google_chat.get_current_user({
-  parent = "spaces/AAAAAAAAAAA"
-})
-
-print("Display name: " .. me.member.displayName)
-print("Role: " .. me.role)
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Google Chat accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.google_chat.list_spaces({...})
-
--- Explicit default (portable across setups)
-app.integrations.google_chat.default.list_spaces({...})
-
--- Named accounts
-app.integrations.google_chat.work.list_spaces({...})
-app.integrations.google_chat.personal.list_spaces({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Responses are decoded Google Chat JSON responses, or `{ success = true, status = ... }` for successful empty responses such as deletes.

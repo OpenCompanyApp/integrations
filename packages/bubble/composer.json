@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-bubble",
-    "description": "Bubble integration for Laravel — list, get, create, update, and delete records from your Bubble application.",
+    "description": "Bubble built-in API integration for Laravel agents: Data API records, Workflow API triggers, and Swagger discovery.",
     "license": "MIT",
     "authors": [
         {

@@ -2,16 +2,13 @@
 
 namespace OpenCompany\Integrations\Splunk\Tools;
 
-use OpenCompany\Integrations\Splunk\SplunkService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class SplunkListIndexes implements Tool
+/**
+ * List Splunk indexes available to the authenticated user.
+ */
+class SplunkListIndexes extends AbstractSplunkTool
 {
-    public function __construct(
-        private SplunkService $service,
-    ) {}
-
     public function name(): string
     {
         return 'splunk_list_indexes';
@@ -24,21 +21,22 @@ class SplunkListIndexes implements Tool
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'count' => ['type' => 'integer', 'description' => 'Maximum number of indexes to return.'],
+            'offset' => ['type' => 'integer', 'description' => 'Pagination offset.'],
+        ];
     }
 
+    /**
+     * List indexes.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Splunk integration is not configured.');
-            }
-
-            $result = $this->service->listIndexes();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->listIndexes(
+            $this->integer($args, 'count', 100),
+            $this->integer($args, 'offset', 0),
+        ));
     }
 }

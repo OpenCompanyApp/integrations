@@ -3,8 +3,10 @@
 namespace OpenCompany\Integrations\ZohoBills;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\ZohoBills\Tools\ZohoBillsCreateInvoice;
 use OpenCompany\Integrations\ZohoBills\Tools\ZohoBillsGetCurrentUser;
@@ -14,7 +16,6 @@ use OpenCompany\Integrations\ZohoBills\Tools\ZohoBillsListCustomers;
 use OpenCompany\Integrations\ZohoBills\Tools\ZohoBillsListInvoices;
 use OpenCompany\Integrations\ZohoBills\Tools\ZohoBillsListItems;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 class ZohoBillsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -73,7 +74,7 @@ class ZohoBillsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
     public function appName(): string
     {
-        return 'zoho_bills';
+        return 'zoho-bills';
     }
 
     public function appMeta(): array
@@ -93,7 +94,7 @@ class ZohoBillsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Online billing and invoicing software by Zoho',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:zoho',
-            'category' => 'payments',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://www.zoho.com/bills/api/v3/',
         ];
@@ -264,12 +265,19 @@ class ZohoBillsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('zoho-bills', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_bills', $key, $default, $account);
+            };
 
             $service = new ZohoBillsService(
-                accessToken: $creds->get('zoho_bills', 'access_token', '', $account),
-                organizationId: $creds->get('zoho_bills', 'organization_id', '', $account),
-                baseUrl: $creds->get('zoho_bills', 'url', 'https://billing.zoho.com', $account),
+                accessToken: $get('access_token'),
+                organizationId: $get('organization_id'),
+                baseUrl: $get('url', 'https://billing.zoho.com'),
             );
 
             return new $class($service);

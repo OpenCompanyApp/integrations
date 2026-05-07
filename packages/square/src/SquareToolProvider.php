@@ -4,26 +4,29 @@ namespace OpenCompany\Integrations\Square;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Square\Tools\SquareListPayments;
-use OpenCompany\Integrations\Square\Tools\SquareGetPayment;
-use OpenCompany\Integrations\Square\Tools\SquareListCustomers;
-use OpenCompany\Integrations\Square\Tools\SquareGetCustomer;
-use OpenCompany\Integrations\Square\Tools\SquareListOrders;
-use OpenCompany\Integrations\Square\Tools\SquareGetOrder;
-use OpenCompany\Integrations\Square\Tools\SquareGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\Integrations\Square\Tools\SquareCreateCustomer;
 use OpenCompany\Integrations\Square\Tools\SquareCreatePayment;
+use OpenCompany\Integrations\Square\Tools\SquareGetCurrentUser;
+use OpenCompany\Integrations\Square\Tools\SquareGetCustomer;
+use OpenCompany\Integrations\Square\Tools\SquareGetOrder;
+use OpenCompany\Integrations\Square\Tools\SquareGetPayment;
+use OpenCompany\Integrations\Square\Tools\SquareListCustomers;
 use OpenCompany\Integrations\Square\Tools\SquareListLocations;
+use OpenCompany\Integrations\Square\Tools\SquareListOrders;
+use OpenCompany\Integrations\Square\Tools\SquareListPayments;
 /**
- * Registers all Square tools and provides integration metadata.
+ * Registers Square tools and metadata for integration discovery.
+ *
+ * Exposes merchant, location, payment, customer, and order operations for the
+ * Square REST API.
  */
-class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
-
-/**
+class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -31,47 +34,36 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Square access tokens are sent as Authorization: Bearer <access_token>.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -97,7 +89,7 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Payment processing, point of sale, customer management, and orders',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:square',
-            'category' => 'sales',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.squareup.com/reference/square',
         ];
@@ -168,7 +160,7 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-        public function tools(): array
+    public function tools(): array
     {
         return [
             'square_get_current_user' => [
@@ -199,12 +191,26 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'Retrieve a Square payment by ID. Returns full payment details including amount, status, card details, and processing fees.',
                 'icon' => 'ph:wrench',
             ],
+            'square_create_payment' => [
+                'class' => SquareCreatePayment::class,
+                'type' => 'write',
+                'name' => 'Create Payment',
+                'description' => 'Create a Square payment from a source ID, amount, currency, and idempotency key.',
+                'icon' => 'ph:credit-card',
+            ],
             'square_list_customers' => [
                 'class' => SquareListCustomers::class,
                 'type' => 'read',
                 'name' => 'List Customers',
                 'description' => 'List Square customers with optional filtering. Supports pagination with cursor.',
                 'icon' => 'ph:wrench',
+            ],
+            'square_create_customer' => [
+                'class' => SquareCreateCustomer::class,
+                'type' => 'write',
+                'name' => 'Create Customer',
+                'description' => 'Create a Square customer profile.',
+                'icon' => 'ph:user-plus',
             ],
             'square_list_orders' => [
                 'class' => SquareListOrders::class,
@@ -220,6 +226,13 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'List Square payments with optional filtering. Supports filtering by location ID, begin_time / end_time (ISO 8601), and pagination with cursor.',
                 'icon' => 'ph:wrench',
             ],
+            'square_list_locations' => [
+                'class' => SquareListLocations::class,
+                'type' => 'read',
+                'name' => 'List Locations',
+                'description' => 'List Square business locations.',
+                'icon' => 'ph:map-pin',
+            ],
         ];
     }
 
@@ -227,7 +240,9 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/square.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
@@ -255,7 +270,7 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             return new SquareService(
                 accessToken: $creds->get('square', 'access_token', '', $account),

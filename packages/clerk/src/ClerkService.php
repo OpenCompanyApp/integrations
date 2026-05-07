@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\Clerk;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Clerk Backend API.
+ *
+ * Handles secret-key authentication, JSON request dispatch, error normalization,
+ * and common endpoint helpers for Clerk resources.
+ */
 class ClerkService
 {
     /**
@@ -29,9 +35,53 @@ class ClerkService
     }
 
     /**
+     * Execute a raw GET request against the Clerk Backend API.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $this->normalizePath($path), $query);
+    }
+
+    /**
+     * Execute a raw POST request against the Clerk Backend API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $payload = []): array
+    {
+        return $this->request('POST', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw PATCH request against the Clerk Backend API.
+     *
+     * @param  array<string, mixed>  $payload  JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $payload = []): array
+    {
+        return $this->request('PATCH', $this->normalizePath($path), $payload);
+    }
+
+    /**
+     * Execute a raw DELETE request against the Clerk Backend API.
+     *
+     * @param  array<string, mixed>  $payload  Optional JSON request body.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $payload = []): array
+    {
+        return $this->request('DELETE', $this->normalizePath($path), $payload);
+    }
+
+    /**
      * List users with optional filtering and pagination.
      *
-     * @param  array  $params  Query parameters (limit, offset, email_address, phone_number, query, order_by).
+     * @param  array<string, mixed>  $params  Query parameters (limit, offset, email_address, phone_number, query, order_by).
      * @return array<string, mixed>
      */
     public function listUsers(array $params = []): array
@@ -53,7 +103,7 @@ class ClerkService
     /**
      * Create a new user.
      *
-     * @param  array  $data  User data (email_address, first_name, last_name, password, username).
+     * @param  array<string, mixed>  $data  User data (email_address, first_name, last_name, password, username).
      * @return array<string, mixed>
      */
     public function createUser(array $data): array
@@ -65,7 +115,7 @@ class ClerkService
      * Update an existing user.
      *
      * @param  string  $userId  The Clerk user ID.
-     * @param  array  $data     Fields to update (first_name, last_name, username).
+     * @param  array<string, mixed>  $data     Fields to update (first_name, last_name, username).
      * @return array<string, mixed>
      */
     public function updateUser(string $userId, array $data): array
@@ -87,7 +137,7 @@ class ClerkService
     /**
      * List organizations with optional filtering and pagination.
      *
-     * @param  array  $params  Query parameters (limit, offset, query).
+     * @param  array<string, mixed>  $params  Query parameters (limit, offset, query).
      * @return array<string, mixed>
      */
     public function listOrganizations(array $params = []): array
@@ -96,11 +146,28 @@ class ClerkService
     }
 
     /**
+     * Normalize a raw path to a Clerk Backend API path.
+     */
+    private function normalizePath(string $path): string
+    {
+        $path = trim($path);
+        if ($path === '') {
+            throw new \RuntimeException('Clerk API path is required.');
+        }
+
+        if (str_starts_with($path, $this->baseUrl)) {
+            $path = substr($path, strlen($this->baseUrl));
+        }
+
+        return '/' . ltrim($path, '/');
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
      * @param  string  $path    API endpoint path.
-     * @param  array  $data     Query parameters or request body.
+     * @param  array<string, mixed>  $data     Query parameters or request body.
      * @return array<string, mixed>
      *
      * @throws \RuntimeException If the request fails.
@@ -122,7 +189,7 @@ class ClerkService
      *
      * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
      * @param  string  $path    API endpoint path.
-     * @param  array  $data     Query parameters or request body.
+     * @param  array<string, mixed>  $data     Query parameters or request body.
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \RuntimeException If the API key is missing or the request fails.

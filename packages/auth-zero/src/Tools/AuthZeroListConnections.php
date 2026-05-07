@@ -16,6 +16,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AuthZeroListConnections implements Tool
 {
+    /**
+     * @param  AuthZeroService  $service  The Auth0 Management API client.
+     */
     public function __construct(
         private AuthZeroService $service,
     ) {}
@@ -37,6 +40,11 @@ class AuthZeroListConnections implements Tool
         ];
     }
 
+    /**
+     * List configured Auth0 connections with optional strategy filtering.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

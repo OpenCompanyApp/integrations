@@ -109,7 +109,7 @@ class LoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Video messaging and screen recording platform',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:loom',
-            'category' => 'video',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://developer.loom.com/docs/api-reference',
         ];

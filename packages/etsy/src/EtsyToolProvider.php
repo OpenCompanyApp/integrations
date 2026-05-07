@@ -2,22 +2,39 @@
 
 namespace OpenCompany\Integrations\Etsy;
 
-use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Etsy\Tools\EtsyListListings;
-use OpenCompany\Integrations\Etsy\Tools\EtsyGetListing;
-use OpenCompany\Integrations\Etsy\Tools\EtsyCreateListing;
-use OpenCompany\Integrations\Etsy\Tools\EtsyListOrders;
-use OpenCompany\Integrations\Etsy\Tools\EtsyGetListingInventory;
-use OpenCompany\Integrations\Etsy\Tools\EtsyGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Etsy\Tools\EtsyApiDelete;
+use OpenCompany\Integrations\Etsy\Tools\EtsyApiGet;
+use OpenCompany\Integrations\Etsy\Tools\EtsyApiPost;
+use OpenCompany\Integrations\Etsy\Tools\EtsyApiPut;
+use OpenCompany\Integrations\Etsy\Tools\EtsyCreateListing;
+use OpenCompany\Integrations\Etsy\Tools\EtsyDeleteListing;
+use OpenCompany\Integrations\Etsy\Tools\EtsyGetCurrentUser;
+use OpenCompany\Integrations\Etsy\Tools\EtsyGetListing;
+use OpenCompany\Integrations\Etsy\Tools\EtsyGetListingInventory;
+use OpenCompany\Integrations\Etsy\Tools\EtsyGetReceipt;
+use OpenCompany\Integrations\Etsy\Tools\EtsyGetShop;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListListingImages;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListListings;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListOrders;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListReceiptTransactions;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListSellerTaxonomyNodes;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListShippingProfiles;
+use OpenCompany\Integrations\Etsy\Tools\EtsyListShopSections;
+use OpenCompany\Integrations\Etsy\Tools\EtsyUpdateListing;
+use OpenCompany\Integrations\Etsy\Tools\EtsyUpdateListingInventory;
+use OpenCompany\Integrations\Etsy\Tools\EtsyUploadListingImage;
 
 /**
+ * Exposes Etsy tools and credential metadata to host applications.
+ */
+class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,48 +42,38 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'oauth2_manual_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'oauth2_manual_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => [
+                    'Etsy requires both an OAuth bearer token and the app keystring in the x-api-key header. Older single-secret configs fall back to using access_token as x-api-key.',
+                ],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_token',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
-              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +86,7 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     {
         return [
             'label' => 'Etsy',
-            'description' => 'Etsy e-commerce',
+            'description' => 'Etsy shop management',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:etsy',
         ];
@@ -89,30 +96,40 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     {
         return [
             'name' => 'Etsy',
-            'description' => 'Manage Etsy shop listings, orders, and inventory',
+            'description' => 'Manage Etsy shops, listings, images, inventory, receipts, shipping profiles, sections, and taxonomy.',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:etsy',
-            'category' => 'ecommerce',
-            'badge' => 'New',
-            'docs_url' => 'https://developers.etsy.com/documentation/',
+            'category' => 'productivity',
+            'badge' => 'verified',
+            'docs_url' => 'https://developers.etsy.com/documentation/reference/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
                 'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'Access Token',
+                'label' => 'OAuth Access Token',
                 'placeholder' => 'Enter your Etsy OAuth access token',
-                'hint' => 'Generate an access token in your <a href="https://www.etsy.com/developers/register" target="_blank">Etsy developer console</a> via OAuth 2.0',
+                'hint' => 'OAuth token with the scopes needed for the tools you plan to use.',
                 'required' => true,
+            ],
+            [
+                'key' => 'api_key',
+                'type' => 'secret',
+                'label' => 'App API Key',
+                'placeholder' => 'Enter your Etsy app keystring',
+                'hint' => 'The x-api-key value from the Etsy developer console.',
+                'required' => false,
             ],
             [
                 'key' => 'shop_id',
                 'type' => 'string',
                 'label' => 'Shop ID',
                 'placeholder' => '123456789',
-                'hint' => 'Your Etsy shop ID. Find it in your Etsy shop URL or via the <code>users/me</code> API endpoint.',
+                'hint' => 'Your Etsy shop ID.',
                 'required' => true,
             ],
             [
@@ -120,44 +137,34 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'type' => 'url',
                 'label' => 'Base URL',
                 'placeholder' => 'https://openapi.etsy.com/v3/application',
-                'hint' => 'Etsy Open API base URL. Change only if using a proxy or mock server.',
+                'hint' => 'Etsy Open API base URL. api.etsy.com and openapi.etsy.com are both documented by Etsy.',
                 'default' => 'https://openapi.etsy.com/v3/application',
             ],
         ];
     }
 
+    /**
+     * Verify the access token by fetching the authenticated user.
+     *
+     * @param  array<string, mixed>  $config  Integration configuration values.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['base_url'] ?? 'https://openapi.etsy.com/v3/application', '/');
+        $accessToken = trim((string) ($config['access_token'] ?? ''));
 
-        if (empty($accessToken)) {
+        if ($accessToken === '') {
             return ['success' => false, 'error' => 'No access token provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'x-api-key' => $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Etsy API at {$baseUrl}. Check the URL.",
-                ];
-            }
-
-            if (!$response->successful()) {
-                $error = $json['error'] ?? 'Unknown error';
-                return [
-                    'success' => false,
-                    'error' => "Etsy API returned an error: {$error}",
-                ];
-            }
+            $service = new EtsyService(
+                accessToken: $accessToken,
+                shopId: (string) ($config['shop_id'] ?? ''),
+                baseUrl: (string) ($config['base_url'] ?? 'https://openapi.etsy.com/v3/application'),
+                apiKey: (string) ($config['api_key'] ?? ''),
+            );
+            $json = $service->getCurrentUser();
 
             $userId = $json['user_id'] ?? 'unknown';
 
@@ -165,7 +172,7 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'success' => true,
                 'message' => "Connected to Etsy API as user ID {$userId}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -173,8 +180,9 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function validationRules(): array
     {
         return [
-            'access_token' => 'nullable|string',
-            'shop_id' => 'nullable|string',
+            'access_token' => 'required|string',
+            'api_key' => 'nullable|string',
+            'shop_id' => 'required|string',
             'base_url' => 'nullable|url',
         ];
     }
@@ -182,58 +190,40 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function tools(): array
     {
         return [
-            'etsy_list_listings' => [
-                'class' => EtsyListListings::class,
-                'type' => 'read',
-                'name' => 'List Listings',
-                'description' => 'List all listings in the Etsy shop.',
-                'icon' => 'ph:list',
-            ],
-            'etsy_get_listing' => [
-                'class' => EtsyGetListing::class,
-                'type' => 'read',
-                'name' => 'Get Listing',
-                'description' => 'Get details for a specific Etsy listing.',
-                'icon' => 'ph:package',
-            ],
-            'etsy_create_listing' => [
-                'class' => EtsyCreateListing::class,
-                'type' => 'write',
-                'name' => 'Create Listing',
-                'description' => 'Create a new listing in the Etsy shop.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'etsy_list_orders' => [
-                'class' => EtsyListOrders::class,
-                'type' => 'read',
-                'name' => 'List Orders',
-                'description' => 'List orders (receipts) for the Etsy shop.',
-                'icon' => 'ph:receipt',
-            ],
-            'etsy_get_listing_inventory' => [
-                'class' => EtsyGetListingInventory::class,
-                'type' => 'read',
-                'name' => 'Get Listing Inventory',
-                'description' => 'Get the inventory (products, offerings) for a listing.',
-                'icon' => 'ph:warehouse',
-            ],
-            'etsy_get_current_user' => [
-                'class' => EtsyGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Etsy user profile.',
-                'icon' => 'ph:user-circle',
-            ],
+            'etsy_get_shop' => ['class' => EtsyGetShop::class, 'type' => 'read', 'name' => 'Get Shop', 'description' => 'Get configured Etsy shop profile.', 'icon' => 'ph:storefront'],
+            'etsy_list_listings' => ['class' => EtsyListListings::class, 'type' => 'read', 'name' => 'List Listings', 'description' => 'List shop listings.', 'icon' => 'ph:list'],
+            'etsy_get_listing' => ['class' => EtsyGetListing::class, 'type' => 'read', 'name' => 'Get Listing', 'description' => 'Get one listing.', 'icon' => 'ph:package'],
+            'etsy_create_listing' => ['class' => EtsyCreateListing::class, 'type' => 'write', 'name' => 'Create Listing', 'description' => 'Create a draft listing.', 'icon' => 'ph:plus-circle'],
+            'etsy_update_listing' => ['class' => EtsyUpdateListing::class, 'type' => 'write', 'name' => 'Update Listing', 'description' => 'Update a listing.', 'icon' => 'ph:pencil-simple'],
+            'etsy_delete_listing' => ['class' => EtsyDeleteListing::class, 'type' => 'write', 'name' => 'Delete Listing', 'description' => 'Delete a listing.', 'icon' => 'ph:trash'],
+            'etsy_list_listing_images' => ['class' => EtsyListListingImages::class, 'type' => 'read', 'name' => 'List Listing Images', 'description' => 'List listing images.', 'icon' => 'ph:image'],
+            'etsy_upload_listing_image' => ['class' => EtsyUploadListingImage::class, 'type' => 'write', 'name' => 'Upload Listing Image', 'description' => 'Upload a listing image.', 'icon' => 'ph:image-square'],
+            'etsy_get_listing_inventory' => ['class' => EtsyGetListingInventory::class, 'type' => 'read', 'name' => 'Get Listing Inventory', 'description' => 'Get listing inventory.', 'icon' => 'ph:warehouse'],
+            'etsy_update_listing_inventory' => ['class' => EtsyUpdateListingInventory::class, 'type' => 'write', 'name' => 'Update Listing Inventory', 'description' => 'Update listing inventory.', 'icon' => 'ph:warehouse'],
+            'etsy_list_orders' => ['class' => EtsyListOrders::class, 'type' => 'read', 'name' => 'List Orders', 'description' => 'List receipts/orders.', 'icon' => 'ph:receipt'],
+            'etsy_get_receipt' => ['class' => EtsyGetReceipt::class, 'type' => 'read', 'name' => 'Get Receipt', 'description' => 'Get one receipt/order.', 'icon' => 'ph:receipt'],
+            'etsy_list_receipt_transactions' => ['class' => EtsyListReceiptTransactions::class, 'type' => 'read', 'name' => 'List Receipt Transactions', 'description' => 'List receipt line items.', 'icon' => 'ph:list-checks'],
+            'etsy_list_shop_sections' => ['class' => EtsyListShopSections::class, 'type' => 'read', 'name' => 'List Shop Sections', 'description' => 'List shop sections.', 'icon' => 'ph:folders'],
+            'etsy_list_shipping_profiles' => ['class' => EtsyListShippingProfiles::class, 'type' => 'read', 'name' => 'List Shipping Profiles', 'description' => 'List shop shipping profiles.', 'icon' => 'ph:truck'],
+            'etsy_list_seller_taxonomy_nodes' => ['class' => EtsyListSellerTaxonomyNodes::class, 'type' => 'read', 'name' => 'List Seller Taxonomy Nodes', 'description' => 'List seller taxonomy nodes.', 'icon' => 'ph:tree-structure'],
+            'etsy_get_current_user' => ['class' => EtsyGetCurrentUser::class, 'type' => 'read', 'name' => 'Get Current User', 'description' => 'Get authenticated Etsy user.', 'icon' => 'ph:user-circle'],
+            'etsy_api_get' => ['class' => EtsyApiGet::class, 'type' => 'read', 'name' => 'API GET', 'description' => 'Call an Etsy GET endpoint.', 'icon' => 'ph:terminal-window'],
+            'etsy_api_post' => ['class' => EtsyApiPost::class, 'type' => 'write', 'name' => 'API POST', 'description' => 'Call an Etsy POST endpoint.', 'icon' => 'ph:terminal-window'],
+            'etsy_api_put' => ['class' => EtsyApiPut::class, 'type' => 'write', 'name' => 'API PUT', 'description' => 'Call an Etsy PUT endpoint.', 'icon' => 'ph:terminal-window'],
+            'etsy_api_delete' => ['class' => EtsyApiDelete::class, 'type' => 'write', 'name' => 'API DELETE', 'description' => 'Call an Etsy DELETE endpoint.', 'icon' => 'ph:terminal-window'],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/etsy.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'OAuth Access Token', 'required' => true],
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'App API Key', 'required' => false],
             ['key' => 'shop_id', 'type' => 'string', 'label' => 'Shop ID', 'required' => true],
             ['key' => 'base_url', 'type' => 'url', 'label' => 'Base URL', 'required' => false, 'default' => 'https://openapi.etsy.com/v3/application'],
         ];
@@ -246,20 +236,29 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
 
     public function createTool(string $class, array $context = []): Tool
     {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Etsy service for the default or selected account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): EtsyService
+    {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new EtsyService(
+            return new EtsyService(
                 accessToken: $creds->get('etsy', 'access_token', '', $account),
                 shopId: $creds->get('etsy', 'shop_id', '', $account),
                 baseUrl: $creds->get('etsy', 'base_url', 'https://openapi.etsy.com/v3/application', $account),
+                apiKey: $creds->get('etsy', 'api_key', '', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(EtsyService::class));
+        return app(EtsyService::class);
     }
 }

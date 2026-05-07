@@ -1,0 +1,401 @@
+{
+    "source": "https://cloudsearch.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Cloud Search API",
+    "version": "v1",
+    "method_count": 49,
+    "generated_package": "google-cloud-search",
+    "methods": [
+        {
+            "discovery_id": "operations.get",
+            "tool": "google_cloud_search_operations_get",
+            "class": "GoogleCloudSearchOperationsGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "operations.lro.list",
+            "tool": "google_cloud_search_operations_lro_list",
+            "class": "GoogleCloudSearchOperationsLroList",
+            "http_method": "GET",
+            "path": "/v1/{+name}/lro",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.getCustomer",
+            "tool": "google_cloud_search_settings_get_customer",
+            "class": "GoogleCloudSearchSettingsGetCustomer",
+            "http_method": "GET",
+            "path": "/v1/settings/customer",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.updateCustomer",
+            "tool": "google_cloud_search_settings_update_customer",
+            "class": "GoogleCloudSearchSettingsUpdateCustomer",
+            "http_method": "PATCH",
+            "path": "/v1/settings/customer",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.searchapplications.update",
+            "tool": "google_cloud_search_settings_searchapplications_update",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsUpdate",
+            "http_method": "PUT",
+            "path": "/v1/settings/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.searchapplications.patch",
+            "tool": "google_cloud_search_settings_searchapplications_patch",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsPatch",
+            "http_method": "PATCH",
+            "path": "/v1/settings/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.searchapplications.delete",
+            "tool": "google_cloud_search_settings_searchapplications_delete",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/settings/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.searchapplications.create",
+            "tool": "google_cloud_search_settings_searchapplications_create",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsCreate",
+            "http_method": "POST",
+            "path": "/v1/settings/searchapplications",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.searchapplications.list",
+            "tool": "google_cloud_search_settings_searchapplications_list",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsList",
+            "http_method": "GET",
+            "path": "/v1/settings/searchapplications",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.searchapplications.get",
+            "tool": "google_cloud_search_settings_searchapplications_get",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsGet",
+            "http_method": "GET",
+            "path": "/v1/settings/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.searchapplications.reset",
+            "tool": "google_cloud_search_settings_searchapplications_reset",
+            "class": "GoogleCloudSearchSettingsSearchapplicationsReset",
+            "http_method": "POST",
+            "path": "/v1/settings/{+name}:reset",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.datasources.delete",
+            "tool": "google_cloud_search_settings_datasources_delete",
+            "class": "GoogleCloudSearchSettingsDatasourcesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/settings/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.datasources.patch",
+            "tool": "google_cloud_search_settings_datasources_patch",
+            "class": "GoogleCloudSearchSettingsDatasourcesPatch",
+            "http_method": "PATCH",
+            "path": "/v1/settings/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.datasources.update",
+            "tool": "google_cloud_search_settings_datasources_update",
+            "class": "GoogleCloudSearchSettingsDatasourcesUpdate",
+            "http_method": "PUT",
+            "path": "/v1/settings/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.datasources.create",
+            "tool": "google_cloud_search_settings_datasources_create",
+            "class": "GoogleCloudSearchSettingsDatasourcesCreate",
+            "http_method": "POST",
+            "path": "/v1/settings/datasources",
+            "type": "write"
+        },
+        {
+            "discovery_id": "settings.datasources.get",
+            "tool": "google_cloud_search_settings_datasources_get",
+            "class": "GoogleCloudSearchSettingsDatasourcesGet",
+            "http_method": "GET",
+            "path": "/v1/settings/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "settings.datasources.list",
+            "tool": "google_cloud_search_settings_datasources_list",
+            "class": "GoogleCloudSearchSettingsDatasourcesList",
+            "http_method": "GET",
+            "path": "/v1/settings/datasources",
+            "type": "read"
+        },
+        {
+            "discovery_id": "debug.identitysources.unmappedids.list",
+            "tool": "google_cloud_search_debug_identitysources_unmappedids_list",
+            "class": "GoogleCloudSearchDebugIdentitysourcesUnmappedidsList",
+            "http_method": "GET",
+            "path": "/v1/debug/{+parent}/unmappedids",
+            "type": "read"
+        },
+        {
+            "discovery_id": "debug.identitysources.items.listForunmappedidentity",
+            "tool": "google_cloud_search_debug_identitysources_items_list_forunmappedidentity",
+            "class": "GoogleCloudSearchDebugIdentitysourcesItemsListForunmappedidentity",
+            "http_method": "GET",
+            "path": "/v1/debug/{+parent}/items:forunmappedidentity",
+            "type": "read"
+        },
+        {
+            "discovery_id": "debug.datasources.items.checkAccess",
+            "tool": "google_cloud_search_debug_datasources_items_check_access",
+            "class": "GoogleCloudSearchDebugDatasourcesItemsCheckAccess",
+            "http_method": "POST",
+            "path": "/v1/debug/{+name}:checkAccess",
+            "type": "write"
+        },
+        {
+            "discovery_id": "debug.datasources.items.searchByViewUrl",
+            "tool": "google_cloud_search_debug_datasources_items_search_by_view_url",
+            "class": "GoogleCloudSearchDebugDatasourcesItemsSearchByViewUrl",
+            "http_method": "POST",
+            "path": "/v1/debug/{+name}/items:searchByViewUrl",
+            "type": "write"
+        },
+        {
+            "discovery_id": "debug.datasources.items.unmappedids.list",
+            "tool": "google_cloud_search_debug_datasources_items_unmappedids_list",
+            "class": "GoogleCloudSearchDebugDatasourcesItemsUnmappedidsList",
+            "http_method": "GET",
+            "path": "/v1/debug/{+parent}/unmappedids",
+            "type": "read"
+        },
+        {
+            "discovery_id": "indexing.datasources.deleteSchema",
+            "tool": "google_cloud_search_indexing_datasources_delete_schema",
+            "class": "GoogleCloudSearchIndexingDatasourcesDeleteSchema",
+            "http_method": "DELETE",
+            "path": "/v1/indexing/{+name}/schema",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.getSchema",
+            "tool": "google_cloud_search_indexing_datasources_get_schema",
+            "class": "GoogleCloudSearchIndexingDatasourcesGetSchema",
+            "http_method": "GET",
+            "path": "/v1/indexing/{+name}/schema",
+            "type": "read"
+        },
+        {
+            "discovery_id": "indexing.datasources.updateSchema",
+            "tool": "google_cloud_search_indexing_datasources_update_schema",
+            "class": "GoogleCloudSearchIndexingDatasourcesUpdateSchema",
+            "http_method": "PUT",
+            "path": "/v1/indexing/{+name}/schema",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.delete",
+            "tool": "google_cloud_search_indexing_datasources_items_delete",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsDelete",
+            "http_method": "DELETE",
+            "path": "/v1/indexing/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.index",
+            "tool": "google_cloud_search_indexing_datasources_items_index",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsIndex",
+            "http_method": "POST",
+            "path": "/v1/indexing/{+name}:index",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.unreserve",
+            "tool": "google_cloud_search_indexing_datasources_items_unreserve",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsUnreserve",
+            "http_method": "POST",
+            "path": "/v1/indexing/{+name}/items:unreserve",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.poll",
+            "tool": "google_cloud_search_indexing_datasources_items_poll",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsPoll",
+            "http_method": "POST",
+            "path": "/v1/indexing/{+name}/items:poll",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.push",
+            "tool": "google_cloud_search_indexing_datasources_items_push",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsPush",
+            "http_method": "POST",
+            "path": "/v1/indexing/{+name}:push",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.deleteQueueItems",
+            "tool": "google_cloud_search_indexing_datasources_items_delete_queue_items",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsDeleteQueueItems",
+            "http_method": "POST",
+            "path": "/v1/indexing/{+name}/items:deleteQueueItems",
+            "type": "write"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.get",
+            "tool": "google_cloud_search_indexing_datasources_items_get",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsGet",
+            "http_method": "GET",
+            "path": "/v1/indexing/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.list",
+            "tool": "google_cloud_search_indexing_datasources_items_list",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsList",
+            "http_method": "GET",
+            "path": "/v1/indexing/{+name}/items",
+            "type": "read"
+        },
+        {
+            "discovery_id": "indexing.datasources.items.upload",
+            "tool": "google_cloud_search_indexing_datasources_items_upload",
+            "class": "GoogleCloudSearchIndexingDatasourcesItemsUpload",
+            "http_method": "POST",
+            "path": "/v1/indexing/{+name}:upload",
+            "type": "write"
+        },
+        {
+            "discovery_id": "media.upload",
+            "tool": "google_cloud_search_media_upload",
+            "class": "GoogleCloudSearchMediaUpload",
+            "http_method": "POST",
+            "path": "/v1/media/{+resourceName}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "v1.initializeCustomer",
+            "tool": "google_cloud_search_v1_initialize_customer",
+            "class": "GoogleCloudSearchV1InitializeCustomer",
+            "http_method": "POST",
+            "path": "/v1:initializeCustomer",
+            "type": "write"
+        },
+        {
+            "discovery_id": "query.suggest",
+            "tool": "google_cloud_search_query_suggest",
+            "class": "GoogleCloudSearchQuerySuggest",
+            "http_method": "POST",
+            "path": "/v1/query/suggest",
+            "type": "write"
+        },
+        {
+            "discovery_id": "query.search",
+            "tool": "google_cloud_search_query_search",
+            "class": "GoogleCloudSearchQuerySearch",
+            "http_method": "POST",
+            "path": "/v1/query/search",
+            "type": "write"
+        },
+        {
+            "discovery_id": "query.removeActivity",
+            "tool": "google_cloud_search_query_remove_activity",
+            "class": "GoogleCloudSearchQueryRemoveActivity",
+            "http_method": "POST",
+            "path": "/v1/query:removeActivity",
+            "type": "write"
+        },
+        {
+            "discovery_id": "query.sources.list",
+            "tool": "google_cloud_search_query_sources_list",
+            "class": "GoogleCloudSearchQuerySourcesList",
+            "http_method": "GET",
+            "path": "/v1/query/sources",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.getUser",
+            "tool": "google_cloud_search_stats_get_user",
+            "class": "GoogleCloudSearchStatsGetUser",
+            "http_method": "GET",
+            "path": "/v1/stats/user",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.getSearchapplication",
+            "tool": "google_cloud_search_stats_get_searchapplication",
+            "class": "GoogleCloudSearchStatsGetSearchapplication",
+            "http_method": "GET",
+            "path": "/v1/stats/searchapplication",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.getIndex",
+            "tool": "google_cloud_search_stats_get_index",
+            "class": "GoogleCloudSearchStatsGetIndex",
+            "http_method": "GET",
+            "path": "/v1/stats/index",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.getQuery",
+            "tool": "google_cloud_search_stats_get_query",
+            "class": "GoogleCloudSearchStatsGetQuery",
+            "http_method": "GET",
+            "path": "/v1/stats/query",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.getSession",
+            "tool": "google_cloud_search_stats_get_session",
+            "class": "GoogleCloudSearchStatsGetSession",
+            "http_method": "GET",
+            "path": "/v1/stats/session",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.user.searchapplications.get",
+            "tool": "google_cloud_search_stats_user_searchapplications_get",
+            "class": "GoogleCloudSearchStatsUserSearchapplicationsGet",
+            "http_method": "GET",
+            "path": "/v1/stats/user/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.query.searchapplications.get",
+            "tool": "google_cloud_search_stats_query_searchapplications_get",
+            "class": "GoogleCloudSearchStatsQuerySearchapplicationsGet",
+            "http_method": "GET",
+            "path": "/v1/stats/query/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.index.datasources.get",
+            "tool": "google_cloud_search_stats_index_datasources_get",
+            "class": "GoogleCloudSearchStatsIndexDatasourcesGet",
+            "http_method": "GET",
+            "path": "/v1/stats/index/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "stats.session.searchapplications.get",
+            "tool": "google_cloud_search_stats_session_searchapplications_get",
+            "class": "GoogleCloudSearchStatsSessionSearchapplicationsGet",
+            "http_method": "GET",
+            "path": "/v1/stats/session/{+name}",
+            "type": "read"
+        }
+    ]
+}

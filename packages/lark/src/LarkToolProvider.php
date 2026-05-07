@@ -92,7 +92,7 @@ class LarkToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             'description' => 'Team messaging and collaboration platform',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:lark',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://open.larksuite.com/document',
         ];

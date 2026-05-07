@@ -2,37 +2,48 @@
 
 namespace OpenCompany\Integrations\Crisp;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * CrispService — HTTP client for the Crisp Chat API.
+ * HTTP client for the official Crisp REST API.
  *
- * Authenticates via HTTP Basic using the API key as the username
- * and the website ID as the password.
- *
- * @see https://docs.crisp.chat/guides/rest-api/rate-limiting/
+ * Uses the operation surface from node-crisp-api and Crisp's documented
+ * token identifier/key authentication with the X-Crisp-Tier header.
  */
 class CrispService
 {
+    private const DEFAULT_BASE_URL = 'https://api.crisp.chat';
+
+    /**
+     * @param  string  $identifier  Crisp token identifier.
+     * @param  string  $key  Crisp token key.
+     * @param  string  $websiteId  Default Crisp website ID for website-scoped operations.
+     * @param  string  $tier  Crisp token tier: user, website, or plugin.
+     * @param  string  $baseUrl  Crisp REST API host, with or without /v1.
+     */
     public function __construct(
-        private string $apiKey = '',
+        private string $identifier = '',
+        private string $key = '',
         private string $websiteId = '',
-        private string $baseUrl = 'https://api.crisp.chat/v1',
+        private string $tier = 'plugin',
+        private string $baseUrl = self::DEFAULT_BASE_URL,
     ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
+        $this->baseUrl = rtrim($this->normalizeBaseUrl($this->baseUrl), '/');
     }
 
     /**
-     * Check whether the service has enough credentials to make requests.
+     * Check whether the service has token credentials.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->websiteId);
+        return trim($this->identifier) !== '' && trim($this->key) !== '';
     }
 
     /**
-     * Get the configured website ID.
+     * Return the configured default website ID, if any.
      */
     public function getWebsiteId(): string
     {
@@ -40,179 +51,229 @@ class CrispService
     }
 
     /**
-     * List conversations for the website.
+     * Return the official Crisp operation map.
      *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $perPage  Number of conversations per page.
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
-    public function listConversations(int $page = 1, int $perPage = 25): array
+    public static function operations(): array
     {
-        return $this->request('GET', "/website/{$this->websiteId}/conversations", [
-            'page_number' => $page,
-            'page_size' => $perPage,
-        ]);
+        return CrispOperations::all();
     }
 
     /**
-     * Get a single conversation by ID.
-     *
-     * @param  string  $conversationId  The conversation session ID.
-     * @return array<string, mixed>
-     */
-    public function getConversation(string $conversationId): array
-    {
-        return $this->request('GET', "/website/{$this->websiteId}/conversations/{$conversationId}");
-    }
-
-    /**
-     * Send a message in a conversation.
-     *
-     * @param  string  $conversationId  The conversation session ID.
-     * @param  string  $text  The message text.
-     * @param  string  $type  Message type (text, note, file, etc.).
-     * @param  string  $from  Message origin: user or operator.
-     * @return array<string, mixed>
-     */
-    public function sendMessage(string $conversationId, string $text, string $type = 'text', string $from = 'operator'): array
-    {
-        return $this->request('POST', "/website/{$this->websiteId}/conversations/{$conversationId}/messages", [
-            'type' => $type,
-            'from' => $from,
-            'content' => $text,
-            'origin' => 'chat',
-        ]);
-    }
-
-    /**
-     * List contacts for the website.
-     *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $perPage  Number of contacts per page.
-     * @return array<string, mixed>
-     */
-    public function listContacts(int $page = 1, int $perPage = 25): array
-    {
-        return $this->request('GET', "/website/{$this->websiteId}/contacts", [
-            'page_number' => $page,
-            'page_size' => $perPage,
-        ]);
-    }
-
-    /**
-     * Get a single contact by ID.
-     *
-     * @param  string  $contactId  The contact identifier.
-     * @return array<string, mixed>
-     */
-    public function getContact(string $contactId): array
-    {
-        return $this->request('GET', "/website/{$this->websiteId}/contacts/{$contactId}");
-    }
-
-    /**
-     * List campaigns for the website.
-     *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $perPage  Number of campaigns per page.
-     * @return array<string, mixed>
-     */
-    public function listCampaigns(int $page = 1, int $perPage = 25): array
-    {
-        return $this->request('GET', "/website/{$this->websiteId}/campaigns", [
-            'page_number' => $page,
-            'page_size' => $perPage,
-        ]);
-    }
-
-    /**
-     * Get the currently authenticated user profile.
+     * Return metadata for one Crisp operation by tool slug or operation key.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentUser(): array
+    public function operation(string $operation): array
     {
-        return $this->request('GET', '/user');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (relative to base URL).
-     * @param  array<string, mixed>  $data  Query params or JSON body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
+        foreach (self::operations() as $definition) {
+            if (($definition['slug'] ?? null) === $operation || ($definition['operation'] ?? null) === $operation) {
+                return $definition;
+            }
         }
 
-        return $response->json() ?? [];
+        throw new RuntimeException("Unsupported Crisp operation: {$operation}");
+    }
+
+    /**
+     * Execute an official Crisp REST API operation.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array<string, mixed>
+     */
+    public function call(string $operation, array $args = []): array
+    {
+        $definition = $this->operation($operation);
+        [$path, $query, $payload] = $this->shapeRequest($definition, $args);
+
+        return $this->request((string) $definition['method'], $path, $query, $payload);
+    }
+
+    /**
+     * Shape tool arguments into path, query, and JSON body data.
+     *
+     * @param  array<string, mixed>  $definition  Operation metadata.
+     * @param  array<string, mixed>  $args  Tool arguments.
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>}
+     */
+    private function shapeRequest(array $definition, array $args): array
+    {
+        $path = (string) $definition['path'];
+        $query = isset($args['query']) && is_array($args['query']) ? $args['query'] : [];
+        $payload = isset($args['payload']) && is_array($args['payload']) ? $args['payload'] : [];
+        $consumed = ['query' => true, 'payload' => true];
+
+        foreach ($definition['parameters'] as $parameter) {
+            $param = (string) $parameter['param'];
+            $name = (string) $parameter['name'];
+            $location = (string) $parameter['in'];
+            $value = $args[$param] ?? $args[$name] ?? null;
+            $consumed[$param] = true;
+            $consumed[$name] = true;
+
+            if ($location === 'path' && $name === 'websiteID' && ($value === null || $value === '')) {
+                $value = $this->websiteId;
+            }
+            if ($location === 'path' && $name === 'pageNumber' && ($value === null || $value === '')) {
+                $value = 1;
+            }
+
+            if (($parameter['required'] ?? false) && ($value === null || $value === '')) {
+                throw new RuntimeException($param.' is required.');
+            }
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            if ($location === 'path') {
+                $path = str_replace('{'.$name.'}', rawurlencode((string) $value), $path);
+            } elseif ($location === 'query') {
+                if (is_array($value) && in_array($param, ['options', 'query', 'search_query'], true)) {
+                    $query = array_merge($query, $value);
+                } else {
+                    $query[$name] = $value;
+                }
+            } elseif ($location === 'body') {
+                if (is_array($value) && in_array($param, ['payload', 'message', 'settings', 'profile', 'campaign', 'template', 'article', 'category', 'section', 'inbox', 'operation', 'people', 'data'], true)) {
+                    $payload = array_merge($payload, $value);
+                } else {
+                    $payload[$name] = $value;
+                }
+            }
+        }
+
+        if (str_contains($path, '{')) {
+            throw new RuntimeException('Missing required Crisp path parameter.');
+        }
+
+        foreach ($args as $key => $value) {
+            if (isset($consumed[$key])) {
+                continue;
+            }
+            if (($definition['type'] ?? 'read') === 'write') {
+                $payload[$key] = $value;
+            } else {
+                $query[$key] = $value;
+            }
+        }
+
+        return [$path, $query, $payload];
+    }
+
+    /**
+     * Normalize legacy base URLs that include /v1.
+     */
+    private function normalizeBaseUrl(string $baseUrl): string
+    {
+        $baseUrl = rtrim($baseUrl ?: self::DEFAULT_BASE_URL, '/');
+
+        return str_ends_with($baseUrl, '/v1') ? substr($baseUrl, 0, -3) : $baseUrl;
+    }
+
+    /**
+     * Dispatch an authenticated Crisp request.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $query = [], array $payload = []): array
+    {
+        $response = $this->rawRequest($method, $path, $query, $payload);
+
+        return $this->decodeResponse($response);
     }
 
     /**
      * Make a raw HTTP request to the Crisp API.
      *
-     * Uses HTTP Basic authentication with apiKey as username and websiteId as password.
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @param  array<string, mixed>  $payload  JSON body fields.
+     * @return Response
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Request data.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $query = [], array $payload = []): Response
     {
-        if (!$this->apiKey || !$this->websiteId) {
-            throw new \RuntimeException('Crisp API key and Website ID are not configured.');
+        if (!$this->isConfigured()) {
+            throw new RuntimeException('Crisp token identifier and token key are required.');
         }
 
-        $url = $this->baseUrl . $path;
+        $options = [];
+        if ($query !== []) {
+            $options['query'] = $this->encodeQuery($query);
+        }
+        if ($payload !== []) {
+            $options['json'] = $payload;
+        }
 
         try {
-            $http = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiKey, $this->websiteId)
-              ->timeout(30);
+            $response = Http::withHeaders(['X-Crisp-Tier' => $this->tier ?: 'plugin'])
+                ->withBasicAuth($this->identifier, $this->key)
+                ->acceptJson()
+                ->timeout(30)
+                ->send(strtoupper($method), $this->baseUrl.$path, $options);
+        } catch (\Throwable $e) {
+            Log::error("Crisp API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Crisp API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Crisp API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or credentials may be invalid.");
-                }
-
-                $error = $response->json('reason') ?? $response->json('message') ?? $body;
-                Log::error("Crisp API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Crisp API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
-            }
-
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Crisp API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Crisp API: {$e->getMessage()}");
+            throw new RuntimeException('Failed to connect to Crisp API: '.$e->getMessage());
         }
+
+        if (!$response->successful()) {
+            $this->throwApiError($method, $path, $response);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Match node-crisp-api query encoding for object values.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     * @return array<string, mixed>
+     */
+    private function encodeQuery(array $query): array
+    {
+        foreach ($query as $key => $value) {
+            if (is_array($value) || is_object($value)) {
+                $query[$key] = json_encode($value);
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Throw a normalized Crisp API error.
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $json = $response->json();
+        $message = is_array($json)
+            ? (string) data_get($json, 'reason', data_get($json, 'message', data_get($json, 'error', '')))
+            : trim($response->body());
+
+        Log::error("Crisp API error: {$method} {$path}", ['status' => $response->status(), 'body' => $response->body()]);
+
+        throw new RuntimeException('Crisp API error ('.$response->status().'): '.($message !== '' ? $message : 'Unexpected API error.'));
+    }
+
+    /**
+     * Decode JSON, text, or empty Crisp responses.
+     *
+     * @return array<string, mixed>
+     */
+    private function decodeResponse(Response $response): array
+    {
+        if ($response->body() === '') {
+            return ['success' => true];
+        }
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return ['body' => $response->body()];
     }
 }

@@ -47,7 +47,7 @@ class TodoCreateList implements Tool
     public function parameters(): array
     {
         return [
-            'displayName' => ['type' => 'string', 'required' => true, 'description' => 'The name of the new task list (e.g., "Shopping List", "Work Tasks").'],
+            'display_name' => ['type' => 'string', 'required' => true, 'description' => 'The name of the new task list (e.g., "Shopping List", "Work Tasks").'],
         ];
     }
 
@@ -63,11 +63,13 @@ class TodoCreateList implements Tool
                 return ToolResult::error('Microsoft To Do integration is not configured.');
             }
 
-            if (empty($args['displayName'])) {
-                return ToolResult::error('The "displayName" parameter is required.');
+            $displayName = $args['display_name'] ?? $args['displayName'] ?? null;
+
+            if (empty($displayName)) {
+                return ToolResult::error('The "display_name" parameter is required.');
             }
 
-            $result = $this->service->createList($args['displayName']);
+            $result = $this->service->createList($displayName);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

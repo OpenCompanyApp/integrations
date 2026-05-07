@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Netlify;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Netlify REST API.
+ *
+ * Handles bearer-token authentication, request dispatch, API error
+ * normalization, and parsed JSON responses for sites, deploys, forms, and DNS.
+ */
 class NetlifyService
 {
+    /**
+     * @param  string  $accessToken  Netlify personal access token or OAuth bearer token.
+     * @param  string  $baseUrl  Netlify API v1 base URL.
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.netlify.com/api/v1',
@@ -31,6 +41,20 @@ class NetlifyService
     }
 
     /**
+     * Create a Netlify site.
+     *
+     * @param  string  $name  Site name.
+     * @param  array<string, mixed>  $body  Additional site setup fields.
+     * @return array<string, mixed>
+     */
+    public function createSite(string $name, array $body = []): array
+    {
+        return $this->request('POST', '/sites', array_merge($body, [
+            'name' => $name,
+        ]));
+    }
+
+    /**
      * Get details for a specific site.
      *
      * @param  string  $siteId  The site identifier.
@@ -39,6 +63,14 @@ class NetlifyService
     public function getSite(string $siteId): array
     {
         return $this->request('GET', '/sites/' . urlencode($siteId));
+    }
+
+    /**
+     * Delete a Netlify site.
+     */
+    public function deleteSite(string $siteId): void
+    {
+        $this->request('DELETE', '/sites/' . urlencode($siteId));
     }
 
     /**
@@ -51,6 +83,19 @@ class NetlifyService
     public function listDeploys(string $siteId, array $params = []): array
     {
         return $this->request('GET', '/sites/' . urlencode($siteId) . '/deploys', $params);
+    }
+
+    /**
+     * Create a deploy for a Netlify site.
+     *
+     * @param  string  $siteId  The site identifier.
+     * @param  array<string, mixed>  $body  Deploy body, usually file digests or async deploy options.
+     * @param  array<string, mixed>  $query  Optional query parameters such as title.
+     * @return array<string, mixed>
+     */
+    public function createDeploy(string $siteId, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $this->pathWithQuery('/sites/' . urlencode($siteId) . '/deploys', $query), $body);
     }
 
     /**
@@ -176,5 +221,21 @@ class NetlifyService
             ]);
             throw new \RuntimeException("Failed to connect to Netlify API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Append query parameters to an API path.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function pathWithQuery(string $path, array $query = []): string
+    {
+        $query = array_filter($query, static fn ($value): bool => $value !== null && $value !== '');
+
+        if ($query === []) {
+            return $path;
+        }
+
+        return $path . '?' . http_build_query($query);
     }
 }

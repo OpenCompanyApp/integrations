@@ -4,21 +4,20 @@ namespace OpenCompany\Integrations\Neon;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Neon\Tools\NeonCreateProject;
-use OpenCompany\Integrations\Neon\Tools\NeonGetBranch;
-use OpenCompany\Integrations\Neon\Tools\NeonGetCurrentUser;
-use OpenCompany\Integrations\Neon\Tools\NeonGetProject;
-use OpenCompany\Integrations\Neon\Tools\NeonListBranches;
-use OpenCompany\Integrations\Neon\Tools\NeonListDatabases;
-use OpenCompany\Integrations\Neon\Tools\NeonListProjects;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
 
 /**
+ * Tool catalog and setup metadata for the Neon integration.
+ *
+ * Exposes generated tools for Neon's official OpenAPI document and resolves
+ * account-specific Neon API keys for host applications.
+ */
+class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,47 +25,27 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'bearer_token',
-            'legacy_auth_type' => 'oauth',
-            'credential_mode' => 'stored_token',
-            'setup_flows' =>
-            [
-              0 => 'manual_token',
+            'auth' => [
+                'strategy' => 'bearer_token',
+                'legacy_auth_type' => 'oauth',
+                'credential_mode' => 'stored_token',
+                'setup_flows' => ['manual_token'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => ['access_token'],
+                'notes' => ['Neon requests use Authorization: Bearer with a Neon API key.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
-              0 => 'access_token',
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_token', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_token',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -79,7 +58,7 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     {
         return [
             'label' => 'Neon',
-            'description' => 'Serverless Postgres',
+            'description' => 'Serverless Postgres projects, branches, computes, databases, roles, operations, API keys, organizations, auth, and billing',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:neon',
         ];
@@ -89,14 +68,17 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     {
         return [
             'name' => 'Neon',
-            'description' => 'Neon — serverless Postgres with branching, autoscaling, and instant provisioning',
+            'description' => 'Manage Neon serverless Postgres projects, branches, computes, databases, roles, operations, API keys, organizations, permissions, Neon Auth, consumption, and billing settings through the official API.',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:neon',
             'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://neon.tech/docs/api-reference',
+            'docs_url' => 'https://neon.com/docs/reference/api-reference',
+            'source_url' => 'https://neon.com/api_spec/release/v2.json',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -104,7 +86,7 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Neon API key',
-                'hint' => 'Generate an API key in the Neon Console under <strong>Account Settings → API Keys</strong>',
+                'hint' => 'Generate an API key in the Neon Console under Account Settings > API Keys.',
                 'required' => true,
             ],
             [
@@ -112,56 +94,56 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://console.neon.tech/api/v2',
-                'hint' => 'Override only if using a custom Neon-compatible endpoint',
+                'hint' => 'Override only if using a custom Neon-compatible endpoint.',
                 'default' => 'https://console.neon.tech/api/v2',
             ],
         ];
     }
 
+    /**
+     * Test the configured Neon API key with the current-user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://console.neon.tech/api/v2', '/');
+        $accessToken = (string) ($config['access_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://console.neon.tech/api/v2'), '/');
 
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No API key provided'];
+        if ($accessToken === '') {
+            return ['success' => false, 'error' => 'No API key provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
-
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Neon API at {$baseUrl}. Check the URL.",
-                ];
-            }
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->timeout(10)
+                ->get($baseUrl . '/users/me');
 
             if (!$response->successful()) {
-                $message = $json['message'] ?? $response->body();
+                $message = $response->json('message') ?? $response->body();
+
                 return [
                     'success' => false,
-                    'error' => "Neon API error ({$response->status()}): {$message}",
+                    'error' => 'Neon API error (' . $response->status() . '): ' . (is_string($message) ? $message : json_encode($message)),
                 ];
             }
 
-            $user = $json['user'] ?? $json;
+            $json = $response->json() ?? [];
+            $user = is_array($json) ? ($json['user'] ?? $json) : [];
             $email = is_array($user) ? ($user['email'] ?? 'unknown') : 'unknown';
 
             return [
                 'success' => true,
                 'message' => "Connected to Neon as {$email}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
@@ -170,70 +152,37 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    /**
+     * Register generated Neon OpenAPI tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
-        return [
-            'neon_list_projects' => [
-                'class' => NeonListProjects::class,
-                'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List all Neon projects in the organization.',
-                'icon' => 'ph:folder',
-            ],
-            'neon_get_project' => [
-                'class' => NeonGetProject::class,
-                'type' => 'read',
-                'name' => 'Get Project',
-                'description' => 'Get details for a specific Neon project.',
-                'icon' => 'ph:folder-open',
-            ],
-            'neon_create_project' => [
-                'class' => NeonCreateProject::class,
-                'type' => 'write',
-                'name' => 'Create Project',
-                'description' => 'Create a new Neon project.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'neon_list_branches' => [
-                'class' => NeonListBranches::class,
-                'type' => 'read',
-                'name' => 'List Branches',
-                'description' => 'List branches in a Neon project.',
-                'icon' => 'ph:git-branch',
-            ],
-            'neon_get_branch' => [
-                'class' => NeonGetBranch::class,
-                'type' => 'read',
-                'name' => 'Get Branch',
-                'description' => 'Get details for a specific branch in a Neon project.',
-                'icon' => 'ph:git-branch',
-            ],
-            'neon_list_databases' => [
-                'class' => NeonListDatabases::class,
-                'type' => 'read',
-                'name' => 'List Databases',
-                'description' => 'List databases in a Neon project branch.',
-                'icon' => 'ph:database',
-            ],
-            'neon_get_current_user' => [
-                'class' => NeonGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the current authenticated user information.',
-                'icon' => 'ph:user',
-            ],
-        ];
+        $tools = [];
+
+        foreach (NeonService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/neon.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://console.neon.tech/api/v2'],
-        ];
     }
 
     public function isIntegration(): bool
@@ -241,21 +190,57 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return true;
     }
 
+    /**
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): NeonService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new NeonService(
-                accessToken: $creds->get('neon', 'access_token', '', $account),
-                baseUrl: $creds->get('neon', 'url', 'https://console.neon.tech/api/v2', $account),
+            return new NeonService(
+                accessToken: (string) $creds->get('neon', 'access_token', '', (string) $account),
+                baseUrl: (string) $creds->get('neon', 'url', 'https://console.neon.tech/api/v2', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(NeonService::class));
+        return app(NeonService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/branches') => 'ph:git-branch',
+            str_contains($path, '/databases') => 'ph:database',
+            str_contains($path, '/roles') => 'ph:user-gear',
+            str_contains($path, '/endpoints') => 'ph:cpu',
+            str_contains($path, '/api_keys') => 'ph:key',
+            str_contains($path, '/organizations') => 'ph:buildings',
+            str_contains($path, '/auth') => 'ph:shield-check',
+            str_contains($path, '/billing'), str_contains($path, '/consumption') => 'ph:chart-bar',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

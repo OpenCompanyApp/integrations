@@ -87,12 +87,14 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration, H
     {
         return [
             'name' => 'ElevenLabs',
-            'description' => 'AI-powered text-to-speech, voice cloning, and sound generation',
+            'description' => 'Legacy compatibility wrapper for ElevenLabs. Prefer the canonical elevenlabs package.',
             'icon' => 'ph:speaker-high',
             'logo' => 'simple-icons:elevenlabs',
-            'category' => 'ai',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://elevenlabs.io/docs/api-reference',
+            'catalog_visibility' => 'hidden',
+            'replacement' => 'elevenlabs',
         ];
     }    public function configSchema(): array
     {
@@ -102,7 +104,7 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration, H
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your ElevenLabs API key',
-                'hint' => 'Find your API key in your ElevenLabs account under <b>Profile → API Keys</b>',
+                'hint' => 'Find your API key in your ElevenLabs account under <b>Profile > API Keys</b>',
                 'required' => true,
             ],
             [

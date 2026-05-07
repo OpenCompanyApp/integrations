@@ -11,6 +11,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class BaserowDeleteRow implements Tool
 {
+    /**
+     * @param  BaserowService  $service  The Baserow API client.
+     */
     public function __construct(
         private BaserowService $service,
     ) {}
@@ -33,6 +36,11 @@ class BaserowDeleteRow implements Tool
         ];
     }
 
+    /**
+     * Delete a row from a Baserow table.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

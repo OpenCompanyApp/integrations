@@ -15,6 +15,8 @@ class NetlifyCreateSite implements Tool
 {
     /**
      * Create a new NetlifyCreateSite tool instance.
+     *
+     * @param  NetlifyService  $service  The Netlify REST API client.
      */
     public function __construct(
         private NetlifyService $service,

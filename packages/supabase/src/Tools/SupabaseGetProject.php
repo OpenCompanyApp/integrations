@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Supabase\SupabaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a Supabase project by project ref.
+ */
 class SupabaseGetProject implements Tool
 {
     /**
@@ -50,8 +53,7 @@ class SupabaseGetProject implements Tool
     /**
      * Execute the tool with the given arguments.
      *
-     * @param  array $args The tool arguments.
-     * @return ToolResult The result of the tool execution.
+     * @param  array<string, mixed>  $args  Tool arguments (project_ref).
      */
     public function execute(array $args): ToolResult
     {
@@ -61,7 +63,7 @@ class SupabaseGetProject implements Tool
             }
 
             if (empty($args['project_ref'])) {
-                return ToolResult::error('Project reference ID is required.');
+                return ToolResult::error('project_ref is required.');
             }
 
             $result = $this->service->getProject($args['project_ref']);

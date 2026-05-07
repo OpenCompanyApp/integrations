@@ -2,68 +2,52 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\Integrations\Mailgun\MailgunService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List all mailing lists in the Mailgun account.
- *
- * Supports pagination via limit and page parameters.
+ * List mailing lists in the account.
  */
-class MailgunListMailingLists implements Tool
+class MailgunListMailingLists extends AbstractMailgunEndpointTool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_list_mailing_lists';
 
-    public function name(): string
-    {
-        return 'mailgun_list_mailing_lists';
-    }
+    protected string $toolDescription = 'List mailing lists in the account.';
 
-    public function description(): string
-    {
-        return 'List all mailing lists in the Mailgun account. Supports pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of lists to return (default 100).'],
-            'page'  => ['type' => 'string', 'description' => 'Page URL or token for pagination.'],
-        ];
-    }
+    protected string $path = '/lists';
 
-    /**
-     * List all mailing lists in the Mailgun account.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, page)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum number of records to return.',
+    ],
+    'skip' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of records to skip.',
+    ],
+    'page' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Pagination cursor or page URL/token.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Mailgun query parameters to pass through.',
+    ],
+];
 
-            $params = [];
+    /** @var list<string> */
+    protected array $required = [];
 
-            if (! empty($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (! empty($args['page'])) {
-                $params['page'] = $args['page'];
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'page',
+];
 
-            $result = $this->service->listMailingLists($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

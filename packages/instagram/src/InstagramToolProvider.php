@@ -93,7 +93,7 @@ class InstagramToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Instagram Graph API — publish media, manage comments, track insights, and view account metrics for Instagram Business and Creator accounts.',
             'icon' => 'ph:instagram-logo',
             'logo' => 'simple-icons:instagram',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.facebook.com/docs/instagram-api',
         ];

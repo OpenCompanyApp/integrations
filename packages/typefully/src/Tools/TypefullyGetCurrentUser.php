@@ -2,15 +2,21 @@
 
 namespace OpenCompany\Integrations\Typefully\Tools;
 
-use OpenCompany\Integrations\Typefully\TypefullyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Typefully\TypefullyService;
 
+/**
+ * Get the authenticated Typefully v2 user.
+ *
+ * Useful for validating API keys and user context.
+ */
 class TypefullyGetCurrentUser implements Tool
 {
-    public function __construct(
-        private TypefullyService $service,
-    ) {}
+    /**
+     * @param  TypefullyService  $service  The Typefully API client.
+     */
+    public function __construct(private TypefullyService $service) {}
 
     public function name(): string
     {
@@ -19,7 +25,7 @@ class TypefullyGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the authenticated Typefully user\'s profile information, including handle, name, and account details.';
+        return 'Get the authenticated Typefully user profile.';
     }
 
     public function parameters(): array
@@ -27,6 +33,11 @@ class TypefullyGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Fetch the authenticated Typefully user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -34,9 +45,7 @@ class TypefullyGetCurrentUser implements Tool
                 return ToolResult::error('Typefully integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
-
-            return ToolResult::success($result);
+            return ToolResult::success($this->service->getCurrentUser());
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

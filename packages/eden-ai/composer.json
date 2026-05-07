@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-eden-ai",
-    "description": "Eden AI integration for Laravel — text generation, image analysis, translation, audio transcription, OCR, and user info.",
+    "description": "Eden AI integration for Laravel with V3 chat, Universal AI, model discovery, files, async jobs, and legacy V2 helpers.",
     "license": "MIT",
     "authors": [
         {

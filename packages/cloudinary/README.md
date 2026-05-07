@@ -1,16 +1,6 @@
 # Integration: Cloudinary
 
-> Cloudinary integration for the [Laravel AI SDK](https://github.com/laravel/ai) — upload, list, get, and delete media resources and folders. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
-
-Give your AI agents access to media management. Upload images, browse folders, retrieve asset metadata, and delete resources — all through the [Cloudinary](https://cloudinary.com) Admin API.
-
-## About OpenCompany
-
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
-
-This Cloudinary tool lets AI agents manage media assets — upload files, organize them in folders, retrieve metadata, and clean up old resources — giving agents full control over your media library.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
+Cloudinary media management for AI agents: signed uploads, Admin API asset listing, search, resource detail, deletion, folders, tags, transformations, upload presets, usage, and a read-only Admin API escape hatch.
 
 ## Installation
 
@@ -18,22 +8,19 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 composer require opencompanyapp/integration-cloudinary
 ```
 
-Laravel auto-discovers the service provider. No manual registration needed.
+Laravel auto-discovers the service provider.
 
 ## Configuration
 
-This tool requires a Cloudinary OAuth access token and your cloud name.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
+Cloudinary's Admin API uses your cloud name plus API key and API secret with HTTP Basic authentication. Signed uploads use the same API key and secret to generate the Upload API signature. The older `access_token` setting remains accepted for backward compatibility, but API key/secret is the documented path.
 
 ```php
 return [
     'cloudinary' => [
-        'access_token' => env('CLOUDINARY_ACCESS_TOKEN'),
-        'cloud_name'   => env('CLOUDINARY_CLOUD_NAME'),
-        'base_url'     => env('CLOUDINARY_BASE_URL', 'https://api.cloudinary.com/v1_1'),
+        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+        'api_key' => env('CLOUDINARY_API_KEY'),
+        'api_secret' => env('CLOUDINARY_API_SECRET'),
+        'base_url' => env('CLOUDINARY_BASE_URL', 'https://api.cloudinary.com/v1_1'),
     ],
 ];
 ```
@@ -42,89 +29,52 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `cloudinary_upload` | write | Upload an image to Cloudinary |
-| `cloudinary_list_resources` | read | List media resources with pagination and filtering |
-| `cloudinary_get_resource` | read | Get details of a specific resource |
-| `cloudinary_delete_resource` | write | Delete a resource permanently |
-| `cloudinary_list_folders` | read | List all folders in the cloud |
-| `cloudinary_get_current_user` | read | Get the authenticated user profile |
+| `cloudinary_upload` | write | Upload an asset with the Upload API |
+| `cloudinary_list_resources` | read | List resources by resource and delivery type |
+| `cloudinary_search_resources` | read | Search assets with Admin API expressions |
+| `cloudinary_get_resource` | read | Get details for a specific asset |
+| `cloudinary_delete_resource` | write | Delete an asset by public ID |
+| `cloudinary_list_resources_by_tag` | read | List assets by tag |
+| `cloudinary_list_tags` | read | List tags by resource type |
+| `cloudinary_list_folders` | read | List root folders |
+| `cloudinary_list_subfolders` | read | List subfolders under a parent folder |
+| `cloudinary_search_folders` | read | Search folders |
+| `cloudinary_create_folder` | write | Create an asset folder |
+| `cloudinary_delete_folder` | write | Delete an empty asset folder |
+| `cloudinary_list_transformations` | read | List named transformations |
+| `cloudinary_list_upload_presets` | read | List upload presets |
+| `cloudinary_get_usage` | read | Get usage details |
+| `cloudinary_ping` | read | Ping Cloudinary servers |
+| `cloudinary_api_get` | read | Call a read-only Admin API endpoint |
 
-## Quick Start
-
-```php
-use OpenCompany\Integrations\Cloudinary\CloudinaryService;
-use OpenCompany\Integrations\Cloudinary\Tools\CloudinaryUpload;
-use OpenCompany\Integrations\Cloudinary\Tools\CloudinaryListResources;
-
-// Create tools
-$service = app(CloudinaryService::class);
-$tools = [
-    new CloudinaryUpload($service),
-    new CloudinaryListResources($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Upload this image to the blog folder: https://example.com/photo.jpg');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('cloudinary');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Cloudinary\Tools\CloudinaryUpload::class
-);
-```
-
-## Standalone Service Usage
+## Service Usage
 
 ```php
 use OpenCompany\Integrations\Cloudinary\CloudinaryService;
 
 $service = app(CloudinaryService::class);
 
-// Upload an image
-$result = $service->upload('https://example.com/photo.jpg', 'blog/hero', 'blog');
-
-// List image resources
+$upload = $service->upload('https://example.test/photo.jpg', 'blog/hero', 'blog');
 $resources = $service->listResources('image', maxResults: 20, prefix: 'blog/');
-
-// Get a specific resource
-$resource = $service->getResource('image', 'blog/hero');
-
-// Delete a resource
-$service->deleteResource('image', 'blog/old-photo');
-
-// List folders
-$folders = $service->listFolders();
-
-// Get current user
-$user = $service->getCurrentUser();
+$search = $service->searchResources(['expression' => 'folder=blog']);
+$asset = $service->getResource('image', 'blog/hero');
+$tags = $service->listTags('image');
+$usage = $service->getUsage();
 ```
+
+## Notes
+
+- Resource detail paths include the delivery type segment, for example `/resources/image/upload/{public_id}`.
+- Resource deletion by public ID uses `DELETE /resources/{resource_type}/{delivery_type}` with a `public_ids` array.
+- `cloudinary_api_get` accepts only relative Admin API paths, not full URLs.
+- The former current-user tool was removed because the documented Cloudinary Admin and Upload APIs do not expose an account-profile endpoint.
 
 ## Dependencies
 
 | Package | Purpose |
 |---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Cloudinary](https://cloudinary.com) account with OAuth access
+| `opencompanyapp/integration-core` | ToolProvider contract and registry |
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT

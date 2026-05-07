@@ -6,6 +6,9 @@ use OpenCompany\Integrations\Appwrite\AppwriteService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Fetch metadata for one Appwrite database.
+ */
 class AppwriteGetDatabase implements Tool
 {
     /**
@@ -50,7 +53,7 @@ class AppwriteGetDatabase implements Tool
     /**
      * Execute the tool with the given arguments.
      *
-     * @param  array $args The tool arguments.
+     * @param  array<string, mixed>  $args The tool arguments.
      * @return ToolResult The result of the tool execution.
      */
     public function execute(array $args): ToolResult

@@ -2,51 +2,38 @@
 
 namespace OpenCompany\Integrations\Brevo\Tools;
 
-use OpenCompany\Integrations\Brevo\BrevoService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BrevoGetContact implements Tool
+/**
+ * Get a contact by email, phone, or identifier.
+ */
+class BrevoGetContact extends AbstractBrevoTool
 {
-    public function __construct(
-        private BrevoService $service,
-    ) {}
+    protected string $toolName = 'brevo_get_contact';
 
-    public function name(): string
-    {
-        return 'brevo_get_contact';
-    }
+    protected string $toolDescription = 'Get a contact by email, phone, or identifier.';
 
-    public function description(): string
-    {
-        return 'Get details of a specific contact in Brevo by their email address. Returns contact attributes, list memberships, and creation date.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'email' => ['type' => 'string', 'required' => true, 'description' => 'The email address of the contact to retrieve (used as the contact identifier in Brevo).'],
-        ];
-    }
+    protected string $path = '/contacts/{identifier}';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brevo integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'identifier' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Contact identifier such as email or external ID.',
+    ],
+];
 
-            $email = $args['email'] ?? '';
+    /** @var list<string> */
+    protected array $required = [
+    'identifier',
+];
 
-            if (empty($email)) {
-                return ToolResult::error('Email address is required.');
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+];
 
-            $result = $this->service->getContact($email);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

@@ -1,209 +1,131 @@
-# OpenRouter — Lua API Reference
+# OpenRouter Lua API Reference
 
-## list_models
+OpenRouter exposes model routing, chat completions, Responses-compatible calls, embeddings, reranking, media jobs, account activity, keys, workspaces, providers, guardrails, and generation records through one API key.
 
-List available AI models on OpenRouter.
+Namespace: `app.integrations["openrouter"]`
 
-### Parameters
+## Common Patterns
 
-None.
-
-### Example
-
-```lua
-local result = app.integrations["openrouter"].list_models({})
-
-for _, model in ipairs(result.data) do
-  print(model.id .. " — " .. model.name)
-end
-```
-
----
-
-## create_completion
-
-Create a chat completion using any model available on OpenRouter.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `model` | string | yes | The model to use (e.g., "openai/gpt-4o", "anthropic/claude-3.5-sonnet") |
-| `messages` | array | yes | Array of message objects with `role` and `content` |
-| `max_tokens` | integer | no | Maximum tokens to generate |
-| `temperature` | number | no | Randomness control (0.0–2.0) |
-| `top_p` | number | no | Nucleus sampling parameter (0.0–1.0) |
-| `stop` | array | no | Strings that stop generation when encountered |
-| `stream` | boolean | no | Stream response incrementally (default: false) |
-
-### Message Format
-
-The `messages` array contains message objects:
-
-```lua
-{
-  { role = "user", content = "Your prompt here" }
-}
-```
-
-For multi-turn conversations:
-
-```lua
-{
-  { role = "system", content = "You are a helpful assistant." },
-  { role = "user", content = "Hello!" },
-  { role = "assistant", content = "Hi there!" },
-  { role = "user", content = "Tell me more." }
-}
-```
-
-### Example
+Use the canonical chat endpoint when you want OpenAI-compatible chat completions:
 
 ```lua
 local result = app.integrations["openrouter"].create_completion({
   model = "openai/gpt-4o",
   messages = {
-    { role = "user", content = "Write a haiku about programming." }
+    { role = "user", content = "Summarize this in one sentence." }
   },
-  max_tokens = 100,
-  temperature = 0.7
+  max_tokens = 120,
+  temperature = 0.2
 })
 
 print(result.choices[1].message.content)
-print("Model: " .. result.model)
-print("Usage input: " .. result.usage.prompt_tokens .. ", output: " .. result.usage.completion_tokens)
 ```
 
----
-
-## list_generations
-
-List generation records from OpenRouter.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max generations per page |
-| `offset` | integer | no | Number of generations to skip |
-| `order` | string | no | Sort order — "asc" or "desc" (default: "desc") |
-
-### Example
+Use `create_response`, `create_message`, `create_embedding`, `rerank`, and `create_video` when an endpoint expects the official OpenRouter JSON payload. Pass that payload under `payload`:
 
 ```lua
-local result = app.integrations["openrouter"].list_generations({
+local response = app.integrations["openrouter"].create_response({
+  payload = {
+    model = "openai/gpt-4o-mini",
+    input = "Write a release note."
+  }
+})
+
+local embedding = app.integrations["openrouter"].create_embedding({
+  payload = {
+    model = "openai/text-embedding-3-small",
+    input = "search text"
+  }
+})
+```
+
+Read tools that accept filters use a `query` object so agents can pass newly documented query parameters without waiting for a package release:
+
+```lua
+local generations = app.integrations["openrouter"].list_generations({
   limit = 10
 })
 
-for _, gen in ipairs(result.data) do
-  print(gen.id .. " — " .. gen.model .. " — tokens: " .. gen.native_tokens_prompt)
-end
-```
-
----
-
-## get_generation
-
-Get details for a specific OpenRouter generation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The generation identifier |
-
-### Example
-
-```lua
-local result = app.integrations["openrouter"].get_generation({
-  id = "gen_01ABC123"
+local activity = app.integrations["openrouter"].get_activity({
+  query = { limit = 25 }
 })
-
-print("Model: " .. result.model)
-print("Input tokens: " .. result.native_tokens_prompt)
-print("Output tokens: " .. result.native_tokens_completion)
-print("Cost: $" .. result.total_cost)
 ```
 
----
+## Tool Groups
 
-## list_api_keys
+### Model and Provider Discovery
 
-List API keys for the OpenRouter account.
+- `list_models({})`
+- `count_models({ query = {...} })`
+- `list_user_models({ query = {...} })`
+- `list_model_endpoints({ author = "openai", slug = "gpt-4o-mini" })`
+- `list_providers({})`
+- `list_embedding_models({})`
+- `list_video_models({})`
 
-### Parameters
+### Generation and Model Calls
 
-None.
+- `create_completion({ model = "...", messages = {...}, max_tokens = 100, temperature = 0.2 })`
+- `create_response({ payload = {...} })`
+- `create_message({ payload = {...} })`
+- `create_embedding({ payload = {...} })`
+- `rerank({ payload = {...} })`
+- `create_video({ payload = {...} })`
+- `get_video({ job_id = "job_123" })`
 
-### Example
+### Generations, Usage, and Account State
+
+- `list_generations({ limit = 10, offset = 0 })`
+- `get_generation({ id = "gen_123" })`
+- `get_generation_content({ id = "gen_123" })`
+- `get_usage({ period = "month" })`
+- `get_credits({})`
+- `get_activity({ query = {...} })`
+- `get_current_user({})`
+
+### API Keys and Workspaces
+
+- `list_api_keys({})`
+- `get_api_key({ hash = "key_hash" })`
+- `create_api_key({ payload = {...} })`
+- `update_api_key({ hash = "key_hash", payload = {...} })`
+- `delete_api_key({ hash = "key_hash" })`
+- `list_organization_members({ query = {...} })`
+- `list_workspaces({ query = {...} })`
+- `get_workspace({ id = "workspace_123" })`
+- `create_workspace({ payload = {...} })`
+- `update_workspace({ id = "workspace_123", payload = {...} })`
+- `delete_workspace({ id = "workspace_123" })`
+- `list_guardrails({ query = {...} })`
+
+## Raw OpenRouter Paths
+
+For newly released endpoints, use guarded relative-path tools:
 
 ```lua
-local result = app.integrations["openrouter"].list_api_keys({})
-
-for _, key in ipairs(result.data) do
-  print(key.name .. " — created: " .. key.created_at)
-end
-```
-
----
-
-## get_usage
-
-Get usage statistics for the OpenRouter account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `period` | string | no | Time period for usage data (e.g., "day", "week", "month") |
-
-### Example
-
-```lua
-local result = app.integrations["openrouter"].get_usage({
-  period = "month"
+local zdr = app.integrations["openrouter"].api_get({
+  path = "/endpoints/zdr",
+  query = {}
 })
-
-print("Total cost: $" .. result.total_cost)
-print("Total tokens: " .. result.total_tokens)
 ```
 
----
+The raw tools only accept relative OpenRouter API paths. Absolute URLs and parent-directory traversal are rejected.
 
-## get_current_user
+- `api_get({ path = "/path", query = {...} })`
+- `api_post({ path = "/path", payload = {...} })`
+- `api_patch({ path = "/path", payload = {...} })`
+- `api_delete({ path = "/path", query = {...} })`
 
-Get the authenticated user's profile and account information.
+## Return Shapes
 
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations["openrouter"].get_current_user({})
-
-print("Label: " .. (result.data.label or "unknown"))
-print("Limit: " .. (result.data.limit or "unlimited"))
-print("Usage: " .. (result.data.usage or "0"))
-```
-
----
+Tool responses are the decoded OpenRouter JSON response. This package does not flatten upstream fields for model calls, account records, keys, workspaces, or generation records because OpenRouter's API returns endpoint-specific response shapes that agents often need intact.
 
 ## Multi-Account Usage
 
-If you have multiple OpenRouter accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
-app.integrations["openrouter"].function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations["openrouter"].default.function_name({...})
-
--- Named accounts
-app.integrations["openrouter"].work.function_name({...})
-app.integrations["openrouter"].personal.function_name({...})
+app.integrations["openrouter"].list_models({})
+app.integrations["openrouter"].default.list_models({})
+app.integrations["openrouter"].work.list_models({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All accounts expose the same tools. Only credentials and optional base URL differ.

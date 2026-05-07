@@ -6,8 +6,14 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Google\Services\GoogleAnalyticsService;
 
+/**
+ * Run a GA4 realtime report and format current activity for agents.
+ */
 class GoogleAnalyticsRealtime implements Tool
 {
+    /**
+     * @param  GoogleAnalyticsService  $service  The Google Analytics API client.
+     */
     public function __construct(
         private GoogleAnalyticsService $service,
     ) {}
@@ -27,6 +33,11 @@ class GoogleAnalyticsRealtime implements Tool
         MD;
     }
 
+    /**
+     * Execute the tool and return a realtime report.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (property_id, metrics, dimensions, limit).
+     */
     public function execute(array $args): ToolResult
     {
         try {

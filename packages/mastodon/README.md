@@ -49,6 +49,10 @@ To create an access token, go to your Mastodon instance → Settings → Develop
 | `mastodon_list_accounts` | read | List followers of a Mastodon account |
 | `mastodon_get_account` | read | Retrieve a Mastodon account profile by ID |
 | `mastodon_get_current_user` | read | Get the authenticated user's Mastodon profile |
+| `mastodon_api_get` | read | Call any Mastodon GET API endpoint |
+| `mastodon_api_post` | write | Call any Mastodon POST API endpoint |
+| `mastodon_api_put` | write | Call any Mastodon PUT API endpoint |
+| `mastodon_api_delete` | write | Call any Mastodon DELETE API endpoint |
 
 ## Quick Start
 
@@ -72,7 +76,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 10 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -101,9 +105,12 @@ $status = $service->getStatus('1234567890');
 
 // Post a new status
 $newStatus = $service->createStatus(
-    status: 'Hello from the API! 🐘',
+    status: 'Hello from the API!',
     visibility: 'public',
 );
+
+// Generic API call for endpoints without a dedicated wrapper
+$notifications = $service->apiGet('/api/v1/notifications', ['limit' => 20]);
 
 // Get an account
 $account = $service->getAccount('123456');

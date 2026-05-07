@@ -1,0 +1,385 @@
+{
+    "source": "https://bigquery.googleapis.com/$discovery/rest?version=v2",
+    "docs": "https://cloud.google.com/bigquery/docs/reference/rest",
+    "version": "v2",
+    "method_count": 47,
+    "generated_at": "2026-05-06",
+    "methods": [
+        {
+            "tool": "google_bigquery_datasets_delete",
+            "class": "GoogleBigQueryDatasetsDelete",
+            "method": "DELETE",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}",
+            "discovery_id": "datasets.delete",
+            "summary": "Datasets Delete"
+        },
+        {
+            "tool": "google_bigquery_datasets_get",
+            "class": "GoogleBigQueryDatasetsGet",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}",
+            "discovery_id": "datasets.get",
+            "summary": "Datasets Get"
+        },
+        {
+            "tool": "google_bigquery_datasets_insert",
+            "class": "GoogleBigQueryDatasetsInsert",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets",
+            "discovery_id": "datasets.insert",
+            "summary": "Datasets Insert"
+        },
+        {
+            "tool": "google_bigquery_datasets_list",
+            "class": "GoogleBigQueryDatasetsList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets",
+            "discovery_id": "datasets.list",
+            "summary": "Datasets List"
+        },
+        {
+            "tool": "google_bigquery_datasets_patch",
+            "class": "GoogleBigQueryDatasetsPatch",
+            "method": "PATCH",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}",
+            "discovery_id": "datasets.patch",
+            "summary": "Datasets Patch"
+        },
+        {
+            "tool": "google_bigquery_datasets_undelete",
+            "class": "GoogleBigQueryDatasetsUndelete",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}:undelete",
+            "discovery_id": "datasets.undelete",
+            "summary": "Datasets Undelete"
+        },
+        {
+            "tool": "google_bigquery_datasets_update",
+            "class": "GoogleBigQueryDatasetsUpdate",
+            "method": "PUT",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}",
+            "discovery_id": "datasets.update",
+            "summary": "Datasets Update"
+        },
+        {
+            "tool": "google_bigquery_jobs_cancel",
+            "class": "GoogleBigQueryJobsCancel",
+            "method": "POST",
+            "path": "/projects/{+projectId}/jobs/{+jobId}/cancel",
+            "discovery_id": "jobs.cancel",
+            "summary": "Jobs Cancel"
+        },
+        {
+            "tool": "google_bigquery_jobs_delete",
+            "class": "GoogleBigQueryJobsDelete",
+            "method": "DELETE",
+            "path": "/projects/{+projectId}/jobs/{+jobId}/delete",
+            "discovery_id": "jobs.delete",
+            "summary": "Jobs Delete"
+        },
+        {
+            "tool": "google_bigquery_jobs_get",
+            "class": "GoogleBigQueryJobsGet",
+            "method": "GET",
+            "path": "/projects/{+projectId}/jobs/{+jobId}",
+            "discovery_id": "jobs.get",
+            "summary": "Jobs Get"
+        },
+        {
+            "tool": "google_bigquery_jobs_get_query_results",
+            "class": "GoogleBigQueryJobsGetQueryResults",
+            "method": "GET",
+            "path": "/projects/{+projectId}/queries/{+jobId}",
+            "discovery_id": "jobs.getQueryResults",
+            "summary": "Jobs Get Query Results"
+        },
+        {
+            "tool": "google_bigquery_jobs_insert",
+            "class": "GoogleBigQueryJobsInsert",
+            "method": "POST",
+            "path": "/projects/{+projectId}/jobs",
+            "discovery_id": "jobs.insert",
+            "summary": "Jobs Insert"
+        },
+        {
+            "tool": "google_bigquery_jobs_list",
+            "class": "GoogleBigQueryJobsList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/jobs",
+            "discovery_id": "jobs.list",
+            "summary": "Jobs List"
+        },
+        {
+            "tool": "google_bigquery_jobs_query",
+            "class": "GoogleBigQueryJobsQuery",
+            "method": "POST",
+            "path": "/projects/{+projectId}/queries",
+            "discovery_id": "jobs.query",
+            "summary": "Jobs Query"
+        },
+        {
+            "tool": "google_bigquery_models_delete",
+            "class": "GoogleBigQueryModelsDelete",
+            "method": "DELETE",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}",
+            "discovery_id": "models.delete",
+            "summary": "Models Delete"
+        },
+        {
+            "tool": "google_bigquery_models_get",
+            "class": "GoogleBigQueryModelsGet",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}",
+            "discovery_id": "models.get",
+            "summary": "Models Get"
+        },
+        {
+            "tool": "google_bigquery_models_list",
+            "class": "GoogleBigQueryModelsList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/models",
+            "discovery_id": "models.list",
+            "summary": "Models List"
+        },
+        {
+            "tool": "google_bigquery_models_patch",
+            "class": "GoogleBigQueryModelsPatch",
+            "method": "PATCH",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}",
+            "discovery_id": "models.patch",
+            "summary": "Models Patch"
+        },
+        {
+            "tool": "google_bigquery_projects_get_service_account",
+            "class": "GoogleBigQueryProjectsGetServiceAccount",
+            "method": "GET",
+            "path": "/projects/{+projectId}/serviceAccount",
+            "discovery_id": "projects.getServiceAccount",
+            "summary": "Projects Get Service Account"
+        },
+        {
+            "tool": "google_bigquery_projects_list",
+            "class": "GoogleBigQueryProjectsList",
+            "method": "GET",
+            "path": "/projects",
+            "discovery_id": "projects.list",
+            "summary": "Projects List"
+        },
+        {
+            "tool": "google_bigquery_routines_delete",
+            "class": "GoogleBigQueryRoutinesDelete",
+            "method": "DELETE",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}",
+            "discovery_id": "routines.delete",
+            "summary": "Routines Delete"
+        },
+        {
+            "tool": "google_bigquery_routines_get",
+            "class": "GoogleBigQueryRoutinesGet",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}",
+            "discovery_id": "routines.get",
+            "summary": "Routines Get"
+        },
+        {
+            "tool": "google_bigquery_routines_get_iam_policy",
+            "class": "GoogleBigQueryRoutinesGetIamPolicy",
+            "method": "POST",
+            "path": "/{+resource}:getIamPolicy",
+            "discovery_id": "routines.getIamPolicy",
+            "summary": "Routines Get Iam Policy"
+        },
+        {
+            "tool": "google_bigquery_routines_insert",
+            "class": "GoogleBigQueryRoutinesInsert",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/routines",
+            "discovery_id": "routines.insert",
+            "summary": "Routines Insert"
+        },
+        {
+            "tool": "google_bigquery_routines_list",
+            "class": "GoogleBigQueryRoutinesList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/routines",
+            "discovery_id": "routines.list",
+            "summary": "Routines List"
+        },
+        {
+            "tool": "google_bigquery_routines_set_iam_policy",
+            "class": "GoogleBigQueryRoutinesSetIamPolicy",
+            "method": "POST",
+            "path": "/{+resource}:setIamPolicy",
+            "discovery_id": "routines.setIamPolicy",
+            "summary": "Routines Set Iam Policy"
+        },
+        {
+            "tool": "google_bigquery_routines_test_iam_permissions",
+            "class": "GoogleBigQueryRoutinesTestIamPermissions",
+            "method": "POST",
+            "path": "/{+resource}:testIamPermissions",
+            "discovery_id": "routines.testIamPermissions",
+            "summary": "Routines Test Iam Permissions"
+        },
+        {
+            "tool": "google_bigquery_routines_update",
+            "class": "GoogleBigQueryRoutinesUpdate",
+            "method": "PUT",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}",
+            "discovery_id": "routines.update",
+            "summary": "Routines Update"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_batch_delete",
+            "class": "GoogleBigQueryRowAccessPoliciesBatchDelete",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/rowAccessPolicies:batchDelete",
+            "discovery_id": "rowAccessPolicies.batchDelete",
+            "summary": "Row Access Policies Batch Delete"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_delete",
+            "class": "GoogleBigQueryRowAccessPoliciesDelete",
+            "method": "DELETE",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/rowAccessPolicies/{+policyId}",
+            "discovery_id": "rowAccessPolicies.delete",
+            "summary": "Row Access Policies Delete"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_get",
+            "class": "GoogleBigQueryRowAccessPoliciesGet",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/rowAccessPolicies/{+policyId}",
+            "discovery_id": "rowAccessPolicies.get",
+            "summary": "Row Access Policies Get"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_get_iam_policy",
+            "class": "GoogleBigQueryRowAccessPoliciesGetIamPolicy",
+            "method": "POST",
+            "path": "/{+resource}:getIamPolicy",
+            "discovery_id": "rowAccessPolicies.getIamPolicy",
+            "summary": "Row Access Policies Get Iam Policy"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_insert",
+            "class": "GoogleBigQueryRowAccessPoliciesInsert",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/rowAccessPolicies",
+            "discovery_id": "rowAccessPolicies.insert",
+            "summary": "Row Access Policies Insert"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_list",
+            "class": "GoogleBigQueryRowAccessPoliciesList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/rowAccessPolicies",
+            "discovery_id": "rowAccessPolicies.list",
+            "summary": "Row Access Policies List"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_test_iam_permissions",
+            "class": "GoogleBigQueryRowAccessPoliciesTestIamPermissions",
+            "method": "POST",
+            "path": "/{+resource}:testIamPermissions",
+            "discovery_id": "rowAccessPolicies.testIamPermissions",
+            "summary": "Row Access Policies Test Iam Permissions"
+        },
+        {
+            "tool": "google_bigquery_row_access_policies_update",
+            "class": "GoogleBigQueryRowAccessPoliciesUpdate",
+            "method": "PUT",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/rowAccessPolicies/{+policyId}",
+            "discovery_id": "rowAccessPolicies.update",
+            "summary": "Row Access Policies Update"
+        },
+        {
+            "tool": "google_bigquery_tabledata_insert_all",
+            "class": "GoogleBigQueryTabledataInsertAll",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/insertAll",
+            "discovery_id": "tabledata.insertAll",
+            "summary": "Tabledata Insert All"
+        },
+        {
+            "tool": "google_bigquery_tabledata_list",
+            "class": "GoogleBigQueryTabledataList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/data",
+            "discovery_id": "tabledata.list",
+            "summary": "Tabledata List"
+        },
+        {
+            "tool": "google_bigquery_tables_delete",
+            "class": "GoogleBigQueryTablesDelete",
+            "method": "DELETE",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}",
+            "discovery_id": "tables.delete",
+            "summary": "Tables Delete"
+        },
+        {
+            "tool": "google_bigquery_tables_get",
+            "class": "GoogleBigQueryTablesGet",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}",
+            "discovery_id": "tables.get",
+            "summary": "Tables Get"
+        },
+        {
+            "tool": "google_bigquery_tables_get_iam_policy",
+            "class": "GoogleBigQueryTablesGetIamPolicy",
+            "method": "POST",
+            "path": "/{+resource}:getIamPolicy",
+            "discovery_id": "tables.getIamPolicy",
+            "summary": "Tables Get Iam Policy"
+        },
+        {
+            "tool": "google_bigquery_tables_insert",
+            "class": "GoogleBigQueryTablesInsert",
+            "method": "POST",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables",
+            "discovery_id": "tables.insert",
+            "summary": "Tables Insert"
+        },
+        {
+            "tool": "google_bigquery_tables_list",
+            "class": "GoogleBigQueryTablesList",
+            "method": "GET",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables",
+            "discovery_id": "tables.list",
+            "summary": "Tables List"
+        },
+        {
+            "tool": "google_bigquery_tables_patch",
+            "class": "GoogleBigQueryTablesPatch",
+            "method": "PATCH",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}",
+            "discovery_id": "tables.patch",
+            "summary": "Tables Patch"
+        },
+        {
+            "tool": "google_bigquery_tables_set_iam_policy",
+            "class": "GoogleBigQueryTablesSetIamPolicy",
+            "method": "POST",
+            "path": "/{+resource}:setIamPolicy",
+            "discovery_id": "tables.setIamPolicy",
+            "summary": "Tables Set Iam Policy"
+        },
+        {
+            "tool": "google_bigquery_tables_test_iam_permissions",
+            "class": "GoogleBigQueryTablesTestIamPermissions",
+            "method": "POST",
+            "path": "/{+resource}:testIamPermissions",
+            "discovery_id": "tables.testIamPermissions",
+            "summary": "Tables Test Iam Permissions"
+        },
+        {
+            "tool": "google_bigquery_tables_update",
+            "class": "GoogleBigQueryTablesUpdate",
+            "method": "PUT",
+            "path": "/projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}",
+            "discovery_id": "tables.update",
+            "summary": "Tables Update"
+        }
+    ]
+}

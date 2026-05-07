@@ -3,17 +3,35 @@
 namespace OpenCompany\Integrations\RingCentral;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\RingCentral\Tools\RingCentralListMessages;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralApiDelete;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralApiGet;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralApiPost;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralApiPut;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralCreateContact;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralDeleteContact;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralDeleteMessage;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetAccount;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetCall;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetContact;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetCurrentUser;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetExtension;
 use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetMessage;
-use OpenCompany\Integrations\RingCentral\Tools\RingCentralSendSms;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetPresence;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralListAccountCalls;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralListAccountPhoneNumbers;
 use OpenCompany\Integrations\RingCentral\Tools\RingCentralListCalls;
 use OpenCompany\Integrations\RingCentral\Tools\RingCentralListContacts;
-use OpenCompany\Integrations\RingCentral\Tools\RingCentralGetCurrentUser;
-
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralListExtensionPhoneNumbers;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralListExtensions;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralListMessages;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralSendSms;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralUpdateContact;
+use OpenCompany\Integrations\RingCentral\Tools\RingCentralUpdateMessage;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -105,10 +123,10 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
     {
         return [
             'name' => 'RingCentral',
-            'description' => 'Cloud business communications — SMS, calls, voicemail, and contacts',
+            'description' => 'Cloud business communications, SMS, calls, voicemail, phone numbers, and contacts',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:ringcentral',
-            'category' => 'communication',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.ringcentral.com/api-reference/',
         ];
@@ -169,11 +187,20 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
 
             $name = trim(($json['name'] ?? '') . ' ' . ($json['loginName'] ?? ''));
 
+            if (!$response->successful()) {
+                $error = $json['message'] ?? $json['error'] ?? $response->body();
+
+                return [
+                    'success' => false,
+                    'error' => is_string($error) ? $error : json_encode($error),
+                ];
+            }
+
             return [
                 'success' => true,
                 'message' => "Connected to RingCentral API at {$baseUrl}" . ($name ? " ({$name})" : '') . '.',
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -211,6 +238,20 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'description' => 'Get details of a specific message.',
                 'icon' => 'ph:envelope-open',
             ],
+            'ringcentral_update_message' => [
+                'class' => RingCentralUpdateMessage::class,
+                'type' => 'write',
+                'name' => 'Update Message',
+                'description' => 'Update a message store record, commonly read status.',
+                'icon' => 'ph:envelope-simple-open',
+            ],
+            'ringcentral_delete_message' => [
+                'class' => RingCentralDeleteMessage::class,
+                'type' => 'write',
+                'name' => 'Delete Message',
+                'description' => 'Delete a message from the extension message store.',
+                'icon' => 'ph:trash',
+            ],
             'ringcentral_send_sms' => [
                 'class' => RingCentralSendSms::class,
                 'type' => 'write',
@@ -225,6 +266,20 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'description' => 'List call log records.',
                 'icon' => 'ph:phone',
             ],
+            'ringcentral_list_account_calls' => [
+                'class' => RingCentralListAccountCalls::class,
+                'type' => 'read',
+                'name' => 'List Account Calls',
+                'description' => 'List account-level call log records.',
+                'icon' => 'ph:phone-call',
+            ],
+            'ringcentral_get_call' => [
+                'class' => RingCentralGetCall::class,
+                'type' => 'read',
+                'name' => 'Get Call',
+                'description' => 'Get one extension call log record.',
+                'icon' => 'ph:phone-incoming',
+            ],
             'ringcentral_list_contacts' => [
                 'class' => RingCentralListContacts::class,
                 'type' => 'read',
@@ -232,12 +287,110 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'description' => 'List contacts from the address book.',
                 'icon' => 'ph:address-book',
             ],
+            'ringcentral_get_contact' => [
+                'class' => RingCentralGetContact::class,
+                'type' => 'read',
+                'name' => 'Get Contact',
+                'description' => 'Get one personal address book contact.',
+                'icon' => 'ph:address-book',
+            ],
+            'ringcentral_create_contact' => [
+                'class' => RingCentralCreateContact::class,
+                'type' => 'write',
+                'name' => 'Create Contact',
+                'description' => 'Create a personal address book contact.',
+                'icon' => 'ph:user-plus',
+            ],
+            'ringcentral_update_contact' => [
+                'class' => RingCentralUpdateContact::class,
+                'type' => 'write',
+                'name' => 'Update Contact',
+                'description' => 'Update a personal address book contact.',
+                'icon' => 'ph:pencil-simple',
+            ],
+            'ringcentral_delete_contact' => [
+                'class' => RingCentralDeleteContact::class,
+                'type' => 'write',
+                'name' => 'Delete Contact',
+                'description' => 'Delete a personal address book contact.',
+                'icon' => 'ph:user-minus',
+            ],
+            'ringcentral_get_account' => [
+                'class' => RingCentralGetAccount::class,
+                'type' => 'read',
+                'name' => 'Get Account',
+                'description' => 'Get RingCentral account metadata.',
+                'icon' => 'ph:buildings',
+            ],
+            'ringcentral_list_extensions' => [
+                'class' => RingCentralListExtensions::class,
+                'type' => 'read',
+                'name' => 'List Extensions',
+                'description' => 'List users and extensions in the account.',
+                'icon' => 'ph:users-three',
+            ],
+            'ringcentral_get_extension' => [
+                'class' => RingCentralGetExtension::class,
+                'type' => 'read',
+                'name' => 'Get Extension',
+                'description' => 'Get one RingCentral extension by ID.',
+                'icon' => 'ph:user-circle',
+            ],
+            'ringcentral_list_account_phone_numbers' => [
+                'class' => RingCentralListAccountPhoneNumbers::class,
+                'type' => 'read',
+                'name' => 'List Account Phone Numbers',
+                'description' => 'List account phone numbers and assignment metadata.',
+                'icon' => 'ph:phone-list',
+            ],
+            'ringcentral_list_extension_phone_numbers' => [
+                'class' => RingCentralListExtensionPhoneNumbers::class,
+                'type' => 'read',
+                'name' => 'List Extension Phone Numbers',
+                'description' => 'List phone numbers assigned to the authenticated extension.',
+                'icon' => 'ph:phone-list',
+            ],
+            'ringcentral_get_presence' => [
+                'class' => RingCentralGetPresence::class,
+                'type' => 'read',
+                'name' => 'Get Presence',
+                'description' => 'Get presence for the authenticated extension.',
+                'icon' => 'ph:broadcast',
+            ],
             'ringcentral_get_current_user' => [
                 'class' => RingCentralGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the current user\'s extension information.',
                 'icon' => 'ph:user-circle',
+            ],
+            'ringcentral_api_get' => [
+                'class' => RingCentralApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call a relative RingCentral API GET endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'ringcentral_api_post' => [
+                'class' => RingCentralApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call a relative RingCentral API POST endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'ringcentral_api_put' => [
+                'class' => RingCentralApiPut::class,
+                'type' => 'write',
+                'name' => 'API PUT',
+                'description' => 'Call a relative RingCentral API PUT endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'ringcentral_api_delete' => [
+                'class' => RingCentralApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call a relative RingCentral API DELETE endpoint.',
+                'icon' => 'ph:brackets-curly',
             ],
         ];
     }
@@ -280,7 +433,7 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new RingCentralService(
                 accessToken: $creds->get('ringcentral', 'access_token', '', $account),

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-bugsnag",
-    "description": "Bugsnag error monitoring integration for Laravel — list projects, errors, events, collaborators.",
+    "description": "Bugsnag error monitoring integration for Laravel - data access, errors, events, releases, pivots, builds, sessions, and privacy exports.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "bugsnag", "error-monitoring", "opencompany"],
+    "keywords": [
+        "tools",
+        "bugsnag",
+        "error-monitoring",
+        "release-tracking",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

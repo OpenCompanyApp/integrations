@@ -6,19 +6,19 @@
 
 ```lua
 -- Step 1: Find the customer
-local contacts = app.integrations.zoho_invoice.list_contacts({
+local contacts = app.integrations["zoho-invoice"].zohoinvoice_list_contacts({
     search_text = "Acme Corp"
 })
 local customer_id = contacts.contacts[1].contact_id
 
 -- Step 2: Find items to add
-local items = app.integrations.zoho_invoice.list_items({
+local items = app.integrations["zoho-invoice"].zohoinvoice_list_items({
     search_text = "Consulting"
 })
 local item_id = items.items[1].item_id
 
 -- Step 3: Create the invoice
-local invoice = app.integrations.zoho_invoice.create_invoice({
+local invoice = app.integrations["zoho-invoice"].zohoinvoice_create_invoice({
     customer_id = customer_id,
     line_items = {
         {
@@ -38,7 +38,7 @@ print("Total: " .. invoice.invoice.total)
 ### List overdue invoices
 
 ```lua
-local result = app.integrations.zoho_invoice.list_invoices({
+local result = app.integrations["zoho-invoice"].zohoinvoice_list_invoices({
     status = "overdue",
     sort_column = "date",
     sort_order = "ascending"
@@ -52,7 +52,7 @@ end
 ### Get payments for a date range
 
 ```lua
-local payments = app.integrations.zoho_invoice.list_payments({
+local payments = app.integrations["zoho-invoice"].zohoinvoice_list_payments({
     date_start = "2025-01-01",
     date_end = "2025-01-31"
 })
@@ -68,7 +68,7 @@ print("Total received: " .. total)
 ### Check your connection
 
 ```lua
-local user = app.integrations.zoho_invoice.get_current_user({})
+local user = app.integrations["zoho-invoice"].zohoinvoice_get_current_user({})
 print("Connected as: " .. user.user.name .. " (" .. user.user.email .. ")")
 ```
 
@@ -126,7 +126,7 @@ Alternatively, create line items without an existing item:
 All list endpoints support `page` and `per_page` parameters:
 
 ```lua
-local result = app.integrations.zoho_invoice.list_invoices({
+local result = app.integrations["zoho-invoice"].zohoinvoice_list_invoices({
     page = 2,
     per_page = 50
 })
@@ -138,14 +138,14 @@ If you have multiple Zoho Invoice accounts configured, use account-specific name
 
 ```lua
 -- Default account (always works)
-app.integrations.zoho_invoice.list_invoices({})
+app.integrations["zoho-invoice"].zohoinvoice_list_invoices({})
 
 -- Explicit default (portable across setups)
-app.integrations.zoho_invoice.default.list_invoices({})
+app.integrations["zoho-invoice"].default.zohoinvoice_list_invoices({})
 
 -- Named accounts
-app.integrations.zoho_invoice.work.list_invoices({})
-app.integrations.zoho_invoice.personal.list_invoices({})
+app.integrations["zoho-invoice"].work.zohoinvoice_list_invoices({})
+app.integrations["zoho-invoice"].personal.zohoinvoice_list_invoices({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

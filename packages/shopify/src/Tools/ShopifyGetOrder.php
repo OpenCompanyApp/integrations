@@ -2,48 +2,48 @@
 
 namespace OpenCompany\Integrations\Shopify\Tools;
 
-use OpenCompany\Integrations\Shopify\ShopifyService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get a single order from the Shopify store by ID.
+ * Get one Shopify Order.
  */
-class ShopifyGetOrder implements Tool
+class ShopifyGetOrder extends AbstractShopifyRestTool
 {
-    public function __construct(
-        private ShopifyService $service,
-    ) {}
+    protected string $toolName = 'shopify_get_order';
 
-    public function name(): string
-    {
-        return 'shopify_get_order';
-    }
+    protected string $toolDescription = 'Get one Shopify Order.';
 
-    public function description(): string
-    {
-        return 'Get a single order from the Shopify store by its ID. Returns full order details including line items and totals.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The order ID.'],
-        ];
-    }
+    protected string $path = '/orders/{order_id}.json';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Shopify integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'order_id' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Shopify Order ID.',
+    ],
+    'fields' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Comma-separated fields to return.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented query parameters.',
+    ],
+];
 
-            $result = $this->service->getOrder($args['id']);
+    /** @var list<string> */
+    protected array $required = [
+    'order_id',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'fields',
+];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

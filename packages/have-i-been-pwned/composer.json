@@ -1,0 +1,39 @@
+{
+    "name": "opencompanyapp/integration-have-i-been-pwned",
+    "description": "Have I Been Pwned integration for Laravel AI agents - breach catalogue, account breach checks, pastes, domains, stealer logs, subscription status, and Pwned Passwords.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\HaveIBeenPwned\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\HaveIBeenPwned\\HaveIBeenPwnedServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "hibp",
+        "have-i-been-pwned",
+        "breach",
+        "security",
+        "passwords",
+        "opencompany"
+    ]
+}

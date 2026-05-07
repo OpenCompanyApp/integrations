@@ -92,7 +92,7 @@ class FreshteamToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'HR software for recruiting, onboarding, and employee management',
             'icon' => 'ph:users-three',
             'logo' => 'simple-icons:freshteam',
-            'category' => 'hr',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.freshteam.com/api/',
         ];

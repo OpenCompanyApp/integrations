@@ -51,7 +51,7 @@ class BitlyShortenLink implements Tool
     public function parameters(): array
     {
         return [
-            'long_url' => ['type' => 'string', 'required' => true, 'description' => 'The long URL to shorten (e.g., "https://example.com/very/long/path").'],
+            'long_url' => ['type' => 'string', 'required' => true, 'description' => 'The long URL to shorten (e.g., "https://example.test/very/long/path").'],
             'domain' => ['type' => 'string', 'description' => 'Custom short domain to use (e.g., "bit.ly", "j.mp"). Defaults to the account\'s default domain.'],
             'group_guid' => ['type' => 'string', 'description' => 'The GUID of the group to associate this link with. If omitted, uses the default group.'],
         ];

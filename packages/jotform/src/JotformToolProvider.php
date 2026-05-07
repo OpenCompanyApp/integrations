@@ -91,7 +91,7 @@ class JotformToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Online form builder — create forms, collect submissions, and manage questions',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:jotform',
-            'category' => 'forms',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://api.jotform.com/docs/',
         ];

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-whatsapp",
-    "description": "WhatsApp Business API integration for Laravel — send messages, manage templates and contacts.",
+    "description": "WhatsApp Business Platform integration for Laravel: messages, media, templates, phone numbers, profiles, and webhooks.",
     "license": "MIT",
     "authors": [
         {

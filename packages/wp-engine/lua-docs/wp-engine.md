@@ -15,7 +15,7 @@ List WP Engine sites with optional pagination.
 
 ```lua
 -- List sites
-local result = app.integrations.wp_engine.list_sites({
+local result = app.integrations["wp-engine"].wp_engine_list_sites({
   limit = 10,
   page = 1
 })
@@ -40,7 +40,7 @@ Get details for a specific WP Engine site.
 ### Examples
 
 ```lua
-local result = app.integrations.wp_engine.get_site({ id = "12345" })
+local result = app.integrations["wp-engine"].wp_engine_get_site({ id = "12345" })
 print(result.name)
 print(result.status)
 print(result.created_at)
@@ -63,7 +63,7 @@ List WP Engine installs with optional pagination.
 
 ```lua
 -- List installs
-local result = app.integrations.wp_engine.list_installs({
+local result = app.integrations["wp-engine"].wp_engine_list_installs({
   limit = 10,
   page = 1
 })
@@ -88,7 +88,7 @@ Get details for a specific WP Engine install.
 ### Examples
 
 ```lua
-local result = app.integrations.wp_engine.get_install({ id = "67890" })
+local result = app.integrations["wp-engine"].wp_engine_get_install({ id = "67890" })
 print(result.name)
 print(result.environment)
 print(result.php_version)
@@ -111,7 +111,7 @@ List domains across WP Engine installs.
 ### Examples
 
 ```lua
-local result = app.integrations.wp_engine.list_domains({
+local result = app.integrations["wp-engine"].wp_engine_list_domains({
   limit = 50,
   page = 1
 })
@@ -137,7 +137,7 @@ List WP Engine users with optional pagination.
 ### Examples
 
 ```lua
-local result = app.integrations.wp_engine.list_users({
+local result = app.integrations["wp-engine"].wp_engine_list_users({
   limit = 10,
   page = 1
 })
@@ -160,7 +160,7 @@ None.
 ### Examples
 
 ```lua
-local result = app.integrations.wp_engine.get_current_user({})
+local result = app.integrations["wp-engine"].wp_engine_get_current_user({})
 print("Logged in as: " .. result.email .. " (" .. result.id .. ")")
 ```
 
@@ -172,14 +172,14 @@ If you have multiple WP Engine accounts configured, use account-specific namespa
 
 ```lua
 -- Default account (always works)
-app.integrations.wp_engine.function_name({...})
+app.integrations["wp-engine"].wp_engine_function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.wp_engine.default.function_name({...})
+app.integrations["wp-engine"].default.wp_engine_function_name({...})
 
 -- Named accounts
-app.integrations.wp_engine.production.function_name({...})
-app.integrations.wp_engine.staging.function_name({...})
+app.integrations["wp-engine"].production.wp_engine_function_name({...})
+app.integrations["wp-engine"].staging.wp_engine_function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

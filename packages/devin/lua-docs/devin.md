@@ -1,136 +1,130 @@
-# Devin AI — Lua API Reference
+# Devin - Lua API Reference
 
-## create_session
+Namespace: `app.integrations.devin`
 
-Create a new Devin AI session with a task prompt.
+This integration targets Devin's current v3 API by default. Configure `org_id`
+for organization-scoped tools. If a host still uses a URL ending in `/v1`, the
+basic session tools use legacy v1 endpoints; v3-only tools return a clear error.
 
-### Parameters
+## Sessions
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `prompt` | string | yes | The task description for Devin to execute |
-| `idempotency_key` | string | no | Unique key to prevent duplicate session creation |
-
-### Examples
+Create a session:
 
 ```lua
-local result = app.integrations.devin.create_session({
-  prompt = "Create a new React component for a login form with email and password fields"
-})
-
-print("Session ID: " .. result.session_id)
-print("Status: " .. result.status)
-```
-
-### With idempotency key
-
-```lua
-local result = app.integrations.devin.create_session({
-  prompt = "Fix the failing tests in the auth module",
-  idempotency_key = "fix-auth-tests-2026-04-05"
+local session = app.integrations.devin.create_session({
+  prompt = "Investigate why the example.test billing specs fail",
+  title = "Billing spec investigation",
+  tags = { "billing", "tests" },
+  repos = { "example/example-app" }
 })
 ```
 
----
-
-## get_session
-
-Retrieve details and current status of a Devin session.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The ID of the session to retrieve |
-
-### Examples
+List and inspect sessions:
 
 ```lua
-local result = app.integrations.devin.get_session({
-  session_id = "sess_abc123"
-})
+local sessions = app.integrations.devin.list_sessions({ first = 10 })
 
-print("Status: " .. result.status)
-print("Created at: " .. result.created_at)
-```
-
----
-
-## list_sessions
-
-List all Devin sessions.
-
-### Parameters
-
-None.
-
-### Examples
-
-```lua
-local result = app.integrations.devin.list_sessions()
-
-for _, session in ipairs(result.sessions or {}) do
-  print(session.session_id .. " - " .. session.status)
-end
-```
-
----
-
-## send_message
-
-Send a message to an existing Devin session.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `session_id` | string | yes | The ID of the session to message |
-| `message` | string | yes | The message content to send |
-
-### Examples
-
-```lua
-local result = app.integrations.devin.send_message({
-  session_id = "sess_abc123",
-  message = "Can you also add form validation to the login component?"
+local details = app.integrations.devin.get_session({
+  session_id = "devin-abc123"
 })
 ```
 
----
-
-## get_current_user
-
-Get information about the currently authenticated Devin user.
-
-### Parameters
-
-None.
-
-### Examples
+Send follow-up instructions:
 
 ```lua
-local result = app.integrations.devin.get_current_user()
-
-print("User: " .. (result.name or "Unknown"))
-print("Email: " .. (result.email or "Unknown"))
+app.integrations.devin.send_message({
+  session_id = "devin-abc123",
+  message = "Please summarize the failing assertion before changing code."
+})
 ```
 
----
+Terminate a session:
+
+```lua
+app.integrations.devin.terminate_session({
+  session_id = "devin-abc123"
+})
+```
+
+## Session Metadata
+
+Use these v3 tools after creating or discovering a session:
+
+```lua
+local messages = app.integrations.devin.list_session_messages({
+  session_id = "devin-abc123",
+  first = 25
+})
+
+local attachments = app.integrations.devin.list_session_attachments({
+  session_id = "devin-abc123"
+})
+
+local tags = app.integrations.devin.get_session_tags({
+  session_id = "devin-abc123"
+})
+
+app.integrations.devin.append_session_tags({
+  session_id = "devin-abc123",
+  tags = { "reviewed" }
+})
+```
+
+Generate and read insights:
+
+```lua
+app.integrations.devin.generate_session_insights({
+  session_id = "devin-abc123"
+})
+
+local insights = app.integrations.devin.get_session_insights({
+  session_id = "devin-abc123"
+})
+```
+
+## Account And Secrets
+
+Check which principal the API key represents:
+
+```lua
+local self = app.integrations.devin.get_current_user()
+```
+
+Manage organization secrets:
+
+```lua
+local secrets = app.integrations.devin.list_secrets({ first = 20 })
+
+local secret = app.integrations.devin.create_secret({
+  type = "key-value",
+  key = "EXAMPLE_TOKEN",
+  value = "dummy-value",
+  is_sensitive = true,
+  note = "Safe fake example"
+})
+
+app.integrations.devin.delete_secret({
+  secret_id = secret.id
+})
+```
+
+Secret list responses return metadata only. Do not expect secret values to be
+returned after creation.
+
+## Return Shapes
+
+The integration returns Devin's JSON objects with minimal normalization. Cursor
+paginated v3 responses may include collection items and page info fields exactly
+as Devin returns them. Legacy v1 session responses may use older field names such
+as `session_id` instead of v3 IDs such as `devin_id`.
 
 ## Multi-Account Usage
 
-If you have multiple Devin accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.devin.create_session({ prompt = "..." })
-
--- Explicit default (portable across setups)
 app.integrations.devin.default.create_session({ prompt = "..." })
-
--- Named accounts
-app.integrations.devin.work.create_session({ prompt = "..." })
-app.integrations.devin.personal.create_session({ prompt = "..." })
+app.integrations.devin.engineering.create_session({ prompt = "..." })
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only credentials, organization ID,
+and API version differ.

@@ -65,6 +65,10 @@ class RazorpayCreateOrder implements Tool
                 return ToolResult::error('Razorpay integration is not configured.');
             }
 
+            if (empty($args['amount'])) {
+                return ToolResult::error('Amount is required.');
+            }
+
             $amount = (int) $args['amount'];
             $currency = $args['currency'] ?? 'INR';
             $receipt = $args['receipt'] ?? '';

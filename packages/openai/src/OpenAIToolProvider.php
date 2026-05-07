@@ -105,7 +105,7 @@ class OpenAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             'description' => 'Chat completions, embeddings, images, audio, assistants, and file management',
             'icon' => 'ph:openai-logo',
             'logo' => 'simple-icons:openai',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://platform.openai.com/docs/api-reference',
         ];

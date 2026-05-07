@@ -1,200 +1,86 @@
-# Salesloft — Lua API Reference
+# Salesloft Lua API Reference
 
-## list_sequences
+Namespace: `app.integrations.salesloft`
 
-List call sequences from Salesloft with optional status filtering and pagination.
+Use this integration for Salesloft people, accounts, cadences, cadence
+memberships, tasks, calls, emails, notes, users, current-user checks, and generic
+relative API calls. Responses are parsed Salesloft JSON, usually with `data` and
+`metadata` keys.
 
-### Parameters
+## People And Accounts
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of sequences to return per page (default: 25) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-| `status` | string | no | Filter by sequence status (e.g., `"active"`, `"paused"`) |
+| Function | Purpose |
+|----------|---------|
+| `list_people({ page?, per_page?, email_address?, account_id? })` | List people. |
+| `get_person({ id })` | Get one person. |
+| `create_person({ payload })` | Create a person with an official payload. |
+| `update_person({ id, payload })` | Update a person. |
+| `delete_person({ id })` | Delete a person. |
+| `list_accounts({ page?, per_page?, domain? })` | List accounts. |
+| `get_account({ id })` | Get one account. |
+| `create_account({ payload })` | Create an account. |
+| `update_account({ id, payload })` | Update an account. |
+| `delete_account({ id })` | Delete an account. |
 
-### Examples
+Use `payload` for official Salesloft request bodies so the package does not hide
+new fields added by the API.
 
-#### List all active sequences
+## Cadences And Tasks
 
-```lua
-local result = app.integrations.salesloft.list_sequences({
-  status = "active",
-  limit = 50
-})
+| Function | Purpose |
+|----------|---------|
+| `list_cadences({ page?, per_page?, owned_by_user_id? })` | List cadences. |
+| `get_cadence({ id })` | Get one cadence. |
+| `list_cadence_memberships({ page?, per_page?, cadence_id?, person_id? })` | List cadence memberships. |
+| `create_cadence_membership({ payload })` | Add a person to a cadence. |
+| `list_tasks({ page?, per_page?, user_id?, person_id?, due_on? })` | List tasks. |
+| `get_task({ id })` | Get one task. |
+| `update_task({ id, payload })` | Update a task. |
 
-for _, seq in ipairs(result.data) do
-  print(seq.id .. ": " .. seq.name .. " (" .. seq.status .. ")")
-end
-```
+## Activities
 
-#### Paginate through sequences
+| Function | Purpose |
+|----------|---------|
+| `list_calls({ page?, per_page?, person_id?, user_id? })` | List call activities. |
+| `create_call({ payload })` | Create a call activity. |
+| `list_emails({ page?, per_page?, person_id?, user_id? })` | List email activities. |
+| `list_notes({ page?, per_page?, person_id?, account_id? })` | List notes. |
+| `create_note({ payload })` | Create a note. |
 
-```lua
-local result = app.integrations.salesloft.list_sequences({
-  limit = 25,
-  page = 2
-})
-```
+## Users And Legacy Wrappers
 
----
+| Function | Purpose |
+|----------|---------|
+| `list_users({ page?, per_page?, email? })` | List Salesloft users. |
+| `get_user({ id })` | Get one Salesloft user. |
+| `get_current_user({})` | Fetch `/v3/users/me` to identify the token owner. |
+| `list_sequences({ limit?, page?, status? })` | Legacy compatibility wrapper for `/v3/call-sequences`. |
+| `get_sequence({ id })` | Legacy compatibility wrapper for one call sequence. |
+| `create_sequence({ name, steps?, owner_id?, status?, targets? })` | Legacy compatibility wrapper to create a call sequence. |
+| `list_rules({ limit?, page? })` | Legacy compatibility wrapper for `/v3/rules`. |
+| `get_rule({ id })` | Legacy compatibility wrapper for one rule. |
 
-## get_sequence
+Prefer cadences and cadence memberships for current Salesloft workflow work.
 
-Get detailed information about a specific call sequence.
+## Generic API Helpers
 
-### Parameters
+| Function | Purpose |
+|----------|---------|
+| `api_get({ path, params? })` | Send GET to a relative Salesloft API path. |
+| `api_post({ path, payload? })` | Send POST to a relative Salesloft API path. |
+| `api_put({ path, payload? })` | Send PUT to a relative Salesloft API path. |
+| `api_delete({ path, payload? })` | Send DELETE to a relative Salesloft API path. |
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The sequence ID |
-
-### Examples
-
-#### Get a sequence by ID
-
-```lua
-local result = app.integrations.salesloft.get_sequence({
-  id = 12345
-})
-
-print("Name: " .. result.data.name)
-print("Status: " .. result.data.status)
-print("Owner: " .. result.data.owner_id)
-```
-
----
-
-## create_sequence
-
-Create a new call sequence in Salesloft.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name of the call sequence |
-| `steps` | array | no | Array of step definitions for the sequence |
-| `owner_id` | integer | no | ID of the user who will own this sequence |
-| `status` | string | no | Initial status (e.g., `"active"`, `"paused"`) |
-| `targets` | array | no | Array of target people or account IDs |
-
-### Examples
-
-#### Create a simple sequence
-
-```lua
-local result = app.integrations.salesloft.create_sequence({
-  name = "Q1 Outreach Campaign",
-  owner_id = 42,
-  status = "active"
-})
-
-print("Created sequence: " .. result.data.id)
-```
-
-#### Create a sequence with steps and targets
-
-```lua
-local result = app.integrations.salesloft.create_sequence({
-  name = "Follow-up Campaign",
-  owner_id = 42,
-  steps = {
-    { type = "call", name = "Initial Call" },
-    { type = "email", name = "Follow-up Email" }
-  },
-  targets = { 101, 102, 103 },
-  status = "active"
-})
-```
-
----
-
-## list_rules
-
-List automation rules from Salesloft with pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of rules to return per page (default: 25) |
-| `page` | integer | no | Page number for pagination (default: 1) |
-
-### Examples
-
-#### List all rules
-
-```lua
-local result = app.integrations.salesloft.list_rules({
-  limit = 50
-})
-
-for _, rule in ipairs(result.data) do
-  print(rule.id .. ": " .. rule.name)
-end
-```
-
----
-
-## get_rule
-
-Get detailed information about a specific automation rule.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The rule ID |
-
-### Examples
-
-#### Get a rule by ID
-
-```lua
-local result = app.integrations.salesloft.get_rule({
-  id = 67890
-})
-
-print("Rule: " .. result.data.name)
-```
-
----
-
-## get_current_user
-
-Get the profile of the currently authenticated Salesloft user. Useful for verifying credentials and identifying the connected account.
-
-### Parameters
-
-None.
-
-### Examples
-
-#### Get current user
-
-```lua
-local result = app.integrations.salesloft.get_current_user({})
-
-print("User: " .. result.data.first_name .. " " .. result.data.last_name)
-print("Email: " .. result.data.email)
-```
-
----
+Generic helpers reject absolute URLs. Use paths such as `/v2/people`,
+`/v2/tasks/123`, or `/v2/activities/calls` so the host controls the API base URL
+and credentials.
 
 ## Multi-Account Usage
 
-If you have multiple Salesloft accounts configured, use account-specific namespaces:
+All functions work under account-specific namespaces:
 
 ```lua
--- Default account (always works)
-app.integrations.salesloft.list_sequences({...})
-
--- Explicit default (portable across setups)
-app.integrations.salesloft.default.list_sequences({...})
-
--- Named accounts
-app.integrations.salesloft.production.list_sequences({...})
-app.integrations.salesloft.staging.list_sequences({...})
+app.integrations.salesloft.list_people({ per_page = 25 })
+app.integrations.salesloft.default.list_people({})
+app.integrations.salesloft.production.list_people({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

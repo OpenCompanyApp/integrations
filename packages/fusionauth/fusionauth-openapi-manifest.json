@@ -1,0 +1,2264 @@
+{
+    "source": "https://raw.githubusercontent.com/FusionAuth/fusionauth-openapi/main/openapi.yaml",
+    "docs": "https://fusionauth.io/docs/sdks/openapi",
+    "title": "FusionAuth API",
+    "version": "1.66.0",
+    "method_count": 322,
+    "generated_at": "2026-05-07T19:01:50+00:00",
+    "operations": {
+        "fusionauth_action_user_with_id": {
+            "slug": "fusionauth_action_user_with_id",
+            "method": "POST",
+            "path": "/api/user/action",
+            "operation_id": "actionUserWithId",
+            "class": "FusionAuthActionUserWithId"
+        },
+        "fusionauth_activate_reactor_with_id": {
+            "slug": "fusionauth_activate_reactor_with_id",
+            "method": "POST",
+            "path": "/api/reactor",
+            "operation_id": "activateReactorWithId",
+            "class": "FusionAuthActivateReactorWithId"
+        },
+        "fusionauth_cancel_action_with_id": {
+            "slug": "fusionauth_cancel_action_with_id",
+            "method": "DELETE",
+            "path": "/api/user/action/{actionId}",
+            "operation_id": "cancelActionWithId",
+            "class": "FusionAuthCancelActionWithId"
+        },
+        "fusionauth_change_password_with_id": {
+            "slug": "fusionauth_change_password_with_id",
+            "method": "POST",
+            "path": "/api/user/change-password/{changePasswordId}",
+            "operation_id": "changePasswordWithId",
+            "class": "FusionAuthChangePasswordWithId"
+        },
+        "fusionauth_comment_on_user_with_id": {
+            "slug": "fusionauth_comment_on_user_with_id",
+            "method": "POST",
+            "path": "/api/user/comment",
+            "operation_id": "commentOnUserWithId",
+            "class": "FusionAuthCommentOnUserWithId"
+        },
+        "fusionauth_complete_verify_identity_with_id": {
+            "slug": "fusionauth_complete_verify_identity_with_id",
+            "method": "POST",
+            "path": "/api/identity/verify/complete",
+            "operation_id": "completeVerifyIdentityWithId",
+            "class": "FusionAuthCompleteVerifyIdentityWithId"
+        },
+        "fusionauth_complete_web_authn_assertion_with_id": {
+            "slug": "fusionauth_complete_web_authn_assertion_with_id",
+            "method": "POST",
+            "path": "/api/webauthn/assert",
+            "operation_id": "completeWebAuthnAssertionWithId",
+            "class": "FusionAuthCompleteWebAuthnAssertionWithId"
+        },
+        "fusionauth_complete_web_authn_login_with_id": {
+            "slug": "fusionauth_complete_web_authn_login_with_id",
+            "method": "POST",
+            "path": "/api/webauthn/login",
+            "operation_id": "completeWebAuthnLoginWithId",
+            "class": "FusionAuthCompleteWebAuthnLoginWithId"
+        },
+        "fusionauth_complete_web_authn_registration_with_id": {
+            "slug": "fusionauth_complete_web_authn_registration_with_id",
+            "method": "POST",
+            "path": "/api/webauthn/register/complete",
+            "operation_id": "completeWebAuthnRegistrationWithId",
+            "class": "FusionAuthCompleteWebAuthnRegistrationWithId"
+        },
+        "fusionauth_create_apikey": {
+            "slug": "fusionauth_create_apikey",
+            "method": "POST",
+            "path": "/api/api-key",
+            "operation_id": "createAPIKey",
+            "class": "FusionAuthCreateApikey"
+        },
+        "fusionauth_create_apikey_with_id": {
+            "slug": "fusionauth_create_apikey_with_id",
+            "method": "POST",
+            "path": "/api/api-key/{keyId}",
+            "operation_id": "createAPIKeyWithId",
+            "class": "FusionAuthCreateApikeyWithId"
+        },
+        "fusionauth_create_application": {
+            "slug": "fusionauth_create_application",
+            "method": "POST",
+            "path": "/api/application",
+            "operation_id": "createApplication",
+            "class": "FusionAuthCreateApplication"
+        },
+        "fusionauth_create_application_role": {
+            "slug": "fusionauth_create_application_role",
+            "method": "POST",
+            "path": "/api/application/{applicationId}/role",
+            "operation_id": "createApplicationRole",
+            "class": "FusionAuthCreateApplicationRole"
+        },
+        "fusionauth_create_application_role_with_id": {
+            "slug": "fusionauth_create_application_role_with_id",
+            "method": "POST",
+            "path": "/api/application/{applicationId}/role/{roleId}",
+            "operation_id": "createApplicationRoleWithId",
+            "class": "FusionAuthCreateApplicationRoleWithId"
+        },
+        "fusionauth_create_application_with_id": {
+            "slug": "fusionauth_create_application_with_id",
+            "method": "POST",
+            "path": "/api/application/{applicationId}",
+            "operation_id": "createApplicationWithId",
+            "class": "FusionAuthCreateApplicationWithId"
+        },
+        "fusionauth_create_audit_log_with_id": {
+            "slug": "fusionauth_create_audit_log_with_id",
+            "method": "POST",
+            "path": "/api/system/audit-log",
+            "operation_id": "createAuditLogWithId",
+            "class": "FusionAuthCreateAuditLogWithId"
+        },
+        "fusionauth_create_connector": {
+            "slug": "fusionauth_create_connector",
+            "method": "POST",
+            "path": "/api/connector",
+            "operation_id": "createConnector",
+            "class": "FusionAuthCreateConnector"
+        },
+        "fusionauth_create_connector_with_id": {
+            "slug": "fusionauth_create_connector_with_id",
+            "method": "POST",
+            "path": "/api/connector/{connectorId}",
+            "operation_id": "createConnectorWithId",
+            "class": "FusionAuthCreateConnectorWithId"
+        },
+        "fusionauth_create_consent": {
+            "slug": "fusionauth_create_consent",
+            "method": "POST",
+            "path": "/api/consent",
+            "operation_id": "createConsent",
+            "class": "FusionAuthCreateConsent"
+        },
+        "fusionauth_create_consent_with_id": {
+            "slug": "fusionauth_create_consent_with_id",
+            "method": "POST",
+            "path": "/api/consent/{consentId}",
+            "operation_id": "createConsentWithId",
+            "class": "FusionAuthCreateConsentWithId"
+        },
+        "fusionauth_create_device_approve": {
+            "slug": "fusionauth_create_device_approve",
+            "method": "POST",
+            "path": "/oauth2/device/approve",
+            "operation_id": "createDeviceApprove",
+            "class": "FusionAuthCreateDeviceApprove"
+        },
+        "fusionauth_create_device_authorize": {
+            "slug": "fusionauth_create_device_authorize",
+            "method": "POST",
+            "path": "/oauth2/device_authorize",
+            "operation_id": "createDevice_authorize",
+            "class": "FusionAuthCreateDeviceAuthorize"
+        },
+        "fusionauth_create_device_user_code": {
+            "slug": "fusionauth_create_device_user_code",
+            "method": "POST",
+            "path": "/oauth2/device/user-code",
+            "operation_id": "createDeviceUserCode",
+            "class": "FusionAuthCreateDeviceUserCode"
+        },
+        "fusionauth_create_email_template": {
+            "slug": "fusionauth_create_email_template",
+            "method": "POST",
+            "path": "/api/email/template",
+            "operation_id": "createEmailTemplate",
+            "class": "FusionAuthCreateEmailTemplate"
+        },
+        "fusionauth_create_email_template_with_id": {
+            "slug": "fusionauth_create_email_template_with_id",
+            "method": "POST",
+            "path": "/api/email/template/{emailTemplateId}",
+            "operation_id": "createEmailTemplateWithId",
+            "class": "FusionAuthCreateEmailTemplateWithId"
+        },
+        "fusionauth_create_entity": {
+            "slug": "fusionauth_create_entity",
+            "method": "POST",
+            "path": "/api/entity",
+            "operation_id": "createEntity",
+            "class": "FusionAuthCreateEntity"
+        },
+        "fusionauth_create_entity_type": {
+            "slug": "fusionauth_create_entity_type",
+            "method": "POST",
+            "path": "/api/entity/type",
+            "operation_id": "createEntityType",
+            "class": "FusionAuthCreateEntityType"
+        },
+        "fusionauth_create_entity_type_permission": {
+            "slug": "fusionauth_create_entity_type_permission",
+            "method": "POST",
+            "path": "/api/entity/type/{entityTypeId}/permission",
+            "operation_id": "createEntityTypePermission",
+            "class": "FusionAuthCreateEntityTypePermission"
+        },
+        "fusionauth_create_entity_type_permission_with_id": {
+            "slug": "fusionauth_create_entity_type_permission_with_id",
+            "method": "POST",
+            "path": "/api/entity/type/{entityTypeId}/permission/{permissionId}",
+            "operation_id": "createEntityTypePermissionWithId",
+            "class": "FusionAuthCreateEntityTypePermissionWithId"
+        },
+        "fusionauth_create_entity_type_with_id": {
+            "slug": "fusionauth_create_entity_type_with_id",
+            "method": "POST",
+            "path": "/api/entity/type/{entityTypeId}",
+            "operation_id": "createEntityTypeWithId",
+            "class": "FusionAuthCreateEntityTypeWithId"
+        },
+        "fusionauth_create_entity_with_id": {
+            "slug": "fusionauth_create_entity_with_id",
+            "method": "POST",
+            "path": "/api/entity/{entityId}",
+            "operation_id": "createEntityWithId",
+            "class": "FusionAuthCreateEntityWithId"
+        },
+        "fusionauth_create_family": {
+            "slug": "fusionauth_create_family",
+            "method": "POST",
+            "path": "/api/user/family",
+            "operation_id": "createFamily",
+            "class": "FusionAuthCreateFamily"
+        },
+        "fusionauth_create_family_with_id": {
+            "slug": "fusionauth_create_family_with_id",
+            "method": "POST",
+            "path": "/api/user/family/{familyId}",
+            "operation_id": "createFamilyWithId",
+            "class": "FusionAuthCreateFamilyWithId"
+        },
+        "fusionauth_create_form": {
+            "slug": "fusionauth_create_form",
+            "method": "POST",
+            "path": "/api/form",
+            "operation_id": "createForm",
+            "class": "FusionAuthCreateForm"
+        },
+        "fusionauth_create_form_field": {
+            "slug": "fusionauth_create_form_field",
+            "method": "POST",
+            "path": "/api/form/field",
+            "operation_id": "createFormField",
+            "class": "FusionAuthCreateFormField"
+        },
+        "fusionauth_create_form_field_with_id": {
+            "slug": "fusionauth_create_form_field_with_id",
+            "method": "POST",
+            "path": "/api/form/field/{fieldId}",
+            "operation_id": "createFormFieldWithId",
+            "class": "FusionAuthCreateFormFieldWithId"
+        },
+        "fusionauth_create_form_with_id": {
+            "slug": "fusionauth_create_form_with_id",
+            "method": "POST",
+            "path": "/api/form/{formId}",
+            "operation_id": "createFormWithId",
+            "class": "FusionAuthCreateFormWithId"
+        },
+        "fusionauth_create_group": {
+            "slug": "fusionauth_create_group",
+            "method": "POST",
+            "path": "/api/group",
+            "operation_id": "createGroup",
+            "class": "FusionAuthCreateGroup"
+        },
+        "fusionauth_create_group_members_with_id": {
+            "slug": "fusionauth_create_group_members_with_id",
+            "method": "POST",
+            "path": "/api/group/member",
+            "operation_id": "createGroupMembersWithId",
+            "class": "FusionAuthCreateGroupMembersWithId"
+        },
+        "fusionauth_create_group_with_id": {
+            "slug": "fusionauth_create_group_with_id",
+            "method": "POST",
+            "path": "/api/group/{groupId}",
+            "operation_id": "createGroupWithId",
+            "class": "FusionAuthCreateGroupWithId"
+        },
+        "fusionauth_create_identity_provider": {
+            "slug": "fusionauth_create_identity_provider",
+            "method": "POST",
+            "path": "/api/identity-provider",
+            "operation_id": "createIdentityProvider",
+            "class": "FusionAuthCreateIdentityProvider"
+        },
+        "fusionauth_create_identity_provider_with_id": {
+            "slug": "fusionauth_create_identity_provider_with_id",
+            "method": "POST",
+            "path": "/api/identity-provider/{identityProviderId}",
+            "operation_id": "createIdentityProviderWithId",
+            "class": "FusionAuthCreateIdentityProviderWithId"
+        },
+        "fusionauth_create_introspect": {
+            "slug": "fusionauth_create_introspect",
+            "method": "POST",
+            "path": "/oauth2/introspect",
+            "operation_id": "createIntrospect",
+            "class": "FusionAuthCreateIntrospect"
+        },
+        "fusionauth_create_ipaccess_control_list": {
+            "slug": "fusionauth_create_ipaccess_control_list",
+            "method": "POST",
+            "path": "/api/ip-acl",
+            "operation_id": "createIPAccessControlList",
+            "class": "FusionAuthCreateIpaccessControlList"
+        },
+        "fusionauth_create_ipaccess_control_list_with_id": {
+            "slug": "fusionauth_create_ipaccess_control_list_with_id",
+            "method": "POST",
+            "path": "/api/ip-acl/{accessControlListId}",
+            "operation_id": "createIPAccessControlListWithId",
+            "class": "FusionAuthCreateIpaccessControlListWithId"
+        },
+        "fusionauth_create_lambda": {
+            "slug": "fusionauth_create_lambda",
+            "method": "POST",
+            "path": "/api/lambda",
+            "operation_id": "createLambda",
+            "class": "FusionAuthCreateLambda"
+        },
+        "fusionauth_create_lambda_with_id": {
+            "slug": "fusionauth_create_lambda_with_id",
+            "method": "POST",
+            "path": "/api/lambda/{lambdaId}",
+            "operation_id": "createLambdaWithId",
+            "class": "FusionAuthCreateLambdaWithId"
+        },
+        "fusionauth_create_logout": {
+            "slug": "fusionauth_create_logout",
+            "method": "POST",
+            "path": "/api/logout",
+            "operation_id": "createLogout",
+            "class": "FusionAuthCreateLogout"
+        },
+        "fusionauth_create_message_template": {
+            "slug": "fusionauth_create_message_template",
+            "method": "POST",
+            "path": "/api/message/template",
+            "operation_id": "createMessageTemplate",
+            "class": "FusionAuthCreateMessageTemplate"
+        },
+        "fusionauth_create_message_template_with_id": {
+            "slug": "fusionauth_create_message_template_with_id",
+            "method": "POST",
+            "path": "/api/message/template/{messageTemplateId}",
+            "operation_id": "createMessageTemplateWithId",
+            "class": "FusionAuthCreateMessageTemplateWithId"
+        },
+        "fusionauth_create_messenger": {
+            "slug": "fusionauth_create_messenger",
+            "method": "POST",
+            "path": "/api/messenger",
+            "operation_id": "createMessenger",
+            "class": "FusionAuthCreateMessenger"
+        },
+        "fusionauth_create_messenger_with_id": {
+            "slug": "fusionauth_create_messenger_with_id",
+            "method": "POST",
+            "path": "/api/messenger/{messengerId}",
+            "operation_id": "createMessengerWithId",
+            "class": "FusionAuthCreateMessengerWithId"
+        },
+        "fusionauth_create_oauth_scope": {
+            "slug": "fusionauth_create_oauth_scope",
+            "method": "POST",
+            "path": "/api/application/{applicationId}/scope",
+            "operation_id": "createOAuthScope",
+            "class": "FusionAuthCreateOauthScope"
+        },
+        "fusionauth_create_oauth_scope_with_id": {
+            "slug": "fusionauth_create_oauth_scope_with_id",
+            "method": "POST",
+            "path": "/api/application/{applicationId}/scope/{scopeId}",
+            "operation_id": "createOAuthScopeWithId",
+            "class": "FusionAuthCreateOauthScopeWithId"
+        },
+        "fusionauth_create_tenant": {
+            "slug": "fusionauth_create_tenant",
+            "method": "POST",
+            "path": "/api/tenant",
+            "operation_id": "createTenant",
+            "class": "FusionAuthCreateTenant"
+        },
+        "fusionauth_create_tenant_manager_identity_provider_type_configuration_with_id": {
+            "slug": "fusionauth_create_tenant_manager_identity_provider_type_configuration_with_id",
+            "method": "POST",
+            "path": "/api/tenant-manager/identity-provider/{type}",
+            "operation_id": "createTenantManagerIdentityProviderTypeConfigurationWithId",
+            "class": "FusionAuthCreateTenantManagerIdentityProviderTypeConfigurationWithId"
+        },
+        "fusionauth_create_tenant_with_id": {
+            "slug": "fusionauth_create_tenant_with_id",
+            "method": "POST",
+            "path": "/api/tenant/{tenantId}",
+            "operation_id": "createTenantWithId",
+            "class": "FusionAuthCreateTenantWithId"
+        },
+        "fusionauth_create_theme": {
+            "slug": "fusionauth_create_theme",
+            "method": "POST",
+            "path": "/api/theme",
+            "operation_id": "createTheme",
+            "class": "FusionAuthCreateTheme"
+        },
+        "fusionauth_create_theme_with_id": {
+            "slug": "fusionauth_create_theme_with_id",
+            "method": "POST",
+            "path": "/api/theme/{themeId}",
+            "operation_id": "createThemeWithId",
+            "class": "FusionAuthCreateThemeWithId"
+        },
+        "fusionauth_create_token": {
+            "slug": "fusionauth_create_token",
+            "method": "POST",
+            "path": "/oauth2/token",
+            "operation_id": "createToken",
+            "class": "FusionAuthCreateToken"
+        },
+        "fusionauth_create_user": {
+            "slug": "fusionauth_create_user",
+            "method": "POST",
+            "path": "/api/user",
+            "operation_id": "createUser",
+            "class": "FusionAuthCreateUser"
+        },
+        "fusionauth_create_user_action": {
+            "slug": "fusionauth_create_user_action",
+            "method": "POST",
+            "path": "/api/user-action",
+            "operation_id": "createUserAction",
+            "class": "FusionAuthCreateUserAction"
+        },
+        "fusionauth_create_user_action_reason": {
+            "slug": "fusionauth_create_user_action_reason",
+            "method": "POST",
+            "path": "/api/user-action-reason",
+            "operation_id": "createUserActionReason",
+            "class": "FusionAuthCreateUserActionReason"
+        },
+        "fusionauth_create_user_action_reason_with_id": {
+            "slug": "fusionauth_create_user_action_reason_with_id",
+            "method": "POST",
+            "path": "/api/user-action-reason/{userActionReasonId}",
+            "operation_id": "createUserActionReasonWithId",
+            "class": "FusionAuthCreateUserActionReasonWithId"
+        },
+        "fusionauth_create_user_action_with_id": {
+            "slug": "fusionauth_create_user_action_with_id",
+            "method": "POST",
+            "path": "/api/user-action/{userActionId}",
+            "operation_id": "createUserActionWithId",
+            "class": "FusionAuthCreateUserActionWithId"
+        },
+        "fusionauth_create_user_change_password": {
+            "slug": "fusionauth_create_user_change_password",
+            "method": "POST",
+            "path": "/api/user/change-password",
+            "operation_id": "createUserChangePassword",
+            "class": "FusionAuthCreateUserChangePassword"
+        },
+        "fusionauth_create_user_consent": {
+            "slug": "fusionauth_create_user_consent",
+            "method": "POST",
+            "path": "/api/user/consent",
+            "operation_id": "createUserConsent",
+            "class": "FusionAuthCreateUserConsent"
+        },
+        "fusionauth_create_user_consent_with_id": {
+            "slug": "fusionauth_create_user_consent_with_id",
+            "method": "POST",
+            "path": "/api/user/consent/{userConsentId}",
+            "operation_id": "createUserConsentWithId",
+            "class": "FusionAuthCreateUserConsentWithId"
+        },
+        "fusionauth_create_user_link_with_id": {
+            "slug": "fusionauth_create_user_link_with_id",
+            "method": "POST",
+            "path": "/api/identity-provider/link",
+            "operation_id": "createUserLinkWithId",
+            "class": "FusionAuthCreateUserLinkWithId"
+        },
+        "fusionauth_create_user_verify_email": {
+            "slug": "fusionauth_create_user_verify_email",
+            "method": "POST",
+            "path": "/api/user/verify-email",
+            "operation_id": "createUserVerifyEmail",
+            "class": "FusionAuthCreateUserVerifyEmail"
+        },
+        "fusionauth_create_user_with_id": {
+            "slug": "fusionauth_create_user_with_id",
+            "method": "POST",
+            "path": "/api/user/{userId}",
+            "operation_id": "createUserWithId",
+            "class": "FusionAuthCreateUserWithId"
+        },
+        "fusionauth_create_webhook": {
+            "slug": "fusionauth_create_webhook",
+            "method": "POST",
+            "path": "/api/webhook",
+            "operation_id": "createWebhook",
+            "class": "FusionAuthCreateWebhook"
+        },
+        "fusionauth_create_webhook_with_id": {
+            "slug": "fusionauth_create_webhook_with_id",
+            "method": "POST",
+            "path": "/api/webhook/{webhookId}",
+            "operation_id": "createWebhookWithId",
+            "class": "FusionAuthCreateWebhookWithId"
+        },
+        "fusionauth_delete_apikey_with_id": {
+            "slug": "fusionauth_delete_apikey_with_id",
+            "method": "DELETE",
+            "path": "/api/api-key/{keyId}",
+            "operation_id": "deleteAPIKeyWithId",
+            "class": "FusionAuthDeleteApikeyWithId"
+        },
+        "fusionauth_delete_application_role_with_id": {
+            "slug": "fusionauth_delete_application_role_with_id",
+            "method": "DELETE",
+            "path": "/api/application/{applicationId}/role/{roleId}",
+            "operation_id": "deleteApplicationRoleWithId",
+            "class": "FusionAuthDeleteApplicationRoleWithId"
+        },
+        "fusionauth_delete_application_with_id": {
+            "slug": "fusionauth_delete_application_with_id",
+            "method": "DELETE",
+            "path": "/api/application/{applicationId}",
+            "operation_id": "deleteApplicationWithId",
+            "class": "FusionAuthDeleteApplicationWithId"
+        },
+        "fusionauth_delete_connector_with_id": {
+            "slug": "fusionauth_delete_connector_with_id",
+            "method": "DELETE",
+            "path": "/api/connector/{connectorId}",
+            "operation_id": "deleteConnectorWithId",
+            "class": "FusionAuthDeleteConnectorWithId"
+        },
+        "fusionauth_delete_consent_with_id": {
+            "slug": "fusionauth_delete_consent_with_id",
+            "method": "DELETE",
+            "path": "/api/consent/{consentId}",
+            "operation_id": "deleteConsentWithId",
+            "class": "FusionAuthDeleteConsentWithId"
+        },
+        "fusionauth_delete_email_template_with_id": {
+            "slug": "fusionauth_delete_email_template_with_id",
+            "method": "DELETE",
+            "path": "/api/email/template/{emailTemplateId}",
+            "operation_id": "deleteEmailTemplateWithId",
+            "class": "FusionAuthDeleteEmailTemplateWithId"
+        },
+        "fusionauth_delete_entity_grant_with_id": {
+            "slug": "fusionauth_delete_entity_grant_with_id",
+            "method": "DELETE",
+            "path": "/api/entity/{entityId}/grant",
+            "operation_id": "deleteEntityGrantWithId",
+            "class": "FusionAuthDeleteEntityGrantWithId"
+        },
+        "fusionauth_delete_entity_type_permission_with_id": {
+            "slug": "fusionauth_delete_entity_type_permission_with_id",
+            "method": "DELETE",
+            "path": "/api/entity/type/{entityTypeId}/permission/{permissionId}",
+            "operation_id": "deleteEntityTypePermissionWithId",
+            "class": "FusionAuthDeleteEntityTypePermissionWithId"
+        },
+        "fusionauth_delete_entity_type_with_id": {
+            "slug": "fusionauth_delete_entity_type_with_id",
+            "method": "DELETE",
+            "path": "/api/entity/type/{entityTypeId}",
+            "operation_id": "deleteEntityTypeWithId",
+            "class": "FusionAuthDeleteEntityTypeWithId"
+        },
+        "fusionauth_delete_entity_with_id": {
+            "slug": "fusionauth_delete_entity_with_id",
+            "method": "DELETE",
+            "path": "/api/entity/{entityId}",
+            "operation_id": "deleteEntityWithId",
+            "class": "FusionAuthDeleteEntityWithId"
+        },
+        "fusionauth_delete_form_field_with_id": {
+            "slug": "fusionauth_delete_form_field_with_id",
+            "method": "DELETE",
+            "path": "/api/form/field/{fieldId}",
+            "operation_id": "deleteFormFieldWithId",
+            "class": "FusionAuthDeleteFormFieldWithId"
+        },
+        "fusionauth_delete_form_with_id": {
+            "slug": "fusionauth_delete_form_with_id",
+            "method": "DELETE",
+            "path": "/api/form/{formId}",
+            "operation_id": "deleteFormWithId",
+            "class": "FusionAuthDeleteFormWithId"
+        },
+        "fusionauth_delete_group_members_with_id": {
+            "slug": "fusionauth_delete_group_members_with_id",
+            "method": "DELETE",
+            "path": "/api/group/member",
+            "operation_id": "deleteGroupMembersWithId",
+            "class": "FusionAuthDeleteGroupMembersWithId"
+        },
+        "fusionauth_delete_group_with_id": {
+            "slug": "fusionauth_delete_group_with_id",
+            "method": "DELETE",
+            "path": "/api/group/{groupId}",
+            "operation_id": "deleteGroupWithId",
+            "class": "FusionAuthDeleteGroupWithId"
+        },
+        "fusionauth_delete_identity_provider_with_id": {
+            "slug": "fusionauth_delete_identity_provider_with_id",
+            "method": "DELETE",
+            "path": "/api/identity-provider/{identityProviderId}",
+            "operation_id": "deleteIdentityProviderWithId",
+            "class": "FusionAuthDeleteIdentityProviderWithId"
+        },
+        "fusionauth_delete_ipaccess_control_list_with_id": {
+            "slug": "fusionauth_delete_ipaccess_control_list_with_id",
+            "method": "DELETE",
+            "path": "/api/ip-acl/{ipAccessControlListId}",
+            "operation_id": "deleteIPAccessControlListWithId",
+            "class": "FusionAuthDeleteIpaccessControlListWithId"
+        },
+        "fusionauth_delete_jwt_refresh": {
+            "slug": "fusionauth_delete_jwt_refresh",
+            "method": "DELETE",
+            "path": "/api/jwt/refresh",
+            "operation_id": "deleteJwtRefresh",
+            "class": "FusionAuthDeleteJwtRefresh"
+        },
+        "fusionauth_delete_key_with_id": {
+            "slug": "fusionauth_delete_key_with_id",
+            "method": "DELETE",
+            "path": "/api/key/{keyId}",
+            "operation_id": "deleteKeyWithId",
+            "class": "FusionAuthDeleteKeyWithId"
+        },
+        "fusionauth_delete_lambda_with_id": {
+            "slug": "fusionauth_delete_lambda_with_id",
+            "method": "DELETE",
+            "path": "/api/lambda/{lambdaId}",
+            "operation_id": "deleteLambdaWithId",
+            "class": "FusionAuthDeleteLambdaWithId"
+        },
+        "fusionauth_delete_message_template_with_id": {
+            "slug": "fusionauth_delete_message_template_with_id",
+            "method": "DELETE",
+            "path": "/api/message/template/{messageTemplateId}",
+            "operation_id": "deleteMessageTemplateWithId",
+            "class": "FusionAuthDeleteMessageTemplateWithId"
+        },
+        "fusionauth_delete_messenger_with_id": {
+            "slug": "fusionauth_delete_messenger_with_id",
+            "method": "DELETE",
+            "path": "/api/messenger/{messengerId}",
+            "operation_id": "deleteMessengerWithId",
+            "class": "FusionAuthDeleteMessengerWithId"
+        },
+        "fusionauth_delete_oauth_scope_with_id": {
+            "slug": "fusionauth_delete_oauth_scope_with_id",
+            "method": "DELETE",
+            "path": "/api/application/{applicationId}/scope/{scopeId}",
+            "operation_id": "deleteOAuthScopeWithId",
+            "class": "FusionAuthDeleteOauthScopeWithId"
+        },
+        "fusionauth_delete_tenant_manager_identity_provider_type_configuration_with_id": {
+            "slug": "fusionauth_delete_tenant_manager_identity_provider_type_configuration_with_id",
+            "method": "DELETE",
+            "path": "/api/tenant-manager/identity-provider/{type}",
+            "operation_id": "deleteTenantManagerIdentityProviderTypeConfigurationWithId",
+            "class": "FusionAuthDeleteTenantManagerIdentityProviderTypeConfigurationWithId"
+        },
+        "fusionauth_delete_tenant_with_id": {
+            "slug": "fusionauth_delete_tenant_with_id",
+            "method": "DELETE",
+            "path": "/api/tenant/{tenantId}",
+            "operation_id": "deleteTenantWithId",
+            "class": "FusionAuthDeleteTenantWithId"
+        },
+        "fusionauth_delete_theme_with_id": {
+            "slug": "fusionauth_delete_theme_with_id",
+            "method": "DELETE",
+            "path": "/api/theme/{themeId}",
+            "operation_id": "deleteThemeWithId",
+            "class": "FusionAuthDeleteThemeWithId"
+        },
+        "fusionauth_delete_user_action_reason_with_id": {
+            "slug": "fusionauth_delete_user_action_reason_with_id",
+            "method": "DELETE",
+            "path": "/api/user-action-reason/{userActionReasonId}",
+            "operation_id": "deleteUserActionReasonWithId",
+            "class": "FusionAuthDeleteUserActionReasonWithId"
+        },
+        "fusionauth_delete_user_action_with_id": {
+            "slug": "fusionauth_delete_user_action_with_id",
+            "method": "DELETE",
+            "path": "/api/user-action/{userActionId}",
+            "operation_id": "deleteUserActionWithId",
+            "class": "FusionAuthDeleteUserActionWithId"
+        },
+        "fusionauth_delete_user_bulk": {
+            "slug": "fusionauth_delete_user_bulk",
+            "method": "DELETE",
+            "path": "/api/user/bulk",
+            "operation_id": "deleteUserBulk",
+            "class": "FusionAuthDeleteUserBulk"
+        },
+        "fusionauth_delete_user_link_with_id": {
+            "slug": "fusionauth_delete_user_link_with_id",
+            "method": "DELETE",
+            "path": "/api/identity-provider/link",
+            "operation_id": "deleteUserLinkWithId",
+            "class": "FusionAuthDeleteUserLinkWithId"
+        },
+        "fusionauth_delete_user_registration_with_id": {
+            "slug": "fusionauth_delete_user_registration_with_id",
+            "method": "DELETE",
+            "path": "/api/user/registration/{userId}/{applicationId}",
+            "operation_id": "deleteUserRegistrationWithId",
+            "class": "FusionAuthDeleteUserRegistrationWithId"
+        },
+        "fusionauth_delete_user_two_factor_with_id": {
+            "slug": "fusionauth_delete_user_two_factor_with_id",
+            "method": "DELETE",
+            "path": "/api/user/two-factor/{userId}",
+            "operation_id": "deleteUserTwoFactorWithId",
+            "class": "FusionAuthDeleteUserTwoFactorWithId"
+        },
+        "fusionauth_delete_user_with_id": {
+            "slug": "fusionauth_delete_user_with_id",
+            "method": "DELETE",
+            "path": "/api/user/{userId}",
+            "operation_id": "deleteUserWithId",
+            "class": "FusionAuthDeleteUserWithId"
+        },
+        "fusionauth_delete_web_authn_credential_with_id": {
+            "slug": "fusionauth_delete_web_authn_credential_with_id",
+            "method": "DELETE",
+            "path": "/api/webauthn/{id}",
+            "operation_id": "deleteWebAuthnCredentialWithId",
+            "class": "FusionAuthDeleteWebAuthnCredentialWithId"
+        },
+        "fusionauth_delete_web_authn_credentials_for_user_with_id": {
+            "slug": "fusionauth_delete_web_authn_credentials_for_user_with_id",
+            "method": "DELETE",
+            "path": "/api/webauthn",
+            "operation_id": "deleteWebAuthnCredentialsForUserWithId",
+            "class": "FusionAuthDeleteWebAuthnCredentialsForUserWithId"
+        },
+        "fusionauth_delete_webhook_with_id": {
+            "slug": "fusionauth_delete_webhook_with_id",
+            "method": "DELETE",
+            "path": "/api/webhook/{webhookId}",
+            "operation_id": "deleteWebhookWithId",
+            "class": "FusionAuthDeleteWebhookWithId"
+        },
+        "fusionauth_enable_two_factor_with_id": {
+            "slug": "fusionauth_enable_two_factor_with_id",
+            "method": "POST",
+            "path": "/api/user/two-factor/{userId}",
+            "operation_id": "enableTwoFactorWithId",
+            "class": "FusionAuthEnableTwoFactorWithId"
+        },
+        "fusionauth_exchange_refresh_token_for_jwtwith_id": {
+            "slug": "fusionauth_exchange_refresh_token_for_jwtwith_id",
+            "method": "POST",
+            "path": "/api/jwt/refresh",
+            "operation_id": "exchangeRefreshTokenForJWTWithId",
+            "class": "FusionAuthExchangeRefreshTokenForJwtwithId"
+        },
+        "fusionauth_forgot_password_with_id": {
+            "slug": "fusionauth_forgot_password_with_id",
+            "method": "POST",
+            "path": "/api/user/forgot-password",
+            "operation_id": "forgotPasswordWithId",
+            "class": "FusionAuthForgotPasswordWithId"
+        },
+        "fusionauth_generate_key": {
+            "slug": "fusionauth_generate_key",
+            "method": "POST",
+            "path": "/api/key/generate",
+            "operation_id": "generateKey",
+            "class": "FusionAuthGenerateKey"
+        },
+        "fusionauth_generate_key_with_id": {
+            "slug": "fusionauth_generate_key_with_id",
+            "method": "POST",
+            "path": "/api/key/generate/{keyId}",
+            "operation_id": "generateKeyWithId",
+            "class": "FusionAuthGenerateKeyWithId"
+        },
+        "fusionauth_generate_two_factor_recovery_codes_with_id": {
+            "slug": "fusionauth_generate_two_factor_recovery_codes_with_id",
+            "method": "POST",
+            "path": "/api/user/two-factor/recovery-code/{userId}",
+            "operation_id": "generateTwoFactorRecoveryCodesWithId",
+            "class": "FusionAuthGenerateTwoFactorRecoveryCodesWithId"
+        },
+        "fusionauth_generate_two_factor_secret_using_jwtwith_id": {
+            "slug": "fusionauth_generate_two_factor_secret_using_jwtwith_id",
+            "method": "GET",
+            "path": "/api/two-factor/secret",
+            "operation_id": "generateTwoFactorSecretUsingJWTWithId",
+            "class": "FusionAuthGenerateTwoFactorSecretUsingJwtwithId"
+        },
+        "fusionauth_identity_provider_login_with_id": {
+            "slug": "fusionauth_identity_provider_login_with_id",
+            "method": "POST",
+            "path": "/api/identity-provider/login",
+            "operation_id": "identityProviderLoginWithId",
+            "class": "FusionAuthIdentityProviderLoginWithId"
+        },
+        "fusionauth_import_key": {
+            "slug": "fusionauth_import_key",
+            "method": "POST",
+            "path": "/api/key/import",
+            "operation_id": "importKey",
+            "class": "FusionAuthImportKey"
+        },
+        "fusionauth_import_key_with_id": {
+            "slug": "fusionauth_import_key_with_id",
+            "method": "POST",
+            "path": "/api/key/import/{keyId}",
+            "operation_id": "importKeyWithId",
+            "class": "FusionAuthImportKeyWithId"
+        },
+        "fusionauth_import_refresh_tokens_with_id": {
+            "slug": "fusionauth_import_refresh_tokens_with_id",
+            "method": "POST",
+            "path": "/api/user/refresh-token/import",
+            "operation_id": "importRefreshTokensWithId",
+            "class": "FusionAuthImportRefreshTokensWithId"
+        },
+        "fusionauth_import_users_with_id": {
+            "slug": "fusionauth_import_users_with_id",
+            "method": "POST",
+            "path": "/api/user/import",
+            "operation_id": "importUsersWithId",
+            "class": "FusionAuthImportUsersWithId"
+        },
+        "fusionauth_import_web_authn_credential_with_id": {
+            "slug": "fusionauth_import_web_authn_credential_with_id",
+            "method": "POST",
+            "path": "/api/webauthn/import",
+            "operation_id": "importWebAuthnCredentialWithId",
+            "class": "FusionAuthImportWebAuthnCredentialWithId"
+        },
+        "fusionauth_issue_jwtwith_id": {
+            "slug": "fusionauth_issue_jwtwith_id",
+            "method": "GET",
+            "path": "/api/jwt/issue",
+            "operation_id": "issueJWTWithId",
+            "class": "FusionAuthIssueJwtwithId"
+        },
+        "fusionauth_login_ping_with_id": {
+            "slug": "fusionauth_login_ping_with_id",
+            "method": "PUT",
+            "path": "/api/login/{userId}/{applicationId}",
+            "operation_id": "loginPingWithId",
+            "class": "FusionAuthLoginPingWithId"
+        },
+        "fusionauth_login_ping_with_request_with_id": {
+            "slug": "fusionauth_login_ping_with_request_with_id",
+            "method": "PUT",
+            "path": "/api/login",
+            "operation_id": "loginPingWithRequestWithId",
+            "class": "FusionAuthLoginPingWithRequestWithId"
+        },
+        "fusionauth_login_with_id": {
+            "slug": "fusionauth_login_with_id",
+            "method": "POST",
+            "path": "/api/login",
+            "operation_id": "loginWithId",
+            "class": "FusionAuthLoginWithId"
+        },
+        "fusionauth_modify_action_with_id": {
+            "slug": "fusionauth_modify_action_with_id",
+            "method": "PUT",
+            "path": "/api/user/action/{actionId}",
+            "operation_id": "modifyActionWithId",
+            "class": "FusionAuthModifyActionWithId"
+        },
+        "fusionauth_passwordless_login_with_id": {
+            "slug": "fusionauth_passwordless_login_with_id",
+            "method": "POST",
+            "path": "/api/passwordless/login",
+            "operation_id": "passwordlessLoginWithId",
+            "class": "FusionAuthPasswordlessLoginWithId"
+        },
+        "fusionauth_patch_apikey_with_id": {
+            "slug": "fusionauth_patch_apikey_with_id",
+            "method": "PATCH",
+            "path": "/api/api-key/{keyId}",
+            "operation_id": "patchAPIKeyWithId",
+            "class": "FusionAuthPatchApikeyWithId"
+        },
+        "fusionauth_patch_application_role_with_id": {
+            "slug": "fusionauth_patch_application_role_with_id",
+            "method": "PATCH",
+            "path": "/api/application/{applicationId}/role/{roleId}",
+            "operation_id": "patchApplicationRoleWithId",
+            "class": "FusionAuthPatchApplicationRoleWithId"
+        },
+        "fusionauth_patch_application_with_id": {
+            "slug": "fusionauth_patch_application_with_id",
+            "method": "PATCH",
+            "path": "/api/application/{applicationId}",
+            "operation_id": "patchApplicationWithId",
+            "class": "FusionAuthPatchApplicationWithId"
+        },
+        "fusionauth_patch_connector_with_id": {
+            "slug": "fusionauth_patch_connector_with_id",
+            "method": "PATCH",
+            "path": "/api/connector/{connectorId}",
+            "operation_id": "patchConnectorWithId",
+            "class": "FusionAuthPatchConnectorWithId"
+        },
+        "fusionauth_patch_consent_with_id": {
+            "slug": "fusionauth_patch_consent_with_id",
+            "method": "PATCH",
+            "path": "/api/consent/{consentId}",
+            "operation_id": "patchConsentWithId",
+            "class": "FusionAuthPatchConsentWithId"
+        },
+        "fusionauth_patch_email_template_with_id": {
+            "slug": "fusionauth_patch_email_template_with_id",
+            "method": "PATCH",
+            "path": "/api/email/template/{emailTemplateId}",
+            "operation_id": "patchEmailTemplateWithId",
+            "class": "FusionAuthPatchEmailTemplateWithId"
+        },
+        "fusionauth_patch_entity_type_permission_with_id": {
+            "slug": "fusionauth_patch_entity_type_permission_with_id",
+            "method": "PATCH",
+            "path": "/api/entity/type/{entityTypeId}/permission/{permissionId}",
+            "operation_id": "patchEntityTypePermissionWithId",
+            "class": "FusionAuthPatchEntityTypePermissionWithId"
+        },
+        "fusionauth_patch_entity_type_with_id": {
+            "slug": "fusionauth_patch_entity_type_with_id",
+            "method": "PATCH",
+            "path": "/api/entity/type/{entityTypeId}",
+            "operation_id": "patchEntityTypeWithId",
+            "class": "FusionAuthPatchEntityTypeWithId"
+        },
+        "fusionauth_patch_entity_with_id": {
+            "slug": "fusionauth_patch_entity_with_id",
+            "method": "PATCH",
+            "path": "/api/entity/{entityId}",
+            "operation_id": "patchEntityWithId",
+            "class": "FusionAuthPatchEntityWithId"
+        },
+        "fusionauth_patch_form_field_with_id": {
+            "slug": "fusionauth_patch_form_field_with_id",
+            "method": "PATCH",
+            "path": "/api/form/field/{fieldId}",
+            "operation_id": "patchFormFieldWithId",
+            "class": "FusionAuthPatchFormFieldWithId"
+        },
+        "fusionauth_patch_form_with_id": {
+            "slug": "fusionauth_patch_form_with_id",
+            "method": "PATCH",
+            "path": "/api/form/{formId}",
+            "operation_id": "patchFormWithId",
+            "class": "FusionAuthPatchFormWithId"
+        },
+        "fusionauth_patch_group_with_id": {
+            "slug": "fusionauth_patch_group_with_id",
+            "method": "PATCH",
+            "path": "/api/group/{groupId}",
+            "operation_id": "patchGroupWithId",
+            "class": "FusionAuthPatchGroupWithId"
+        },
+        "fusionauth_patch_identity_provider_with_id": {
+            "slug": "fusionauth_patch_identity_provider_with_id",
+            "method": "PATCH",
+            "path": "/api/identity-provider/{identityProviderId}",
+            "operation_id": "patchIdentityProviderWithId",
+            "class": "FusionAuthPatchIdentityProviderWithId"
+        },
+        "fusionauth_patch_integrations_with_id": {
+            "slug": "fusionauth_patch_integrations_with_id",
+            "method": "PATCH",
+            "path": "/api/integration",
+            "operation_id": "patchIntegrationsWithId",
+            "class": "FusionAuthPatchIntegrationsWithId"
+        },
+        "fusionauth_patch_ipaccess_control_list_with_id": {
+            "slug": "fusionauth_patch_ipaccess_control_list_with_id",
+            "method": "PATCH",
+            "path": "/api/ip-acl/{accessControlListId}",
+            "operation_id": "patchIPAccessControlListWithId",
+            "class": "FusionAuthPatchIpaccessControlListWithId"
+        },
+        "fusionauth_patch_lambda_with_id": {
+            "slug": "fusionauth_patch_lambda_with_id",
+            "method": "PATCH",
+            "path": "/api/lambda/{lambdaId}",
+            "operation_id": "patchLambdaWithId",
+            "class": "FusionAuthPatchLambdaWithId"
+        },
+        "fusionauth_patch_message_template_with_id": {
+            "slug": "fusionauth_patch_message_template_with_id",
+            "method": "PATCH",
+            "path": "/api/message/template/{messageTemplateId}",
+            "operation_id": "patchMessageTemplateWithId",
+            "class": "FusionAuthPatchMessageTemplateWithId"
+        },
+        "fusionauth_patch_messenger_with_id": {
+            "slug": "fusionauth_patch_messenger_with_id",
+            "method": "PATCH",
+            "path": "/api/messenger/{messengerId}",
+            "operation_id": "patchMessengerWithId",
+            "class": "FusionAuthPatchMessengerWithId"
+        },
+        "fusionauth_patch_oauth_scope_with_id": {
+            "slug": "fusionauth_patch_oauth_scope_with_id",
+            "method": "PATCH",
+            "path": "/api/application/{applicationId}/scope/{scopeId}",
+            "operation_id": "patchOAuthScopeWithId",
+            "class": "FusionAuthPatchOauthScopeWithId"
+        },
+        "fusionauth_patch_registration_with_id": {
+            "slug": "fusionauth_patch_registration_with_id",
+            "method": "PATCH",
+            "path": "/api/user/registration/{userId}",
+            "operation_id": "patchRegistrationWithId",
+            "class": "FusionAuthPatchRegistrationWithId"
+        },
+        "fusionauth_patch_system_configuration_with_id": {
+            "slug": "fusionauth_patch_system_configuration_with_id",
+            "method": "PATCH",
+            "path": "/api/system-configuration",
+            "operation_id": "patchSystemConfigurationWithId",
+            "class": "FusionAuthPatchSystemConfigurationWithId"
+        },
+        "fusionauth_patch_tenant_manager_configuration_with_id": {
+            "slug": "fusionauth_patch_tenant_manager_configuration_with_id",
+            "method": "PATCH",
+            "path": "/api/tenant-manager",
+            "operation_id": "patchTenantManagerConfigurationWithId",
+            "class": "FusionAuthPatchTenantManagerConfigurationWithId"
+        },
+        "fusionauth_patch_tenant_manager_identity_provider_type_configuration_with_id": {
+            "slug": "fusionauth_patch_tenant_manager_identity_provider_type_configuration_with_id",
+            "method": "PATCH",
+            "path": "/api/tenant-manager/identity-provider/{type}",
+            "operation_id": "patchTenantManagerIdentityProviderTypeConfigurationWithId",
+            "class": "FusionAuthPatchTenantManagerIdentityProviderTypeConfigurationWithId"
+        },
+        "fusionauth_patch_tenant_with_id": {
+            "slug": "fusionauth_patch_tenant_with_id",
+            "method": "PATCH",
+            "path": "/api/tenant/{tenantId}",
+            "operation_id": "patchTenantWithId",
+            "class": "FusionAuthPatchTenantWithId"
+        },
+        "fusionauth_patch_theme_with_id": {
+            "slug": "fusionauth_patch_theme_with_id",
+            "method": "PATCH",
+            "path": "/api/theme/{themeId}",
+            "operation_id": "patchThemeWithId",
+            "class": "FusionAuthPatchThemeWithId"
+        },
+        "fusionauth_patch_user_action_reason_with_id": {
+            "slug": "fusionauth_patch_user_action_reason_with_id",
+            "method": "PATCH",
+            "path": "/api/user-action-reason/{userActionReasonId}",
+            "operation_id": "patchUserActionReasonWithId",
+            "class": "FusionAuthPatchUserActionReasonWithId"
+        },
+        "fusionauth_patch_user_action_with_id": {
+            "slug": "fusionauth_patch_user_action_with_id",
+            "method": "PATCH",
+            "path": "/api/user-action/{userActionId}",
+            "operation_id": "patchUserActionWithId",
+            "class": "FusionAuthPatchUserActionWithId"
+        },
+        "fusionauth_patch_user_consent_with_id": {
+            "slug": "fusionauth_patch_user_consent_with_id",
+            "method": "PATCH",
+            "path": "/api/user/consent/{userConsentId}",
+            "operation_id": "patchUserConsentWithId",
+            "class": "FusionAuthPatchUserConsentWithId"
+        },
+        "fusionauth_patch_user_with_id": {
+            "slug": "fusionauth_patch_user_with_id",
+            "method": "PATCH",
+            "path": "/api/user/{userId}",
+            "operation_id": "patchUserWithId",
+            "class": "FusionAuthPatchUserWithId"
+        },
+        "fusionauth_patch_webhook_with_id": {
+            "slug": "fusionauth_patch_webhook_with_id",
+            "method": "PATCH",
+            "path": "/api/webhook/{webhookId}",
+            "operation_id": "patchWebhookWithId",
+            "class": "FusionAuthPatchWebhookWithId"
+        },
+        "fusionauth_reconcile_jwtwith_id": {
+            "slug": "fusionauth_reconcile_jwtwith_id",
+            "method": "POST",
+            "path": "/api/jwt/reconcile",
+            "operation_id": "reconcileJWTWithId",
+            "class": "FusionAuthReconcileJwtwithId"
+        },
+        "fusionauth_register": {
+            "slug": "fusionauth_register",
+            "method": "POST",
+            "path": "/api/user/registration",
+            "operation_id": "register",
+            "class": "FusionAuthRegister"
+        },
+        "fusionauth_register_with_id": {
+            "slug": "fusionauth_register_with_id",
+            "method": "POST",
+            "path": "/api/user/registration/{userId}",
+            "operation_id": "registerWithId",
+            "class": "FusionAuthRegisterWithId"
+        },
+        "fusionauth_reindex_with_id": {
+            "slug": "fusionauth_reindex_with_id",
+            "method": "POST",
+            "path": "/api/system/reindex",
+            "operation_id": "reindexWithId",
+            "class": "FusionAuthReindexWithId"
+        },
+        "fusionauth_remove_user_from_family_with_id": {
+            "slug": "fusionauth_remove_user_from_family_with_id",
+            "method": "DELETE",
+            "path": "/api/user/family/{familyId}/{userId}",
+            "operation_id": "removeUserFromFamilyWithId",
+            "class": "FusionAuthRemoveUserFromFamilyWithId"
+        },
+        "fusionauth_retrieve_action_with_id": {
+            "slug": "fusionauth_retrieve_action_with_id",
+            "method": "GET",
+            "path": "/api/user/action/{actionId}",
+            "operation_id": "retrieveActionWithId",
+            "class": "FusionAuthRetrieveActionWithId"
+        },
+        "fusionauth_retrieve_apikey_with_id": {
+            "slug": "fusionauth_retrieve_apikey_with_id",
+            "method": "GET",
+            "path": "/api/api-key/{keyId}",
+            "operation_id": "retrieveAPIKeyWithId",
+            "class": "FusionAuthRetrieveApikeyWithId"
+        },
+        "fusionauth_retrieve_application": {
+            "slug": "fusionauth_retrieve_application",
+            "method": "GET",
+            "path": "/api/application",
+            "operation_id": "retrieveApplication",
+            "class": "FusionAuthRetrieveApplication"
+        },
+        "fusionauth_retrieve_application_with_id": {
+            "slug": "fusionauth_retrieve_application_with_id",
+            "method": "GET",
+            "path": "/api/application/{applicationId}",
+            "operation_id": "retrieveApplicationWithId",
+            "class": "FusionAuthRetrieveApplicationWithId"
+        },
+        "fusionauth_retrieve_audit_log_with_id": {
+            "slug": "fusionauth_retrieve_audit_log_with_id",
+            "method": "GET",
+            "path": "/api/system/audit-log/{auditLogId}",
+            "operation_id": "retrieveAuditLogWithId",
+            "class": "FusionAuthRetrieveAuditLogWithId"
+        },
+        "fusionauth_retrieve_connector_with_id": {
+            "slug": "fusionauth_retrieve_connector_with_id",
+            "method": "GET",
+            "path": "/api/connector/{connectorId}",
+            "operation_id": "retrieveConnectorWithId",
+            "class": "FusionAuthRetrieveConnectorWithId"
+        },
+        "fusionauth_retrieve_consent_with_id": {
+            "slug": "fusionauth_retrieve_consent_with_id",
+            "method": "GET",
+            "path": "/api/consent/{consentId}",
+            "operation_id": "retrieveConsentWithId",
+            "class": "FusionAuthRetrieveConsentWithId"
+        },
+        "fusionauth_retrieve_daily_active_report_with_id": {
+            "slug": "fusionauth_retrieve_daily_active_report_with_id",
+            "method": "GET",
+            "path": "/api/report/daily-active-user",
+            "operation_id": "retrieveDailyActiveReportWithId",
+            "class": "FusionAuthRetrieveDailyActiveReportWithId"
+        },
+        "fusionauth_retrieve_device_user_code": {
+            "slug": "fusionauth_retrieve_device_user_code",
+            "method": "GET",
+            "path": "/oauth2/device/user-code",
+            "operation_id": "retrieveDeviceUserCode",
+            "class": "FusionAuthRetrieveDeviceUserCode"
+        },
+        "fusionauth_retrieve_device_validate": {
+            "slug": "fusionauth_retrieve_device_validate",
+            "method": "GET",
+            "path": "/oauth2/device/validate",
+            "operation_id": "retrieveDeviceValidate",
+            "class": "FusionAuthRetrieveDeviceValidate"
+        },
+        "fusionauth_retrieve_email_template": {
+            "slug": "fusionauth_retrieve_email_template",
+            "method": "GET",
+            "path": "/api/email/template",
+            "operation_id": "retrieveEmailTemplate",
+            "class": "FusionAuthRetrieveEmailTemplate"
+        },
+        "fusionauth_retrieve_email_template_preview_with_id": {
+            "slug": "fusionauth_retrieve_email_template_preview_with_id",
+            "method": "POST",
+            "path": "/api/email/template/preview",
+            "operation_id": "retrieveEmailTemplatePreviewWithId",
+            "class": "FusionAuthRetrieveEmailTemplatePreviewWithId"
+        },
+        "fusionauth_retrieve_email_template_with_id": {
+            "slug": "fusionauth_retrieve_email_template_with_id",
+            "method": "GET",
+            "path": "/api/email/template/{emailTemplateId}",
+            "operation_id": "retrieveEmailTemplateWithId",
+            "class": "FusionAuthRetrieveEmailTemplateWithId"
+        },
+        "fusionauth_retrieve_entity_grant_with_id": {
+            "slug": "fusionauth_retrieve_entity_grant_with_id",
+            "method": "GET",
+            "path": "/api/entity/{entityId}/grant",
+            "operation_id": "retrieveEntityGrantWithId",
+            "class": "FusionAuthRetrieveEntityGrantWithId"
+        },
+        "fusionauth_retrieve_entity_type_with_id": {
+            "slug": "fusionauth_retrieve_entity_type_with_id",
+            "method": "GET",
+            "path": "/api/entity/type/{entityTypeId}",
+            "operation_id": "retrieveEntityTypeWithId",
+            "class": "FusionAuthRetrieveEntityTypeWithId"
+        },
+        "fusionauth_retrieve_entity_with_id": {
+            "slug": "fusionauth_retrieve_entity_with_id",
+            "method": "GET",
+            "path": "/api/entity/{entityId}",
+            "operation_id": "retrieveEntityWithId",
+            "class": "FusionAuthRetrieveEntityWithId"
+        },
+        "fusionauth_retrieve_event_log_with_id": {
+            "slug": "fusionauth_retrieve_event_log_with_id",
+            "method": "GET",
+            "path": "/api/system/event-log/{eventLogId}",
+            "operation_id": "retrieveEventLogWithId",
+            "class": "FusionAuthRetrieveEventLogWithId"
+        },
+        "fusionauth_retrieve_families_with_id": {
+            "slug": "fusionauth_retrieve_families_with_id",
+            "method": "GET",
+            "path": "/api/user/family",
+            "operation_id": "retrieveFamiliesWithId",
+            "class": "FusionAuthRetrieveFamiliesWithId"
+        },
+        "fusionauth_retrieve_family_members_by_family_id_with_id": {
+            "slug": "fusionauth_retrieve_family_members_by_family_id_with_id",
+            "method": "GET",
+            "path": "/api/user/family/{familyId}",
+            "operation_id": "retrieveFamilyMembersByFamilyIdWithId",
+            "class": "FusionAuthRetrieveFamilyMembersByFamilyIdWithId"
+        },
+        "fusionauth_retrieve_form_field_with_id": {
+            "slug": "fusionauth_retrieve_form_field_with_id",
+            "method": "GET",
+            "path": "/api/form/field/{fieldId}",
+            "operation_id": "retrieveFormFieldWithId",
+            "class": "FusionAuthRetrieveFormFieldWithId"
+        },
+        "fusionauth_retrieve_form_with_id": {
+            "slug": "fusionauth_retrieve_form_with_id",
+            "method": "GET",
+            "path": "/api/form/{formId}",
+            "operation_id": "retrieveFormWithId",
+            "class": "FusionAuthRetrieveFormWithId"
+        },
+        "fusionauth_retrieve_group_with_id": {
+            "slug": "fusionauth_retrieve_group_with_id",
+            "method": "GET",
+            "path": "/api/group/{groupId}",
+            "operation_id": "retrieveGroupWithId",
+            "class": "FusionAuthRetrieveGroupWithId"
+        },
+        "fusionauth_retrieve_identity_provider_by_type_with_id": {
+            "slug": "fusionauth_retrieve_identity_provider_by_type_with_id",
+            "method": "GET",
+            "path": "/api/identity-provider",
+            "operation_id": "retrieveIdentityProviderByTypeWithId",
+            "class": "FusionAuthRetrieveIdentityProviderByTypeWithId"
+        },
+        "fusionauth_retrieve_identity_provider_connection_test_results_with_id": {
+            "slug": "fusionauth_retrieve_identity_provider_connection_test_results_with_id",
+            "method": "GET",
+            "path": "/api/identity-provider/test",
+            "operation_id": "retrieveIdentityProviderConnectionTestResultsWithId",
+            "class": "FusionAuthRetrieveIdentityProviderConnectionTestResultsWithId"
+        },
+        "fusionauth_retrieve_identity_provider_link": {
+            "slug": "fusionauth_retrieve_identity_provider_link",
+            "method": "GET",
+            "path": "/api/identity-provider/link",
+            "operation_id": "retrieveIdentityProviderLink",
+            "class": "FusionAuthRetrieveIdentityProviderLink"
+        },
+        "fusionauth_retrieve_identity_provider_lookup": {
+            "slug": "fusionauth_retrieve_identity_provider_lookup",
+            "method": "GET",
+            "path": "/api/identity-provider/lookup",
+            "operation_id": "retrieveIdentityProviderLookup",
+            "class": "FusionAuthRetrieveIdentityProviderLookup"
+        },
+        "fusionauth_retrieve_identity_provider_with_id": {
+            "slug": "fusionauth_retrieve_identity_provider_with_id",
+            "method": "GET",
+            "path": "/api/identity-provider/{identityProviderId}",
+            "operation_id": "retrieveIdentityProviderWithId",
+            "class": "FusionAuthRetrieveIdentityProviderWithId"
+        },
+        "fusionauth_retrieve_ipaccess_control_list_with_id": {
+            "slug": "fusionauth_retrieve_ipaccess_control_list_with_id",
+            "method": "GET",
+            "path": "/api/ip-acl/{ipAccessControlListId}",
+            "operation_id": "retrieveIPAccessControlListWithId",
+            "class": "FusionAuthRetrieveIpaccessControlListWithId"
+        },
+        "fusionauth_retrieve_json_web_key_set_with_id": {
+            "slug": "fusionauth_retrieve_json_web_key_set_with_id",
+            "method": "GET",
+            "path": "/.well-known/jwks.json",
+            "operation_id": "retrieveJsonWebKeySetWithId",
+            "class": "FusionAuthRetrieveJsonWebKeySetWithId"
+        },
+        "fusionauth_retrieve_jwt_public_key": {
+            "slug": "fusionauth_retrieve_jwt_public_key",
+            "method": "GET",
+            "path": "/api/jwt/public-key",
+            "operation_id": "retrieveJwtPublicKey",
+            "class": "FusionAuthRetrieveJwtPublicKey"
+        },
+        "fusionauth_retrieve_key_with_id": {
+            "slug": "fusionauth_retrieve_key_with_id",
+            "method": "GET",
+            "path": "/api/key/{keyId}",
+            "operation_id": "retrieveKeyWithId",
+            "class": "FusionAuthRetrieveKeyWithId"
+        },
+        "fusionauth_retrieve_keys_with_id": {
+            "slug": "fusionauth_retrieve_keys_with_id",
+            "method": "GET",
+            "path": "/api/key",
+            "operation_id": "retrieveKeysWithId",
+            "class": "FusionAuthRetrieveKeysWithId"
+        },
+        "fusionauth_retrieve_lambda_with_id": {
+            "slug": "fusionauth_retrieve_lambda_with_id",
+            "method": "GET",
+            "path": "/api/lambda/{lambdaId}",
+            "operation_id": "retrieveLambdaWithId",
+            "class": "FusionAuthRetrieveLambdaWithId"
+        },
+        "fusionauth_retrieve_lambdas_by_type_with_id": {
+            "slug": "fusionauth_retrieve_lambdas_by_type_with_id",
+            "method": "GET",
+            "path": "/api/lambda",
+            "operation_id": "retrieveLambdasByTypeWithId",
+            "class": "FusionAuthRetrieveLambdasByTypeWithId"
+        },
+        "fusionauth_retrieve_message_template": {
+            "slug": "fusionauth_retrieve_message_template",
+            "method": "GET",
+            "path": "/api/message/template",
+            "operation_id": "retrieveMessageTemplate",
+            "class": "FusionAuthRetrieveMessageTemplate"
+        },
+        "fusionauth_retrieve_message_template_preview_with_id": {
+            "slug": "fusionauth_retrieve_message_template_preview_with_id",
+            "method": "POST",
+            "path": "/api/message/template/preview",
+            "operation_id": "retrieveMessageTemplatePreviewWithId",
+            "class": "FusionAuthRetrieveMessageTemplatePreviewWithId"
+        },
+        "fusionauth_retrieve_message_template_with_id": {
+            "slug": "fusionauth_retrieve_message_template_with_id",
+            "method": "GET",
+            "path": "/api/message/template/{messageTemplateId}",
+            "operation_id": "retrieveMessageTemplateWithId",
+            "class": "FusionAuthRetrieveMessageTemplateWithId"
+        },
+        "fusionauth_retrieve_messenger_with_id": {
+            "slug": "fusionauth_retrieve_messenger_with_id",
+            "method": "GET",
+            "path": "/api/messenger/{messengerId}",
+            "operation_id": "retrieveMessengerWithId",
+            "class": "FusionAuthRetrieveMessengerWithId"
+        },
+        "fusionauth_retrieve_monthly_active_report_with_id": {
+            "slug": "fusionauth_retrieve_monthly_active_report_with_id",
+            "method": "GET",
+            "path": "/api/report/monthly-active-user",
+            "operation_id": "retrieveMonthlyActiveReportWithId",
+            "class": "FusionAuthRetrieveMonthlyActiveReportWithId"
+        },
+        "fusionauth_retrieve_oauth_configuration_with_id": {
+            "slug": "fusionauth_retrieve_oauth_configuration_with_id",
+            "method": "GET",
+            "path": "/api/application/{applicationId}/oauth-configuration",
+            "operation_id": "retrieveOauthConfigurationWithId",
+            "class": "FusionAuthRetrieveOauthConfigurationWithId"
+        },
+        "fusionauth_retrieve_oauth_scope_with_id": {
+            "slug": "fusionauth_retrieve_oauth_scope_with_id",
+            "method": "GET",
+            "path": "/api/application/{applicationId}/scope/{scopeId}",
+            "operation_id": "retrieveOAuthScopeWithId",
+            "class": "FusionAuthRetrieveOauthScopeWithId"
+        },
+        "fusionauth_retrieve_open_id_configuration_with_id": {
+            "slug": "fusionauth_retrieve_open_id_configuration_with_id",
+            "method": "GET",
+            "path": "/.well-known/openid-configuration",
+            "operation_id": "retrieveOpenIdConfigurationWithId",
+            "class": "FusionAuthRetrieveOpenIdConfigurationWithId"
+        },
+        "fusionauth_retrieve_password_validation_rules_with_id": {
+            "slug": "fusionauth_retrieve_password_validation_rules_with_id",
+            "method": "GET",
+            "path": "/api/tenant/password-validation-rules",
+            "operation_id": "retrievePasswordValidationRulesWithId",
+            "class": "FusionAuthRetrievePasswordValidationRulesWithId"
+        },
+        "fusionauth_retrieve_password_validation_rules_with_tenant_id_with_id": {
+            "slug": "fusionauth_retrieve_password_validation_rules_with_tenant_id_with_id",
+            "method": "GET",
+            "path": "/api/tenant/password-validation-rules/{tenantId}",
+            "operation_id": "retrievePasswordValidationRulesWithTenantIdWithId",
+            "class": "FusionAuthRetrievePasswordValidationRulesWithTenantIdWithId"
+        },
+        "fusionauth_retrieve_pending_children_with_id": {
+            "slug": "fusionauth_retrieve_pending_children_with_id",
+            "method": "GET",
+            "path": "/api/user/family/pending",
+            "operation_id": "retrievePendingChildrenWithId",
+            "class": "FusionAuthRetrievePendingChildrenWithId"
+        },
+        "fusionauth_retrieve_pending_link_with_id": {
+            "slug": "fusionauth_retrieve_pending_link_with_id",
+            "method": "GET",
+            "path": "/api/identity-provider/link/pending/{pendingLinkId}",
+            "operation_id": "retrievePendingLinkWithId",
+            "class": "FusionAuthRetrievePendingLinkWithId"
+        },
+        "fusionauth_retrieve_reactor_metrics_with_id": {
+            "slug": "fusionauth_retrieve_reactor_metrics_with_id",
+            "method": "GET",
+            "path": "/api/reactor/metrics",
+            "operation_id": "retrieveReactorMetricsWithId",
+            "class": "FusionAuthRetrieveReactorMetricsWithId"
+        },
+        "fusionauth_retrieve_refresh_token_by_id_with_id": {
+            "slug": "fusionauth_retrieve_refresh_token_by_id_with_id",
+            "method": "GET",
+            "path": "/api/jwt/refresh/{tokenId}",
+            "operation_id": "retrieveRefreshTokenByIdWithId",
+            "class": "FusionAuthRetrieveRefreshTokenByIdWithId"
+        },
+        "fusionauth_retrieve_refresh_tokens_with_id": {
+            "slug": "fusionauth_retrieve_refresh_tokens_with_id",
+            "method": "GET",
+            "path": "/api/jwt/refresh",
+            "operation_id": "retrieveRefreshTokensWithId",
+            "class": "FusionAuthRetrieveRefreshTokensWithId"
+        },
+        "fusionauth_retrieve_registration_report_with_id": {
+            "slug": "fusionauth_retrieve_registration_report_with_id",
+            "method": "GET",
+            "path": "/api/report/registration",
+            "operation_id": "retrieveRegistrationReportWithId",
+            "class": "FusionAuthRetrieveRegistrationReportWithId"
+        },
+        "fusionauth_retrieve_registration_with_id": {
+            "slug": "fusionauth_retrieve_registration_with_id",
+            "method": "GET",
+            "path": "/api/user/registration/{userId}/{applicationId}",
+            "operation_id": "retrieveRegistrationWithId",
+            "class": "FusionAuthRetrieveRegistrationWithId"
+        },
+        "fusionauth_retrieve_report_login": {
+            "slug": "fusionauth_retrieve_report_login",
+            "method": "GET",
+            "path": "/api/report/login",
+            "operation_id": "retrieveReportLogin",
+            "class": "FusionAuthRetrieveReportLogin"
+        },
+        "fusionauth_retrieve_status": {
+            "slug": "fusionauth_retrieve_status",
+            "method": "GET",
+            "path": "/api/status",
+            "operation_id": "retrieveStatus",
+            "class": "FusionAuthRetrieveStatus"
+        },
+        "fusionauth_retrieve_system_health_with_id": {
+            "slug": "fusionauth_retrieve_system_health_with_id",
+            "method": "GET",
+            "path": "/api/health",
+            "operation_id": "retrieveSystemHealthWithId",
+            "class": "FusionAuthRetrieveSystemHealthWithId"
+        },
+        "fusionauth_retrieve_tenant_with_id": {
+            "slug": "fusionauth_retrieve_tenant_with_id",
+            "method": "GET",
+            "path": "/api/tenant/{tenantId}",
+            "operation_id": "retrieveTenantWithId",
+            "class": "FusionAuthRetrieveTenantWithId"
+        },
+        "fusionauth_retrieve_theme_with_id": {
+            "slug": "fusionauth_retrieve_theme_with_id",
+            "method": "GET",
+            "path": "/api/theme/{themeId}",
+            "operation_id": "retrieveThemeWithId",
+            "class": "FusionAuthRetrieveThemeWithId"
+        },
+        "fusionauth_retrieve_total_report_with_excludes_with_id": {
+            "slug": "fusionauth_retrieve_total_report_with_excludes_with_id",
+            "method": "GET",
+            "path": "/api/report/totals",
+            "operation_id": "retrieveTotalReportWithExcludesWithId",
+            "class": "FusionAuthRetrieveTotalReportWithExcludesWithId"
+        },
+        "fusionauth_retrieve_two_factor_recovery_codes_with_id": {
+            "slug": "fusionauth_retrieve_two_factor_recovery_codes_with_id",
+            "method": "GET",
+            "path": "/api/user/two-factor/recovery-code/{userId}",
+            "operation_id": "retrieveTwoFactorRecoveryCodesWithId",
+            "class": "FusionAuthRetrieveTwoFactorRecoveryCodesWithId"
+        },
+        "fusionauth_retrieve_two_factor_status_with_id": {
+            "slug": "fusionauth_retrieve_two_factor_status_with_id",
+            "method": "GET",
+            "path": "/api/two-factor/status/{twoFactorTrustId}",
+            "operation_id": "retrieveTwoFactorStatusWithId",
+            "class": "FusionAuthRetrieveTwoFactorStatusWithId"
+        },
+        "fusionauth_retrieve_two_factor_status_with_request_with_id": {
+            "slug": "fusionauth_retrieve_two_factor_status_with_request_with_id",
+            "method": "POST",
+            "path": "/api/two-factor/status",
+            "operation_id": "retrieveTwoFactorStatusWithRequestWithId",
+            "class": "FusionAuthRetrieveTwoFactorStatusWithRequestWithId"
+        },
+        "fusionauth_retrieve_user": {
+            "slug": "fusionauth_retrieve_user",
+            "method": "GET",
+            "path": "/api/user",
+            "operation_id": "retrieveUser",
+            "class": "FusionAuthRetrieveUser"
+        },
+        "fusionauth_retrieve_user_action": {
+            "slug": "fusionauth_retrieve_user_action",
+            "method": "GET",
+            "path": "/api/user-action",
+            "operation_id": "retrieveUserAction",
+            "class": "FusionAuthRetrieveUserAction"
+        },
+        "fusionauth_retrieve_user_action_reason": {
+            "slug": "fusionauth_retrieve_user_action_reason",
+            "method": "GET",
+            "path": "/api/user-action-reason",
+            "operation_id": "retrieveUserActionReason",
+            "class": "FusionAuthRetrieveUserActionReason"
+        },
+        "fusionauth_retrieve_user_action_reason_with_id": {
+            "slug": "fusionauth_retrieve_user_action_reason_with_id",
+            "method": "GET",
+            "path": "/api/user-action-reason/{userActionReasonId}",
+            "operation_id": "retrieveUserActionReasonWithId",
+            "class": "FusionAuthRetrieveUserActionReasonWithId"
+        },
+        "fusionauth_retrieve_user_action_with_id": {
+            "slug": "fusionauth_retrieve_user_action_with_id",
+            "method": "GET",
+            "path": "/api/user-action/{userActionId}",
+            "operation_id": "retrieveUserActionWithId",
+            "class": "FusionAuthRetrieveUserActionWithId"
+        },
+        "fusionauth_retrieve_user_actioning": {
+            "slug": "fusionauth_retrieve_user_actioning",
+            "method": "GET",
+            "path": "/api/user/action",
+            "operation_id": "retrieveUserActioning",
+            "class": "FusionAuthRetrieveUserActioning"
+        },
+        "fusionauth_retrieve_user_change_password": {
+            "slug": "fusionauth_retrieve_user_change_password",
+            "method": "GET",
+            "path": "/api/user/change-password",
+            "operation_id": "retrieveUserChangePassword",
+            "class": "FusionAuthRetrieveUserChangePassword"
+        },
+        "fusionauth_retrieve_user_change_password_with_id": {
+            "slug": "fusionauth_retrieve_user_change_password_with_id",
+            "method": "GET",
+            "path": "/api/user/change-password/{changePasswordId}",
+            "operation_id": "retrieveUserChangePasswordWithId",
+            "class": "FusionAuthRetrieveUserChangePasswordWithId"
+        },
+        "fusionauth_retrieve_user_comments_with_id": {
+            "slug": "fusionauth_retrieve_user_comments_with_id",
+            "method": "GET",
+            "path": "/api/user/comment/{userId}",
+            "operation_id": "retrieveUserCommentsWithId",
+            "class": "FusionAuthRetrieveUserCommentsWithId"
+        },
+        "fusionauth_retrieve_user_consent_with_id": {
+            "slug": "fusionauth_retrieve_user_consent_with_id",
+            "method": "GET",
+            "path": "/api/user/consent/{userConsentId}",
+            "operation_id": "retrieveUserConsentWithId",
+            "class": "FusionAuthRetrieveUserConsentWithId"
+        },
+        "fusionauth_retrieve_user_consents_with_id": {
+            "slug": "fusionauth_retrieve_user_consents_with_id",
+            "method": "GET",
+            "path": "/api/user/consent",
+            "operation_id": "retrieveUserConsentsWithId",
+            "class": "FusionAuthRetrieveUserConsentsWithId"
+        },
+        "fusionauth_retrieve_user_info_from_access_token_with_id": {
+            "slug": "fusionauth_retrieve_user_info_from_access_token_with_id",
+            "method": "GET",
+            "path": "/oauth2/userinfo",
+            "operation_id": "retrieveUserInfoFromAccessTokenWithId",
+            "class": "FusionAuthRetrieveUserInfoFromAccessTokenWithId"
+        },
+        "fusionauth_retrieve_user_recent_login": {
+            "slug": "fusionauth_retrieve_user_recent_login",
+            "method": "GET",
+            "path": "/api/user/recent-login",
+            "operation_id": "retrieveUserRecentLogin",
+            "class": "FusionAuthRetrieveUserRecentLogin"
+        },
+        "fusionauth_retrieve_user_with_id": {
+            "slug": "fusionauth_retrieve_user_with_id",
+            "method": "GET",
+            "path": "/api/user/{userId}",
+            "operation_id": "retrieveUserWithId",
+            "class": "FusionAuthRetrieveUserWithId"
+        },
+        "fusionauth_retrieve_version_with_id": {
+            "slug": "fusionauth_retrieve_version_with_id",
+            "method": "GET",
+            "path": "/api/system/version",
+            "operation_id": "retrieveVersionWithId",
+            "class": "FusionAuthRetrieveVersionWithId"
+        },
+        "fusionauth_retrieve_web_authn_credential_with_id": {
+            "slug": "fusionauth_retrieve_web_authn_credential_with_id",
+            "method": "GET",
+            "path": "/api/webauthn/{id}",
+            "operation_id": "retrieveWebAuthnCredentialWithId",
+            "class": "FusionAuthRetrieveWebAuthnCredentialWithId"
+        },
+        "fusionauth_retrieve_web_authn_credentials_for_user_with_id": {
+            "slug": "fusionauth_retrieve_web_authn_credentials_for_user_with_id",
+            "method": "GET",
+            "path": "/api/webauthn",
+            "operation_id": "retrieveWebAuthnCredentialsForUserWithId",
+            "class": "FusionAuthRetrieveWebAuthnCredentialsForUserWithId"
+        },
+        "fusionauth_retrieve_webhook": {
+            "slug": "fusionauth_retrieve_webhook",
+            "method": "GET",
+            "path": "/api/webhook",
+            "operation_id": "retrieveWebhook",
+            "class": "FusionAuthRetrieveWebhook"
+        },
+        "fusionauth_retrieve_webhook_attempt_log_with_id": {
+            "slug": "fusionauth_retrieve_webhook_attempt_log_with_id",
+            "method": "GET",
+            "path": "/api/system/webhook-attempt-log/{webhookAttemptLogId}",
+            "operation_id": "retrieveWebhookAttemptLogWithId",
+            "class": "FusionAuthRetrieveWebhookAttemptLogWithId"
+        },
+        "fusionauth_retrieve_webhook_event_log_with_id": {
+            "slug": "fusionauth_retrieve_webhook_event_log_with_id",
+            "method": "GET",
+            "path": "/api/system/webhook-event-log/{webhookEventLogId}",
+            "operation_id": "retrieveWebhookEventLogWithId",
+            "class": "FusionAuthRetrieveWebhookEventLogWithId"
+        },
+        "fusionauth_retrieve_webhook_with_id": {
+            "slug": "fusionauth_retrieve_webhook_with_id",
+            "method": "GET",
+            "path": "/api/webhook/{webhookId}",
+            "operation_id": "retrieveWebhookWithId",
+            "class": "FusionAuthRetrieveWebhookWithId"
+        },
+        "fusionauth_revoke_refresh_token_by_id_with_id": {
+            "slug": "fusionauth_revoke_refresh_token_by_id_with_id",
+            "method": "DELETE",
+            "path": "/api/jwt/refresh/{tokenId}",
+            "operation_id": "revokeRefreshTokenByIdWithId",
+            "class": "FusionAuthRevokeRefreshTokenByIdWithId"
+        },
+        "fusionauth_revoke_user_consent_with_id": {
+            "slug": "fusionauth_revoke_user_consent_with_id",
+            "method": "DELETE",
+            "path": "/api/user/consent/{userConsentId}",
+            "operation_id": "revokeUserConsentWithId",
+            "class": "FusionAuthRevokeUserConsentWithId"
+        },
+        "fusionauth_search_applications_with_id": {
+            "slug": "fusionauth_search_applications_with_id",
+            "method": "POST",
+            "path": "/api/application/search",
+            "operation_id": "searchApplicationsWithId",
+            "class": "FusionAuthSearchApplicationsWithId"
+        },
+        "fusionauth_search_audit_logs_with_id": {
+            "slug": "fusionauth_search_audit_logs_with_id",
+            "method": "POST",
+            "path": "/api/system/audit-log/search",
+            "operation_id": "searchAuditLogsWithId",
+            "class": "FusionAuthSearchAuditLogsWithId"
+        },
+        "fusionauth_search_consents_with_id": {
+            "slug": "fusionauth_search_consents_with_id",
+            "method": "POST",
+            "path": "/api/consent/search",
+            "operation_id": "searchConsentsWithId",
+            "class": "FusionAuthSearchConsentsWithId"
+        },
+        "fusionauth_search_email_templates_with_id": {
+            "slug": "fusionauth_search_email_templates_with_id",
+            "method": "POST",
+            "path": "/api/email/template/search",
+            "operation_id": "searchEmailTemplatesWithId",
+            "class": "FusionAuthSearchEmailTemplatesWithId"
+        },
+        "fusionauth_search_entities_by_ids_with_id": {
+            "slug": "fusionauth_search_entities_by_ids_with_id",
+            "method": "GET",
+            "path": "/api/entity/search",
+            "operation_id": "searchEntitiesByIdsWithId",
+            "class": "FusionAuthSearchEntitiesByIdsWithId"
+        },
+        "fusionauth_search_entities_with_id": {
+            "slug": "fusionauth_search_entities_with_id",
+            "method": "POST",
+            "path": "/api/entity/search",
+            "operation_id": "searchEntitiesWithId",
+            "class": "FusionAuthSearchEntitiesWithId"
+        },
+        "fusionauth_search_entity_grants_with_id": {
+            "slug": "fusionauth_search_entity_grants_with_id",
+            "method": "POST",
+            "path": "/api/entity/grant/search",
+            "operation_id": "searchEntityGrantsWithId",
+            "class": "FusionAuthSearchEntityGrantsWithId"
+        },
+        "fusionauth_search_entity_types_with_id": {
+            "slug": "fusionauth_search_entity_types_with_id",
+            "method": "POST",
+            "path": "/api/entity/type/search",
+            "operation_id": "searchEntityTypesWithId",
+            "class": "FusionAuthSearchEntityTypesWithId"
+        },
+        "fusionauth_search_event_logs_with_id": {
+            "slug": "fusionauth_search_event_logs_with_id",
+            "method": "POST",
+            "path": "/api/system/event-log/search",
+            "operation_id": "searchEventLogsWithId",
+            "class": "FusionAuthSearchEventLogsWithId"
+        },
+        "fusionauth_search_group_members_with_id": {
+            "slug": "fusionauth_search_group_members_with_id",
+            "method": "POST",
+            "path": "/api/group/member/search",
+            "operation_id": "searchGroupMembersWithId",
+            "class": "FusionAuthSearchGroupMembersWithId"
+        },
+        "fusionauth_search_groups_with_id": {
+            "slug": "fusionauth_search_groups_with_id",
+            "method": "POST",
+            "path": "/api/group/search",
+            "operation_id": "searchGroupsWithId",
+            "class": "FusionAuthSearchGroupsWithId"
+        },
+        "fusionauth_search_identity_providers_with_id": {
+            "slug": "fusionauth_search_identity_providers_with_id",
+            "method": "POST",
+            "path": "/api/identity-provider/search",
+            "operation_id": "searchIdentityProvidersWithId",
+            "class": "FusionAuthSearchIdentityProvidersWithId"
+        },
+        "fusionauth_search_ipaccess_control_lists_with_id": {
+            "slug": "fusionauth_search_ipaccess_control_lists_with_id",
+            "method": "POST",
+            "path": "/api/ip-acl/search",
+            "operation_id": "searchIPAccessControlListsWithId",
+            "class": "FusionAuthSearchIpaccessControlListsWithId"
+        },
+        "fusionauth_search_keys_with_id": {
+            "slug": "fusionauth_search_keys_with_id",
+            "method": "POST",
+            "path": "/api/key/search",
+            "operation_id": "searchKeysWithId",
+            "class": "FusionAuthSearchKeysWithId"
+        },
+        "fusionauth_search_lambdas_with_id": {
+            "slug": "fusionauth_search_lambdas_with_id",
+            "method": "POST",
+            "path": "/api/lambda/search",
+            "operation_id": "searchLambdasWithId",
+            "class": "FusionAuthSearchLambdasWithId"
+        },
+        "fusionauth_search_login_records_with_id": {
+            "slug": "fusionauth_search_login_records_with_id",
+            "method": "POST",
+            "path": "/api/system/login-record/search",
+            "operation_id": "searchLoginRecordsWithId",
+            "class": "FusionAuthSearchLoginRecordsWithId"
+        },
+        "fusionauth_search_tenants_with_id": {
+            "slug": "fusionauth_search_tenants_with_id",
+            "method": "POST",
+            "path": "/api/tenant/search",
+            "operation_id": "searchTenantsWithId",
+            "class": "FusionAuthSearchTenantsWithId"
+        },
+        "fusionauth_search_themes_with_id": {
+            "slug": "fusionauth_search_themes_with_id",
+            "method": "POST",
+            "path": "/api/theme/search",
+            "operation_id": "searchThemesWithId",
+            "class": "FusionAuthSearchThemesWithId"
+        },
+        "fusionauth_search_user_comments_with_id": {
+            "slug": "fusionauth_search_user_comments_with_id",
+            "method": "POST",
+            "path": "/api/user/comment/search",
+            "operation_id": "searchUserCommentsWithId",
+            "class": "FusionAuthSearchUserCommentsWithId"
+        },
+        "fusionauth_search_users_by_ids_with_id": {
+            "slug": "fusionauth_search_users_by_ids_with_id",
+            "method": "GET",
+            "path": "/api/user/search",
+            "operation_id": "searchUsersByIdsWithId",
+            "class": "FusionAuthSearchUsersByIdsWithId"
+        },
+        "fusionauth_search_users_by_query_with_id": {
+            "slug": "fusionauth_search_users_by_query_with_id",
+            "method": "POST",
+            "path": "/api/user/search",
+            "operation_id": "searchUsersByQueryWithId",
+            "class": "FusionAuthSearchUsersByQueryWithId"
+        },
+        "fusionauth_search_webhook_event_logs_with_id": {
+            "slug": "fusionauth_search_webhook_event_logs_with_id",
+            "method": "POST",
+            "path": "/api/system/webhook-event-log/search",
+            "operation_id": "searchWebhookEventLogsWithId",
+            "class": "FusionAuthSearchWebhookEventLogsWithId"
+        },
+        "fusionauth_search_webhooks_with_id": {
+            "slug": "fusionauth_search_webhooks_with_id",
+            "method": "POST",
+            "path": "/api/webhook/search",
+            "operation_id": "searchWebhooksWithId",
+            "class": "FusionAuthSearchWebhooksWithId"
+        },
+        "fusionauth_send_email_with_id": {
+            "slug": "fusionauth_send_email_with_id",
+            "method": "POST",
+            "path": "/api/email/send/{emailTemplateId}",
+            "operation_id": "sendEmailWithId",
+            "class": "FusionAuthSendEmailWithId"
+        },
+        "fusionauth_send_family_request_email_with_id": {
+            "slug": "fusionauth_send_family_request_email_with_id",
+            "method": "POST",
+            "path": "/api/user/family/request",
+            "operation_id": "sendFamilyRequestEmailWithId",
+            "class": "FusionAuthSendFamilyRequestEmailWithId"
+        },
+        "fusionauth_send_passwordless_code_with_id": {
+            "slug": "fusionauth_send_passwordless_code_with_id",
+            "method": "POST",
+            "path": "/api/passwordless/send",
+            "operation_id": "sendPasswordlessCodeWithId",
+            "class": "FusionAuthSendPasswordlessCodeWithId"
+        },
+        "fusionauth_send_two_factor_code_for_enable_disable_with_id": {
+            "slug": "fusionauth_send_two_factor_code_for_enable_disable_with_id",
+            "method": "POST",
+            "path": "/api/two-factor/send",
+            "operation_id": "sendTwoFactorCodeForEnableDisableWithId",
+            "class": "FusionAuthSendTwoFactorCodeForEnableDisableWithId"
+        },
+        "fusionauth_send_two_factor_code_for_login_using_method_with_id": {
+            "slug": "fusionauth_send_two_factor_code_for_login_using_method_with_id",
+            "method": "POST",
+            "path": "/api/two-factor/send/{twoFactorId}",
+            "operation_id": "sendTwoFactorCodeForLoginUsingMethodWithId",
+            "class": "FusionAuthSendTwoFactorCodeForLoginUsingMethodWithId"
+        },
+        "fusionauth_send_verify_identity_with_id": {
+            "slug": "fusionauth_send_verify_identity_with_id",
+            "method": "POST",
+            "path": "/api/identity/verify/send",
+            "operation_id": "sendVerifyIdentityWithId",
+            "class": "FusionAuthSendVerifyIdentityWithId"
+        },
+        "fusionauth_start_identity_provider_connection_test_with_id": {
+            "slug": "fusionauth_start_identity_provider_connection_test_with_id",
+            "method": "POST",
+            "path": "/api/identity-provider/test",
+            "operation_id": "startIdentityProviderConnectionTestWithId",
+            "class": "FusionAuthStartIdentityProviderConnectionTestWithId"
+        },
+        "fusionauth_start_identity_provider_login_with_id": {
+            "slug": "fusionauth_start_identity_provider_login_with_id",
+            "method": "POST",
+            "path": "/api/identity-provider/start",
+            "operation_id": "startIdentityProviderLoginWithId",
+            "class": "FusionAuthStartIdentityProviderLoginWithId"
+        },
+        "fusionauth_start_passwordless_login_with_id": {
+            "slug": "fusionauth_start_passwordless_login_with_id",
+            "method": "POST",
+            "path": "/api/passwordless/start",
+            "operation_id": "startPasswordlessLoginWithId",
+            "class": "FusionAuthStartPasswordlessLoginWithId"
+        },
+        "fusionauth_start_two_factor_login_with_id": {
+            "slug": "fusionauth_start_two_factor_login_with_id",
+            "method": "POST",
+            "path": "/api/two-factor/start",
+            "operation_id": "startTwoFactorLoginWithId",
+            "class": "FusionAuthStartTwoFactorLoginWithId"
+        },
+        "fusionauth_start_verify_identity_with_id": {
+            "slug": "fusionauth_start_verify_identity_with_id",
+            "method": "POST",
+            "path": "/api/identity/verify/start",
+            "operation_id": "startVerifyIdentityWithId",
+            "class": "FusionAuthStartVerifyIdentityWithId"
+        },
+        "fusionauth_start_web_authn_login_with_id": {
+            "slug": "fusionauth_start_web_authn_login_with_id",
+            "method": "POST",
+            "path": "/api/webauthn/start",
+            "operation_id": "startWebAuthnLoginWithId",
+            "class": "FusionAuthStartWebAuthnLoginWithId"
+        },
+        "fusionauth_start_web_authn_registration_with_id": {
+            "slug": "fusionauth_start_web_authn_registration_with_id",
+            "method": "POST",
+            "path": "/api/webauthn/register/start",
+            "operation_id": "startWebAuthnRegistrationWithId",
+            "class": "FusionAuthStartWebAuthnRegistrationWithId"
+        },
+        "fusionauth_two_factor_login_with_id": {
+            "slug": "fusionauth_two_factor_login_with_id",
+            "method": "POST",
+            "path": "/api/two-factor/login",
+            "operation_id": "twoFactorLoginWithId",
+            "class": "FusionAuthTwoFactorLoginWithId"
+        },
+        "fusionauth_update_apikey_with_id": {
+            "slug": "fusionauth_update_apikey_with_id",
+            "method": "PUT",
+            "path": "/api/api-key/{keyId}",
+            "operation_id": "updateAPIKeyWithId",
+            "class": "FusionAuthUpdateApikeyWithId"
+        },
+        "fusionauth_update_application_role_with_id": {
+            "slug": "fusionauth_update_application_role_with_id",
+            "method": "PUT",
+            "path": "/api/application/{applicationId}/role/{roleId}",
+            "operation_id": "updateApplicationRoleWithId",
+            "class": "FusionAuthUpdateApplicationRoleWithId"
+        },
+        "fusionauth_update_application_with_id": {
+            "slug": "fusionauth_update_application_with_id",
+            "method": "PUT",
+            "path": "/api/application/{applicationId}",
+            "operation_id": "updateApplicationWithId",
+            "class": "FusionAuthUpdateApplicationWithId"
+        },
+        "fusionauth_update_connector_with_id": {
+            "slug": "fusionauth_update_connector_with_id",
+            "method": "PUT",
+            "path": "/api/connector/{connectorId}",
+            "operation_id": "updateConnectorWithId",
+            "class": "FusionAuthUpdateConnectorWithId"
+        },
+        "fusionauth_update_consent_with_id": {
+            "slug": "fusionauth_update_consent_with_id",
+            "method": "PUT",
+            "path": "/api/consent/{consentId}",
+            "operation_id": "updateConsentWithId",
+            "class": "FusionAuthUpdateConsentWithId"
+        },
+        "fusionauth_update_email_template_with_id": {
+            "slug": "fusionauth_update_email_template_with_id",
+            "method": "PUT",
+            "path": "/api/email/template/{emailTemplateId}",
+            "operation_id": "updateEmailTemplateWithId",
+            "class": "FusionAuthUpdateEmailTemplateWithId"
+        },
+        "fusionauth_update_entity_type_permission_with_id": {
+            "slug": "fusionauth_update_entity_type_permission_with_id",
+            "method": "PUT",
+            "path": "/api/entity/type/{entityTypeId}/permission/{permissionId}",
+            "operation_id": "updateEntityTypePermissionWithId",
+            "class": "FusionAuthUpdateEntityTypePermissionWithId"
+        },
+        "fusionauth_update_entity_type_with_id": {
+            "slug": "fusionauth_update_entity_type_with_id",
+            "method": "PUT",
+            "path": "/api/entity/type/{entityTypeId}",
+            "operation_id": "updateEntityTypeWithId",
+            "class": "FusionAuthUpdateEntityTypeWithId"
+        },
+        "fusionauth_update_entity_with_id": {
+            "slug": "fusionauth_update_entity_with_id",
+            "method": "PUT",
+            "path": "/api/entity/{entityId}",
+            "operation_id": "updateEntityWithId",
+            "class": "FusionAuthUpdateEntityWithId"
+        },
+        "fusionauth_update_form_field_with_id": {
+            "slug": "fusionauth_update_form_field_with_id",
+            "method": "PUT",
+            "path": "/api/form/field/{fieldId}",
+            "operation_id": "updateFormFieldWithId",
+            "class": "FusionAuthUpdateFormFieldWithId"
+        },
+        "fusionauth_update_form_with_id": {
+            "slug": "fusionauth_update_form_with_id",
+            "method": "PUT",
+            "path": "/api/form/{formId}",
+            "operation_id": "updateFormWithId",
+            "class": "FusionAuthUpdateFormWithId"
+        },
+        "fusionauth_update_group_members_with_id": {
+            "slug": "fusionauth_update_group_members_with_id",
+            "method": "PUT",
+            "path": "/api/group/member",
+            "operation_id": "updateGroupMembersWithId",
+            "class": "FusionAuthUpdateGroupMembersWithId"
+        },
+        "fusionauth_update_group_with_id": {
+            "slug": "fusionauth_update_group_with_id",
+            "method": "PUT",
+            "path": "/api/group/{groupId}",
+            "operation_id": "updateGroupWithId",
+            "class": "FusionAuthUpdateGroupWithId"
+        },
+        "fusionauth_update_identity_provider_with_id": {
+            "slug": "fusionauth_update_identity_provider_with_id",
+            "method": "PUT",
+            "path": "/api/identity-provider/{identityProviderId}",
+            "operation_id": "updateIdentityProviderWithId",
+            "class": "FusionAuthUpdateIdentityProviderWithId"
+        },
+        "fusionauth_update_integrations_with_id": {
+            "slug": "fusionauth_update_integrations_with_id",
+            "method": "PUT",
+            "path": "/api/integration",
+            "operation_id": "updateIntegrationsWithId",
+            "class": "FusionAuthUpdateIntegrationsWithId"
+        },
+        "fusionauth_update_ipaccess_control_list_with_id": {
+            "slug": "fusionauth_update_ipaccess_control_list_with_id",
+            "method": "PUT",
+            "path": "/api/ip-acl/{accessControlListId}",
+            "operation_id": "updateIPAccessControlListWithId",
+            "class": "FusionAuthUpdateIpaccessControlListWithId"
+        },
+        "fusionauth_update_key_with_id": {
+            "slug": "fusionauth_update_key_with_id",
+            "method": "PUT",
+            "path": "/api/key/{keyId}",
+            "operation_id": "updateKeyWithId",
+            "class": "FusionAuthUpdateKeyWithId"
+        },
+        "fusionauth_update_lambda_with_id": {
+            "slug": "fusionauth_update_lambda_with_id",
+            "method": "PUT",
+            "path": "/api/lambda/{lambdaId}",
+            "operation_id": "updateLambdaWithId",
+            "class": "FusionAuthUpdateLambdaWithId"
+        },
+        "fusionauth_update_message_template_with_id": {
+            "slug": "fusionauth_update_message_template_with_id",
+            "method": "PUT",
+            "path": "/api/message/template/{messageTemplateId}",
+            "operation_id": "updateMessageTemplateWithId",
+            "class": "FusionAuthUpdateMessageTemplateWithId"
+        },
+        "fusionauth_update_messenger_with_id": {
+            "slug": "fusionauth_update_messenger_with_id",
+            "method": "PUT",
+            "path": "/api/messenger/{messengerId}",
+            "operation_id": "updateMessengerWithId",
+            "class": "FusionAuthUpdateMessengerWithId"
+        },
+        "fusionauth_update_oauth_scope_with_id": {
+            "slug": "fusionauth_update_oauth_scope_with_id",
+            "method": "PUT",
+            "path": "/api/application/{applicationId}/scope/{scopeId}",
+            "operation_id": "updateOAuthScopeWithId",
+            "class": "FusionAuthUpdateOauthScopeWithId"
+        },
+        "fusionauth_update_registration_with_id": {
+            "slug": "fusionauth_update_registration_with_id",
+            "method": "PUT",
+            "path": "/api/user/registration/{userId}",
+            "operation_id": "updateRegistrationWithId",
+            "class": "FusionAuthUpdateRegistrationWithId"
+        },
+        "fusionauth_update_system_configuration_with_id": {
+            "slug": "fusionauth_update_system_configuration_with_id",
+            "method": "PUT",
+            "path": "/api/system-configuration",
+            "operation_id": "updateSystemConfigurationWithId",
+            "class": "FusionAuthUpdateSystemConfigurationWithId"
+        },
+        "fusionauth_update_tenant_manager_configuration_with_id": {
+            "slug": "fusionauth_update_tenant_manager_configuration_with_id",
+            "method": "PUT",
+            "path": "/api/tenant-manager",
+            "operation_id": "updateTenantManagerConfigurationWithId",
+            "class": "FusionAuthUpdateTenantManagerConfigurationWithId"
+        },
+        "fusionauth_update_tenant_manager_identity_provider_type_configuration_with_id": {
+            "slug": "fusionauth_update_tenant_manager_identity_provider_type_configuration_with_id",
+            "method": "PUT",
+            "path": "/api/tenant-manager/identity-provider/{type}",
+            "operation_id": "updateTenantManagerIdentityProviderTypeConfigurationWithId",
+            "class": "FusionAuthUpdateTenantManagerIdentityProviderTypeConfigurationWithId"
+        },
+        "fusionauth_update_tenant_with_id": {
+            "slug": "fusionauth_update_tenant_with_id",
+            "method": "PUT",
+            "path": "/api/tenant/{tenantId}",
+            "operation_id": "updateTenantWithId",
+            "class": "FusionAuthUpdateTenantWithId"
+        },
+        "fusionauth_update_theme_with_id": {
+            "slug": "fusionauth_update_theme_with_id",
+            "method": "PUT",
+            "path": "/api/theme/{themeId}",
+            "operation_id": "updateThemeWithId",
+            "class": "FusionAuthUpdateThemeWithId"
+        },
+        "fusionauth_update_user_action_reason_with_id": {
+            "slug": "fusionauth_update_user_action_reason_with_id",
+            "method": "PUT",
+            "path": "/api/user-action-reason/{userActionReasonId}",
+            "operation_id": "updateUserActionReasonWithId",
+            "class": "FusionAuthUpdateUserActionReasonWithId"
+        },
+        "fusionauth_update_user_action_with_id": {
+            "slug": "fusionauth_update_user_action_with_id",
+            "method": "PUT",
+            "path": "/api/user-action/{userActionId}",
+            "operation_id": "updateUserActionWithId",
+            "class": "FusionAuthUpdateUserActionWithId"
+        },
+        "fusionauth_update_user_consent_with_id": {
+            "slug": "fusionauth_update_user_consent_with_id",
+            "method": "PUT",
+            "path": "/api/user/consent/{userConsentId}",
+            "operation_id": "updateUserConsentWithId",
+            "class": "FusionAuthUpdateUserConsentWithId"
+        },
+        "fusionauth_update_user_family_with_id": {
+            "slug": "fusionauth_update_user_family_with_id",
+            "method": "PUT",
+            "path": "/api/user/family/{familyId}",
+            "operation_id": "updateUserFamilyWithId",
+            "class": "FusionAuthUpdateUserFamilyWithId"
+        },
+        "fusionauth_update_user_verify_email": {
+            "slug": "fusionauth_update_user_verify_email",
+            "method": "PUT",
+            "path": "/api/user/verify-email",
+            "operation_id": "updateUserVerifyEmail",
+            "class": "FusionAuthUpdateUserVerifyEmail"
+        },
+        "fusionauth_update_user_verify_registration": {
+            "slug": "fusionauth_update_user_verify_registration",
+            "method": "PUT",
+            "path": "/api/user/verify-registration",
+            "operation_id": "updateUserVerifyRegistration",
+            "class": "FusionAuthUpdateUserVerifyRegistration"
+        },
+        "fusionauth_update_user_with_id": {
+            "slug": "fusionauth_update_user_with_id",
+            "method": "PUT",
+            "path": "/api/user/{userId}",
+            "operation_id": "updateUserWithId",
+            "class": "FusionAuthUpdateUserWithId"
+        },
+        "fusionauth_update_webhook_with_id": {
+            "slug": "fusionauth_update_webhook_with_id",
+            "method": "PUT",
+            "path": "/api/webhook/{webhookId}",
+            "operation_id": "updateWebhookWithId",
+            "class": "FusionAuthUpdateWebhookWithId"
+        },
+        "fusionauth_upsert_entity_grant_with_id": {
+            "slug": "fusionauth_upsert_entity_grant_with_id",
+            "method": "POST",
+            "path": "/api/entity/{entityId}/grant",
+            "operation_id": "upsertEntityGrantWithId",
+            "class": "FusionAuthUpsertEntityGrantWithId"
+        },
+        "fusionauth_validate_jwtwith_id": {
+            "slug": "fusionauth_validate_jwtwith_id",
+            "method": "GET",
+            "path": "/api/jwt/validate",
+            "operation_id": "validateJWTWithId",
+            "class": "FusionAuthValidateJwtwithId"
+        },
+        "fusionauth_vend_jwtwith_id": {
+            "slug": "fusionauth_vend_jwtwith_id",
+            "method": "POST",
+            "path": "/api/jwt/vend",
+            "operation_id": "vendJWTWithId",
+            "class": "FusionAuthVendJwtwithId"
+        },
+        "fusionauth_verify_identity_with_id": {
+            "slug": "fusionauth_verify_identity_with_id",
+            "method": "POST",
+            "path": "/api/identity/verify",
+            "operation_id": "verifyIdentityWithId",
+            "class": "FusionAuthVerifyIdentityWithId"
+        },
+        "fusionauth_verify_user_registration_with_id": {
+            "slug": "fusionauth_verify_user_registration_with_id",
+            "method": "POST",
+            "path": "/api/user/verify-registration",
+            "operation_id": "verifyUserRegistrationWithId",
+            "class": "FusionAuthVerifyUserRegistrationWithId"
+        }
+    }
+}

@@ -6,10 +6,17 @@ use OpenCompany\Integrations\Clerk\ClerkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Clerk users.
+ *
+ * Supports pagination and common user search filters.
+ */
 class ClerkListUsers implements Tool
 {
     /**
      * Create a new ClerkListUsers tool instance.
+     *
+     * @param  ClerkService  $service  Clerk Backend API client.
      */
     public function __construct(
         private ClerkService $service,
@@ -51,7 +58,7 @@ class ClerkListUsers implements Tool
     /**
      * Execute the list users tool.
      *
-     * @param  array  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

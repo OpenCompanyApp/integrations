@@ -3,21 +3,40 @@
 namespace OpenCompany\Integrations\HuggingFace;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListModels;
-use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetModel;
-use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListDatasets;
-use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceInference;
-use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListSpaces;
-use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceApiDelete;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceApiGet;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceApiPost;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceApiPut;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceCreateRepo;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetCurrentUser;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetDataset;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetModel;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetScanStatus;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceGetSpace;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceInference;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListDatasets;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListDatasetTags;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListCommits;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListModelTags;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListModels;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListRefs;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListSpaceHardware;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListSpaces;
+use OpenCompany\Integrations\HuggingFace\Tools\HuggingFaceListTree;
 
 /**
+ * Tool catalog and setup metadata for the Hugging Face integration.
+ *
+ * Exposes Hub discovery, repository utilities, and serverless inference tools.
+ */
+class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -78,7 +97,7 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
     {
         return [
             'label' => 'Hugging Face',
-            'description' => 'AI model hub & inference',
+            'description' => 'Model hub and inference',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:huggingface',
         ];
@@ -91,11 +110,13 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'AI model hub, datasets, Spaces, and serverless inference',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:huggingface',
-            'category' => 'ai',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://huggingface.co/docs/hub/api',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -114,9 +135,23 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'hint' => 'Use <code>https://huggingface.co/api</code> for the public hub, or your Enterprise hub URL',
                 'default' => 'https://huggingface.co/api',
             ],
+            [
+                'key' => 'inference_url',
+                'type' => 'url',
+                'label' => 'Inference Base URL',
+                'placeholder' => 'https://router.huggingface.co/hf-inference/models',
+                'hint' => 'Serverless Inference API model router base URL',
+                'default' => 'https://router.huggingface.co/hf-inference/models',
+            ],
         ];
     }
 
+    /**
+     * Verify that the configured token can access the current-user endpoint.
+     *
+     * @param  array<string, mixed>  $config  Setup form configuration.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -130,7 +165,7 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/whoami-v2');
 
             $json = $response->json();
 
@@ -156,7 +191,7 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'success' => true,
                 'message' => "Connected to Hugging Face API as {$name}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -166,6 +201,7 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
         return [
             'access_token' => 'nullable|string',
             'url' => 'nullable|url',
+            'inference_url' => 'nullable|url',
         ];
     }
 
@@ -193,6 +229,13 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'description' => 'Search and list datasets on Hugging Face Hub.',
                 'icon' => 'ph:database',
             ],
+            'huggingface_get_dataset' => [
+                'class' => HuggingFaceGetDataset::class,
+                'type' => 'read',
+                'name' => 'Get Dataset',
+                'description' => 'Get detailed information about a specific dataset.',
+                'icon' => 'ph:database',
+            ],
             'huggingface_inference' => [
                 'class' => HuggingFaceInference::class,
                 'type' => 'write',
@@ -207,6 +250,13 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'description' => 'Search and list Spaces on Hugging Face Hub.',
                 'icon' => 'ph:app-window',
             ],
+            'huggingface_get_space' => [
+                'class' => HuggingFaceGetSpace::class,
+                'type' => 'read',
+                'name' => 'Get Space',
+                'description' => 'Get detailed information about a specific Space.',
+                'icon' => 'ph:app-window',
+            ],
             'huggingface_get_current_user' => [
                 'class' => HuggingFaceGetCurrentUser::class,
                 'type' => 'read',
@@ -214,17 +264,104 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
                 'description' => 'Get the authenticated user\'s profile information.',
                 'icon' => 'ph:user-circle',
             ],
+            'huggingface_list_commits' => [
+                'class' => HuggingFaceListCommits::class,
+                'type' => 'read',
+                'name' => 'List Commits',
+                'description' => 'List commits for a model, dataset, or Space repository.',
+                'icon' => 'ph:git-commit',
+            ],
+            'huggingface_list_refs' => [
+                'class' => HuggingFaceListRefs::class,
+                'type' => 'read',
+                'name' => 'List Refs',
+                'description' => 'List branches and tags for a Hub repository.',
+                'icon' => 'ph:git-branch',
+            ],
+            'huggingface_list_tree' => [
+                'class' => HuggingFaceListTree::class,
+                'type' => 'read',
+                'name' => 'List Tree',
+                'description' => 'List files and folders in a model, dataset, or Space repository.',
+                'icon' => 'ph:tree-structure',
+            ],
+            'huggingface_get_scan_status' => [
+                'class' => HuggingFaceGetScanStatus::class,
+                'type' => 'read',
+                'name' => 'Get Scan Status',
+                'description' => 'Get repository security scan status from the Hub.',
+                'icon' => 'ph:shield-check',
+            ],
+            'huggingface_list_model_tags' => [
+                'class' => HuggingFaceListModelTags::class,
+                'type' => 'read',
+                'name' => 'List Model Tags',
+                'description' => 'List model tags grouped by type.',
+                'icon' => 'ph:tag',
+            ],
+            'huggingface_list_dataset_tags' => [
+                'class' => HuggingFaceListDatasetTags::class,
+                'type' => 'read',
+                'name' => 'List Dataset Tags',
+                'description' => 'List dataset tags grouped by type.',
+                'icon' => 'ph:tag',
+            ],
+            'huggingface_list_space_hardware' => [
+                'class' => HuggingFaceListSpaceHardware::class,
+                'type' => 'read',
+                'name' => 'List Space Hardware',
+                'description' => 'List available Space hardware options.',
+                'icon' => 'ph:cpu',
+            ],
+            'huggingface_create_repo' => [
+                'class' => HuggingFaceCreateRepo::class,
+                'type' => 'write',
+                'name' => 'Create Repository',
+                'description' => 'Create a model, dataset, or Space repository.',
+                'icon' => 'ph:plus-circle',
+            ],
+            'huggingface_api_get' => [
+                'class' => HuggingFaceApiGet::class,
+                'type' => 'read',
+                'name' => 'API GET',
+                'description' => 'Call a relative Hugging Face Hub API GET endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'huggingface_api_post' => [
+                'class' => HuggingFaceApiPost::class,
+                'type' => 'write',
+                'name' => 'API POST',
+                'description' => 'Call a relative Hugging Face Hub API POST endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'huggingface_api_put' => [
+                'class' => HuggingFaceApiPut::class,
+                'type' => 'write',
+                'name' => 'API PUT',
+                'description' => 'Call a relative Hugging Face Hub API PUT endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
+            'huggingface_api_delete' => [
+                'class' => HuggingFaceApiDelete::class,
+                'type' => 'write',
+                'name' => 'API DELETE',
+                'description' => 'Call a relative Hugging Face Hub API DELETE endpoint.',
+                'icon' => 'ph:brackets-curly',
+            ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/hugging-face.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
             ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://huggingface.co/api'],
+            ['key' => 'inference_url', 'type' => 'url', 'label' => 'Inference Base URL', 'required' => false, 'default' => 'https://router.huggingface.co/hf-inference/models'],
         ];
     }
 
@@ -238,11 +375,18 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
+            $accessToken = $creds->get('hugging-face', 'access_token', '', $account)
+                ?: $creds->get('huggingface', 'access_token', '', $account);
+            $baseUrl = $creds->get('hugging-face', 'url', '', $account)
+                ?: $creds->get('huggingface', 'url', 'https://huggingface.co/api', $account);
+            $inferenceUrl = $creds->get('hugging-face', 'inference_url', '', $account)
+                ?: $creds->get('huggingface', 'inference_url', 'https://router.huggingface.co/hf-inference/models', $account);
 
             $service = new HuggingFaceService(
-                accessToken: $creds->get('hugging-face', 'access_token', '', $account),
-                baseUrl: $creds->get('hugging-face', 'url', 'https://huggingface.co/api', $account),
+                accessToken: $accessToken,
+                baseUrl: $baseUrl,
+                inferenceUrl: $inferenceUrl,
             );
 
             return new $class($service);

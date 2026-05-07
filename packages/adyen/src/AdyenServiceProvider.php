@@ -26,6 +26,8 @@ class AdyenServiceProvider extends ServiceProvider
                 apiKey: $creds->get('adyen', 'api_key', ''),
                 merchantAccount: $creds->get('adyen', 'merchant_account', ''),
                 baseUrl: $creds->get('adyen', 'url', 'https://checkout-test.adyen.com'),
+                managementUrl: $creds->get('adyen', 'management_url', 'https://management-test.adyen.com'),
+                companyId: $creds->get('adyen', 'company_id', ''),
             );
         });
     }

@@ -1,0 +1,38 @@
+{
+    "name": "opencompanyapp/integration-google-keep",
+    "description": "Google Keep integration for Laravel AI agents - notes, note permissions, and media downloads.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GoogleKeep\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GoogleKeep\\GoogleKeepServiceProvider"
+            ]
+        }
+    },
+    "keywords": [
+        "tools",
+        "google",
+        "keep",
+        "notes",
+        "workspace",
+        "opencompany"
+    ]
+}

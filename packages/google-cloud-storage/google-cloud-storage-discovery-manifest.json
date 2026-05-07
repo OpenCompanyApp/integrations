@@ -1,0 +1,829 @@
+{
+    "source": "https://storage.googleapis.com/$discovery/rest?version=v1",
+    "docs": "https://cloud.google.com/storage/docs/json_api/v1",
+    "version": "v1",
+    "method_count": 82,
+    "generated_at": "2026-05-06",
+    "methods": [
+        {
+            "tool": "google_cloud_storage_anywhere_caches_insert",
+            "class": "GoogleCloudStorageAnywhereCachesInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/anywhereCaches",
+            "discovery_id": "anywhereCaches.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches Insert"
+        },
+        {
+            "tool": "google_cloud_storage_anywhere_caches_update",
+            "class": "GoogleCloudStorageAnywhereCachesUpdate",
+            "method": "PATCH",
+            "path": "/b/{bucket}/anywhereCaches/{anywhereCacheId}",
+            "discovery_id": "anywhereCaches.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches Update"
+        },
+        {
+            "tool": "google_cloud_storage_anywhere_caches_get",
+            "class": "GoogleCloudStorageAnywhereCachesGet",
+            "method": "GET",
+            "path": "/b/{bucket}/anywhereCaches/{anywhereCacheId}",
+            "discovery_id": "anywhereCaches.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches Get"
+        },
+        {
+            "tool": "google_cloud_storage_anywhere_caches_list",
+            "class": "GoogleCloudStorageAnywhereCachesList",
+            "method": "GET",
+            "path": "/b/{bucket}/anywhereCaches",
+            "discovery_id": "anywhereCaches.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches List"
+        },
+        {
+            "tool": "google_cloud_storage_anywhere_caches_pause",
+            "class": "GoogleCloudStorageAnywhereCachesPause",
+            "method": "POST",
+            "path": "/b/{bucket}/anywhereCaches/{anywhereCacheId}/pause",
+            "discovery_id": "anywhereCaches.pause",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches Pause"
+        },
+        {
+            "tool": "google_cloud_storage_anywhere_caches_resume",
+            "class": "GoogleCloudStorageAnywhereCachesResume",
+            "method": "POST",
+            "path": "/b/{bucket}/anywhereCaches/{anywhereCacheId}/resume",
+            "discovery_id": "anywhereCaches.resume",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches Resume"
+        },
+        {
+            "tool": "google_cloud_storage_anywhere_caches_disable",
+            "class": "GoogleCloudStorageAnywhereCachesDisable",
+            "method": "POST",
+            "path": "/b/{bucket}/anywhereCaches/{anywhereCacheId}/disable",
+            "discovery_id": "anywhereCaches.disable",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Anywhere Caches Disable"
+        },
+        {
+            "tool": "google_cloud_storage_bucket_access_controls_delete",
+            "class": "GoogleCloudStorageBucketAccessControlsDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/acl/{entity}",
+            "discovery_id": "bucketAccessControls.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Bucket Access Controls Delete"
+        },
+        {
+            "tool": "google_cloud_storage_bucket_access_controls_get",
+            "class": "GoogleCloudStorageBucketAccessControlsGet",
+            "method": "GET",
+            "path": "/b/{bucket}/acl/{entity}",
+            "discovery_id": "bucketAccessControls.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Bucket Access Controls Get"
+        },
+        {
+            "tool": "google_cloud_storage_bucket_access_controls_insert",
+            "class": "GoogleCloudStorageBucketAccessControlsInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/acl",
+            "discovery_id": "bucketAccessControls.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Bucket Access Controls Insert"
+        },
+        {
+            "tool": "google_cloud_storage_bucket_access_controls_list",
+            "class": "GoogleCloudStorageBucketAccessControlsList",
+            "method": "GET",
+            "path": "/b/{bucket}/acl",
+            "discovery_id": "bucketAccessControls.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Bucket Access Controls List"
+        },
+        {
+            "tool": "google_cloud_storage_bucket_access_controls_patch",
+            "class": "GoogleCloudStorageBucketAccessControlsPatch",
+            "method": "PATCH",
+            "path": "/b/{bucket}/acl/{entity}",
+            "discovery_id": "bucketAccessControls.patch",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Bucket Access Controls Patch"
+        },
+        {
+            "tool": "google_cloud_storage_bucket_access_controls_update",
+            "class": "GoogleCloudStorageBucketAccessControlsUpdate",
+            "method": "PUT",
+            "path": "/b/{bucket}/acl/{entity}",
+            "discovery_id": "bucketAccessControls.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Bucket Access Controls Update"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_delete",
+            "class": "GoogleCloudStorageBucketsDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}",
+            "discovery_id": "buckets.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Delete"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_restore",
+            "class": "GoogleCloudStorageBucketsRestore",
+            "method": "POST",
+            "path": "/b/{bucket}/restore",
+            "discovery_id": "buckets.restore",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Restore"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_relocate",
+            "class": "GoogleCloudStorageBucketsRelocate",
+            "method": "POST",
+            "path": "/b/{bucket}/relocate",
+            "discovery_id": "buckets.relocate",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Relocate"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_get",
+            "class": "GoogleCloudStorageBucketsGet",
+            "method": "GET",
+            "path": "/b/{bucket}",
+            "discovery_id": "buckets.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Get"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_get_iam_policy",
+            "class": "GoogleCloudStorageBucketsGetIamPolicy",
+            "method": "GET",
+            "path": "/b/{bucket}/iam",
+            "discovery_id": "buckets.getIamPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_get_storage_layout",
+            "class": "GoogleCloudStorageBucketsGetStorageLayout",
+            "method": "GET",
+            "path": "/b/{bucket}/storageLayout",
+            "discovery_id": "buckets.getStorageLayout",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Get Storage Layout"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_insert",
+            "class": "GoogleCloudStorageBucketsInsert",
+            "method": "POST",
+            "path": "/b",
+            "discovery_id": "buckets.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Insert"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_list",
+            "class": "GoogleCloudStorageBucketsList",
+            "method": "GET",
+            "path": "/b",
+            "discovery_id": "buckets.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets List"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_lock_retention_policy",
+            "class": "GoogleCloudStorageBucketsLockRetentionPolicy",
+            "method": "POST",
+            "path": "/b/{bucket}/lockRetentionPolicy",
+            "discovery_id": "buckets.lockRetentionPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Lock Retention Policy"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_patch",
+            "class": "GoogleCloudStorageBucketsPatch",
+            "method": "PATCH",
+            "path": "/b/{bucket}",
+            "discovery_id": "buckets.patch",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Patch"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_set_iam_policy",
+            "class": "GoogleCloudStorageBucketsSetIamPolicy",
+            "method": "PUT",
+            "path": "/b/{bucket}/iam",
+            "discovery_id": "buckets.setIamPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_test_iam_permissions",
+            "class": "GoogleCloudStorageBucketsTestIamPermissions",
+            "method": "GET",
+            "path": "/b/{bucket}/iam/testPermissions",
+            "discovery_id": "buckets.testIamPermissions",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_storage_buckets_update",
+            "class": "GoogleCloudStorageBucketsUpdate",
+            "method": "PUT",
+            "path": "/b/{bucket}",
+            "discovery_id": "buckets.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Buckets Update"
+        },
+        {
+            "tool": "google_cloud_storage_operations_cancel",
+            "class": "GoogleCloudStorageOperationsCancel",
+            "method": "POST",
+            "path": "/b/{bucket}/operations/{operationId}/cancel",
+            "discovery_id": "operations.cancel",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Operations Cancel"
+        },
+        {
+            "tool": "google_cloud_storage_operations_get",
+            "class": "GoogleCloudStorageOperationsGet",
+            "method": "GET",
+            "path": "/b/{bucket}/operations/{operationId}",
+            "discovery_id": "operations.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Operations Get"
+        },
+        {
+            "tool": "google_cloud_storage_operations_advance_relocate_bucket",
+            "class": "GoogleCloudStorageOperationsAdvanceRelocateBucket",
+            "method": "POST",
+            "path": "/b/{bucket}/operations/{operationId}/advanceRelocateBucket",
+            "discovery_id": "operations.advanceRelocateBucket",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Operations Advance Relocate Bucket"
+        },
+        {
+            "tool": "google_cloud_storage_operations_list",
+            "class": "GoogleCloudStorageOperationsList",
+            "method": "GET",
+            "path": "/b/{bucket}/operations",
+            "discovery_id": "operations.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Operations List"
+        },
+        {
+            "tool": "google_cloud_storage_channels_stop",
+            "class": "GoogleCloudStorageChannelsStop",
+            "method": "POST",
+            "path": "/channels/stop",
+            "discovery_id": "channels.stop",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Channels Stop"
+        },
+        {
+            "tool": "google_cloud_storage_default_object_access_controls_delete",
+            "class": "GoogleCloudStorageDefaultObjectAccessControlsDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/defaultObjectAcl/{entity}",
+            "discovery_id": "defaultObjectAccessControls.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Default Object Access Controls Delete"
+        },
+        {
+            "tool": "google_cloud_storage_default_object_access_controls_get",
+            "class": "GoogleCloudStorageDefaultObjectAccessControlsGet",
+            "method": "GET",
+            "path": "/b/{bucket}/defaultObjectAcl/{entity}",
+            "discovery_id": "defaultObjectAccessControls.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Default Object Access Controls Get"
+        },
+        {
+            "tool": "google_cloud_storage_default_object_access_controls_insert",
+            "class": "GoogleCloudStorageDefaultObjectAccessControlsInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/defaultObjectAcl",
+            "discovery_id": "defaultObjectAccessControls.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Default Object Access Controls Insert"
+        },
+        {
+            "tool": "google_cloud_storage_default_object_access_controls_list",
+            "class": "GoogleCloudStorageDefaultObjectAccessControlsList",
+            "method": "GET",
+            "path": "/b/{bucket}/defaultObjectAcl",
+            "discovery_id": "defaultObjectAccessControls.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Default Object Access Controls List"
+        },
+        {
+            "tool": "google_cloud_storage_default_object_access_controls_patch",
+            "class": "GoogleCloudStorageDefaultObjectAccessControlsPatch",
+            "method": "PATCH",
+            "path": "/b/{bucket}/defaultObjectAcl/{entity}",
+            "discovery_id": "defaultObjectAccessControls.patch",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Default Object Access Controls Patch"
+        },
+        {
+            "tool": "google_cloud_storage_default_object_access_controls_update",
+            "class": "GoogleCloudStorageDefaultObjectAccessControlsUpdate",
+            "method": "PUT",
+            "path": "/b/{bucket}/defaultObjectAcl/{entity}",
+            "discovery_id": "defaultObjectAccessControls.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Default Object Access Controls Update"
+        },
+        {
+            "tool": "google_cloud_storage_folders_delete",
+            "class": "GoogleCloudStorageFoldersDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/folders/{folder}",
+            "discovery_id": "folders.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Folders Delete"
+        },
+        {
+            "tool": "google_cloud_storage_folders_delete_recursive",
+            "class": "GoogleCloudStorageFoldersDeleteRecursive",
+            "method": "POST",
+            "path": "/b/{bucket}/folders/{folder}/deleteRecursive",
+            "discovery_id": "folders.deleteRecursive",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Folders Delete Recursive"
+        },
+        {
+            "tool": "google_cloud_storage_folders_get",
+            "class": "GoogleCloudStorageFoldersGet",
+            "method": "GET",
+            "path": "/b/{bucket}/folders/{folder}",
+            "discovery_id": "folders.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Folders Get"
+        },
+        {
+            "tool": "google_cloud_storage_folders_insert",
+            "class": "GoogleCloudStorageFoldersInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/folders",
+            "discovery_id": "folders.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Folders Insert"
+        },
+        {
+            "tool": "google_cloud_storage_folders_list",
+            "class": "GoogleCloudStorageFoldersList",
+            "method": "GET",
+            "path": "/b/{bucket}/folders",
+            "discovery_id": "folders.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Folders List"
+        },
+        {
+            "tool": "google_cloud_storage_folders_rename",
+            "class": "GoogleCloudStorageFoldersRename",
+            "method": "POST",
+            "path": "/b/{bucket}/folders/{sourceFolder}/renameTo/folders/{destinationFolder}",
+            "discovery_id": "folders.rename",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Folders Rename"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_delete",
+            "class": "GoogleCloudStorageManagedFoldersDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/managedFolders/{managedFolder}",
+            "discovery_id": "managedFolders.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders Delete"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_get",
+            "class": "GoogleCloudStorageManagedFoldersGet",
+            "method": "GET",
+            "path": "/b/{bucket}/managedFolders/{managedFolder}",
+            "discovery_id": "managedFolders.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders Get"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_get_iam_policy",
+            "class": "GoogleCloudStorageManagedFoldersGetIamPolicy",
+            "method": "GET",
+            "path": "/b/{bucket}/managedFolders/{managedFolder}/iam",
+            "discovery_id": "managedFolders.getIamPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_insert",
+            "class": "GoogleCloudStorageManagedFoldersInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/managedFolders",
+            "discovery_id": "managedFolders.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders Insert"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_list",
+            "class": "GoogleCloudStorageManagedFoldersList",
+            "method": "GET",
+            "path": "/b/{bucket}/managedFolders",
+            "discovery_id": "managedFolders.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders List"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_set_iam_policy",
+            "class": "GoogleCloudStorageManagedFoldersSetIamPolicy",
+            "method": "PUT",
+            "path": "/b/{bucket}/managedFolders/{managedFolder}/iam",
+            "discovery_id": "managedFolders.setIamPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_storage_managed_folders_test_iam_permissions",
+            "class": "GoogleCloudStorageManagedFoldersTestIamPermissions",
+            "method": "GET",
+            "path": "/b/{bucket}/managedFolders/{managedFolder}/iam/testPermissions",
+            "discovery_id": "managedFolders.testIamPermissions",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Managed Folders Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_storage_notifications_delete",
+            "class": "GoogleCloudStorageNotificationsDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/notificationConfigs/{notification}",
+            "discovery_id": "notifications.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Notifications Delete"
+        },
+        {
+            "tool": "google_cloud_storage_notifications_get",
+            "class": "GoogleCloudStorageNotificationsGet",
+            "method": "GET",
+            "path": "/b/{bucket}/notificationConfigs/{notification}",
+            "discovery_id": "notifications.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Notifications Get"
+        },
+        {
+            "tool": "google_cloud_storage_notifications_insert",
+            "class": "GoogleCloudStorageNotificationsInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/notificationConfigs",
+            "discovery_id": "notifications.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Notifications Insert"
+        },
+        {
+            "tool": "google_cloud_storage_notifications_list",
+            "class": "GoogleCloudStorageNotificationsList",
+            "method": "GET",
+            "path": "/b/{bucket}/notificationConfigs",
+            "discovery_id": "notifications.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Notifications List"
+        },
+        {
+            "tool": "google_cloud_storage_object_access_controls_delete",
+            "class": "GoogleCloudStorageObjectAccessControlsDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/o/{object}/acl/{entity}",
+            "discovery_id": "objectAccessControls.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Object Access Controls Delete"
+        },
+        {
+            "tool": "google_cloud_storage_object_access_controls_get",
+            "class": "GoogleCloudStorageObjectAccessControlsGet",
+            "method": "GET",
+            "path": "/b/{bucket}/o/{object}/acl/{entity}",
+            "discovery_id": "objectAccessControls.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Object Access Controls Get"
+        },
+        {
+            "tool": "google_cloud_storage_object_access_controls_insert",
+            "class": "GoogleCloudStorageObjectAccessControlsInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/o/{object}/acl",
+            "discovery_id": "objectAccessControls.insert",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Object Access Controls Insert"
+        },
+        {
+            "tool": "google_cloud_storage_object_access_controls_list",
+            "class": "GoogleCloudStorageObjectAccessControlsList",
+            "method": "GET",
+            "path": "/b/{bucket}/o/{object}/acl",
+            "discovery_id": "objectAccessControls.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Object Access Controls List"
+        },
+        {
+            "tool": "google_cloud_storage_object_access_controls_patch",
+            "class": "GoogleCloudStorageObjectAccessControlsPatch",
+            "method": "PATCH",
+            "path": "/b/{bucket}/o/{object}/acl/{entity}",
+            "discovery_id": "objectAccessControls.patch",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Object Access Controls Patch"
+        },
+        {
+            "tool": "google_cloud_storage_object_access_controls_update",
+            "class": "GoogleCloudStorageObjectAccessControlsUpdate",
+            "method": "PUT",
+            "path": "/b/{bucket}/o/{object}/acl/{entity}",
+            "discovery_id": "objectAccessControls.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Object Access Controls Update"
+        },
+        {
+            "tool": "google_cloud_storage_objects_compose",
+            "class": "GoogleCloudStorageObjectsCompose",
+            "method": "POST",
+            "path": "/b/{destinationBucket}/o/{destinationObject}/compose",
+            "discovery_id": "objects.compose",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Compose"
+        },
+        {
+            "tool": "google_cloud_storage_objects_copy",
+            "class": "GoogleCloudStorageObjectsCopy",
+            "method": "POST",
+            "path": "/b/{sourceBucket}/o/{sourceObject}/copyTo/b/{destinationBucket}/o/{destinationObject}",
+            "discovery_id": "objects.copy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Copy"
+        },
+        {
+            "tool": "google_cloud_storage_objects_delete",
+            "class": "GoogleCloudStorageObjectsDelete",
+            "method": "DELETE",
+            "path": "/b/{bucket}/o/{object}",
+            "discovery_id": "objects.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Delete"
+        },
+        {
+            "tool": "google_cloud_storage_objects_get",
+            "class": "GoogleCloudStorageObjectsGet",
+            "method": "GET",
+            "path": "/b/{bucket}/o/{object}",
+            "discovery_id": "objects.get",
+            "media_upload": false,
+            "media_download": true,
+            "summary": "Objects Get"
+        },
+        {
+            "tool": "google_cloud_storage_objects_get_iam_policy",
+            "class": "GoogleCloudStorageObjectsGetIamPolicy",
+            "method": "GET",
+            "path": "/b/{bucket}/o/{object}/iam",
+            "discovery_id": "objects.getIamPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Get Iam Policy"
+        },
+        {
+            "tool": "google_cloud_storage_objects_insert",
+            "class": "GoogleCloudStorageObjectsInsert",
+            "method": "POST",
+            "path": "/b/{bucket}/o",
+            "discovery_id": "objects.insert",
+            "media_upload": true,
+            "media_download": false,
+            "summary": "Objects Insert"
+        },
+        {
+            "tool": "google_cloud_storage_objects_list",
+            "class": "GoogleCloudStorageObjectsList",
+            "method": "GET",
+            "path": "/b/{bucket}/o",
+            "discovery_id": "objects.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects List"
+        },
+        {
+            "tool": "google_cloud_storage_objects_patch",
+            "class": "GoogleCloudStorageObjectsPatch",
+            "method": "PATCH",
+            "path": "/b/{bucket}/o/{object}",
+            "discovery_id": "objects.patch",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Patch"
+        },
+        {
+            "tool": "google_cloud_storage_objects_rewrite",
+            "class": "GoogleCloudStorageObjectsRewrite",
+            "method": "POST",
+            "path": "/b/{sourceBucket}/o/{sourceObject}/rewriteTo/b/{destinationBucket}/o/{destinationObject}",
+            "discovery_id": "objects.rewrite",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Rewrite"
+        },
+        {
+            "tool": "google_cloud_storage_objects_move",
+            "class": "GoogleCloudStorageObjectsMove",
+            "method": "POST",
+            "path": "/b/{bucket}/o/{sourceObject}/moveTo/o/{destinationObject}",
+            "discovery_id": "objects.move",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Move"
+        },
+        {
+            "tool": "google_cloud_storage_objects_set_iam_policy",
+            "class": "GoogleCloudStorageObjectsSetIamPolicy",
+            "method": "PUT",
+            "path": "/b/{bucket}/o/{object}/iam",
+            "discovery_id": "objects.setIamPolicy",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Set Iam Policy"
+        },
+        {
+            "tool": "google_cloud_storage_objects_test_iam_permissions",
+            "class": "GoogleCloudStorageObjectsTestIamPermissions",
+            "method": "GET",
+            "path": "/b/{bucket}/o/{object}/iam/testPermissions",
+            "discovery_id": "objects.testIamPermissions",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Test Iam Permissions"
+        },
+        {
+            "tool": "google_cloud_storage_objects_update",
+            "class": "GoogleCloudStorageObjectsUpdate",
+            "method": "PUT",
+            "path": "/b/{bucket}/o/{object}",
+            "discovery_id": "objects.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Update"
+        },
+        {
+            "tool": "google_cloud_storage_objects_watch_all",
+            "class": "GoogleCloudStorageObjectsWatchAll",
+            "method": "POST",
+            "path": "/b/{bucket}/o/watch",
+            "discovery_id": "objects.watchAll",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Watch All"
+        },
+        {
+            "tool": "google_cloud_storage_objects_restore",
+            "class": "GoogleCloudStorageObjectsRestore",
+            "method": "POST",
+            "path": "/b/{bucket}/o/{object}/restore",
+            "discovery_id": "objects.restore",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Restore"
+        },
+        {
+            "tool": "google_cloud_storage_objects_bulk_restore",
+            "class": "GoogleCloudStorageObjectsBulkRestore",
+            "method": "POST",
+            "path": "/b/{bucket}/o/bulkRestore",
+            "discovery_id": "objects.bulkRestore",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Objects Bulk Restore"
+        },
+        {
+            "tool": "google_cloud_storage_projects_hmac_keys_create",
+            "class": "GoogleCloudStorageProjectsHmacKeysCreate",
+            "method": "POST",
+            "path": "/projects/{projectId}/hmacKeys",
+            "discovery_id": "projects.hmacKeys.create",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Projects Hmac Keys Create"
+        },
+        {
+            "tool": "google_cloud_storage_projects_hmac_keys_delete",
+            "class": "GoogleCloudStorageProjectsHmacKeysDelete",
+            "method": "DELETE",
+            "path": "/projects/{projectId}/hmacKeys/{accessId}",
+            "discovery_id": "projects.hmacKeys.delete",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Projects Hmac Keys Delete"
+        },
+        {
+            "tool": "google_cloud_storage_projects_hmac_keys_get",
+            "class": "GoogleCloudStorageProjectsHmacKeysGet",
+            "method": "GET",
+            "path": "/projects/{projectId}/hmacKeys/{accessId}",
+            "discovery_id": "projects.hmacKeys.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Projects Hmac Keys Get"
+        },
+        {
+            "tool": "google_cloud_storage_projects_hmac_keys_list",
+            "class": "GoogleCloudStorageProjectsHmacKeysList",
+            "method": "GET",
+            "path": "/projects/{projectId}/hmacKeys",
+            "discovery_id": "projects.hmacKeys.list",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Projects Hmac Keys List"
+        },
+        {
+            "tool": "google_cloud_storage_projects_hmac_keys_update",
+            "class": "GoogleCloudStorageProjectsHmacKeysUpdate",
+            "method": "PUT",
+            "path": "/projects/{projectId}/hmacKeys/{accessId}",
+            "discovery_id": "projects.hmacKeys.update",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Projects Hmac Keys Update"
+        },
+        {
+            "tool": "google_cloud_storage_projects_service_account_get",
+            "class": "GoogleCloudStorageProjectsServiceAccountGet",
+            "method": "GET",
+            "path": "/projects/{projectId}/serviceAccount",
+            "discovery_id": "projects.serviceAccount.get",
+            "media_upload": false,
+            "media_download": false,
+            "summary": "Projects Service Account Get"
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-fellow",
-    "description": "Fellow meeting management integration for Laravel — list meetings, manage notes, action items, and goals.",
+    "description": "Fellow Developer API integration for Laravel: notes, action items, recordings, and webhooks.",
     "license": "MIT",
     "authors": [
         {

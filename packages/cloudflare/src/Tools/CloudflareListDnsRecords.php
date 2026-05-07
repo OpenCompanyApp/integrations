@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Cloudflare\CloudflareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List DNS records in a Cloudflare zone.
+ *
+ * Applies common DNS record filters and returns compact record summaries.
+ */
 class CloudflareListDnsRecords implements Tool
 {
+    /**
+     * @param  CloudflareService  $service  Cloudflare API client.
+     */
     public function __construct(
         private CloudflareService $service,
     ) {}
@@ -34,6 +42,11 @@ class CloudflareListDnsRecords implements Tool
         ];
     }
 
+    /**
+     * List DNS records for a zone.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

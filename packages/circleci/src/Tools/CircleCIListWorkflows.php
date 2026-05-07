@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class CircleCIListWorkflows implements Tool
 {
+    /**
+     * @param  CircleCIService  $service  The CircleCI API client.
+     */
     public function __construct(
         private CircleCIService $service,
     ) {}
@@ -35,6 +38,11 @@ class CircleCIListWorkflows implements Tool
         ];
     }
 
+    /**
+     * List workflows for a pipeline.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

@@ -2,222 +2,107 @@
 
 namespace OpenCompany\Integrations\GoogleTasks;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Google Tasks REST API.
+ *
+ * Handles OAuth bearer authentication, Discovery path expansion, JSON request
+ * dispatch, response parsing, and Google API error normalization.
+ */
 class GoogleTasksService
 {
-    public function __construct(
-        private string $accessToken = '',
-        private string $baseUrl = 'https://tasks.googleapis.com',
-    ) {
+    /**
+     * @param  string  $accessToken  Google OAuth 2.0 access token with Tasks scopes.
+     * @param  string  $baseUrl  Google Tasks REST API base URL.
+     */
+    public function __construct(private string $accessToken = '', private string $baseUrl = 'https://tasks.googleapis.com')
+    {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    public function isConfigured(): bool
-    {
-        return !empty($this->accessToken);
-    }
+    public function isConfigured(): bool { return $this->accessToken !== ''; }
 
     /**
-     * List all task lists for the authenticated user.
+     * Execute a Google Tasks REST method.
      *
-     * @param  int|null  $maxResults  Maximum number of task lists to return (default: 20, max: 100).
-     * @param  string|null  $pageToken  Token for the next page of results.
+     * @param  array<string, mixed>  $pathParams  Path parameter values keyed by Discovery parameter name.
+     * @param  string[]  $reservedPathParams  Path parameters using `{+param}` reserved expansion.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      * @return array<string, mixed>
      */
-    public function listTaskLists(?int $maxResults = null, ?string $pageToken = null): array
+    public function request(string $method, string $pathTemplate, array $pathParams = [], array $reservedPathParams = [], array $query = [], array $body = []): array
     {
-        $params = [];
-        if ($maxResults !== null) {
-            $params['maxResults'] = $maxResults;
-        }
-        if ($pageToken !== null) {
-            $params['pageToken'] = $pageToken;
-        }
-
-        return $this->request('GET', '/tasks/v1/users/@me/lists', $params);
+        $response = $this->rawRequest($method, $this->expandPath($pathTemplate, $pathParams, $reservedPathParams), $query, $body);
+        if ($response->body() === '') return ['success' => true, 'status' => $response->status()];
+        return $response->json() ?? ['body' => $response->body(), 'status' => $response->status()];
     }
 
     /**
-     * Get a specific task list by ID.
+     * Perform a raw HTTP request against Google Tasks.
      *
-     * @param  string  $taskListId  The task list ID.
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @param  array<string, mixed>  $body  JSON request body.
      */
-    public function getTaskList(string $taskListId): array
+    private function rawRequest(string $method, string $path, array $query = [], array $body = []): Response
     {
-        return $this->request('GET', '/tasks/v1/users/@me/lists/' . urlencode($taskListId));
-    }
-
-    /**
-     * Create a new task list.
-     *
-     * @param  string  $title  The title of the task list.
-     * @return array<string, mixed>
-     */
-    public function createTaskList(string $title): array
-    {
-        return $this->request('POST', '/tasks/v1/users/@me/lists', [
-            'title' => $title,
-        ]);
-    }
-
-    /**
-     * List tasks in a given task list.
-     *
-     * @param  string  $taskListId  The task list ID.
-     * @param  int|null  $maxResults  Maximum number of tasks to return (default: 20, max: 100).
-     * @param  string|null  $pageToken  Token for the next page of results.
-     * @param  bool|null  $showCompleted  Whether to include completed tasks (default: true).
-     * @param  string|null  $dueDate  ISO 8601 date to filter tasks due before this date (e.g., "2026-04-30T00:00:00.000Z").
-     * @return array<string, mixed>
-     */
-    public function listTasks(
-        string $taskListId,
-        ?int $maxResults = null,
-        ?string $pageToken = null,
-        ?bool $showCompleted = null,
-        ?string $dueDate = null,
-    ): array {
-        $params = [];
-        if ($maxResults !== null) {
-            $params['maxResults'] = $maxResults;
-        }
-        if ($pageToken !== null) {
-            $params['pageToken'] = $pageToken;
-        }
-        if ($showCompleted !== null) {
-            $params['showCompleted'] = $showCompleted ? 'true' : 'false';
-        }
-        if ($dueDate !== null) {
-            $params['dueMax'] = $dueDate;
-        }
-
-        return $this->request('GET', '/tasks/v1/lists/' . urlencode($taskListId) . '/tasks', $params);
-    }
-
-    /**
-     * Get a specific task by ID from a task list.
-     *
-     * @param  string  $taskListId  The task list ID.
-     * @param  string  $taskId  The task ID.
-     * @return array<string, mixed>
-     */
-    public function getTask(string $taskListId, string $taskId): array
-    {
-        return $this->request(
-            'GET',
-            '/tasks/v1/lists/' . urlencode($taskListId) . '/tasks/' . urlencode($taskId),
-        );
-    }
-
-    /**
-     * Create a new task in a task list.
-     *
-     * @param  string  $taskListId  The task list ID.
-     * @param  string  $title  The title of the task.
-     * @param  string|null  $notes  Notes/description for the task.
-     * @param  string|null  $due  Due date in RFC 3339 format (e.g., "2026-04-30T00:00:00.000Z").
-     * @return array<string, mixed>
-     */
-    public function createTask(
-        string $taskListId,
-        string $title,
-        ?string $notes = null,
-        ?string $due = null,
-    ): array {
-        $body = ['title' => $title];
-        if ($notes !== null) {
-            $body['notes'] = $notes;
-        }
-        if ($due !== null) {
-            $body['due'] = $due;
-        }
-
-        return $this->request(
-            'POST',
-            '/tasks/v1/lists/' . urlencode($taskListId) . '/tasks',
-            $body,
-        );
-    }
-
-    /**
-     * Get the current authenticated user's information.
-     *
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/tasks/v1/users/@me');
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query parameters or JSON body.
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
-        }
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Google Tasks API.
-     *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Query parameters or JSON body.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Google Tasks access token is not configured.');
-        }
-
-        $url = $this->baseUrl . $path;
-
+        if (!$this->isConfigured()) throw new RuntimeException('Google Tasks access token is not configured.');
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
-
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            $method = strtoupper($method);
+            $url = $this->urlWithQuery($this->baseUrl.$path, $query);
+            $http = Http::withHeaders(['Authorization' => 'Bearer '.$this->accessToken, 'Content-Type' => 'application/json', 'Accept' => 'application/json'])->timeout(120);
+            $response = match ($method) {
+                'GET' => $http->get($url),
+                'POST' => $http->post($url, $body),
+                'PUT' => $http->put($url, $body),
+                'PATCH' => $http->patch($url, $body),
+                'DELETE' => $http->delete($url, $body),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
-
             if (!$response->successful()) {
-                $error = $response->json('error.message') ?? $response->body();
-                Log::error("Google Tasks API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Google Tasks API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                $error = $response->json('error.message') ?? $response->json('error') ?? $response->body();
+                Log::error("Google Tasks API error: {$method} {$path}", ['status' => $response->status(), 'error' => $error]);
+                throw new RuntimeException('Google Tasks API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
             }
-
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Google Tasks API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Google Tasks API: {$e->getMessage()}");
+            Log::error("Google Tasks API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            throw new RuntimeException("Failed to connect to Google Tasks API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Expand Discovery path templates such as `{tasklist}` and `{task}`.
+     *
+     * @param  array<string, mixed>  $pathParams  Path parameter values.
+     * @param  string[]  $reservedPathParams  Parameters using reserved expansion.
+     */
+    private function expandPath(string $template, array $pathParams, array $reservedPathParams): string
+    {
+        return (string) preg_replace_callback('/\{(\+?)([A-Za-z0-9_]+)(?:=[^}]*)?\}/', function (array $matches) use ($pathParams, $reservedPathParams): string {
+            $key = $matches[2];
+            if (!array_key_exists($key, $pathParams) || $pathParams[$key] === null || $pathParams[$key] === '') throw new RuntimeException($key.' must be a non-empty path parameter.');
+            $reserved = $matches[1] === '+' || in_array($key, $reservedPathParams, true);
+            return $reserved ? str_replace('%2F', '/', rawurlencode((string) $pathParams[$key])) : rawurlencode((string) $pathParams[$key]);
+        }, $template);
+    }
+
+    /**
+     * Append query parameters while preserving repeated Google API keys.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') continue;
+            foreach (is_array($value) ? $value : [$value] as $item) if ($item !== null && $item !== '') $parts[] = rawurlencode((string) $key).'='.rawurlencode((string) $item);
+        }
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

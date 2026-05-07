@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Mattermost integration with Laravel's service container.
+ *
+ * Binds MattermostService from host credentials and registers MattermostToolProvider
+ * with the shared provider registry.
+ */
 class MattermostServiceProvider extends ServiceProvider
 {
     public function register(): void

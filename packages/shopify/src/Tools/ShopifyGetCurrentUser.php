@@ -2,48 +2,28 @@
 
 namespace OpenCompany\Integrations\Shopify\Tools;
 
-use OpenCompany\Integrations\Shopify\ShopifyService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Get shop info and verify the Shopify API connection.
- *
- * Useful for verifying the API connection and retrieving store information.
+ * Compatibility alias for shop metadata.
  */
-class ShopifyGetCurrentUser implements Tool
+class ShopifyGetCurrentUser extends AbstractShopifyRestTool
 {
-    public function __construct(
-        private ShopifyService $service,
-    ) {}
+    protected string $toolName = 'shopify_get_current_user';
 
-    public function name(): string
-    {
-        return 'shopify_get_current_user';
-    }
+    protected string $toolDescription = 'Compatibility alias for shop metadata.';
 
-    public function description(): string
-    {
-        return 'Get the current shop info from Shopify. Use this to verify the API connection is working.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/shop.json';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Shopify integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [];
 
-            $result = $this->service->getCurrentUser();
+    /** @var list<string> */
+    protected array $required = [];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
+
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

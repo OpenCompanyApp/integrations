@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-tapfiliate",
-    "description": "Tapfiliate affiliate marketing integration for Laravel — manage affiliates, conversions, and tracking.",
+    "description": "Tapfiliate affiliate marketing integration for Laravel — manage affiliates, conversions, commissions, customers, and programs.",
     "license": "MIT",
     "authors": [
         {

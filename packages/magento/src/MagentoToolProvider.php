@@ -106,7 +106,7 @@ class MagentoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Open-source e-commerce platform for online merchants — manage products, orders, and customers.',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:magento',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.adobe.com/commerce/webapi/rest/',
         ];

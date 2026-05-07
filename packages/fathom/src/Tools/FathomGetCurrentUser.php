@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to get the currently authenticated Fathom user profile.
+ * Tool to get the authenticated Fathom account profile.
  *
- * Returns the user's name, email, and account details. Useful for verifying
- * API connectivity and identifying which account is in use.
+ * Kept for backward compatibility; calls the documented /account endpoint.
  */
 class FathomGetCurrentUser implements Tool
 {
@@ -36,7 +35,7 @@ class FathomGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the currently authenticated Fathom user profile. Returns user name, email, and account details. Useful for verifying API connectivity.';
+        return 'Get the authenticated Fathom account profile. This calls the documented /account endpoint.';
     }
 
     /**

@@ -1,201 +1,158 @@
-# MailerSend — Lua API Reference
+# MailerSend - Lua API Reference
 
-## list_messages
+Namespace: `app.integrations["mailer-send"]`
 
-List email messages from your MailerSend account.
+This integration uses the MailerSend API V1 with bearer-token authentication. The API returns MailerSend's native JSON response shapes, commonly `data`, `links`, and `meta` for list endpoints.
 
-### Parameters
+Official API reference: https://developers.mailersend.com/api/v1/
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results per page (default: 25) |
-| `page` | integer | no | Page number (default: 1) |
+## Coverage
 
-### Example
+The integration exposes tools for:
 
-```lua
-local result = app.integrations["mailer-send"].list_messages({
-  limit = 10,
-  page = 1
-})
+- Email sending: single email and bulk email.
+- Messages, templates, domains, DNS records, verification, and domain recipients.
+- Activity and analytics by date, country, user-agent, and reading environment.
+- Recipients and suppression lists for hard bounces, spam complaints, unsubscribes, and on-hold entries.
+- Webhooks and inbound email routes.
+- SMTP users for sending domains.
 
-for _, msg in ipairs(result.data or {}) do
-  print(msg.id .. ": " .. (msg.subject or "(no subject)"))
-end
-```
-
----
-
-## get_message
-
-Get detailed information about a specific email message.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The unique message ID |
-
-### Example
-
-```lua
-local result = app.integrations["mailer-send"].get_message({
-  id = "msg_abc123"
-})
-
-print("Status: " .. result.data.status)
-print("Subject: " .. result.data.subject)
-```
-
----
-
-## send_email
-
-Send an email through MailerSend.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `from` | object | yes | Sender with `email` and `name` keys |
-| `to` | array | yes | Array of recipient objects with `email` and optional `name` |
-| `subject` | string | yes | Email subject line |
-| `html` | string | no | HTML body content |
-| `text` | string | no | Plain text body content |
-
-### Example
+## Sending Email
 
 ```lua
 local result = app.integrations["mailer-send"].send_email({
-  from = {
-    email = "noreply@example.com",
-    name = "Acme Corp"
-  },
+  from = {email = "noreply@example.test", name = "Example"},
   to = {
-    { email = "user@example.com", name = "John Doe" }
+    {email = "ada@example.test", name = "Ada"}
   },
-  subject = "Welcome to Acme!",
-  html = "<h1>Welcome!</h1><p>Thanks for signing up.</p>",
-  text = "Welcome! Thanks for signing up."
+  subject = "Welcome",
+  html = "<p>Hello Ada</p>",
+  text = "Hello Ada",
+  tags = {"onboarding"},
+  personalization = {
+    {
+      email = "ada@example.test",
+      data = {first_name = "Ada"}
+    }
+  }
 })
-
-print("Message ID: " .. result.data.message_id)
 ```
 
----
-
-## list_templates
-
-List email templates from your MailerSend account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results per page (default: 25) |
-| `page` | integer | no | Page number (default: 1) |
-
-### Example
+For batches, pass an array of full MailerSend email payloads:
 
 ```lua
-local result = app.integrations["mailer-send"].list_templates({
-  limit = 20
+local bulk = app.integrations["mailer-send"].send_bulk_email({
+  messages = {
+    {
+      from = {email = "noreply@example.test", name = "Example"},
+      to = {{email = "ada@example.test"}},
+      subject = "Batch 1",
+      text = "Hello"
+    }
+  }
 })
-
-for _, tpl in ipairs(result.data or {}) do
-  print(tpl.id .. ": " .. tpl.name)
-end
 ```
 
----
-
-## list_domains
-
-List sending domains configured in your MailerSend account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results per page (default: 25) |
-| `page` | integer | no | Page number (default: 1) |
-| `verified` | boolean | no | Filter by verification status |
-
-### Example
+## Domains
 
 ```lua
-local result = app.integrations["mailer-send"].list_domains({
-  limit = 50,
+local domains = app.integrations["mailer-send"].list_domains({
+  limit = 25,
+  page = 1,
   verified = true
 })
 
-for _, domain in ipairs(result.data or {}) do
-  print(domain.name .. " - verified: " .. tostring(domain.verified))
-end
-```
-
----
-
-## list_recipients
-
-List recipients (contacts) from your MailerSend account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results per page (default: 25) |
-| `page` | integer | no | Page number (default: 1) |
-
-### Example
-
-```lua
-local result = app.integrations["mailer-send"].list_recipients({
-  limit = 50,
-  page = 1
+local dns = app.integrations["mailer-send"].get_domain_dns_records({
+  domain_id = "domain_123"
 })
 
-for _, rcpt in ipairs(result.data or {}) do
-  print(rcpt.email .. " - " .. (rcpt.name or ""))
-end
+local status = app.integrations["mailer-send"].get_domain_verification_status({
+  domain_id = "domain_123"
+})
 ```
 
----
+Domain writes include `create_domain`, `delete_domain`, and `update_domain_settings`.
 
-## get_current_user
+## Activity And Analytics
 
-Verify MailerSend API connectivity and token validity.
-
-### Parameters
-
-None.
-
-### Example
+MailerSend activity endpoints require a domain and a Unix timestamp range. Analytics data is retained by MailerSend for a limited period.
 
 ```lua
-local result = app.integrations["mailer-send"].get_current_user({})
+local activity = app.integrations["mailer-send"].list_activities({
+  domain_id = "domain_123",
+  date_from = 1778112000,
+  date_to = 1778198400,
+  event = {"sent", "delivered"},
+  limit = 25
+})
 
-if result.status == "connected" then
-  print("MailerSend API is reachable!")
-end
+local by_date = app.integrations["mailer-send"].get_analytics_by_date({
+  date_from = 1778112000,
+  date_to = 1778198400,
+  event = {"sent", "delivered", "opened"},
+  group_by = "days"
+})
 ```
 
----
+Open analytics tools are available for country, user-agent, and reading environment.
+
+## Suppressions
+
+```lua
+local bounces = app.integrations["mailer-send"].list_hard_bounces({
+  domain_id = "domain_123",
+  limit = 25
+})
+
+app.integrations["mailer-send"].add_unsubscribes({
+  domain_id = "domain_123",
+  recipients = {"user@example.test"}
+})
+```
+
+Deletion tools accept `ids` or `all = true` where the upstream endpoint supports bulk deletion.
+
+## Webhooks And Inbound Routes
+
+```lua
+local webhook = app.integrations["mailer-send"].create_webhook({
+  domain_id = "domain_123",
+  name = "Events",
+  url = "https://example.test/hooks/mailersend",
+  events = {"activity.sent", "activity.delivered"},
+  enabled = true
+})
+
+local route = app.integrations["mailer-send"].create_inbound_route({
+  domain_id = "domain_123",
+  name = "Support replies",
+  domain_enabled = true,
+  inbound_domain = "inbound.example.test",
+  inbound_priority = 10,
+  catch_filter = {type = "catch_all", filters = {}},
+  match_filter = {type = "match_all", filters = {}},
+  forwards = {
+    {type = "webhook", value = "https://example.test/hooks/inbound"}
+  }
+})
+```
+
+## SMTP Users
+
+```lua
+local smtp_users = app.integrations["mailer-send"].list_smtp_users({
+  domain_id = "domain_123"
+})
+```
+
+Use SMTP user write tools for setup automation only; generated credentials are sensitive and should not be logged.
 
 ## Multi-Account Usage
 
-If you have multiple MailerSend accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations["mailer-send"].list_messages({})
-
--- Explicit default (portable across setups)
 app.integrations["mailer-send"].default.list_messages({})
-
--- Named accounts
-app.integrations["mailer-send"].production.list_messages({})
-app.integrations["mailer-send"].staging.list_messages({})
+app.integrations["mailer-send"].production.list_domains({})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All account namespaces expose the same tools; only credentials differ.

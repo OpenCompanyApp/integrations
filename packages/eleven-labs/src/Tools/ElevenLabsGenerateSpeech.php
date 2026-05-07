@@ -35,8 +35,8 @@ class ElevenLabsGenerateSpeech implements Tool
             'text' => ['type' => 'string', 'required' => true, 'description' => 'The text to convert to speech.'],
             'voice_id' => ['type' => 'string', 'required' => true, 'description' => 'The voice identifier to use for synthesis.'],
             'model_id' => ['type' => 'string', 'description' => 'The model ID (e.g., "eleven_multilingual_v2"). Defaults to "eleven_multilingual_v2".'],
-            'stability' => ['type' => 'number', 'description' => 'Voice stability (0.0–1.0). Higher values produce more consistent, less expressive output.'],
-            'similarity_boost' => ['type' => 'number', 'description' => 'Similarity boost (0.0–1.0). Higher values make the output closer to the original voice.'],
+            'stability' => ['type' => 'number', 'description' => 'Voice stability (0.0-1.0). Higher values produce more consistent, less expressive output.'],
+            'similarity_boost' => ['type' => 'number', 'description' => 'Similarity boost (0.0-1.0). Higher values make the output closer to the original voice.'],
         ];
     }
 

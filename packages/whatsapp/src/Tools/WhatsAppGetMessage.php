@@ -9,14 +9,14 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Retrieve a specific WhatsApp message by its ID.
  *
- * Returns the message content, status, timestamps, and sender/recipient info.
+ * Returns the Graph object details available for the supplied message ID.
  *
- * @see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#retrieve-messages
+ * @see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages
  */
 class WhatsAppGetMessage implements Tool
 {
     /**
-     * Create a new WhatsAppGetMessage tool instance.
+     * @param  WhatsAppService  $service  WhatsApp API client.
      */
     public function __construct(
         private WhatsAppService $service,
@@ -35,7 +35,7 @@ class WhatsAppGetMessage implements Tool
      */
     public function description(): string
     {
-        return 'Retrieve a specific WhatsApp message by its ID. Returns the message content, status (sent, delivered, read), and timestamps.';
+        return 'Retrieve a specific WhatsApp message or Graph object by ID with optional fields.';
     }
 
     /**
@@ -46,20 +46,21 @@ class WhatsAppGetMessage implements Tool
     public function parameters(): array
     {
         return [
-            'message_id' => ['type' => 'string', 'required' => true, 'description' => 'The WhatsApp message ID (e.g. "wamid.HBgM...").'],
+            'message_id' => ['type' => 'string', 'required' => true, 'description' => 'The WhatsApp message ID or Graph object ID.'],
+            'fields' => ['type' => 'string', 'description' => 'Optional comma-separated Graph fields to request.'],
         ];
     }
 
     /**
-     * Execute the tool — fetch the message from the API.
+     * Execute the tool and fetch the message from the API.
      *
-     * @param  array{message_id?: string}  $args
+     * @param  array<string, mixed>  $args
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('WhatsApp integration is not configured.');
+            if (! $this->service->hasAccessToken()) {
+                return ToolResult::error('WhatsApp access token is not configured.');
             }
 
             $messageId = $args['message_id'] ?? '';
@@ -68,7 +69,7 @@ class WhatsAppGetMessage implements Tool
                 return ToolResult::error('message_id is required.');
             }
 
-            $result = $this->service->getMessage($messageId);
+            $result = $this->service->getMessage($messageId, $args['fields'] ?? null);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

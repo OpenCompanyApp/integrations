@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Vimeo\VimeoService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a Vimeo album/showcase.
+ */
 class VimeoGetAlbum implements Tool
 {
+    /**
+     * @param  VimeoService  $service  The Vimeo API client.
+     */
     public function __construct(
         private VimeoService $service,
     ) {}
@@ -29,6 +35,11 @@ class VimeoGetAlbum implements Tool
         ];
     }
 
+    /**
+     * Get the album.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -36,7 +47,12 @@ class VimeoGetAlbum implements Tool
                 return ToolResult::error('Vimeo integration is not configured.');
             }
 
-            $result = $this->service->getAlbum($args['album_id']);
+            $albumId = (string) ($args['album_id'] ?? '');
+            if ($albumId === '') {
+                return ToolResult::error('album_id is required.');
+            }
+
+            $result = $this->service->getAlbum($albumId);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

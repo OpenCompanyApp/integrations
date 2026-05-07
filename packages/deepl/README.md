@@ -1,36 +1,7 @@
-# DeepL Integration for Laravel
+# DeepL Integration
 
-DeepL translation integration — translate text, manage glossaries, list languages, and check usage.
+Generated DeepL API tools for OpenCompany and KosmoKrator hosts.
 
-## Installation
+Source OpenAPI document: <https://raw.githubusercontent.com/DeepLcom/openapi/main/openapi.yaml>
 
-```bash
-composer require opencompanyapp/integration-deepl
-```
-
-## Configuration
-
-| Key | Type | Description |
-|-----|------|-------------|
-| `api_key` | secret | Your DeepL API authentication key. |
-| `base_url` | url | API base URL. Use `https://api.deepl.com` (paid) or `https://api-free.deepl.com` (free tier). |
-
-## Tools
-
-| Tool | Type | Description |
-|------|------|-------------|
-| `deepl_translate_text` | write | Translate text using DeepL. |
-| `deepl_list_languages` | read | List supported languages. |
-| `deepl_get_usage` | read | Check API usage and character limits. |
-| `deepl_list_glossaries` | read | List all glossaries. |
-| `deepl_get_glossary` | read | Get details of a specific glossary. |
-| `deepl_create_glossary` | write | Create a new glossary with custom term translations. |
-| `deepl_get_current_user` | read | Get current DeepL account information and usage statistics. |
-
-## Authentication
-
-Uses the `Authorization: DeepL-Auth-Key {api_key}` header for all API requests.
-
-## License
-
-MIT
+The package exposes the official DeepL API surface for text translation, document translation, v2 and v3 glossaries, write/rephrase, usage, supported languages, admin developer keys, admin analytics, style rules, translation memories, and voice realtime sessions. Tools use the `DeepL-Auth-Key` authorization scheme and preserve the original common slugs for translate, languages, usage, and v2 glossary operations.

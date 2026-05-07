@@ -83,7 +83,7 @@ class ZohoCrmToolProvider implements ToolProvider, ConfigurableIntegration, HasI
 
     public function appName(): string
     {
-        return 'zoho_crm';
+        return 'zoho-crm';
     }
 
     public function appMeta(): array
@@ -316,9 +316,16 @@ class ZohoCrmToolProvider implements ToolProvider, ConfigurableIntegration, HasI
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $credential = static function (string $key, mixed $default = '') use ($creds, $account): mixed {
+                $value = $creds->get('zoho-crm', $key, null, $account);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_crm', $key, $default, $account);
+            };
 
             return new ZohoCrmService(
-                accessToken: $creds->get('zoho_crm', 'access_token', '', $account),
+                accessToken: $credential('access_token'),
             );
         }
 

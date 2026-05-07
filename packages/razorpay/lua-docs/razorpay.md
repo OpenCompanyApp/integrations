@@ -207,7 +207,7 @@ end
 
 ## get_current_user
 
-Get current user information from Razorpay. Returns details about the authenticated account.
+Verify the Razorpay API connection with a lightweight payments request. Razorpay does not expose a general current-user endpoint in the payments API, so this returns the same collection shape as `list_payments` with `count = 1`.
 
 ### Parameters
 
@@ -218,10 +218,7 @@ None.
 ```lua
 local result = app.integrations.razorpay.get_current_user({})
 
--- Inspect the returned data
-for k, v in pairs(result) do
-  print(k .. ": " .. tostring(v))
-end
+print("Connected; sample count: " .. tostring(result.count))
 ```
 
 ---

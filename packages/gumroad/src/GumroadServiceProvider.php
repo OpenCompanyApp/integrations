@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Gumroad integration with Laravel's service container.
+ *
+ * Binds GumroadService with host-provided credentials and registers the tool
+ * provider when the integration registry is available.
+ */
 class GumroadServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,8 +20,8 @@ class GumroadServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new GumroadService(
-                accessToken: $creds->get('gumroad', 'access_token', ''),
-                baseUrl: $creds->get('gumroad', 'url', 'https://api.gumroad.com/v2'),
+                accessToken: (string) $creds->get('gumroad', 'access_token', ''),
+                baseUrl: (string) $creds->get('gumroad', 'url', 'https://api.gumroad.com/v2'),
             );
         });
     }

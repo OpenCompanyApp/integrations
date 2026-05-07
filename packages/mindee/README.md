@@ -1,132 +1,64 @@
-# Integration: Mindee
+# Mindee Integration
 
-> Mindee document OCR integration for the [Laravel AI SDK](https://github.com/laravel/ai) — parse invoices, receipts, passports, and custom documents. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+Mindee document OCR and data extraction tools for OpenCompany and KosmoKrator
+agents.
 
-Give your AI agents the ability to extract structured data from documents using OCR. Parse invoices, expense receipts, passports, and custom document types — all through the [Mindee](https://mindee.com) API.
+This package targets Mindee's documented v1 REST API shape:
 
-## About OpenCompany
+- `Authorization: Token <api-key>`
+- `POST /products/{account}/{api_name}/{api_version}/predict`
+- `POST /products/{account}/{api_name}/{api_version}/predict_async`
+- `GET /products/{account}/{api_name}/{api_version}/documents/queue/{job_id}`
 
-[OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
+## Tools
 
-This Mindee tool lets AI agents parse and extract structured data from uploaded documents — giving agents document intelligence capabilities for invoices, receipts, passports, and custom document types.
-
-OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
-
-## Installation
-
-```console
-composer require opencompanyapp/integration-mindee
-```
-
-Laravel auto-discovers the service provider. No manual registration needed.
+| Tool | Type | Notes |
+|------|------|-------|
+| `mindee_predict_document` | write | Generic synchronous prediction for any Mindee product or custom model. |
+| `mindee_predict_document_async` | write | Generic asynchronous prediction enqueue. |
+| `mindee_get_async_prediction` | read | Poll asynchronous job status or receive completed redirect metadata. |
+| `mindee_parse_invoice` | write | Convenience wrapper for `mindee/invoices/v4`. |
+| `mindee_parse_receipt` | write | Convenience wrapper for `mindee/expense_receipts/v5`. |
+| `mindee_parse_passport` | write | Convenience wrapper for `mindee/passport/v1`. |
+| `mindee_parse_custom` | write | Convenience wrapper for an `account/api_name/api_version` endpoint ID. |
 
 ## Configuration
-
-This tool requires a Mindee API key.
-
-**In OpenCompany**, credentials are managed through the Integrations UI.
-
-**For standalone usage**, create `config/ai-tools.php`:
 
 ```php
 return [
     'mindee' => [
         'api_key' => env('MINDEE_API_KEY'),
-        'url'     => env('MINDEE_URL', 'https://api.mindee.net/v1'),
+        'url' => env('MINDEE_URL', 'https://api.mindee.net/v1'),
     ],
 ];
 ```
 
-## Available Tools
+## Document Input
 
-| Tool | Type | Description |
-|------|------|-------------|
-| `mindee_parse_invoice` | write | Extract structured data from invoices — supplier, line items, totals, dates, tax |
-| `mindee_parse_receipt` | write | Extract structured data from expense receipts — merchant, items, totals, category |
-| `mindee_parse_passport` | write | Extract structured data from passports — name, DOB, nationality, number, expiry |
-| `mindee_parse_custom` | write | Parse documents using a custom Mindee endpoint (your own trained model) |
-| `mindee_get_current_user` | read | Get the current authenticated user's account information |
+Prediction tools accept a local file path, a URL, or a base64-encoded document
+string in the `document` parameter. Local files are sent as multipart
+`document` uploads. URL and base64 inputs are sent as JSON with a `document`
+field.
 
-## Quick Start
+Use the generic tools for additional off-the-shelf APIs or custom APIs:
 
 ```php
-use OpenCompany\Integrations\Mindee\MindeeService;
-use OpenCompany\Integrations\Mindee\Tools\MindeeParseInvoice;
-
-// Create tools
-$service = app(MindeeService::class);
-$tools = [
-    new MindeeParseInvoice($service),
-];
-
-// Use with an AI agent
-$response = Ai::agent()
-    ->tools($tools)
-    ->prompt('Parse this invoice and tell me the total amount');
-```
-
-### Via ToolProvider (recommended)
-
-If you have `integration-core` installed, all 5 tools auto-register with the `ToolProviderRegistry`:
-
-```php
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
-
-$registry = app(ToolProviderRegistry::class);
-$provider = $registry->get('mindee');
-
-// Create any tool via the provider
-$tool = $provider->createTool(
-    \OpenCompany\Integrations\Mindee\Tools\MindeeParseInvoice::class
+$service->predictProduct(
+    account: 'mindee',
+    apiName: 'expense_receipts',
+    apiVersion: 'v5',
+    document: '/tmp/receipt.jpg',
 );
 ```
 
-## Standalone Service Usage
+For custom APIs, pass endpoint IDs as `account/api_name/api_version`:
 
 ```php
-use OpenCompany\Integrations\Mindee\MindeeService;
-
-$service = app(MindeeService::class);
-
-// Parse an invoice (from file path)
-$result = $service->parseInvoice('/path/to/invoice.pdf');
-
-// Parse a receipt (from base64)
-$result = $service->parseReceipt(base64_encode($fileContent), 'receipt.jpg');
-
-// Parse a passport
-$result = $service->parsePassport('/path/to/passport.jpg');
-
-// Parse a custom document
-$result = $service->parseCustom('username/endpoint_name/v1', '/path/to/document.pdf');
-
-// Get current user
-$user = $service->getCurrentUser();
+$service->parseCustom('acme/purchase_orders/v1', '/tmp/po.pdf');
 ```
 
-## Document Input
+## Notes
 
-All parsing tools accept either:
-
-1. **File path** — a local file path that the server can read (e.g., `/tmp/uploaded_invoice.pdf`)
-2. **Base64 string** — a base64-encoded representation of the file content
-
-When using base64, you can optionally specify a `file_name` to help the API identify the file type.
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
-| [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11 or 12
-- [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Mindee](https://mindee.com) account with API access
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+Mindee's documented API is prediction-oriented, so connection testing verifies
+that required setup values are present without calling an unrelated account
+endpoint. Run a prediction tool with a safe sample document for a live API check.

@@ -3,20 +3,27 @@
 namespace OpenCompany\Integrations\Google;
 
 use Illuminate\Support\Facades\Http;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Google\Services\GoogleAnalyticsService;
+use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsBatchRunPivotReports;
+use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsBatchRunReports;
+use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsCheckCompatibility;
 use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsListProperties;
 use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsMetadata;
+use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsPivotReport;
 use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsRealtime;
 use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsReport;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+/**
+ * Exposes Google Analytics GA4 Admin and Data API tools.
+ */
 class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -77,7 +84,7 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
 
     public function appName(): string
     {
-        return 'google_analytics';
+        return 'google-analytics';
     }
 
     public function appMeta(): array
@@ -210,6 +217,34 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
                 'description' => 'Run a GA4 analytics report. Returns rows of dimension/metric data for the specified date range. Common dimensions: sessionSource, sessionMedium, sessionDefaultChannelGroup (traffic source); pagePath, pageTitle, landingPage (pages); country, city (geo); deviceCategory, browser, operatingSystem (device); date, dateHour, month (time); newVsReturning (user); eventName (events). Common metrics: sessions, totalUsers, newUsers, activeUsers (traffic); screenPageViews, bounceRate, averageSessionDuration, engagementRate, sessionsPerUser (engagement); eventCount, conversions (events); purchaseRevenue, totalRevenue (e-commerce). Dates: YYYY-MM-DD or relative: "today", "yesterday", "7daysAgo", "28daysAgo", "30daysAgo", "90daysAgo", "365daysAgo". Filter operators: exact, contains, begins_with, ends_with, regex, in_list. Metric filter operators: equal, less_than, greater_than, less_than_or_equal, greater_than_or_equal.',
                 'icon' => 'ph:wrench',
             ],
+            'google_analytics_check_compatibility' => [
+                'class' => GoogleAnalyticsCheckCompatibility::class,
+                'type' => 'read',
+                'name' => 'Check Compatibility',
+                'description' => 'Check whether GA4 dimensions and metrics can be combined in a Data API report.',
+                'icon' => 'ph:check-circle',
+            ],
+            'google_analytics_pivot_report' => [
+                'class' => GoogleAnalyticsPivotReport::class,
+                'type' => 'read',
+                'name' => 'Pivot Report',
+                'description' => 'Run an advanced GA4 pivot report.',
+                'icon' => 'ph:table',
+            ],
+            'google_analytics_batch_run_reports' => [
+                'class' => GoogleAnalyticsBatchRunReports::class,
+                'type' => 'read',
+                'name' => 'Batch Run Reports',
+                'description' => 'Run multiple GA4 standard reports in one Data API request.',
+                'icon' => 'ph:stack',
+            ],
+            'google_analytics_batch_run_pivot_reports' => [
+                'class' => GoogleAnalyticsBatchRunPivotReports::class,
+                'type' => 'read',
+                'name' => 'Batch Run Pivot Reports',
+                'description' => 'Run multiple GA4 pivot reports in one Data API request.',
+                'icon' => 'ph:stack',
+            ],
         ];
     }
 
@@ -234,7 +269,10 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
     /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        $service = app(GoogleAnalyticsService::class);
+        $account = $context['account'] ?? null;
+        $service = $account !== null
+            ? new GoogleAnalyticsService(GoogleServiceProvider::makeClient(app(), $this->appName(), (string) $account))
+            : app(GoogleAnalyticsService::class);
 
         return new $class($service);
     }

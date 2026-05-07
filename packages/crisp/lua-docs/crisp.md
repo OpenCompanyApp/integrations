@@ -1,203 +1,140 @@
-# Crisp — Lua API Reference
+# Crisp Lua API Reference
 
-## list_conversations
+Namespace: `app.integrations.crisp`
 
-List chat conversations for the website.
+This integration exposes the official Crisp REST API method surface from `node-crisp-api` 10.9.3. Configure it with a token identifier, token key, token tier, and optionally a default website ID.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based). Default: 1 |
-| `per_page` | integer | no | Conversations per page (max 100). Default: 25 |
-
-### Example
+## Usage Pattern
 
 ```lua
-local result = app.integrations.crisp.list_conversations({
-  page = 1,
-  per_page = 25
-})
-
-for _, conv in ipairs(result.data or {}) do
-  print(conv.session_id .. " — " .. (conv.last_message or "no messages"))
-end
-```
-
----
-
-## get_conversation
-
-Get details and messages of a specific conversation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `conversation_id` | string | yes | The conversation session ID |
-
-### Example
-
-```lua
-local result = app.integrations.crisp.get_conversation({
-  conversation_id = "session_abc123"
-})
-
-for _, msg in ipairs(result.data or {}) do
-  print(msg.from .. ": " .. msg.content)
-end
-```
-
----
-
-## send_message
-
-Send a message in a Crisp conversation.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `conversation_id` | string | yes | The conversation session ID |
-| `text` | string | yes | The message text to send |
-| `type` | string | no | Message type: `"text"` (default), `"note"`, `"file"` |
-| `from` | string | no | Message origin: `"operator"` (default) or `"user"` |
-
-### Example
-
-```lua
-local result = app.integrations.crisp.send_message({
-  conversation_id = "session_abc123",
-  text = "Hello! How can I help you today?",
-  type = "text",
-  from = "operator"
-})
-
-print("Message sent: " .. tostring(result.sent))
-```
-
-### Send an internal note
-
-```lua
-local result = app.integrations.crisp.send_message({
-  conversation_id = "session_abc123",
-  text = "VIP customer — handle with priority.",
-  type = "note",
-  from = "operator"
+local conversations = app.integrations.crisp.list_conversations({
+  page_number = 1,
+  query = { per_page = 50 }
 })
 ```
 
----
+Website-scoped tools accept `website_id`; if omitted, the configured default website ID is used. Complex write requests should pass the Crisp-documented JSON body as `payload`.
 
-## list_contacts
+## Operation Coverage
 
-List contacts for the website.
+Total tools: 226
 
-### Parameters
+| `crisp_generate_bucket_url` | write | POST `/v1/bucket/url/generate` |
+| `crisp_list_animation_medias` | read | GET `/v1/media/animation/list/{pageNumber}` |
+| `crisp_plan_subscription_list_all_active_subscriptions` | read | GET `/v1/plans/subscription` |
+| `crisp_get_plan_subscription_for_website` | read | GET `/v1/plans/subscription/{websiteID}` |
+| `crisp_subscribe_website_to_plan` | write | POST `/v1/plans/subscription/{websiteID}` |
+| `crisp_unsubscribe_plan_from_website` | write | DELETE `/v1/plans/subscription/{websiteID}` |
+| `crisp_change_bill_period_for_website_plan_subscription` | write | PATCH `/v1/plans/subscription/{websiteID}/bill/period` |
+| `crisp_check_coupon_availability_for_website_plan_subscription` | read | GET `/v1/plans/subscription/{websiteID}/coupon` |
+| `crisp_redeem_coupon_for_website_plan_subscription` | write | PATCH `/v1/plans/subscription/{websiteID}/coupon` |
+| `crisp_get_connect_account` | read | GET `/v1/plugin/connect/account` |
+| `crisp_check_connect_session_validity` | read | HEAD `/v1/plugin/connect/session` |
+| `crisp_list_all_connect_websites` | read | GET `/v1/plugin/connect/websites/all/{pageNumber}` |
+| `crisp_list_connect_websites_since` | read | GET `/v1/plugin/connect/websites/since` |
+| `crisp_get_connect_endpoints` | read | GET `/v1/plugin/connect/endpoints` |
+| `crisp_plugin_subscription_list_all_active_subscriptions` | read | GET `/v1/plugins/subscription` |
+| `crisp_list_subscriptions_for_website` | read | GET `/v1/plugins/subscription/{websiteID}` |
+| `crisp_get_subscription_details` | read | GET `/v1/plugins/subscription/{websiteID}/{pluginID}` |
+| `crisp_subscribe_website_to_plugin` | write | POST `/v1/plugins/subscription/{websiteID}` |
+| `crisp_unsubscribe_plugin_from_website` | write | DELETE `/v1/plugins/subscription/{websiteID}/{pluginID}` |
+| `crisp_get_subscription_settings` | read | GET `/v1/plugins/subscription/{websiteID}/{pluginID}/settings` |
+| `crisp_save_subscription_settings` | write | PUT `/v1/plugins/subscription/{websiteID}/{pluginID}/settings` |
+| `crisp_update_subscription_settings` | write | PATCH `/v1/plugins/subscription/{websiteID}/{pluginID}/settings` |
+| `crisp_get_plugin_usage_bills` | read | GET `/v1/plugins/subscription/{websiteID}/{pluginID}/bill/usage` |
+| `crisp_report_plugin_usage_to_bill` | write | POST `/v1/plugins/subscription/{websiteID}/{pluginID}/bill/usage` |
+| `crisp_get_plugin_attest_provenance` | read | GET `/v1/plugins/subscription/{websiteID}/{pluginID}/attest/provenance` |
+| `crisp_forward_plugin_payload_to_channel` | write | POST `/v1/plugins/subscription/{websiteID}/{pluginID}/channel` |
+| `crisp_dispatch_plugin_event` | write | POST `/v1/plugins/subscription/{websiteID}/{pluginID}/event` |
+| `crisp_generate_analytics` | write | POST `/v1/website/{websiteID}/analytics/generate` |
+| `crisp_get_website_availability_status` | read | GET `/v1/website/{websiteID}/availability/status` |
+| `crisp_list_website_operator_availabilities` | read | GET `/v1/website/{websiteID}/availability/operators` |
+| `crisp_check_website_exists` | read | HEAD `/v1/website` |
+| `crisp_create_website` | write | POST `/v1/website` |
+| `crisp_get_website` | read | GET `/v1/website/{websiteID}` |
+| `crisp_delete_website` | write | DELETE `/v1/website/{websiteID}` |
+| `crisp_abort_website_deletion` | write | DELETE `/v1/website/{websiteID}/expunge` |
+| `crisp_batch_resolve_conversations` | write | PATCH `/v1/website/{websiteID}/batch/resolve` |
+| `crisp_batch_read_conversations` | write | PATCH `/v1/website/{websiteID}/batch/read` |
+| `crisp_batch_remove_conversations` | write | PATCH `/v1/website/{websiteID}/batch/remove` |
+| `crisp_batch_remove_people` | write | PATCH `/v1/website/{websiteID}/batch/remove` |
+| `crisp_list_campaigns` | read | GET `/v1/website/{websiteID}/campaigns/list/{pageNumber}` |
+| `crisp_list_campaign_tags` | read | GET `/v1/website/{websiteID}/campaigns/tags` |
+| `crisp_list_campaign_templates` | read | GET `/v1/website/{websiteID}/campaigns/templates/{pageNumber}` |
+| `crisp_create_new_campaign_template` | write | POST `/v1/website/{websiteID}/campaigns/template` |
+| `crisp_check_campaign_template_exists` | read | HEAD `/v1/website/{websiteID}/campaigns/template/{templateID}` |
+| `crisp_get_campaign_template` | read | GET `/v1/website/{websiteID}/campaigns/template/{templateID}` |
+| `crisp_save_campaign_template` | write | PUT `/v1/website/{websiteID}/campaigns/template/{templateID}` |
+| `crisp_update_campaign_template` | write | PATCH `/v1/website/{websiteID}/campaigns/template/{templateID}` |
+| `crisp_remove_campaign_template` | write | DELETE `/v1/website/{websiteID}/campaigns/template/{templateID}` |
+| `crisp_create_new_campaign` | write | POST `/v1/website/{websiteID}/campaign` |
+| `crisp_check_campaign_exists` | read | HEAD `/v1/website/{websiteID}/campaign/{campaignID}` |
+| `crisp_get_campaign` | read | GET `/v1/website/{websiteID}/campaign/{campaignID}` |
+| `crisp_save_campaign` | write | PUT `/v1/website/{websiteID}/campaign/{campaignID}` |
+| `crisp_update_campaign` | write | PATCH `/v1/website/{websiteID}/campaign/{campaignID}` |
+| `crisp_remove_campaign` | write | DELETE `/v1/website/{websiteID}/campaign/{campaignID}` |
+| `crisp_dispatch_campaign` | write | POST `/v1/website/{websiteID}/campaign/{campaignID}/dispatch` |
+| `crisp_resume_campaign` | write | POST `/v1/website/{websiteID}/campaign/{campaignID}/resume` |
+| `crisp_pause_campaign` | write | POST `/v1/website/{websiteID}/campaign/{campaignID}/pause` |
+| `crisp_test_campaign` | write | POST `/v1/website/{websiteID}/campaign/{campaignID}/test` |
+| `crisp_list_campaign_recipients` | read | GET `/v1/website/{websiteID}/campaign/{campaignID}/recipients/{pageNumber}` |
+| `crisp_list_campaign_statistics` | read | GET `/v1/website/{websiteID}/campaign/{campaignID}/statistics/{action}/{pageNumber}` |
+| `crisp_list_conversations` | read | GET `/v1/website/{websiteID}/conversations/{pageNumber}` |
+| `crisp_list_suggested_conversation_segments` | read | GET `/v1/website/{websiteID}/conversations/suggest/segments/{pageNumber}` |
+| `crisp_delete_suggested_conversation_segment` | write | DELETE `/v1/website/{websiteID}/conversations/suggest/segment` |
+| `crisp_list_suggested_conversation_data_keys` | read | GET `/v1/website/{websiteID}/conversations/suggest/data/{pageNumber}` |
+| `crisp_delete_suggested_conversation_data_key` | write | DELETE `/v1/website/{websiteID}/conversations/suggest/data` |
+| `crisp_list_spam_conversations` | read | GET `/v1/website/{websiteID}/conversations/spams/{pageNumber}` |
+| `crisp_resolve_spam_conversation_content` | read | GET `/v1/website/{websiteID}/conversations/spam/{spamID}/content` |
+| `crisp_submit_spam_conversation_decision` | write | POST `/v1/website/{websiteID}/conversations/spam/{spamID}/decision` |
+| `crisp_create_new_conversation` | write | POST `/v1/website/{websiteID}/conversation` |
+| `crisp_check_conversation_exists` | read | HEAD `/v1/website/{websiteID}/conversation/{sessionID}` |
+| `crisp_get_conversation` | read | GET `/v1/website/{websiteID}/conversation/{sessionID}` |
+| `crisp_remove_conversation` | write | DELETE `/v1/website/{websiteID}/conversation/{sessionID}` |
+| `crisp_initiate_conversation_with_existing_session` | write | POST `/v1/website/{websiteID}/conversation/{sessionID}/initiate` |
+| `crisp_get_messages_in_conversation` | read | GET `/v1/website/{websiteID}/conversation/{sessionID}/messages` |
+| `crisp_send_message_in_conversation` | write | POST `/v1/website/{websiteID}/conversation/{sessionID}/message` |
+| `crisp_get_message_in_conversation` | read | GET `/v1/website/{websiteID}/conversation/{sessionID}/message/{fingerprint}` |
+| `crisp_update_message_in_conversation` | write | PATCH `/v1/website/{websiteID}/conversation/{sessionID}/message/{fingerprint}` |
+| `crisp_remove_message_in_conversation` | write | DELETE `/v1/website/{websiteID}/conversation/{sessionID}/message/{fingerprint}` |
+| `crisp_compose_message_in_conversation` | write | PATCH `/v1/website/{websiteID}/conversation/{sessionID}/compose` |
+| `crisp_mark_messages_read_in_conversation` | write | PATCH `/v1/website/{websiteID}/conversation/{sessionID}/read` |
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based). Default: 1 |
-| `per_page` | integer | no | Contacts per page (max 100). Default: 25 |
+## Examples
 
-### Example
+### Send a message in a conversation
 
 ```lua
-local result = app.integrations.crisp.list_contacts({
-  page = 1,
-  per_page = 50
+local result = app.integrations.crisp.send_message_in_conversation({
+  session_id = "session_700c65e1-85e2-465a-b9ac-ecb5ec2c9881",
+  payload = {
+    type = "text",
+    from = "operator",
+    origin = "chat",
+    content = "Hey there! Need help?"
+  }
 })
-
-for _, contact in ipairs(result.data or {}) do
-  print(contact.email .. " — " .. (contact.person.nickname or "unknown"))
-end
 ```
 
----
-
-## get_contact
-
-Get details of a specific contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `contact_id` | string | yes | The contact identifier (email or Crisp contact ID) |
-
-### Example
+### Get a people profile
 
 ```lua
-local result = app.integrations.crisp.get_contact({
-  contact_id = "user@example.com"
+local profile = app.integrations.crisp.get_people_profile({
+  people_id = "people_123"
 })
-
-local contact = result.data or {}
-print("Name: " .. (contact.person.nickname or "N/A"))
-print("Email: " .. (contact.person.email or "N/A"))
 ```
 
----
-
-## list_campaigns
-
-List marketing campaigns for the website.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based). Default: 1 |
-| `per_page` | integer | no | Campaigns per page (max 100). Default: 25 |
-
-### Example
+### List helpdesk articles
 
 ```lua
-local result = app.integrations.crisp.list_campaigns({
-  page = 1,
-  per_page = 25
+local articles = app.integrations.crisp.list_helpdesk_locale_articles({
+  locale = "en",
+  page_number = 1
 })
-
-for _, campaign in ipairs(result.data or {}) do
-  print(campaign.name .. " — status: " .. campaign.state)
-end
 ```
 
----
+## Notes
 
-## get_current_user
+Crisp authorization depends on token tier and scopes. A tool can be present in this package but still return `not_allowed` if the configured token tier or scopes do not permit that endpoint.
 
-Get the authenticated Crisp user profile. Useful for verifying credentials.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.crisp.get_current_user({})
-
-local user = result.data or {}
-print("Connected as: " .. (user.email or "unknown"))
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Crisp accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.crisp.list_conversations({...})
-
--- Explicit default (portable across setups)
-app.integrations.crisp.default.list_conversations({...})
-
--- Named accounts
-app.integrations.crisp.support.list_conversations({...})
-app.integrations.crisp.sales.list_conversations({...})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Query object values are JSON-encoded to match `node-crisp-api` behavior.

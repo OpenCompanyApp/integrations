@@ -2,32 +2,14 @@
 
 namespace OpenCompany\Integrations\Twitter;
 
-use Illuminate\Support\ServiceProvider;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\Integrations\X\XServiceProvider;
 
 /**
- * Registers legacy Twitter services without exposing duplicate tools.
+ * Legacy compatibility alias for the canonical Twitter / X service provider.
  *
- * The canonical public integration is `x`. This provider keeps the old service
- * binding available for direct legacy consumers but intentionally avoids
- * registering `twitter` in the tool registry.
+ * Hosts requiring the old package now register the canonical `x` provider and
+ * can still use stored `twitter` credentials through fallback lookup.
  */
-class TwitterServiceProvider extends ServiceProvider
+class TwitterServiceProvider extends XServiceProvider
 {
-    public function register(): void
-    {
-        $this->app->singleton(TwitterService::class, function ($app) {
-            $creds = $app->make(CredentialResolver::class);
-
-            return new TwitterService(
-                accessToken: $creds->get('twitter', 'access_token', ''),
-                baseUrl: $creds->get('twitter', 'url', 'https://api.twitter.com/2'),
-            );
-        });
-    }
-
-    public function boot(): void
-    {
-        // Deprecated compatibility package: do not register duplicate tools.
-    }
 }

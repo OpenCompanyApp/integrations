@@ -1,170 +1,141 @@
-# Sendy — Lua API Reference
+# Sendy Lua Reference
+
+Sendy is self-hosted, so every account needs both an API key and the installation hostname. The integration uses Sendy's official form-post API and normalizes plain-text responses into small agent-friendly objects.
 
 ## subscribe
 
-Subscribe an email address to a Sendy mailing list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list` | string | yes | The list ID to subscribe to |
-| `email` | string | yes | The subscriber's email address |
-| `name` | string | no | The subscriber's name |
-
-### Response
-
-On success, returns `{ list, email, message }`. Common messages include `"Subscribed successfully."` and `"Already subscribed."`.
-
-### Examples
+Subscribe or update an email address on a list.
 
 ```lua
 local result = app.integrations.sendy.subscribe({
-  list = "abc123",
-  email = "user@example.com",
-  name = "John Doe"
+  list = "list_abc",
+  email = "reader@example.test",
+  name = "Example Reader",
+  country = "US",
+  gdpr = "true",
+  custom_fields = {
+    Plan = "Pro"
+  }
 })
-
-print(result.message)
 ```
 
----
+Optional fields include `country`, `ipaddress`, `referrer`, `gdpr`, `silent`, and `custom_fields`.
 
 ## unsubscribe
 
-Unsubscribe an email address from a Sendy mailing list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list` | string | yes | The list ID to unsubscribe from |
-| `email` | string | yes | The subscriber's email address |
-
-### Examples
+Unsubscribe an email address from a list.
 
 ```lua
 local result = app.integrations.sendy.unsubscribe({
-  list = "abc123",
-  email = "user@example.com"
+  list = "list_abc",
+  email = "reader@example.test"
 })
-
-print(result.message)
 ```
 
----
+## delete_subscriber
+
+Delete a subscriber from a list.
+
+```lua
+local result = app.integrations.sendy.delete_subscriber({
+  list_id = "list_abc",
+  email = "reader@example.test"
+})
+```
+
+## subscription_status
+
+Get a subscriber's status in a list. Sendy can return values such as `Subscribed`, `Unsubscribed`, `Unconfirmed`, `Bounced`, `Soft bounced`, or `Complained`.
+
+```lua
+local result = app.integrations.sendy.subscription_status({
+  list_id = "list_abc",
+  email = "reader@example.test"
+})
+
+print(result.status)
+```
 
 ## list_subscribers
 
-Get the total subscriber count for a Sendy list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The list ID to query |
-
-### Examples
+Get the active subscriber count for a list. The tool name is historical; it maps to Sendy's `active-subscriber-count.php` endpoint.
 
 ```lua
 local result = app.integrations.sendy.list_subscribers({
-  list_id = "abc123"
+  list_id = "list_abc"
 })
 
-print("Subscribers: " .. result.subscribers)
+print(result.subscribers)
 ```
 
----
+## get_lists
+
+Get lists for a brand.
+
+```lua
+local lists = app.integrations.sendy.get_lists({
+  brand_id = "1",
+  include_hidden = true
+})
+```
+
+## get_brands
+
+Get all brands visible to the API key.
+
+```lua
+local brands = app.integrations.sendy.get_brands({})
+```
 
 ## create_campaign
 
-Create a new email campaign in Sendy. Can be saved as a draft or sent immediately.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `from_name` | string | yes | Sender name |
-| `from_email` | string | yes | Sender email address |
-| `reply_to` | string | yes | Reply-to email address |
-| `title` | string | yes | Internal campaign title (for reference) |
-| `subject` | string | yes | Email subject line |
-| `html_text` | string | yes | HTML content of the email |
-| `list_ids` | string | yes | Comma-separated list IDs to send to |
-| `plain_text` | string | no | Plain text version (auto-generated if omitted) |
-| `send_campaign` | integer | no | `1` to send immediately, `0` or omit to save as draft |
-| `brand_id` | string | no | Brand ID (required for multi-brand setups) |
-| `query_string` | string | no | UTM query string appended to links |
-
-### Examples
-
-#### Save as draft
+Create a draft, send immediately, or schedule a campaign. Sendy requires `brand_id` for drafts, and requires `list_ids` or `segment_ids` when `send_campaign = 1`.
 
 ```lua
 local result = app.integrations.sendy.create_campaign({
-  from_name = "Acme Corp",
-  from_email = "hello@acme.com",
-  reply_to = "hello@acme.com",
-  title = "April Newsletter",
-  subject = "What's new at Acme",
-  html_text = "<h1>Hello!</h1><p>Here's what's new...</p>",
-  list_ids = "abc123,def456"
+  from_name = "Example Corp",
+  from_email = "newsletter@example.test",
+  reply_to = "support@example.test",
+  title = "May Newsletter",
+  subject = "What changed this month",
+  html_text = "<h1>Hello</h1><p>Monthly update.</p>",
+  plain_text = "Hello\n\nMonthly update.",
+  list_ids = "list_abc",
+  send_campaign = 1,
+  track_opens = 1,
+  track_clicks = 1
 })
-
-print("Campaign created: " .. (result.campaign_id or "draft"))
 ```
 
-#### Send immediately
+Scheduling options:
 
 ```lua
 local result = app.integrations.sendy.create_campaign({
-  from_name = "Acme Corp",
-  from_email = "hello@acme.com",
-  reply_to = "hello@acme.com",
-  title = "Flash Sale!",
-  subject = "50% off — today only",
-  html_text = "<h1>Flash Sale!</h1><p>Get 50% off everything...</p>",
-  list_ids = "abc123",
-  send_campaign = 1
+  from_name = "Example Corp",
+  from_email = "newsletter@example.test",
+  reply_to = "support@example.test",
+  title = "Scheduled Newsletter",
+  subject = "Scheduled update",
+  html_text = "<h1>Scheduled</h1>",
+  list_ids = "list_abc",
+  send_campaign = 1,
+  schedule_date_time = "June 15, 2026 6:05pm",
+  schedule_timezone = "America/New_York"
 })
-
-print(result.message)
 ```
-
----
 
 ## get_current_user
 
-Get the current brand/account information from Sendy. Useful for verifying credentials.
-
-### Parameters
-
-None.
-
-### Examples
+Compatibility alias for `get_brands`.
 
 ```lua
-local result = app.integrations.sendy.get_current_user({})
-
-print("Brand: " .. (result.message or "verified"))
+local brands = app.integrations.sendy.get_current_user({})
 ```
-
----
 
 ## Multi-Account Usage
 
-If you have multiple Sendy instances configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.sendy.subscribe({...})
-
--- Explicit default (portable across setups)
 app.integrations.sendy.default.subscribe({...})
-
--- Named accounts
 app.integrations.sendy.marketing.subscribe({...})
-app.integrations.sendy.internal.subscribe({...})
 ```
-
-All functions are identical across accounts — only the credentials differ.

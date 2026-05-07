@@ -105,7 +105,7 @@ class MySQLToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'MySQL integration for Laravel — query databases, manage tables, and perform CRUD operations via HTTP REST bridge.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

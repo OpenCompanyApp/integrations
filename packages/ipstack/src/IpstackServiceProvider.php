@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the IPstack integration with Laravel.
+ *
+ * Binds the API client from configured credentials and registers the provider
+ * with the shared integration registry.
+ */
 class IpstackServiceProvider extends ServiceProvider
 {
     /**

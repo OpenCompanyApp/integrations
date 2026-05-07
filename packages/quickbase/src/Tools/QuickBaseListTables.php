@@ -6,8 +6,14 @@ use OpenCompany\Integrations\QuickBase\QuickBaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List tables in a Quickbase app.
+ */
 class QuickBaseListTables implements Tool
 {
+    /**
+     * @param  QuickBaseService  $service  The Quickbase REST API client.
+     */
     public function __construct(
         private QuickBaseService $service,
     ) {}

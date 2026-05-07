@@ -3,22 +3,24 @@
 namespace OpenCompany\Integrations\Ipstack;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupIp;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupBulk;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackCheckLocation;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackGetTimezone;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackGetCurrency;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackGetConnection;
-use OpenCompany\Integrations\Ipstack\Tools\IpstackGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupBulk;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupIp;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupRequester;
 
 /**
+ * Publishes IPstack geolocation lookup tools to host discovery surfaces.
+ *
+ * The provider exposes the three official endpoint shapes: standard lookup,
+ * bulk lookup, and requester lookup.
+ */
+class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,93 +28,70 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [
+                    'HTTPS, bulk lookup, hostname lookup, and security fields can depend on the selected IPstack plan.',
+                ],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-    /**
-     * The application name used as the integration identifier.
-     */
     public function appName(): string
     {
         return 'ipstack';
     }
 
-    /**
-     * Metadata shown in app and catalog discovery UIs.
-     *
-     * @return array<string, mixed>
-     */
     public function appMeta(): array
     {
         return [
-            'label' => 'Ipstack',
-            'description' => 'IPstack geolocation integration for Laravel — lookup IP addresses, check location…',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
+            'label' => 'IPstack',
+            'description' => 'IP geolocation lookup',
+            'icon' => 'ph:map-pin',
+            'logo' => 'ph:map-pin',
         ];
     }
 
-    /**
-     * Canonical integration metadata used by settings and generated catalogs.
-     *
-     * @return array<string, mixed>
-     */
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Ipstack',
-            'description' => 'IPstack geolocation integration for Laravel — lookup IP addresses, check location, timezone, currency, and connection data.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-            'category' => 'other',
+            'name' => 'IPstack',
+            'description' => 'Look up IP geolocation data through the official IPstack standard, bulk, and requester endpoints.',
+            'icon' => 'ph:map-pin',
+            'logo' => 'ph:map-pin',
+            'category' => 'data',
             'badge' => 'verified',
+            'docs_url' => 'https://ipstack.com/documentation',
+            'source_url' => 'https://ipstack.com/documentation',
         ];
     }
-/**
-     * Configuration schema for the IPstack integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
+
     public function configSchema(): array
     {
         return [
@@ -121,7 +100,7 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your IPstack API access key',
-                'hint' => 'Find your access key in the IPstack dashboard at <strong>Dashboard → Access Key</strong>',
+                'hint' => 'Find your access key in the IPstack dashboard.',
                 'required' => true,
             ],
             [
@@ -129,24 +108,24 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.ipstack.com',
-                'hint' => 'Use <code>https://api.ipstack.com</code> (default). HTTPS may require a paid plan.',
+                'hint' => 'Use https://api.ipstack.com. HTTPS access can depend on your IPstack plan.',
                 'default' => 'https://api.ipstack.com',
             ],
         ];
     }
 
     /**
-     * Test the connection using the provided configuration.
+     * Test the connection using the requester lookup endpoint.
      *
-     * @param  array<string, mixed>  $config
+     * @param  array<string, mixed>  $config  Candidate credential values.
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.ipstack.com', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://api.ipstack.com'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
@@ -159,6 +138,7 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
 
             if (isset($json['error'])) {
                 $error = $json['error']['info'] ?? $json['error']['type'] ?? 'Unknown error';
+
                 return ['success' => false, 'error' => "IPstack API error: {$error}"];
             }
 
@@ -173,16 +153,11 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'success' => true,
                 'message' => "Connected to IPstack API at {$baseUrl}.",
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Laravel validation rules for the configuration fields.
-     *
-     * @return array<string, string>
-     */
     public function validationRules(): array
     {
         return [
@@ -191,79 +166,38 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    /**
-     * Return the list of tools provided by this integration.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function tools(): array
     {
         return [
             'ipstack_lookup_ip' => [
                 'class' => IpstackLookupIp::class,
                 'type' => 'read',
-                'name' => 'Lookup IP',
-                'description' => 'Look up geolocation data for a single IP address.',
+                'name' => 'Standard Lookup',
+                'description' => 'Look up geolocation data for one IP address or domain.',
                 'icon' => 'ph:map-pin',
             ],
             'ipstack_lookup_bulk' => [
                 'class' => IpstackLookupBulk::class,
                 'type' => 'read',
-                'name' => 'Bulk IP Lookup',
-                'description' => 'Look up geolocation data for multiple IP addresses at once.',
+                'name' => 'Bulk Lookup',
+                'description' => 'Look up geolocation data for up to 50 IP addresses or domains.',
                 'icon' => 'ph:list-magnifying-glass',
             ],
-            'ipstack_check_location' => [
-                'class' => IpstackCheckLocation::class,
+            'ipstack_lookup_requester' => [
+                'class' => IpstackLookupRequester::class,
                 'type' => 'read',
-                'name' => 'Check Location',
-                'description' => 'Check if an IP address is in a specific country or region.',
-                'icon' => 'ph:map-trifold',
-            ],
-            'ipstack_get_timezone' => [
-                'class' => IpstackGetTimezone::class,
-                'type' => 'read',
-                'name' => 'Get Timezone',
-                'description' => 'Get timezone information for an IP address.',
-                'icon' => 'ph:clock',
-            ],
-            'ipstack_get_currency' => [
-                'class' => IpstackGetCurrency::class,
-                'type' => 'read',
-                'name' => 'Get Currency',
-                'description' => 'Get local currency information for an IP address.',
-                'icon' => 'ph:currency-dollar',
-            ],
-            'ipstack_get_connection' => [
-                'class' => IpstackGetConnection::class,
-                'type' => 'read',
-                'name' => 'Get Connection',
-                'description' => 'Get connection and ISP information for an IP address.',
-                'icon' => 'ph:wifi-high',
-            ],
-            'ipstack_get_current_user' => [
-                'class' => IpstackGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Detect and geolocate the current requesting IP address.',
+                'name' => 'Requester Lookup',
+                'description' => 'Detect and geolocate the requesting IP address.',
                 'icon' => 'ph:user-circle',
             ],
         ];
     }
 
-    /**
-     * Path to the Lua API docs markdown file.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/ipstack.md';
     }
 
-    /**
-     * Credential fields for quick reference.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
@@ -272,35 +206,34 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    /**
-     * Confirm this class represents an integration (not a standalone tool).
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance, optionally using account-specific credentials.
-     *
-     * @param  class-string<Tool>  $class  The tool class to instantiate.
-     * @param  array<string, mixed>  $context  Optional context with an 'account' key for multi-account support.
-     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context with optional account.
+     */
+    private function resolveService(array $context = []): IpstackService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new IpstackService(
+            return new IpstackService(
                 apiKey: $creds->get('ipstack', 'api_key', '', $account),
                 baseUrl: $creds->get('ipstack', 'url', 'https://api.ipstack.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(IpstackService::class));
+        return app(IpstackService::class);
     }
 }

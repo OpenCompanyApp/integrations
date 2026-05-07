@@ -91,7 +91,7 @@ class CalComToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'label' => 'Cal.com',
-            'description' => 'Scheduling & bookings',
+            'description' => 'Legacy alias for Cal.com',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calcom',
         ];
@@ -103,13 +103,14 @@ class CalComToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Cal.com',
-            'description' => 'Open scheduling infrastructure for booking and calendar management',
+            'name' => 'Cal.com Legacy Alias',
+            'description' => 'Legacy cal-com package alias. Use the canonical cal integration for new work.',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calcom',
             'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://developer.cal.com/api',
+            'docs_url' => 'https://cal.com/docs/api-reference/v2/introduction',
+            'catalog_visibility' => 'hidden',
         ];
     }    /**
      * Get the configuration schema for Cal.com credentials.
@@ -155,7 +156,7 @@ class CalComToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/me');
 
             $json = $response->json();
 

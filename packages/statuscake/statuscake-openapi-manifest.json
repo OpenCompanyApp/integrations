@@ -1,0 +1,11 @@
+{
+  "source_url": "https://developers.statuscake.com/redocusaurus/plugin-redoc-0.yaml",
+  "docs_url": "https://developers.statuscake.com/api/",
+  "swagger": "2.0",
+  "version": "1.2.0",
+  "path_count": 18,
+  "method_count": 36,
+  "read_count": 18,
+  "write_count": 18,
+  "base_url": "https://api.statuscake.com/v1"
+}

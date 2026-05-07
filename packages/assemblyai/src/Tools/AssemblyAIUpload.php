@@ -61,13 +61,13 @@ class AssemblyAIUpload implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('AssemblyAI integration is not configured.');
             }
 
-            $filePath = $args['file_path'];
+            $filePath = $args['file_path'] ?? '';
 
-            if (!file_exists($filePath)) {
+            if (! is_string($filePath) || ! file_exists($filePath)) {
                 return ToolResult::error("File not found: {$filePath}");
             }
 

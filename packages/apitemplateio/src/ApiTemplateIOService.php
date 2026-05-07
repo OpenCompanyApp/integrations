@@ -2,156 +2,274 @@
 
 namespace OpenCompany\Integrations\ApiTemplateIO;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 /**
- * Service class for interacting with the API Template IO API.
+ * HTTP client for the APITemplate.io REST API v2.
  *
- * Handles authentication, HTTP communication, and error handling for generating
- * PDFs and images from templates, managing templates, and account information.
+ * Handles API-key authentication, request dispatch, error logging, and response parsing for PDF,
+ * image, generated-object, account, and template-management endpoints.
  */
 class ApiTemplateIOService
 {
     /**
-     * Create a new ApiTemplateIOService instance.
-     *
-     * @param string $apiKey  The API key for authenticating with API Template IO.
-     * @param string $baseUrl The base URL for the API Template IO API.
+     * @param  string  $apiKey  APITemplate.io API key
+     * @param  string  $baseUrl  APITemplate.io API base URL, including the regional host but not a trailing slash
      */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.apitemplate.io/v1',
+        private string $baseUrl = 'https://rest.apitemplate.io',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service is properly configured with an API key.
-     *
-     * @return bool True if an API key is set.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return $this->apiKey !== '';
     }
 
     /**
-     * Generate a PDF document from a template.
+     * Generate a PDF document from a saved template.
      *
-     * @param string               $templateId   The template ID to use for generation.
-     * @param array<string, mixed> $data         The data to merge into the template.
-     * @param array<string, mixed> $extraParams  Additional parameters (e.g., output_html, meta, expire).
-     *
-     * @return array<string, mixed> The API response containing the generated PDF URL and metadata.
+     * @param  string  $templateId  Template ID from the APITemplate.io console
+     * @param  array<string, mixed>  $data  JSON payload merged into the template
+     * @param  array<string, mixed>  $query  Optional query parameters such as expiration, async, filename, or webhook_url
+     * @return array<string, mixed>
      */
-    public function createPdf(string $templateId, array $data = [], array $extraParams = []): array
+    public function createPdf(string $templateId, array $data = [], array $query = []): array
     {
-        $body = array_merge($extraParams, [
+        return $this->request('POST', '/v2/create-pdf', $data, array_merge($query, [
             'template_id' => $templateId,
-            'data' => $data,
-            'output_format' => 'pdf',
-        ]);
-
-        return $this->request('POST', '/create', $body);
+        ]));
     }
 
     /**
-     * Generate an image (PNG or JPEG) from a template.
+     * Generate an image from a saved visual template.
      *
-     * @param string               $templateId   The template ID to use for generation.
-     * @param array<string, mixed> $data         The data to merge into the template.
-     * @param string               $outputFormat The image format — either "png" or "jpeg".
-     * @param array<string, mixed> $extraParams  Additional parameters (e.g., output_html, meta, expire).
-     *
-     * @return array<string, mixed> The API response containing the generated image URL and metadata.
+     * @param  string  $templateId  Template ID from the APITemplate.io console
+     * @param  array<string, mixed>  $payload  Image override payload, usually containing an overrides array
+     * @param  array<string, mixed>  $query  Optional query parameters such as output_image_type, expiration, or meta
+     * @return array<string, mixed>
      */
-    public function createImage(string $templateId, array $data = [], string $outputFormat = 'png', array $extraParams = []): array
+    public function createImage(string $templateId, array $payload = [], array $query = []): array
     {
-        $body = array_merge($extraParams, [
+        return $this->request('POST', '/v2/create-image', $payload, array_merge($query, [
             'template_id' => $templateId,
+        ]));
+    }
+
+    /**
+     * Generate a PDF directly from HTML content.
+     *
+     * @param  string  $body  HTML body content, including optional Jinja2 placeholders
+     * @param  string  $css  Optional CSS, normally including a style tag
+     * @param  array<string, mixed>  $data  Values for dynamic placeholders in the HTML body
+     * @param  array<string, mixed>  $settings  PDF rendering settings such as paper_size or margins
+     * @param  array<string, mixed>  $query  Optional query parameters such as expiration, async, filename, or webhook_url
+     * @return array<string, mixed>
+     */
+    public function createPdfFromHtml(string $body, string $css = '', array $data = [], array $settings = [], array $query = []): array
+    {
+        return $this->request('POST', '/v2/create-pdf-from-html', $this->documentPayload([
+            'body' => $body,
+            'css' => $css,
             'data' => $data,
-            'output_format' => $outputFormat,
+            'settings' => $settings,
+        ]), $query);
+    }
+
+    /**
+     * Generate a PDF from a public URL.
+     *
+     * @param  string  $url  Public URL to render into a PDF
+     * @param  array<string, mixed>  $settings  PDF rendering settings such as paper_size or margins
+     * @param  array<string, mixed>  $query  Optional query parameters such as expiration, async, filename, or webhook_url
+     * @return array<string, mixed>
+     */
+    public function createPdfFromUrl(string $url, array $settings = [], array $query = []): array
+    {
+        return $this->request('POST', '/v2/create-pdf-from-url', $this->documentPayload([
+            'url' => $url,
+            'settings' => $settings,
+        ]), $query);
+    }
+
+    /**
+     * Generate a PDF from Markdown content.
+     *
+     * @param  string  $body  Markdown body content, including optional Jinja2 placeholders
+     * @param  string  $css  Optional CSS, normally including a style tag
+     * @param  array<string, mixed>  $data  Values for dynamic placeholders in the Markdown body
+     * @param  array<string, mixed>  $settings  PDF rendering settings such as paper_size or margins
+     * @param  array<string, mixed>  $query  Optional query parameters such as expiration, async, filename, or webhook_url
+     * @return array<string, mixed>
+     */
+    public function createPdfFromMarkdown(string $body, string $css = '', array $data = [], array $settings = [], array $query = []): array
+    {
+        return $this->request('POST', '/v2/create-pdf-from-markdown', $this->documentPayload([
+            'body' => $body,
+            'css' => $css,
+            'data' => $data,
+            'settings' => $settings,
+        ]), $query);
+    }
+
+    /**
+     * List generated PDFs and images.
+     *
+     * @param  array<string, mixed>  $params  Query filters such as limit, offset, template_id, transaction_type, or transaction_ref
+     * @return array<string, mixed>
+     */
+    public function listObjects(array $params = []): array
+    {
+        return $this->request('GET', '/v2/list-objects', [], $params);
+    }
+
+    /**
+     * Delete a generated object from the CDN and mark its transaction as deleted.
+     *
+     * @param  string  $transactionRef  Generated object transaction reference
+     * @return array<string, mixed>
+     */
+    public function deleteObject(string $transactionRef): array
+    {
+        return $this->request('GET', '/v2/delete-object', [], [
+            'transaction_ref' => $transactionRef,
         ]);
-
-        return $this->request('POST', '/create', $body);
     }
 
     /**
-     * List available templates with pagination.
+     * Get current account information for the configured API key.
      *
-     * @param int    $limit  Number of templates to return per page (default: 50).
-     * @param int    $offset Offset for pagination (default: 0).
-     * @param string $filter Optional filter expression for templates.
-     *
-     * @return array<string, mixed> The paginated list of templates.
+     * @return array<string, mixed>
      */
-    public function listTemplates(int $limit = 50, int $offset = 0, string $filter = ''): array
+    public function getAccountInformation(): array
     {
-        $params = [
-            'limit' => $limit,
-            'offset' => $offset,
-        ];
-
-        if ($filter !== '') {
-            $params['filter'] = $filter;
-        }
-
-        return $this->request('GET', '/templates', $params);
+        return $this->request('GET', '/v2/account-information');
     }
 
     /**
-     * Get details for a specific template by ID.
+     * Backward-compatible alias for account information.
      *
-     * @param string $templateId The template ID to retrieve.
-     *
-     * @return array<string, mixed> The template details.
-     */
-    public function getTemplate(string $templateId): array
-    {
-        return $this->request('GET', '/templates/' . urlencode($templateId));
-    }
-
-    /**
-     * Get the current authenticated user's account information.
-     *
-     * @return array<string, mixed> The account details including usage and subscription info.
+     * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/account');
+        return $this->getAccountInformation();
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * List saved templates.
      *
-     * @param string               $method The HTTP method (GET, POST, PUT, DELETE).
-     * @param string               $path   The API endpoint path.
-     * @param array<string, mixed> $data   Request data (query params for GET, body for POST/PUT).
-     *
-     * @return array<string, mixed> The parsed JSON response.
+     * @param  int|array<string, mixed>  $limit  Page size or a complete query parameter array
+     * @param  int  $offset  Offset when using the legacy positional signature
+     * @param  string  $format  Optional PDF/JPEG format filter when using the legacy positional signature
+     * @param  array<string, mixed>  $extraParams  Additional query parameters such as template_id, group_name, or with_layer_info
+     * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    public function listTemplates(int|array $limit = 300, int $offset = 0, string $format = '', array $extraParams = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
+        if (is_array($limit)) {
+            return $this->request('GET', '/v2/list-templates', [], $limit);
+        }
+
+        $params = array_merge($extraParams, [
+            'limit' => $limit,
+            'offset' => $offset,
+        ]);
+
+        if ($format !== '') {
+            $params['format'] = $format;
+        }
+
+        return $this->request('GET', '/v2/list-templates', [], $params);
     }
 
     /**
-     * Make a raw HTTP request to the API Template IO API.
+     * Get details for a saved PDF template.
      *
-     * @param string               $method The HTTP method (GET, POST, PUT, DELETE).
-     * @param string               $path   The API endpoint path.
-     * @param array<string, mixed> $data   Request data.
-     *
-     * @return \Illuminate\Http\Client\Response The raw HTTP response.
-     *
-     * @throws \RuntimeException If the API key is missing or the request fails.
+     * @param  string  $templateId  Template ID from the APITemplate.io console
+     * @return array<string, mixed>
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    public function getTemplate(string $templateId): array
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('API Template IO API key is not configured.');
+        return $this->request('GET', '/v2/get-template', [], [
+            'template_id' => $templateId,
+        ]);
+    }
+
+    /**
+     * Update a saved PDF template.
+     *
+     * @param  string  $templateId  Template ID from the APITemplate.io console
+     * @param  array<string, mixed>  $fields  Template fields such as body, css, or settings
+     * @return array<string, mixed>
+     */
+    public function updateTemplate(string $templateId, array $fields): array
+    {
+        return $this->request('POST', '/v2/update-template', array_merge($fields, [
+            'template_id' => $templateId,
+        ]));
+    }
+
+    /**
+     * Merge multiple PDF URLs or PDF data URLs into one PDF.
+     *
+     * @param  array<int, string>  $urls  PDF URLs or data URLs to merge in order
+     * @param  array<string, mixed>  $params  Optional body parameters such as export_type, expiration, cloud_storage, or postaction settings
+     * @return array<string, mixed>
+     */
+    public function mergePdfs(array $urls, array $params = []): array
+    {
+        return $this->request('POST', '/v2/merge-pdfs', array_merge($params, [
+            'urls' => array_values($urls),
+        ]));
+    }
+
+    /**
+     * Make an APITemplate.io API request and return parsed JSON.
+     *
+     * @param  string  $method  HTTP method
+     * @param  string  $path  API path
+     * @param  array<string, mixed>  $body  JSON request body for write endpoints
+     * @param  array<string, mixed>  $query  Query string parameters
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $body = [], array $query = []): array
+    {
+        $response = $this->rawRequest($method, $path, $body, $this->compact($query));
+
+        $json = $response->json();
+        if (is_array($json)) {
+            return $json;
+        }
+
+        return [
+            'status' => $response->status(),
+            'content_type' => $response->header('Content-Type'),
+            'body' => $response->body(),
+        ];
+    }
+
+    /**
+     * Dispatch a raw HTTP request.
+     *
+     * @param  string  $method  HTTP method
+     * @param  string  $path  API path
+     * @param  array<string, mixed>  $body  JSON request body
+     * @param  array<string, mixed>  $query  Query string parameters
+     * @return Response
+     *
+     * @throws RuntimeException
+     */
+    private function rawRequest(string $method, string $path, array $body = [], array $query = []): Response
+    {
+        if ($this->apiKey === '') {
+            throw new RuntimeException('API Template IO API key is not configured.');
         }
 
         $url = $this->baseUrl . $path;
@@ -160,41 +278,75 @@ class ApiTemplateIOService
             $http = Http::withHeaders([
                 'X-API-KEY' => $this->apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(60);
+            ])->timeout(100);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET' => $http->get($url, $query),
+                'POST' => $http->withOptions(['query' => $query])->post($url, $body),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("API Template IO returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("API Template IO endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
-                }
-
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
-                Log::error("API Template IO error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("API Template IO error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            if (! $response->successful()) {
+                $this->throwApiError($method, $path, $response);
             }
 
             return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             Log::error("API Template IO connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to API Template IO: {$e->getMessage()}");
+
+            throw new RuntimeException("Failed to connect to API Template IO: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Build a request body without optional empty values.
+     *
+     * @param  array<string, mixed>  $payload  Raw document payload
+     * @return array<string, mixed>
+     */
+    private function documentPayload(array $payload): array
+    {
+        return $this->compact($payload);
+    }
+
+    /**
+     * Remove null and empty string parameters while preserving false, zero, and empty arrays.
+     *
+     * @param  array<string, mixed>  $values  Input values
+     * @return array<string, mixed>
+     */
+    private function compact(array $values): array
+    {
+        return array_filter($values, static fn (mixed $value): bool => $value !== null && $value !== '');
+    }
+
+    /**
+     * Log and throw a normalized API exception.
+     *
+     * @throws RuntimeException
+     */
+    private function throwApiError(string $method, string $path, Response $response): never
+    {
+        $contentType = $response->header('Content-Type');
+        $body = $response->body();
+
+        if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+            Log::warning("API Template IO returned HTML for {$method} {$path}", [
+                'status' => $response->status(),
+            ]);
+
+            throw new RuntimeException("API Template IO endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
+        }
+
+        $error = $response->json('message') ?? $response->json('error') ?? $body;
+
+        Log::error("API Template IO error: {$method} {$path}", [
+            'status' => $response->status(),
+            'error' => $error,
+        ]);
+
+        throw new RuntimeException("API Template IO error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
     }
 }

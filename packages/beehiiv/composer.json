@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-beehiiv",
-    "description": "Beehiiv integration for Laravel — manage posts, subscribers, and newsletter analytics.",
+    "description": "beehiiv API integration for Laravel agents.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "beehiiv", "newsletter", "opencompany"],
+    "keywords": [
+        "tools",
+        "beehiiv",
+        "newsletter",
+        "publishing",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

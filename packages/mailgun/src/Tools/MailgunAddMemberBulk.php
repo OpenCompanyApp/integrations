@@ -2,93 +2,50 @@
 
 namespace OpenCompany\Integrations\Mailgun\Tools;
 
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Mailgun\MailgunService;
-
 /**
- * Add multiple members to a Mailgun mailing list in bulk.
+ * Bulk add mailing list members.
  */
-class MailgunAddMemberBulk implements Tool
+class MailgunAddMemberBulk extends AbstractMailgunEndpointTool
 {
-    /** @param MailgunService $service The Mailgun API client */
-    public function __construct(
-        private MailgunService $service,
-    ) {}
+    protected string $toolName = 'mailgun_add_member_bulk';
 
-    public function name(): string
-    {
-        return 'mailgun_add_member_bulk';
-    }
+    protected string $toolDescription = 'Bulk add mailing list members.';
 
-    public function description(): string
-    {
-        return <<<'MD'
-        Add multiple members to a Mailgun mailing list in a single request. Uses upsert mode —
-        existing members are updated. Each member object must contain at least an "address" key,
-        and may include "name" and "vars".
-        MD;
-    }
+    protected string $method = 'POST';
 
-    public function parameters(): array
-    {
-        return [
-            'list_address' => [
-                'type' => 'string',
-                'required' => true,
-                'description' => 'The mailing list address to add members to.',
-            ],
-            'members' => [
-                'type' => 'array',
-                'required' => true,
-                'description' => 'Array of member objects, each with at least an "address" key.',
-                'items' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'address' => [
-                            'type' => 'string',
-                            'description' => 'Member email address.',
-                        ],
-                        'name' => [
-                            'type' => 'string',
-                            'description' => 'Member display name.',
-                        ],
-                        'vars' => [
-                            'type' => 'object',
-                            'description' => 'Custom variables for the member.',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
+    protected string $path = '/lists/{list_address}/members.json';
 
-    /** @param array<string, mixed> $args Tool arguments */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Mailgun integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'list_address' => [
+        'type' => 'string',
+        'required' => true,
+        'description' => 'Mailing list address.',
+    ],
+    'members' => [
+        'type' => 'array',
+        'required' => true,
+        'description' => 'Array of member objects.',
+    ],
+    'upsert' => [
+        'type' => 'boolean',
+        'required' => false,
+        'description' => 'Update existing members.',
+    ],
+];
 
-            $listAddress = $args['list_address'] ?? '';
-            if (empty($listAddress)) {
-                return ToolResult::error('The "list_address" parameter is required.');
-            }
+    /** @var list<string> */
+    protected array $required = [
+    'list_address',
+    'members',
+];
 
-            $members = $args['members'] ?? [];
-            if (empty($members)) {
-                return ToolResult::error('The "members" parameter is required and must not be empty.');
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            $result = $this->service->addMemberBulk(
-                listAddress: $listAddress,
-                members: $members,
-            );
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+    'members',
+    'upsert',
+];
 }

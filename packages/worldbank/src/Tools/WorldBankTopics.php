@@ -6,8 +6,14 @@ use OpenCompany\Integrations\WorldBank\WorldBankService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List World Bank topics or indicators in a topic.
+ */
 class WorldBankTopics implements Tool
 {
+    /**
+     * @param  WorldBankService  $service  The World Bank API client.
+     */
     public function __construct(
         private WorldBankService $service,
     ) {}
@@ -29,6 +35,11 @@ class WorldBankTopics implements Tool
         ];
     }
 
+    /**
+     * List topics or topic indicators.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (topic_id).
+     */
     public function execute(array $args): ToolResult
     {
         try {

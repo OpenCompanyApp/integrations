@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-docker",
-    "description": "Docker Hub integration for Laravel — manage repositories, tags, and organizations.",
+    "description": "Docker Hub integration for Laravel agents with generated Hub API coverage.",
     "license": "MIT",
     "authors": [
         {

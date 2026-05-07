@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Paystack integration with Laravel's service container.
+ *
+ * Binds the Paystack service using stored credentials and registers the
+ * tool provider with the shared integration registry when available.
+ */
 class PaystackServiceProvider extends ServiceProvider
 {
     public function register(): void

@@ -1,0 +1,3827 @@
+{
+    "source_url": "https://dash.readme.com/api/v1/api-registry/dnq41ujmori9g73",
+    "openapi": "3.0.1",
+    "title": "FireHydrant API",
+    "version": "0.0.1",
+    "base_url": "https://api.firehydrant.io",
+    "auth": "api_key_header_authorization",
+    "method_count": 477,
+    "operations": [
+        {
+            "operation_id": "ping",
+            "class": "FireHydrantPing",
+            "slug": "firehydrant_ping",
+            "method": "get",
+            "path": "/v1/ping",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_environments",
+            "class": "FireHydrantListEnvironments",
+            "slug": "firehydrant_list_environments",
+            "method": "get",
+            "path": "/v1/environments",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_environment",
+            "class": "FireHydrantCreateEnvironment",
+            "slug": "firehydrant_create_environment",
+            "method": "post",
+            "path": "/v1/environments",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_environment",
+            "class": "FireHydrantGetEnvironment",
+            "slug": "firehydrant_get_environment",
+            "method": "get",
+            "path": "/v1/environments/{environment_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_environment",
+            "class": "FireHydrantUpdateEnvironment",
+            "slug": "firehydrant_update_environment",
+            "method": "patch",
+            "path": "/v1/environments/{environment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_environment",
+            "class": "FireHydrantDeleteEnvironment",
+            "slug": "firehydrant_delete_environment",
+            "method": "delete",
+            "path": "/v1/environments/{environment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_environment_services",
+            "class": "FireHydrantListEnvironmentServices",
+            "slug": "firehydrant_list_environment_services",
+            "method": "get",
+            "path": "/v1/environments/{environment_id}/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_environment_functionalities",
+            "class": "FireHydrantListEnvironmentFunctionalities",
+            "slug": "firehydrant_list_environment_functionalities",
+            "method": "get",
+            "path": "/v1/environments/{environment_id}/functionalities",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_services",
+            "class": "FireHydrantListServices",
+            "slug": "firehydrant_list_services",
+            "method": "get",
+            "path": "/v1/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_service",
+            "class": "FireHydrantCreateService",
+            "slug": "firehydrant_create_service",
+            "method": "post",
+            "path": "/v1/services",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_service_links",
+            "class": "FireHydrantCreateServiceLinks",
+            "slug": "firehydrant_create_service_links",
+            "method": "post",
+            "path": "/v1/services/service_links",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_service",
+            "class": "FireHydrantGetService",
+            "slug": "firehydrant_get_service",
+            "method": "get",
+            "path": "/v1/services/{service_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_service",
+            "class": "FireHydrantUpdateService",
+            "slug": "firehydrant_update_service",
+            "method": "patch",
+            "path": "/v1/services/{service_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_service",
+            "class": "FireHydrantDeleteService",
+            "slug": "firehydrant_delete_service",
+            "method": "delete",
+            "path": "/v1/services/{service_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_service_environments",
+            "class": "FireHydrantListServiceEnvironments",
+            "slug": "firehydrant_list_service_environments",
+            "method": "get",
+            "path": "/v1/services/{service_id}/environments",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_service_dependencies",
+            "class": "FireHydrantGetServiceDependencies",
+            "slug": "firehydrant_get_service_dependencies",
+            "method": "get",
+            "path": "/v1/services/{service_id}/dependencies",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_service_available_upstream_dependencies",
+            "class": "FireHydrantListServiceAvailableUpstreamDependencies",
+            "slug": "firehydrant_list_service_available_upstream_dependencies",
+            "method": "get",
+            "path": "/v1/services/{service_id}/available_upstream_dependencies",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_service_available_downstream_dependencies",
+            "class": "FireHydrantListServiceAvailableDownstreamDependencies",
+            "slug": "firehydrant_list_service_available_downstream_dependencies",
+            "method": "get",
+            "path": "/v1/services/{service_id}/available_downstream_dependencies",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_service_link",
+            "class": "FireHydrantDeleteServiceLink",
+            "slug": "firehydrant_delete_service_link",
+            "method": "delete",
+            "path": "/v1/services/{service_id}/service_links/{remote_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_service_checklist_response",
+            "class": "FireHydrantCreateServiceChecklistResponse",
+            "slug": "firehydrant_create_service_checklist_response",
+            "method": "post",
+            "path": "/v1/services/{service_id}/checklist_response/{checklist_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_service_dependency",
+            "class": "FireHydrantCreateServiceDependency",
+            "slug": "firehydrant_create_service_dependency",
+            "method": "post",
+            "path": "/v1/service_dependencies",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_service_dependency",
+            "class": "FireHydrantGetServiceDependency",
+            "slug": "firehydrant_get_service_dependency",
+            "method": "get",
+            "path": "/v1/service_dependencies/{service_dependency_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_service_dependency",
+            "class": "FireHydrantUpdateServiceDependency",
+            "slug": "firehydrant_update_service_dependency",
+            "method": "patch",
+            "path": "/v1/service_dependencies/{service_dependency_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_service_dependency",
+            "class": "FireHydrantDeleteServiceDependency",
+            "slug": "firehydrant_delete_service_dependency",
+            "method": "delete",
+            "path": "/v1/service_dependencies/{service_dependency_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_functionalities",
+            "class": "FireHydrantListFunctionalities",
+            "slug": "firehydrant_list_functionalities",
+            "method": "get",
+            "path": "/v1/functionalities",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_functionality",
+            "class": "FireHydrantCreateFunctionality",
+            "slug": "firehydrant_create_functionality",
+            "method": "post",
+            "path": "/v1/functionalities",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_functionality",
+            "class": "FireHydrantGetFunctionality",
+            "slug": "firehydrant_get_functionality",
+            "method": "get",
+            "path": "/v1/functionalities/{functionality_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_functionality",
+            "class": "FireHydrantUpdateFunctionality",
+            "slug": "firehydrant_update_functionality",
+            "method": "patch",
+            "path": "/v1/functionalities/{functionality_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_functionality",
+            "class": "FireHydrantDeleteFunctionality",
+            "slug": "firehydrant_delete_functionality",
+            "method": "delete",
+            "path": "/v1/functionalities/{functionality_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_functionality_environments",
+            "class": "FireHydrantListFunctionalityEnvironments",
+            "slug": "firehydrant_list_functionality_environments",
+            "method": "get",
+            "path": "/v1/functionalities/{functionality_id}/environments",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_functionality_services",
+            "class": "FireHydrantListFunctionalityServices",
+            "slug": "firehydrant_list_functionality_services",
+            "method": "get",
+            "path": "/v1/functionalities/{functionality_id}/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_teams",
+            "class": "FireHydrantListTeams",
+            "slug": "firehydrant_list_teams",
+            "method": "get",
+            "path": "/v1/teams",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_team",
+            "class": "FireHydrantCreateTeam",
+            "slug": "firehydrant_create_team",
+            "method": "post",
+            "path": "/v1/teams",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team",
+            "class": "FireHydrantGetTeam",
+            "slug": "firehydrant_get_team",
+            "method": "get",
+            "path": "/v1/teams/{team_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_team",
+            "class": "FireHydrantUpdateTeam",
+            "slug": "firehydrant_update_team",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_team",
+            "class": "FireHydrantDeleteTeam",
+            "slug": "firehydrant_delete_team",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_support_hours_schedule",
+            "class": "FireHydrantGetSupportHoursSchedule",
+            "slug": "firehydrant_get_support_hours_schedule",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/support_hours_schedule",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_support_hours_schedule",
+            "class": "FireHydrantUpdateSupportHoursSchedule",
+            "slug": "firehydrant_update_support_hours_schedule",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}/support_hours_schedule",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_support_hours_schedule",
+            "class": "FireHydrantDeleteSupportHoursSchedule",
+            "slug": "firehydrant_delete_support_hours_schedule",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}/support_hours_schedule",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_team_call_routes",
+            "class": "FireHydrantListTeamCallRoutes",
+            "slug": "firehydrant_list_team_call_routes",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/call_routes",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_team_call_route",
+            "class": "FireHydrantCreateTeamCallRoute",
+            "slug": "firehydrant_create_team_call_route",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/call_routes",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_team_escalation_policies",
+            "class": "FireHydrantListTeamEscalationPolicies",
+            "slug": "firehydrant_list_team_escalation_policies",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/escalation_policies",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_team_escalation_policy",
+            "class": "FireHydrantCreateTeamEscalationPolicy",
+            "slug": "firehydrant_create_team_escalation_policy",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/escalation_policies",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_escalation_policy",
+            "class": "FireHydrantGetTeamEscalationPolicy",
+            "slug": "firehydrant_get_team_escalation_policy",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/escalation_policies/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_team_escalation_policy",
+            "class": "FireHydrantUpdateTeamEscalationPolicy",
+            "slug": "firehydrant_update_team_escalation_policy",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}/escalation_policies/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_team_escalation_policy",
+            "class": "FireHydrantDeleteTeamEscalationPolicy",
+            "slug": "firehydrant_delete_team_escalation_policy",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}/escalation_policies/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "preview_team_on_call_schedule",
+            "class": "FireHydrantPreviewTeamOnCallSchedule",
+            "slug": "firehydrant_preview_team_on_call_schedule",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules/preview",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_team_on_call_schedules",
+            "class": "FireHydrantListTeamOnCallSchedules",
+            "slug": "firehydrant_list_team_on_call_schedules",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/on_call_schedules",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_team_on_call_schedule",
+            "class": "FireHydrantCreateTeamOnCallSchedule",
+            "slug": "firehydrant_create_team_on_call_schedule",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_on_call_schedule",
+            "class": "FireHydrantGetTeamOnCallSchedule",
+            "slug": "firehydrant_get_team_on_call_schedule",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_team_on_call_schedule",
+            "class": "FireHydrantUpdateTeamOnCallSchedule",
+            "slug": "firehydrant_update_team_on_call_schedule",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_team_on_call_schedule",
+            "class": "FireHydrantDeleteTeamOnCallSchedule",
+            "slug": "firehydrant_delete_team_on_call_schedule",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "preview_on_call_schedule_rotation",
+            "class": "FireHydrantPreviewOnCallScheduleRotation",
+            "slug": "firehydrant_preview_on_call_schedule_rotation",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations/preview",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_on_call_schedule_rotation",
+            "class": "FireHydrantCreateOnCallScheduleRotation",
+            "slug": "firehydrant_create_on_call_schedule_rotation",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations",
+            "type": "write"
+        },
+        {
+            "operation_id": "copy_on_call_schedule_rotation",
+            "class": "FireHydrantCopyOnCallScheduleRotation",
+            "slug": "firehydrant_copy_on_call_schedule_rotation",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations/{rotation_id}/copy",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_on_call_schedule_rotation",
+            "class": "FireHydrantGetOnCallScheduleRotation",
+            "slug": "firehydrant_get_on_call_schedule_rotation",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations/{rotation_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_on_call_schedule_rotation",
+            "class": "FireHydrantUpdateOnCallScheduleRotation",
+            "slug": "firehydrant_update_on_call_schedule_rotation",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations/{rotation_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_on_call_schedule_rotation",
+            "class": "FireHydrantDeleteOnCallScheduleRotation",
+            "slug": "firehydrant_delete_on_call_schedule_rotation",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations/{rotation_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "override_on_call_schedule_rotation_shifts",
+            "class": "FireHydrantOverrideOnCallScheduleRotationShifts",
+            "slug": "firehydrant_override_on_call_schedule_rotation_shifts",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/rotations/{rotation_id}/overrides",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_on_call_shift",
+            "class": "FireHydrantCreateOnCallShift",
+            "slug": "firehydrant_create_on_call_shift",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/shifts",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_on_call_shift",
+            "class": "FireHydrantGetOnCallShift",
+            "slug": "firehydrant_get_on_call_shift",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/shifts/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_on_call_shift",
+            "class": "FireHydrantUpdateOnCallShift",
+            "slug": "firehydrant_update_on_call_shift",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/shifts/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_on_call_shift",
+            "class": "FireHydrantDeleteOnCallShift",
+            "slug": "firehydrant_delete_on_call_shift",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}/on_call_schedules/{schedule_id}/shifts/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_team_signal_rules",
+            "class": "FireHydrantListTeamSignalRules",
+            "slug": "firehydrant_list_team_signal_rules",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/signal_rules",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_team_signal_rule",
+            "class": "FireHydrantCreateTeamSignalRule",
+            "slug": "firehydrant_create_team_signal_rule",
+            "method": "post",
+            "path": "/v1/teams/{team_id}/signal_rules",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_team_signal_rule",
+            "class": "FireHydrantGetTeamSignalRule",
+            "slug": "firehydrant_get_team_signal_rule",
+            "method": "get",
+            "path": "/v1/teams/{team_id}/signal_rules/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_team_signal_rule",
+            "class": "FireHydrantUpdateTeamSignalRule",
+            "slug": "firehydrant_update_team_signal_rule",
+            "method": "patch",
+            "path": "/v1/teams/{team_id}/signal_rules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_team_signal_rule",
+            "class": "FireHydrantDeleteTeamSignalRule",
+            "slug": "firehydrant_delete_team_signal_rule",
+            "method": "delete",
+            "path": "/v1/teams/{team_id}/signal_rules/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_changes",
+            "class": "FireHydrantListChanges",
+            "slug": "firehydrant_list_changes",
+            "method": "get",
+            "path": "/v1/changes",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_change",
+            "class": "FireHydrantCreateChange",
+            "slug": "firehydrant_create_change",
+            "method": "post",
+            "path": "/v1/changes",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_change",
+            "class": "FireHydrantUpdateChange",
+            "slug": "firehydrant_update_change",
+            "method": "patch",
+            "path": "/v1/changes/{change_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_change",
+            "class": "FireHydrantDeleteChange",
+            "slug": "firehydrant_delete_change",
+            "method": "delete",
+            "path": "/v1/changes/{change_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_change_identities",
+            "class": "FireHydrantListChangeIdentities",
+            "slug": "firehydrant_list_change_identities",
+            "method": "get",
+            "path": "/v1/changes/{change_id}/identities",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_change_identity",
+            "class": "FireHydrantCreateChangeIdentity",
+            "slug": "firehydrant_create_change_identity",
+            "method": "post",
+            "path": "/v1/changes/{change_id}/identities",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_change_identity",
+            "class": "FireHydrantUpdateChangeIdentity",
+            "slug": "firehydrant_update_change_identity",
+            "method": "patch",
+            "path": "/v1/changes/{change_id}/identities/{identity_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_change_identity",
+            "class": "FireHydrantDeleteChangeIdentity",
+            "slug": "firehydrant_delete_change_identity",
+            "method": "delete",
+            "path": "/v1/changes/{change_id}/identities/{identity_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_change_events",
+            "class": "FireHydrantListChangeEvents",
+            "slug": "firehydrant_list_change_events",
+            "method": "get",
+            "path": "/v1/changes/events",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_change_event",
+            "class": "FireHydrantCreateChangeEvent",
+            "slug": "firehydrant_create_change_event",
+            "method": "post",
+            "path": "/v1/changes/events",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_change_event",
+            "class": "FireHydrantGetChangeEvent",
+            "slug": "firehydrant_get_change_event",
+            "method": "get",
+            "path": "/v1/changes/events/{change_event_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_change_event",
+            "class": "FireHydrantUpdateChangeEvent",
+            "slug": "firehydrant_update_change_event",
+            "method": "patch",
+            "path": "/v1/changes/events/{change_event_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_change_event",
+            "class": "FireHydrantDeleteChangeEvent",
+            "slug": "firehydrant_delete_change_event",
+            "method": "delete",
+            "path": "/v1/changes/events/{change_event_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_change_types",
+            "class": "FireHydrantListChangeTypes",
+            "slug": "firehydrant_list_change_types",
+            "method": "get",
+            "path": "/v1/change_types",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_entitlements",
+            "class": "FireHydrantListEntitlements",
+            "slug": "firehydrant_list_entitlements",
+            "method": "get",
+            "path": "/v1/entitlements",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_incidents",
+            "class": "FireHydrantListIncidents",
+            "slug": "firehydrant_list_incidents",
+            "method": "get",
+            "path": "/v1/incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident",
+            "class": "FireHydrantCreateIncident",
+            "slug": "firehydrant_create_incident",
+            "method": "post",
+            "path": "/v1/incidents",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident_channel",
+            "class": "FireHydrantGetIncidentChannel",
+            "slug": "firehydrant_get_incident_channel",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/channel",
+            "type": "read"
+        },
+        {
+            "operation_id": "close_incident",
+            "class": "FireHydrantCloseIncident",
+            "slug": "firehydrant_close_incident",
+            "method": "put",
+            "path": "/v1/incidents/{incident_id}/close",
+            "type": "write"
+        },
+        {
+            "operation_id": "resolve_incident",
+            "class": "FireHydrantResolveIncident",
+            "slug": "firehydrant_resolve_incident",
+            "method": "put",
+            "path": "/v1/incidents/{incident_id}/resolve",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident",
+            "class": "FireHydrantGetIncident",
+            "slug": "firehydrant_get_incident",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_incident",
+            "class": "FireHydrantUpdateIncident",
+            "slug": "firehydrant_update_incident",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident",
+            "class": "FireHydrantDeleteIncident",
+            "slug": "firehydrant_delete_incident",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "unarchive_incident",
+            "class": "FireHydrantUnarchiveIncident",
+            "slug": "firehydrant_unarchive_incident",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/unarchive",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_alerts",
+            "class": "FireHydrantListIncidentAlerts",
+            "slug": "firehydrant_list_incident_alerts",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_alert",
+            "class": "FireHydrantCreateIncidentAlert",
+            "slug": "firehydrant_create_incident_alert",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/alerts",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_alert_primary",
+            "class": "FireHydrantUpdateIncidentAlertPrimary",
+            "slug": "firehydrant_update_incident_alert_primary",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/alerts/{incident_alert_id}/primary",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_alert",
+            "class": "FireHydrantDeleteIncidentAlert",
+            "slug": "firehydrant_delete_incident_alert",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/alerts/{incident_alert_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "bulk_update_incident_milestones",
+            "class": "FireHydrantBulkUpdateIncidentMilestones",
+            "slug": "firehydrant_bulk_update_incident_milestones",
+            "method": "put",
+            "path": "/v1/incidents/{incident_id}/milestones/bulk_update",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_milestones",
+            "class": "FireHydrantListIncidentMilestones",
+            "slug": "firehydrant_list_incident_milestones",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/milestones",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_incident_change_events",
+            "class": "FireHydrantListIncidentChangeEvents",
+            "slug": "firehydrant_list_incident_change_events",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/related_change_events",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_change_event",
+            "class": "FireHydrantCreateIncidentChangeEvent",
+            "slug": "firehydrant_create_incident_change_event",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/related_change_events",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_change_event",
+            "class": "FireHydrantUpdateIncidentChangeEvent",
+            "slug": "firehydrant_update_incident_change_event",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/related_change_events/{related_change_event_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_status_pages",
+            "class": "FireHydrantListIncidentStatusPages",
+            "slug": "firehydrant_list_incident_status_pages",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/status_pages",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_status_page",
+            "class": "FireHydrantCreateIncidentStatusPage",
+            "slug": "firehydrant_create_incident_status_page",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/status_pages",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_status_page",
+            "class": "FireHydrantDeleteIncidentStatusPage",
+            "slug": "firehydrant_delete_incident_status_page",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/status_pages/{status_page_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_incident_task_list",
+            "class": "FireHydrantCreateIncidentTaskList",
+            "slug": "firehydrant_create_incident_task_list",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/task_lists",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_tasks",
+            "class": "FireHydrantListIncidentTasks",
+            "slug": "firehydrant_list_incident_tasks",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/tasks",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_task",
+            "class": "FireHydrantCreateIncidentTask",
+            "slug": "firehydrant_create_incident_task",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/tasks",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident_task",
+            "class": "FireHydrantGetIncidentTask",
+            "slug": "firehydrant_get_incident_task",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/tasks/{task_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_incident_task",
+            "class": "FireHydrantUpdateIncidentTask",
+            "slug": "firehydrant_update_incident_task",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/tasks/{task_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_task",
+            "class": "FireHydrantDeleteIncidentTask",
+            "slug": "firehydrant_delete_incident_task",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/tasks/{task_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "convert_incident_task",
+            "class": "FireHydrantConvertIncidentTask",
+            "slug": "firehydrant_convert_incident_task",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/tasks/{task_id}/convert",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_links",
+            "class": "FireHydrantListIncidentLinks",
+            "slug": "firehydrant_list_incident_links",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/links",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_link",
+            "class": "FireHydrantCreateIncidentLink",
+            "slug": "firehydrant_create_incident_link",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/links",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_link",
+            "class": "FireHydrantUpdateIncidentLink",
+            "slug": "firehydrant_update_incident_link",
+            "method": "put",
+            "path": "/v1/incidents/{incident_id}/links/{link_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_link",
+            "class": "FireHydrantDeleteIncidentLink",
+            "slug": "firehydrant_delete_incident_link",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/links/{link_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_transcript_attribution",
+            "class": "FireHydrantUpdateTranscriptAttribution",
+            "slug": "firehydrant_update_transcript_attribution",
+            "method": "put",
+            "path": "/v1/incidents/{incident_id}/transcript/attribution",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_transcript_entries",
+            "class": "FireHydrantListTranscriptEntries",
+            "slug": "firehydrant_list_transcript_entries",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/transcript",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_transcript_entry",
+            "class": "FireHydrantDeleteTranscriptEntry",
+            "slug": "firehydrant_delete_transcript_entry",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/transcript/{transcript_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_conference_bridges",
+            "class": "FireHydrantListIncidentConferenceBridges",
+            "slug": "firehydrant_list_incident_conference_bridges",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/conference_bridges",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_conference_bridge_translation",
+            "class": "FireHydrantGetConferenceBridgeTranslation",
+            "slug": "firehydrant_get_conference_bridge_translation",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/conference_bridges/{id}/translations/{language_code}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_similar_incidents",
+            "class": "FireHydrantListSimilarIncidents",
+            "slug": "firehydrant_list_similar_incidents",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/similar",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_incident_attachments",
+            "class": "FireHydrantListIncidentAttachments",
+            "slug": "firehydrant_list_incident_attachments",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/attachments",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_attachment",
+            "class": "FireHydrantCreateIncidentAttachment",
+            "slug": "firehydrant_create_incident_attachment",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/attachments",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_events",
+            "class": "FireHydrantListIncidentEvents",
+            "slug": "firehydrant_list_incident_events",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/events",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_incident_event",
+            "class": "FireHydrantGetIncidentEvent",
+            "slug": "firehydrant_get_incident_event",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/events/{event_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_incident_event",
+            "class": "FireHydrantUpdateIncidentEvent",
+            "slug": "firehydrant_update_incident_event",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/events/{event_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_event",
+            "class": "FireHydrantDeleteIncidentEvent",
+            "slug": "firehydrant_delete_incident_event",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/events/{event_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_vote_status",
+            "class": "FireHydrantGetVoteStatus",
+            "slug": "firehydrant_get_vote_status",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/events/{event_id}/votes/status",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_vote",
+            "class": "FireHydrantUpdateVote",
+            "slug": "firehydrant_update_vote",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/events/{event_id}/votes",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_impact_put",
+            "class": "FireHydrantUpdateIncidentImpactPut",
+            "slug": "firehydrant_update_incident_impact_put",
+            "method": "put",
+            "path": "/v1/incidents/{incident_id}/impact",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_impact_patch",
+            "class": "FireHydrantUpdateIncidentImpactPatch",
+            "slug": "firehydrant_update_incident_impact_patch",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/impact",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_impacts",
+            "class": "FireHydrantListIncidentImpacts",
+            "slug": "firehydrant_list_incident_impacts",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/impact/{type}",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_impact",
+            "class": "FireHydrantCreateIncidentImpact",
+            "slug": "firehydrant_create_incident_impact",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/impact/{type}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_impact",
+            "class": "FireHydrantDeleteIncidentImpact",
+            "slug": "firehydrant_delete_incident_impact",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/impact/{type}/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_incident_note",
+            "class": "FireHydrantCreateIncidentNote",
+            "slug": "firehydrant_create_incident_note",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/notes",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_note",
+            "class": "FireHydrantUpdateIncidentNote",
+            "slug": "firehydrant_update_incident_note",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/notes/{note_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_incident_chat_message",
+            "class": "FireHydrantCreateIncidentChatMessage",
+            "slug": "firehydrant_create_incident_chat_message",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/generic_chat_messages",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_chat_message",
+            "class": "FireHydrantUpdateIncidentChatMessage",
+            "slug": "firehydrant_update_incident_chat_message",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/generic_chat_messages/{message_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_chat_message",
+            "class": "FireHydrantDeleteIncidentChatMessage",
+            "slug": "firehydrant_delete_incident_chat_message",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/generic_chat_messages/{message_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_role_assignments",
+            "class": "FireHydrantListIncidentRoleAssignments",
+            "slug": "firehydrant_list_incident_role_assignments",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/role_assignments",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_role_assignment",
+            "class": "FireHydrantCreateIncidentRoleAssignment",
+            "slug": "firehydrant_create_incident_role_assignment",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/role_assignments",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_role_assignment",
+            "class": "FireHydrantDeleteIncidentRoleAssignment",
+            "slug": "firehydrant_delete_incident_role_assignment",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/role_assignments/{role_assignment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_incident_team_assignment",
+            "class": "FireHydrantCreateIncidentTeamAssignment",
+            "slug": "firehydrant_create_incident_team_assignment",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/team_assignments",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_team_assignment",
+            "class": "FireHydrantDeleteIncidentTeamAssignment",
+            "slug": "firehydrant_delete_incident_team_assignment",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/team_assignments/{team_assignment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident_user",
+            "class": "FireHydrantGetIncidentUser",
+            "slug": "firehydrant_get_incident_user",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/users/{user_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_incident_relationships",
+            "class": "FireHydrantGetIncidentRelationships",
+            "slug": "firehydrant_get_incident_relationships",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/relationships",
+            "type": "read"
+        },
+        {
+            "operation_id": "share_incident_retrospectives",
+            "class": "FireHydrantShareIncidentRetrospectives",
+            "slug": "firehydrant_share_incident_retrospectives",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/retrospectives/share",
+            "type": "write"
+        },
+        {
+            "operation_id": "export_incident_retrospectives_markdown",
+            "class": "FireHydrantExportIncidentRetrospectivesMarkdown",
+            "slug": "firehydrant_export_incident_retrospectives_markdown",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/retrospectives/export_markdown",
+            "type": "write"
+        },
+        {
+            "operation_id": "export_incident_retrospectives",
+            "class": "FireHydrantExportIncidentRetrospectives",
+            "slug": "firehydrant_export_incident_retrospectives",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/retrospectives/export",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_retrospectives",
+            "class": "FireHydrantListIncidentRetrospectives",
+            "slug": "firehydrant_list_incident_retrospectives",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/retrospectives",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_retrospective",
+            "class": "FireHydrantCreateIncidentRetrospective",
+            "slug": "firehydrant_create_incident_retrospective",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/retrospectives",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_incident_retrospective",
+            "class": "FireHydrantUpdateIncidentRetrospective",
+            "slug": "firehydrant_update_incident_retrospective",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/retrospectives/{retrospective_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_incident_retrospective_field",
+            "class": "FireHydrantCreateIncidentRetrospectiveField",
+            "slug": "firehydrant_create_incident_retrospective_field",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/retrospectives/{retrospective_id}/fields",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident_retrospective_field",
+            "class": "FireHydrantGetIncidentRetrospectiveField",
+            "slug": "firehydrant_get_incident_retrospective_field",
+            "method": "get",
+            "path": "/v1/incidents/{incident_id}/retrospectives/{retrospective_id}/fields/{field_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_incident_retrospective_field",
+            "class": "FireHydrantUpdateIncidentRetrospectiveField",
+            "slug": "firehydrant_update_incident_retrospective_field",
+            "method": "patch",
+            "path": "/v1/incidents/{incident_id}/retrospectives/{retrospective_id}/fields/{field_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_incident_retrospective_dynamic_input",
+            "class": "FireHydrantCreateIncidentRetrospectiveDynamicInput",
+            "slug": "firehydrant_create_incident_retrospective_dynamic_input",
+            "method": "post",
+            "path": "/v1/incidents/{incident_id}/retrospectives/{retrospective_id}/fields/{field_id}/inputs",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_retrospective_dynamic_input",
+            "class": "FireHydrantDeleteIncidentRetrospectiveDynamicInput",
+            "slug": "firehydrant_delete_incident_retrospective_dynamic_input",
+            "method": "delete",
+            "path": "/v1/incidents/{incident_id}/retrospectives/{retrospective_id}/fields/{field_id}/inputs",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_roles",
+            "class": "FireHydrantListIncidentRoles",
+            "slug": "firehydrant_list_incident_roles",
+            "method": "get",
+            "path": "/v1/incident_roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_role",
+            "class": "FireHydrantCreateIncidentRole",
+            "slug": "firehydrant_create_incident_role",
+            "method": "post",
+            "path": "/v1/incident_roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident_role",
+            "class": "FireHydrantGetIncidentRole",
+            "slug": "firehydrant_get_incident_role",
+            "method": "get",
+            "path": "/v1/incident_roles/{incident_role_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_incident_role",
+            "class": "FireHydrantUpdateIncidentRole",
+            "slug": "firehydrant_update_incident_role",
+            "method": "patch",
+            "path": "/v1/incident_roles/{incident_role_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_role",
+            "class": "FireHydrantDeleteIncidentRole",
+            "slug": "firehydrant_delete_incident_role",
+            "method": "delete",
+            "path": "/v1/incident_roles/{incident_role_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "validate_incident_tags",
+            "class": "FireHydrantValidateIncidentTags",
+            "slug": "firehydrant_validate_incident_tags",
+            "method": "post",
+            "path": "/v1/incident_tags/validate",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_incident_tags",
+            "class": "FireHydrantListIncidentTags",
+            "slug": "firehydrant_list_incident_tags",
+            "method": "get",
+            "path": "/v1/incident_tags",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_incident_types",
+            "class": "FireHydrantListIncidentTypes",
+            "slug": "firehydrant_list_incident_types",
+            "method": "get",
+            "path": "/v1/incident_types",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_incident_type",
+            "class": "FireHydrantCreateIncidentType",
+            "slug": "firehydrant_create_incident_type",
+            "method": "post",
+            "path": "/v1/incident_types",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_incident_type",
+            "class": "FireHydrantGetIncidentType",
+            "slug": "firehydrant_get_incident_type",
+            "method": "get",
+            "path": "/v1/incident_types/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_incident_type",
+            "class": "FireHydrantUpdateIncidentType",
+            "slug": "firehydrant_update_incident_type",
+            "method": "patch",
+            "path": "/v1/incident_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_incident_type",
+            "class": "FireHydrantDeleteIncidentType",
+            "slug": "firehydrant_delete_incident_type",
+            "method": "delete",
+            "path": "/v1/incident_types/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_integrations",
+            "class": "FireHydrantListIntegrations",
+            "slug": "firehydrant_list_integrations",
+            "method": "get",
+            "path": "/v1/integrations",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_integration",
+            "class": "FireHydrantGetIntegration",
+            "slug": "firehydrant_get_integration",
+            "method": "get",
+            "path": "/v1/integrations/{integration_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_field_map",
+            "class": "FireHydrantUpdateFieldMap",
+            "slug": "firehydrant_update_field_map",
+            "method": "patch",
+            "path": "/v1/integrations/field_maps/{field_map_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_field_map_available_fields",
+            "class": "FireHydrantListFieldMapAvailableFields",
+            "slug": "firehydrant_list_field_map_available_fields",
+            "method": "get",
+            "path": "/v1/integrations/field_maps/{field_map_id}/available_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_authed_providers",
+            "class": "FireHydrantListAuthedProviders",
+            "slug": "firehydrant_list_authed_providers",
+            "method": "get",
+            "path": "/v1/integrations/authed_providers/{integration_slug}/{connection_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_authed_provider",
+            "class": "FireHydrantUpdateAuthedProvider",
+            "slug": "firehydrant_update_authed_provider",
+            "method": "patch",
+            "path": "/v1/integrations/authed_providers/{integration_slug}/{connection_id}/{authed_provider_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_connections",
+            "class": "FireHydrantListConnections",
+            "slug": "firehydrant_list_connections",
+            "method": "get",
+            "path": "/v1/integrations/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_connection",
+            "class": "FireHydrantCreateConnection",
+            "slug": "firehydrant_create_connection",
+            "method": "post",
+            "path": "/v1/integrations/connections/{slug}",
+            "type": "write"
+        },
+        {
+            "operation_id": "refresh_connection",
+            "class": "FireHydrantRefreshConnection",
+            "slug": "firehydrant_refresh_connection",
+            "method": "patch",
+            "path": "/v1/integrations/connections/{slug}/{connection_id}/refresh",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_connection",
+            "class": "FireHydrantUpdateConnection",
+            "slug": "firehydrant_update_connection",
+            "method": "patch",
+            "path": "/v1/integrations/connections/{slug}/{connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_connection_statuses",
+            "class": "FireHydrantListConnectionStatuses",
+            "slug": "firehydrant_list_connection_statuses",
+            "method": "get",
+            "path": "/v1/integrations/statuses",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_connection_statuses_by_slug",
+            "class": "FireHydrantListConnectionStatusesBySlug",
+            "slug": "firehydrant_list_connection_statuses_by_slug",
+            "method": "get",
+            "path": "/v1/integrations/statuses/{slug}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_connection_statuses_by_slug_and_id",
+            "class": "FireHydrantListConnectionStatusesBySlugAndId",
+            "slug": "firehydrant_list_connection_statuses_by_slug_and_id",
+            "method": "get",
+            "path": "/v1/integrations/statuses/{slug}/{by_connection_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_aws_connections",
+            "class": "FireHydrantListAwsConnections",
+            "slug": "firehydrant_list_aws_connections",
+            "method": "get",
+            "path": "/v1/integrations/aws/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_aws_connection",
+            "class": "FireHydrantGetAwsConnection",
+            "slug": "firehydrant_get_aws_connection",
+            "method": "get",
+            "path": "/v1/integrations/aws/connections/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_aws_connection",
+            "class": "FireHydrantUpdateAwsConnection",
+            "slug": "firehydrant_update_aws_connection",
+            "method": "patch",
+            "path": "/v1/integrations/aws/connections/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_aws_cloudtrail_batches",
+            "class": "FireHydrantListAwsCloudtrailBatches",
+            "slug": "firehydrant_list_aws_cloudtrail_batches",
+            "method": "get",
+            "path": "/v1/integrations/aws/cloudtrail_batches",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_aws_cloudtrail_batch",
+            "class": "FireHydrantGetAwsCloudtrailBatch",
+            "slug": "firehydrant_get_aws_cloudtrail_batch",
+            "method": "get",
+            "path": "/v1/integrations/aws/cloudtrail_batches/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_aws_cloudtrail_batch",
+            "class": "FireHydrantUpdateAwsCloudtrailBatch",
+            "slug": "firehydrant_update_aws_cloudtrail_batch",
+            "method": "patch",
+            "path": "/v1/integrations/aws/cloudtrail_batches/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_aws_cloudtrail_batch_events",
+            "class": "FireHydrantListAwsCloudtrailBatchEvents",
+            "slug": "firehydrant_list_aws_cloudtrail_batch_events",
+            "method": "get",
+            "path": "/v1/integrations/aws/cloudtrail_batches/{id}/events",
+            "type": "read"
+        },
+        {
+            "operation_id": "search_confluence_spaces",
+            "class": "FireHydrantSearchConfluenceSpaces",
+            "slug": "firehydrant_search_confluence_spaces",
+            "method": "get",
+            "path": "/v1/integrations/confluence_cloud/connections/{id}/space/search",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_slack_workspaces",
+            "class": "FireHydrantListSlackWorkspaces",
+            "slug": "firehydrant_list_slack_workspaces",
+            "method": "get",
+            "path": "/v1/integrations/slack/connections/{connection_id}/workspaces",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_slack_usergroups",
+            "class": "FireHydrantListSlackUsergroups",
+            "slug": "firehydrant_list_slack_usergroups",
+            "method": "get",
+            "path": "/v1/integrations/slack/usergroups",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_slack_emoji_actions",
+            "class": "FireHydrantListSlackEmojiActions",
+            "slug": "firehydrant_list_slack_emoji_actions",
+            "method": "get",
+            "path": "/v1/integrations/slack/connections/{connection_id}/emoji_actions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_slack_emoji_action",
+            "class": "FireHydrantCreateSlackEmojiAction",
+            "slug": "firehydrant_create_slack_emoji_action",
+            "method": "post",
+            "path": "/v1/integrations/slack/connections/{connection_id}/emoji_actions",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_slack_emoji_action",
+            "class": "FireHydrantGetSlackEmojiAction",
+            "slug": "firehydrant_get_slack_emoji_action",
+            "method": "get",
+            "path": "/v1/integrations/slack/connections/{connection_id}/emoji_actions/{emoji_action_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_slack_emoji_action",
+            "class": "FireHydrantUpdateSlackEmojiAction",
+            "slug": "firehydrant_update_slack_emoji_action",
+            "method": "patch",
+            "path": "/v1/integrations/slack/connections/{connection_id}/emoji_actions/{emoji_action_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_slack_emoji_action",
+            "class": "FireHydrantDeleteSlackEmojiAction",
+            "slug": "firehydrant_delete_slack_emoji_action",
+            "method": "delete",
+            "path": "/v1/integrations/slack/connections/{connection_id}/emoji_actions/{emoji_action_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_statuspage_connections",
+            "class": "FireHydrantListStatuspageConnections",
+            "slug": "firehydrant_list_statuspage_connections",
+            "method": "get",
+            "path": "/v1/integrations/statuspage/connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_statuspage_connection",
+            "class": "FireHydrantGetStatuspageConnection",
+            "slug": "firehydrant_get_statuspage_connection",
+            "method": "get",
+            "path": "/v1/integrations/statuspage/connections/{connection_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_statuspage_connection",
+            "class": "FireHydrantUpdateStatuspageConnection",
+            "slug": "firehydrant_update_statuspage_connection",
+            "method": "patch",
+            "path": "/v1/integrations/statuspage/connections/{connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_statuspage_connection",
+            "class": "FireHydrantDeleteStatuspageConnection",
+            "slug": "firehydrant_delete_statuspage_connection",
+            "method": "delete",
+            "path": "/v1/integrations/statuspage/connections/{connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_statuspage_connection_pages",
+            "class": "FireHydrantListStatuspageConnectionPages",
+            "slug": "firehydrant_list_statuspage_connection_pages",
+            "method": "get",
+            "path": "/v1/integrations/statuspage/connections/{connection_id}/pages",
+            "type": "read"
+        },
+        {
+            "operation_id": "search_zendesk_tickets",
+            "class": "FireHydrantSearchZendeskTickets",
+            "slug": "firehydrant_search_zendesk_tickets",
+            "method": "get",
+            "path": "/v1/integrations/zendesk/{connection_id}/tickets/search",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_zendesk_customer_support_issue",
+            "class": "FireHydrantGetZendeskCustomerSupportIssue",
+            "slug": "firehydrant_get_zendesk_customer_support_issue",
+            "method": "get",
+            "path": "/v1/integrations/zendesk/search",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_users",
+            "class": "FireHydrantListUsers",
+            "slug": "firehydrant_list_users",
+            "method": "get",
+            "path": "/v1/users",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_user",
+            "class": "FireHydrantGetUser",
+            "slug": "firehydrant_get_user",
+            "method": "get",
+            "path": "/v1/users/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_user_owned_services",
+            "class": "FireHydrantListUserOwnedServices",
+            "slug": "firehydrant_list_user_owned_services",
+            "method": "get",
+            "path": "/v1/users/{id}/services",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_current_user",
+            "class": "FireHydrantGetCurrentUser",
+            "slug": "firehydrant_get_current_user",
+            "method": "get",
+            "path": "/v1/current_user",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_permissions",
+            "class": "FireHydrantListPermissions",
+            "slug": "firehydrant_list_permissions",
+            "method": "get",
+            "path": "/v1/permissions",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_current_user_permissions",
+            "class": "FireHydrantListCurrentUserPermissions",
+            "slug": "firehydrant_list_current_user_permissions",
+            "method": "get",
+            "path": "/v1/permissions/current_user",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_team_permissions",
+            "class": "FireHydrantListTeamPermissions",
+            "slug": "firehydrant_list_team_permissions",
+            "method": "get",
+            "path": "/v1/permissions/team",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_mean_time_report",
+            "class": "FireHydrantGetMeanTimeReport",
+            "slug": "firehydrant_get_mean_time_report",
+            "method": "get",
+            "path": "/v1/reports/mean_time",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_retrospectives",
+            "class": "FireHydrantListRetrospectives",
+            "slug": "firehydrant_list_retrospectives",
+            "method": "get",
+            "path": "/v1/retrospectives",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_roles",
+            "class": "FireHydrantListRoles",
+            "slug": "firehydrant_list_roles",
+            "method": "get",
+            "path": "/v1/roles",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_role",
+            "class": "FireHydrantCreateRole",
+            "slug": "firehydrant_create_role",
+            "method": "post",
+            "path": "/v1/roles",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_role",
+            "class": "FireHydrantGetRole",
+            "slug": "firehydrant_get_role",
+            "method": "get",
+            "path": "/v1/roles/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_role",
+            "class": "FireHydrantUpdateRole",
+            "slug": "firehydrant_update_role",
+            "method": "patch",
+            "path": "/v1/roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_role",
+            "class": "FireHydrantDeleteRole",
+            "slug": "firehydrant_delete_role",
+            "method": "delete",
+            "path": "/v1/roles/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_ticket_funnel_metrics",
+            "class": "FireHydrantListTicketFunnelMetrics",
+            "slug": "firehydrant_list_ticket_funnel_metrics",
+            "method": "get",
+            "path": "/v1/metrics/ticket_funnel",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_retrospective_metrics",
+            "class": "FireHydrantListRetrospectiveMetrics",
+            "slug": "firehydrant_list_retrospective_metrics",
+            "method": "get",
+            "path": "/v1/metrics/retrospectives",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_milestone_funnel_metrics",
+            "class": "FireHydrantListMilestoneFunnelMetrics",
+            "slug": "firehydrant_list_milestone_funnel_metrics",
+            "method": "get",
+            "path": "/v1/metrics/milestone_funnel",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_user_involvement_metrics",
+            "class": "FireHydrantListUserInvolvementMetrics",
+            "slug": "firehydrant_list_user_involvement_metrics",
+            "method": "get",
+            "path": "/v1/metrics/user_involvements",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_incident_metrics",
+            "class": "FireHydrantListIncidentMetrics",
+            "slug": "firehydrant_list_incident_metrics",
+            "method": "get",
+            "path": "/v1/metrics/incidents",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_mttx_metrics",
+            "class": "FireHydrantListMttxMetrics",
+            "slug": "firehydrant_list_mttx_metrics",
+            "method": "get",
+            "path": "/v1/metrics/mttx",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_infrastructure_type_metrics",
+            "class": "FireHydrantListInfrastructureTypeMetrics",
+            "slug": "firehydrant_list_infrastructure_type_metrics",
+            "method": "get",
+            "path": "/v1/metrics/{infra_type}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_infrastructure_metrics",
+            "class": "FireHydrantListInfrastructureMetrics",
+            "slug": "firehydrant_list_infrastructure_metrics",
+            "method": "get",
+            "path": "/v1/metrics/{infra_type}/{infra_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_runbook_actions",
+            "class": "FireHydrantListRunbookActions",
+            "slug": "firehydrant_list_runbook_actions",
+            "method": "get",
+            "path": "/v1/runbooks/actions",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_runbook_executions",
+            "class": "FireHydrantListRunbookExecutions",
+            "slug": "firehydrant_list_runbook_executions",
+            "method": "get",
+            "path": "/v1/runbooks/executions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_runbook_execution",
+            "class": "FireHydrantCreateRunbookExecution",
+            "slug": "firehydrant_create_runbook_execution",
+            "method": "post",
+            "path": "/v1/runbooks/executions",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_runbook_execution",
+            "class": "FireHydrantGetRunbookExecution",
+            "slug": "firehydrant_get_runbook_execution",
+            "method": "get",
+            "path": "/v1/runbooks/executions/{execution_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_runbook_execution",
+            "class": "FireHydrantDeleteRunbookExecution",
+            "slug": "firehydrant_delete_runbook_execution",
+            "method": "delete",
+            "path": "/v1/runbooks/executions/{execution_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_runbook_execution_step",
+            "class": "FireHydrantUpdateRunbookExecutionStep",
+            "slug": "firehydrant_update_runbook_execution_step",
+            "method": "put",
+            "path": "/v1/runbooks/executions/{execution_id}/steps/{step_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_runbook_execution_step_script",
+            "class": "FireHydrantGetRunbookExecutionStepScript",
+            "slug": "firehydrant_get_runbook_execution_step_script",
+            "method": "get",
+            "path": "/v1/runbooks/executions/{execution_id}/steps/{step_id}/script",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_runbook_execution_step_script",
+            "class": "FireHydrantUpdateRunbookExecutionStepScript",
+            "slug": "firehydrant_update_runbook_execution_step_script",
+            "method": "put",
+            "path": "/v1/runbooks/executions/{execution_id}/steps/{step_id}/script/{state}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_runbook_action_field_options",
+            "class": "FireHydrantGetRunbookActionFieldOptions",
+            "slug": "firehydrant_get_runbook_action_field_options",
+            "method": "get",
+            "path": "/v1/runbooks/select_options/{integration_slug}/{action_slug}/{field}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_runbooks",
+            "class": "FireHydrantListRunbooks",
+            "slug": "firehydrant_list_runbooks",
+            "method": "get",
+            "path": "/v1/runbooks",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_runbook",
+            "class": "FireHydrantCreateRunbook",
+            "slug": "firehydrant_create_runbook",
+            "method": "post",
+            "path": "/v1/runbooks",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_runbook",
+            "class": "FireHydrantGetRunbook",
+            "slug": "firehydrant_get_runbook",
+            "method": "get",
+            "path": "/v1/runbooks/{runbook_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_runbook",
+            "class": "FireHydrantUpdateRunbook",
+            "slug": "firehydrant_update_runbook",
+            "method": "put",
+            "path": "/v1/runbooks/{runbook_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_runbook",
+            "class": "FireHydrantDeleteRunbook",
+            "slug": "firehydrant_delete_runbook",
+            "method": "delete",
+            "path": "/v1/runbooks/{runbook_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_runbook_audits",
+            "class": "FireHydrantListRunbookAudits",
+            "slug": "firehydrant_list_runbook_audits",
+            "method": "get",
+            "path": "/v1/runbook_audits",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_audit_events",
+            "class": "FireHydrantListAuditEvents",
+            "slug": "firehydrant_list_audit_events",
+            "method": "get",
+            "path": "/v1/audit_events",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_audit_event",
+            "class": "FireHydrantGetAuditEvent",
+            "slug": "firehydrant_get_audit_event",
+            "method": "get",
+            "path": "/v1/audit_events/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_nunc_connections",
+            "class": "FireHydrantListNuncConnections",
+            "slug": "firehydrant_list_nunc_connections",
+            "method": "get",
+            "path": "/v1/nunc_connections",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_nunc_connection",
+            "class": "FireHydrantCreateNuncConnection",
+            "slug": "firehydrant_create_nunc_connection",
+            "method": "post",
+            "path": "/v1/nunc_connections",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_email_subscribers",
+            "class": "FireHydrantListEmailSubscribers",
+            "slug": "firehydrant_list_email_subscribers",
+            "method": "get",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/subscribers",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_email_subscriber",
+            "class": "FireHydrantCreateEmailSubscriber",
+            "slug": "firehydrant_create_email_subscriber",
+            "method": "post",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/subscribers",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_email_subscriber",
+            "class": "FireHydrantDeleteEmailSubscriber",
+            "slug": "firehydrant_delete_email_subscriber",
+            "method": "delete",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/subscribers",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_nunc_connection",
+            "class": "FireHydrantGetNuncConnection",
+            "slug": "firehydrant_get_nunc_connection",
+            "method": "get",
+            "path": "/v1/nunc_connections/{nunc_connection_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_nunc_connection",
+            "class": "FireHydrantUpdateNuncConnection",
+            "slug": "firehydrant_update_nunc_connection",
+            "method": "put",
+            "path": "/v1/nunc_connections/{nunc_connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_nunc_connection",
+            "class": "FireHydrantDeleteNuncConnection",
+            "slug": "firehydrant_delete_nunc_connection",
+            "method": "delete",
+            "path": "/v1/nunc_connections/{nunc_connection_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "unpublish_nunc_connection",
+            "class": "FireHydrantUnpublishNuncConnection",
+            "slug": "firehydrant_unpublish_nunc_connection",
+            "method": "post",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/unpublish",
+            "type": "write"
+        },
+        {
+            "operation_id": "publish_nunc_connection",
+            "class": "FireHydrantPublishNuncConnection",
+            "slug": "firehydrant_publish_nunc_connection",
+            "method": "post",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/publish",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_nunc_component_group",
+            "class": "FireHydrantUpdateNuncComponentGroup",
+            "slug": "firehydrant_update_nunc_component_group",
+            "method": "patch",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/component_groups/{group_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_nunc_component_group",
+            "class": "FireHydrantDeleteNuncComponentGroup",
+            "slug": "firehydrant_delete_nunc_component_group",
+            "method": "delete",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/component_groups/{group_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_nunc_component_group",
+            "class": "FireHydrantCreateNuncComponentGroup",
+            "slug": "firehydrant_create_nunc_component_group",
+            "method": "post",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/component_groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_nunc_link",
+            "class": "FireHydrantUpdateNuncLink",
+            "slug": "firehydrant_update_nunc_link",
+            "method": "patch",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/links/{link_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_nunc_link",
+            "class": "FireHydrantDeleteNuncLink",
+            "slug": "firehydrant_delete_nunc_link",
+            "method": "delete",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/links/{link_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_nunc_link",
+            "class": "FireHydrantCreateNuncLink",
+            "slug": "firehydrant_create_nunc_link",
+            "method": "post",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/links",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_nunc_image",
+            "class": "FireHydrantUpdateNuncImage",
+            "slug": "firehydrant_update_nunc_image",
+            "method": "put",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/images/{type}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_nunc_image",
+            "class": "FireHydrantDeleteNuncImage",
+            "slug": "firehydrant_delete_nunc_image",
+            "method": "delete",
+            "path": "/v1/nunc_connections/{nunc_connection_id}/images/{type}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_saved_search",
+            "class": "FireHydrantGetSavedSearch",
+            "slug": "firehydrant_get_saved_search",
+            "method": "get",
+            "path": "/v1/saved_searches/{resource_type}/{saved_search_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_saved_search",
+            "class": "FireHydrantUpdateSavedSearch",
+            "slug": "firehydrant_update_saved_search",
+            "method": "patch",
+            "path": "/v1/saved_searches/{resource_type}/{saved_search_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_saved_search",
+            "class": "FireHydrantDeleteSavedSearch",
+            "slug": "firehydrant_delete_saved_search",
+            "method": "delete",
+            "path": "/v1/saved_searches/{resource_type}/{saved_search_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_saved_searches",
+            "class": "FireHydrantListSavedSearches",
+            "slug": "firehydrant_list_saved_searches",
+            "method": "get",
+            "path": "/v1/saved_searches/{resource_type}",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_saved_search",
+            "class": "FireHydrantCreateSavedSearch",
+            "slug": "firehydrant_create_saved_search",
+            "method": "post",
+            "path": "/v1/saved_searches/{resource_type}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_lifecycle_measurement_definitions",
+            "class": "FireHydrantListLifecycleMeasurementDefinitions",
+            "slug": "firehydrant_list_lifecycle_measurement_definitions",
+            "method": "get",
+            "path": "/v1/lifecycles/measurement_definitions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_lifecycle_measurement_definition",
+            "class": "FireHydrantCreateLifecycleMeasurementDefinition",
+            "slug": "firehydrant_create_lifecycle_measurement_definition",
+            "method": "post",
+            "path": "/v1/lifecycles/measurement_definitions",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_lifecycle_measurement_definition",
+            "class": "FireHydrantGetLifecycleMeasurementDefinition",
+            "slug": "firehydrant_get_lifecycle_measurement_definition",
+            "method": "get",
+            "path": "/v1/lifecycles/measurement_definitions/{measurement_definition_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_lifecycle_measurement_definition",
+            "class": "FireHydrantUpdateLifecycleMeasurementDefinition",
+            "slug": "firehydrant_update_lifecycle_measurement_definition",
+            "method": "patch",
+            "path": "/v1/lifecycles/measurement_definitions/{measurement_definition_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_lifecycle_measurement_definition",
+            "class": "FireHydrantDeleteLifecycleMeasurementDefinition",
+            "slug": "firehydrant_delete_lifecycle_measurement_definition",
+            "method": "delete",
+            "path": "/v1/lifecycles/measurement_definitions/{measurement_definition_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_lifecycle_phases",
+            "class": "FireHydrantListLifecyclePhases",
+            "slug": "firehydrant_list_lifecycle_phases",
+            "method": "get",
+            "path": "/v1/lifecycles/phases",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_lifecycle_milestone",
+            "class": "FireHydrantCreateLifecycleMilestone",
+            "slug": "firehydrant_create_lifecycle_milestone",
+            "method": "post",
+            "path": "/v1/lifecycles/milestones",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_lifecycle_milestone",
+            "class": "FireHydrantUpdateLifecycleMilestone",
+            "slug": "firehydrant_update_lifecycle_milestone",
+            "method": "patch",
+            "path": "/v1/lifecycles/milestones/{milestone_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_lifecycle_milestone",
+            "class": "FireHydrantDeleteLifecycleMilestone",
+            "slug": "firehydrant_delete_lifecycle_milestone",
+            "method": "delete",
+            "path": "/v1/lifecycles/milestones/{milestone_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_priorities",
+            "class": "FireHydrantListPriorities",
+            "slug": "firehydrant_list_priorities",
+            "method": "get",
+            "path": "/v1/priorities",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_priority",
+            "class": "FireHydrantCreatePriority",
+            "slug": "firehydrant_create_priority",
+            "method": "post",
+            "path": "/v1/priorities",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_priority",
+            "class": "FireHydrantGetPriority",
+            "slug": "firehydrant_get_priority",
+            "method": "get",
+            "path": "/v1/priorities/{priority_slug}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_priority",
+            "class": "FireHydrantUpdatePriority",
+            "slug": "firehydrant_update_priority",
+            "method": "patch",
+            "path": "/v1/priorities/{priority_slug}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_priority",
+            "class": "FireHydrantDeletePriority",
+            "slug": "firehydrant_delete_priority",
+            "method": "delete",
+            "path": "/v1/priorities/{priority_slug}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_severities",
+            "class": "FireHydrantListSeverities",
+            "slug": "firehydrant_list_severities",
+            "method": "get",
+            "path": "/v1/severities",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_severity",
+            "class": "FireHydrantCreateSeverity",
+            "slug": "firehydrant_create_severity",
+            "method": "post",
+            "path": "/v1/severities",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_severity",
+            "class": "FireHydrantGetSeverity",
+            "slug": "firehydrant_get_severity",
+            "method": "get",
+            "path": "/v1/severities/{severity_slug}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_severity",
+            "class": "FireHydrantUpdateSeverity",
+            "slug": "firehydrant_update_severity",
+            "method": "patch",
+            "path": "/v1/severities/{severity_slug}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_severity",
+            "class": "FireHydrantDeleteSeverity",
+            "slug": "firehydrant_delete_severity",
+            "method": "delete",
+            "path": "/v1/severities/{severity_slug}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_severity_matrix",
+            "class": "FireHydrantGetSeverityMatrix",
+            "slug": "firehydrant_get_severity_matrix",
+            "method": "get",
+            "path": "/v1/severity_matrix",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_severity_matrix",
+            "class": "FireHydrantUpdateSeverityMatrix",
+            "slug": "firehydrant_update_severity_matrix",
+            "method": "patch",
+            "path": "/v1/severity_matrix",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_severity_matrix_conditions",
+            "class": "FireHydrantListSeverityMatrixConditions",
+            "slug": "firehydrant_list_severity_matrix_conditions",
+            "method": "get",
+            "path": "/v1/severity_matrix/conditions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_severity_matrix_condition",
+            "class": "FireHydrantCreateSeverityMatrixCondition",
+            "slug": "firehydrant_create_severity_matrix_condition",
+            "method": "post",
+            "path": "/v1/severity_matrix/conditions",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_severity_matrix_condition",
+            "class": "FireHydrantGetSeverityMatrixCondition",
+            "slug": "firehydrant_get_severity_matrix_condition",
+            "method": "get",
+            "path": "/v1/severity_matrix/conditions/{condition_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_severity_matrix_condition",
+            "class": "FireHydrantUpdateSeverityMatrixCondition",
+            "slug": "firehydrant_update_severity_matrix_condition",
+            "method": "patch",
+            "path": "/v1/severity_matrix/conditions/{condition_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_severity_matrix_condition",
+            "class": "FireHydrantDeleteSeverityMatrixCondition",
+            "slug": "firehydrant_delete_severity_matrix_condition",
+            "method": "delete",
+            "path": "/v1/severity_matrix/conditions/{condition_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_severity_matrix_impacts",
+            "class": "FireHydrantListSeverityMatrixImpacts",
+            "slug": "firehydrant_list_severity_matrix_impacts",
+            "method": "get",
+            "path": "/v1/severity_matrix/impacts",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_severity_matrix_impact",
+            "class": "FireHydrantCreateSeverityMatrixImpact",
+            "slug": "firehydrant_create_severity_matrix_impact",
+            "method": "post",
+            "path": "/v1/severity_matrix/impacts",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_severity_matrix_impact",
+            "class": "FireHydrantUpdateSeverityMatrixImpact",
+            "slug": "firehydrant_update_severity_matrix_impact",
+            "method": "patch",
+            "path": "/v1/severity_matrix/impacts/{impact_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_severity_matrix_impact",
+            "class": "FireHydrantDeleteSeverityMatrixImpact",
+            "slug": "firehydrant_delete_severity_matrix_impact",
+            "method": "delete",
+            "path": "/v1/severity_matrix/impacts/{impact_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_scheduled_maintenances",
+            "class": "FireHydrantListScheduledMaintenances",
+            "slug": "firehydrant_list_scheduled_maintenances",
+            "method": "get",
+            "path": "/v1/scheduled_maintenances",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_scheduled_maintenance",
+            "class": "FireHydrantCreateScheduledMaintenance",
+            "slug": "firehydrant_create_scheduled_maintenance",
+            "method": "post",
+            "path": "/v1/scheduled_maintenances",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_scheduled_maintenance",
+            "class": "FireHydrantGetScheduledMaintenance",
+            "slug": "firehydrant_get_scheduled_maintenance",
+            "method": "get",
+            "path": "/v1/scheduled_maintenances/{scheduled_maintenance_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_scheduled_maintenance",
+            "class": "FireHydrantUpdateScheduledMaintenance",
+            "slug": "firehydrant_update_scheduled_maintenance",
+            "method": "patch",
+            "path": "/v1/scheduled_maintenances/{scheduled_maintenance_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_scheduled_maintenance",
+            "class": "FireHydrantDeleteScheduledMaintenance",
+            "slug": "firehydrant_delete_scheduled_maintenance",
+            "method": "delete",
+            "path": "/v1/scheduled_maintenances/{scheduled_maintenance_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_schedules",
+            "class": "FireHydrantListSchedules",
+            "slug": "firehydrant_list_schedules",
+            "method": "get",
+            "path": "/v1/schedules",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_infrastructures",
+            "class": "FireHydrantListInfrastructures",
+            "slug": "firehydrant_list_infrastructures",
+            "method": "get",
+            "path": "/v1/infrastructures",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_nunc_subscription",
+            "class": "FireHydrantDeleteNuncSubscription",
+            "slug": "firehydrant_delete_nunc_subscription",
+            "method": "delete",
+            "path": "/v1/nunc/subscriptions/{unsubscribe_token}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_nunc_subscription",
+            "class": "FireHydrantCreateNuncSubscription",
+            "slug": "firehydrant_create_nunc_subscription",
+            "method": "post",
+            "path": "/v1/nunc/subscriptions",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_status_update_templates",
+            "class": "FireHydrantListStatusUpdateTemplates",
+            "slug": "firehydrant_list_status_update_templates",
+            "method": "get",
+            "path": "/v1/status_update_templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_status_update_template",
+            "class": "FireHydrantCreateStatusUpdateTemplate",
+            "slug": "firehydrant_create_status_update_template",
+            "method": "post",
+            "path": "/v1/status_update_templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_status_update_template",
+            "class": "FireHydrantGetStatusUpdateTemplate",
+            "slug": "firehydrant_get_status_update_template",
+            "method": "get",
+            "path": "/v1/status_update_templates/{status_update_template_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_status_update_template",
+            "class": "FireHydrantUpdateStatusUpdateTemplate",
+            "slug": "firehydrant_update_status_update_template",
+            "method": "patch",
+            "path": "/v1/status_update_templates/{status_update_template_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_status_update_template",
+            "class": "FireHydrantDeleteStatusUpdateTemplate",
+            "slug": "firehydrant_delete_status_update_template",
+            "method": "delete",
+            "path": "/v1/status_update_templates/{status_update_template_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_custom_field_definition",
+            "class": "FireHydrantUpdateCustomFieldDefinition",
+            "slug": "firehydrant_update_custom_field_definition",
+            "method": "patch",
+            "path": "/v1/custom_fields/definitions/{field_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_custom_field_definition",
+            "class": "FireHydrantDeleteCustomFieldDefinition",
+            "slug": "firehydrant_delete_custom_field_definition",
+            "method": "delete",
+            "path": "/v1/custom_fields/definitions/{field_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_custom_field_definitions",
+            "class": "FireHydrantListCustomFieldDefinitions",
+            "slug": "firehydrant_list_custom_field_definitions",
+            "method": "get",
+            "path": "/v1/custom_fields/definitions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_custom_field_definition",
+            "class": "FireHydrantCreateCustomFieldDefinition",
+            "slug": "firehydrant_create_custom_field_definition",
+            "method": "post",
+            "path": "/v1/custom_fields/definitions",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_custom_field_select_options",
+            "class": "FireHydrantListCustomFieldSelectOptions",
+            "slug": "firehydrant_list_custom_field_select_options",
+            "method": "get",
+            "path": "/v1/custom_fields/definitions/{field_id}/select_options",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_post_mortem_reports",
+            "class": "FireHydrantListPostMortemReports",
+            "slug": "firehydrant_list_post_mortem_reports",
+            "method": "get",
+            "path": "/v1/post_mortems/reports",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_post_mortem_report",
+            "class": "FireHydrantCreatePostMortemReport",
+            "slug": "firehydrant_create_post_mortem_report",
+            "method": "post",
+            "path": "/v1/post_mortems/reports",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_post_mortem_report",
+            "class": "FireHydrantGetPostMortemReport",
+            "slug": "firehydrant_get_post_mortem_report",
+            "method": "get",
+            "path": "/v1/post_mortems/reports/{report_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_post_mortem_report",
+            "class": "FireHydrantUpdatePostMortemReport",
+            "slug": "firehydrant_update_post_mortem_report",
+            "method": "patch",
+            "path": "/v1/post_mortems/reports/{report_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_post_mortem_reasons",
+            "class": "FireHydrantListPostMortemReasons",
+            "slug": "firehydrant_list_post_mortem_reasons",
+            "method": "get",
+            "path": "/v1/post_mortems/reports/{report_id}/reasons",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_post_mortem_reason",
+            "class": "FireHydrantCreatePostMortemReason",
+            "slug": "firehydrant_create_post_mortem_reason",
+            "method": "post",
+            "path": "/v1/post_mortems/reports/{report_id}/reasons",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_post_mortem_reason",
+            "class": "FireHydrantUpdatePostMortemReason",
+            "slug": "firehydrant_update_post_mortem_reason",
+            "method": "patch",
+            "path": "/v1/post_mortems/reports/{report_id}/reasons/{reason_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_post_mortem_reason",
+            "class": "FireHydrantDeletePostMortemReason",
+            "slug": "firehydrant_delete_post_mortem_reason",
+            "method": "delete",
+            "path": "/v1/post_mortems/reports/{report_id}/reasons/{reason_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "reorder_post_mortem_reasons",
+            "class": "FireHydrantReorderPostMortemReasons",
+            "slug": "firehydrant_reorder_post_mortem_reasons",
+            "method": "put",
+            "path": "/v1/post_mortems/reports/{report_id}/reasons/order",
+            "type": "write"
+        },
+        {
+            "operation_id": "publish_post_mortem_report",
+            "class": "FireHydrantPublishPostMortemReport",
+            "slug": "firehydrant_publish_post_mortem_report",
+            "method": "post",
+            "path": "/v1/post_mortems/reports/{report_id}/publish",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_post_mortem_field",
+            "class": "FireHydrantUpdatePostMortemField",
+            "slug": "firehydrant_update_post_mortem_field",
+            "method": "patch",
+            "path": "/v1/post_mortems/reports/{report_id}/fields/{field_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_post_mortem_questions",
+            "class": "FireHydrantListPostMortemQuestions",
+            "slug": "firehydrant_list_post_mortem_questions",
+            "method": "get",
+            "path": "/v1/post_mortems/questions",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_post_mortem_questions",
+            "class": "FireHydrantUpdatePostMortemQuestions",
+            "slug": "firehydrant_update_post_mortem_questions",
+            "method": "put",
+            "path": "/v1/post_mortems/questions",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_post_mortem_question",
+            "class": "FireHydrantGetPostMortemQuestion",
+            "slug": "firehydrant_get_post_mortem_question",
+            "method": "get",
+            "path": "/v1/post_mortems/questions/{question_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_retrospective_templates",
+            "class": "FireHydrantListRetrospectiveTemplates",
+            "slug": "firehydrant_list_retrospective_templates",
+            "method": "get",
+            "path": "/v1/retrospective_templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_retrospective_template",
+            "class": "FireHydrantCreateRetrospectiveTemplate",
+            "slug": "firehydrant_create_retrospective_template",
+            "method": "post",
+            "path": "/v1/retrospective_templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_retrospective_template",
+            "class": "FireHydrantGetRetrospectiveTemplate",
+            "slug": "firehydrant_get_retrospective_template",
+            "method": "get",
+            "path": "/v1/retrospective_templates/{retrospective_template_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_retrospective_template",
+            "class": "FireHydrantUpdateRetrospectiveTemplate",
+            "slug": "firehydrant_update_retrospective_template",
+            "method": "patch",
+            "path": "/v1/retrospective_templates/{retrospective_template_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_retrospective_template",
+            "class": "FireHydrantDeleteRetrospectiveTemplate",
+            "slug": "firehydrant_delete_retrospective_template",
+            "method": "delete",
+            "path": "/v1/retrospective_templates/{retrospective_template_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_alerts",
+            "class": "FireHydrantListAlerts",
+            "slug": "firehydrant_list_alerts",
+            "method": "get",
+            "path": "/v1/alerts",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_alert",
+            "class": "FireHydrantGetAlert",
+            "slug": "firehydrant_get_alert",
+            "method": "get",
+            "path": "/v1/alerts/{alert_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_processing_log_entries",
+            "class": "FireHydrantListProcessingLogEntries",
+            "slug": "firehydrant_list_processing_log_entries",
+            "method": "get",
+            "path": "/v1/processing_log_entries",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_signals_page",
+            "class": "FireHydrantCreateSignalsPage",
+            "slug": "firehydrant_create_signals_page",
+            "method": "post",
+            "path": "/v1/page/signals",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_tickets",
+            "class": "FireHydrantListTickets",
+            "slug": "firehydrant_list_tickets",
+            "method": "get",
+            "path": "/v1/ticketing/tickets",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_ticket",
+            "class": "FireHydrantCreateTicket",
+            "slug": "firehydrant_create_ticket",
+            "method": "post",
+            "path": "/v1/ticketing/tickets",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_ticket",
+            "class": "FireHydrantGetTicket",
+            "slug": "firehydrant_get_ticket",
+            "method": "get",
+            "path": "/v1/ticketing/tickets/{ticket_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_ticket",
+            "class": "FireHydrantUpdateTicket",
+            "slug": "firehydrant_update_ticket",
+            "method": "patch",
+            "path": "/v1/ticketing/tickets/{ticket_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_ticket",
+            "class": "FireHydrantDeleteTicket",
+            "slug": "firehydrant_delete_ticket",
+            "method": "delete",
+            "path": "/v1/ticketing/tickets/{ticket_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_ticketing_projects",
+            "class": "FireHydrantListTicketingProjects",
+            "slug": "firehydrant_list_ticketing_projects",
+            "method": "get",
+            "path": "/v1/ticketing/projects",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_ticketing_project",
+            "class": "FireHydrantGetTicketingProject",
+            "slug": "firehydrant_get_ticketing_project",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_configuration_options",
+            "class": "FireHydrantGetConfigurationOptions",
+            "slug": "firehydrant_get_configuration_options",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/configuration_options",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_options_for_field",
+            "class": "FireHydrantGetOptionsForField",
+            "slug": "firehydrant_get_options_for_field",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/configuration_options/options_for/{field_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_available_ticketing_field_maps",
+            "class": "FireHydrantListAvailableTicketingFieldMaps",
+            "slug": "firehydrant_list_available_ticketing_field_maps",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/field_maps/available_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_ticketing_field_map",
+            "class": "FireHydrantCreateTicketingFieldMap",
+            "slug": "firehydrant_create_ticketing_field_map",
+            "method": "post",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/field_maps",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_ticketing_field_map",
+            "class": "FireHydrantGetTicketingFieldMap",
+            "slug": "firehydrant_get_ticketing_field_map",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/field_maps/{map_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_ticketing_field_map",
+            "class": "FireHydrantUpdateTicketingFieldMap",
+            "slug": "firehydrant_update_ticketing_field_map",
+            "method": "patch",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/field_maps/{map_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_ticketing_field_map",
+            "class": "FireHydrantDeleteTicketingFieldMap",
+            "slug": "firehydrant_delete_ticketing_field_map",
+            "method": "delete",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/field_maps/{map_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_available_inbound_field_maps",
+            "class": "FireHydrantListAvailableInboundFieldMaps",
+            "slug": "firehydrant_list_available_inbound_field_maps",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/inbound_field_maps/available_fields",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_inbound_field_maps",
+            "class": "FireHydrantListInboundFieldMaps",
+            "slug": "firehydrant_list_inbound_field_maps",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/inbound_field_maps",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_inbound_field_map",
+            "class": "FireHydrantCreateInboundFieldMap",
+            "slug": "firehydrant_create_inbound_field_map",
+            "method": "post",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/inbound_field_maps",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_inbound_field_map",
+            "class": "FireHydrantGetInboundFieldMap",
+            "slug": "firehydrant_get_inbound_field_map",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/inbound_field_maps/{map_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_inbound_field_map",
+            "class": "FireHydrantUpdateInboundFieldMap",
+            "slug": "firehydrant_update_inbound_field_map",
+            "method": "put",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/inbound_field_maps/{map_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_inbound_field_map",
+            "class": "FireHydrantDeleteInboundFieldMap",
+            "slug": "firehydrant_delete_inbound_field_map",
+            "method": "delete",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/inbound_field_maps/{map_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "create_ticketing_project_config",
+            "class": "FireHydrantCreateTicketingProjectConfig",
+            "slug": "firehydrant_create_ticketing_project_config",
+            "method": "post",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/provider_project_configurations",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_ticketing_project_config",
+            "class": "FireHydrantGetTicketingProjectConfig",
+            "slug": "firehydrant_get_ticketing_project_config",
+            "method": "get",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/provider_project_configurations/{config_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_ticketing_project_config",
+            "class": "FireHydrantUpdateTicketingProjectConfig",
+            "slug": "firehydrant_update_ticketing_project_config",
+            "method": "patch",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/provider_project_configurations/{config_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_ticketing_project_config",
+            "class": "FireHydrantDeleteTicketingProjectConfig",
+            "slug": "firehydrant_delete_ticketing_project_config",
+            "method": "delete",
+            "path": "/v1/ticketing/projects/{ticketing_project_id}/provider_project_configurations/{config_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_ticketing_priorities",
+            "class": "FireHydrantListTicketingPriorities",
+            "slug": "firehydrant_list_ticketing_priorities",
+            "method": "get",
+            "path": "/v1/ticketing/priorities",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_ticketing_priority",
+            "class": "FireHydrantCreateTicketingPriority",
+            "slug": "firehydrant_create_ticketing_priority",
+            "method": "post",
+            "path": "/v1/ticketing/priorities",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_ticketing_priority",
+            "class": "FireHydrantGetTicketingPriority",
+            "slug": "firehydrant_get_ticketing_priority",
+            "method": "get",
+            "path": "/v1/ticketing/priorities/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_ticketing_priority",
+            "class": "FireHydrantUpdateTicketingPriority",
+            "slug": "firehydrant_update_ticketing_priority",
+            "method": "patch",
+            "path": "/v1/ticketing/priorities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_ticketing_priority",
+            "class": "FireHydrantDeleteTicketingPriority",
+            "slug": "firehydrant_delete_ticketing_priority",
+            "method": "delete",
+            "path": "/v1/ticketing/priorities/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_ticket_tags",
+            "class": "FireHydrantListTicketTags",
+            "slug": "firehydrant_list_ticket_tags",
+            "method": "get",
+            "path": "/v1/ticketing/ticket_tags",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_ticketing_form_configuration",
+            "class": "FireHydrantGetTicketingFormConfiguration",
+            "slug": "firehydrant_get_ticketing_form_configuration",
+            "method": "get",
+            "path": "/v1/ticketing/form_configurations",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_ticketing_custom_definitions",
+            "class": "FireHydrantListTicketingCustomDefinitions",
+            "slug": "firehydrant_list_ticketing_custom_definitions",
+            "method": "get",
+            "path": "/v1/ticketing/custom_fields/definitions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_ticketing_custom_definition",
+            "class": "FireHydrantCreateTicketingCustomDefinition",
+            "slug": "firehydrant_create_ticketing_custom_definition",
+            "method": "post",
+            "path": "/v1/ticketing/custom_fields/definitions",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_ticketing_custom_definition",
+            "class": "FireHydrantUpdateTicketingCustomDefinition",
+            "slug": "firehydrant_update_ticketing_custom_definition",
+            "method": "patch",
+            "path": "/v1/ticketing/custom_fields/definitions/{field_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_ticketing_custom_definition",
+            "class": "FireHydrantDeleteTicketingCustomDefinition",
+            "slug": "firehydrant_delete_ticketing_custom_definition",
+            "method": "delete",
+            "path": "/v1/ticketing/custom_fields/definitions/{field_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_task_lists",
+            "class": "FireHydrantListTaskLists",
+            "slug": "firehydrant_list_task_lists",
+            "method": "get",
+            "path": "/v1/task_lists",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_task_list",
+            "class": "FireHydrantCreateTaskList",
+            "slug": "firehydrant_create_task_list",
+            "method": "post",
+            "path": "/v1/task_lists",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_task_list",
+            "class": "FireHydrantGetTaskList",
+            "slug": "firehydrant_get_task_list",
+            "method": "get",
+            "path": "/v1/task_lists/{task_list_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_task_list",
+            "class": "FireHydrantUpdateTaskList",
+            "slug": "firehydrant_update_task_list",
+            "method": "patch",
+            "path": "/v1/task_lists/{task_list_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_task_list",
+            "class": "FireHydrantDeleteTaskList",
+            "slug": "firehydrant_delete_task_list",
+            "method": "delete",
+            "path": "/v1/task_lists/{task_list_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "ping_noauth",
+            "class": "FireHydrantPingNoauth",
+            "slug": "firehydrant_ping_noauth",
+            "method": "get",
+            "path": "/v1/noauth/ping",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_scim_group",
+            "class": "FireHydrantGetScimGroup",
+            "slug": "firehydrant_get_scim_group",
+            "method": "get",
+            "path": "/v1/scim/v2/Groups/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_scim_group",
+            "class": "FireHydrantUpdateScimGroup",
+            "slug": "firehydrant_update_scim_group",
+            "method": "put",
+            "path": "/v1/scim/v2/Groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "patch_scim_group",
+            "class": "FireHydrantPatchScimGroup",
+            "slug": "firehydrant_patch_scim_group",
+            "method": "patch",
+            "path": "/v1/scim/v2/Groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_scim_group",
+            "class": "FireHydrantDeleteScimGroup",
+            "slug": "firehydrant_delete_scim_group",
+            "method": "delete",
+            "path": "/v1/scim/v2/Groups/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_scim_groups",
+            "class": "FireHydrantListScimGroups",
+            "slug": "firehydrant_list_scim_groups",
+            "method": "get",
+            "path": "/v1/scim/v2/Groups",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_scim_group",
+            "class": "FireHydrantCreateScimGroup",
+            "slug": "firehydrant_create_scim_group",
+            "method": "post",
+            "path": "/v1/scim/v2/Groups",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_scim_user",
+            "class": "FireHydrantGetScimUser",
+            "slug": "firehydrant_get_scim_user",
+            "method": "get",
+            "path": "/v1/scim/v2/Users/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_scim_user",
+            "class": "FireHydrantUpdateScimUser",
+            "slug": "firehydrant_update_scim_user",
+            "method": "put",
+            "path": "/v1/scim/v2/Users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "patch_scim_user",
+            "class": "FireHydrantPatchScimUser",
+            "slug": "firehydrant_patch_scim_user",
+            "method": "patch",
+            "path": "/v1/scim/v2/Users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_scim_user",
+            "class": "FireHydrantDeleteScimUser",
+            "slug": "firehydrant_delete_scim_user",
+            "method": "delete",
+            "path": "/v1/scim/v2/Users/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_scim_users",
+            "class": "FireHydrantListScimUsers",
+            "slug": "firehydrant_list_scim_users",
+            "method": "get",
+            "path": "/v1/scim/v2/Users",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_scim_user",
+            "class": "FireHydrantCreateScimUser",
+            "slug": "firehydrant_create_scim_user",
+            "method": "post",
+            "path": "/v1/scim/v2/Users",
+            "type": "write"
+        },
+        {
+            "operation_id": "refresh_catalog",
+            "class": "FireHydrantRefreshCatalog",
+            "slug": "firehydrant_refresh_catalog",
+            "method": "get",
+            "path": "/v1/catalogs/{catalog_id}/refresh",
+            "type": "read"
+        },
+        {
+            "operation_id": "ingest_catalog_data",
+            "class": "FireHydrantIngestCatalogData",
+            "slug": "firehydrant_ingest_catalog_data",
+            "method": "post",
+            "path": "/v1/catalogs/{catalog_id}/ingest",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_checklist_templates",
+            "class": "FireHydrantListChecklistTemplates",
+            "slug": "firehydrant_list_checklist_templates",
+            "method": "get",
+            "path": "/v1/checklist_templates",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_checklist_template",
+            "class": "FireHydrantCreateChecklistTemplate",
+            "slug": "firehydrant_create_checklist_template",
+            "method": "post",
+            "path": "/v1/checklist_templates",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_checklist_template",
+            "class": "FireHydrantGetChecklistTemplate",
+            "slug": "firehydrant_get_checklist_template",
+            "method": "get",
+            "path": "/v1/checklist_templates/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_checklist_template",
+            "class": "FireHydrantUpdateChecklistTemplate",
+            "slug": "firehydrant_update_checklist_template",
+            "method": "patch",
+            "path": "/v1/checklist_templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_checklist_template",
+            "class": "FireHydrantDeleteChecklistTemplate",
+            "slug": "firehydrant_delete_checklist_template",
+            "method": "delete",
+            "path": "/v1/checklist_templates/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_bootstrap",
+            "class": "FireHydrantGetBootstrap",
+            "slug": "firehydrant_get_bootstrap",
+            "method": "get",
+            "path": "/v1/bootstrap",
+            "type": "read"
+        },
+        {
+            "operation_id": "append_form_data_on_selected_value_get",
+            "class": "FireHydrantAppendFormDataOnSelectedValueGet",
+            "slug": "firehydrant_append_form_data_on_selected_value_get",
+            "method": "get",
+            "path": "/v1/form_configurations/{slug}/append_data_on_select/{field_id}/{selected_value}",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_form_configuration",
+            "class": "FireHydrantGetFormConfiguration",
+            "slug": "firehydrant_get_form_configuration",
+            "method": "get",
+            "path": "/v1/form_configurations/{slug}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_comment_reaction",
+            "class": "FireHydrantDeleteCommentReaction",
+            "slug": "firehydrant_delete_comment_reaction",
+            "method": "delete",
+            "path": "/v1/conversations/{conversation_id}/comments/{comment_id}/reactions/{reaction_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_comment_reactions",
+            "class": "FireHydrantListCommentReactions",
+            "slug": "firehydrant_list_comment_reactions",
+            "method": "get",
+            "path": "/v1/conversations/{conversation_id}/comments/{comment_id}/reactions",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_comment_reaction",
+            "class": "FireHydrantCreateCommentReaction",
+            "slug": "firehydrant_create_comment_reaction",
+            "method": "post",
+            "path": "/v1/conversations/{conversation_id}/comments/{comment_id}/reactions",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_comment",
+            "class": "FireHydrantGetComment",
+            "slug": "firehydrant_get_comment",
+            "method": "get",
+            "path": "/v1/conversations/{conversation_id}/comments/{comment_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_comment",
+            "class": "FireHydrantUpdateComment",
+            "slug": "firehydrant_update_comment",
+            "method": "patch",
+            "path": "/v1/conversations/{conversation_id}/comments/{comment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_comment",
+            "class": "FireHydrantDeleteComment",
+            "slug": "firehydrant_delete_comment",
+            "method": "delete",
+            "path": "/v1/conversations/{conversation_id}/comments/{comment_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_comments",
+            "class": "FireHydrantListComments",
+            "slug": "firehydrant_list_comments",
+            "method": "get",
+            "path": "/v1/conversations/{conversation_id}/comments",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_comment",
+            "class": "FireHydrantCreateComment",
+            "slug": "firehydrant_create_comment",
+            "method": "post",
+            "path": "/v1/conversations/{conversation_id}/comments",
+            "type": "write"
+        },
+        {
+            "operation_id": "update_signals_alert",
+            "class": "FireHydrantUpdateSignalsAlert",
+            "slug": "firehydrant_update_signals_alert",
+            "method": "patch",
+            "path": "/v1/signals/alerts/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_timeseries_analytics",
+            "class": "FireHydrantGetSignalsTimeseriesAnalytics",
+            "slug": "firehydrant_get_signals_timeseries_analytics",
+            "method": "get",
+            "path": "/v1/signals/analytics/timeseries",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_signals_grouped_metrics",
+            "class": "FireHydrantGetSignalsGroupedMetrics",
+            "slug": "firehydrant_get_signals_grouped_metrics",
+            "method": "get",
+            "path": "/v1/signals/analytics/grouped_metrics",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_signals_mttx_analytics",
+            "class": "FireHydrantGetSignalsMttxAnalytics",
+            "slug": "firehydrant_get_signals_mttx_analytics",
+            "method": "get",
+            "path": "/v1/signals/analytics/mttx",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_signals_noise_analytics",
+            "class": "FireHydrantGetSignalsNoiseAnalytics",
+            "slug": "firehydrant_get_signals_noise_analytics",
+            "method": "get",
+            "path": "/v1/signals/analytics/noise/metrics",
+            "type": "read"
+        },
+        {
+            "operation_id": "export_signals_shift_analytics",
+            "class": "FireHydrantExportSignalsShiftAnalytics",
+            "slug": "firehydrant_export_signals_shift_analytics",
+            "method": "get",
+            "path": "/v1/signals/analytics/shifts/export",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_call_routes",
+            "class": "FireHydrantListCallRoutes",
+            "slug": "firehydrant_list_call_routes",
+            "method": "get",
+            "path": "/v1/signals/call_routes",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_call_route",
+            "class": "FireHydrantGetCallRoute",
+            "slug": "firehydrant_get_call_route",
+            "method": "get",
+            "path": "/v1/signals/call_routes/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_call_route",
+            "class": "FireHydrantUpdateCallRoute",
+            "slug": "firehydrant_update_call_route",
+            "method": "patch",
+            "path": "/v1/signals/call_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_call_route",
+            "class": "FireHydrantDeleteCallRoute",
+            "slug": "firehydrant_delete_call_route",
+            "method": "delete",
+            "path": "/v1/signals/call_routes/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_signals_event_sources",
+            "class": "FireHydrantListSignalsEventSources",
+            "slug": "firehydrant_list_signals_event_sources",
+            "method": "get",
+            "path": "/v1/signals/event_sources",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_signals_event_source",
+            "class": "FireHydrantCreateSignalsEventSource",
+            "slug": "firehydrant_create_signals_event_source",
+            "method": "put",
+            "path": "/v1/signals/event_sources",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_event_source",
+            "class": "FireHydrantGetSignalsEventSource",
+            "slug": "firehydrant_get_signals_event_source",
+            "method": "get",
+            "path": "/v1/signals/event_sources/{transposer_slug}",
+            "type": "read"
+        },
+        {
+            "operation_id": "delete_signals_event_source",
+            "class": "FireHydrantDeleteSignalsEventSource",
+            "slug": "firehydrant_delete_signals_event_source",
+            "method": "delete",
+            "path": "/v1/signals/event_sources/{transposer_slug}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_hacker_mode",
+            "class": "FireHydrantGetSignalsHackerMode",
+            "slug": "firehydrant_get_signals_hacker_mode",
+            "method": "get",
+            "path": "/v1/signals/hacker_mode",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_signals_alert_grouping_configurations",
+            "class": "FireHydrantListSignalsAlertGroupingConfigurations",
+            "slug": "firehydrant_list_signals_alert_grouping_configurations",
+            "method": "get",
+            "path": "/v1/signals/grouping",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_signals_alert_grouping_configuration",
+            "class": "FireHydrantCreateSignalsAlertGroupingConfiguration",
+            "slug": "firehydrant_create_signals_alert_grouping_configuration",
+            "method": "post",
+            "path": "/v1/signals/grouping",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_alert_grouping_configuration",
+            "class": "FireHydrantGetSignalsAlertGroupingConfiguration",
+            "slug": "firehydrant_get_signals_alert_grouping_configuration",
+            "method": "get",
+            "path": "/v1/signals/grouping/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_signals_alert_grouping_configuration",
+            "class": "FireHydrantUpdateSignalsAlertGroupingConfiguration",
+            "slug": "firehydrant_update_signals_alert_grouping_configuration",
+            "method": "patch",
+            "path": "/v1/signals/grouping/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_signals_alert_grouping_configuration",
+            "class": "FireHydrantDeleteSignalsAlertGroupingConfiguration",
+            "slug": "firehydrant_delete_signals_alert_grouping_configuration",
+            "method": "delete",
+            "path": "/v1/signals/grouping/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_signals_email_targets",
+            "class": "FireHydrantListSignalsEmailTargets",
+            "slug": "firehydrant_list_signals_email_targets",
+            "method": "get",
+            "path": "/v1/signals/email_targets",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_signals_email_target",
+            "class": "FireHydrantCreateSignalsEmailTarget",
+            "slug": "firehydrant_create_signals_email_target",
+            "method": "post",
+            "path": "/v1/signals/email_targets",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_email_target",
+            "class": "FireHydrantGetSignalsEmailTarget",
+            "slug": "firehydrant_get_signals_email_target",
+            "method": "get",
+            "path": "/v1/signals/email_targets/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_signals_email_target",
+            "class": "FireHydrantUpdateSignalsEmailTarget",
+            "slug": "firehydrant_update_signals_email_target",
+            "method": "patch",
+            "path": "/v1/signals/email_targets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_signals_email_target",
+            "class": "FireHydrantDeleteSignalsEmailTarget",
+            "slug": "firehydrant_delete_signals_email_target",
+            "method": "delete",
+            "path": "/v1/signals/email_targets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_signals_webhook_targets",
+            "class": "FireHydrantListSignalsWebhookTargets",
+            "slug": "firehydrant_list_signals_webhook_targets",
+            "method": "get",
+            "path": "/v1/signals/webhook_targets",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_signals_webhook_target",
+            "class": "FireHydrantCreateSignalsWebhookTarget",
+            "slug": "firehydrant_create_signals_webhook_target",
+            "method": "post",
+            "path": "/v1/signals/webhook_targets",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_webhook_target",
+            "class": "FireHydrantGetSignalsWebhookTarget",
+            "slug": "firehydrant_get_signals_webhook_target",
+            "method": "get",
+            "path": "/v1/signals/webhook_targets/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_signals_webhook_target",
+            "class": "FireHydrantUpdateSignalsWebhookTarget",
+            "slug": "firehydrant_update_signals_webhook_target",
+            "method": "patch",
+            "path": "/v1/signals/webhook_targets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_signals_webhook_target",
+            "class": "FireHydrantDeleteSignalsWebhookTarget",
+            "slug": "firehydrant_delete_signals_webhook_target",
+            "method": "delete",
+            "path": "/v1/signals/webhook_targets/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_signals_heartbeat_endpoint_configurations",
+            "class": "FireHydrantListSignalsHeartbeatEndpointConfigurations",
+            "slug": "firehydrant_list_signals_heartbeat_endpoint_configurations",
+            "method": "get",
+            "path": "/v1/signals/heartbeat_endpoints",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_signals_heartbeat_endpoint_configuration",
+            "class": "FireHydrantCreateSignalsHeartbeatEndpointConfiguration",
+            "slug": "firehydrant_create_signals_heartbeat_endpoint_configuration",
+            "method": "post",
+            "path": "/v1/signals/heartbeat_endpoints",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_signals_heartbeat_endpoint_status",
+            "class": "FireHydrantGetSignalsHeartbeatEndpointStatus",
+            "slug": "firehydrant_get_signals_heartbeat_endpoint_status",
+            "method": "get",
+            "path": "/v1/signals/heartbeat_endpoints/statuses",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_signals_heartbeat_endpoint_url",
+            "class": "FireHydrantGetSignalsHeartbeatEndpointUrl",
+            "slug": "firehydrant_get_signals_heartbeat_endpoint_url",
+            "method": "get",
+            "path": "/v1/signals/heartbeat_endpoints/addresses",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_signals_heartbeat_endpoint_configuration",
+            "class": "FireHydrantGetSignalsHeartbeatEndpointConfiguration",
+            "slug": "firehydrant_get_signals_heartbeat_endpoint_configuration",
+            "method": "get",
+            "path": "/v1/signals/heartbeat_endpoints/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_signals_heartbeat_endpoint_configuration",
+            "class": "FireHydrantUpdateSignalsHeartbeatEndpointConfiguration",
+            "slug": "firehydrant_update_signals_heartbeat_endpoint_configuration",
+            "method": "patch",
+            "path": "/v1/signals/heartbeat_endpoints/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_signals_heartbeat_endpoint_configuration",
+            "class": "FireHydrantDeleteSignalsHeartbeatEndpointConfiguration",
+            "slug": "firehydrant_delete_signals_heartbeat_endpoint_configuration",
+            "method": "delete",
+            "path": "/v1/signals/heartbeat_endpoints/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_notification_policy_settings",
+            "class": "FireHydrantListNotificationPolicySettings",
+            "slug": "firehydrant_list_notification_policy_settings",
+            "method": "get",
+            "path": "/v1/signals/notification_policy_items",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_notification_policy",
+            "class": "FireHydrantCreateNotificationPolicy",
+            "slug": "firehydrant_create_notification_policy",
+            "method": "post",
+            "path": "/v1/signals/notification_policy_items",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_notification_policy",
+            "class": "FireHydrantGetNotificationPolicy",
+            "slug": "firehydrant_get_notification_policy",
+            "method": "get",
+            "path": "/v1/signals/notification_policy_items/{id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_notification_policy",
+            "class": "FireHydrantUpdateNotificationPolicy",
+            "slug": "firehydrant_update_notification_policy",
+            "method": "patch",
+            "path": "/v1/signals/notification_policy_items/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_notification_policy",
+            "class": "FireHydrantDeleteNotificationPolicy",
+            "slug": "firehydrant_delete_notification_policy",
+            "method": "delete",
+            "path": "/v1/signals/notification_policy_items/{id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_user_notification_settings_by_user_id",
+            "class": "FireHydrantListUserNotificationSettingsByUserId",
+            "slug": "firehydrant_list_user_notification_settings_by_user_id",
+            "method": "get",
+            "path": "/v1/signals/users/{user_id}/notification_settings",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_signals_transposers",
+            "class": "FireHydrantListSignalsTransposers",
+            "slug": "firehydrant_list_signals_transposers",
+            "method": "get",
+            "path": "/v1/signals/transposers",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_signals_ingest_url",
+            "class": "FireHydrantGetSignalsIngestUrl",
+            "slug": "firehydrant_get_signals_ingest_url",
+            "method": "get",
+            "path": "/v1/signals/ingest_url",
+            "type": "read"
+        },
+        {
+            "operation_id": "debug_signals_expression",
+            "class": "FireHydrantDebugSignalsExpression",
+            "slug": "firehydrant_debug_signals_expression",
+            "method": "post",
+            "path": "/v1/signals/debugger",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_organization_on_call_schedules",
+            "class": "FireHydrantListOrganizationOnCallSchedules",
+            "slug": "firehydrant_list_organization_on_call_schedules",
+            "method": "get",
+            "path": "/v1/signals_on_call",
+            "type": "read"
+        },
+        {
+            "operation_id": "list_webhooks",
+            "class": "FireHydrantListWebhooks",
+            "slug": "firehydrant_list_webhooks",
+            "method": "get",
+            "path": "/v1/webhooks",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_webhook",
+            "class": "FireHydrantCreateWebhook",
+            "slug": "firehydrant_create_webhook",
+            "method": "post",
+            "path": "/v1/webhooks",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_webhook_deliveries",
+            "class": "FireHydrantListWebhookDeliveries",
+            "slug": "firehydrant_list_webhook_deliveries",
+            "method": "get",
+            "path": "/v1/webhooks/{webhook_id}/deliveries",
+            "type": "read"
+        },
+        {
+            "operation_id": "get_webhook",
+            "class": "FireHydrantGetWebhook",
+            "slug": "firehydrant_get_webhook",
+            "method": "get",
+            "path": "/v1/webhooks/{webhook_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_webhook",
+            "class": "FireHydrantUpdateWebhook",
+            "slug": "firehydrant_update_webhook",
+            "method": "patch",
+            "path": "/v1/webhooks/{webhook_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "delete_webhook",
+            "class": "FireHydrantDeleteWebhook",
+            "slug": "firehydrant_delete_webhook",
+            "method": "delete",
+            "path": "/v1/webhooks/{webhook_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_ai_incident_summary_vote_status",
+            "class": "FireHydrantGetAiIncidentSummaryVoteStatus",
+            "slug": "firehydrant_get_ai_incident_summary_vote_status",
+            "method": "get",
+            "path": "/v1/ai/summarize_incident/{incident_id}/{generated_summary_id}/voted",
+            "type": "read"
+        },
+        {
+            "operation_id": "vote_ai_incident_summary",
+            "class": "FireHydrantVoteAiIncidentSummary",
+            "slug": "firehydrant_vote_ai_incident_summary",
+            "method": "put",
+            "path": "/v1/ai/summarize_incident/{incident_id}/{generated_summary_id}/vote",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_ai_preferences",
+            "class": "FireHydrantGetAiPreferences",
+            "slug": "firehydrant_get_ai_preferences",
+            "method": "get",
+            "path": "/v1/ai/preferences",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_ai_preferences",
+            "class": "FireHydrantUpdateAiPreferences",
+            "slug": "firehydrant_update_ai_preferences",
+            "method": "patch",
+            "path": "/v1/ai/preferences",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_audiences",
+            "class": "FireHydrantListAudiences",
+            "slug": "firehydrant_list_audiences",
+            "method": "get",
+            "path": "/v1/audiences",
+            "type": "read"
+        },
+        {
+            "operation_id": "create_audience",
+            "class": "FireHydrantCreateAudience",
+            "slug": "firehydrant_create_audience",
+            "method": "post",
+            "path": "/v1/audiences",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_audience",
+            "class": "FireHydrantGetAudience",
+            "slug": "firehydrant_get_audience",
+            "method": "get",
+            "path": "/v1/audiences/{audience_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "update_audience",
+            "class": "FireHydrantUpdateAudience",
+            "slug": "firehydrant_update_audience",
+            "method": "patch",
+            "path": "/v1/audiences/{audience_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "archive_audience",
+            "class": "FireHydrantArchiveAudience",
+            "slug": "firehydrant_archive_audience",
+            "method": "delete",
+            "path": "/v1/audiences/{audience_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "restore_audience",
+            "class": "FireHydrantRestoreAudience",
+            "slug": "firehydrant_restore_audience",
+            "method": "patch",
+            "path": "/v1/audiences/{audience_id}/restore",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_member_default_audience",
+            "class": "FireHydrantGetMemberDefaultAudience",
+            "slug": "firehydrant_get_member_default_audience",
+            "method": "get",
+            "path": "/v1/audiences/member/{member_id}/default",
+            "type": "read"
+        },
+        {
+            "operation_id": "set_member_default_audience",
+            "class": "FireHydrantSetMemberDefaultAudience",
+            "slug": "firehydrant_set_member_default_audience",
+            "method": "put",
+            "path": "/v1/audiences/member/{member_id}/default",
+            "type": "write"
+        },
+        {
+            "operation_id": "get_audience_summary",
+            "class": "FireHydrantGetAudienceSummary",
+            "slug": "firehydrant_get_audience_summary",
+            "method": "get",
+            "path": "/v1/audiences/{audience_id}/summaries/{incident_id}",
+            "type": "read"
+        },
+        {
+            "operation_id": "generate_audience_summary",
+            "class": "FireHydrantGenerateAudienceSummary",
+            "slug": "firehydrant_generate_audience_summary",
+            "method": "post",
+            "path": "/v1/audiences/{audience_id}/summaries/{incident_id}",
+            "type": "write"
+        },
+        {
+            "operation_id": "list_audience_summaries",
+            "class": "FireHydrantListAudienceSummaries",
+            "slug": "firehydrant_list_audience_summaries",
+            "method": "get",
+            "path": "/v1/audiences/summaries/{incident_id}",
+            "type": "read"
+        }
+    ]
+}

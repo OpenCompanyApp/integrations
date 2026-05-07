@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-salesloft",
-    "description": "Salesloft integration for Laravel — manage call sequences, rules, and user data.",
+    "description": "Salesloft integration for Laravel: people, accounts, cadences, tasks, calls, emails, notes, and users.",
     "license": "MIT",
     "authors": [
         {

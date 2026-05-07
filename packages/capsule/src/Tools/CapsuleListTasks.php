@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * CapsuleListTasks — list tasks from Capsule CRM.
+ * List tasks from Capsule CRM.
  *
  * Supports pagination via `page` and `per_page` parameters,
  * and optional filtering by status (e.g. "OPEN", "COMPLETED").
  */
 class CapsuleListTasks implements Tool
 {
+    /**
+     * @param  CapsuleService  $service  The Capsule CRM API client.
+     */
     public function __construct(
         private CapsuleService $service,
     ) {}
@@ -37,6 +40,11 @@ class CapsuleListTasks implements Tool
         ];
     }
 
+    /**
+     * List Capsule CRM tasks.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

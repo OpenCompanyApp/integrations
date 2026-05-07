@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OpenCompany\Integrations\Tests\Instantly;
 
 use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Facades\Http;
 use OpenCompany\Integrations\Instantly\InstantlyService;
 use OpenCompany\Integrations\Instantly\InstantlyToolProvider;
@@ -16,9 +17,16 @@ use PHPUnit\Framework\TestCase;
 
 final class InstantlyServiceTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Http::swap(new HttpFactory);
+    }
+
     protected function tearDown(): void
     {
         Http::preventStrayRequests(false);
+        Http::swap(new HttpFactory);
         parent::tearDown();
     }
 

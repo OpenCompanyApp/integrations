@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class ManyChatListTags implements Tool
 {
+    /**
+     * @param  ManyChatService  $service  The Manychat API client.
+     */
     public function __construct(
         private ManyChatService $service,
     ) {}
@@ -33,6 +36,11 @@ class ManyChatListTags implements Tool
         return [];
     }
 
+    /**
+     * List bot tags.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

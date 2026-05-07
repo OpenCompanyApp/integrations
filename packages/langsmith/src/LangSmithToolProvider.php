@@ -1,0 +1,1284 @@
+<?php
+
+namespace OpenCompany\Integrations\LangSmith;
+
+use Illuminate\Support\Facades\Http;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetServerInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetHealthInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetQueueMetrics;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTracingProjectPrebuiltDashboard;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadTracerSession;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateTracerSession;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteTracerSession;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadTracerSessions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateTracerSession;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteTracerSessions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadTracerSessionsRunsMetadata;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadFilterViews;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFilterView;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadFilterView;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateFilterView;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteFilterView;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithRenameFilterView;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaGetInsightsJobs;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaCreateInsightsJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaGetInsightsJobConfigs;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaCreateInsightsJobConfig;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaAutoGenerateInsightsJobConfig;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaUpdateInsightsJobConfig;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaDeleteInsightsJobConfig;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaGetInsightsJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaUpdateInsightsJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaDeleteInsightsJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaGetRunClusterFromInsightsJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBetaGetRunsFromInsightsJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateWorkspace;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListWorkspaces;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchWorkspace;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteWorkspace;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentWorkspaceStats;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentWorkspaceUsageLimitsInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSharedTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithBulkUnshareEntities;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListCurrentWorkspaceSecrets;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpsertCurrentWorkspaceSecrets;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentWorkspaceEncryptedSecrets;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTagKeys;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateTagKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateTagKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTagKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteTagKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateTagValue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTagValues;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTagValue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateTagValue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteTagValue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateTagging;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTaggings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteTagging;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTags;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTagsForResource;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTagsForResources;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetAuditLogs;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTtlSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpsertTtlSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetApiV1OrgsTtlSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutApiV1OrgsTtlSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCountExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadExample;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateExample;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteExample;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateExample;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithLegacyUpdateExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUploadExamplesFromCsv;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithValidateExample;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithValidateExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadDatasets;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteDatasets;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadDatasetsStream;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUploadCsvDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUploadExperiment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetDatasetVersions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDiffDatasetVersions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetDatasetVersion;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateDatasetVersion;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDownloadDatasetOpenai;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDownloadDatasetOpenaiFt;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDownloadDatasetCsv;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDownloadDatasetJsonl;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadExamplesWithRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadExamplesWithRunsGrouped;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadDelta;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadDeltaStream;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadGroupedExperiments;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadDatasetShareState;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithShareDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUnshareDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadComparativeExperiments;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateComparativeExperiment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteComparativeExperiment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCloneDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetDatasetSplits;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateDatasetSplits;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGenerate;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDatasetHandler;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithStreamDatasetHandler;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithStudioExperiment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListRules;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateRule;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithValidateRule;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateRule;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRule;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithThreadPreview;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListRuleLogs;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListRuleLogsV2;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetLastAppliedRule;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithTriggerRule;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithTriggerRules;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadRunShareState;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithShareRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUnshareRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithValidateRunsQuery;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithQueryRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGenerateQueryForRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithStatsRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGroupRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithStatsGroupRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRunsAbac;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithEvaluateExperimentAdhoc;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFeedbackFormulaEp;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListFeedbackFormulaEp;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetFeedbackFormulaEp;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateFeedbackFormulaEp;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteFeedbackFormulaEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadFeedback;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateFeedback;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteFeedback;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadFeedbacks;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFeedback;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithEagerlyCreateFeedback;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFeedbackIngestToken;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListFeedbackIngestTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFeedbackWithTokenGet;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFeedbackWithTokenPost;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSharedRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSharedRunById;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithQuerySharedRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedFeedbacks;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDataset;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCountSharedExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDatasetTracerSessions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDatasetTracerSessionsBulk;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDatasetExamplesWithRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDelta;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDeltaStream;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithQuerySharedDatasetRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGenerateQueryForSharedDatasetRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithStatsSharedDatasetRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDatasetRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedDatasetFeedback;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSharedComparativeExperiments;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetMessageJsonSchema;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetToolDefJsonSchema;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetAnnotationQueues;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteAnnotationQueues;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPopulateAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddRunsToAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetRunsFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddRunsToAnnotationQueueByKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithExportAnnotationQueueArchivedRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetRunFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetAnnotationQueuesForRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateRunInAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRunFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRunsFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTotalSizeFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTotalArchivedFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSizeFromAnnotationQueue;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateIdentityAnnotationQueueRunStatus;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithResolveAnnotationQueueRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithExecute;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExports;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateBulkExport;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExportDestinations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateBulkExportDestination;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExportRunsFiltered;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExport;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCancelBulkExport;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExportDestination;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateBulkExportDestination;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExportRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetBulkExportRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListFeedbackConfigsEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateFeedbackConfigEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateFeedbackConfigEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteFeedbackConfigEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadModelPriceMap;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateNewModelPrice;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateModelPrice;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteModelPrice;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListUsageLimits;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpsertUsageLimit;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListOrgUsageLimits;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteUsageLimit;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithInvokePrompt;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPromptCanvas;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListPromptWebhooks;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreatePromptWebhook;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetPromptWebhook;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdatePromptWebhook;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeletePromptWebhook;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithTestPromptWebhook;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListPlaygroundSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreatePlaygroundSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetPlaygroundSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdatePlaygroundSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeletePlaygroundSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCloneSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSections;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadCharts;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadChartPreview;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSingleChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithReadSingleSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgReadSections;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgCreateSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgReadCharts;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgReadChartPreview;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgCreateChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgReadSingleChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgUpdateChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgDeleteChart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgReadSingleSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgUpdateSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOrgDeleteSection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTools;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithInvalidateToolsCache;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithProxyGet;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithProxy;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListOrganizations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateOrganization;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateCustomersAndGetStripeSetupIntent;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetOrganizationInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentOrganizationInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateCurrentOrganizationInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetOrganizationBillingInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetDashboard;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOnPaymentMethodCreated;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCompanyInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithSetCompanyInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithChangePaymentPlan;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListOrganizationRoles;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateOrganizationRoles;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteOrganizationRoles;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateOrganizationRoles;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListPermissions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListPendingOrganizationInvites;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentOrgMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddMemberToCurrentOrg;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentActiveOrgMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentPendingOrgMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddMembersToCurrentOrgBatch;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddBasicAuthMembersToCurrentOrg;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteCurrentOrgPendingMember;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeletePendingOrganizationInvite;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithClaimPendingOrganizationInvite;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithRemoveMemberFromCurrentOrg;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateCurrentOrgMember;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateCurrentUser;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentSsoSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateSsoSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateSsoSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteSsoSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateAllowedLoginMethods;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetOrgUsage;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetGranularUsage;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithExportGranularUsageCsv;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentUserLoginMethods;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateStripeCheckoutSessionsEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateStripeAccountLinksEndpoint;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListOrgServiceKeys;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateOrgServiceKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteOrgServiceKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListOrgPersonalAccessTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateOrgPersonalAccessToken;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteOrgPersonalAccessToken;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithSetDefaultSsoProvision;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithLogin;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithSendSsoEmailConfirmation;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCheckSsoEmailVerificationStatus;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithConfirmSsoUserEmail;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSsoSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithLookupSsoByEmail;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetApiV1ApiKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostApiV1ApiKey;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDelete;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetPersonalAccessTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGeneratePersonalAccessToken;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeletePersonalAccessToken;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListTenants;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateTenant;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetOnboardingState;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateOnboardingState;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateOnboardingStateField;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetLsUserId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetServiceAccounts;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateServiceAccount;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteServiceAccount;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListPendingWorkspaceInvites;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeletePendingWorkspaceInvite;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithClaimPendingWorkspaceInvite;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentWorkspaceMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddMemberToCurrentWorkspace;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentActiveWorkspaceMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCurrentPendingWorkspaceMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddMembersToCurrentWorkspaceBatch;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteCurrentWorkspaceMember;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchCurrentWorkspaceMember;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteCurrentWorkspacePendingMember;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetApiV1Ok;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithSetTenantHandle;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListRepos;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRepos;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithForkRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListRepoTags;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithOptimizePromptJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithLikeRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateComment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetComments;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetSubComments;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateSubComment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithLikeComment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUnlikeComment;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTags;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateTag;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetTag;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateTag;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteTag;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListRepoOwners;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithAddRepoOwner;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithRemoveRepoOwner;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListJobs;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithUpdateJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteJob;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithListJobLogs;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithCreateLog;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetLog;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteLog;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetWellKnownOauthAuthorizationServer;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetApiV1HubEnvironments;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPost;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteApiV1HubEnvironmentsId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatch;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetAuthPublic;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostAwsMarketplaceRegister;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCommitsOwnerRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostCommitsOwnerRepo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetCommitsOwnerRepoCommit;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetDatasetsDatasetIdExperimentViewOverrides;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostDatasetsDatasetIdExperimentViewOverrides;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetDatasetsDatasetIdExperimentViewOverridesId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteDatasetsDatasetIdExperimentViewOverridesId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchDatasetsDatasetIdExperimentViewOverridesId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetMeProvidersProvidertype;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetOauthAuthorize;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostOauthAuthorizeApprove;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostOauthDeviceAuthorize;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostOauthDeviceCode;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostOauthRevoke;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostOauthToken;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetReposOwnerRepoTagsTagNameHistory;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostRunsBatch;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostRunsMultipart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchRunsRunId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1AgentBuilderIntegrations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutV1AgentBuilderIntegrations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1BeaconUsageSnapshot;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetAgents;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetAgents;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetAgentsAgentid;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1FleetAgentsAgentid;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetAuthProviders;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetAuthProviders;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetAuthProvidersDiscover;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetAuthProvidersProviderId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1FleetAuthProvidersProviderId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1FleetAuthProvidersProviderId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetAuthSessions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetAuthSessionsSessionId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetAuthTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetAuthTokensRevoke;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1FleetAuthTokensTokenId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1FleetAuthTokensTokenId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetIntegrations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetIntegrations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetIntegrationsId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1FleetIntegrationsId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1FleetIntegrationsId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutV1FleetIntegrationsIdAuthMethods;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetMcpServers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetMcpServers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetMcpServersMcpServerId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1FleetMcpServersMcpServerId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1FleetMcpServersMcpServerId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetMcpServersMcpServerIdOauthProvider;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetMcpTools;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetSkills;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetSkills;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetSkillsSkillid;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutV1FleetSkillsSkillid;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1FleetSkillsSkillid;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetThreads;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1FleetThreadsThreadid;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetThreadsThreadidResolveInterrupt;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1FleetThreadsThreadidRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformAlertsSessionId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformAlertsSessionIdTest;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformAlertsSessionIdAlertRuleId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformAlertsSessionIdAlertRuleId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformAlertsSessionIdAlertRuleId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformAnnotationQueuesQueueIdReviewers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformAnnotationQueuesQueueIdReviewersIdentityId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformDatasetsExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformDatasetsDatasetIdExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformDatasetsDatasetIdExamples;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformEvaluators;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformEvaluators;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformEvaluators;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformEvaluatorsEvaluatorId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformEvaluatorsEvaluatorId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformEvaluatorsEvaluatorId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFeatures;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutV1PlatformFeaturesFeatureDefaultModel;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformFeaturesFeatureDefaultModel;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutV1PlatformFeaturesFeatureDisabledModels;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformFeaturesFeatureDisabledModelsModel;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetWebhooksWebhookIdRun;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetMcpServers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetMcpServers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetMcpServersMcpServerId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformFleetMcpServersMcpServerId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformFleetMcpServersMcpServerId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetMcpServersMcpServerIdOauthProvider;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetProvidersGithubAppAuth;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetProvidersGithubAppConnection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformFleetProvidersGithubAppConnection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformFleetProvidersGithubAppConnection;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetProvidersGithubAppInstall;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetProvidersGithubAppInstallations;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetProvidersGithubAppInstallationsRefresh;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformFleetProvidersGithubAppInstallationsId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetProvidersGithubAppInstallationsIdRepos;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetProvidersGithubAppTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformFleetProvidersGithubAppWebhooks;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetUsageAgents;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetUsageModels;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetUsageTools;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformFleetUsageUsers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformHubReposOwnerRepoDirectories;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformHubReposOwnerRepoDirectories;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformHubReposOwnerRepoDirectoriesCommits;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformMcpVendors;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformMcpVendorsVendorSlug;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformMcpVendorsVendorSlugAccount;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformMcpVendorsVendorSlugMcpServers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformMcpVendorsVendorSlugSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutV1PlatformMcpVendorsVendorSlugSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformMcpVendorsVendorSlugSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformMcpVendorsVendorSlugSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformMcpVendorsVendorSlugTools;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformNpsResponse;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformOpsBackfillsRestart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentAccessPolicies;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformOrgsCurrentAccessPolicies;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformOrgsCurrentAccessPoliciesRolesRoleIdAccessPolicies;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentAccessPoliciesAccessPolicyId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformOrgsCurrentAccessPoliciesAccessPolicyId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentDataPlanes;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentInfo;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentMembers;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentScimTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformOrgsCurrentScimTokens;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformOrgsCurrentScimTokensScimTokenId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformOrgsCurrentScimTokensScimTokenId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformOrgsCurrentScimTokensScimTokenId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformSessionsSessionidAgentVersions;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformTools;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV1PlatformTools;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformToolsIdId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformToolsIdId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformToolsIdId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV1PlatformToolsHandle;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV1PlatformToolsHandle;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV1PlatformToolsHandle;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2RunsQuery;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2RunsRunId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2SandboxesBoxes;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesBoxes;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesBoxesBatch;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2SandboxesBoxesName;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV2SandboxesBoxesName;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPatchV2SandboxesBoxesName;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesBoxesNameServiceUrl;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesBoxesNameSnapshot;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesBoxesNameStart;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2SandboxesBoxesNameStatus;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesBoxesNameStop;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesInternalStartName;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2SandboxesSnapshots;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2SandboxesSnapshots;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2SandboxesSnapshotsSnapshotId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithDeleteV2SandboxesSnapshotsSnapshotId;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2SandboxesUsage;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPostV2ThreadsQuery;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2ThreadsThreadIdTraces;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetV2TracesTraceIdRuns;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithGetWorkspacesCurrentTtlSettings;
+use OpenCompany\Integrations\LangSmith\Tools\LangSmithPutWorkspacesCurrentTtlSettings;
+
+/**
+ * Tool catalog and configuration metadata for LangSmith.
+ *
+ * Exposes generated coverage for the official LangSmith OpenAPI document,
+ * including tracing, datasets, experiments, feedback, workspaces, orgs, MCP,
+ * agents, prompts, queues, sandboxes, charts, and admin endpoints.
+ */
+class LangSmithToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => ['Uses x-api-key by default; bearer_token, tenant_id, and organization_id are optional for advanced LangSmith deployments.'],
+            ],
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
+            ],
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
+            ],
+        ];
+    }
+
+    public function appName(): string
+    {
+        return 'langsmith';
+    }
+
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'LangSmith',
+            'description' => 'LLM observability, evals, traces, datasets, prompts, and platform administration',
+            'icon' => 'ph:git-branch',
+            'logo' => 'simple-icons:langchain',
+        ];
+    }
+
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'LangSmith',
+            'description' => 'Full generated coverage for LangSmith traces, runs, datasets, examples, feedback, sessions, workspaces, organizations, prompts, agents, MCP, sandboxes, charts, and administration APIs.',
+            'icon' => 'ph:git-branch',
+            'logo' => 'simple-icons:langchain',
+            'category' => 'analytics',
+            'badge' => 'verified',
+            'docs_url' => 'https://api.smith.langchain.com/redoc',
+        ];
+    }
+
+    public function configSchema(): array
+    {
+        return [
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'placeholder' => 'lsv2_...', 'hint' => 'LangSmith API key sent as the x-api-key header.', 'required' => true],
+            ['key' => 'bearer_token', 'type' => 'secret', 'label' => 'Bearer Token', 'placeholder' => 'Optional OAuth bearer token', 'hint' => 'Optional bearer token for OAuth/device-code endpoints or custom deployments.'],
+            ['key' => 'tenant_id', 'type' => 'text', 'label' => 'Workspace ID', 'placeholder' => 'Workspace UUID', 'hint' => 'Optional x-tenant-id header for organization-scoped keys.'],
+            ['key' => 'organization_id', 'type' => 'text', 'label' => 'Organization ID', 'placeholder' => 'Organization UUID', 'hint' => 'Optional x-organization-id header for organization management endpoints.'],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'placeholder' => 'https://api.smith.langchain.com', 'hint' => 'Use https://eu.api.smith.langchain.com for EU, or a self-hosted LangSmith API URL.', 'default' => 'https://api.smith.langchain.com'],
+        ];
+    }
+
+    /**
+     * Verify LangSmith credentials with the lightweight server info endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $bearerToken = (string) ($config['bearer_token'] ?? '');
+        $baseUrl = rtrim((string) ($config['base_url'] ?? 'https://api.smith.langchain.com'), '/');
+
+        if ($apiKey === '' && $bearerToken === '') {
+            return ['success' => false, 'error' => 'API key or bearer token is required.'];
+        }
+
+        $headers = ['Accept' => 'application/json'];
+        if ($apiKey !== '') {
+            $headers['x-api-key'] = $apiKey;
+        }
+        if ($bearerToken !== '') {
+            $headers['Authorization'] = 'Bearer ' . $bearerToken;
+        }
+        if (($config['tenant_id'] ?? '') !== '') {
+            $headers['x-tenant-id'] = (string) $config['tenant_id'];
+        }
+        if (($config['organization_id'] ?? '') !== '') {
+            $headers['x-organization-id'] = (string) $config['organization_id'];
+        }
+
+        try {
+            $response = Http::withHeaders($headers)->timeout(10)->get($baseUrl . '/api/v1/info');
+
+            if (!$response->successful()) {
+                return ['success' => false, 'error' => 'LangSmith API returned HTTP ' . $response->status() . '.'];
+            }
+
+            return ['success' => true, 'message' => "Connected to LangSmith at {$baseUrl}."];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function validationRules(): array
+    {
+        return [
+            'api_key' => 'nullable|string',
+            'bearer_token' => 'nullable|string',
+            'tenant_id' => 'nullable|string',
+            'organization_id' => 'nullable|string',
+            'base_url' => 'nullable|url',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [            'langsmith_get_server_info' => ['class' => LangSmithGetServerInfo::class, 'type' => 'read', 'name' => 'Get Server Info', 'description' => 'Get Server Info (GET /api/v1/info).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_health_info' => ['class' => LangSmithGetHealthInfo::class, 'type' => 'read', 'name' => 'Get Health Info', 'description' => 'Get Health Info (GET /api/v1/info/health).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_queue_metrics' => ['class' => LangSmithGetQueueMetrics::class, 'type' => 'read', 'name' => 'Get Queue Metrics', 'description' => 'Get Queue Metrics (GET /api/v1/metrics/queue/{queue_name}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_tracing_project_prebuilt_dashboard' => ['class' => LangSmithGetTracingProjectPrebuiltDashboard::class, 'type' => 'write', 'name' => 'Get Tracing Project Prebuilt Dashboard', 'description' => 'Get Tracing Project Prebuilt Dashboard (POST /api/v1/sessions/{session_id}/dashboard).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_tracer_session' => ['class' => LangSmithReadTracerSession::class, 'type' => 'read', 'name' => 'Read Tracer Session', 'description' => 'Read Tracer Session (GET /api/v1/sessions/{session_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_tracer_session' => ['class' => LangSmithUpdateTracerSession::class, 'type' => 'write', 'name' => 'Update Tracer Session', 'description' => 'Update Tracer Session (PATCH /api/v1/sessions/{session_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_tracer_session' => ['class' => LangSmithDeleteTracerSession::class, 'type' => 'write', 'name' => 'Delete Tracer Session', 'description' => 'Delete Tracer Session (DELETE /api/v1/sessions/{session_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_tracer_sessions' => ['class' => LangSmithReadTracerSessions::class, 'type' => 'read', 'name' => 'Read Tracer Sessions', 'description' => 'Read Tracer Sessions (GET /api/v1/sessions).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_tracer_session' => ['class' => LangSmithCreateTracerSession::class, 'type' => 'write', 'name' => 'Create Tracer Session', 'description' => 'Create Tracer Session (POST /api/v1/sessions).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_tracer_sessions' => ['class' => LangSmithDeleteTracerSessions::class, 'type' => 'write', 'name' => 'Delete Tracer Sessions', 'description' => 'Delete Tracer Sessions (DELETE /api/v1/sessions).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_tracer_sessions_runs_metadata' => ['class' => LangSmithReadTracerSessionsRunsMetadata::class, 'type' => 'read', 'name' => 'Read Tracer Sessions Runs Metadata', 'description' => 'Read Tracer Sessions Runs Metadata (GET /api/v1/sessions/{session_id}/metadata).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_filter_views' => ['class' => LangSmithReadFilterViews::class, 'type' => 'read', 'name' => 'Read Filter Views', 'description' => 'Read Filter Views (GET /api/v1/sessions/{session_id}/views).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_filter_view' => ['class' => LangSmithCreateFilterView::class, 'type' => 'write', 'name' => 'Create Filter View', 'description' => 'Create Filter View (POST /api/v1/sessions/{session_id}/views).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_filter_view' => ['class' => LangSmithReadFilterView::class, 'type' => 'read', 'name' => 'Read Filter View', 'description' => 'Read Filter View (GET /api/v1/sessions/{session_id}/views/{view_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_filter_view' => ['class' => LangSmithUpdateFilterView::class, 'type' => 'write', 'name' => 'Update Filter View', 'description' => 'Update Filter View (PATCH /api/v1/sessions/{session_id}/views/{view_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_filter_view' => ['class' => LangSmithDeleteFilterView::class, 'type' => 'write', 'name' => 'Delete Filter View', 'description' => 'Delete Filter View (DELETE /api/v1/sessions/{session_id}/views/{view_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_rename_filter_view' => ['class' => LangSmithRenameFilterView::class, 'type' => 'write', 'name' => 'Rename Filter View', 'description' => 'Rename Filter View (PATCH /api/v1/sessions/{session_id}/views/{view_id}/rename).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_get_insights_jobs' => ['class' => LangSmithBetaGetInsightsJobs::class, 'type' => 'read', 'name' => 'Beta Get Insights Jobs', 'description' => '[Beta] Get Insights Jobs (GET /api/v1/sessions/{session_id}/insights).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_beta_create_insights_job' => ['class' => LangSmithBetaCreateInsightsJob::class, 'type' => 'write', 'name' => 'Beta Create Insights Job', 'description' => '[Beta] Create Insights Job (POST /api/v1/sessions/{session_id}/insights).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_get_insights_job_configs' => ['class' => LangSmithBetaGetInsightsJobConfigs::class, 'type' => 'read', 'name' => 'Beta Get Insights Job Configs', 'description' => '[Beta] Get Insights Job Configs (GET /api/v1/sessions/{session_id}/insights/configs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_beta_create_insights_job_config' => ['class' => LangSmithBetaCreateInsightsJobConfig::class, 'type' => 'write', 'name' => 'Beta Create Insights Job Config', 'description' => '[Beta] Create Insights Job Config (POST /api/v1/sessions/{session_id}/insights/configs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_auto_generate_insights_job_config' => ['class' => LangSmithBetaAutoGenerateInsightsJobConfig::class, 'type' => 'write', 'name' => 'Beta Auto Generate Insights Job Config', 'description' => '[Beta] Auto-Generate Insights Job Config (POST /api/v1/sessions/{session_id}/insights/configs/generate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_update_insights_job_config' => ['class' => LangSmithBetaUpdateInsightsJobConfig::class, 'type' => 'write', 'name' => 'Beta Update Insights Job Config', 'description' => '[Beta] Update Insights Job Config (PATCH /api/v1/sessions/{session_id}/insights/configs/{config_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_delete_insights_job_config' => ['class' => LangSmithBetaDeleteInsightsJobConfig::class, 'type' => 'write', 'name' => 'Beta Delete Insights Job Config', 'description' => '[Beta] Delete Insights Job Config (DELETE /api/v1/sessions/{session_id}/insights/configs/{config_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_get_insights_job' => ['class' => LangSmithBetaGetInsightsJob::class, 'type' => 'read', 'name' => 'Beta Get Insights Job', 'description' => '[Beta] Get Insights Job (GET /api/v1/sessions/{session_id}/insights/{job_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_beta_update_insights_job' => ['class' => LangSmithBetaUpdateInsightsJob::class, 'type' => 'write', 'name' => 'Beta Update Insights Job', 'description' => '[Beta] Update Insights Job (PATCH /api/v1/sessions/{session_id}/insights/{job_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_delete_insights_job' => ['class' => LangSmithBetaDeleteInsightsJob::class, 'type' => 'write', 'name' => 'Beta Delete Insights Job', 'description' => '[Beta] Delete Insights Job (DELETE /api/v1/sessions/{session_id}/insights/{job_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_beta_get_run_cluster_from_insights_job' => ['class' => LangSmithBetaGetRunClusterFromInsightsJob::class, 'type' => 'read', 'name' => 'Beta Get Run Cluster From Insights Job', 'description' => '[Beta] Get Run Cluster From Insights Job (GET /api/v1/sessions/{session_id}/insights/{job_id}/clusters/{cluster_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_beta_get_runs_from_insights_job' => ['class' => LangSmithBetaGetRunsFromInsightsJob::class, 'type' => 'read', 'name' => 'Beta Get Runs From Insights Job', 'description' => '[Beta] Get Runs From Insights Job (GET /api/v1/sessions/{session_id}/insights/{job_id}/runs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_workspace' => ['class' => LangSmithCreateWorkspace::class, 'type' => 'write', 'name' => 'Create Workspace', 'description' => 'Create Workspace (POST /api/v1/workspaces).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_workspaces' => ['class' => LangSmithListWorkspaces::class, 'type' => 'read', 'name' => 'List Workspaces', 'description' => 'List Workspaces (GET /api/v1/workspaces).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_patch_workspace' => ['class' => LangSmithPatchWorkspace::class, 'type' => 'write', 'name' => 'Patch Workspace', 'description' => 'Patch Workspace (PATCH /api/v1/workspaces/{workspace_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_workspace' => ['class' => LangSmithDeleteWorkspace::class, 'type' => 'write', 'name' => 'Delete Workspace', 'description' => 'Delete Workspace (DELETE /api/v1/workspaces/{workspace_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_current_workspace_stats' => ['class' => LangSmithGetCurrentWorkspaceStats::class, 'type' => 'read', 'name' => 'Get Current Workspace Stats', 'description' => 'Get Current Workspace Stats (GET /api/v1/workspaces/current/stats).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_current_workspace_usage_limits_info' => ['class' => LangSmithGetCurrentWorkspaceUsageLimitsInfo::class, 'type' => 'read', 'name' => 'Get Current Workspace Usage Limits Info', 'description' => 'Get Current Workspace Usage Limits Info (GET /api/v1/workspaces/current/usage_limits).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_shared_tokens' => ['class' => LangSmithGetSharedTokens::class, 'type' => 'read', 'name' => 'Get Shared Tokens', 'description' => 'Get Shared Tokens (GET /api/v1/workspaces/current/shared).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_bulk_unshare_entities' => ['class' => LangSmithBulkUnshareEntities::class, 'type' => 'write', 'name' => 'Bulk Unshare Entities', 'description' => 'Bulk Unshare Entities (DELETE /api/v1/workspaces/current/shared).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_current_workspace_secrets' => ['class' => LangSmithListCurrentWorkspaceSecrets::class, 'type' => 'read', 'name' => 'List Current Workspace Secrets', 'description' => 'List Current Workspace Secrets (GET /api/v1/workspaces/current/secrets).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_upsert_current_workspace_secrets' => ['class' => LangSmithUpsertCurrentWorkspaceSecrets::class, 'type' => 'write', 'name' => 'Upsert Current Workspace Secrets', 'description' => 'Upsert Current Workspace Secrets (POST /api/v1/workspaces/current/secrets).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_current_workspace_encrypted_secrets' => ['class' => LangSmithGetCurrentWorkspaceEncryptedSecrets::class, 'type' => 'read', 'name' => 'Get Current Workspace Encrypted Secrets', 'description' => 'Get Current Workspace Encrypted Secrets (GET /api/v1/workspaces/current/secrets/encrypted).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_tag_keys' => ['class' => LangSmithListTagKeys::class, 'type' => 'read', 'name' => 'List Tag Keys', 'description' => 'List Tag Keys (GET /api/v1/workspaces/current/tag-keys).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_tag_key' => ['class' => LangSmithCreateTagKey::class, 'type' => 'write', 'name' => 'Create Tag Key', 'description' => 'Create Tag Key (POST /api/v1/workspaces/current/tag-keys).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_tag_key' => ['class' => LangSmithUpdateTagKey::class, 'type' => 'write', 'name' => 'Update Tag Key', 'description' => 'Update Tag Key (PATCH /api/v1/workspaces/current/tag-keys/{tag_key_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_tag_key' => ['class' => LangSmithGetTagKey::class, 'type' => 'read', 'name' => 'Get Tag Key', 'description' => 'Get Tag Key (GET /api/v1/workspaces/current/tag-keys/{tag_key_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_tag_key' => ['class' => LangSmithDeleteTagKey::class, 'type' => 'write', 'name' => 'Delete Tag Key', 'description' => 'Delete Tag Key (DELETE /api/v1/workspaces/current/tag-keys/{tag_key_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_tag_value' => ['class' => LangSmithCreateTagValue::class, 'type' => 'write', 'name' => 'Create Tag Value', 'description' => 'Create Tag Value (POST /api/v1/workspaces/current/tag-keys/{tag_key_id}/tag-values).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_tag_values' => ['class' => LangSmithListTagValues::class, 'type' => 'read', 'name' => 'List Tag Values', 'description' => 'List Tag Values (GET /api/v1/workspaces/current/tag-keys/{tag_key_id}/tag-values).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_tag_value' => ['class' => LangSmithGetTagValue::class, 'type' => 'read', 'name' => 'Get Tag Value', 'description' => 'Get Tag Value (GET /api/v1/workspaces/current/tag-keys/{tag_key_id}/tag-values/{tag_value_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_tag_value' => ['class' => LangSmithUpdateTagValue::class, 'type' => 'write', 'name' => 'Update Tag Value', 'description' => 'Update Tag Value (PATCH /api/v1/workspaces/current/tag-keys/{tag_key_id}/tag-values/{tag_value_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_tag_value' => ['class' => LangSmithDeleteTagValue::class, 'type' => 'write', 'name' => 'Delete Tag Value', 'description' => 'Delete Tag Value (DELETE /api/v1/workspaces/current/tag-keys/{tag_key_id}/tag-values/{tag_value_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_tagging' => ['class' => LangSmithCreateTagging::class, 'type' => 'write', 'name' => 'Create Tagging', 'description' => 'Create Tagging (POST /api/v1/workspaces/current/taggings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_taggings' => ['class' => LangSmithListTaggings::class, 'type' => 'read', 'name' => 'List Taggings', 'description' => 'List Taggings (GET /api/v1/workspaces/current/taggings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_tagging' => ['class' => LangSmithDeleteTagging::class, 'type' => 'write', 'name' => 'Delete Tagging', 'description' => 'Delete Tagging (DELETE /api/v1/workspaces/current/taggings/{tagging_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_tags' => ['class' => LangSmithListTags::class, 'type' => 'read', 'name' => 'List Tags', 'description' => 'List Tags (GET /api/v1/workspaces/current/tags).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_tags_for_resource' => ['class' => LangSmithListTagsForResource::class, 'type' => 'read', 'name' => 'List Tags For Resource', 'description' => 'List Tags For Resource (GET /api/v1/workspaces/current/tags/resource).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_tags_for_resources' => ['class' => LangSmithListTagsForResources::class, 'type' => 'write', 'name' => 'List Tags For Resources', 'description' => 'List Tags For Resources (POST /api/v1/workspaces/current/tags/resources).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_audit_logs' => ['class' => LangSmithGetAuditLogs::class, 'type' => 'read', 'name' => 'Get Audit Logs', 'description' => 'Get Audit Logs (GET /api/v1/audit-logs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_ttl_settings' => ['class' => LangSmithListTtlSettings::class, 'type' => 'read', 'name' => 'List Ttl Settings', 'description' => 'List Ttl Settings (GET /api/v1/ttl-settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_upsert_ttl_settings' => ['class' => LangSmithUpsertTtlSettings::class, 'type' => 'write', 'name' => 'Upsert Ttl Settings', 'description' => 'Upsert Ttl Settings (PUT /api/v1/ttl-settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_api_v1_orgs_ttl_settings' => ['class' => LangSmithGetApiV1OrgsTtlSettings::class, 'type' => 'read', 'name' => 'Get Api V1 Orgs Ttl Settings', 'description' => 'List Ttl Settings (GET /api/v1/orgs/ttl-settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_put_api_v1_orgs_ttl_settings' => ['class' => LangSmithPutApiV1OrgsTtlSettings::class, 'type' => 'write', 'name' => 'Put Api V1 Orgs Ttl Settings', 'description' => 'Upsert Ttl Settings (PUT /api/v1/orgs/ttl-settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_count_examples' => ['class' => LangSmithCountExamples::class, 'type' => 'read', 'name' => 'Count Examples', 'description' => 'Count Examples (GET /api/v1/examples/count).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_example' => ['class' => LangSmithReadExample::class, 'type' => 'read', 'name' => 'Read Example', 'description' => 'Read Example (GET /api/v1/examples/{example_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_example' => ['class' => LangSmithUpdateExample::class, 'type' => 'write', 'name' => 'Update Example', 'description' => 'Update Example (PATCH /api/v1/examples/{example_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_example' => ['class' => LangSmithDeleteExample::class, 'type' => 'write', 'name' => 'Delete Example', 'description' => 'Delete Example (DELETE /api/v1/examples/{example_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_examples' => ['class' => LangSmithReadExamples::class, 'type' => 'read', 'name' => 'Read Examples', 'description' => 'Read Examples (GET /api/v1/examples).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_example' => ['class' => LangSmithCreateExample::class, 'type' => 'write', 'name' => 'Create Example', 'description' => 'Create Example (POST /api/v1/examples).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_examples' => ['class' => LangSmithDeleteExamples::class, 'type' => 'write', 'name' => 'Delete Examples', 'description' => 'Delete Examples (DELETE /api/v1/examples).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_examples' => ['class' => LangSmithCreateExamples::class, 'type' => 'write', 'name' => 'Create Examples', 'description' => 'Create Examples (POST /api/v1/examples/bulk).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_legacy_update_examples' => ['class' => LangSmithLegacyUpdateExamples::class, 'type' => 'write', 'name' => 'Legacy Update Examples', 'description' => 'Legacy Update Examples (PATCH /api/v1/examples/bulk).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_upload_examples_from_csv' => ['class' => LangSmithUploadExamplesFromCsv::class, 'type' => 'write', 'name' => 'Upload Examples From Csv', 'description' => 'Upload Examples From Csv (POST /api/v1/examples/upload/{dataset_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_validate_example' => ['class' => LangSmithValidateExample::class, 'type' => 'write', 'name' => 'Validate Example', 'description' => 'Validate Example (POST /api/v1/examples/validate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_validate_examples' => ['class' => LangSmithValidateExamples::class, 'type' => 'write', 'name' => 'Validate Examples', 'description' => 'Validate Examples (POST /api/v1/examples/validate/bulk).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_datasets' => ['class' => LangSmithReadDatasets::class, 'type' => 'read', 'name' => 'Read Datasets', 'description' => 'Read Datasets (GET /api/v1/datasets).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_dataset' => ['class' => LangSmithCreateDataset::class, 'type' => 'write', 'name' => 'Create Dataset', 'description' => 'Create Dataset (POST /api/v1/datasets).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_datasets' => ['class' => LangSmithDeleteDatasets::class, 'type' => 'write', 'name' => 'Delete Datasets', 'description' => 'Delete Datasets (DELETE /api/v1/datasets).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_datasets_stream' => ['class' => LangSmithReadDatasetsStream::class, 'type' => 'read', 'name' => 'Read Datasets Stream', 'description' => 'Read Datasets Stream (GET /api/v1/datasets/stream).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_dataset' => ['class' => LangSmithReadDataset::class, 'type' => 'read', 'name' => 'Read Dataset', 'description' => 'Read Dataset (GET /api/v1/datasets/{dataset_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_dataset' => ['class' => LangSmithDeleteDataset::class, 'type' => 'write', 'name' => 'Delete Dataset', 'description' => 'Delete Dataset (DELETE /api/v1/datasets/{dataset_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_dataset' => ['class' => LangSmithUpdateDataset::class, 'type' => 'write', 'name' => 'Update Dataset', 'description' => 'Update Dataset (PATCH /api/v1/datasets/{dataset_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_upload_csv_dataset' => ['class' => LangSmithUploadCsvDataset::class, 'type' => 'write', 'name' => 'Upload Csv Dataset', 'description' => 'Upload Csv Dataset (POST /api/v1/datasets/upload).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_upload_experiment' => ['class' => LangSmithUploadExperiment::class, 'type' => 'write', 'name' => 'Upload Experiment', 'description' => 'Upload Experiment (POST /api/v1/datasets/upload-experiment).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_dataset_versions' => ['class' => LangSmithGetDatasetVersions::class, 'type' => 'read', 'name' => 'Get Dataset Versions', 'description' => 'Get Dataset Versions (GET /api/v1/datasets/{dataset_id}/versions).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_diff_dataset_versions' => ['class' => LangSmithDiffDatasetVersions::class, 'type' => 'read', 'name' => 'Diff Dataset Versions', 'description' => 'Diff Dataset Versions (GET /api/v1/datasets/{dataset_id}/versions/diff).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_dataset_version' => ['class' => LangSmithGetDatasetVersion::class, 'type' => 'read', 'name' => 'Get Dataset Version', 'description' => 'Get Dataset Version (GET /api/v1/datasets/{dataset_id}/version).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_dataset_version' => ['class' => LangSmithUpdateDatasetVersion::class, 'type' => 'write', 'name' => 'Update Dataset Version', 'description' => 'Update Dataset Version (PUT /api/v1/datasets/{dataset_id}/tags).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_download_dataset_openai' => ['class' => LangSmithDownloadDatasetOpenai::class, 'type' => 'read', 'name' => 'Download Dataset Openai', 'description' => 'Download Dataset Openai (GET /api/v1/datasets/{dataset_id}/openai).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_download_dataset_openai_ft' => ['class' => LangSmithDownloadDatasetOpenaiFt::class, 'type' => 'read', 'name' => 'Download Dataset Openai Ft', 'description' => 'Download Dataset Openai Ft (GET /api/v1/datasets/{dataset_id}/openai_ft).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_download_dataset_csv' => ['class' => LangSmithDownloadDatasetCsv::class, 'type' => 'read', 'name' => 'Download Dataset Csv', 'description' => 'Download Dataset Csv (GET /api/v1/datasets/{dataset_id}/csv).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_download_dataset_jsonl' => ['class' => LangSmithDownloadDatasetJsonl::class, 'type' => 'read', 'name' => 'Download Dataset Jsonl', 'description' => 'Download Dataset Jsonl (GET /api/v1/datasets/{dataset_id}/jsonl).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_examples_with_runs' => ['class' => LangSmithReadExamplesWithRuns::class, 'type' => 'write', 'name' => 'Read Examples With Runs', 'description' => 'Read Examples With Runs (POST /api/v1/datasets/{dataset_id}/runs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_examples_with_runs_grouped' => ['class' => LangSmithReadExamplesWithRunsGrouped::class, 'type' => 'write', 'name' => 'Read Examples With Runs Grouped', 'description' => 'Read Examples With Runs Grouped (POST /api/v1/datasets/{dataset_id}/group/runs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_delta' => ['class' => LangSmithReadDelta::class, 'type' => 'write', 'name' => 'Read Delta', 'description' => 'Read Delta (POST /api/v1/datasets/{dataset_id}/runs/delta).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_delta_stream' => ['class' => LangSmithReadDeltaStream::class, 'type' => 'write', 'name' => 'Read Delta Stream', 'description' => 'Read Delta Stream (POST /api/v1/datasets/{dataset_id}/runs/delta/stream).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_grouped_experiments' => ['class' => LangSmithReadGroupedExperiments::class, 'type' => 'write', 'name' => 'Read Grouped Experiments', 'description' => 'Read Grouped Experiments (POST /api/v1/datasets/{dataset_id}/experiments/grouped).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_dataset_share_state' => ['class' => LangSmithReadDatasetShareState::class, 'type' => 'read', 'name' => 'Read Dataset Share State', 'description' => 'Read Dataset Share State (GET /api/v1/datasets/{dataset_id}/share).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_share_dataset' => ['class' => LangSmithShareDataset::class, 'type' => 'write', 'name' => 'Share Dataset', 'description' => 'Share Dataset (PUT /api/v1/datasets/{dataset_id}/share).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_unshare_dataset' => ['class' => LangSmithUnshareDataset::class, 'type' => 'write', 'name' => 'Unshare Dataset', 'description' => 'Unshare Dataset (DELETE /api/v1/datasets/{dataset_id}/share).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_comparative_experiments' => ['class' => LangSmithReadComparativeExperiments::class, 'type' => 'read', 'name' => 'Read Comparative Experiments', 'description' => 'Read Comparative Experiments (GET /api/v1/datasets/{dataset_id}/comparative).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_comparative_experiment' => ['class' => LangSmithCreateComparativeExperiment::class, 'type' => 'write', 'name' => 'Create Comparative Experiment', 'description' => 'Create Comparative Experiment (POST /api/v1/datasets/comparative).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_comparative_experiment' => ['class' => LangSmithDeleteComparativeExperiment::class, 'type' => 'write', 'name' => 'Delete Comparative Experiment', 'description' => 'Delete Comparative Experiment (DELETE /api/v1/datasets/comparative/{comparative_experiment_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_clone_dataset' => ['class' => LangSmithCloneDataset::class, 'type' => 'write', 'name' => 'Clone Dataset', 'description' => 'Clone Dataset (POST /api/v1/datasets/clone).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_dataset_splits' => ['class' => LangSmithGetDatasetSplits::class, 'type' => 'read', 'name' => 'Get Dataset Splits', 'description' => 'Get Dataset Splits (GET /api/v1/datasets/{dataset_id}/splits).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_dataset_splits' => ['class' => LangSmithUpdateDatasetSplits::class, 'type' => 'write', 'name' => 'Update Dataset Splits', 'description' => 'Update Dataset Splits (PUT /api/v1/datasets/{dataset_id}/splits).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_generate' => ['class' => LangSmithGenerate::class, 'type' => 'write', 'name' => 'Generate', 'description' => 'Generate (POST /api/v1/datasets/{dataset_id}/generate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_dataset_handler' => ['class' => LangSmithDatasetHandler::class, 'type' => 'write', 'name' => 'Dataset Handler', 'description' => 'Dataset Handler (POST /api/v1/datasets/playground_experiment/batch).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_stream_dataset_handler' => ['class' => LangSmithStreamDatasetHandler::class, 'type' => 'write', 'name' => 'Stream Dataset Handler', 'description' => 'Stream Dataset Handler (POST /api/v1/datasets/playground_experiment/stream).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_studio_experiment' => ['class' => LangSmithStudioExperiment::class, 'type' => 'write', 'name' => 'Studio Experiment', 'description' => 'Studio Experiment (POST /api/v1/datasets/studio_experiment).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_rules' => ['class' => LangSmithListRules::class, 'type' => 'read', 'name' => 'List Rules', 'description' => 'List Rules (GET /api/v1/runs/rules).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_rule' => ['class' => LangSmithCreateRule::class, 'type' => 'write', 'name' => 'Create Rule', 'description' => 'Create Rule (POST /api/v1/runs/rules).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_validate_rule' => ['class' => LangSmithValidateRule::class, 'type' => 'write', 'name' => 'Validate Rule', 'description' => 'Validate Rule (POST /api/v1/runs/rules/validate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_rule' => ['class' => LangSmithUpdateRule::class, 'type' => 'write', 'name' => 'Update Rule', 'description' => 'Update Rule (PATCH /api/v1/runs/rules/{rule_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_rule' => ['class' => LangSmithDeleteRule::class, 'type' => 'write', 'name' => 'Delete Rule', 'description' => 'Delete Rule (DELETE /api/v1/runs/rules/{rule_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_thread_preview' => ['class' => LangSmithThreadPreview::class, 'type' => 'read', 'name' => 'Thread Preview', 'description' => 'Thread Preview (GET /api/v1/runs/threads/{thread_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_rule_logs' => ['class' => LangSmithListRuleLogs::class, 'type' => 'read', 'name' => 'List Rule Logs', 'description' => 'List Rule Logs (GET /api/v1/runs/rules/{rule_id}/logs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_rule_logs_v2' => ['class' => LangSmithListRuleLogsV2::class, 'type' => 'read', 'name' => 'List Rule Logs V2', 'description' => 'List Rule Logs V2 (GET /api/v1/runs/rules/{rule_id}/logs/v2).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_last_applied_rule' => ['class' => LangSmithGetLastAppliedRule::class, 'type' => 'read', 'name' => 'Get Last Applied Rule', 'description' => 'Get Last Applied Rule (GET /api/v1/runs/rules/{rule_id}/last_applied).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_trigger_rule' => ['class' => LangSmithTriggerRule::class, 'type' => 'write', 'name' => 'Trigger Rule', 'description' => 'Trigger Rule (POST /api/v1/runs/rules/{rule_id}/trigger).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_trigger_rules' => ['class' => LangSmithTriggerRules::class, 'type' => 'write', 'name' => 'Trigger Rules', 'description' => 'Trigger Rules (POST /api/v1/runs/rules/trigger).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_run' => ['class' => LangSmithReadRun::class, 'type' => 'read', 'name' => 'Read Run', 'description' => 'Read Run (GET /api/v1/runs/{run_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_run' => ['class' => LangSmithUpdateRun::class, 'type' => 'write', 'name' => 'Update Run', 'description' => 'Update Run (PATCH /api/v1/runs/{run_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_run_share_state' => ['class' => LangSmithReadRunShareState::class, 'type' => 'read', 'name' => 'Read Run Share State', 'description' => 'Read Run Share State (GET /api/v1/runs/{run_id}/share).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_share_run' => ['class' => LangSmithShareRun::class, 'type' => 'write', 'name' => 'Share Run', 'description' => 'Share Run (PUT /api/v1/runs/{run_id}/share).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_unshare_run' => ['class' => LangSmithUnshareRun::class, 'type' => 'write', 'name' => 'Unshare Run', 'description' => 'Unshare Run (DELETE /api/v1/runs/{run_id}/share).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_validate_runs_query' => ['class' => LangSmithValidateRunsQuery::class, 'type' => 'write', 'name' => 'Validate Runs Query', 'description' => 'Validate Runs Query (POST /api/v1/runs/query/validate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_query_runs' => ['class' => LangSmithQueryRuns::class, 'type' => 'write', 'name' => 'Query Runs', 'description' => 'Query Runs (POST /api/v1/runs/query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_generate_query_for_runs' => ['class' => LangSmithGenerateQueryForRuns::class, 'type' => 'write', 'name' => 'Generate Query For Runs', 'description' => 'Generate Query For Runs (POST /api/v1/runs/generate-query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_stats_runs' => ['class' => LangSmithStatsRuns::class, 'type' => 'write', 'name' => 'Stats Runs', 'description' => 'Stats Runs (POST /api/v1/runs/stats).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_group_runs' => ['class' => LangSmithGroupRuns::class, 'type' => 'write', 'name' => 'Group Runs', 'description' => 'Group Runs (POST /api/v1/runs/group).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_stats_group_runs' => ['class' => LangSmithStatsGroupRuns::class, 'type' => 'write', 'name' => 'Stats Group Runs', 'description' => 'Stats Group Runs (POST /api/v1/runs/group/stats).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_runs_abac' => ['class' => LangSmithDeleteRunsAbac::class, 'type' => 'write', 'name' => 'Delete Runs Abac', 'description' => 'Delete Runs Abac (POST /api/v1/runs/delete/traces).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_runs' => ['class' => LangSmithDeleteRuns::class, 'type' => 'write', 'name' => 'Delete Runs', 'description' => 'Delete Runs (POST /api/v1/runs/delete).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_evaluate_experiment_adhoc' => ['class' => LangSmithEvaluateExperimentAdhoc::class, 'type' => 'write', 'name' => 'Evaluate Experiment Adhoc', 'description' => 'Evaluate Experiment Adhoc (POST /api/v1/runs/experiments/{experiment_id}/evaluate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_feedback_formula_ep' => ['class' => LangSmithCreateFeedbackFormulaEp::class, 'type' => 'write', 'name' => 'Create Feedback Formula Ep', 'description' => 'Create Feedback Formula Ep (POST /api/v1/feedback/formulas).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_feedback_formula_ep' => ['class' => LangSmithListFeedbackFormulaEp::class, 'type' => 'read', 'name' => 'List Feedback Formula Ep', 'description' => 'List Feedback Formula Ep (GET /api/v1/feedback/formulas).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_feedback_formula_ep' => ['class' => LangSmithGetFeedbackFormulaEp::class, 'type' => 'read', 'name' => 'Get Feedback Formula Ep', 'description' => 'Get Feedback Formula Ep (GET /api/v1/feedback/formulas/{feedback_formula_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_feedback_formula_ep' => ['class' => LangSmithUpdateFeedbackFormulaEp::class, 'type' => 'write', 'name' => 'Update Feedback Formula Ep', 'description' => 'Update Feedback Formula Ep (PUT /api/v1/feedback/formulas/{feedback_formula_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_feedback_formula_endpoint' => ['class' => LangSmithDeleteFeedbackFormulaEndpoint::class, 'type' => 'write', 'name' => 'Delete Feedback Formula Endpoint', 'description' => 'Delete Feedback Formula Endpoint (DELETE /api/v1/feedback/formulas/{feedback_formula_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_feedback' => ['class' => LangSmithReadFeedback::class, 'type' => 'read', 'name' => 'Read Feedback', 'description' => 'Read Feedback (GET /api/v1/feedback/{feedback_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_feedback' => ['class' => LangSmithUpdateFeedback::class, 'type' => 'write', 'name' => 'Update Feedback', 'description' => 'Update Feedback (PATCH /api/v1/feedback/{feedback_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_feedback' => ['class' => LangSmithDeleteFeedback::class, 'type' => 'write', 'name' => 'Delete Feedback', 'description' => 'Delete Feedback (DELETE /api/v1/feedback/{feedback_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_feedbacks' => ['class' => LangSmithReadFeedbacks::class, 'type' => 'read', 'name' => 'Read Feedbacks', 'description' => 'Read Feedbacks (GET /api/v1/feedback).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_feedback' => ['class' => LangSmithCreateFeedback::class, 'type' => 'write', 'name' => 'Create Feedback', 'description' => 'Create Feedback (POST /api/v1/feedback).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_eagerly_create_feedback' => ['class' => LangSmithEagerlyCreateFeedback::class, 'type' => 'write', 'name' => 'Eagerly Create Feedback', 'description' => 'Eagerly Create Feedback (POST /api/v1/feedback/eager).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_feedback_ingest_token' => ['class' => LangSmithCreateFeedbackIngestToken::class, 'type' => 'write', 'name' => 'Create Feedback Ingest Token', 'description' => 'Create Feedback Ingest Token (POST /api/v1/feedback/tokens).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_feedback_ingest_tokens' => ['class' => LangSmithListFeedbackIngestTokens::class, 'type' => 'read', 'name' => 'List Feedback Ingest Tokens', 'description' => 'List Feedback Ingest Tokens (GET /api/v1/feedback/tokens).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_feedback_with_token_get' => ['class' => LangSmithCreateFeedbackWithTokenGet::class, 'type' => 'read', 'name' => 'Create Feedback With Token Get', 'description' => 'Create Feedback With Token Get (GET /api/v1/feedback/tokens/{token}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_feedback_with_token_post' => ['class' => LangSmithCreateFeedbackWithTokenPost::class, 'type' => 'write', 'name' => 'Create Feedback With Token Post', 'description' => 'Create Feedback With Token Post (POST /api/v1/feedback/tokens/{token}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_shared_run' => ['class' => LangSmithGetSharedRun::class, 'type' => 'read', 'name' => 'Get Shared Run', 'description' => 'Get Shared Run (GET /api/v1/public/{share_token}/run).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_shared_run_by_id' => ['class' => LangSmithGetSharedRunById::class, 'type' => 'read', 'name' => 'Get Shared Run By Id', 'description' => 'Get Shared Run By Id (GET /api/v1/public/{share_token}/run/{id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_query_shared_runs' => ['class' => LangSmithQuerySharedRuns::class, 'type' => 'write', 'name' => 'Query Shared Runs', 'description' => 'Query Shared Runs (POST /api/v1/public/{share_token}/runs/query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_shared_feedbacks' => ['class' => LangSmithReadSharedFeedbacks::class, 'type' => 'read', 'name' => 'Read Shared Feedbacks', 'description' => 'Read Shared Feedbacks (GET /api/v1/public/{share_token}/feedbacks).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_dataset' => ['class' => LangSmithReadSharedDataset::class, 'type' => 'read', 'name' => 'Read Shared Dataset', 'description' => 'Read Shared Dataset (GET /api/v1/public/{share_token}/datasets).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_count_shared_examples' => ['class' => LangSmithCountSharedExamples::class, 'type' => 'read', 'name' => 'Count Shared Examples', 'description' => 'Count Shared Examples (GET /api/v1/public/{share_token}/examples/count).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_examples' => ['class' => LangSmithReadSharedExamples::class, 'type' => 'read', 'name' => 'Read Shared Examples', 'description' => 'Read Shared Examples (GET /api/v1/public/{share_token}/examples).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_dataset_tracer_sessions' => ['class' => LangSmithReadSharedDatasetTracerSessions::class, 'type' => 'read', 'name' => 'Read Shared Dataset Tracer Sessions', 'description' => 'Read Shared Dataset Tracer Sessions (GET /api/v1/public/{share_token}/datasets/sessions).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_dataset_tracer_sessions_bulk' => ['class' => LangSmithReadSharedDatasetTracerSessionsBulk::class, 'type' => 'read', 'name' => 'Read Shared Dataset Tracer Sessions Bulk', 'description' => 'Read Shared Dataset Tracer Sessions Bulk (GET /api/v1/public/datasets/sessions-bulk).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_dataset_examples_with_runs' => ['class' => LangSmithReadSharedDatasetExamplesWithRuns::class, 'type' => 'write', 'name' => 'Read Shared Dataset Examples With Runs', 'description' => 'Read Shared Dataset Examples With Runs (POST /api/v1/public/{share_token}/examples/runs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_shared_delta' => ['class' => LangSmithReadSharedDelta::class, 'type' => 'write', 'name' => 'Read Shared Delta', 'description' => 'Read Shared Delta (POST /api/v1/public/{share_token}/datasets/runs/delta).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_shared_delta_stream' => ['class' => LangSmithReadSharedDeltaStream::class, 'type' => 'write', 'name' => 'Read Shared Delta Stream', 'description' => 'Read Shared Delta Stream (POST /api/v1/public/{share_token}/datasets/runs/delta/stream).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_query_shared_dataset_runs' => ['class' => LangSmithQuerySharedDatasetRuns::class, 'type' => 'write', 'name' => 'Query Shared Dataset Runs', 'description' => 'Query Shared Dataset Runs (POST /api/v1/public/{share_token}/datasets/runs/query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_generate_query_for_shared_dataset_runs' => ['class' => LangSmithGenerateQueryForSharedDatasetRuns::class, 'type' => 'write', 'name' => 'Generate Query For Shared Dataset Runs', 'description' => 'Generate Query For Shared Dataset Runs (POST /api/v1/public/{share_token}/datasets/runs/generate-query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_stats_shared_dataset_runs' => ['class' => LangSmithStatsSharedDatasetRuns::class, 'type' => 'write', 'name' => 'Stats Shared Dataset Runs', 'description' => 'Stats Shared Dataset Runs (POST /api/v1/public/{share_token}/datasets/runs/stats).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_shared_dataset_run' => ['class' => LangSmithReadSharedDatasetRun::class, 'type' => 'read', 'name' => 'Read Shared Dataset Run', 'description' => 'Read Shared Dataset Run (GET /api/v1/public/{share_token}/datasets/runs/{run_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_dataset_feedback' => ['class' => LangSmithReadSharedDatasetFeedback::class, 'type' => 'read', 'name' => 'Read Shared Dataset Feedback', 'description' => 'Read Shared Dataset Feedback (GET /api/v1/public/{share_token}/datasets/feedback).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_read_shared_comparative_experiments' => ['class' => LangSmithReadSharedComparativeExperiments::class, 'type' => 'read', 'name' => 'Read Shared Comparative Experiments', 'description' => 'Read Shared Comparative Experiments (GET /api/v1/public/{share_token}/datasets/comparative).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_message_json_schema' => ['class' => LangSmithGetMessageJsonSchema::class, 'type' => 'read', 'name' => 'Get Message Json Schema', 'description' => 'Get Message Json Schema (GET /api/v1/public/schemas/{version}/message.json).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_tool_def_json_schema' => ['class' => LangSmithGetToolDefJsonSchema::class, 'type' => 'read', 'name' => 'Get Tool Def Json Schema', 'description' => 'Get Tool Def Json Schema (GET /api/v1/public/schemas/{version}/tooldef.json).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_annotation_queues' => ['class' => LangSmithGetAnnotationQueues::class, 'type' => 'read', 'name' => 'Get Annotation Queues', 'description' => 'Get Annotation Queues (GET /api/v1/annotation-queues).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_annotation_queue' => ['class' => LangSmithCreateAnnotationQueue::class, 'type' => 'write', 'name' => 'Create Annotation Queue', 'description' => 'Create Annotation Queue (POST /api/v1/annotation-queues).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_annotation_queues' => ['class' => LangSmithDeleteAnnotationQueues::class, 'type' => 'write', 'name' => 'Delete Annotation Queues', 'description' => 'Delete Annotation Queues (DELETE /api/v1/annotation-queues).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_populate_annotation_queue' => ['class' => LangSmithPopulateAnnotationQueue::class, 'type' => 'write', 'name' => 'Populate Annotation Queue', 'description' => 'Populate Annotation Queue (POST /api/v1/annotation-queues/populate).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_annotation_queue' => ['class' => LangSmithDeleteAnnotationQueue::class, 'type' => 'write', 'name' => 'Delete Annotation Queue', 'description' => 'Delete Annotation Queue (DELETE /api/v1/annotation-queues/{queue_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_annotation_queue' => ['class' => LangSmithUpdateAnnotationQueue::class, 'type' => 'write', 'name' => 'Update Annotation Queue', 'description' => 'Update Annotation Queue (PATCH /api/v1/annotation-queues/{queue_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_annotation_queue' => ['class' => LangSmithGetAnnotationQueue::class, 'type' => 'read', 'name' => 'Get Annotation Queue', 'description' => 'Get Annotation Queue (GET /api/v1/annotation-queues/{queue_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_runs_to_annotation_queue' => ['class' => LangSmithAddRunsToAnnotationQueue::class, 'type' => 'write', 'name' => 'Add Runs To Annotation Queue', 'description' => 'Add Runs To Annotation Queue (POST /api/v1/annotation-queues/{queue_id}/runs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_runs_from_annotation_queue' => ['class' => LangSmithGetRunsFromAnnotationQueue::class, 'type' => 'read', 'name' => 'Get Runs From Annotation Queue', 'description' => 'Get Runs From Annotation Queue (GET /api/v1/annotation-queues/{queue_id}/runs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_runs_to_annotation_queue_by_key' => ['class' => LangSmithAddRunsToAnnotationQueueByKey::class, 'type' => 'write', 'name' => 'Add Runs To Annotation Queue By Key', 'description' => 'Add Runs To Annotation Queue By Key (POST /api/v1/annotation-queues/{queue_id}/runs/by-key).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_export_annotation_queue_archived_runs' => ['class' => LangSmithExportAnnotationQueueArchivedRuns::class, 'type' => 'write', 'name' => 'Export Annotation Queue Archived Runs', 'description' => 'Export Annotation Queue Archived Runs (POST /api/v1/annotation-queues/{queue_id}/export).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_run_from_annotation_queue' => ['class' => LangSmithGetRunFromAnnotationQueue::class, 'type' => 'read', 'name' => 'Get Run From Annotation Queue', 'description' => 'Get Run From Annotation Queue (GET /api/v1/annotation-queues/{queue_id}/run/{index}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_annotation_queues_for_run' => ['class' => LangSmithGetAnnotationQueuesForRun::class, 'type' => 'read', 'name' => 'Get Annotation Queues For Run', 'description' => 'Get Annotation Queues For Run (GET /api/v1/annotation-queues/{run_id}/queues).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_run_in_annotation_queue' => ['class' => LangSmithUpdateRunInAnnotationQueue::class, 'type' => 'write', 'name' => 'Update Run In Annotation Queue', 'description' => 'Update Run In Annotation Queue (PATCH /api/v1/annotation-queues/{queue_id}/runs/{queue_run_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_run_from_annotation_queue' => ['class' => LangSmithDeleteRunFromAnnotationQueue::class, 'type' => 'write', 'name' => 'Delete Run From Annotation Queue', 'description' => 'Delete Run From Annotation Queue (DELETE /api/v1/annotation-queues/{queue_id}/runs/{queue_run_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_runs_from_annotation_queue' => ['class' => LangSmithDeleteRunsFromAnnotationQueue::class, 'type' => 'write', 'name' => 'Delete Runs From Annotation Queue', 'description' => 'Delete Runs From Annotation Queue (POST /api/v1/annotation-queues/{queue_id}/runs/delete).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_total_size_from_annotation_queue' => ['class' => LangSmithGetTotalSizeFromAnnotationQueue::class, 'type' => 'read', 'name' => 'Get Total Size From Annotation Queue', 'description' => 'Get Total Size From Annotation Queue (GET /api/v1/annotation-queues/{queue_id}/total_size).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_total_archived_from_annotation_queue' => ['class' => LangSmithGetTotalArchivedFromAnnotationQueue::class, 'type' => 'read', 'name' => 'Get Total Archived From Annotation Queue', 'description' => 'Get Total Archived From Annotation Queue (GET /api/v1/annotation-queues/{queue_id}/total_archived).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_size_from_annotation_queue' => ['class' => LangSmithGetSizeFromAnnotationQueue::class, 'type' => 'read', 'name' => 'Get Size From Annotation Queue', 'description' => 'Get Size From Annotation Queue (GET /api/v1/annotation-queues/{queue_id}/size).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_identity_annotation_queue_run_status' => ['class' => LangSmithCreateIdentityAnnotationQueueRunStatus::class, 'type' => 'write', 'name' => 'Create Identity Annotation Queue Run Status', 'description' => 'Create Identity Annotation Queue Run Status (POST /api/v1/annotation-queues/status/{annotation_queue_run_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_resolve_annotation_queue_run' => ['class' => LangSmithResolveAnnotationQueueRun::class, 'type' => 'read', 'name' => 'Resolve Annotation Queue Run', 'description' => 'Resolve Annotation Queue Run (GET /api/v1/annotation-queues/{queue_id}/runs/resolve/{queue_run_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_execute' => ['class' => LangSmithExecute::class, 'type' => 'write', 'name' => 'Execute', 'description' => 'Execute (POST /api/v1/ace/execute).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_bulk_exports' => ['class' => LangSmithGetBulkExports::class, 'type' => 'read', 'name' => 'Get Bulk Exports', 'description' => 'Get Bulk Exports (GET /api/v1/bulk-exports).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_bulk_export' => ['class' => LangSmithCreateBulkExport::class, 'type' => 'write', 'name' => 'Create Bulk Export', 'description' => 'Create Bulk Export (POST /api/v1/bulk-exports).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_bulk_export_destinations' => ['class' => LangSmithGetBulkExportDestinations::class, 'type' => 'read', 'name' => 'Get Bulk Export Destinations', 'description' => 'Get Bulk Export Destinations (GET /api/v1/bulk-exports/destinations).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_bulk_export_destination' => ['class' => LangSmithCreateBulkExportDestination::class, 'type' => 'write', 'name' => 'Create Bulk Export Destination', 'description' => 'Create Bulk Export Destination (POST /api/v1/bulk-exports/destinations).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_bulk_export_runs_filtered' => ['class' => LangSmithGetBulkExportRunsFiltered::class, 'type' => 'read', 'name' => 'Get Bulk Export Runs Filtered', 'description' => 'Get Bulk Export Runs Filtered (GET /api/v1/bulk-exports/runs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_bulk_export' => ['class' => LangSmithGetBulkExport::class, 'type' => 'read', 'name' => 'Get Bulk Export', 'description' => 'Get Bulk Export (GET /api/v1/bulk-exports/{bulk_export_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_cancel_bulk_export' => ['class' => LangSmithCancelBulkExport::class, 'type' => 'write', 'name' => 'Cancel Bulk Export', 'description' => 'Cancel Bulk Export (PATCH /api/v1/bulk-exports/{bulk_export_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_bulk_export_destination' => ['class' => LangSmithGetBulkExportDestination::class, 'type' => 'read', 'name' => 'Get Bulk Export Destination', 'description' => 'Get Bulk Export Destination (GET /api/v1/bulk-exports/destinations/{destination_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_bulk_export_destination' => ['class' => LangSmithUpdateBulkExportDestination::class, 'type' => 'write', 'name' => 'Update Bulk Export Destination', 'description' => 'Update Bulk Export Destination (PATCH /api/v1/bulk-exports/destinations/{destination_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_bulk_export_runs' => ['class' => LangSmithGetBulkExportRuns::class, 'type' => 'read', 'name' => 'Get Bulk Export Runs', 'description' => 'Get Bulk Export Runs (GET /api/v1/bulk-exports/{bulk_export_id}/runs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_bulk_export_run' => ['class' => LangSmithGetBulkExportRun::class, 'type' => 'read', 'name' => 'Get Bulk Export Run', 'description' => 'Get Bulk Export Run (GET /api/v1/bulk-exports/{bulk_export_id}/runs/{run_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_feedback_configs_endpoint' => ['class' => LangSmithListFeedbackConfigsEndpoint::class, 'type' => 'read', 'name' => 'List Feedback Configs Endpoint', 'description' => 'List Feedback Configs Endpoint (GET /api/v1/feedback-configs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_feedback_config_endpoint' => ['class' => LangSmithCreateFeedbackConfigEndpoint::class, 'type' => 'write', 'name' => 'Create Feedback Config Endpoint', 'description' => 'Create Feedback Config Endpoint (POST /api/v1/feedback-configs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_feedback_config_endpoint' => ['class' => LangSmithUpdateFeedbackConfigEndpoint::class, 'type' => 'write', 'name' => 'Update Feedback Config Endpoint', 'description' => 'Update Feedback Config Endpoint (PATCH /api/v1/feedback-configs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_feedback_config_endpoint' => ['class' => LangSmithDeleteFeedbackConfigEndpoint::class, 'type' => 'write', 'name' => 'Delete Feedback Config Endpoint', 'description' => 'Delete Feedback Config Endpoint (DELETE /api/v1/feedback-configs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_model_price_map' => ['class' => LangSmithReadModelPriceMap::class, 'type' => 'read', 'name' => 'Read Model Price Map', 'description' => 'Read Model Price Map (GET /api/v1/model-price-map).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_new_model_price' => ['class' => LangSmithCreateNewModelPrice::class, 'type' => 'write', 'name' => 'Create New Model Price', 'description' => 'Create New Model Price (POST /api/v1/model-price-map).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_model_price' => ['class' => LangSmithUpdateModelPrice::class, 'type' => 'write', 'name' => 'Update Model Price', 'description' => 'Update Model Price (PUT /api/v1/model-price-map/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_model_price' => ['class' => LangSmithDeleteModelPrice::class, 'type' => 'write', 'name' => 'Delete Model Price', 'description' => 'Delete Model Price (DELETE /api/v1/model-price-map/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_usage_limits' => ['class' => LangSmithListUsageLimits::class, 'type' => 'read', 'name' => 'List Usage Limits', 'description' => 'List Usage Limits (GET /api/v1/usage-limits).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_upsert_usage_limit' => ['class' => LangSmithUpsertUsageLimit::class, 'type' => 'write', 'name' => 'Upsert Usage Limit', 'description' => 'Upsert Usage Limit (PUT /api/v1/usage-limits).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_org_usage_limits' => ['class' => LangSmithListOrgUsageLimits::class, 'type' => 'read', 'name' => 'List Org Usage Limits', 'description' => 'List Org Usage Limits (GET /api/v1/usage-limits/org).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_usage_limit' => ['class' => LangSmithDeleteUsageLimit::class, 'type' => 'write', 'name' => 'Delete Usage Limit', 'description' => 'Delete Usage Limit (DELETE /api/v1/usage-limits/{usage_limit_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_invoke_prompt' => ['class' => LangSmithInvokePrompt::class, 'type' => 'write', 'name' => 'Invoke Prompt', 'description' => 'Invoke Prompt (POST /api/v1/prompts/invoke_prompt).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_prompt_canvas' => ['class' => LangSmithPromptCanvas::class, 'type' => 'write', 'name' => 'Prompt Canvas', 'description' => 'Prompt Canvas (POST /api/v1/prompts/canvas).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_prompt_webhooks' => ['class' => LangSmithListPromptWebhooks::class, 'type' => 'read', 'name' => 'List Prompt Webhooks', 'description' => 'List Prompt Webhooks (GET /api/v1/prompt-webhooks).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_prompt_webhook' => ['class' => LangSmithCreatePromptWebhook::class, 'type' => 'write', 'name' => 'Create Prompt Webhook', 'description' => 'Create Prompt Webhook (POST /api/v1/prompt-webhooks).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_prompt_webhook' => ['class' => LangSmithGetPromptWebhook::class, 'type' => 'read', 'name' => 'Get Prompt Webhook', 'description' => 'Get Prompt Webhook (GET /api/v1/prompt-webhooks/{webhook_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_prompt_webhook' => ['class' => LangSmithUpdatePromptWebhook::class, 'type' => 'write', 'name' => 'Update Prompt Webhook', 'description' => 'Update Prompt Webhook (PATCH /api/v1/prompt-webhooks/{webhook_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_prompt_webhook' => ['class' => LangSmithDeletePromptWebhook::class, 'type' => 'write', 'name' => 'Delete Prompt Webhook', 'description' => 'Delete Prompt Webhook (DELETE /api/v1/prompt-webhooks/{webhook_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_test_prompt_webhook' => ['class' => LangSmithTestPromptWebhook::class, 'type' => 'write', 'name' => 'Test Prompt Webhook', 'description' => 'Test Prompt Webhook (POST /api/v1/prompt-webhooks/test).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_playground_settings' => ['class' => LangSmithListPlaygroundSettings::class, 'type' => 'read', 'name' => 'List Playground Settings', 'description' => 'List Playground Settings (GET /api/v1/playground-settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_playground_settings' => ['class' => LangSmithCreatePlaygroundSettings::class, 'type' => 'write', 'name' => 'Create Playground Settings', 'description' => 'Create Playground Settings (POST /api/v1/playground-settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_playground_settings' => ['class' => LangSmithGetPlaygroundSettings::class, 'type' => 'read', 'name' => 'Get Playground Settings', 'description' => 'Get Playground Settings (GET /api/v1/playground-settings/{playground_settings_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_playground_settings' => ['class' => LangSmithUpdatePlaygroundSettings::class, 'type' => 'write', 'name' => 'Update Playground Settings', 'description' => 'Update Playground Settings (PATCH /api/v1/playground-settings/{playground_settings_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_playground_settings' => ['class' => LangSmithDeletePlaygroundSettings::class, 'type' => 'write', 'name' => 'Delete Playground Settings', 'description' => 'Delete Playground Settings (DELETE /api/v1/playground-settings/{playground_settings_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_clone_section' => ['class' => LangSmithCloneSection::class, 'type' => 'write', 'name' => 'Clone Section', 'description' => 'Clone Section (POST /api/v1/charts/section/clone).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_sections' => ['class' => LangSmithReadSections::class, 'type' => 'read', 'name' => 'Read Sections', 'description' => 'Read Sections (GET /api/v1/charts/section).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_section' => ['class' => LangSmithCreateSection::class, 'type' => 'write', 'name' => 'Create Section', 'description' => 'Create Section (POST /api/v1/charts/section).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_charts' => ['class' => LangSmithReadCharts::class, 'type' => 'write', 'name' => 'Read Charts', 'description' => 'Read Charts (POST /api/v1/charts).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_chart_preview' => ['class' => LangSmithReadChartPreview::class, 'type' => 'write', 'name' => 'Read Chart Preview', 'description' => 'Read Chart Preview (POST /api/v1/charts/preview).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_chart' => ['class' => LangSmithCreateChart::class, 'type' => 'write', 'name' => 'Create Chart', 'description' => 'Create Chart (POST /api/v1/charts/create).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_single_chart' => ['class' => LangSmithReadSingleChart::class, 'type' => 'write', 'name' => 'Read Single Chart', 'description' => 'Read Single Chart (POST /api/v1/charts/{chart_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_chart' => ['class' => LangSmithUpdateChart::class, 'type' => 'write', 'name' => 'Update Chart', 'description' => 'Update Chart (PATCH /api/v1/charts/{chart_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_chart' => ['class' => LangSmithDeleteChart::class, 'type' => 'write', 'name' => 'Delete Chart', 'description' => 'Delete Chart (DELETE /api/v1/charts/{chart_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_read_single_section' => ['class' => LangSmithReadSingleSection::class, 'type' => 'write', 'name' => 'Read Single Section', 'description' => 'Read Single Section (POST /api/v1/charts/section/{section_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_section' => ['class' => LangSmithUpdateSection::class, 'type' => 'write', 'name' => 'Update Section', 'description' => 'Update Section (PATCH /api/v1/charts/section/{section_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_section' => ['class' => LangSmithDeleteSection::class, 'type' => 'write', 'name' => 'Delete Section', 'description' => 'Delete Section (DELETE /api/v1/charts/section/{section_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_read_sections' => ['class' => LangSmithOrgReadSections::class, 'type' => 'read', 'name' => 'Org Read Sections', 'description' => 'Org Read Sections (GET /api/v1/org-charts/section).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_org_create_section' => ['class' => LangSmithOrgCreateSection::class, 'type' => 'write', 'name' => 'Org Create Section', 'description' => 'Org Create Section (POST /api/v1/org-charts/section).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_read_charts' => ['class' => LangSmithOrgReadCharts::class, 'type' => 'write', 'name' => 'Org Read Charts', 'description' => 'Org Read Charts (POST /api/v1/org-charts).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_read_chart_preview' => ['class' => LangSmithOrgReadChartPreview::class, 'type' => 'write', 'name' => 'Org Read Chart Preview', 'description' => 'Org Read Chart Preview (POST /api/v1/org-charts/preview).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_create_chart' => ['class' => LangSmithOrgCreateChart::class, 'type' => 'write', 'name' => 'Org Create Chart', 'description' => 'Org Create Chart (POST /api/v1/org-charts/create).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_read_single_chart' => ['class' => LangSmithOrgReadSingleChart::class, 'type' => 'write', 'name' => 'Org Read Single Chart', 'description' => 'Org Read Single Chart (POST /api/v1/org-charts/{chart_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_update_chart' => ['class' => LangSmithOrgUpdateChart::class, 'type' => 'write', 'name' => 'Org Update Chart', 'description' => 'Org Update Chart (PATCH /api/v1/org-charts/{chart_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_delete_chart' => ['class' => LangSmithOrgDeleteChart::class, 'type' => 'write', 'name' => 'Org Delete Chart', 'description' => 'Org Delete Chart (DELETE /api/v1/org-charts/{chart_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_read_single_section' => ['class' => LangSmithOrgReadSingleSection::class, 'type' => 'write', 'name' => 'Org Read Single Section', 'description' => 'Org Read Single Section (POST /api/v1/org-charts/section/{section_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_update_section' => ['class' => LangSmithOrgUpdateSection::class, 'type' => 'write', 'name' => 'Org Update Section', 'description' => 'Org Update Section (PATCH /api/v1/org-charts/section/{section_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_org_delete_section' => ['class' => LangSmithOrgDeleteSection::class, 'type' => 'write', 'name' => 'Org Delete Section', 'description' => 'Org Delete Section (DELETE /api/v1/org-charts/section/{section_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_tools' => ['class' => LangSmithGetTools::class, 'type' => 'read', 'name' => 'Get Tools', 'description' => 'Get Tools (GET /api/v1/mcp/tools).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_invalidate_tools_cache' => ['class' => LangSmithInvalidateToolsCache::class, 'type' => 'write', 'name' => 'Invalidate Tools Cache', 'description' => 'Invalidate Tools Cache (DELETE /api/v1/mcp/tools).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_proxy_get' => ['class' => LangSmithProxyGet::class, 'type' => 'read', 'name' => 'Proxy Get', 'description' => 'Proxy Get (GET /api/v1/mcp/proxy).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_proxy' => ['class' => LangSmithProxy::class, 'type' => 'write', 'name' => 'Proxy', 'description' => 'Proxy (POST /api/v1/mcp/proxy).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_organizations' => ['class' => LangSmithListOrganizations::class, 'type' => 'read', 'name' => 'List Organizations', 'description' => 'List Organizations (GET /api/v1/orgs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_organization' => ['class' => LangSmithCreateOrganization::class, 'type' => 'write', 'name' => 'Create Organization', 'description' => 'Create Organization (POST /api/v1/orgs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_customers_and_get_stripe_setup_intent' => ['class' => LangSmithCreateCustomersAndGetStripeSetupIntent::class, 'type' => 'write', 'name' => 'Create Customers And Get Stripe Setup Intent', 'description' => 'Create Customers And Get Stripe Setup Intent (POST /api/v1/orgs/current/setup).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_organization_info' => ['class' => LangSmithGetOrganizationInfo::class, 'type' => 'read', 'name' => 'Get Organization Info', 'description' => 'Get Organization Info (GET /api/v1/orgs/current).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_current_organization_info' => ['class' => LangSmithGetCurrentOrganizationInfo::class, 'type' => 'read', 'name' => 'Get Current Organization Info', 'description' => 'Get Current Organization Info (GET /api/v1/orgs/current/info).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_current_organization_info' => ['class' => LangSmithUpdateCurrentOrganizationInfo::class, 'type' => 'write', 'name' => 'Update Current Organization Info', 'description' => 'Update Current Organization Info (PATCH /api/v1/orgs/current/info).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_organization_billing_info' => ['class' => LangSmithGetOrganizationBillingInfo::class, 'type' => 'read', 'name' => 'Get Organization Billing Info', 'description' => 'Get Organization Billing Info (GET /api/v1/orgs/current/billing).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_dashboard' => ['class' => LangSmithGetDashboard::class, 'type' => 'read', 'name' => 'Get Dashboard', 'description' => 'Get Dashboard (GET /api/v1/orgs/current/dashboard).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_on_payment_method_created' => ['class' => LangSmithOnPaymentMethodCreated::class, 'type' => 'write', 'name' => 'On Payment Method Created', 'description' => 'On Payment Method Created (POST /api/v1/orgs/current/payment-method).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_company_info' => ['class' => LangSmithGetCompanyInfo::class, 'type' => 'read', 'name' => 'Get Company Info', 'description' => 'Get Company Info (GET /api/v1/orgs/current/business-info).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_set_company_info' => ['class' => LangSmithSetCompanyInfo::class, 'type' => 'write', 'name' => 'Set Company Info', 'description' => 'Set Company Info (POST /api/v1/orgs/current/business-info).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_change_payment_plan' => ['class' => LangSmithChangePaymentPlan::class, 'type' => 'write', 'name' => 'Change Payment Plan', 'description' => 'Change Payment Plan (POST /api/v1/orgs/current/plan).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_organization_roles' => ['class' => LangSmithListOrganizationRoles::class, 'type' => 'read', 'name' => 'List Organization Roles', 'description' => 'List Organization Roles (GET /api/v1/orgs/current/roles).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_organization_roles' => ['class' => LangSmithCreateOrganizationRoles::class, 'type' => 'write', 'name' => 'Create Organization Roles', 'description' => 'Create Organization Roles (POST /api/v1/orgs/current/roles).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_organization_roles' => ['class' => LangSmithDeleteOrganizationRoles::class, 'type' => 'write', 'name' => 'Delete Organization Roles', 'description' => 'Delete Organization Roles (DELETE /api/v1/orgs/current/roles/{role_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_organization_roles' => ['class' => LangSmithUpdateOrganizationRoles::class, 'type' => 'write', 'name' => 'Update Organization Roles', 'description' => 'Update Organization Roles (PATCH /api/v1/orgs/current/roles/{role_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_permissions' => ['class' => LangSmithListPermissions::class, 'type' => 'read', 'name' => 'List Permissions', 'description' => 'List Permissions (GET /api/v1/orgs/permissions).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_list_pending_organization_invites' => ['class' => LangSmithListPendingOrganizationInvites::class, 'type' => 'read', 'name' => 'List Pending Organization Invites', 'description' => 'List Pending Organization Invites (GET /api/v1/orgs/pending).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_current_org_members' => ['class' => LangSmithGetCurrentOrgMembers::class, 'type' => 'read', 'name' => 'Get Current Org Members', 'description' => 'Get Current Org Members (GET /api/v1/orgs/current/members).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_member_to_current_org' => ['class' => LangSmithAddMemberToCurrentOrg::class, 'type' => 'write', 'name' => 'Add Member To Current Org', 'description' => 'Add Member To Current Org (POST /api/v1/orgs/current/members).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_current_active_org_members' => ['class' => LangSmithGetCurrentActiveOrgMembers::class, 'type' => 'read', 'name' => 'Get Current Active Org Members', 'description' => 'Get Current Active Org Members (GET /api/v1/orgs/current/members/active).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_current_pending_org_members' => ['class' => LangSmithGetCurrentPendingOrgMembers::class, 'type' => 'read', 'name' => 'Get Current Pending Org Members', 'description' => 'Get Current Pending Org Members (GET /api/v1/orgs/current/members/pending).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_members_to_current_org_batch' => ['class' => LangSmithAddMembersToCurrentOrgBatch::class, 'type' => 'write', 'name' => 'Add Members To Current Org Batch', 'description' => 'Add Members To Current Org Batch (POST /api/v1/orgs/current/members/batch).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_add_basic_auth_members_to_current_org' => ['class' => LangSmithAddBasicAuthMembersToCurrentOrg::class, 'type' => 'write', 'name' => 'Add Basic Auth Members To Current Org', 'description' => 'Add Basic Auth Members To Current Org (POST /api/v1/orgs/current/members/basic/batch).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_current_org_pending_member' => ['class' => LangSmithDeleteCurrentOrgPendingMember::class, 'type' => 'write', 'name' => 'Delete Current Org Pending Member', 'description' => 'Delete Current Org Pending Member (DELETE /api/v1/orgs/current/members/{identity_id}/pending).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_pending_organization_invite' => ['class' => LangSmithDeletePendingOrganizationInvite::class, 'type' => 'write', 'name' => 'Delete Pending Organization Invite', 'description' => 'Delete Pending Organization Invite (DELETE /api/v1/orgs/pending/{organization_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_claim_pending_organization_invite' => ['class' => LangSmithClaimPendingOrganizationInvite::class, 'type' => 'write', 'name' => 'Claim Pending Organization Invite', 'description' => 'Claim Pending Organization Invite (POST /api/v1/orgs/pending/{organization_id}/claim).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_remove_member_from_current_org' => ['class' => LangSmithRemoveMemberFromCurrentOrg::class, 'type' => 'write', 'name' => 'Remove Member From Current Org', 'description' => 'Remove Member From Current Org (DELETE /api/v1/orgs/current/members/{identity_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_current_org_member' => ['class' => LangSmithUpdateCurrentOrgMember::class, 'type' => 'write', 'name' => 'Update Current Org Member', 'description' => 'Update Current Org Member (PATCH /api/v1/orgs/current/members/{identity_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_current_user' => ['class' => LangSmithUpdateCurrentUser::class, 'type' => 'write', 'name' => 'Update Current User', 'description' => 'Update Current User (PATCH /api/v1/orgs/members/basic).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_current_sso_settings' => ['class' => LangSmithGetCurrentSsoSettings::class, 'type' => 'read', 'name' => 'Get Current Sso Settings', 'description' => 'Get Current Sso Settings (GET /api/v1/orgs/current/sso-settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_sso_settings' => ['class' => LangSmithCreateSsoSettings::class, 'type' => 'write', 'name' => 'Create Sso Settings', 'description' => 'Create Sso Settings (POST /api/v1/orgs/current/sso-settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_sso_settings' => ['class' => LangSmithUpdateSsoSettings::class, 'type' => 'write', 'name' => 'Update Sso Settings', 'description' => 'Update Sso Settings (PATCH /api/v1/orgs/current/sso-settings/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_sso_settings' => ['class' => LangSmithDeleteSsoSettings::class, 'type' => 'write', 'name' => 'Delete Sso Settings', 'description' => 'Delete Sso Settings (DELETE /api/v1/orgs/current/sso-settings/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_allowed_login_methods' => ['class' => LangSmithUpdateAllowedLoginMethods::class, 'type' => 'write', 'name' => 'Update Allowed Login Methods', 'description' => 'Update Allowed Login Methods (PATCH /api/v1/orgs/current/login-methods).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_org_usage' => ['class' => LangSmithGetOrgUsage::class, 'type' => 'read', 'name' => 'Get Org Usage', 'description' => 'Get Org Usage (GET /api/v1/orgs/current/billing/usage).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_granular_usage' => ['class' => LangSmithGetGranularUsage::class, 'type' => 'read', 'name' => 'Get Granular Usage', 'description' => 'Get Granular Usage (GET /api/v1/orgs/current/billing/granular-usage).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_export_granular_usage_csv' => ['class' => LangSmithExportGranularUsageCsv::class, 'type' => 'read', 'name' => 'Export Granular Usage Csv', 'description' => 'Export Granular Usage Csv (GET /api/v1/orgs/current/billing/granular-usage/export).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_current_user_login_methods' => ['class' => LangSmithGetCurrentUserLoginMethods::class, 'type' => 'read', 'name' => 'Get Current User Login Methods', 'description' => 'Get Current User Login Methods (GET /api/v1/orgs/current/user/login-methods).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_stripe_checkout_sessions_endpoint' => ['class' => LangSmithCreateStripeCheckoutSessionsEndpoint::class, 'type' => 'write', 'name' => 'Create Stripe Checkout Sessions Endpoint', 'description' => 'Create Stripe Checkout Sessions Endpoint (POST /api/v1/orgs/current/stripe_checkout_session).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_stripe_account_links_endpoint' => ['class' => LangSmithCreateStripeAccountLinksEndpoint::class, 'type' => 'write', 'name' => 'Create Stripe Account Links Endpoint', 'description' => 'Create Stripe Account Links Endpoint (POST /api/v1/orgs/current/stripe_account_links).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_org_service_keys' => ['class' => LangSmithListOrgServiceKeys::class, 'type' => 'read', 'name' => 'List Org Service Keys', 'description' => 'List Org Service Keys (GET /api/v1/orgs/current/service-keys).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_org_service_key' => ['class' => LangSmithCreateOrgServiceKey::class, 'type' => 'write', 'name' => 'Create Org Service Key', 'description' => 'Create Org Service Key (POST /api/v1/orgs/current/service-keys).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_org_service_key' => ['class' => LangSmithDeleteOrgServiceKey::class, 'type' => 'write', 'name' => 'Delete Org Service Key', 'description' => 'Delete Org Service Key (DELETE /api/v1/orgs/current/service-keys/{api_key_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_org_personal_access_tokens' => ['class' => LangSmithListOrgPersonalAccessTokens::class, 'type' => 'read', 'name' => 'List Org Personal Access Tokens', 'description' => 'List Org Personal Access Tokens (GET /api/v1/orgs/current/personal-access-tokens).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_org_personal_access_token' => ['class' => LangSmithCreateOrgPersonalAccessToken::class, 'type' => 'write', 'name' => 'Create Org Personal Access Token', 'description' => 'Create Org Personal Access Token (POST /api/v1/orgs/current/personal-access-tokens).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_org_personal_access_token' => ['class' => LangSmithDeleteOrgPersonalAccessToken::class, 'type' => 'write', 'name' => 'Delete Org Personal Access Token', 'description' => 'Delete Org Personal Access Token (DELETE /api/v1/orgs/current/personal-access-tokens/{pat_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_set_default_sso_provision' => ['class' => LangSmithSetDefaultSsoProvision::class, 'type' => 'write', 'name' => 'Set Default Sso Provision', 'description' => 'Set Default Sso Provision (POST /api/v1/orgs/current/set-default-sso-provision).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_login' => ['class' => LangSmithLogin::class, 'type' => 'write', 'name' => 'Login', 'description' => 'Login (POST /api/v1/login).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_send_sso_email_confirmation' => ['class' => LangSmithSendSsoEmailConfirmation::class, 'type' => 'write', 'name' => 'Send Sso Email Confirmation', 'description' => 'Send Sso Email Confirmation (POST /api/v1/sso/email-verification/send).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_check_sso_email_verification_status' => ['class' => LangSmithCheckSsoEmailVerificationStatus::class, 'type' => 'write', 'name' => 'Check Sso Email Verification Status', 'description' => 'Check Sso Email Verification Status (POST /api/v1/sso/email-verification/status).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_confirm_sso_user_email' => ['class' => LangSmithConfirmSsoUserEmail::class, 'type' => 'write', 'name' => 'Confirm Sso User Email', 'description' => 'Confirm Sso User Email (POST /api/v1/sso/email-verification/confirm).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_sso_settings' => ['class' => LangSmithGetSsoSettings::class, 'type' => 'read', 'name' => 'Get Sso Settings', 'description' => 'Get Sso Settings (GET /api/v1/sso/settings/{sso_login_slug}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_lookup_sso_by_email' => ['class' => LangSmithLookupSsoByEmail::class, 'type' => 'write', 'name' => 'Lookup Sso By Email', 'description' => 'Lookup Sso By Email (POST /api/v1/sso/email-lookup).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_api_v1_api_key' => ['class' => LangSmithGetApiV1ApiKey::class, 'type' => 'read', 'name' => 'Get Api V1 Api Key', 'description' => 'Get Api Keys (GET /api/v1/api-key).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_api_v1_api_key' => ['class' => LangSmithPostApiV1ApiKey::class, 'type' => 'write', 'name' => 'Post Api V1 Api Key', 'description' => 'Generate Api Key (POST /api/v1/api-key).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete' => ['class' => LangSmithDelete::class, 'type' => 'write', 'name' => 'Delete', 'description' => 'Delete Api Key (DELETE /api/v1/api-key/{api_key_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_personal_access_tokens' => ['class' => LangSmithGetPersonalAccessTokens::class, 'type' => 'read', 'name' => 'Get Personal Access Tokens', 'description' => 'Get Personal Access Tokens (GET /api/v1/api-key/current).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_generate_personal_access_token' => ['class' => LangSmithGeneratePersonalAccessToken::class, 'type' => 'write', 'name' => 'Generate Personal Access Token', 'description' => 'Generate Personal Access Token (POST /api/v1/api-key/current).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_personal_access_token' => ['class' => LangSmithDeletePersonalAccessToken::class, 'type' => 'write', 'name' => 'Delete Personal Access Token', 'description' => 'Delete Personal Access Token (DELETE /api/v1/api-key/current/{pat_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_tenants' => ['class' => LangSmithListTenants::class, 'type' => 'read', 'name' => 'List Tenants', 'description' => 'List Tenants (GET /api/v1/tenants).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_tenant' => ['class' => LangSmithCreateTenant::class, 'type' => 'write', 'name' => 'Create Tenant', 'description' => 'Create Tenant (POST /api/v1/tenants).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_onboarding_state' => ['class' => LangSmithGetOnboardingState::class, 'type' => 'read', 'name' => 'Get Onboarding State', 'description' => 'Get Onboarding State (GET /api/v1/me/onboarding_state).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_onboarding_state' => ['class' => LangSmithCreateOnboardingState::class, 'type' => 'write', 'name' => 'Create Onboarding State', 'description' => 'Create Onboarding State (POST /api/v1/me/onboarding_state).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_update_onboarding_state_field' => ['class' => LangSmithUpdateOnboardingStateField::class, 'type' => 'write', 'name' => 'Update Onboarding State Field', 'description' => 'Update Onboarding State Field (PUT /api/v1/me/onboarding_state/{field}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_ls_user_id' => ['class' => LangSmithGetLsUserId::class, 'type' => 'read', 'name' => 'Get Ls User Id', 'description' => 'Get Ls User Id (GET /api/v1/me/ls_user_id).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_service_accounts' => ['class' => LangSmithGetServiceAccounts::class, 'type' => 'read', 'name' => 'Get Service Accounts', 'description' => 'Get Service Accounts (GET /api/v1/service-accounts).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_service_account' => ['class' => LangSmithCreateServiceAccount::class, 'type' => 'write', 'name' => 'Create Service Account', 'description' => 'Create Service Account (POST /api/v1/service-accounts).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_service_account' => ['class' => LangSmithDeleteServiceAccount::class, 'type' => 'write', 'name' => 'Delete Service Account', 'description' => 'Delete Service Account (DELETE /api/v1/service-accounts/{service_account_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_pending_workspace_invites' => ['class' => LangSmithListPendingWorkspaceInvites::class, 'type' => 'read', 'name' => 'List Pending Workspace Invites', 'description' => 'List Pending Workspace Invites (GET /api/v1/workspaces/pending).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_pending_workspace_invite' => ['class' => LangSmithDeletePendingWorkspaceInvite::class, 'type' => 'write', 'name' => 'Delete Pending Workspace Invite', 'description' => 'Delete Pending Workspace Invite (DELETE /api/v1/workspaces/pending/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_claim_pending_workspace_invite' => ['class' => LangSmithClaimPendingWorkspaceInvite::class, 'type' => 'write', 'name' => 'Claim Pending Workspace Invite', 'description' => 'Claim Pending Workspace Invite (POST /api/v1/workspaces/pending/{workspace_id}/claim).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_current_workspace_members' => ['class' => LangSmithGetCurrentWorkspaceMembers::class, 'type' => 'read', 'name' => 'Get Current Workspace Members', 'description' => 'Get Current Workspace Members (GET /api/v1/workspaces/current/members).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_member_to_current_workspace' => ['class' => LangSmithAddMemberToCurrentWorkspace::class, 'type' => 'write', 'name' => 'Add Member To Current Workspace', 'description' => 'Add Member To Current Workspace (POST /api/v1/workspaces/current/members).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_current_active_workspace_members' => ['class' => LangSmithGetCurrentActiveWorkspaceMembers::class, 'type' => 'read', 'name' => 'Get Current Active Workspace Members', 'description' => 'Get Current Active Workspace Members (GET /api/v1/workspaces/current/members/active).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_current_pending_workspace_members' => ['class' => LangSmithGetCurrentPendingWorkspaceMembers::class, 'type' => 'read', 'name' => 'Get Current Pending Workspace Members', 'description' => 'Get Current Pending Workspace Members (GET /api/v1/workspaces/current/members/pending).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_members_to_current_workspace_batch' => ['class' => LangSmithAddMembersToCurrentWorkspaceBatch::class, 'type' => 'write', 'name' => 'Add Members To Current Workspace Batch', 'description' => 'Add Members To Current Workspace Batch (POST /api/v1/workspaces/current/members/batch).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_current_workspace_member' => ['class' => LangSmithDeleteCurrentWorkspaceMember::class, 'type' => 'write', 'name' => 'Delete Current Workspace Member', 'description' => 'Delete Current Workspace Member (DELETE /api/v1/workspaces/current/members/{identity_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_current_workspace_member' => ['class' => LangSmithPatchCurrentWorkspaceMember::class, 'type' => 'write', 'name' => 'Patch Current Workspace Member', 'description' => 'Patch Current Workspace Member (PATCH /api/v1/workspaces/current/members/{identity_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_current_workspace_pending_member' => ['class' => LangSmithDeleteCurrentWorkspacePendingMember::class, 'type' => 'write', 'name' => 'Delete Current Workspace Pending Member', 'description' => 'Delete Current Workspace Pending Member (DELETE /api/v1/workspaces/current/members/{identity_id}/pending).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_api_v1_ok' => ['class' => LangSmithGetApiV1Ok::class, 'type' => 'read', 'name' => 'Get Api V1 Ok', 'description' => 'Ok (GET /api/v1/ok).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_settings' => ['class' => LangSmithGetSettings::class, 'type' => 'read', 'name' => 'Get Settings', 'description' => 'Get Settings (GET /api/v1/settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_set_tenant_handle' => ['class' => LangSmithSetTenantHandle::class, 'type' => 'write', 'name' => 'Set Tenant Handle', 'description' => 'Set Tenant Handle (POST /api/v1/settings/handle).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_repos' => ['class' => LangSmithListRepos::class, 'type' => 'read', 'name' => 'List Repos', 'description' => 'List Repos (GET /api/v1/repos).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_repo' => ['class' => LangSmithCreateRepo::class, 'type' => 'write', 'name' => 'Create Repo', 'description' => 'Create Repo (POST /api/v1/repos).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_repos' => ['class' => LangSmithDeleteRepos::class, 'type' => 'write', 'name' => 'Delete Repos', 'description' => 'Delete Repos (DELETE /api/v1/repos).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_repo' => ['class' => LangSmithGetRepo::class, 'type' => 'read', 'name' => 'Get Repo', 'description' => 'Get Repo (GET /api/v1/repos/{owner}/{repo}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_repo' => ['class' => LangSmithUpdateRepo::class, 'type' => 'write', 'name' => 'Update Repo', 'description' => 'Update Repo (PATCH /api/v1/repos/{owner}/{repo}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_repo' => ['class' => LangSmithDeleteRepo::class, 'type' => 'write', 'name' => 'Delete Repo', 'description' => 'Delete Repo (DELETE /api/v1/repos/{owner}/{repo}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_fork_repo' => ['class' => LangSmithForkRepo::class, 'type' => 'write', 'name' => 'Fork Repo', 'description' => 'Fork Repo (POST /api/v1/repos/{owner}/{repo}/fork).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_repo_tags' => ['class' => LangSmithListRepoTags::class, 'type' => 'read', 'name' => 'List Repo Tags', 'description' => 'List Repo Tags (GET /api/v1/repos/tags).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_optimize_prompt_job' => ['class' => LangSmithOptimizePromptJob::class, 'type' => 'write', 'name' => 'Optimize Prompt Job', 'description' => 'Optimize Prompt Job (POST /api/v1/repos/optimize-job).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_like_repo' => ['class' => LangSmithLikeRepo::class, 'type' => 'write', 'name' => 'Like Repo', 'description' => 'Like Repo (POST /api/v1/likes/{owner}/{repo}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_create_comment' => ['class' => LangSmithCreateComment::class, 'type' => 'write', 'name' => 'Create Comment', 'description' => 'Create Comment (POST /api/v1/comments/{owner}/{repo}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_comments' => ['class' => LangSmithGetComments::class, 'type' => 'read', 'name' => 'Get Comments', 'description' => 'Get Comments (GET /api/v1/comments/{owner}/{repo}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_sub_comments' => ['class' => LangSmithGetSubComments::class, 'type' => 'read', 'name' => 'Get Sub Comments', 'description' => 'Get Sub Comments (GET /api/v1/comments/{owner}/{repo}/{parent_comment_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_sub_comment' => ['class' => LangSmithCreateSubComment::class, 'type' => 'write', 'name' => 'Create Sub Comment', 'description' => 'Create Sub Comment (POST /api/v1/comments/{owner}/{repo}/{parent_comment_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_like_comment' => ['class' => LangSmithLikeComment::class, 'type' => 'write', 'name' => 'Like Comment', 'description' => 'Like Comment (POST /api/v1/comments/{owner}/{repo}/{parent_comment_id}/like).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_unlike_comment' => ['class' => LangSmithUnlikeComment::class, 'type' => 'write', 'name' => 'Unlike Comment', 'description' => 'Unlike Comment (DELETE /api/v1/comments/{owner}/{repo}/{parent_comment_id}/like).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_tags' => ['class' => LangSmithGetTags::class, 'type' => 'read', 'name' => 'Get Tags', 'description' => 'Get Tags (GET /api/v1/repos/{owner}/{repo}/tags).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_tag' => ['class' => LangSmithCreateTag::class, 'type' => 'write', 'name' => 'Create Tag', 'description' => 'Create Tag (POST /api/v1/repos/{owner}/{repo}/tags).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_tag' => ['class' => LangSmithGetTag::class, 'type' => 'read', 'name' => 'Get Tag', 'description' => 'Get Tag (GET /api/v1/repos/{owner}/{repo}/tags/{tag_name}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_tag' => ['class' => LangSmithUpdateTag::class, 'type' => 'write', 'name' => 'Update Tag', 'description' => 'Update Tag (PATCH /api/v1/repos/{owner}/{repo}/tags/{tag_name}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_tag' => ['class' => LangSmithDeleteTag::class, 'type' => 'write', 'name' => 'Delete Tag', 'description' => 'Delete Tag (DELETE /api/v1/repos/{owner}/{repo}/tags/{tag_name}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_repo_owners' => ['class' => LangSmithListRepoOwners::class, 'type' => 'read', 'name' => 'List Repo Owners', 'description' => 'List Repo Owners (GET /api/v1/repos/{owner}/{repo}/owners).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_add_repo_owner' => ['class' => LangSmithAddRepoOwner::class, 'type' => 'write', 'name' => 'Add Repo Owner', 'description' => 'Add Repo Owner (POST /api/v1/repos/{owner}/{repo}/owners).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_remove_repo_owner' => ['class' => LangSmithRemoveRepoOwner::class, 'type' => 'write', 'name' => 'Remove Repo Owner', 'description' => 'Remove Repo Owner (DELETE /api/v1/repos/{owner}/{repo}/owners).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_jobs' => ['class' => LangSmithListJobs::class, 'type' => 'read', 'name' => 'List Jobs', 'description' => 'List Jobs (GET /api/v1/repos/{owner}/{repo}/optimization-jobs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_job' => ['class' => LangSmithCreateJob::class, 'type' => 'write', 'name' => 'Create Job', 'description' => 'Create Job (POST /api/v1/repos/{owner}/{repo}/optimization-jobs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_job' => ['class' => LangSmithGetJob::class, 'type' => 'read', 'name' => 'Get Job', 'description' => 'Get Job (GET /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_update_job' => ['class' => LangSmithUpdateJob::class, 'type' => 'write', 'name' => 'Update Job', 'description' => 'Update Job (PATCH /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_job' => ['class' => LangSmithDeleteJob::class, 'type' => 'write', 'name' => 'Delete Job', 'description' => 'Delete Job (DELETE /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_list_job_logs' => ['class' => LangSmithListJobLogs::class, 'type' => 'read', 'name' => 'List Job Logs', 'description' => 'List Job Logs (GET /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}/logs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_create_log' => ['class' => LangSmithCreateLog::class, 'type' => 'write', 'name' => 'Create Log', 'description' => 'Create Log (POST /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}/logs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_log' => ['class' => LangSmithGetLog::class, 'type' => 'read', 'name' => 'Get Log', 'description' => 'Get Log (GET /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}/logs/{log_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_log' => ['class' => LangSmithDeleteLog::class, 'type' => 'write', 'name' => 'Delete Log', 'description' => 'Delete Log (DELETE /api/v1/repos/{owner}/{repo}/optimization-jobs/{job_id}/logs/{log_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_well_known_oauth_authorization_server' => ['class' => LangSmithGetWellKnownOauthAuthorizationServer::class, 'type' => 'read', 'name' => 'Get Well Known Oauth Authorization Server', 'description' => 'Get OAuth2 authorization server metadata (GET /.well-known/oauth-authorization-server).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_api_v1_hub_environments' => ['class' => LangSmithGetApiV1HubEnvironments::class, 'type' => 'read', 'name' => 'Get Api V1 Hub Environments', 'description' => 'List hub environments (GET /api/v1/hub/environments).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post' => ['class' => LangSmithPost::class, 'type' => 'write', 'name' => 'Post', 'description' => 'Create hub environments model (POST /api/v1/hub/environments).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_api_v1_hub_environments_id' => ['class' => LangSmithDeleteApiV1HubEnvironmentsId::class, 'type' => 'write', 'name' => 'Delete Api V1 Hub Environments Id', 'description' => 'Delete hub environments model (DELETE /api/v1/hub/environments/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch' => ['class' => LangSmithPatch::class, 'type' => 'write', 'name' => 'Patch', 'description' => 'Update hub environments model (PATCH /api/v1/hub/environments/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_auth_public' => ['class' => LangSmithGetAuthPublic::class, 'type' => 'read', 'name' => 'Get Auth Public', 'description' => 'Get public auth info (GET /auth/public).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_aws_marketplace_register' => ['class' => LangSmithPostAwsMarketplaceRegister::class, 'type' => 'write', 'name' => 'Post Aws Marketplace Register', 'description' => 'AWS Marketplace fulfillment URL registration (POST /aws-marketplace/register).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_commits_owner_repo' => ['class' => LangSmithGetCommitsOwnerRepo::class, 'type' => 'read', 'name' => 'Get Commits Owner Repo', 'description' => 'List commits (GET /commits/{owner}/{repo}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_commits_owner_repo' => ['class' => LangSmithPostCommitsOwnerRepo::class, 'type' => 'write', 'name' => 'Post Commits Owner Repo', 'description' => 'Create a commit (POST /commits/{owner}/{repo}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_commits_owner_repo_commit' => ['class' => LangSmithGetCommitsOwnerRepoCommit::class, 'type' => 'read', 'name' => 'Get Commits Owner Repo Commit', 'description' => 'Get a commit (GET /commits/{owner}/{repo}/{commit}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_datasets_dataset_id_experiment_view_overrides' => ['class' => LangSmithGetDatasetsDatasetIdExperimentViewOverrides::class, 'type' => 'read', 'name' => 'Get Datasets Dataset Id Experiment View Overrides', 'description' => 'Get experiment view override configurations for a dataset (GET /datasets/{dataset_id}/experiment-view-overrides).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_datasets_dataset_id_experiment_view_overrides' => ['class' => LangSmithPostDatasetsDatasetIdExperimentViewOverrides::class, 'type' => 'write', 'name' => 'Post Datasets Dataset Id Experiment View Overrides', 'description' => 'Create new experiment view override configuration for a dataset (POST /datasets/{dataset_id}/experiment-view-overrides).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_datasets_dataset_id_experiment_view_overrides_id' => ['class' => LangSmithGetDatasetsDatasetIdExperimentViewOverridesId::class, 'type' => 'read', 'name' => 'Get Datasets Dataset Id Experiment View Overrides Id', 'description' => 'Get experiment view override configuration by specific ID (GET /datasets/{dataset_id}/experiment-view-overrides/{id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_datasets_dataset_id_experiment_view_overrides_id' => ['class' => LangSmithDeleteDatasetsDatasetIdExperimentViewOverridesId::class, 'type' => 'write', 'name' => 'Delete Datasets Dataset Id Experiment View Overrides Id', 'description' => 'Delete experiment view override configuration (DELETE /datasets/{dataset_id}/experiment-view-overrides/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_datasets_dataset_id_experiment_view_overrides_id' => ['class' => LangSmithPatchDatasetsDatasetIdExperimentViewOverridesId::class, 'type' => 'write', 'name' => 'Patch Datasets Dataset Id Experiment View Overrides Id', 'description' => 'Update existing experiment view override configuration (PATCH /datasets/{dataset_id}/experiment-view-overrides/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_me_providers_providertype' => ['class' => LangSmithGetMeProvidersProvidertype::class, 'type' => 'read', 'name' => 'Get Me Providers Providertype', 'description' => 'Get the authenticated user\'s provider user ID (GET /me/providers/{providerType}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_oauth_authorize' => ['class' => LangSmithGetOauthAuthorize::class, 'type' => 'read', 'name' => 'Get Oauth Authorize', 'description' => 'Initiate OAuth2 authorization (GET /oauth/authorize).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_oauth_authorize_approve' => ['class' => LangSmithPostOauthAuthorizeApprove::class, 'type' => 'write', 'name' => 'Post Oauth Authorize Approve', 'description' => 'Approve OAuth2 authorization request (POST /oauth/authorize/approve).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_oauth_device_authorize' => ['class' => LangSmithPostOauthDeviceAuthorize::class, 'type' => 'write', 'name' => 'Post Oauth Device Authorize', 'description' => 'Authorize a device code (POST /oauth/device/authorize).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_oauth_device_code' => ['class' => LangSmithPostOauthDeviceCode::class, 'type' => 'write', 'name' => 'Post Oauth Device Code', 'description' => 'Request OAuth2 device authorization (POST /oauth/device/code).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_oauth_revoke' => ['class' => LangSmithPostOauthRevoke::class, 'type' => 'write', 'name' => 'Post Oauth Revoke', 'description' => 'Revoke an OAuth2 token (POST /oauth/revoke).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_oauth_token' => ['class' => LangSmithPostOauthToken::class, 'type' => 'write', 'name' => 'Post Oauth Token', 'description' => 'Exchange grant for OAuth2 tokens (POST /oauth/token).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_repos_owner_repo_tags_tag_name_history' => ['class' => LangSmithGetReposOwnerRepoTagsTagNameHistory::class, 'type' => 'read', 'name' => 'Get Repos Owner Repo Tags Tag Name History', 'description' => 'Get tag transition history (GET /repos/{owner}/{repo}/tags/{tag_name}/history).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_runs' => ['class' => LangSmithPostRuns::class, 'type' => 'write', 'name' => 'Post Runs', 'description' => 'Create a Run (POST /runs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_runs_batch' => ['class' => LangSmithPostRunsBatch::class, 'type' => 'write', 'name' => 'Post Runs Batch', 'description' => 'Ingest Runs (Batch JSON) (POST /runs/batch).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_runs_multipart' => ['class' => LangSmithPostRunsMultipart::class, 'type' => 'write', 'name' => 'Post Runs Multipart', 'description' => 'Ingest Runs (Multipart) (POST /runs/multipart).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_runs_run_id' => ['class' => LangSmithPatchRunsRunId::class, 'type' => 'write', 'name' => 'Patch Runs Run Id', 'description' => 'Update a Run (PATCH /runs/{run_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_agent_builder_integrations' => ['class' => LangSmithGetV1AgentBuilderIntegrations::class, 'type' => 'read', 'name' => 'Get V1 Agent Builder Integrations', 'description' => 'Get Agent Builder integrations settings (GET /v1/agent-builder/integrations).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_put_v1_agent_builder_integrations' => ['class' => LangSmithPutV1AgentBuilderIntegrations::class, 'type' => 'write', 'name' => 'Put V1 Agent Builder Integrations', 'description' => 'Update Agent Builder integrations settings (PUT /v1/agent-builder/integrations).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_beacon_usage_snapshot' => ['class' => LangSmithPostV1BeaconUsageSnapshot::class, 'type' => 'write', 'name' => 'Post V1 Beacon Usage Snapshot', 'description' => 'Submit a self-hosted usage snapshot (POST /v1/beacon/usage-snapshot).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_agents' => ['class' => LangSmithGetV1FleetAgents::class, 'type' => 'read', 'name' => 'Get V1 Fleet Agents', 'description' => 'List agents (GET /v1/fleet/agents).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_agents' => ['class' => LangSmithPostV1FleetAgents::class, 'type' => 'write', 'name' => 'Post V1 Fleet Agents', 'description' => 'Create an agent (POST /v1/fleet/agents).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_agents_agentid' => ['class' => LangSmithGetV1FleetAgentsAgentid::class, 'type' => 'read', 'name' => 'Get V1 Fleet Agents Agentid', 'description' => 'Get an agent (GET /v1/fleet/agents/{agentID}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_patch_v1_fleet_agents_agentid' => ['class' => LangSmithPatchV1FleetAgentsAgentid::class, 'type' => 'write', 'name' => 'Patch V1 Fleet Agents Agentid', 'description' => 'Update an agent (PATCH /v1/fleet/agents/{agentID}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_auth_providers' => ['class' => LangSmithGetV1FleetAuthProviders::class, 'type' => 'read', 'name' => 'Get V1 Fleet Auth Providers', 'description' => 'List OAuth providers (GET /v1/fleet/auth-providers).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_auth_providers' => ['class' => LangSmithPostV1FleetAuthProviders::class, 'type' => 'write', 'name' => 'Post V1 Fleet Auth Providers', 'description' => 'Register an OAuth provider (POST /v1/fleet/auth-providers).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_fleet_auth_providers_discover' => ['class' => LangSmithPostV1FleetAuthProvidersDiscover::class, 'type' => 'write', 'name' => 'Post V1 Fleet Auth Providers Discover', 'description' => 'Discover and register an OAuth provider (POST /v1/fleet/auth-providers/discover).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_auth_providers_provider_id' => ['class' => LangSmithGetV1FleetAuthProvidersProviderId::class, 'type' => 'read', 'name' => 'Get V1 Fleet Auth Providers Provider Id', 'description' => 'Get an OAuth provider (GET /v1/fleet/auth-providers/{provider_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_fleet_auth_providers_provider_id' => ['class' => LangSmithDeleteV1FleetAuthProvidersProviderId::class, 'type' => 'write', 'name' => 'Delete V1 Fleet Auth Providers Provider Id', 'description' => 'Delete an OAuth provider (DELETE /v1/fleet/auth-providers/{provider_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_fleet_auth_providers_provider_id' => ['class' => LangSmithPatchV1FleetAuthProvidersProviderId::class, 'type' => 'write', 'name' => 'Patch V1 Fleet Auth Providers Provider Id', 'description' => 'Update an OAuth provider (PATCH /v1/fleet/auth-providers/{provider_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_fleet_auth_sessions' => ['class' => LangSmithPostV1FleetAuthSessions::class, 'type' => 'write', 'name' => 'Post V1 Fleet Auth Sessions', 'description' => 'Start an authorization session (POST /v1/fleet/auth-sessions).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_auth_sessions_session_id' => ['class' => LangSmithGetV1FleetAuthSessionsSessionId::class, 'type' => 'read', 'name' => 'Get V1 Fleet Auth Sessions Session Id', 'description' => 'Get an authorization session (GET /v1/fleet/auth-sessions/{session_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_fleet_auth_tokens' => ['class' => LangSmithGetV1FleetAuthTokens::class, 'type' => 'read', 'name' => 'Get V1 Fleet Auth Tokens', 'description' => 'List your connection tokens (GET /v1/fleet/auth-tokens).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_auth_tokens_revoke' => ['class' => LangSmithPostV1FleetAuthTokensRevoke::class, 'type' => 'write', 'name' => 'Post V1 Fleet Auth Tokens Revoke', 'description' => 'Revoke connection tokens by filter (POST /v1/fleet/auth-tokens/revoke).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_fleet_auth_tokens_token_id' => ['class' => LangSmithDeleteV1FleetAuthTokensTokenId::class, 'type' => 'write', 'name' => 'Delete V1 Fleet Auth Tokens Token Id', 'description' => 'Revoke a connection token (DELETE /v1/fleet/auth-tokens/{token_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_fleet_auth_tokens_token_id' => ['class' => LangSmithPatchV1FleetAuthTokensTokenId::class, 'type' => 'write', 'name' => 'Patch V1 Fleet Auth Tokens Token Id', 'description' => 'Update a connection token (PATCH /v1/fleet/auth-tokens/{token_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_integrations' => ['class' => LangSmithGetV1FleetIntegrations::class, 'type' => 'read', 'name' => 'Get V1 Fleet Integrations', 'description' => 'List integrations (GET /v1/fleet/integrations).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_integrations' => ['class' => LangSmithPostV1FleetIntegrations::class, 'type' => 'write', 'name' => 'Post V1 Fleet Integrations', 'description' => 'Create a custom integration (POST /v1/fleet/integrations).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_integrations_id' => ['class' => LangSmithGetV1FleetIntegrationsId::class, 'type' => 'read', 'name' => 'Get V1 Fleet Integrations Id', 'description' => 'Get an integration (GET /v1/fleet/integrations/{id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_fleet_integrations_id' => ['class' => LangSmithDeleteV1FleetIntegrationsId::class, 'type' => 'write', 'name' => 'Delete V1 Fleet Integrations Id', 'description' => 'Delete a custom integration (DELETE /v1/fleet/integrations/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_fleet_integrations_id' => ['class' => LangSmithPatchV1FleetIntegrationsId::class, 'type' => 'write', 'name' => 'Patch V1 Fleet Integrations Id', 'description' => 'Update a custom integration (PATCH /v1/fleet/integrations/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_put_v1_fleet_integrations_id_auth_methods' => ['class' => LangSmithPutV1FleetIntegrationsIdAuthMethods::class, 'type' => 'write', 'name' => 'Put V1 Fleet Integrations Id Auth Methods', 'description' => 'Replace integration auth methods (PUT /v1/fleet/integrations/{id}/auth-methods).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_mcp_servers' => ['class' => LangSmithGetV1FleetMcpServers::class, 'type' => 'read', 'name' => 'Get V1 Fleet Mcp Servers', 'description' => 'List MCP servers (GET /v1/fleet/mcp-servers).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_mcp_servers' => ['class' => LangSmithPostV1FleetMcpServers::class, 'type' => 'write', 'name' => 'Post V1 Fleet Mcp Servers', 'description' => 'Create MCP server (POST /v1/fleet/mcp-servers).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_mcp_servers_mcp_server_id' => ['class' => LangSmithGetV1FleetMcpServersMcpServerId::class, 'type' => 'read', 'name' => 'Get V1 Fleet Mcp Servers Mcp Server Id', 'description' => 'Get MCP server (GET /v1/fleet/mcp-servers/{mcp_server_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_fleet_mcp_servers_mcp_server_id' => ['class' => LangSmithDeleteV1FleetMcpServersMcpServerId::class, 'type' => 'write', 'name' => 'Delete V1 Fleet Mcp Servers Mcp Server Id', 'description' => 'Delete MCP server (DELETE /v1/fleet/mcp-servers/{mcp_server_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_fleet_mcp_servers_mcp_server_id' => ['class' => LangSmithPatchV1FleetMcpServersMcpServerId::class, 'type' => 'write', 'name' => 'Patch V1 Fleet Mcp Servers Mcp Server Id', 'description' => 'Update MCP server (PATCH /v1/fleet/mcp-servers/{mcp_server_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_fleet_mcp_servers_mcp_server_id_oauth_provider' => ['class' => LangSmithPostV1FleetMcpServersMcpServerIdOauthProvider::class, 'type' => 'write', 'name' => 'Post V1 Fleet Mcp Servers Mcp Server Id Oauth Provider', 'description' => 'Register per-user MCP OAuth provider (POST /v1/fleet/mcp-servers/{mcp_server_id}/oauth-provider).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_mcp_tools' => ['class' => LangSmithGetV1FleetMcpTools::class, 'type' => 'read', 'name' => 'Get V1 Fleet Mcp Tools', 'description' => 'List MCP tools (GET /v1/fleet/mcp/tools).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_fleet_skills' => ['class' => LangSmithGetV1FleetSkills::class, 'type' => 'read', 'name' => 'Get V1 Fleet Skills', 'description' => 'List skills (GET /v1/fleet/skills).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_skills' => ['class' => LangSmithPostV1FleetSkills::class, 'type' => 'write', 'name' => 'Post V1 Fleet Skills', 'description' => 'Create a skill (POST /v1/fleet/skills).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_skills_skillid' => ['class' => LangSmithGetV1FleetSkillsSkillid::class, 'type' => 'read', 'name' => 'Get V1 Fleet Skills Skillid', 'description' => 'Get a skill (GET /v1/fleet/skills/{skillID}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_put_v1_fleet_skills_skillid' => ['class' => LangSmithPutV1FleetSkillsSkillid::class, 'type' => 'write', 'name' => 'Put V1 Fleet Skills Skillid', 'description' => 'Replace a skill (PUT /v1/fleet/skills/{skillID}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_fleet_skills_skillid' => ['class' => LangSmithDeleteV1FleetSkillsSkillid::class, 'type' => 'write', 'name' => 'Delete V1 Fleet Skills Skillid', 'description' => 'Delete a skill (DELETE /v1/fleet/skills/{skillID}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_fleet_threads' => ['class' => LangSmithPostV1FleetThreads::class, 'type' => 'write', 'name' => 'Post V1 Fleet Threads', 'description' => 'Create thread (POST /v1/fleet/threads).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_fleet_threads_threadid' => ['class' => LangSmithGetV1FleetThreadsThreadid::class, 'type' => 'read', 'name' => 'Get V1 Fleet Threads Threadid', 'description' => 'Get thread (GET /v1/fleet/threads/{threadID}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_fleet_threads_threadid_resolve_interrupt' => ['class' => LangSmithPostV1FleetThreadsThreadidResolveInterrupt::class, 'type' => 'write', 'name' => 'Post V1 Fleet Threads Threadid Resolve Interrupt', 'description' => 'Resolve an interrupted thread (POST /v1/fleet/threads/{threadID}/resolve-interrupt).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_fleet_threads_threadid_runs' => ['class' => LangSmithPostV1FleetThreadsThreadidRuns::class, 'type' => 'write', 'name' => 'Post V1 Fleet Threads Threadid Runs', 'description' => 'Create thread run (POST /v1/fleet/threads/{threadID}/runs).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_alerts_session_id' => ['class' => LangSmithPostV1PlatformAlertsSessionId::class, 'type' => 'write', 'name' => 'Post V1 Platform Alerts Session Id', 'description' => 'Create an alert rule (POST /v1/platform/alerts/{session_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_alerts_session_id_test' => ['class' => LangSmithPostV1PlatformAlertsSessionIdTest::class, 'type' => 'write', 'name' => 'Post V1 Platform Alerts Session Id Test', 'description' => 'Test an alert action to determine if configuration is valid (POST /v1/platform/alerts/{session_id}/test).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_alerts_session_id_alert_rule_id' => ['class' => LangSmithGetV1PlatformAlertsSessionIdAlertRuleId::class, 'type' => 'read', 'name' => 'Get V1 Platform Alerts Session Id Alert Rule Id', 'description' => 'Get an alert rule (GET /v1/platform/alerts/{session_id}/{alert_rule_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_alerts_session_id_alert_rule_id' => ['class' => LangSmithDeleteV1PlatformAlertsSessionIdAlertRuleId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Alerts Session Id Alert Rule Id', 'description' => 'Delete an alert rule (DELETE /v1/platform/alerts/{session_id}/{alert_rule_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_alerts_session_id_alert_rule_id' => ['class' => LangSmithPatchV1PlatformAlertsSessionIdAlertRuleId::class, 'type' => 'write', 'name' => 'Patch V1 Platform Alerts Session Id Alert Rule Id', 'description' => 'Update an alert rule (PATCH /v1/platform/alerts/{session_id}/{alert_rule_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_annotation_queues_queue_id_reviewers' => ['class' => LangSmithPostV1PlatformAnnotationQueuesQueueIdReviewers::class, 'type' => 'write', 'name' => 'Post V1 Platform Annotation Queues Queue Id Reviewers', 'description' => 'Add a reviewer to an annotation queue (POST /v1/platform/annotation-queues/{queue_id}/reviewers).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_platform_annotation_queues_queue_id_reviewers_identity_id' => ['class' => LangSmithDeleteV1PlatformAnnotationQueuesQueueIdReviewersIdentityId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Annotation Queues Queue Id Reviewers Identity Id', 'description' => 'Remove a reviewer from an annotation queue (DELETE /v1/platform/annotation-queues/{queue_id}/reviewers/{identity_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_datasets_examples' => ['class' => LangSmithPostV1PlatformDatasetsExamples::class, 'type' => 'write', 'name' => 'Post V1 Platform Datasets Examples', 'description' => 'Hard Delete Examples (POST /v1/platform/datasets/examples/delete).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_datasets_dataset_id_examples' => ['class' => LangSmithPostV1PlatformDatasetsDatasetIdExamples::class, 'type' => 'write', 'name' => 'Post V1 Platform Datasets Dataset Id Examples', 'description' => 'Upload Examples (POST /v1/platform/datasets/{dataset_id}/examples).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_datasets_dataset_id_examples' => ['class' => LangSmithPatchV1PlatformDatasetsDatasetIdExamples::class, 'type' => 'write', 'name' => 'Patch V1 Platform Datasets Dataset Id Examples', 'description' => 'Update Examples (PATCH /v1/platform/datasets/{dataset_id}/examples).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_evaluators' => ['class' => LangSmithGetV1PlatformEvaluators::class, 'type' => 'read', 'name' => 'Get V1 Platform Evaluators', 'description' => 'List evaluators (GET /v1/platform/evaluators).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_evaluators' => ['class' => LangSmithPostV1PlatformEvaluators::class, 'type' => 'write', 'name' => 'Post V1 Platform Evaluators', 'description' => 'Create evaluator (POST /v1/platform/evaluators).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_platform_evaluators' => ['class' => LangSmithDeleteV1PlatformEvaluators::class, 'type' => 'write', 'name' => 'Delete V1 Platform Evaluators', 'description' => 'Bulk delete evaluators (DELETE /v1/platform/evaluators).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_evaluators_evaluator_id' => ['class' => LangSmithGetV1PlatformEvaluatorsEvaluatorId::class, 'type' => 'read', 'name' => 'Get V1 Platform Evaluators Evaluator Id', 'description' => 'Get evaluator (GET /v1/platform/evaluators/{evaluator_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_evaluators_evaluator_id' => ['class' => LangSmithDeleteV1PlatformEvaluatorsEvaluatorId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Evaluators Evaluator Id', 'description' => 'Delete evaluator (DELETE /v1/platform/evaluators/{evaluator_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_evaluators_evaluator_id' => ['class' => LangSmithPatchV1PlatformEvaluatorsEvaluatorId::class, 'type' => 'write', 'name' => 'Patch V1 Platform Evaluators Evaluator Id', 'description' => 'Update evaluator (PATCH /v1/platform/evaluators/{evaluator_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_features' => ['class' => LangSmithGetV1PlatformFeatures::class, 'type' => 'read', 'name' => 'Get V1 Platform Features', 'description' => 'List feature configurations (GET /v1/platform/features).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_put_v1_platform_features_feature_default_model' => ['class' => LangSmithPutV1PlatformFeaturesFeatureDefaultModel::class, 'type' => 'write', 'name' => 'Put V1 Platform Features Feature Default Model', 'description' => 'Set default model for a feature (PUT /v1/platform/features/{feature}/default-model).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_platform_features_feature_default_model' => ['class' => LangSmithDeleteV1PlatformFeaturesFeatureDefaultModel::class, 'type' => 'write', 'name' => 'Delete V1 Platform Features Feature Default Model', 'description' => 'Delete default model for a feature (DELETE /v1/platform/features/{feature}/default-model).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_put_v1_platform_features_feature_disabled_models' => ['class' => LangSmithPutV1PlatformFeaturesFeatureDisabledModels::class, 'type' => 'write', 'name' => 'Put V1 Platform Features Feature Disabled Models', 'description' => 'Disable a model for a feature (PUT /v1/platform/features/{feature}/disabled-models).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_platform_features_feature_disabled_models_model' => ['class' => LangSmithDeleteV1PlatformFeaturesFeatureDisabledModelsModel::class, 'type' => 'write', 'name' => 'Delete V1 Platform Features Feature Disabled Models Model', 'description' => 'Re-enable a disabled model for a feature (DELETE /v1/platform/features/{feature}/disabled-models/{model}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_fleet_webhooks_webhook_id_run' => ['class' => LangSmithPostV1PlatformFleetWebhooksWebhookIdRun::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Webhooks Webhook Id Run', 'description' => 'Run a fleet webhook (POST /v1/platform/fleet-webhooks/{webhook_id}/run).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_fleet_mcp_servers' => ['class' => LangSmithGetV1PlatformFleetMcpServers::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Mcp Servers', 'description' => 'List MCP servers (GET /v1/platform/fleet/mcp-servers).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_fleet_mcp_servers' => ['class' => LangSmithPostV1PlatformFleetMcpServers::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Mcp Servers', 'description' => 'Create MCP server (POST /v1/platform/fleet/mcp-servers).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_fleet_mcp_servers_mcp_server_id' => ['class' => LangSmithGetV1PlatformFleetMcpServersMcpServerId::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Mcp Servers Mcp Server Id', 'description' => 'Get MCP server (GET /v1/platform/fleet/mcp-servers/{mcp_server_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_fleet_mcp_servers_mcp_server_id' => ['class' => LangSmithDeleteV1PlatformFleetMcpServersMcpServerId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Fleet Mcp Servers Mcp Server Id', 'description' => 'Delete MCP server (DELETE /v1/platform/fleet/mcp-servers/{mcp_server_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_fleet_mcp_servers_mcp_server_id' => ['class' => LangSmithPatchV1PlatformFleetMcpServersMcpServerId::class, 'type' => 'write', 'name' => 'Patch V1 Platform Fleet Mcp Servers Mcp Server Id', 'description' => 'Update MCP server (PATCH /v1/platform/fleet/mcp-servers/{mcp_server_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_fleet_mcp_servers_mcp_server_id_oauth_provider' => ['class' => LangSmithPostV1PlatformFleetMcpServersMcpServerIdOauthProvider::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Mcp Servers Mcp Server Id Oauth Provider', 'description' => 'Register per-user MCP OAuth provider (POST /v1/platform/fleet/mcp-servers/{mcp_server_id}/oauth-provider).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_fleet_providers_github_app_auth' => ['class' => LangSmithPostV1PlatformFleetProvidersGithubAppAuth::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Providers Github App Auth', 'description' => 'Get GitHub OAuth authorization link (POST /v1/platform/fleet/providers/github-app/auth).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_fleet_providers_github_app_connection' => ['class' => LangSmithGetV1PlatformFleetProvidersGithubAppConnection::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Providers Github App Connection', 'description' => 'Get GitHub user connection status (GET /v1/platform/fleet/providers/github-app/connection).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_fleet_providers_github_app_connection' => ['class' => LangSmithDeleteV1PlatformFleetProvidersGithubAppConnection::class, 'type' => 'write', 'name' => 'Delete V1 Platform Fleet Providers Github App Connection', 'description' => 'Delete GitHub user connection (DELETE /v1/platform/fleet/providers/github-app/connection).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_fleet_providers_github_app_connection' => ['class' => LangSmithPatchV1PlatformFleetProvidersGithubAppConnection::class, 'type' => 'write', 'name' => 'Patch V1 Platform Fleet Providers Github App Connection', 'description' => 'Update GitHub user connection (PATCH /v1/platform/fleet/providers/github-app/connection).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_fleet_providers_github_app_install' => ['class' => LangSmithPostV1PlatformFleetProvidersGithubAppInstall::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Providers Github App Install', 'description' => 'Get GitHub App install link (POST /v1/platform/fleet/providers/github-app/install).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_fleet_providers_github_app_installations' => ['class' => LangSmithGetV1PlatformFleetProvidersGithubAppInstallations::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Providers Github App Installations', 'description' => 'List GitHub App installations (GET /v1/platform/fleet/providers/github-app/installations).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_fleet_providers_github_app_installations_refresh' => ['class' => LangSmithPostV1PlatformFleetProvidersGithubAppInstallationsRefresh::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Providers Github App Installations Refresh', 'description' => 'Refresh GitHub App installations (POST /v1/platform/fleet/providers/github-app/installations/refresh).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_platform_fleet_providers_github_app_installations_id' => ['class' => LangSmithDeleteV1PlatformFleetProvidersGithubAppInstallationsId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Fleet Providers Github App Installations Id', 'description' => 'Delete a GitHub App installation (DELETE /v1/platform/fleet/providers/github-app/installations/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_fleet_providers_github_app_installations_id_repos' => ['class' => LangSmithGetV1PlatformFleetProvidersGithubAppInstallationsIdRepos::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Providers Github App Installations Id Repos', 'description' => 'List repositories for a GitHub App installation (GET /v1/platform/fleet/providers/github-app/installations/{id}/repos).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_fleet_providers_github_app_tokens' => ['class' => LangSmithPostV1PlatformFleetProvidersGithubAppTokens::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Providers Github App Tokens', 'description' => 'Request a GitHub access token (POST /v1/platform/fleet/providers/github-app/tokens).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_fleet_providers_github_app_webhooks' => ['class' => LangSmithPostV1PlatformFleetProvidersGithubAppWebhooks::class, 'type' => 'write', 'name' => 'Post V1 Platform Fleet Providers Github App Webhooks', 'description' => 'Handle GitHub App webhook events (POST /v1/platform/fleet/providers/github-app/webhooks).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_fleet_usage_agents' => ['class' => LangSmithGetV1PlatformFleetUsageAgents::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Usage Agents', 'description' => 'List fleet agents with usage (GET /v1/platform/fleet/usage/agents).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_fleet_usage_models' => ['class' => LangSmithGetV1PlatformFleetUsageModels::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Usage Models', 'description' => 'List fleet models with usage (GET /v1/platform/fleet/usage/models).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_fleet_usage_tools' => ['class' => LangSmithGetV1PlatformFleetUsageTools::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Usage Tools', 'description' => 'List fleet tools with usage (GET /v1/platform/fleet/usage/tools).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_fleet_usage_users' => ['class' => LangSmithGetV1PlatformFleetUsageUsers::class, 'type' => 'read', 'name' => 'Get V1 Platform Fleet Usage Users', 'description' => 'List fleet users with usage (GET /v1/platform/fleet/usage/users).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_hub_repos_owner_repo_directories' => ['class' => LangSmithGetV1PlatformHubReposOwnerRepoDirectories::class, 'type' => 'read', 'name' => 'Get V1 Platform Hub Repos Owner Repo Directories', 'description' => 'Get directory contents (GET /v1/platform/hub/repos/{owner}/{repo}/directories).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_hub_repos_owner_repo_directories' => ['class' => LangSmithDeleteV1PlatformHubReposOwnerRepoDirectories::class, 'type' => 'write', 'name' => 'Delete V1 Platform Hub Repos Owner Repo Directories', 'description' => 'Delete directory repository (DELETE /v1/platform/hub/repos/{owner}/{repo}/directories).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_hub_repos_owner_repo_directories_commits' => ['class' => LangSmithPostV1PlatformHubReposOwnerRepoDirectoriesCommits::class, 'type' => 'write', 'name' => 'Post V1 Platform Hub Repos Owner Repo Directories Commits', 'description' => 'Create directory commit (POST /v1/platform/hub/repos/{owner}/{repo}/directories/commits).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_mcp_vendors' => ['class' => LangSmithGetV1PlatformMcpVendors::class, 'type' => 'read', 'name' => 'Get V1 Platform Mcp Vendors', 'description' => 'List MCP vendors (GET /v1/platform/mcp-vendors).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_mcp_vendors_vendor_slug' => ['class' => LangSmithGetV1PlatformMcpVendorsVendorSlug::class, 'type' => 'read', 'name' => 'Get V1 Platform Mcp Vendors Vendor Slug', 'description' => 'Get MCP vendor (GET /v1/platform/mcp-vendors/{vendor_slug}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_mcp_vendors_vendor_slug_account' => ['class' => LangSmithGetV1PlatformMcpVendorsVendorSlugAccount::class, 'type' => 'read', 'name' => 'Get V1 Platform Mcp Vendors Vendor Slug Account', 'description' => 'Get vendor account (GET /v1/platform/mcp-vendors/{vendor_slug}/account).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_mcp_vendors_vendor_slug_mcp_servers' => ['class' => LangSmithGetV1PlatformMcpVendorsVendorSlugMcpServers::class, 'type' => 'read', 'name' => 'Get V1 Platform Mcp Vendors Vendor Slug Mcp Servers', 'description' => 'List MCP servers for a vendor (GET /v1/platform/mcp-vendors/{vendor_slug}/mcp-servers).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_mcp_vendors_vendor_slug_settings' => ['class' => LangSmithGetV1PlatformMcpVendorsVendorSlugSettings::class, 'type' => 'read', 'name' => 'Get V1 Platform Mcp Vendors Vendor Slug Settings', 'description' => 'Get vendor settings (GET /v1/platform/mcp-vendors/{vendor_slug}/settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_put_v1_platform_mcp_vendors_vendor_slug_settings' => ['class' => LangSmithPutV1PlatformMcpVendorsVendorSlugSettings::class, 'type' => 'write', 'name' => 'Put V1 Platform Mcp Vendors Vendor Slug Settings', 'description' => 'Replace vendor settings (PUT /v1/platform/mcp-vendors/{vendor_slug}/settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_mcp_vendors_vendor_slug_settings' => ['class' => LangSmithPostV1PlatformMcpVendorsVendorSlugSettings::class, 'type' => 'write', 'name' => 'Post V1 Platform Mcp Vendors Vendor Slug Settings', 'description' => 'Create vendor settings (POST /v1/platform/mcp-vendors/{vendor_slug}/settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_delete_v1_platform_mcp_vendors_vendor_slug_settings' => ['class' => LangSmithDeleteV1PlatformMcpVendorsVendorSlugSettings::class, 'type' => 'write', 'name' => 'Delete V1 Platform Mcp Vendors Vendor Slug Settings', 'description' => 'Delete vendor settings (DELETE /v1/platform/mcp-vendors/{vendor_slug}/settings).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_mcp_vendors_vendor_slug_tools' => ['class' => LangSmithGetV1PlatformMcpVendorsVendorSlugTools::class, 'type' => 'read', 'name' => 'Get V1 Platform Mcp Vendors Vendor Slug Tools', 'description' => 'List tools for a vendor (GET /v1/platform/mcp-vendors/{vendor_slug}/tools).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_nps_response' => ['class' => LangSmithPostV1PlatformNpsResponse::class, 'type' => 'write', 'name' => 'Post V1 Platform Nps Response', 'description' => 'Submit an NPS response (POST /v1/platform/nps/response).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_ops_backfills_restart' => ['class' => LangSmithPostV1PlatformOpsBackfillsRestart::class, 'type' => 'write', 'name' => 'Post V1 Platform Ops Backfills Restart', 'description' => 'Restart a backfill job (POST /v1/platform/ops/backfills/restart).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_orgs_current_access_policies' => ['class' => LangSmithGetV1PlatformOrgsCurrentAccessPolicies::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Access Policies', 'description' => 'List access policies (GET /v1/platform/orgs/current/access-policies).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_orgs_current_access_policies' => ['class' => LangSmithPostV1PlatformOrgsCurrentAccessPolicies::class, 'type' => 'write', 'name' => 'Post V1 Platform Orgs Current Access Policies', 'description' => 'Create an access policy (POST /v1/platform/orgs/current/access-policies).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v1_platform_orgs_current_access_policies_roles_role_id_access_policies' => ['class' => LangSmithPostV1PlatformOrgsCurrentAccessPoliciesRolesRoleIdAccessPolicies::class, 'type' => 'write', 'name' => 'Post V1 Platform Orgs Current Access Policies Roles Role Id Access Policies', 'description' => 'Attach access policies to a role (POST /v1/platform/orgs/current/access-policies/roles/{role_id}/access-policies).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_orgs_current_access_policies_access_policy_id' => ['class' => LangSmithGetV1PlatformOrgsCurrentAccessPoliciesAccessPolicyId::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Access Policies Access Policy Id', 'description' => 'Get an access policy (GET /v1/platform/orgs/current/access-policies/{access_policy_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_orgs_current_access_policies_access_policy_id' => ['class' => LangSmithDeleteV1PlatformOrgsCurrentAccessPoliciesAccessPolicyId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Orgs Current Access Policies Access Policy Id', 'description' => 'Delete an access policy (DELETE /v1/platform/orgs/current/access-policies/{access_policy_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_orgs_current_data_planes' => ['class' => LangSmithGetV1PlatformOrgsCurrentDataPlanes::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Data Planes', 'description' => 'List data planes for the current organization (GET /v1/platform/orgs/current/data-planes).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_orgs_current_info' => ['class' => LangSmithGetV1PlatformOrgsCurrentInfo::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Info', 'description' => 'Get current organization info (GET /v1/platform/orgs/current/info).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_orgs_current_members' => ['class' => LangSmithGetV1PlatformOrgsCurrentMembers::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Members', 'description' => 'List org members with workspace roles (GET /v1/platform/orgs/current/members).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_orgs_current_scim_tokens' => ['class' => LangSmithGetV1PlatformOrgsCurrentScimTokens::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Scim Tokens', 'description' => 'List SCIM tokens (GET /v1/platform/orgs/current/scim/tokens).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_orgs_current_scim_tokens' => ['class' => LangSmithPostV1PlatformOrgsCurrentScimTokens::class, 'type' => 'write', 'name' => 'Post V1 Platform Orgs Current Scim Tokens', 'description' => 'Create a SCIM token (POST /v1/platform/orgs/current/scim/tokens).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_orgs_current_scim_tokens_scim_token_id' => ['class' => LangSmithGetV1PlatformOrgsCurrentScimTokensScimTokenId::class, 'type' => 'read', 'name' => 'Get V1 Platform Orgs Current Scim Tokens Scim Token Id', 'description' => 'Get a SCIM token (GET /v1/platform/orgs/current/scim/tokens/{scim_token_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_orgs_current_scim_tokens_scim_token_id' => ['class' => LangSmithDeleteV1PlatformOrgsCurrentScimTokensScimTokenId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Orgs Current Scim Tokens Scim Token Id', 'description' => 'Delete a SCIM token (DELETE /v1/platform/orgs/current/scim/tokens/{scim_token_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_orgs_current_scim_tokens_scim_token_id' => ['class' => LangSmithPatchV1PlatformOrgsCurrentScimTokensScimTokenId::class, 'type' => 'write', 'name' => 'Patch V1 Platform Orgs Current Scim Tokens Scim Token Id', 'description' => 'Update a SCIM token (PATCH /v1/platform/orgs/current/scim/tokens/{scim_token_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_sessions_sessionid_agent_versions' => ['class' => LangSmithGetV1PlatformSessionsSessionidAgentVersions::class, 'type' => 'read', 'name' => 'Get V1 Platform Sessions Sessionid Agent Versions', 'description' => 'List agent versions for a project (GET /v1/platform/sessions/{sessionID}/agent-versions).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v1_platform_tools' => ['class' => LangSmithGetV1PlatformTools::class, 'type' => 'read', 'name' => 'Get V1 Platform Tools', 'description' => 'List tools (GET /v1/platform/tools).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v1_platform_tools' => ['class' => LangSmithPostV1PlatformTools::class, 'type' => 'write', 'name' => 'Post V1 Platform Tools', 'description' => 'Create a tool (POST /v1/platform/tools).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_tools_id_id' => ['class' => LangSmithGetV1PlatformToolsIdId::class, 'type' => 'read', 'name' => 'Get V1 Platform Tools Id Id', 'description' => 'Get a tool by ID (GET /v1/platform/tools/id/{id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_tools_id_id' => ['class' => LangSmithDeleteV1PlatformToolsIdId::class, 'type' => 'write', 'name' => 'Delete V1 Platform Tools Id Id', 'description' => 'Delete a tool by ID (DELETE /v1/platform/tools/id/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_tools_id_id' => ['class' => LangSmithPatchV1PlatformToolsIdId::class, 'type' => 'write', 'name' => 'Patch V1 Platform Tools Id Id', 'description' => 'Update a tool by ID (PATCH /v1/platform/tools/id/{id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v1_platform_tools_handle' => ['class' => LangSmithGetV1PlatformToolsHandle::class, 'type' => 'read', 'name' => 'Get V1 Platform Tools Handle', 'description' => 'Get a tool by handle (GET /v1/platform/tools/{handle}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v1_platform_tools_handle' => ['class' => LangSmithDeleteV1PlatformToolsHandle::class, 'type' => 'write', 'name' => 'Delete V1 Platform Tools Handle', 'description' => 'Delete a tool by handle (DELETE /v1/platform/tools/{handle}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v1_platform_tools_handle' => ['class' => LangSmithPatchV1PlatformToolsHandle::class, 'type' => 'write', 'name' => 'Patch V1 Platform Tools Handle', 'description' => 'Update a tool by handle (PATCH /v1/platform/tools/{handle}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v2_runs_query' => ['class' => LangSmithPostV2RunsQuery::class, 'type' => 'write', 'name' => 'Post V2 Runs Query', 'description' => 'Query runs (POST /v2/runs/query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_runs_run_id' => ['class' => LangSmithGetV2RunsRunId::class, 'type' => 'read', 'name' => 'Get V2 Runs Run Id', 'description' => 'Get a single run (GET /v2/runs/{run_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v2_sandboxes_boxes' => ['class' => LangSmithGetV2SandboxesBoxes::class, 'type' => 'read', 'name' => 'Get V2 Sandboxes Boxes', 'description' => 'List sandbox claims (GET /v2/sandboxes/boxes).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v2_sandboxes_boxes' => ['class' => LangSmithPostV2SandboxesBoxes::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Boxes', 'description' => 'Create a sandbox claim (POST /v2/sandboxes/boxes).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v2_sandboxes_boxes_batch' => ['class' => LangSmithPostV2SandboxesBoxesBatch::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Boxes Batch', 'description' => 'Batch delete sandbox claims (POST /v2/sandboxes/boxes/batch-delete).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_sandboxes_boxes_name' => ['class' => LangSmithGetV2SandboxesBoxesName::class, 'type' => 'read', 'name' => 'Get V2 Sandboxes Boxes Name', 'description' => 'Get a sandbox claim (GET /v2/sandboxes/boxes/{name}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v2_sandboxes_boxes_name' => ['class' => LangSmithDeleteV2SandboxesBoxesName::class, 'type' => 'write', 'name' => 'Delete V2 Sandboxes Boxes Name', 'description' => 'Delete a sandbox claim (DELETE /v2/sandboxes/boxes/{name}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_patch_v2_sandboxes_boxes_name' => ['class' => LangSmithPatchV2SandboxesBoxesName::class, 'type' => 'write', 'name' => 'Patch V2 Sandboxes Boxes Name', 'description' => 'Update a sandbox claim (PATCH /v2/sandboxes/boxes/{name}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v2_sandboxes_boxes_name_service_url' => ['class' => LangSmithPostV2SandboxesBoxesNameServiceUrl::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Boxes Name Service Url', 'description' => 'Generate a service access token (POST /v2/sandboxes/boxes/{name}/service-url).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v2_sandboxes_boxes_name_snapshot' => ['class' => LangSmithPostV2SandboxesBoxesNameSnapshot::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Boxes Name Snapshot', 'description' => 'Capture a snapshot from a sandbox (POST /v2/sandboxes/boxes/{name}/snapshot).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v2_sandboxes_boxes_name_start' => ['class' => LangSmithPostV2SandboxesBoxesNameStart::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Boxes Name Start', 'description' => 'Start a sandbox (POST /v2/sandboxes/boxes/{name}/start).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_sandboxes_boxes_name_status' => ['class' => LangSmithGetV2SandboxesBoxesNameStatus::class, 'type' => 'read', 'name' => 'Get V2 Sandboxes Boxes Name Status', 'description' => 'Get sandbox claim status (GET /v2/sandboxes/boxes/{name}/status).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v2_sandboxes_boxes_name_stop' => ['class' => LangSmithPostV2SandboxesBoxesNameStop::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Boxes Name Stop', 'description' => 'Stop a sandbox (POST /v2/sandboxes/boxes/{name}/stop).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_post_v2_sandboxes_internal_start_name' => ['class' => LangSmithPostV2SandboxesInternalStartName::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Internal Start Name', 'description' => 'Internal: start a stopped sandbox (service-to-service) (POST /v2/sandboxes/internal/start/{name}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_sandboxes_snapshots' => ['class' => LangSmithGetV2SandboxesSnapshots::class, 'type' => 'read', 'name' => 'Get V2 Sandboxes Snapshots', 'description' => 'List snapshots (GET /v2/sandboxes/snapshots).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v2_sandboxes_snapshots' => ['class' => LangSmithPostV2SandboxesSnapshots::class, 'type' => 'write', 'name' => 'Post V2 Sandboxes Snapshots', 'description' => 'Create a snapshot (POST /v2/sandboxes/snapshots).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_sandboxes_snapshots_snapshot_id' => ['class' => LangSmithGetV2SandboxesSnapshotsSnapshotId::class, 'type' => 'read', 'name' => 'Get V2 Sandboxes Snapshots Snapshot Id', 'description' => 'Get a snapshot (GET /v2/sandboxes/snapshots/{snapshot_id}).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_delete_v2_sandboxes_snapshots_snapshot_id' => ['class' => LangSmithDeleteV2SandboxesSnapshotsSnapshotId::class, 'type' => 'write', 'name' => 'Delete V2 Sandboxes Snapshots Snapshot Id', 'description' => 'Delete a snapshot (DELETE /v2/sandboxes/snapshots/{snapshot_id}).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_sandboxes_usage' => ['class' => LangSmithGetV2SandboxesUsage::class, 'type' => 'read', 'name' => 'Get V2 Sandboxes Usage', 'description' => 'Get sandbox resource usage (GET /v2/sandboxes/usage).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_post_v2_threads_query' => ['class' => LangSmithPostV2ThreadsQuery::class, 'type' => 'write', 'name' => 'Post V2 Threads Query', 'description' => 'Query Threads (POST /v2/threads/query).', 'icon' => 'ph:paper-plane-tilt'],
+            'langsmith_get_v2_threads_thread_id_traces' => ['class' => LangSmithGetV2ThreadsThreadIdTraces::class, 'type' => 'read', 'name' => 'Get V2 Threads Thread Id Traces', 'description' => 'Query Thread Traces (GET /v2/threads/{thread_id}/traces).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_v2_traces_trace_id_runs' => ['class' => LangSmithGetV2TracesTraceIdRuns::class, 'type' => 'read', 'name' => 'Get V2 Traces Trace Id Runs', 'description' => 'List runs in a trace (GET /v2/traces/{trace_id}/runs).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_get_workspaces_current_ttl_settings' => ['class' => LangSmithGetWorkspacesCurrentTtlSettings::class, 'type' => 'read', 'name' => 'Get Workspaces Current Ttl Settings', 'description' => 'Get workspace TTL settings (GET /workspaces/current/ttl-settings).', 'icon' => 'ph:magnifying-glass'],
+            'langsmith_put_workspaces_current_ttl_settings' => ['class' => LangSmithPutWorkspacesCurrentTtlSettings::class, 'type' => 'write', 'name' => 'Put Workspaces Current Ttl Settings', 'description' => 'Update workspace TTL settings (PUT /workspaces/current/ttl-settings).', 'icon' => 'ph:paper-plane-tilt'],
+        ];
+    }
+
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Create a LangSmith tool from the catalog class name.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
+    public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve account-specific LangSmith credentials when provided by the host.
+     *
+     * @param  array<string, mixed>  $context  Optional account context.
+     */
+    private function resolveService(array $context = []): LangSmithService
+    {
+        $account = $context['account'] ?? null;
+
+        if ($account !== null) {
+            $credentials = app(CredentialResolver::class);
+
+            return new LangSmithService(
+                apiKey: $credentials->get('langsmith', 'api_key', '', $account),
+                bearerToken: $credentials->get('langsmith', 'bearer_token', '', $account),
+                tenantId: $credentials->get('langsmith', 'tenant_id', '', $account),
+                organizationId: $credentials->get('langsmith', 'organization_id', '', $account),
+                baseUrl: $credentials->get('langsmith', 'base_url', 'https://api.smith.langchain.com', $account),
+            );
+        }
+
+        return app(LangSmithService::class);
+    }
+
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    public function requiredCredentials(): array
+    {
+        return ['api_key'];
+    }
+
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__ . '/../lua-docs/langsmith.md';
+    }
+}

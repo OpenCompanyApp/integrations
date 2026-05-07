@@ -12,11 +12,18 @@ class ZohoInventoryServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZohoInventoryService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
+            $get = static function (string $key, mixed $default = '') use ($creds): mixed {
+                $value = $creds->get('zoho-inventory', $key, null);
+
+                return $value !== null && $value !== ''
+                    ? $value
+                    : $creds->get('zoho_inventory', $key, $default);
+            };
 
             return new ZohoInventoryService(
-                accessToken: $creds->get('zoho_inventory', 'access_token', ''),
-                organizationId: $creds->get('zoho_inventory', 'organization_id', ''),
-                baseUrl: $creds->get('zoho_inventory', 'url', 'https://www.zohoapis.com/inventory'),
+                accessToken: $get('access_token'),
+                organizationId: $get('organization_id'),
+                baseUrl: $get('url', 'https://www.zohoapis.com/inventory'),
             );
         });
     }

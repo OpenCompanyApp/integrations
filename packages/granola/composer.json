@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-granola",
-    "description": "Granola meeting notes integration for Laravel — list meetings, get transcripts, create notes, share meetings.",
+    "description": "Granola Enterprise API integration for Laravel - list notes, get note details, and list folders.",
     "license": "MIT",
     "authors": [
         {

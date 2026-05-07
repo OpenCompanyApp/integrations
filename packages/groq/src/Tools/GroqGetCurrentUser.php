@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Deprecated unsupported current-user lookup tool.
+ */
 class GroqGetCurrentUser implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -27,6 +33,11 @@ class GroqGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Execute the deprecated current-user lookup.
+     *
+     * @param  array<string, mixed>  $args  No arguments are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

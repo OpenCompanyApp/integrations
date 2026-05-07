@@ -3,22 +3,21 @@
 namespace OpenCompany\Integrations\Typesense;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseListCollections;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseGetCollection;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseCreateCollection;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseSearchDocuments;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseIndexDocument;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseGetDocument;
-use OpenCompany\Integrations\Typesense\Tools\TypesenseGetHealth;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 /**
+ * Tool catalog and setup metadata for the Typesense integration.
+ *
+ * Exposes generated tools for Typesense's official OpenAPI document and
+ * resolves account-specific API keys for host applications.
+ */
+class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,46 +25,27 @@ class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => ['Typesense requests use the X-TYPESENSE-API-KEY header.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret'],
+                'cli' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'manual_secret', 'runtime_mode' => 'normal'],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
@@ -78,7 +58,7 @@ class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             'label' => 'Typesense',
-            'description' => 'Open-source search engine',
+            'description' => 'Search collections, documents, aliases, synonyms, curation, keys, analytics, presets, stopwords, and operations',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:typesense',
         ];
@@ -88,139 +68,91 @@ class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             'name' => 'Typesense',
-            'description' => 'Fast, open-source search engine for building delightful search experiences',
+            'description' => 'Manage Typesense search collections, documents, aliases, API keys, synonym sets, curation sets, analytics rules, presets, stopwords, overrides, and cluster operations through the official REST API.',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:typesense',
             'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://typesense.org/docs/api/',
-        ];
-    }    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'api_key',
-                'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Typesense API key',
-                'hint' => 'Find your API key in the Typesense dashboard or server configuration',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'Typesense URL',
-                'placeholder' => 'http://localhost:8108',
-                'hint' => 'The URL of your Typesense instance (default: <code>http://localhost:8108</code>)',
-                'default' => 'http://localhost:8108',
-            ],
+            'docs_url' => 'https://typesense.org/docs/latest/api/',
+            'source_url' => 'https://raw.githubusercontent.com/typesense/typesense-api-spec/master/openapi.yml',
         ];
     }
 
+    public function configSchema(): array
+    {
+        return [
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'placeholder' => 'Enter your Typesense API key', 'hint' => 'Use an admin key for write operations or a scoped search key for read/search-only operations.', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Typesense URL', 'placeholder' => 'http://localhost:8108', 'hint' => 'The base URL of your Typesense node or cluster.', 'default' => 'http://localhost:8108'],
+        ];
+    }
+
+    /**
+     * Test the configured Typesense API key with the health endpoint.
+     *
+     * @param  array<string, mixed>  $config  Credential and endpoint settings.
+     * @return array{success: bool, message?: string, error?: string}
+     */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'http://localhost:8108', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'http://localhost:8108'), '/');
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided'];
+        if ($apiKey === '') {
+            return ['success' => false, 'error' => 'No API key provided.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'X-TYPESENSE-API-KEY' => $apiKey,
-            ])->timeout(10)->get($baseUrl . '/health');
+            $response = Http::withHeaders(['X-TYPESENSE-API-KEY' => $apiKey, 'Accept' => 'application/json'])
+                ->timeout(10)
+                ->get($baseUrl . '/health');
 
-            $json = $response->json();
-
-            if ($response->successful() && ($json['ok'] ?? false) === true) {
-                return [
-                    'success' => true,
-                    'message' => "Connected to Typesense at {$baseUrl}.",
-                ];
+            if (!$response->successful()) {
+                return ['success' => false, 'error' => "Typesense health check failed at {$baseUrl}. Status: {$response->status()}."];
             }
 
-            return [
-                'success' => false,
-                'error' => "Typesense health check failed at {$baseUrl}. Status: {$response->status()}",
-            ];
-        } catch (\Exception $e) {
+            return ['success' => true, 'message' => "Connected to Typesense at {$baseUrl}."];
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    /** @return array<string, string> */
     public function validationRules(): array
     {
-        return [
-            'api_key' => 'nullable|string',
-            'url' => 'nullable|url',
-        ];
+        return ['api_key' => 'nullable|string', 'url' => 'nullable|url'];
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function credentialFields(): array
+    {
+        return $this->configSchema();
+    }
+
+    /**
+     * Register generated Typesense OpenAPI tools.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function tools(): array
     {
-        return [
-            'typesense_list_collections' => [
-                'class' => TypesenseListCollections::class,
-                'type' => 'read',
-                'name' => 'List Collections',
-                'description' => 'List all collections in the Typesense instance.',
-                'icon' => 'ph:folder',
-            ],
-            'typesense_get_collection' => [
-                'class' => TypesenseGetCollection::class,
-                'type' => 'read',
-                'name' => 'Get Collection',
-                'description' => 'Get details of a specific collection.',
-                'icon' => 'ph:folder-open',
-            ],
-            'typesense_create_collection' => [
-                'class' => TypesenseCreateCollection::class,
-                'type' => 'write',
-                'name' => 'Create Collection',
-                'description' => 'Create a new collection with a schema.',
-                'icon' => 'ph:folder-plus',
-            ],
-            'typesense_search_documents' => [
-                'class' => TypesenseSearchDocuments::class,
-                'type' => 'read',
-                'name' => 'Search Documents',
-                'description' => 'Search for documents in a collection.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'typesense_index_document' => [
-                'class' => TypesenseIndexDocument::class,
-                'type' => 'write',
-                'name' => 'Index Document',
-                'description' => 'Index (create or update) a document in a collection.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'typesense_get_document' => [
-                'class' => TypesenseGetDocument::class,
-                'type' => 'read',
-                'name' => 'Get Document',
-                'description' => 'Retrieve a single document by ID.',
-                'icon' => 'ph:file-text',
-            ],
-            'typesense_get_health' => [
-                'class' => TypesenseGetHealth::class,
-                'type' => 'read',
-                'name' => 'Get Health',
-                'description' => 'Check the health of the Typesense instance.',
-                'icon' => 'ph:heartbeat',
-            ],
-        ];
+        $tools = [];
+
+        foreach (TypesenseService::operations() as $slug => $operation) {
+            $tools[$slug] = [
+                'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
+                'type' => $operation['type'] ?? 'read',
+                'name' => $operation['name'] ?? $slug,
+                'description' => $operation['description'] ?? '',
+                'icon' => $this->iconFor($operation),
+            ];
+        }
+
+        return $tools;
     }
 
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/typesense.md';
-    }    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Typesense URL', 'required' => false, 'default' => 'http://localhost:8108'],
-        ];
     }
 
     public function isIntegration(): bool
@@ -228,21 +160,58 @@ class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return true;
     }
 
+    /**
+     * Create a tool instance with default or account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context containing an account key.
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve a service for the default or named account.
+     *
+     * @param  array<string, mixed>  $context  Tool creation context.
+     */
+    private function resolveService(array $context = []): TypesenseService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new TypesenseService(
-                apiKey: $creds->get('typesense', 'api_key', '', $account),
-                baseUrl: $creds->get('typesense', 'url', 'http://localhost:8108', $account),
+            return new TypesenseService(
+                apiKey: (string) $creds->get('typesense', 'api_key', '', (string) $account),
+                baseUrl: (string) $creds->get('typesense', 'url', 'http://localhost:8108', (string) $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(TypesenseService::class));
+        return app(TypesenseService::class);
+    }
+
+    /**
+     * Choose a catalog icon from the operation path.
+     *
+     * @param  array<string, mixed>  $operation  Operation metadata.
+     */
+    private function iconFor(array $operation): string
+    {
+        $path = (string) ($operation['path'] ?? '');
+
+        return match (true) {
+            str_contains($path, '/collections') => 'ph:database',
+            str_contains($path, '/documents') => 'ph:file-text',
+            str_contains($path, '/keys') => 'ph:key',
+            str_contains($path, '/aliases') => 'ph:arrows-left-right',
+            str_contains($path, '/synonym') => 'ph:git-merge',
+            str_contains($path, '/curation') => 'ph:magic-wand',
+            str_contains($path, '/analytics') => 'ph:chart-bar',
+            str_contains($path, '/operations') => 'ph:gear',
+            str_contains($path, '/health') => 'ph:heartbeat',
+            default => ($operation['type'] ?? 'read') === 'read' ? 'ph:list' : 'ph:pencil-simple',
+        };
     }
 }

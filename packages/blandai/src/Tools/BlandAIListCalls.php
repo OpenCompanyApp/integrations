@@ -43,7 +43,12 @@ class BlandAIListCalls implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of calls to return (default: 50).'],
-            'offset' => ['type' => 'integer', 'description' => 'Number of calls to skip for pagination (default: 0).'],
+            'after' => ['type' => 'string', 'description' => 'Cursor value from the previous response.'],
+            'from_number' => ['type' => 'string', 'description' => 'Filter by dispatching phone number.'],
+            'to_number' => ['type' => 'string', 'description' => 'Filter by called phone number.'],
+            'batch_id' => ['type' => 'string', 'description' => 'Filter by batch ID.'],
+            'start_date' => ['type' => 'string', 'description' => 'Start date/time filter.'],
+            'end_date' => ['type' => 'string', 'description' => 'End date/time filter.'],
         ];
     }
 
@@ -59,10 +64,14 @@ class BlandAIListCalls implements Tool
                 return ToolResult::error('BlandAI integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
+            $filters = [];
+            foreach (['limit', 'after', 'from_number', 'to_number', 'batch_id', 'start_date', 'end_date'] as $key) {
+                if (isset($args[$key]) && $args[$key] !== '') {
+                    $filters[$key] = $args[$key];
+                }
+            }
 
-            $result = $this->service->listCalls($limit, $offset);
+            $result = $this->service->listCalls($filters);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

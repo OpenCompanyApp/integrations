@@ -10,10 +10,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Send a message via ManyChat's Social messaging API.
  *
  * Supports sending messages through Instagram, Facebook Messenger,
- * WhatsApp, and SMS — depending on the ManyChat account configuration.
+ * WhatsApp, and SMS depending on the ManyChat account configuration.
  */
 class ManyChatSendMessage implements Tool
 {
+    /**
+     * @param  ManyChatService  $service  The Manychat API client.
+     */
     public function __construct(
         private ManyChatService $service,
     ) {}
@@ -37,6 +40,11 @@ class ManyChatSendMessage implements Tool
         ];
     }
 
+    /**
+     * Send a compatibility message payload through sendContent.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

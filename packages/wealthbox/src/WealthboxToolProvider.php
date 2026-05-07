@@ -107,7 +107,7 @@ class WealthboxToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             'description' => 'Wealthbox CRM integration for Laravel — manage contacts, tasks, opportunities, workflows, and events.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

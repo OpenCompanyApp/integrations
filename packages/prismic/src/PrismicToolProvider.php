@@ -105,7 +105,7 @@ class PrismicToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Prismic headless CMS integration for Laravel — list and search documents, types, tags, refs, and languages.',
             'icon' => 'ph:plug',
             'logo' => 'ph:plug',
-            'category' => 'other',
+            'category' => 'data',
             'badge' => 'verified',
         ];
     }

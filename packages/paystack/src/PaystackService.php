@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\Paystack;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * HTTP client for the Paystack REST API.
+ *
+ * Handles bearer secret-key authentication, JSON request dispatch,
+ * error normalization, and response parsing for Paystack tools.
+ */
 class PaystackService
 {
     private string $baseUrl = 'https://api.paystack.co';
@@ -33,14 +39,25 @@ class PaystackService
     }
 
     /**
-     * Get a single transaction by ID or reference.
+     * Fetch a single transaction by numeric ID.
      *
-     * @param  string  $id  Transaction ID or reference.
+     * @param  string  $id  Transaction ID.
      * @return array<string, mixed>
      */
     public function getTransaction(string $id): array
     {
         return $this->request('GET', '/transaction/' . urlencode($id));
+    }
+
+    /**
+     * Verify a transaction by reference.
+     *
+     * @param  string  $reference  Transaction reference.
+     * @return array<string, mixed>
+     */
+    public function verifyTransaction(string $reference): array
+    {
+        return $this->request('GET', '/transaction/verify/' . urlencode($reference));
     }
 
     /**

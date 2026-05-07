@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-baserow",
-    "description": "Baserow database integration for Laravel — list databases, manage table rows, and query user info.",
+    "description": "Baserow database integration for Laravel: manage tables, fields, rows, batch operations, and user info.",
     "license": "MIT",
     "authors": [
         {

@@ -93,7 +93,7 @@ class OnfleetToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'description' => 'Last-mile delivery management platform',
             'icon' => 'ph:truck',
             'logo' => 'simple-icons:onfleet',
-            'category' => 'logistics',
+            'category' => 'data',
             'badge' => 'verified',
             'docs_url' => 'https://docs.onfleet.com/',
         ];

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\DigitalOcean\DigitalOceanService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List DigitalOcean Kubernetes clusters in the account.
+ */
 class DigitalOceanListKubernetes implements Tool
 {
+    /**
+     * @param  DigitalOceanService  $service  The DigitalOcean API client.
+     */
     public function __construct(
         private DigitalOceanService $service,
     ) {}
@@ -30,6 +36,11 @@ class DigitalOceanListKubernetes implements Tool
         ];
     }
 
+    /**
+     * List Kubernetes clusters using optional DigitalOcean pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -37,7 +48,10 @@ class DigitalOceanListKubernetes implements Tool
                 return ToolResult::error('DigitalOcean integration is not configured.');
             }
 
-            $result = $this->service->listKubernetesClusters();
+            $page = isset($args['page']) ? (int) $args['page'] : null;
+            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : null;
+
+            $result = $this->service->listKubernetesClusters($page, $perPage);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

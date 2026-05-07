@@ -4,18 +4,25 @@ namespace OpenCompany\Integrations\Samsara;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
+/**
+ * HTTP client for the Samsara REST API.
+ *
+ * Handles bearer-token authentication, current unversioned API paths, legacy
+ * v2-compatible configuration, response parsing, and error normalization.
+ */
 class SamsaraService
 {
     /**
      * Create a new Samsara service instance.
      *
      * @param  string  $accessToken  Samsara API access token.
-     * @param  string  $baseUrl  Samsara API base URL (default: https://api.samsara.com/v2).
+     * @param  string  $baseUrl  Samsara API base URL.
      */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.samsara.com/v2',
+        private string $baseUrl = 'https://api.samsara.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -53,7 +60,7 @@ class SamsaraService
      */
     public function getVehicle(string $id): array
     {
-        return $this->request('GET', '/fleet/vehicles/' . urlencode($id));
+        return $this->request('GET', '/fleet/vehicles/' . rawurlencode($id));
     }
 
     /**
@@ -81,7 +88,7 @@ class SamsaraService
      */
     public function getDriver(string $id): array
     {
-        return $this->request('GET', '/fleet/drivers/' . urlencode($id));
+        return $this->request('GET', '/fleet/drivers/' . rawurlencode($id));
     }
 
     /**
@@ -112,18 +119,65 @@ class SamsaraService
     }
 
     /**
+     * Execute a safe relative GET request.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiGet(string $path, array $query = []): array
+    {
+        return $this->request('GET', $path, $query);
+    }
+
+    /**
+     * Execute a safe relative POST request.
+     *
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPost(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('POST', $path, $body, $query);
+    }
+
+    /**
+     * Execute a safe relative PATCH request.
+     *
+     * @param  array<string, mixed>  $body  JSON request body.
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiPatch(string $path, array $body = [], array $query = []): array
+    {
+        return $this->request('PATCH', $path, $body, $query);
+    }
+
+    /**
+     * Execute a safe relative DELETE request.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    public function apiDelete(string $path, array $query = []): array
+    {
+        return $this->request('DELETE', $path, [], $query);
+    }
+
+    /**
      * Make an authenticated API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method (GET, POST, PATCH, PUT, DELETE).
      * @param  string  $path  API endpoint path (relative to base URL).
      * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  array<string, mixed>  $query  Query string parameters for non-GET methods.
      * @return array<string, mixed>
      *
      * @throws \RuntimeException If the request fails or the service is not configured.
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], array $query = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        $response = $this->rawRequest($method, $path, $data, $query);
 
         return $response->json() ?? [];
     }
@@ -131,19 +185,22 @@ class SamsaraService
     /**
      * Make a raw HTTP request to the Samsara API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $method  HTTP method (GET, POST, PATCH, PUT, DELETE).
      * @param  string  $path  API endpoint path (relative to base URL).
      * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  array<string, mixed>  $query  Query string parameters for non-GET methods.
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \RuntimeException If not configured, connection fails, or the API returns an error.
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = [], array $query = []): \Illuminate\Http\Client\Response
     {
         if (! $this->accessToken) {
-            throw new \RuntimeException('Samsara access token is not configured.');
+            throw new RuntimeException('Samsara access token is not configured.');
         }
 
+        $method = strtoupper($method);
+        $path = $this->safeRelativePath($path);
         $url = $this->baseUrl . $path;
 
         try {
@@ -153,12 +210,13 @@ class SamsaraService
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            $response = match ($method) {
+                'GET' => $http->get($this->urlWithQuery($url, $data)),
+                'POST' => $http->post($this->urlWithQuery($url, $query), $data),
+                'PATCH' => $http->patch($this->urlWithQuery($url, $query), $data),
+                'PUT' => $http->put($this->urlWithQuery($url, $query), $data),
+                'DELETE' => $http->delete($this->urlWithQuery($url, $query)),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (! $response->successful()) {
@@ -167,7 +225,7 @@ class SamsaraService
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     'Samsara API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error))
                 );
             }
@@ -177,7 +235,55 @@ class SamsaraService
             Log::error("Samsara API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException("Failed to connect to Samsara API: {$e->getMessage()}");
+            throw new RuntimeException("Failed to connect to Samsara API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Validate a relative API path.
+     */
+    private function safeRelativePath(string $path): string
+    {
+        if ($path === '' || str_contains($path, '://')) {
+            throw new RuntimeException('Samsara API path must be a relative path.');
+        }
+
+        $path = '/' . ltrim($path, '/');
+        if (str_contains($path, '..')) {
+            throw new RuntimeException('Samsara API path cannot contain parent directory traversal.');
+        }
+
+        return $path;
+    }
+
+    /**
+     * Remove empty query values.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     * @return array<string, mixed>
+     */
+    private function filterEmpty(array $query): array
+    {
+        return array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+    }
+
+    /**
+     * Append query parameters while preserving repeated values.
+     *
+     * @param  array<string, mixed>  $query  Query string parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+
+        foreach ($this->filterEmpty($query) as $key => $value) {
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item !== null && $item !== '') {
+                    $parts[] = rawurlencode((string) $key) . '=' . rawurlencode((string) $item);
+                }
+            }
+        }
+
+        return $parts === [] ? $url : $url . '?' . implode('&', $parts);
     }
 }

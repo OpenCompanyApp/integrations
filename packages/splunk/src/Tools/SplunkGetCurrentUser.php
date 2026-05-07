@@ -2,16 +2,13 @@
 
 namespace OpenCompany\Integrations\Splunk\Tools;
 
-use OpenCompany\Integrations\Splunk\SplunkService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-class SplunkGetCurrentUser implements Tool
+/**
+ * Get the current authenticated Splunk user context.
+ */
+class SplunkGetCurrentUser extends AbstractSplunkTool
 {
-    public function __construct(
-        private SplunkService $service,
-    ) {}
-
     public function name(): string
     {
         return 'splunk_get_current_user';
@@ -27,18 +24,13 @@ class SplunkGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get the current user context.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Splunk integration is not configured.');
-            }
-
-            $result = $this->service->getCurrentUser();
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->getCurrentUser());
     }
 }

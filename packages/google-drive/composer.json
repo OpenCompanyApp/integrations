@@ -1,6 +1,7 @@
 {
     "name": "opencompanyapp/integration-google-drive",
-    "description": "Google Drive integration for Laravel — list, get, create files and folders, track changes, and get user info.",
+    "description": "Google Drive integration for Laravel AI agents - generated Drive API v3 coverage for files, permissions, comments, replies, drives, changes, revisions, approvals, apps, channels, operations, and uploads.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +9,11 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "google-drive", "gdrive", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-google-drive": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +27,12 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "keywords": [
+        "tools",
+        "google",
+        "drive",
+        "files",
+        "workspace",
+        "opencompany"
+    ]
 }

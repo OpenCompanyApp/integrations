@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Groq\GroqService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Create a chat completion using Groq's OpenAI-compatible endpoint.
+ */
 class GroqCreateCompletion implements Tool
 {
+    /**
+     * @param  GroqService  $service  Groq API client.
+     */
     public function __construct(
         private GroqService $service,
     ) {}
@@ -27,13 +33,18 @@ class GroqCreateCompletion implements Tool
         return [
             'model' => ['type' => 'string', 'required' => true, 'description' => 'The model ID to use (e.g., "llama-3.3-70b-versatile", "mixtral-8x7b-32768", "gemma2-9b-it").'],
             'messages' => ['type' => 'array', 'required' => true, 'description' => 'Array of message objects. Each message should have a "role" ("system", "user", or "assistant") and "content" string.'],
-            'temperature' => ['type' => 'number', 'description' => 'Controls randomness in generation (0.0–2.0). Lower values are more deterministic, higher values more creative.'],
+            'temperature' => ['type' => 'number', 'description' => 'Controls randomness in generation (0.0-2.0). Lower values are more deterministic, higher values more creative.'],
             'max_tokens' => ['type' => 'integer', 'description' => 'Maximum number of tokens to generate in the response.'],
-            'top_p' => ['type' => 'number', 'description' => 'Nucleus sampling parameter (0.0–1.0). Limits cumulative probability of tokens considered.'],
+            'top_p' => ['type' => 'number', 'description' => 'Nucleus sampling parameter (0.0-1.0). Limits cumulative probability of tokens considered.'],
             'stream' => ['type' => 'boolean', 'description' => 'Whether to stream the response. Defaults to false.'],
         ];
     }
 
+    /**
+     * Execute the chat completion request.
+     *
+     * @param  array<string, mixed>  $args  Chat completion arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

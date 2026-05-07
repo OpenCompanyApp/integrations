@@ -14,6 +14,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class AhrefsListBacklinks implements Tool
 {
+    /**
+     * @param  AhrefsService  $service  Ahrefs API client.
+     */
     public function __construct(
         private AhrefsService $service,
     ) {}
@@ -34,10 +37,15 @@ class AhrefsListBacklinks implements Tool
             'target' => ['type' => 'string', 'required' => true, 'description' => 'The target URL or domain to analyze (e.g., "example.com" or "https://example.com/page").'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of backlinks to return (default: 100).'],
             'offset' => ['type' => 'integer', 'description' => 'Number of results to skip for pagination (default: 0).'],
-            'mode' => ['type' => 'string', 'description' => 'Target matching mode: "domain" (all subdomains), "subdomain" (specific subdomain), "exact" (exact URL), "prefix" (URL prefix). Default: "domain".'],
+            'mode' => ['type' => 'string', 'description' => 'Target matching mode: "domain", "subdomains", "exact", or "prefix". Default: "subdomains".'],
         ];
     }
 
+    /**
+     * Execute the tool.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -48,7 +56,7 @@ class AhrefsListBacklinks implements Tool
             $target = $args['target'];
             $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
             $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
-            $mode = $args['mode'] ?? 'domain';
+            $mode = $args['mode'] ?? 'subdomains';
 
             $result = $this->service->listBacklinks($target, $limit, $offset, $mode);
 

@@ -1,0 +1,65 @@
+{
+    "source": "https://keep.googleapis.com/$discovery/rest?version=v1",
+    "service": "Google Keep API",
+    "version": "v1",
+    "method_count": 7,
+    "generated_package": "google-keep",
+    "methods": [
+        {
+            "discovery_id": "notes.get",
+            "tool": "google_keep_notes_get",
+            "class": "GoogleKeepNotesGet",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "notes.list",
+            "tool": "google_keep_notes_list",
+            "class": "GoogleKeepNotesList",
+            "http_method": "GET",
+            "path": "/v1/notes",
+            "type": "read"
+        },
+        {
+            "discovery_id": "notes.delete",
+            "tool": "google_keep_notes_delete",
+            "class": "GoogleKeepNotesDelete",
+            "http_method": "DELETE",
+            "path": "/v1/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "notes.create",
+            "tool": "google_keep_notes_create",
+            "class": "GoogleKeepNotesCreate",
+            "http_method": "POST",
+            "path": "/v1/notes",
+            "type": "write"
+        },
+        {
+            "discovery_id": "notes.permissions.batchDelete",
+            "tool": "google_keep_notes_permissions_batch_delete",
+            "class": "GoogleKeepNotesPermissionsBatchDelete",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/permissions:batchDelete",
+            "type": "write"
+        },
+        {
+            "discovery_id": "notes.permissions.batchCreate",
+            "tool": "google_keep_notes_permissions_batch_create",
+            "class": "GoogleKeepNotesPermissionsBatchCreate",
+            "http_method": "POST",
+            "path": "/v1/{+parent}/permissions:batchCreate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "media.download",
+            "tool": "google_keep_media_download",
+            "class": "GoogleKeepMediaDownload",
+            "http_method": "GET",
+            "path": "/v1/{+name}",
+            "type": "read"
+        }
+    ]
+}

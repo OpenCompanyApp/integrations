@@ -48,8 +48,8 @@ class AnthropicListModels implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of models to return per page (default: 20, max: 1000).'],
-            'before_id' => ['type' => 'string', 'description' => 'Model ID used for cursor-based pagination — return models before this ID.'],
-            'after_id' => ['type' => 'string', 'description' => 'Model ID used for cursor-based pagination — return models after this ID.'],
+            'before_id' => ['type' => 'string', 'description' => 'Model ID used for cursor-based pagination - return models before this ID.'],
+            'after_id' => ['type' => 'string', 'description' => 'Model ID used for cursor-based pagination - return models after this ID.'],
         ];
     }
 

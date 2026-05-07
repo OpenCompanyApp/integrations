@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * CapsuleGetCurrentUser — retrieve the currently authenticated Capsule CRM user.
+ * Retrieve the currently authenticated Capsule CRM user.
  *
  * Useful for verifying credentials and identifying which account
  * the integration is connected to.
  */
 class CapsuleGetCurrentUser implements Tool
 {
+    /**
+     * @param  CapsuleService  $service  The Capsule CRM API client.
+     */
     public function __construct(
         private CapsuleService $service,
     ) {}
@@ -33,6 +36,11 @@ class CapsuleGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get the authenticated Capsule CRM user.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

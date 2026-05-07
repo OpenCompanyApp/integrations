@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-wufoo",
-    "description": "Wufoo forms integration for Laravel — list forms, retrieve entries, manage reports.",
+    "description": "Wufoo API v3 integration for Laravel — forms, entries, fields, reports, users, comments, and webhooks.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "wufoo", "forms", "opencompany"],
+    "keywords": ["tools", "wufoo", "forms", "entries", "reports", "webhooks", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

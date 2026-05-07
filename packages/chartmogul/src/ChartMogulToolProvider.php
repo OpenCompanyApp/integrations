@@ -3,22 +3,25 @@
 namespace OpenCompany\Integrations\ChartMogul;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListCustomers;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulGetCustomer;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListSubscriptions;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListPlans;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListInvoices;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulGetMetrics;
-use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulGetCurrentUser;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulGetCustomer;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulGetMetrics;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListCustomers;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListInvoices;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListPlans;
+use OpenCompany\Integrations\ChartMogul\Tools\ChartMogulListSubscriptions;
 
 /**
+ * Registers the ChartMogul integration provider and exposes analytics tools.
+ */
+class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -27,9 +30,9 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
     {
         return [
           'auth' => [
-            'strategy' => 'api_key',
+            'strategy' => 'basic_auth_api_key',
             'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
+            'credential_mode' => 'stored_token',
             'setup_flows' =>
             [
               0 => 'manual_secret',
@@ -38,9 +41,11 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
             'refreshable' => false,
             'token_keys' =>
             [
+              0 => 'api_key',
             ],
             'notes' =>
             [
+              0 => 'ChartMogul uses HTTP Basic Auth with the API key as username and an empty password.',
             ],
           ],
           'host_availability' => [
@@ -95,7 +100,9 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
             'badge' => 'verified',
             'docs_url' => 'https://dev.chartmogul.com/docs/',
         ];
-    }    public function configSchema(): array
+    }
+
+    public function configSchema(): array
     {
         return [
             [
@@ -127,10 +134,10 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/v1/users/me');
+            $response = Http::acceptJson()
+                ->withBasicAuth($apiKey, '')
+                ->timeout(10)
+                ->get($baseUrl . '/v1/ping');
 
             $json = $response->json();
 
@@ -149,12 +156,9 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
                 ];
             }
 
-            $name = ($json['first_name'] ?? '') . ' ' . ($json['last_name'] ?? '');
-            $name = trim($name) ?: 'Unknown user';
-
             return [
                 'success' => true,
-                'message' => "Connected to ChartMogul API as {$name}.",
+                'message' => 'Connected to ChartMogul API.',
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -189,8 +193,8 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
             'chartmogul_list_subscriptions' => [
                 'class' => ChartMogulListSubscriptions::class,
                 'type' => 'read',
-                'name' => 'List Subscriptions',
-                'description' => 'List subscriptions with filtering and pagination.',
+                'name' => 'List Customer Subscriptions',
+                'description' => 'List subscriptions for a specific customer.',
                 'icon' => 'ph:repeat',
             ],
             'chartmogul_list_plans' => [
@@ -217,8 +221,8 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
             'chartmogul_get_current_user' => [
                 'class' => ChartMogulGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated ChartMogul user.',
+                'name' => 'Ping API',
+                'description' => 'Verify ChartMogul API credentials with the ping endpoint.',
                 'icon' => 'ph:identification-card',
             ],
         ];
@@ -227,7 +231,9 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/chartmogul.md';
-    }    public function credentialFields(): array
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -245,7 +251,7 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new ChartMogulService(
                 apiKey: $creds->get('chartmogul', 'api_key', '', $account),

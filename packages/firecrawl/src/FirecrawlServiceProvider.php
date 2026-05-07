@@ -25,7 +25,7 @@ class FirecrawlServiceProvider extends ServiceProvider
 
             return new FirecrawlService(
                 apiKey: $creds->get('firecrawl', 'api_key', ''),
-                baseUrl: $creds->get('firecrawl', 'url', 'https://api.firecrawl.dev/v1'),
+                baseUrl: $creds->get('firecrawl', 'url', 'https://api.firecrawl.dev/v2'),
             );
         });
     }

@@ -6,8 +6,14 @@ use OpenCompany\Integrations\LaunchDarkly\LaunchDarklyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Toggle a LaunchDarkly feature flag for one environment.
+ */
 class LaunchDarklyToggleFlag implements Tool
 {
+    /**
+     * @param  LaunchDarklyService  $service  LaunchDarkly API client.
+     */
     public function __construct(
         private LaunchDarklyService $service,
     ) {}
@@ -32,6 +38,11 @@ class LaunchDarklyToggleFlag implements Tool
         ];
     }
 
+    /**
+     * Turn a feature flag on or off using a LaunchDarkly JSON Patch.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

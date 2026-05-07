@@ -1,0 +1,63 @@
+<?php
+
+namespace OpenCompany\Integrations\GoogleTranslate\Tools;
+
+/**
+ * Projects Locations Datasets Examples List.
+ *
+ * Maps to the official Cloud Translation endpoint GET /v3/{+parent}/examples.
+ */
+class GoogleTranslateProjectsLocationsDatasetsExamplesList extends AbstractGoogleTranslateTool
+{
+    protected const NAME = 'google_translate_projects_locations_datasets_examples_list';
+    protected const DESCRIPTION = 'Projects Locations Datasets Examples List
+
+Official Google Cloud Translation endpoint: GET /v3/{+parent}/examples
+Lists sentence pairs in the dataset.';
+    protected const PARAMETERS = array (
+  'parent' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `parent` from the official Cloud Translation API method.',
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'required' => false,
+    'description' => 'Query string parameters accepted by the official Cloud Translation method. Known keys: filter, pageToken, pageSize.',
+  ),
+  'filter' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Optional. An expression for filtering the examples that will be returned. Example filter: * `usage=TRAIN`',
+  ),
+  'pageToken' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Optional. A token identifying a page of results for the server to return. Typically obtained from next_page_token field in the response of a ListExamples call.',
+  ),
+  'pageSize' =>
+  array (
+    'type' => 'integer',
+    'required' => false,
+    'description' => 'Optional. Requested page size. The server can return fewer results than requested.',
+  ),
+);
+    protected const METHOD = 'GET';
+    protected const PATH = '/v3/{+parent}/examples';
+    protected const PATH_PARAMS = array (
+  0 => 'parent',
+);
+    protected const RESERVED_PATH_PARAMS = array (
+  0 => 'parent',
+);
+    protected const QUERY_KEYS = array (
+  0 => 'filter',
+  1 => 'pageToken',
+  2 => 'pageSize',
+);
+    protected const BODY_REQUIRED = false;
+}

@@ -2,15 +2,21 @@
 
 namespace OpenCompany\Integrations\Typefully\Tools;
 
-use OpenCompany\Integrations\Typefully\TypefullyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Typefully\TypefullyService;
 
+/**
+ * List scheduled Typefully v2 drafts for a social set.
+ *
+ * Uses the v2 draft list endpoint with status filtering.
+ */
 class TypefullyListScheduled implements Tool
 {
-    public function __construct(
-        private TypefullyService $service,
-    ) {}
+    /**
+     * @param  TypefullyService  $service  The Typefully API client.
+     */
+    public function __construct(private TypefullyService $service) {}
 
     public function name(): string
     {
@@ -19,17 +25,24 @@ class TypefullyListScheduled implements Tool
 
     public function description(): string
     {
-        return 'List scheduled drafts in Typefully that are queued for publication. Returns draft content, scheduled dates, and metadata.';
+        return 'List scheduled Typefully drafts for a social set.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of drafts to return (default: 20, max: 100).'],
-            'offset' => ['type' => 'integer', 'description' => 'Number of drafts to skip for pagination (default: 0).'],
+            'social_set_id' => ['type' => 'string', 'required' => true, 'description' => 'Typefully social set ID.'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of drafts to return.'],
+            'offset' => ['type' => 'integer', 'description' => 'Number of drafts to skip for pagination.'],
+            'sort' => ['type' => 'string', 'description' => 'Sort field such as scheduled_date, created_at, updated_at, or published_at.'],
         ];
     }
 
+    /**
+     * List scheduled drafts.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -37,12 +50,14 @@ class TypefullyListScheduled implements Tool
                 return ToolResult::error('Typefully integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
+            $params = ['status' => 'scheduled'];
+            foreach (['limit', 'offset', 'sort'] as $field) {
+                if (isset($args[$field])) {
+                    $params[$field] = $args[$field];
+                }
+            }
 
-            $result = $this->service->listScheduled($limit, $offset);
-
-            return ToolResult::success($result);
+            return ToolResult::success($this->service->listDrafts($args['social_set_id'] ?? '', $params));
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

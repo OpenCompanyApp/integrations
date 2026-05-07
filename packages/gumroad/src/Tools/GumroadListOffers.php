@@ -2,48 +2,34 @@
 
 namespace OpenCompany\Integrations\Gumroad\Tools;
 
-use OpenCompany\Integrations\Gumroad\GumroadService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class GumroadListOffers implements Tool
+/**
+ * List account-level offers when available.
+ */
+class GumroadListOffers extends AbstractGumroadEndpointTool
 {
-    public function __construct(
-        private GumroadService $service,
-    ) {}
+    protected string $toolName = 'gumroad_list_offers';
 
-    public function name(): string
-    {
-        return 'gumroad_list_offers';
-    }
+    protected string $toolDescription = 'List account-level offers when available.';
 
-    public function description(): string
-    {
-        return 'List all offers (discount codes) in your Gumroad account. Returns offer codes, discount amounts, and associated products.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [];
-    }
+    protected string $path = '/offers';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Gumroad integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional query parameters.',
+    ],
+];
 
-            $result = $this->service->listOffers();
+    /** @var list<string> */
+    protected array $required = [];
 
-            $offers = $result['offers'] ?? [];
+    /** @var array<int|string, string> */
+    protected array $queryParams = [];
 
-            return ToolResult::success([
-                'offers' => $offers,
-                'totalCount' => count($offers),
-            ]);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

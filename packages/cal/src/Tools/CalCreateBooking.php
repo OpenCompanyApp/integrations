@@ -12,10 +12,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Books a time slot for a given event type, specifying the time range
  * and attendee responses (name, email, and custom fields).
  *
- * @see https://developer.cal.com/api/endpoints/bookings
+ * @see https://cal.com/docs/api-reference/v2/bookings/create-a-booking
  */
 class CalCreateBooking implements Tool
 {
+    /**
+     * @param  CalService  $service  Cal.com API client.
+     */
     public function __construct(
         private CalService $service,
     ) {}
@@ -38,10 +41,10 @@ class CalCreateBooking implements Tool
     public function parameters(): array
     {
         return [
-            'eventTypeId' => ['type' => 'integer', 'required' => true, 'description' => 'The event type ID to book.'],
+            'event_type_id' => ['type' => 'integer', 'required' => true, 'description' => 'The event type ID to book.'],
             'start' => ['type' => 'string', 'required' => true, 'description' => 'Start time in ISO 8601 format (e.g., "2026-04-10T09:00:00Z").'],
             'end' => ['type' => 'string', 'required' => true, 'description' => 'End time in ISO 8601 format (e.g., "2026-04-10T09:30:00Z").'],
-            'responses' => ['type' => 'object', 'required' => true, 'description' => 'Attendee responses. Must include "name" and "email". Example: {"name": "John Doe", "email": "john@example.com", "notes": "Optional notes."}.'],
+            'responses' => ['type' => 'object', 'required' => true, 'description' => 'Attendee responses. Must include "name" and "email". Example: {"name": "Jane Example", "email": "jane@example.test", "notes": "Optional notes."}.'],
         ];
     }
 
@@ -57,8 +60,10 @@ class CalCreateBooking implements Tool
                 return ToolResult::error('Cal.com integration is not configured.');
             }
 
-            if (!isset($args['eventTypeId'])) {
-                return ToolResult::error('The "eventTypeId" parameter is required.');
+            $rawEventTypeId = $args['event_type_id'] ?? $args['eventTypeId'] ?? null;
+
+            if ($rawEventTypeId === null) {
+                return ToolResult::error('The "event_type_id" parameter is required.');
             }
 
             if (!isset($args['start'])) {
@@ -73,7 +78,7 @@ class CalCreateBooking implements Tool
                 return ToolResult::error('The "responses" parameter is required and must be an object with at least "name" and "email".');
             }
 
-            $eventTypeId = (int) $args['eventTypeId'];
+            $eventTypeId = (int) $rawEventTypeId;
             $start = $args['start'];
             $end = $args['end'];
             $responses = $args['responses'];

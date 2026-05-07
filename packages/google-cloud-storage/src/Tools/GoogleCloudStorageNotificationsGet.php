@@ -1,0 +1,58 @@
+<?php
+
+namespace OpenCompany\Integrations\GoogleCloudStorage\Tools;
+
+/**
+ * Notifications Get.
+ *
+ * Maps to the official Cloud Storage endpoint GET /b/{bucket}/notificationConfigs/{notification}.
+ */
+class GoogleCloudStorageNotificationsGet extends AbstractGoogleCloudStorageTool
+{
+    protected const NAME = 'google_cloud_storage_notifications_get';
+    protected const DESCRIPTION = 'Notifications Get
+
+Official Cloud Storage endpoint: GET /b/{bucket}/notificationConfigs/{notification}
+View a notification configuration.';
+    protected const PARAMETERS = array (
+  'bucket' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `bucket`.',
+  ),
+  'notification' =>
+  array (
+    'type' => 'string',
+    'required' => true,
+    'description' => 'Path parameter `notification`.',
+  ),
+  'query' =>
+  array (
+    'type' => 'object',
+    'required' => false,
+    'description' => 'Query string parameters accepted by the official Cloud Storage method. Known keys: userProject.',
+  ),
+  'userProject' =>
+  array (
+    'type' => 'string',
+    'required' => false,
+    'description' => 'Shortcut for query parameter `userProject`.',
+  ),
+);
+    protected const METHOD = 'GET';
+    protected const PATH = '/b/{bucket}/notificationConfigs/{notification}';
+    protected const PATH_PARAMS = array (
+  0 => 'bucket',
+  1 => 'notification',
+);
+    protected const RESERVED_PATH_PARAMS = array (
+);
+    protected const QUERY_KEYS = array (
+  0 => 'userProject',
+);
+    protected const BODY_REQUIRED = false;
+    protected const MEDIA_UPLOAD = false;
+    protected const MEDIA_DOWNLOAD = false;
+    protected const UPLOAD_PATH = '';
+}

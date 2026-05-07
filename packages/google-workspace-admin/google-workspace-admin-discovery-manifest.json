@@ -1,0 +1,1033 @@
+{
+    "source": "https://admin.googleapis.com/$discovery/rest?version=directory_v1",
+    "service": "Admin SDK Directory API",
+    "version": "directory_v1",
+    "method_count": 128,
+    "generated_package": "google-workspace-admin",
+    "methods": [
+        {
+            "discovery_id": "groups.update",
+            "tool": "google_workspace_admin_groups_update",
+            "class": "GoogleWorkspaceAdminGroupsUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/groups/{groupKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "groups.list",
+            "tool": "google_workspace_admin_groups_list",
+            "class": "GoogleWorkspaceAdminGroupsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/groups",
+            "type": "read"
+        },
+        {
+            "discovery_id": "groups.patch",
+            "tool": "google_workspace_admin_groups_patch",
+            "class": "GoogleWorkspaceAdminGroupsPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/groups/{groupKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "groups.get",
+            "tool": "google_workspace_admin_groups_get",
+            "class": "GoogleWorkspaceAdminGroupsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/groups/{groupKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "groups.insert",
+            "tool": "google_workspace_admin_groups_insert",
+            "class": "GoogleWorkspaceAdminGroupsInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/groups",
+            "type": "write"
+        },
+        {
+            "discovery_id": "groups.delete",
+            "tool": "google_workspace_admin_groups_delete",
+            "class": "GoogleWorkspaceAdminGroupsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/groups/{groupKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "groups.aliases.insert",
+            "tool": "google_workspace_admin_groups_aliases_insert",
+            "class": "GoogleWorkspaceAdminGroupsAliasesInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/groups/{groupKey}/aliases",
+            "type": "write"
+        },
+        {
+            "discovery_id": "groups.aliases.delete",
+            "tool": "google_workspace_admin_groups_aliases_delete",
+            "class": "GoogleWorkspaceAdminGroupsAliasesDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/groups/{groupKey}/aliases/{alias}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "groups.aliases.list",
+            "tool": "google_workspace_admin_groups_aliases_list",
+            "class": "GoogleWorkspaceAdminGroupsAliasesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/groups/{groupKey}/aliases",
+            "type": "read"
+        },
+        {
+            "discovery_id": "resources.features.get",
+            "tool": "google_workspace_admin_resources_features_get",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features/{featureKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "resources.features.insert",
+            "tool": "google_workspace_admin_resources_features_insert",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.features.delete",
+            "tool": "google_workspace_admin_resources_features_delete",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features/{featureKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.features.update",
+            "tool": "google_workspace_admin_resources_features_update",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features/{featureKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.features.list",
+            "tool": "google_workspace_admin_resources_features_list",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features",
+            "type": "read"
+        },
+        {
+            "discovery_id": "resources.features.rename",
+            "tool": "google_workspace_admin_resources_features_rename",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesRename",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features/{oldName}/rename",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.features.patch",
+            "tool": "google_workspace_admin_resources_features_patch",
+            "class": "GoogleWorkspaceAdminResourcesFeaturesPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customer}/resources/features/{featureKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.buildings.insert",
+            "tool": "google_workspace_admin_resources_buildings_insert",
+            "class": "GoogleWorkspaceAdminResourcesBuildingsInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/resources/buildings",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.buildings.delete",
+            "tool": "google_workspace_admin_resources_buildings_delete",
+            "class": "GoogleWorkspaceAdminResourcesBuildingsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/resources/buildings/{buildingId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.buildings.get",
+            "tool": "google_workspace_admin_resources_buildings_get",
+            "class": "GoogleWorkspaceAdminResourcesBuildingsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/resources/buildings/{buildingId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "resources.buildings.patch",
+            "tool": "google_workspace_admin_resources_buildings_patch",
+            "class": "GoogleWorkspaceAdminResourcesBuildingsPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customer}/resources/buildings/{buildingId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.buildings.update",
+            "tool": "google_workspace_admin_resources_buildings_update",
+            "class": "GoogleWorkspaceAdminResourcesBuildingsUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customer}/resources/buildings/{buildingId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.buildings.list",
+            "tool": "google_workspace_admin_resources_buildings_list",
+            "class": "GoogleWorkspaceAdminResourcesBuildingsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/resources/buildings",
+            "type": "read"
+        },
+        {
+            "discovery_id": "resources.calendars.patch",
+            "tool": "google_workspace_admin_resources_calendars_patch",
+            "class": "GoogleWorkspaceAdminResourcesCalendarsPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customer}/resources/calendars/{calendarResourceId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.calendars.update",
+            "tool": "google_workspace_admin_resources_calendars_update",
+            "class": "GoogleWorkspaceAdminResourcesCalendarsUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customer}/resources/calendars/{calendarResourceId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.calendars.list",
+            "tool": "google_workspace_admin_resources_calendars_list",
+            "class": "GoogleWorkspaceAdminResourcesCalendarsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/resources/calendars",
+            "type": "read"
+        },
+        {
+            "discovery_id": "resources.calendars.insert",
+            "tool": "google_workspace_admin_resources_calendars_insert",
+            "class": "GoogleWorkspaceAdminResourcesCalendarsInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/resources/calendars",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.calendars.delete",
+            "tool": "google_workspace_admin_resources_calendars_delete",
+            "class": "GoogleWorkspaceAdminResourcesCalendarsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/resources/calendars/{calendarResourceId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "resources.calendars.get",
+            "tool": "google_workspace_admin_resources_calendars_get",
+            "class": "GoogleWorkspaceAdminResourcesCalendarsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/resources/calendars/{calendarResourceId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "domains.delete",
+            "tool": "google_workspace_admin_domains_delete",
+            "class": "GoogleWorkspaceAdminDomainsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/domains/{domainName}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "domains.insert",
+            "tool": "google_workspace_admin_domains_insert",
+            "class": "GoogleWorkspaceAdminDomainsInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/domains",
+            "type": "write"
+        },
+        {
+            "discovery_id": "domains.list",
+            "tool": "google_workspace_admin_domains_list",
+            "class": "GoogleWorkspaceAdminDomainsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/domains",
+            "type": "read"
+        },
+        {
+            "discovery_id": "domains.get",
+            "tool": "google_workspace_admin_domains_get",
+            "class": "GoogleWorkspaceAdminDomainsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/domains/{domainName}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "mobiledevices.action",
+            "tool": "google_workspace_admin_mobiledevices_action",
+            "class": "GoogleWorkspaceAdminMobiledevicesAction",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/mobile/{resourceId}/action",
+            "type": "write"
+        },
+        {
+            "discovery_id": "mobiledevices.delete",
+            "tool": "google_workspace_admin_mobiledevices_delete",
+            "class": "GoogleWorkspaceAdminMobiledevicesDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/mobile/{resourceId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "mobiledevices.get",
+            "tool": "google_workspace_admin_mobiledevices_get",
+            "class": "GoogleWorkspaceAdminMobiledevicesGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/mobile/{resourceId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "mobiledevices.list",
+            "tool": "google_workspace_admin_mobiledevices_list",
+            "class": "GoogleWorkspaceAdminMobiledevicesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/mobile",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customer.devices.chromeos.batchChangeStatus",
+            "tool": "google_workspace_admin_customer_devices_chromeos_batch_change_status",
+            "class": "GoogleWorkspaceAdminCustomerDevicesChromeosBatchChangeStatus",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos:batchChangeStatus",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customer.devices.chromeos.countChromeOsDevices",
+            "tool": "google_workspace_admin_customer_devices_chromeos_count_chrome_os_devices",
+            "class": "GoogleWorkspaceAdminCustomerDevicesChromeosCountChromeOsDevices",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos:countChromeOsDevices",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customer.devices.chromeos.issueCommand",
+            "tool": "google_workspace_admin_customer_devices_chromeos_issue_command",
+            "class": "GoogleWorkspaceAdminCustomerDevicesChromeosIssueCommand",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/{deviceId}:issueCommand",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customer.devices.chromeos.commands.get",
+            "tool": "google_workspace_admin_customer_devices_chromeos_commands_get",
+            "class": "GoogleWorkspaceAdminCustomerDevicesChromeosCommandsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/{deviceId}/commands/{commandId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "orgunits.patch",
+            "tool": "google_workspace_admin_orgunits_patch",
+            "class": "GoogleWorkspaceAdminOrgunitsPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customerId}/orgunits/{+orgUnitPath}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "orgunits.update",
+            "tool": "google_workspace_admin_orgunits_update",
+            "class": "GoogleWorkspaceAdminOrgunitsUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customerId}/orgunits/{+orgUnitPath}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "orgunits.list",
+            "tool": "google_workspace_admin_orgunits_list",
+            "class": "GoogleWorkspaceAdminOrgunitsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/orgunits",
+            "type": "read"
+        },
+        {
+            "discovery_id": "orgunits.insert",
+            "tool": "google_workspace_admin_orgunits_insert",
+            "class": "GoogleWorkspaceAdminOrgunitsInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/orgunits",
+            "type": "write"
+        },
+        {
+            "discovery_id": "orgunits.delete",
+            "tool": "google_workspace_admin_orgunits_delete",
+            "class": "GoogleWorkspaceAdminOrgunitsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customerId}/orgunits/{+orgUnitPath}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "orgunits.get",
+            "tool": "google_workspace_admin_orgunits_get",
+            "class": "GoogleWorkspaceAdminOrgunitsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/orgunits/{+orgUnitPath}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "privileges.list",
+            "tool": "google_workspace_admin_privileges_list",
+            "class": "GoogleWorkspaceAdminPrivilegesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/roles/ALL/privileges",
+            "type": "read"
+        },
+        {
+            "discovery_id": "members.update",
+            "tool": "google_workspace_admin_members_update",
+            "class": "GoogleWorkspaceAdminMembersUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/groups/{groupKey}/members/{memberKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "members.hasMember",
+            "tool": "google_workspace_admin_members_has_member",
+            "class": "GoogleWorkspaceAdminMembersHasMember",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/groups/{groupKey}/hasMember/{memberKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "members.list",
+            "tool": "google_workspace_admin_members_list",
+            "class": "GoogleWorkspaceAdminMembersList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/groups/{groupKey}/members",
+            "type": "read"
+        },
+        {
+            "discovery_id": "members.patch",
+            "tool": "google_workspace_admin_members_patch",
+            "class": "GoogleWorkspaceAdminMembersPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/groups/{groupKey}/members/{memberKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "members.get",
+            "tool": "google_workspace_admin_members_get",
+            "class": "GoogleWorkspaceAdminMembersGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/groups/{groupKey}/members/{memberKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "members.insert",
+            "tool": "google_workspace_admin_members_insert",
+            "class": "GoogleWorkspaceAdminMembersInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/groups/{groupKey}/members",
+            "type": "write"
+        },
+        {
+            "discovery_id": "members.delete",
+            "tool": "google_workspace_admin_members_delete",
+            "class": "GoogleWorkspaceAdminMembersDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/groups/{groupKey}/members/{memberKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "verificationCodes.invalidate",
+            "tool": "google_workspace_admin_verification_codes_invalidate",
+            "class": "GoogleWorkspaceAdminVerificationCodesInvalidate",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/verificationCodes/invalidate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "verificationCodes.list",
+            "tool": "google_workspace_admin_verification_codes_list",
+            "class": "GoogleWorkspaceAdminVerificationCodesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/verificationCodes",
+            "type": "read"
+        },
+        {
+            "discovery_id": "verificationCodes.generate",
+            "tool": "google_workspace_admin_verification_codes_generate",
+            "class": "GoogleWorkspaceAdminVerificationCodesGenerate",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/verificationCodes/generate",
+            "type": "write"
+        },
+        {
+            "discovery_id": "twoStepVerification.turnOff",
+            "tool": "google_workspace_admin_two_step_verification_turn_off",
+            "class": "GoogleWorkspaceAdminTwoStepVerificationTurnOff",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/twoStepVerification/turnOff",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.patch",
+            "tool": "google_workspace_admin_customers_patch",
+            "class": "GoogleWorkspaceAdminCustomersPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customers/{customerKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.get",
+            "tool": "google_workspace_admin_customers_get",
+            "class": "GoogleWorkspaceAdminCustomersGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customers/{customerKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customers.update",
+            "tool": "google_workspace_admin_customers_update",
+            "class": "GoogleWorkspaceAdminCustomersUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customers/{customerKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.get",
+            "tool": "google_workspace_admin_customers_chrome_printers_get",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.batchCreatePrinters",
+            "tool": "google_workspace_admin_customers_chrome_printers_batch_create_printers",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersBatchCreatePrinters",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/{+parent}/chrome/printers:batchCreatePrinters",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.delete",
+            "tool": "google_workspace_admin_customers_chrome_printers_delete",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.batchDeletePrinters",
+            "tool": "google_workspace_admin_customers_chrome_printers_batch_delete_printers",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersBatchDeletePrinters",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/{+parent}/chrome/printers:batchDeletePrinters",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.list",
+            "tool": "google_workspace_admin_customers_chrome_printers_list",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/{+parent}/chrome/printers",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.create",
+            "tool": "google_workspace_admin_customers_chrome_printers_create",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersCreate",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/{+parent}/chrome/printers",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.listPrinterModels",
+            "tool": "google_workspace_admin_customers_chrome_printers_list_printer_models",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersListPrinterModels",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/{+parent}/chrome/printers:listPrinterModels",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customers.chrome.printers.patch",
+            "tool": "google_workspace_admin_customers_chrome_printers_patch",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintersPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.list",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_list",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/{+parent}/chrome/printServers",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.batchCreatePrintServers",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_batch_create_print_servers",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersBatchCreatePrintServers",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/{+parent}/chrome/printServers:batchCreatePrintServers",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.patch",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_patch",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.create",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_create",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersCreate",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/{+parent}/chrome/printServers",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.get",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_get",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/{+name}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.delete",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_delete",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/{+name}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "customers.chrome.printServers.batchDeletePrintServers",
+            "tool": "google_workspace_admin_customers_chrome_print_servers_batch_delete_print_servers",
+            "class": "GoogleWorkspaceAdminCustomersChromePrintServersBatchDeletePrintServers",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/{+parent}/chrome/printServers:batchDeletePrintServers",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.undelete",
+            "tool": "google_workspace_admin_users_undelete",
+            "class": "GoogleWorkspaceAdminUsersUndelete",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/undelete",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.update",
+            "tool": "google_workspace_admin_users_update",
+            "class": "GoogleWorkspaceAdminUsersUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/users/{userKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.signOut",
+            "tool": "google_workspace_admin_users_sign_out",
+            "class": "GoogleWorkspaceAdminUsersSignOut",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/signOut",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.createGuest",
+            "tool": "google_workspace_admin_users_create_guest",
+            "class": "GoogleWorkspaceAdminUsersCreateGuest",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users:createGuest",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.patch",
+            "tool": "google_workspace_admin_users_patch",
+            "class": "GoogleWorkspaceAdminUsersPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/users/{userKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.watch",
+            "tool": "google_workspace_admin_users_watch",
+            "class": "GoogleWorkspaceAdminUsersWatch",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/watch",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.get",
+            "tool": "google_workspace_admin_users_get",
+            "class": "GoogleWorkspaceAdminUsersGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "users.delete",
+            "tool": "google_workspace_admin_users_delete",
+            "class": "GoogleWorkspaceAdminUsersDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/users/{userKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.insert",
+            "tool": "google_workspace_admin_users_insert",
+            "class": "GoogleWorkspaceAdminUsersInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.list",
+            "tool": "google_workspace_admin_users_list",
+            "class": "GoogleWorkspaceAdminUsersList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users",
+            "type": "read"
+        },
+        {
+            "discovery_id": "users.makeAdmin",
+            "tool": "google_workspace_admin_users_make_admin",
+            "class": "GoogleWorkspaceAdminUsersMakeAdmin",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/makeAdmin",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.aliases.list",
+            "tool": "google_workspace_admin_users_aliases_list",
+            "class": "GoogleWorkspaceAdminUsersAliasesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/aliases",
+            "type": "read"
+        },
+        {
+            "discovery_id": "users.aliases.watch",
+            "tool": "google_workspace_admin_users_aliases_watch",
+            "class": "GoogleWorkspaceAdminUsersAliasesWatch",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/aliases/watch",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.aliases.insert",
+            "tool": "google_workspace_admin_users_aliases_insert",
+            "class": "GoogleWorkspaceAdminUsersAliasesInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/users/{userKey}/aliases",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.aliases.delete",
+            "tool": "google_workspace_admin_users_aliases_delete",
+            "class": "GoogleWorkspaceAdminUsersAliasesDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/users/{userKey}/aliases/{alias}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.photos.delete",
+            "tool": "google_workspace_admin_users_photos_delete",
+            "class": "GoogleWorkspaceAdminUsersPhotosDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/users/{userKey}/photos/thumbnail",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.photos.patch",
+            "tool": "google_workspace_admin_users_photos_patch",
+            "class": "GoogleWorkspaceAdminUsersPhotosPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/users/{userKey}/photos/thumbnail",
+            "type": "write"
+        },
+        {
+            "discovery_id": "users.photos.get",
+            "tool": "google_workspace_admin_users_photos_get",
+            "class": "GoogleWorkspaceAdminUsersPhotosGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/photos/thumbnail",
+            "type": "read"
+        },
+        {
+            "discovery_id": "users.photos.update",
+            "tool": "google_workspace_admin_users_photos_update",
+            "class": "GoogleWorkspaceAdminUsersPhotosUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/users/{userKey}/photos/thumbnail",
+            "type": "write"
+        },
+        {
+            "discovery_id": "domainAliases.list",
+            "tool": "google_workspace_admin_domain_aliases_list",
+            "class": "GoogleWorkspaceAdminDomainAliasesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/domainaliases",
+            "type": "read"
+        },
+        {
+            "discovery_id": "domainAliases.get",
+            "tool": "google_workspace_admin_domain_aliases_get",
+            "class": "GoogleWorkspaceAdminDomainAliasesGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/domainaliases/{domainAliasName}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "domainAliases.delete",
+            "tool": "google_workspace_admin_domain_aliases_delete",
+            "class": "GoogleWorkspaceAdminDomainAliasesDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/domainaliases/{domainAliasName}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "domainAliases.insert",
+            "tool": "google_workspace_admin_domain_aliases_insert",
+            "class": "GoogleWorkspaceAdminDomainAliasesInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/domainaliases",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roleAssignments.delete",
+            "tool": "google_workspace_admin_role_assignments_delete",
+            "class": "GoogleWorkspaceAdminRoleAssignmentsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/roleassignments/{roleAssignmentId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roleAssignments.insert",
+            "tool": "google_workspace_admin_role_assignments_insert",
+            "class": "GoogleWorkspaceAdminRoleAssignmentsInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/roleassignments",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roleAssignments.list",
+            "tool": "google_workspace_admin_role_assignments_list",
+            "class": "GoogleWorkspaceAdminRoleAssignmentsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/roleassignments",
+            "type": "read"
+        },
+        {
+            "discovery_id": "roleAssignments.get",
+            "tool": "google_workspace_admin_role_assignments_get",
+            "class": "GoogleWorkspaceAdminRoleAssignmentsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/roleassignments/{roleAssignmentId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "schemas.get",
+            "tool": "google_workspace_admin_schemas_get",
+            "class": "GoogleWorkspaceAdminSchemasGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/schemas/{schemaKey}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "schemas.delete",
+            "tool": "google_workspace_admin_schemas_delete",
+            "class": "GoogleWorkspaceAdminSchemasDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customerId}/schemas/{schemaKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "schemas.insert",
+            "tool": "google_workspace_admin_schemas_insert",
+            "class": "GoogleWorkspaceAdminSchemasInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/schemas",
+            "type": "write"
+        },
+        {
+            "discovery_id": "schemas.list",
+            "tool": "google_workspace_admin_schemas_list",
+            "class": "GoogleWorkspaceAdminSchemasList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/schemas",
+            "type": "read"
+        },
+        {
+            "discovery_id": "schemas.update",
+            "tool": "google_workspace_admin_schemas_update",
+            "class": "GoogleWorkspaceAdminSchemasUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customerId}/schemas/{schemaKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "schemas.patch",
+            "tool": "google_workspace_admin_schemas_patch",
+            "class": "GoogleWorkspaceAdminSchemasPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customerId}/schemas/{schemaKey}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "chromeosdevices.update",
+            "tool": "google_workspace_admin_chromeosdevices_update",
+            "class": "GoogleWorkspaceAdminChromeosdevicesUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/{deviceId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "chromeosdevices.list",
+            "tool": "google_workspace_admin_chromeosdevices_list",
+            "class": "GoogleWorkspaceAdminChromeosdevicesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos",
+            "type": "read"
+        },
+        {
+            "discovery_id": "chromeosdevices.moveDevicesToOu",
+            "tool": "google_workspace_admin_chromeosdevices_move_devices_to_ou",
+            "class": "GoogleWorkspaceAdminChromeosdevicesMoveDevicesToOu",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/moveDevicesToOu",
+            "type": "write"
+        },
+        {
+            "discovery_id": "chromeosdevices.patch",
+            "tool": "google_workspace_admin_chromeosdevices_patch",
+            "class": "GoogleWorkspaceAdminChromeosdevicesPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/{deviceId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "chromeosdevices.get",
+            "tool": "google_workspace_admin_chromeosdevices_get",
+            "class": "GoogleWorkspaceAdminChromeosdevicesGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/{deviceId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "chromeosdevices.action",
+            "tool": "google_workspace_admin_chromeosdevices_action",
+            "class": "GoogleWorkspaceAdminChromeosdevicesAction",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customerId}/devices/chromeos/{resourceId}/action",
+            "type": "write"
+        },
+        {
+            "discovery_id": "channels.stop",
+            "tool": "google_workspace_admin_channels_stop",
+            "class": "GoogleWorkspaceAdminChannelsStop",
+            "http_method": "POST",
+            "path": "/admin/directory_v1/channels/stop",
+            "type": "write"
+        },
+        {
+            "discovery_id": "asps.list",
+            "tool": "google_workspace_admin_asps_list",
+            "class": "GoogleWorkspaceAdminAspsList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/asps",
+            "type": "read"
+        },
+        {
+            "discovery_id": "asps.get",
+            "tool": "google_workspace_admin_asps_get",
+            "class": "GoogleWorkspaceAdminAspsGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/asps/{codeId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "asps.delete",
+            "tool": "google_workspace_admin_asps_delete",
+            "class": "GoogleWorkspaceAdminAspsDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/users/{userKey}/asps/{codeId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tokens.delete",
+            "tool": "google_workspace_admin_tokens_delete",
+            "class": "GoogleWorkspaceAdminTokensDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/users/{userKey}/tokens/{clientId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "tokens.list",
+            "tool": "google_workspace_admin_tokens_list",
+            "class": "GoogleWorkspaceAdminTokensList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/tokens",
+            "type": "read"
+        },
+        {
+            "discovery_id": "tokens.get",
+            "tool": "google_workspace_admin_tokens_get",
+            "class": "GoogleWorkspaceAdminTokensGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/users/{userKey}/tokens/{clientId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "roles.insert",
+            "tool": "google_workspace_admin_roles_insert",
+            "class": "GoogleWorkspaceAdminRolesInsert",
+            "http_method": "POST",
+            "path": "/admin/directory/v1/customer/{customer}/roles",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roles.delete",
+            "tool": "google_workspace_admin_roles_delete",
+            "class": "GoogleWorkspaceAdminRolesDelete",
+            "http_method": "DELETE",
+            "path": "/admin/directory/v1/customer/{customer}/roles/{roleId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roles.get",
+            "tool": "google_workspace_admin_roles_get",
+            "class": "GoogleWorkspaceAdminRolesGet",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/roles/{roleId}",
+            "type": "read"
+        },
+        {
+            "discovery_id": "roles.patch",
+            "tool": "google_workspace_admin_roles_patch",
+            "class": "GoogleWorkspaceAdminRolesPatch",
+            "http_method": "PATCH",
+            "path": "/admin/directory/v1/customer/{customer}/roles/{roleId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roles.update",
+            "tool": "google_workspace_admin_roles_update",
+            "class": "GoogleWorkspaceAdminRolesUpdate",
+            "http_method": "PUT",
+            "path": "/admin/directory/v1/customer/{customer}/roles/{roleId}",
+            "type": "write"
+        },
+        {
+            "discovery_id": "roles.list",
+            "tool": "google_workspace_admin_roles_list",
+            "class": "GoogleWorkspaceAdminRolesList",
+            "http_method": "GET",
+            "path": "/admin/directory/v1/customer/{customer}/roles",
+            "type": "read"
+        }
+    ]
+}

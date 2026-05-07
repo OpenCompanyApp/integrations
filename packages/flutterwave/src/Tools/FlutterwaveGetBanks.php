@@ -6,6 +6,11 @@ use OpenCompany\Integrations\Flutterwave\FlutterwaveService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List banks supported by Flutterwave for a country.
+ *
+ * Requires an ISO country code such as NG, KE, GH, or ZA.
+ */
 class FlutterwaveGetBanks implements Tool
 {
     /**
@@ -48,8 +53,7 @@ class FlutterwaveGetBanks implements Tool
     /**
      * Execute the tool: fetch banks for a country from Flutterwave.
      *
-     * @param  array  $args  The tool arguments (country required).
-     * @return ToolResult The result containing the list of banks or an error message.
+     * @param  array<string, mixed>  $args  Tool arguments.
      */
     public function execute(array $args): ToolResult
     {

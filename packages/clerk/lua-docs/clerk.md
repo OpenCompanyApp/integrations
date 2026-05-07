@@ -1,213 +1,123 @@
-# Clerk — Lua API Reference
+# Clerk
 
-## clerk_list_users
+Clerk tools are exposed under `app.integrations.clerk`. The integration uses Clerk's Backend API with a secret key. Do not use publishable keys.
 
-List users from Clerk with optional filtering and pagination.
+## Raw API Helpers
 
-### Parameters
+Use raw helpers for Backend API endpoints that do not yet have a first-class tool:
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of users to return (default: 10, max: 500). |
-| `offset` | integer | no | Number of users to skip for pagination. |
-| `email_address` | string | no | Filter users by email address. |
-| `phone_number` | string | no | Filter users by phone number. |
-| `query` | string | no | Search query to filter users by name, email, or username. |
-| `order_by` | string | no | Sort order: `"+created_at"` (ascending) or `"-created_at"` (descending). |
+- `clerk_api_get`
+- `clerk_api_post`
+- `clerk_api_patch`
+- `clerk_api_delete`
 
-### Examples
+Paths are relative to `https://api.clerk.com/v1`.
 
 ```lua
--- List all users
-local result = app.integrations.clerk.list_users({})
-
--- Search for a user by name or email
-local result = app.integrations.clerk.list_users({
-  query = "john"
-})
-
--- Paginate through users
-local result = app.integrations.clerk.list_users({
-  limit = 50,
-  offset = 100,
-  order_by = "-created_at"
+local sessions = app.integrations.clerk.clerk_api_get({
+  path = "/sessions",
+  query = {
+    user_id = "user_123"
+  }
 })
 ```
 
----
-
-## clerk_get_user
-
-Retrieve a single Clerk user by their ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Clerk user ID (e.g., `"user_2abc123"`). |
-
-### Examples
+## Users
 
 ```lua
-local result = app.integrations.clerk.get_user({
-  id = "user_2abc123"
+local users = app.integrations.clerk.clerk_list_users({
+  query = "alex",
+  limit = 20
+})
+
+local user = app.integrations.clerk.clerk_get_user({
+  id = "user_123"
 })
 ```
 
----
+User tools include:
 
-## clerk_create_user
+- `clerk_list_users`
+- `clerk_count_users`
+- `clerk_get_user`
+- `clerk_create_user`
+- `clerk_update_user`
+- `clerk_delete_user`
+- `clerk_ban_user`
+- `clerk_unban_user`
+- `clerk_lock_user`
+- `clerk_unlock_user`
 
-Create a new user in Clerk.
+The existing user create/update tools keep their compatibility argument names. New endpoint-mapped tools use `user_id`.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email_address` | array | yes | Array of email addresses for the user. At least one is required. |
-| `first_name` | string | no | The user's first name. |
-| `last_name` | string | no | The user's last name. |
-| `password` | string | no | The user's password (minimum 8 characters). |
-| `username` | string | no | The user's username. |
-
-### Examples
+## Sessions
 
 ```lua
--- Create a user with email and name
-local result = app.integrations.clerk.create_user({
-  email_address = { "john@example.com" },
-  first_name = "John",
-  last_name = "Doe",
-  password = "securepassword123"
+local active = app.integrations.clerk.clerk_list_sessions({
+  user_id = "user_123",
+  status = "active"
 })
 
--- Create a user with multiple emails
-local result = app.integrations.clerk.create_user({
-  email_address = { "john@work.com", "john@personal.com" },
-  first_name = "John",
-  username = "johndoe"
+app.integrations.clerk.clerk_revoke_session({
+  session_id = "sess_123"
 })
 ```
 
----
+Session tools:
 
-## clerk_update_user
+- `clerk_list_sessions`
+- `clerk_get_session`
+- `clerk_revoke_session`
 
-Update an existing Clerk user's profile.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Clerk user ID to update. |
-| `first_name` | string | no | Updated first name. |
-| `last_name` | string | no | Updated last name. |
-| `username` | string | no | Updated username. |
-
-### Examples
+## Organizations
 
 ```lua
--- Update a user's name
-local result = app.integrations.clerk.update_user({
-  id = "user_2abc123",
-  first_name = "Jane",
-  last_name = "Smith"
+local org = app.integrations.clerk.clerk_create_organization({
+  name = "Example Inc",
+  created_by = "user_123"
 })
 
--- Update username only
-local result = app.integrations.clerk.update_user({
-  id = "user_2abc123",
-  username = "janesmith"
+app.integrations.clerk.clerk_create_organization_membership({
+  organization_id = "org_123",
+  user_id = "user_123",
+  role = "org:member"
 })
 ```
 
----
+Organization tools:
 
-## clerk_delete_user
+- `clerk_list_organizations`
+- `clerk_create_organization`
+- `clerk_get_organization`
+- `clerk_update_organization`
+- `clerk_delete_organization`
+- `clerk_list_organization_memberships`
+- `clerk_create_organization_membership`
+- `clerk_update_organization_membership`
+- `clerk_delete_organization_membership`
+- `clerk_list_organization_invitations`
+- `clerk_create_organization_invitation`
+- `clerk_revoke_organization_invitation`
 
-Delete a user from Clerk. This action is irreversible.
+Organization invitation creation is rate limited by Clerk. The tool forwards Clerk API errors directly.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Clerk user ID to delete. |
-
-### Examples
+## Application Invitations And Sign-In Tokens
 
 ```lua
-local result = app.integrations.clerk.delete_user({
-  id = "user_2abc123"
+local invitation = app.integrations.clerk.clerk_create_invitation({
+  email_address = "person@example.test",
+  redirect_url = "https://example.test/welcome"
 })
 ```
 
----
+Available tools:
 
-## clerk_list_organizations
+- `clerk_list_invitations`
+- `clerk_create_invitation`
+- `clerk_revoke_invitation`
+- `clerk_create_sign_in_token`
+- `clerk_revoke_sign_in_token`
 
-List organizations from Clerk with optional filtering and pagination.
+## Output Shape
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of organizations to return (default: 10, max: 500). |
-| `offset` | integer | no | Number of organizations to skip for pagination. |
-| `query` | string | no | Search query to filter organizations by name. |
-
-### Examples
-
-```lua
--- List all organizations
-local result = app.integrations.clerk.list_organizations({})
-
--- Search for an organization
-local result = app.integrations.clerk.list_organizations({
-  query = "Acme"
-})
-
--- Paginate
-local result = app.integrations.clerk.list_organizations({
-  limit = 50,
-  offset = 0
-})
-```
-
----
-
-## clerk_get_current_user
-
-Health check — verify Clerk API connectivity by fetching the first user.
-
-### Parameters
-
-None.
-
-### Examples
-
-```lua
-local result = app.integrations.clerk.get_current_user({})
-if result.connected then
-  print("Clerk API is reachable")
-end
-```
-
----
-
-## Multi-Account Usage
-
-If you have multiple Clerk applications configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.clerk.function_name({})
-
--- Explicit default (portable across setups)
-app.integrations.clerk.default.function_name({})
-
--- Named accounts
-app.integrations.clerk.production.function_name({})
-app.integrations.clerk.staging.function_name({})
-```
-
-All functions are identical across accounts — only the credentials differ.
+Most tools return Clerk's parsed JSON response directly. Existing compatibility tools such as `clerk_get_current_user` keep their normalized health-check response.

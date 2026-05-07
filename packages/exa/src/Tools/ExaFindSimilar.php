@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Exa\ExaService;
  */
 class ExaFindSimilar implements Tool
 {
+    /**
+     * @param  ExaService  $service  The Exa API client.
+     */
     public function __construct(
         private ExaService $service,
     ) {}
@@ -39,6 +42,20 @@ class ExaFindSimilar implements Tool
             'num_results' => [
                 'type' => 'integer',
                 'description' => 'Number of similar pages to return (default: 10, max: 100).',
+            ],
+            'exclude_source_domain' => [
+                'type' => 'boolean',
+                'description' => 'Exclude results from the same domain as the source URL.',
+            ],
+            'include_domains' => [
+                'type' => 'array',
+                'description' => 'Domains to include.',
+                'items' => ['type' => 'string'],
+            ],
+            'exclude_domains' => [
+                'type' => 'array',
+                'description' => 'Domains to exclude.',
+                'items' => ['type' => 'string'],
             ],
         ];
     }
@@ -66,6 +83,18 @@ class ExaFindSimilar implements Tool
 
             if (isset($args['num_results'])) {
                 $body['numResults'] = (int) $args['num_results'];
+            }
+
+            if (isset($args['exclude_source_domain'])) {
+                $body['excludeSourceDomain'] = (bool) $args['exclude_source_domain'];
+            }
+
+            if (isset($args['include_domains'])) {
+                $body['includeDomains'] = $args['include_domains'];
+            }
+
+            if (isset($args['exclude_domains'])) {
+                $body['excludeDomains'] = $args['exclude_domains'];
             }
 
             $result = $this->service->findSimilar($body);

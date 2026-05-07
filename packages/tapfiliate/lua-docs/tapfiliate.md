@@ -1,181 +1,162 @@
-# Tapfiliate — Lua API Reference
+# Tapfiliate Lua Reference
 
-## list_affiliates
+This integration targets Tapfiliate REST API v1.6 and authenticates with `X-Api-Key`. Use it for affiliate operations, conversion tracking, commission reconciliation, customer attribution, and program configuration lookups.
 
-List all affiliates in your Tapfiliate account.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Results per page (default: 25, max: 100) |
-| `page` | integer | no | Page number (default: 1) |
-
-### Example
+## Affiliates
 
 ```lua
-local affiliates = app.integrations.tapfiliate.list_affiliates({ limit = 50, page = 1 })
-
-for _, aff in ipairs(affiliates) do
-  print(aff.id .. ": " .. (aff.email or "no email"))
-end
-```
-
----
-
-## get_affiliate
-
-Get details for a specific affiliate.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The affiliate ID |
-
-### Example
-
-```lua
-local aff = app.integrations.tapfiliate.get_affiliate({ id = "aff_12345" })
-print("Name: " .. (aff.first_name or "") .. " " .. (aff.last_name or ""))
-print("Email: " .. (aff.email or ""))
-print("Status: " .. (aff.status or ""))
-```
-
----
-
-## list_conversions
-
-List conversions with optional filters and pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `affiliate_id` | string | no | Filter by affiliate ID |
-| `campaign_id` | string | no | Filter by campaign ID |
-| `external_id` | string | no | Filter by external reference ID |
-| `status` | string | no | Filter: `"approved"`, `"pending"`, or `"rejected"` |
-| `from_date` | string | no | Start date (ISO 8601, e.g., `"2025-01-01"`) |
-| `to_date` | string | no | End date (ISO 8601, e.g., `"2025-12-31"`) |
-| `limit` | integer | no | Results per page (default: 25, max: 100) |
-| `page` | integer | no | Page number (default: 1) |
-
-### Example
-
-```lua
--- Get approved conversions for a specific affiliate
-local conversions = app.integrations.tapfiliate.list_conversions({
-  affiliate_id = "aff_12345",
-  status = "approved",
-  from_date = "2025-01-01",
-  to_date = "2025-12-31"
+local affiliates = app.integrations.tapfiliate.list_affiliates({
+  email = "partner@example.test",
+  referral_code = "PARTNER",
+  limit = 50,
+  page = 1
 })
 
-for _, conv in ipairs(conversions) do
-  print(conv.id .. ": $" .. conv.amount .. " (" .. conv.status .. ")")
-end
+local affiliate = app.integrations.tapfiliate.get_affiliate({
+  id = "aff_123"
+})
 ```
 
----
+Create and update affiliates:
 
-## create_conversion
+```lua
+local created = app.integrations.tapfiliate.create_affiliate({
+  firstname = "Ada",
+  lastname = "Lovelace",
+  email = "ada@example.test",
+  company = { name = "Example Partners" },
+  custom_fields = { channel = "newsletter" }
+})
 
-Create a new conversion for an affiliate.
+local updated = app.integrations.tapfiliate.update_affiliate({
+  affiliate_id = "aff_123",
+  firstname = "Ada",
+  custom_fields = { tier = "gold" }
+})
+```
 
-### Parameters
+Group and notes tools:
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `affiliate_id` | string | yes | The affiliate to credit |
-| `amount` | number | yes | Conversion amount (e.g., `29.99`) |
-| `external_id` | string | yes | Unique external reference (e.g., order ID) |
-| `campaign_id` | string | no | Campaign to associate with |
-| `commission_type` | string | no | `"default"` or `"fixed"` |
-| `commission_amount` | number | no | Override commission amount (if fixed type) |
-| `meta_data` | object | no | Key-value metadata |
+```lua
+app.integrations.tapfiliate.set_affiliate_group({
+  affiliate_id = "aff_123",
+  group_id = "group_1"
+})
 
-### Example
+local notes = app.integrations.tapfiliate.list_affiliate_notes({
+  affiliate_id = "aff_123"
+})
+
+local groups = app.integrations.tapfiliate.list_affiliate_groups({})
+```
+
+## Conversions
+
+List and retrieve conversions:
+
+```lua
+local conversions = app.integrations.tapfiliate.list_conversions({
+  affiliate_id = "aff_123",
+  program_id = "prog_1",
+  status = "approved",
+  date_from = "2026-01-01",
+  date_to = "2026-01-31"
+})
+
+local conversion = app.integrations.tapfiliate.get_conversion({
+  conversion_id = "12345"
+})
+```
+
+Create conversions by known affiliate, referral code, click/tracking id, coupon, or customer id:
 
 ```lua
 local conversion = app.integrations.tapfiliate.create_conversion({
-  affiliate_id = "aff_12345",
-  amount = 99.00,
-  external_id = "order_67890",
-  campaign_id = "camp_abc"
-})
-print("Created conversion: " .. conversion.id)
-```
-
----
-
-## get_current_user
-
-Get the currently authenticated Tapfiliate user.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local user = app.integrations.tapfiliate.get_current_user({})
-print("Logged in as: " .. (user.email or "unknown"))
-```
-
----
-
-## Common Workflows
-
-### Check top affiliates
-
-```lua
-local affiliates = app.integrations.tapfiliate.list_affiliates({ limit = 10 })
-
-for _, aff in ipairs(affiliates) do
-  local conversions = app.integrations.tapfiliate.list_conversions({
-    affiliate_id = aff.id,
-    status = "approved"
-  })
-  local total = 0
-  for _, c in ipairs(conversions) do
-    total = total + (c.amount or 0)
-  end
-  print(aff.email .. ": $" .. total .. " in conversions")
-end
-```
-
-### Record a conversion from an order
-
-```lua
-app.integrations.tapfiliate.create_conversion({
-  affiliate_id = "aff_12345",
+  external_id = "order_1001",
   amount = 149.99,
-  external_id = "ORD-2025-0042",
+  currency = "USD",
+  referral_code = "PARTNER",
+  program_id = "prog_1",
   meta_data = {
-    product = "Pro Plan",
-    customer_email = "customer@example.com"
+    plan = "Pro"
   }
 })
 ```
 
----
+Add a commission line:
+
+```lua
+local commission = app.integrations.tapfiliate.add_conversion_commission({
+  conversion_id = "12345",
+  conversion_sub_amount = 49.99,
+  commission_type = "default",
+  comment = "Expansion revenue"
+})
+```
+
+## Commissions
+
+```lua
+local commissions = app.integrations.tapfiliate.list_commissions({
+  affiliate_id = "aff_123",
+  status = "approved",
+  date_from = "2026-01-01"
+})
+
+local commission = app.integrations.tapfiliate.get_commission({
+  commission_id = "98765"
+})
+```
+
+## Customers
+
+```lua
+local customers = app.integrations.tapfiliate.list_customers({
+  program_id = "prog_1",
+  affiliate_id = "aff_123"
+})
+
+local customer = app.integrations.tapfiliate.create_customer({
+  customer_id = "cust_1001",
+  referral_code = "PARTNER",
+  program_id = "prog_1",
+  meta_data = {
+    email = "buyer@example.test"
+  }
+})
+```
+
+## Programs
+
+```lua
+local programs = app.integrations.tapfiliate.list_programs({})
+
+local enrollment = app.integrations.tapfiliate.get_program_affiliate({
+  program_id = "prog_1",
+  affiliate_id = "aff_123"
+})
+
+app.integrations.tapfiliate.update_program_affiliate({
+  program_id = "prog_1",
+  affiliate_id = "aff_123",
+  coupon = "PARTNER10"
+})
+
+local types = app.integrations.tapfiliate.list_program_commission_types({
+  program_id = "prog_1"
+})
+```
+
+## Account Check
+
+```lua
+local user = app.integrations.tapfiliate.get_current_user({})
+```
 
 ## Multi-Account Usage
 
-If you have multiple Tapfiliate accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.tapfiliate.list_affiliates({})
-
--- Explicit default (portable across setups)
 app.integrations.tapfiliate.default.list_affiliates({})
-
--- Named accounts
-app.integrations.tapfiliate.work.list_affiliates({})
 app.integrations.tapfiliate.partner.list_affiliates({})
 ```
-
-All functions are identical across accounts — only the credentials differ.

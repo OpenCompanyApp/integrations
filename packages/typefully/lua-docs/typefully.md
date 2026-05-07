@@ -1,165 +1,232 @@
-# Typefully — Lua API Reference
+# Typefully
 
-## create_draft
+Lua API reference for the `typefully` integration package. This package targets Typefully API v2, which uses `Authorization: Bearer <api_key>` and scopes draft, media, tag, and queue operations under a `social_set_id`.
 
-Create a new draft in Typefully. Supports tweets, threads, and newsletters.
+Start with `typefully_list_social_sets` to find the account or brand you want to publish from.
 
-### Parameters
+## User and Social Sets
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `content` | string | yes | Draft content. For threads, separate tweets with four newlines (`\n\n\n\n`). |
-| `type` | string | no | Draft type: `"tweet"`, `"thread"`, or `"mail"`. Auto-detected if omitted. |
-| `schedule_date` | string | no | ISO 8601 date to schedule (e.g., `"2026-04-10T09:00:00Z"`). Omit to save unscheduled. |
-| `thread_connector` | boolean | no | Add "Show more" between thread tweets (default: `true`). |
-| `is_tweet_pin` | boolean | no | Pin the tweet after publishing (default: `false`). |
-| `is_tweet_reply` | boolean | no | Publish as a reply (default: `false`). Requires `reply_to`. |
-| `reply_to` | string | no | Tweet ID to reply to. |
-| `mail_subject` | string | no | Subject line for newsletter drafts. |
-| `mail_subtitle` | string | no | Subtitle for newsletter drafts. |
-| `audience_id` | string | no | Audience ID for newsletter drafts. |
-| `label_ids` | array | no | Label IDs to assign. |
-
-### Examples
-
-#### Simple tweet
+### `typefully_get_current_user`
 
 ```lua
-local result = app.integrations.typefully.create_draft({
-  content = "Hello world! This is my first scheduled tweet via the API."
-})
-print("Draft ID: " .. result.id)
+local user = typefully_get_current_user()
+print(user.name or user.handle)
 ```
 
-#### Thread with scheduling
+### `typefully_list_social_sets`
 
 ```lua
-local result = app.integrations.typefully.create_draft({
-  content = "🧵 Thread: 3 tips for better tweets\n\n\n\n1/ Keep it concise. Short tweets get more engagement.\n\n\n\n2/ Use a hook. Start with a bold statement or question.\n\n\n\n3/ End with a CTA. Tell people what to do next.",
-  type = "thread",
-  schedule_date = "2026-04-10T09:00:00Z"
-})
-print("Scheduled thread ID: " .. result.id)
-```
-
-#### Newsletter draft
-
-```lua
-local result = app.integrations.typefully.create_draft({
-  content = "# Weekly Update\n\nHere's what happened this week...",
-  type = "mail",
-  mail_subject = "Weekly Update — April 2026",
-  mail_subtitle = "News, updates, and tips"
-})
-```
-
----
-
-## list_scheduled
-
-List scheduled drafts awaiting publication.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 20, max: 100). |
-| `offset` | integer | no | Skip N results for pagination (default: 0). |
-
-### Example
-
-```lua
-local result = app.integrations.typefully.list_scheduled({
-  limit = 10
-})
-
-for _, draft in ipairs(result.drafts or {}) do
-  print(draft.id .. ": scheduled for " .. (draft.schedule_date or "unscheduled"))
+local sets = typefully_list_social_sets({ limit = 20 })
+for _, set in ipairs(sets.results or {}) do
+  print(set.id, set.name, set.username)
 end
 ```
 
----
-
-## list_published
-
-List already published drafts.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 20, max: 100). |
-| `offset` | integer | no | Skip N results for pagination (default: 0). |
-
-### Example
+### `typefully_get_social_set`
 
 ```lua
-local result = app.integrations.typefully.list_published({
-  limit = 10
+local set = typefully_get_social_set({ social_set_id = "social-set-test" })
+print(set.name)
+```
+
+## Drafts
+
+### `typefully_list_drafts`
+
+List drafts with optional `status`, `tags`, `limit`, `offset`, and `sort` filters. Common statuses include `draft`, `scheduled`, and `published`.
+
+```lua
+local drafts = typefully_list_drafts({
+  social_set_id = "social-set-test",
+  status = "scheduled",
+  limit = 10,
+  sort = "scheduled_date",
 })
-
-for _, draft in ipairs(result.drafts or {}) do
-  print(draft.id .. ": published " .. (draft.published_at or "unknown"))
-end
 ```
 
----
+### `typefully_list_scheduled`
 
-## get_draft
-
-Get details of a specific draft by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The Typefully draft ID. |
-
-### Example
+Shortcut for listing drafts with `status = "scheduled"`.
 
 ```lua
-local result = app.integrations.typefully.get_draft({
-  id = "abc123"
+local scheduled = typefully_list_scheduled({
+  social_set_id = "social-set-test",
+  limit = 10,
 })
-
-print("Content: " .. result.content)
-print("Status: " .. (result.status or "unknown"))
 ```
 
----
+### `typefully_list_published`
 
-## get_current_user
-
-Get the authenticated user's Typefully profile.
-
-### Parameters
-
-None.
-
-### Example
+Shortcut for listing drafts with `status = "published"`.
 
 ```lua
-local result = app.integrations.typefully.get_current_user({})
-print("Handle: @" .. (result.handle or "unknown"))
-print("Name: " .. (result.name or "unknown"))
+local published = typefully_list_published({
+  social_set_id = "social-set-test",
+  limit = 10,
+})
 ```
 
----
+### `typefully_get_draft`
+
+```lua
+local draft = typefully_get_draft({
+  social_set_id = "social-set-test",
+  draft_id = "draft-test",
+})
+print(draft.id, draft.status)
+```
+
+### `typefully_create_draft`
+
+For full v2 control, pass the Typefully `platforms` structure. Supported platform keys include `x`, `linkedin`, `threads`, `bluesky`, and `mastodon`.
+
+```lua
+local draft = typefully_create_draft({
+  social_set_id = "social-set-test",
+  platforms = {
+    x = {
+      enabled = true,
+      posts = {
+        { text = "Just shipped a new feature." },
+      },
+    },
+    linkedin = {
+      enabled = true,
+      posts = {
+        { text = "We just shipped a new feature for teams." },
+      },
+    },
+  },
+  tags = { "product-launch" },
+})
+```
+
+For a simple single-platform draft, pass `content` and optionally `platform`.
+
+```lua
+local draft = typefully_create_draft({
+  social_set_id = "social-set-test",
+  platform = "x",
+  content = "Simple draft from an agent.",
+})
+```
+
+To schedule or publish immediately, set `publish_at` to an ISO 8601 datetime, `"next-free-slot"`, or `"now"`.
+
+```lua
+local scheduled = typefully_create_draft({
+  social_set_id = "social-set-test",
+  content = "Scheduled for the next free slot.",
+  publish_at = "next-free-slot",
+})
+```
+
+### `typefully_update_draft`
+
+Patch an existing draft. Only provided fields are sent.
+
+```lua
+local draft = typefully_update_draft({
+  social_set_id = "social-set-test",
+  draft_id = "draft-test",
+  publish_at = "now",
+  share = true,
+})
+```
+
+### `typefully_delete_draft`
+
+```lua
+local result = typefully_delete_draft({
+  social_set_id = "social-set-test",
+  draft_id = "draft-test",
+})
+print(result.deleted)
+```
+
+## Media
+
+### `typefully_request_media_upload`
+
+Request a presigned upload URL. Upload the file bytes to the returned URL outside this tool, then check media status and attach the `media_id` to a draft post.
+
+```lua
+local upload = typefully_request_media_upload({
+  social_set_id = "social-set-test",
+  file_name = "launch.png",
+  file_type = "image/png",
+})
+print(upload.media_id, upload.upload_url)
+```
+
+### `typefully_get_media`
+
+```lua
+local media = typefully_get_media({
+  social_set_id = "social-set-test",
+  media_id = "media-test",
+})
+print(media.status)
+```
+
+Attach ready media IDs in a draft:
+
+```lua
+local draft = typefully_create_draft({
+  social_set_id = "social-set-test",
+  platforms = {
+    x = {
+      enabled = true,
+      posts = {
+        { text = "Launch image attached.", media_ids = { "media-test" } },
+      },
+    },
+  },
+})
+```
+
+## Tags
+
+### `typefully_list_tags`
+
+```lua
+local tags = typefully_list_tags({ social_set_id = "social-set-test" })
+```
+
+### `typefully_create_tag`
+
+```lua
+local tag = typefully_create_tag({
+  social_set_id = "social-set-test",
+  name = "Product Launch",
+})
+```
+
+## Queue
+
+### `typefully_get_queue`
+
+Inspect upcoming scheduled content for a social set where the endpoint is available.
+
+```lua
+local queue = typefully_get_queue({
+  social_set_id = "social-set-test",
+  limit = 10,
+})
+```
+
+## Return Shapes
+
+Typefully v2 list endpoints commonly return paginated objects with fields such as `results`, `count`, `limit`, and `offset`. Draft and media tools return the Typefully API object for the requested resource. Delete tools return a compact confirmation object:
+
+```lua
+{ deleted = true, draft_id = "draft-test" }
+```
 
 ## Multi-Account Usage
 
-If you have multiple Typefully accounts configured, use account-specific namespaces:
+Use the namespace prefix assigned by the host:
 
 ```lua
--- Default account (always works)
-app.integrations.typefully.function_name({...})
-
--- Explicit default (portable across setups)
-app.integrations.typefully.default.function_name({...})
-
--- Named accounts
-app.integrations.typefully.work.function_name({...})
-app.integrations.typefully.personal.function_name({...})
+local sets = ns_typefully_work.typefully_list_social_sets({ limit = 10 })
 ```
-
-All functions are identical across accounts — only the credentials differ.

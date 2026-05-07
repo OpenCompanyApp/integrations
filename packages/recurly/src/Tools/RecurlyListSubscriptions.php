@@ -6,6 +6,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Recurly\RecurlyService;
 
+/**
+ * List Recurly subscriptions.
+ *
+ * Supports cursor pagination and filters for account and subscription state.
+ */
 class RecurlyListSubscriptions implements Tool
 {
     /**

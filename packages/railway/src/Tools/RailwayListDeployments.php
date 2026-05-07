@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Railway\RailwayService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List Railway deployments for a service.
+ *
+ * Optionally filters by environment and limits the number of returned records.
+ */
 class RailwayListDeployments implements Tool
 {
+    /**
+     * @param  RailwayService  $service  The Railway GraphQL API client.
+     */
     public function __construct(
         private RailwayService $service,
     ) {}
@@ -31,6 +39,11 @@ class RailwayListDeployments implements Tool
         ];
     }
 
+    /**
+     * List deployments and return normalized status, environment, and creator fields.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (service_id, environment_id, limit)
+     */
     public function execute(array $args): ToolResult
     {
         try {

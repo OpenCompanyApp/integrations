@@ -4,20 +4,12 @@ namespace OpenCompany\Integrations\Tally\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Tally\TallyService;
 
 /**
  * List submissions for a specific Tally form with pagination.
  */
-class TallyListSubmissions implements Tool
+class TallyListSubmissions extends AbstractTallyTool implements Tool
 {
-    /**
-     * @param  TallyService  $service  The Tally API service instance.
-     */
-    public function __construct(
-        private TallyService $service,
-    ) {}
-
     public function name(): string
     {
         return 'tally_list_submissions';
@@ -42,7 +34,24 @@ class TallyListSubmissions implements Tool
             ],
             'limit' => [
                 'type' => 'integer',
-                'description' => 'Number of submissions per page (default: 20, max: 100).',
+                'description' => 'Number of submissions per page (default: 50, max: 500).',
+            ],
+            'filter' => [
+                'type' => 'string',
+                'description' => 'Submission status filter.',
+                'enum' => ['all', 'completed', 'partial'],
+            ],
+            'start_date' => [
+                'type' => 'string',
+                'description' => 'Return submissions submitted on or after this ISO 8601 timestamp.',
+            ],
+            'end_date' => [
+                'type' => 'string',
+                'description' => 'Return submissions submitted on or before this ISO 8601 timestamp.',
+            ],
+            'after_id' => [
+                'type' => 'string',
+                'description' => 'Return submissions after this submission ID.',
             ],
         ];
     }
@@ -54,24 +63,16 @@ class TallyListSubmissions implements Tool
      */
     public function execute(array $args): ToolResult
     {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Tally integration is not configured.');
-            }
-
-            $formId = $args['form_id'] ?? '';
-            if (empty($formId)) {
-                return ToolResult::error('Form ID is required.');
-            }
-
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
-
-            $result = $this->service->listSubmissions($formId, $page, $limit);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
+        return $this->run(fn (): array => $this->service->listSubmissions(
+            $this->requiredString($args, 'form_id', 'Form ID'),
+            array_merge(
+                $this->params($args, ['page', 'limit', 'filter']),
+                $this->mappedPayload($args, [
+                    'start_date' => 'startDate',
+                    'end_date' => 'endDate',
+                    'after_id' => 'afterId',
+                ]),
+            ),
+        ));
     }
 }

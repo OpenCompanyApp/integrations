@@ -1,164 +1,109 @@
-# Cloudinary — Lua API Reference
+# Cloudinary Lua API Reference
 
-## upload
+Namespace: `app.integrations.cloudinary`
 
-Upload an image to Cloudinary.
+Cloudinary tools cover signed uploads and Admin API operations for assets, folders, tags, transformations, upload presets, usage, and read-only long-tail endpoints.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `file` | string | yes | File to upload — a remote URL or base64 data URI |
-| `public_id` | string | no | Public ID to assign (auto-generated if omitted) |
-| `folder` | string | no | Folder path (e.g. `"blog/images"`) |
-
-### Example
+## Uploads
 
 ```lua
 local result = app.integrations.cloudinary.upload({
-  file = "https://example.com/photo.jpg",
+  file = "https://example.test/photo.jpg",
   public_id = "blog/hero",
-  folder = "blog"
+  folder = "blog",
+  resource_type = "image",
+  options = {
+    tags = "hero,blog",
+    context = "alt=Hero image"
+  }
 })
-
-print("Uploaded: " .. result.secure_url)
-print("Dimensions: " .. result.width .. "x" .. result.height)
 ```
 
----
+`resource_type` can be `image`, `video`, or `raw`. `options` accepts signed Upload API parameters.
 
-## list_resources
-
-List media resources in your Cloudinary cloud.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | no | Resource type: `"image"`, `"video"`, or `"raw"` (default: `"image"`) |
-| `max_results` | integer | no | Max resources to return (max 500) |
-| `next_cursor` | string | no | Pagination cursor from a previous response |
-| `prefix` | string | no | Only resources whose public ID starts with this prefix |
-
-### Example
+## Assets
 
 ```lua
-local result = app.integrations.cloudinary.list_resources({
+local resources = app.integrations.cloudinary.list_resources({
   type = "image",
+  delivery_type = "upload",
   prefix = "blog/",
   max_results = 20
 })
 
-for _, resource in ipairs(result.resources) do
-  print(resource.public_id .. " (" .. resource.format .. ")")
-end
-```
+local search = app.integrations.cloudinary.search_resources({
+  params = {
+    expression = "folder=blog",
+    max_results = 20
+  }
+})
 
----
-
-## get_resource
-
-Get details of a specific Cloudinary resource.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Resource type: `"image"`, `"video"`, or `"raw"` |
-| `public_id` | string | yes | Public ID of the resource |
-
-### Example
-
-```lua
-local result = app.integrations.cloudinary.get_resource({
+local asset = app.integrations.cloudinary.get_resource({
   type = "image",
+  delivery_type = "upload",
   public_id = "blog/hero"
 })
-
-print(result.secure_url)
-print("Size: " .. result.bytes .. " bytes")
 ```
 
----
+Resource detail and delete calls require the Cloudinary resource type and delivery type. The default delivery type is `upload`.
 
-## delete_resource
-
-Delete a media resource from Cloudinary. **This action is irreversible.**
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | yes | Resource type: `"image"`, `"video"`, or `"raw"` |
-| `public_id` | string | yes | Public ID of the resource to delete |
-
-### Example
+## Tags
 
 ```lua
-local result = app.integrations.cloudinary.delete_resource({
-  type = "image",
-  public_id = "blog/old-photo"
+local tags = app.integrations.cloudinary.list_tags({
+  resource_type = "image",
+  params = { prefix = "he" }
 })
 
-print(result.message)
+local tagged = app.integrations.cloudinary.list_resources_by_tag({
+  tag = "hero",
+  resource_type = "image"
+})
 ```
 
----
-
-## list_folders
-
-List all folders in your Cloudinary cloud.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `max_results` | integer | no | Max folders to return |
-| `next_cursor` | string | no | Pagination cursor from a previous response |
-
-### Example
+## Folders
 
 ```lua
-local result = app.integrations.cloudinary.list_folders({})
+local folders = app.integrations.cloudinary.list_folders({})
+local subfolders = app.integrations.cloudinary.list_subfolders({
+  folder = "blog"
+})
 
-for _, folder in ipairs(result.folders) do
-  print(folder.name .. " (" .. folder.path .. ")")
-end
+local found = app.integrations.cloudinary.search_folders({
+  params = { expression = "name:blog" }
+})
 ```
 
----
+`create_folder` and `delete_folder` are write tools. `delete_folder` only deletes empty folders.
 
-## get_current_user
-
-Get the currently authenticated Cloudinary user profile.
-
-### Parameters
-
-None.
-
-### Example
+## Transformations, Presets, Usage
 
 ```lua
-local result = app.integrations.cloudinary.get_current_user({})
-print("Connected as: " .. result.name .. " (" .. result.email .. ")")
+local transformations = app.integrations.cloudinary.list_transformations({})
+local presets = app.integrations.cloudinary.list_upload_presets({})
+local usage = app.integrations.cloudinary.get_usage({})
+local ping = app.integrations.cloudinary.ping({})
 ```
 
----
+## Long-Tail GET Endpoints
+
+```lua
+local result = app.integrations.cloudinary.api_get({
+  path = "/resources/search",
+  params = { expression = "resource_type:image" }
+})
+```
+
+`api_get` accepts only relative Admin API paths, not full URLs.
 
 ## Multi-Account Usage
 
-If you have multiple Cloudinary accounts configured, use account-specific namespaces:
-
 ```lua
--- Default account (always works)
 app.integrations.cloudinary.upload({...})
-
--- Explicit default (portable across setups)
 app.integrations.cloudinary.default.upload({...})
-
--- Named accounts
-app.integrations.cloudinary.production.upload({...})
-app.integrations.cloudinary.staging.upload({...})
+app.integrations.cloudinary.production.search_resources({
+  params = { expression = "folder=blog" }
+})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts; only credentials differ.

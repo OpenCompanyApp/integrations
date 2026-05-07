@@ -1,214 +1,92 @@
-# Bitly — Lua API Reference
+# Bitly Lua Reference
 
-## shorten_link
+Namespace: `bitly`
 
-Shorten a long URL into a Bitlink.
+Bitly tools target API v4 and use bearer access tokens.
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `long_url` | string | yes | The long URL to shorten |
-| `domain` | string | no | Custom short domain (e.g., `"bit.ly"`, `"j.mp"`) |
-| `group_guid` | string | no | GUID of the group to associate the link with |
-
-### Example
+## Links
 
 ```lua
-local result = app.integrations.bitly.shorten_link({
-  long_url = "https://example.com/very/long/path?param=value"
+local short = app.integrations.bitly.shorten_link({
+  long_url = "https://example.test/campaign",
 })
 
-print("Short URL: " .. result.link)
-print("ID: " .. result.id)
-```
-
----
-
-## get_link
-
-Retrieve details for an existing Bitlink.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `bitlink` | string | yes | Bitlink identifier (e.g., `"bit.ly/abc123"`) |
-
-### Example
-
-```lua
-local result = app.integrations.bitly.get_link({
-  bitlink = "bit.ly/abc123"
+local created = app.integrations.bitly.create_bitlink({
+  long_url = "https://example.test/landing-page",
+  title = "Campaign",
+  tags = {"campaign"},
 })
 
-print("Long URL: " .. result.long_url)
-print("Title: " .. (result.title or "(none)"))
-print("Created: " .. result.created_at)
-```
+local link = app.integrations.bitly.get_link({ bitlink = "bit.ly/abc123" })
+local expanded = app.integrations.bitly.expand_bitlink({ bitlink = "bit.ly/abc123" })
 
----
-
-## update_link
-
-Update a Bitlink's metadata — title, archived status, or tags.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `bitlink` | string | yes | Bitlink identifier (e.g., `"bit.ly/abc123"`) |
-| `title` | string | no | Descriptive title for the link |
-| `archived` | boolean | no | `true` to archive, `false` to restore |
-| `tags` | array | no | Array of tags (e.g., `{"marketing", "campaign"}`) |
-
-### Example
-
-```lua
-local result = app.integrations.bitly.update_link({
+local updated = app.integrations.bitly.update_link({
   bitlink = "bit.ly/abc123",
-  title = "Q1 Campaign Link",
-  tags = {"marketing", "q1"}
+  title = "Updated campaign",
+  archived = false,
 })
 ```
 
----
-
-## get_clicks
-
-Get click metrics for a Bitlink over a time range.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `bitlink` | string | yes | Bitlink identifier (e.g., `"bit.ly/abc123"`) |
-| `unit` | string | no | Time unit: `"minute"`, `"hour"`, `"day"`, `"week"`, `"month"` (default: `"day"`) |
-| `units` | integer | no | Number of units to return. `-1` for all (default: `-1`) |
-| `unit_reference` | string | no | ISO 8601 timestamp reference point (e.g., `"2026-01-01T00:00:00+0000"`) |
-
-### Example
+Custom Bitlinks require a custom domain:
 
 ```lua
--- Get clicks for the last 30 days
-local result = app.integrations.bitly.get_clicks({
+local custom = app.integrations.bitly.add_custom_bitlink({
+  custom_bitlink = "links.example.test/campaign",
+  bitlink_id = "links.example.test/abc123",
+})
+```
+
+## Analytics
+
+```lua
+local clicks = app.integrations.bitly.get_clicks({
   bitlink = "bit.ly/abc123",
   unit = "day",
-  units = 30
+  units = 30,
 })
 
-for _, click in ipairs(result.link_clicks) do
-  print(click.date .. ": " .. click.clicks .. " clicks")
-end
-```
-
----
-
-## list_groups
-
-List all groups in the Bitly account. Groups organize links and are required when creating new Bitlinks in specific organizations.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.bitly.list_groups()
-
-for _, group in ipairs(result.groups) do
-  print(group.guid .. ": " .. group.name)
-end
-```
-
----
-
-## get_group
-
-Retrieve details for a specific Bitly group.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `group_guid` | string | yes | The GUID of the group |
-
-### Example
-
-```lua
-local result = app.integrations.bitly.get_group({
-  group_guid = "Bk1abcDefGhi"
+local summary = app.integrations.bitly.get_click_summary({
+  bitlink = "bit.ly/abc123",
+  params = { unit = "day", units = 30 },
 })
 
-print("Group: " .. result.name)
-print("Organization: " .. result.organization_guid)
+local countries = app.integrations.bitly.get_click_countries({
+  bitlink = "bit.ly/abc123",
+  params = { unit = "day", units = 30, size = 10 },
+})
 ```
 
----
-
-## create_bitlink
-
-Create a new Bitlink with full metadata (title, tags, custom domain). Use this instead of `shorten_link` when you need to set metadata at creation time.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `long_url` | string | yes | The destination URL |
-| `title` | string | no | Descriptive title for the link |
-| `tags` | array | no | Array of tags (e.g., `{"marketing"}`) |
-| `domain` | string | no | Custom short domain (e.g., `"bit.ly"`) |
-| `group_guid` | string | no | GUID of the group to associate the link with |
-
-### Example
+## Groups, QR Codes, And Webhooks
 
 ```lua
-local result = app.integrations.bitly.create_bitlink({
-  long_url = "https://example.com/landing-page",
-  title = "Q1 Landing Page",
-  tags = {"marketing", "q1"},
-  domain = "bit.ly"
+local groups = app.integrations.bitly.list_groups({})
+local group_links = app.integrations.bitly.list_group_bitlinks({
+  group_guid = "group_guid",
+  params = { size = 25 },
 })
 
-print("Created: " .. result.link)
+local qr = app.integrations.bitly.create_qr_code({
+  body = {
+    title = "Campaign QR",
+    destination = { bitlink_id = "bit.ly/abc123" },
+  },
+})
+
+local webhooks = app.integrations.bitly.list_organization_webhooks({
+  organization_guid = "org_guid",
+})
 ```
 
----
-
-## get_current_user
-
-Get the authenticated user's Bitly profile. Useful for verifying the connection is working.
-
-### Parameters
-
-None.
-
-### Example
+## Generic API
 
 ```lua
-local result = app.integrations.bitly.get_current_user()
-
-print("Logged in as: " .. result.login)
-print("Name: " .. (result.name or "(none)"))
+local result = app.integrations.bitly.api_get({
+  path = "/groups",
+})
 ```
 
----
+Generic write tools:
 
-## Multi-Account Usage
-
-If you have multiple Bitly accounts configured, use account-specific namespaces:
-
-```lua
--- Default account (always works)
-app.integrations.bitly.shorten_link({ long_url = "https://example.com" })
-
--- Explicit default (portable across setups)
-app.integrations.bitly.default.shorten_link({ long_url = "https://example.com" })
-
--- Named accounts
-app.integrations.bitly.marketing.shorten_link({ long_url = "https://example.com" })
-app.integrations.bitly.social.shorten_link({ long_url = "https://example.com" })
-```
-
-All functions are identical across accounts — only the credentials differ.
+- `api_post({ path, body })`
+- `api_patch({ path, body })`
+- `api_delete({ path, body })`

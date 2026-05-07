@@ -1,0 +1,3648 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/security-api-overview?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 606,
+  "path_prefixes": [
+    "/security"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/security",
+      "operationId": "security.security.GetSecurity",
+      "tool": "microsoft_graph_security_security_get_security"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security",
+      "operationId": "security.security.UpdateSecurity",
+      "tool": "microsoft_graph_security_security_update_security"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts",
+      "operationId": "security.ListAlerts",
+      "tool": "microsoft_graph_security_list_alerts"
+    },
+    {
+      "method": "POST",
+      "path": "/security/alerts",
+      "operationId": "security.CreateAlerts",
+      "tool": "microsoft_graph_security_create_alerts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts/$count",
+      "operationId": "security.alerts.GetCount-82d4",
+      "tool": "microsoft_graph_security_alerts_get_count_82d4"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts/{alert-id}",
+      "operationId": "security.GetAlerts",
+      "tool": "microsoft_graph_security_get_alerts"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/alerts/{alert-id}",
+      "operationId": "security.UpdateAlerts",
+      "tool": "microsoft_graph_security_update_alerts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts_v2",
+      "operationId": "security.ListAlerts_v2",
+      "tool": "microsoft_graph_security_list_alerts_v2"
+    },
+    {
+      "method": "POST",
+      "path": "/security/alerts_v2",
+      "operationId": "security.CreateAlerts_v2",
+      "tool": "microsoft_graph_security_create_alerts_v2"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts_v2/$count",
+      "operationId": "security.alerts_v2.GetCount-9522",
+      "tool": "microsoft_graph_security_alerts_v2_get_count_9522"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts_v2/{alert-id}",
+      "operationId": "security.GetAlerts_v2",
+      "tool": "microsoft_graph_security_get_alerts_v2"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/alerts_v2/{alert-id}",
+      "operationId": "security.UpdateAlerts_v2",
+      "tool": "microsoft_graph_security_update_alerts_v2"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/alerts_v2/{alert-id}",
+      "operationId": "security.DeleteAlerts_v2",
+      "tool": "microsoft_graph_security_delete_alerts_v2"
+    },
+    {
+      "method": "POST",
+      "path": "/security/alerts_v2/{alert-id}/comments",
+      "operationId": "security.alerts_v2.SetComments",
+      "tool": "microsoft_graph_security_alerts_v2_set_comments"
+    },
+    {
+      "method": "GET",
+      "path": "/security/alerts_v2/{alert-id}/comments/$count",
+      "operationId": "security.alerts_v2.Comments.GetCount-2f70",
+      "tool": "microsoft_graph_security_alerts_v2_comments_get_count_2f70"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation",
+      "operationId": "security.GetAttackSimulation",
+      "tool": "microsoft_graph_security_get_attack_simulation"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation",
+      "operationId": "security.UpdateAttackSimulation",
+      "tool": "microsoft_graph_security_update_attack_simulation"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation",
+      "operationId": "security.DeleteAttackSimulation",
+      "tool": "microsoft_graph_security_delete_attack_simulation"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/endUserNotifications",
+      "operationId": "security.attackSimulation.ListEndUserNotifications",
+      "tool": "microsoft_graph_security_attack_simulation_list_end_user_notifications"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/endUserNotifications",
+      "operationId": "security.attackSimulation.CreateEndUserNotifications",
+      "tool": "microsoft_graph_security_attack_simulation_create_end_user_notifications"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/endUserNotifications/$count",
+      "operationId": "security.attackSimulation.endUserNotifications.GetCount-421b",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_get_count_421b"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}",
+      "operationId": "security.attackSimulation.GetEndUserNotifications",
+      "tool": "microsoft_graph_security_attack_simulation_get_end_user_notifications"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}",
+      "operationId": "security.attackSimulation.UpdateEndUserNotifications",
+      "tool": "microsoft_graph_security_attack_simulation_update_end_user_notifications"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}",
+      "operationId": "security.attackSimulation.DeleteEndUserNotifications",
+      "tool": "microsoft_graph_security_attack_simulation_delete_end_user_notifications"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}/details",
+      "operationId": "security.attackSimulation.endUserNotifications.ListDetails",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_list_details"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}/details",
+      "operationId": "security.attackSimulation.endUserNotifications.CreateDetails",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_create_details"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}/details/$count",
+      "operationId": "security.attackSimulation.endUserNotifications.details.GetCount-5759",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_details_get_count_5759"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}/details/{endUserNotificationDetail-id}",
+      "operationId": "security.attackSimulation.endUserNotifications.GetDetails",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}/details/{endUserNotificationDetail-id}",
+      "operationId": "security.attackSimulation.endUserNotifications.UpdateDetails",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/endUserNotifications/{endUserNotification-id}/details/{endUserNotificationDetail-id}",
+      "operationId": "security.attackSimulation.endUserNotifications.DeleteDetails",
+      "tool": "microsoft_graph_security_attack_simulation_end_user_notifications_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/landingPages",
+      "operationId": "security.attackSimulation.ListLandingPages",
+      "tool": "microsoft_graph_security_attack_simulation_list_landing_pages"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/landingPages",
+      "operationId": "security.attackSimulation.CreateLandingPages",
+      "tool": "microsoft_graph_security_attack_simulation_create_landing_pages"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/landingPages/$count",
+      "operationId": "security.attackSimulation.landingPages.GetCount-7f61",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_get_count_7f61"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}",
+      "operationId": "security.attackSimulation.GetLandingPages",
+      "tool": "microsoft_graph_security_attack_simulation_get_landing_pages"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}",
+      "operationId": "security.attackSimulation.UpdateLandingPages",
+      "tool": "microsoft_graph_security_attack_simulation_update_landing_pages"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}",
+      "operationId": "security.attackSimulation.DeleteLandingPages",
+      "tool": "microsoft_graph_security_attack_simulation_delete_landing_pages"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}/details",
+      "operationId": "security.attackSimulation.landingPages.ListDetails",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_list_details"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}/details",
+      "operationId": "security.attackSimulation.landingPages.CreateDetails",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_create_details"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}/details/$count",
+      "operationId": "security.attackSimulation.landingPages.details.GetCount-8be7",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_details_get_count_8be7"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}/details/{landingPageDetail-id}",
+      "operationId": "security.attackSimulation.landingPages.GetDetails",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_get_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}/details/{landingPageDetail-id}",
+      "operationId": "security.attackSimulation.landingPages.UpdateDetails",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_update_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/landingPages/{landingPage-id}/details/{landingPageDetail-id}",
+      "operationId": "security.attackSimulation.landingPages.DeleteDetails",
+      "tool": "microsoft_graph_security_attack_simulation_landing_pages_delete_details"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/loginPages",
+      "operationId": "security.attackSimulation.ListLoginPages",
+      "tool": "microsoft_graph_security_attack_simulation_list_login_pages"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/loginPages",
+      "operationId": "security.attackSimulation.CreateLoginPages",
+      "tool": "microsoft_graph_security_attack_simulation_create_login_pages"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/loginPages/$count",
+      "operationId": "security.attackSimulation.loginPages.GetCount-a7ea",
+      "tool": "microsoft_graph_security_attack_simulation_login_pages_get_count_a7ea"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/loginPages/{loginPage-id}",
+      "operationId": "security.attackSimulation.GetLoginPages",
+      "tool": "microsoft_graph_security_attack_simulation_get_login_pages"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/loginPages/{loginPage-id}",
+      "operationId": "security.attackSimulation.UpdateLoginPages",
+      "tool": "microsoft_graph_security_attack_simulation_update_login_pages"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/loginPages/{loginPage-id}",
+      "operationId": "security.attackSimulation.DeleteLoginPages",
+      "tool": "microsoft_graph_security_attack_simulation_delete_login_pages"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/operations",
+      "operationId": "security.attackSimulation.ListOperations",
+      "tool": "microsoft_graph_security_attack_simulation_list_operations"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/operations",
+      "operationId": "security.attackSimulation.CreateOperations",
+      "tool": "microsoft_graph_security_attack_simulation_create_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/operations/$count",
+      "operationId": "security.attackSimulation.operations.GetCount-e5f7",
+      "tool": "microsoft_graph_security_attack_simulation_operations_get_count_e5f7"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/operations/{attackSimulationOperation-id}",
+      "operationId": "security.attackSimulation.GetOperations",
+      "tool": "microsoft_graph_security_attack_simulation_get_operations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/operations/{attackSimulationOperation-id}",
+      "operationId": "security.attackSimulation.UpdateOperations",
+      "tool": "microsoft_graph_security_attack_simulation_update_operations"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/operations/{attackSimulationOperation-id}",
+      "operationId": "security.attackSimulation.DeleteOperations",
+      "tool": "microsoft_graph_security_attack_simulation_delete_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/payloads",
+      "operationId": "security.attackSimulation.ListPayloads",
+      "tool": "microsoft_graph_security_attack_simulation_list_payloads"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/payloads",
+      "operationId": "security.attackSimulation.CreatePayloads",
+      "tool": "microsoft_graph_security_attack_simulation_create_payloads"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/payloads/$count",
+      "operationId": "security.attackSimulation.payloads.GetCount-f3a2",
+      "tool": "microsoft_graph_security_attack_simulation_payloads_get_count_f3a2"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/payloads/{payload-id}",
+      "operationId": "security.attackSimulation.GetPayloads",
+      "tool": "microsoft_graph_security_attack_simulation_get_payloads"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/payloads/{payload-id}",
+      "operationId": "security.attackSimulation.UpdatePayloads",
+      "tool": "microsoft_graph_security_attack_simulation_update_payloads"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/payloads/{payload-id}",
+      "operationId": "security.attackSimulation.DeletePayloads",
+      "tool": "microsoft_graph_security_attack_simulation_delete_payloads"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulationAutomations",
+      "operationId": "security.attackSimulation.ListSimulationAutomations",
+      "tool": "microsoft_graph_security_attack_simulation_list_simulation_automations"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/simulationAutomations",
+      "operationId": "security.attackSimulation.CreateSimulationAutomations",
+      "tool": "microsoft_graph_security_attack_simulation_create_simulation_automations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulationAutomations/$count",
+      "operationId": "security.attackSimulation.simulationAutomations.GetCount-6071",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_get_count_6071"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}",
+      "operationId": "security.attackSimulation.GetSimulationAutomations",
+      "tool": "microsoft_graph_security_attack_simulation_get_simulation_automations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}",
+      "operationId": "security.attackSimulation.UpdateSimulationAutomations",
+      "tool": "microsoft_graph_security_attack_simulation_update_simulation_automations"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}",
+      "operationId": "security.attackSimulation.DeleteSimulationAutomations",
+      "tool": "microsoft_graph_security_attack_simulation_delete_simulation_automations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}/runs",
+      "operationId": "security.attackSimulation.simulationAutomations.ListRuns",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_list_runs"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}/runs",
+      "operationId": "security.attackSimulation.simulationAutomations.CreateRuns",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_create_runs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}/runs/$count",
+      "operationId": "security.attackSimulation.simulationAutomations.runs.GetCount-9ec4",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_runs_get_count_9ec4"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}/runs/{simulationAutomationRun-id}",
+      "operationId": "security.attackSimulation.simulationAutomations.GetRuns",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_get_runs"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}/runs/{simulationAutomationRun-id}",
+      "operationId": "security.attackSimulation.simulationAutomations.UpdateRuns",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_update_runs"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/simulationAutomations/{simulationAutomation-id}/runs/{simulationAutomationRun-id}",
+      "operationId": "security.attackSimulation.simulationAutomations.DeleteRuns",
+      "tool": "microsoft_graph_security_attack_simulation_simulation_automations_delete_runs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulations",
+      "operationId": "security.attackSimulation.ListSimulations",
+      "tool": "microsoft_graph_security_attack_simulation_list_simulations"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/simulations",
+      "operationId": "security.attackSimulation.CreateSimulations",
+      "tool": "microsoft_graph_security_attack_simulation_create_simulations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulations/$count",
+      "operationId": "security.attackSimulation.simulations.GetCount-285e",
+      "tool": "microsoft_graph_security_attack_simulation_simulations_get_count_285e"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulations/{simulation-id}",
+      "operationId": "security.attackSimulation.GetSimulations",
+      "tool": "microsoft_graph_security_attack_simulation_get_simulations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/simulations/{simulation-id}",
+      "operationId": "security.attackSimulation.UpdateSimulations",
+      "tool": "microsoft_graph_security_attack_simulation_update_simulations"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/simulations/{simulation-id}",
+      "operationId": "security.attackSimulation.DeleteSimulations",
+      "tool": "microsoft_graph_security_attack_simulation_delete_simulations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulations/{simulation-id}/landingPage",
+      "operationId": "security.attackSimulation.simulations.GetLandingPage",
+      "tool": "microsoft_graph_security_attack_simulation_simulations_get_landing_page"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulations/{simulation-id}/loginPage",
+      "operationId": "security.attackSimulation.simulations.GetLoginPage",
+      "tool": "microsoft_graph_security_attack_simulation_simulations_get_login_page"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/simulations/{simulation-id}/payload",
+      "operationId": "security.attackSimulation.simulations.GetPayload",
+      "tool": "microsoft_graph_security_attack_simulation_simulations_get_payload"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/trainings",
+      "operationId": "security.attackSimulation.ListTrainings",
+      "tool": "microsoft_graph_security_attack_simulation_list_trainings"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/trainings",
+      "operationId": "security.attackSimulation.CreateTrainings",
+      "tool": "microsoft_graph_security_attack_simulation_create_trainings"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/trainings/$count",
+      "operationId": "security.attackSimulation.trainings.GetCount-b606",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_get_count_b606"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/trainings/{training-id}",
+      "operationId": "security.attackSimulation.GetTrainings",
+      "tool": "microsoft_graph_security_attack_simulation_get_trainings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/trainings/{training-id}",
+      "operationId": "security.attackSimulation.UpdateTrainings",
+      "tool": "microsoft_graph_security_attack_simulation_update_trainings"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/trainings/{training-id}",
+      "operationId": "security.attackSimulation.DeleteTrainings",
+      "tool": "microsoft_graph_security_attack_simulation_delete_trainings"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/trainings/{training-id}/languageDetails",
+      "operationId": "security.attackSimulation.trainings.ListLanguageDetails",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_list_language_details"
+    },
+    {
+      "method": "POST",
+      "path": "/security/attackSimulation/trainings/{training-id}/languageDetails",
+      "operationId": "security.attackSimulation.trainings.CreateLanguageDetails",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_create_language_details"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/trainings/{training-id}/languageDetails/$count",
+      "operationId": "security.attackSimulation.trainings.languageDetails.GetCount-b009",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_language_details_get_count_b009"
+    },
+    {
+      "method": "GET",
+      "path": "/security/attackSimulation/trainings/{training-id}/languageDetails/{trainingLanguageDetail-id}",
+      "operationId": "security.attackSimulation.trainings.GetLanguageDetails",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_get_language_details"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/attackSimulation/trainings/{training-id}/languageDetails/{trainingLanguageDetail-id}",
+      "operationId": "security.attackSimulation.trainings.UpdateLanguageDetails",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_update_language_details"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/attackSimulation/trainings/{training-id}/languageDetails/{trainingLanguageDetail-id}",
+      "operationId": "security.attackSimulation.trainings.DeleteLanguageDetails",
+      "tool": "microsoft_graph_security_attack_simulation_trainings_delete_language_details"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases",
+      "operationId": "security.GetCases",
+      "tool": "microsoft_graph_security_get_cases"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases",
+      "operationId": "security.UpdateCases",
+      "tool": "microsoft_graph_security_update_cases"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases",
+      "operationId": "security.DeleteCases",
+      "tool": "microsoft_graph_security_delete_cases"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases",
+      "operationId": "security.cases.ListEdiscoveryCases",
+      "tool": "microsoft_graph_security_cases_list_ediscovery_cases"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases",
+      "operationId": "security.cases.CreateEdiscoveryCases",
+      "tool": "microsoft_graph_security_cases_create_ediscovery_cases"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/$count",
+      "operationId": "security.cases.ediscoveryCases.GetCount-3b6b",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_count_3b6b"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}",
+      "operationId": "security.cases.GetEdiscoveryCases",
+      "tool": "microsoft_graph_security_cases_get_ediscovery_cases"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}",
+      "operationId": "security.cases.UpdateEdiscoveryCases",
+      "tool": "microsoft_graph_security_cases_update_ediscovery_cases"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}",
+      "operationId": "security.cases.DeleteEdiscoveryCases",
+      "tool": "microsoft_graph_security_cases_delete_ediscovery_cases"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/caseMembers",
+      "operationId": "security.cases.ediscoveryCases.ListCaseMembers",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_case_members"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/caseMembers",
+      "operationId": "security.cases.ediscoveryCases.CreateCaseMembers",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_case_members"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/caseMembers/$count",
+      "operationId": "security.cases.ediscoveryCases.caseMembers.GetCount-56e0",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_case_members_get_count_56e0"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/caseMembers/{ediscoveryCaseMember-id}",
+      "operationId": "security.cases.ediscoveryCases.GetCaseMembers",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_case_members"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/caseMembers/{ediscoveryCaseMember-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateCaseMembers",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_case_members"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/caseMembers/{ediscoveryCaseMember-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteCaseMembers",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_case_members"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians",
+      "operationId": "security.cases.ediscoveryCases.ListCustodians",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_custodians"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians",
+      "operationId": "security.cases.ediscoveryCases.CreateCustodians",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_custodians"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/$count",
+      "operationId": "security.cases.ediscoveryCases.custodians.GetCount-ff1d",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_get_count_ff1d"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/microsoft.graph.security.applyHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.applyHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_apply_hold"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/microsoft.graph.security.removeHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.removeHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_remove_hold"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}",
+      "operationId": "security.cases.ediscoveryCases.GetCustodians",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_custodians"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateCustodians",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_custodians"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteCustodians",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_custodians"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/lastIndexOperation",
+      "operationId": "security.cases.ediscoveryCases.custodians.GetLastIndexOperation",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_get_last_index_operation"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/microsoft.graph.security.activate",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.ediscoveryCustodian.activate",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_ediscovery_custodian_activate"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/microsoft.graph.security.applyHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.ediscoveryCustodian.applyHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_ediscovery_custodian_apply_hold"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/microsoft.graph.security.release",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.ediscoveryCustodian.release",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_ediscovery_custodian_release"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/microsoft.graph.security.removeHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.ediscoveryCustodian.removeHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_ediscovery_custodian_remove_hold"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/microsoft.graph.security.updateIndex",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.custodians.ediscoveryCustodian.updateIndex",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_custodians_ediscovery_custodian_update_index"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources",
+      "operationId": "security.cases.ediscoveryCases.custodians.ListSiteSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_list_site_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources",
+      "operationId": "security.cases.ediscoveryCases.custodians.CreateSiteSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_create_site_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources/$count",
+      "operationId": "security.cases.ediscoveryCases.custodians.siteSources.GetCount-a46a",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_site_sources_get_count_a46a"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources/{siteSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.GetSiteSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_get_site_sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources/{siteSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.UpdateSiteSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_update_site_sources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources/{siteSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.DeleteSiteSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_delete_site_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/siteSources/{siteSource-id}/site",
+      "operationId": "security.cases.ediscoveryCases.custodians.siteSources.GetSite",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_site_sources_get_site"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources",
+      "operationId": "security.cases.ediscoveryCases.custodians.ListUnifiedGroupSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_list_unified_group_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources",
+      "operationId": "security.cases.ediscoveryCases.custodians.CreateUnifiedGroupSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_create_unified_group_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/$count",
+      "operationId": "security.cases.ediscoveryCases.custodians.unifiedGroupSources.GetCount-bdfc",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_unified_group_sources_get_count_bdfc"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/{unifiedGroupSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.GetUnifiedGroupSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_get_unified_group_sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/{unifiedGroupSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.UpdateUnifiedGroupSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_update_unified_group_sources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/{unifiedGroupSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.DeleteUnifiedGroupSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_delete_unified_group_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/{unifiedGroupSource-id}/group",
+      "operationId": "security.cases.ediscoveryCases.custodians.unifiedGroupSources.GetGroup",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_unified_group_sources_get_group"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/{unifiedGroupSource-id}/group/serviceProvisioningErrors",
+      "operationId": "security.cases.ediscoveryCases.custodians.unifiedGroupSources.group.ListServiceProvisioningErrors",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_unified_group_sources_group_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/unifiedGroupSources/{unifiedGroupSource-id}/group/serviceProvisioningErrors/$count",
+      "operationId": "security.cases.ediscoveryCases.custodians.unifiedGroupSources.group.ServiceProvisioningErrors.GetCount-2e98",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_unified_group_sources_group_service_provisioning_errors_get_count_2e98"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/userSources",
+      "operationId": "security.cases.ediscoveryCases.custodians.ListUserSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_list_user_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/userSources",
+      "operationId": "security.cases.ediscoveryCases.custodians.CreateUserSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_create_user_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/userSources/$count",
+      "operationId": "security.cases.ediscoveryCases.custodians.userSources.GetCount-9c7a",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_user_sources_get_count_9c7a"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/userSources/{userSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.GetUserSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_get_user_sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/userSources/{userSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.UpdateUserSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_update_user_sources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/custodians/{ediscoveryCustodian-id}/userSources/{userSource-id}",
+      "operationId": "security.cases.ediscoveryCases.custodians.DeleteUserSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_custodians_delete_user_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/microsoft.graph.security.close",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.close",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_close"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/microsoft.graph.security.reopen",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.reopen",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources",
+      "operationId": "security.cases.ediscoveryCases.ListNoncustodialDataSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_noncustodial_data_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources",
+      "operationId": "security.cases.ediscoveryCases.CreateNoncustodialDataSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_noncustodial_data_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/$count",
+      "operationId": "security.cases.ediscoveryCases.noncustodialDataSources.GetCount-68bd",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_noncustodial_data_sources_get_count_68bd"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/microsoft.graph.security.applyHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.noncustodialDataSources.applyHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_noncustodial_data_sources_apply_hold"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/microsoft.graph.security.removeHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.noncustodialDataSources.removeHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_noncustodial_data_sources_remove_hold"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.GetNoncustodialDataSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_noncustodial_data_sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateNoncustodialDataSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_noncustodial_data_sources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteNoncustodialDataSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_noncustodial_data_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/dataSource",
+      "operationId": "security.cases.ediscoveryCases.noncustodialDataSources.GetDataSource",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_noncustodial_data_sources_get_data_source"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/dataSource",
+      "operationId": "security.cases.ediscoveryCases.noncustodialDataSources.UpdateDataSource",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_noncustodial_data_sources_update_data_source"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/dataSource",
+      "operationId": "security.cases.ediscoveryCases.noncustodialDataSources.DeleteDataSource",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_noncustodial_data_sources_delete_data_source"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/lastIndexOperation",
+      "operationId": "security.cases.ediscoveryCases.noncustodialDataSources.GetLastIndexOperation",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_noncustodial_data_sources_get_last_index_operation"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/microsoft.graph.security.applyHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.noncustodialDataSources.ediscoveryNoncustodialDataSource.applyHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_noncustodial_data_sources_ediscovery_noncustodial_data_source_apply_hold"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/microsoft.graph.security.release",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.noncustodialDataSources.ediscoveryNoncustodialDataSource.release",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_noncustodial_data_sources_ediscovery_noncustodial_data_source_release"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/microsoft.graph.security.removeHold",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.noncustodialDataSources.ediscoveryNoncustodialDataSource.removeHold",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_noncustodial_data_sources_ediscovery_noncustodial_data_source_remove_hold"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/noncustodialDataSources/{ediscoveryNoncustodialDataSource-id}/microsoft.graph.security.updateIndex",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.noncustodialDataSources.ediscoveryNoncustodialDataSource.updateIndex",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_noncustodial_data_sources_ediscovery_noncustodial_data_source_update_index"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/operations",
+      "operationId": "security.cases.ediscoveryCases.ListOperations",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_operations"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/operations",
+      "operationId": "security.cases.ediscoveryCases.CreateOperations",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/operations/$count",
+      "operationId": "security.cases.ediscoveryCases.operations.GetCount-4abd",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_operations_get_count_4abd"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/operations/{caseOperation-id}",
+      "operationId": "security.cases.ediscoveryCases.GetOperations",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_operations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/operations/{caseOperation-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateOperations",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_operations"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/operations/{caseOperation-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteOperations",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_operations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets",
+      "operationId": "security.cases.ediscoveryCases.ListReviewSets",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_review_sets"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets",
+      "operationId": "security.cases.ediscoveryCases.CreateReviewSets",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_review_sets"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/$count",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.GetCount-feba",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_get_count_feba"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}",
+      "operationId": "security.cases.ediscoveryCases.GetReviewSets",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_review_sets"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateReviewSets",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_review_sets"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteReviewSets",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_review_sets"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/microsoft.graph.security.addToReviewSet",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.reviewSets.ediscoveryReviewSet.addToReviewSet",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_review_sets_ediscovery_review_set_add_to_review_set"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/microsoft.graph.security.export",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.reviewSets.ediscoveryReviewSet.export",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_review_sets_ediscovery_review_set_export"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.ListQueries",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_list_queries"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.CreateQueries",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_create_queries"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries/$count",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.queries.GetCount-5777",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_queries_get_count_5777"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries/{ediscoveryReviewSetQuery-id}",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.GetQueries",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_get_queries"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries/{ediscoveryReviewSetQuery-id}",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.UpdateQueries",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_update_queries"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries/{ediscoveryReviewSetQuery-id}",
+      "operationId": "security.cases.ediscoveryCases.reviewSets.DeleteQueries",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_review_sets_delete_queries"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries/{ediscoveryReviewSetQuery-id}/microsoft.graph.security.applyTags",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.reviewSets.ediscoveryReviewSet.queries.ediscoveryReviewSetQuery.applyTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_review_sets_ediscovery_review_set_queries_ediscovery_review_set_query_apply_tags"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/reviewSets/{ediscoveryReviewSet-id}/queries/{ediscoveryReviewSetQuery-id}/microsoft.graph.security.export",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.reviewSets.ediscoveryReviewSet.queries.ediscoveryReviewSetQuery.export",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_review_sets_ediscovery_review_set_queries_ediscovery_review_set_query_export"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches",
+      "operationId": "security.cases.ediscoveryCases.ListSearches",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_searches"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches",
+      "operationId": "security.cases.ediscoveryCases.CreateSearches",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_searches"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/$count",
+      "operationId": "security.cases.ediscoveryCases.searches.GetCount-87f1",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_get_count_87f1"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}",
+      "operationId": "security.cases.ediscoveryCases.GetSearches",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_searches"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateSearches",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_searches"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteSearches",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_searches"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/addToReviewSetOperation",
+      "operationId": "security.cases.ediscoveryCases.searches.GetAddToReviewSetOperation",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_get_add_to_review_set_operation"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/additionalSources",
+      "operationId": "security.cases.ediscoveryCases.searches.ListAdditionalSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_list_additional_sources"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/additionalSources",
+      "operationId": "security.cases.ediscoveryCases.searches.CreateAdditionalSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_create_additional_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/additionalSources/$count",
+      "operationId": "security.cases.ediscoveryCases.searches.additionalSources.GetCount-f0d1",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_additional_sources_get_count_f0d1"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/additionalSources/{dataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.searches.GetAdditionalSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_get_additional_sources"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/additionalSources/{dataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.searches.UpdateAdditionalSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_update_additional_sources"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/additionalSources/{dataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.searches.DeleteAdditionalSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_delete_additional_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/custodianSources",
+      "operationId": "security.cases.ediscoveryCases.searches.ListCustodianSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_list_custodian_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/custodianSources/$count",
+      "operationId": "security.cases.ediscoveryCases.searches.custodianSources.GetCount-fb3f",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_custodian_sources_get_count_fb3f"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/custodianSources/{dataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.searches.GetCustodianSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_get_custodian_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/lastEstimateStatisticsOperation",
+      "operationId": "security.cases.ediscoveryCases.searches.GetLastEstimateStatisticsOperation",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_get_last_estimate_statistics_operation"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/microsoft.graph.security.estimateStatistics",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.searches.ediscoverySearch.estimateStatistics",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_searches_ediscovery_search_estimate_statistics"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/microsoft.graph.security.exportReport",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.searches.ediscoverySearch.exportReport",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_searches_ediscovery_search_export_report"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/microsoft.graph.security.exportResult",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.searches.ediscoverySearch.exportResult",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_searches_ediscovery_search_export_result"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/microsoft.graph.security.purgeData",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.searches.ediscoverySearch.purgeData",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_searches_ediscovery_search_purge_data"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/noncustodialSources",
+      "operationId": "security.cases.ediscoveryCases.searches.ListNoncustodialSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_list_noncustodial_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/noncustodialSources/$count",
+      "operationId": "security.cases.ediscoveryCases.searches.noncustodialSources.GetCount-14fa",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_noncustodial_sources_get_count_14fa"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/searches/{ediscoverySearch-id}/noncustodialSources/{ediscoveryNoncustodialDataSource-id}",
+      "operationId": "security.cases.ediscoveryCases.searches.GetNoncustodialSources",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_searches_get_noncustodial_sources"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/settings",
+      "operationId": "security.cases.ediscoveryCases.GetSettings",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/settings",
+      "operationId": "security.cases.ediscoveryCases.UpdateSettings",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_settings"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/settings",
+      "operationId": "security.cases.ediscoveryCases.DeleteSettings",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_settings"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/settings/microsoft.graph.security.resetToDefault",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.settings.resetToDefault",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_settings_reset_to_default"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags",
+      "operationId": "security.cases.ediscoveryCases.ListTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_list_tags"
+    },
+    {
+      "method": "POST",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags",
+      "operationId": "security.cases.ediscoveryCases.CreateTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_create_tags"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/$count",
+      "operationId": "security.cases.ediscoveryCases.tags.GetCount-a3cc",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_tags_get_count_a3cc"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/microsoft.graph.security.asHierarchy()",
+      "operationId": "security.cases.ediscoveryCases.ediscoveryCase.tags.asHierarchy",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_ediscovery_case_tags_as_hierarchy"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}",
+      "operationId": "security.cases.ediscoveryCases.GetTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_get_tags"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}",
+      "operationId": "security.cases.ediscoveryCases.UpdateTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_update_tags"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}",
+      "operationId": "security.cases.ediscoveryCases.DeleteTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_delete_tags"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}/childTags",
+      "operationId": "security.cases.ediscoveryCases.tags.ListChildTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_tags_list_child_tags"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}/childTags/$count",
+      "operationId": "security.cases.ediscoveryCases.tags.childTags.GetCount-5afe",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_tags_child_tags_get_count_5afe"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}/childTags/{ediscoveryReviewTag-id1}",
+      "operationId": "security.cases.ediscoveryCases.tags.GetChildTags",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_tags_get_child_tags"
+    },
+    {
+      "method": "GET",
+      "path": "/security/cases/ediscoveryCases/{ediscoveryCase-id}/tags/{ediscoveryReviewTag-id}/parent",
+      "operationId": "security.cases.ediscoveryCases.tags.GetParent",
+      "tool": "microsoft_graph_security_cases_ediscovery_cases_tags_get_parent"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance",
+      "operationId": "security.GetDataSecurityAndGovernance",
+      "tool": "microsoft_graph_security_get_data_security_and_governance"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/dataSecurityAndGovernance",
+      "operationId": "security.UpdateDataSecurityAndGovernance",
+      "tool": "microsoft_graph_security_update_data_security_and_governance"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/dataSecurityAndGovernance",
+      "operationId": "security.DeleteDataSecurityAndGovernance",
+      "tool": "microsoft_graph_security_delete_data_security_and_governance"
+    },
+    {
+      "method": "POST",
+      "path": "/security/dataSecurityAndGovernance/processContentAsync",
+      "operationId": "security.dataSecurityAndGovernance.processContentAsync",
+      "tool": "microsoft_graph_security_data_security_and_governance_process_content_async"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/protectionScopes",
+      "operationId": "security.dataSecurityAndGovernance.GetProtectionScopes",
+      "tool": "microsoft_graph_security_data_security_and_governance_get_protection_scopes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/dataSecurityAndGovernance/protectionScopes",
+      "operationId": "security.dataSecurityAndGovernance.UpdateProtectionScopes",
+      "tool": "microsoft_graph_security_data_security_and_governance_update_protection_scopes"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/dataSecurityAndGovernance/protectionScopes",
+      "operationId": "security.dataSecurityAndGovernance.DeleteProtectionScopes",
+      "tool": "microsoft_graph_security_data_security_and_governance_delete_protection_scopes"
+    },
+    {
+      "method": "POST",
+      "path": "/security/dataSecurityAndGovernance/protectionScopes/compute",
+      "operationId": "security.dataSecurityAndGovernance.protectionScopes.compute",
+      "tool": "microsoft_graph_security_data_security_and_governance_protection_scopes_compute"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels",
+      "operationId": "security.dataSecurityAndGovernance.ListSensitivityLabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_list_sensitivity_labels"
+    },
+    {
+      "method": "POST",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels",
+      "operationId": "security.dataSecurityAndGovernance.CreateSensitivityLabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_create_sensitivity_labels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/$count",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.GetCount-bfc1",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_get_count_bfc1"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/computeInheritance(labelIds={labelIds},locale='{locale}',contentFormats={contentFormats})",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.computeInheritance",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_compute_inheritance"
+    },
+    {
+      "method": "POST",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/computeRightsAndInheritance",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.computeRightsAndInheritance",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_compute_rights_and_inheritance"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}",
+      "operationId": "security.dataSecurityAndGovernance.GetSensitivityLabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_get_sensitivity_labels"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}",
+      "operationId": "security.dataSecurityAndGovernance.UpdateSensitivityLabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_update_sensitivity_labels"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}",
+      "operationId": "security.dataSecurityAndGovernance.DeleteSensitivityLabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_delete_sensitivity_labels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/rights",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.GetRights",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_get_rights"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.ListSublabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_list_sublabels"
+    },
+    {
+      "method": "POST",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.CreateSublabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_create_sublabels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/$count",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.sublabels.GetCount-6580",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_sublabels_get_count_6580"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/computeInheritance(labelIds={labelIds},locale='{locale}',contentFormats={contentFormats})",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.sensitivityLabel.sublabels.computeInheritance",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_sensitivity_label_sublabels_compute_inheritance"
+    },
+    {
+      "method": "POST",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/computeRightsAndInheritance",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.sensitivityLabel.sublabels.computeRightsAndInheritance",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_sensitivity_label_sublabels_compute_rights_and_inheritance"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/{sensitivityLabel-id1}",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.GetSublabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_get_sublabels"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/{sensitivityLabel-id1}",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.UpdateSublabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_update_sublabels"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/{sensitivityLabel-id1}",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.DeleteSublabels",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_delete_sublabels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/dataSecurityAndGovernance/sensitivityLabels/{sensitivityLabel-id}/sublabels/{sensitivityLabel-id1}/rights",
+      "operationId": "security.dataSecurityAndGovernance.sensitivityLabels.sublabels.GetRights",
+      "tool": "microsoft_graph_security_data_security_and_governance_sensitivity_labels_sublabels_get_rights"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities",
+      "operationId": "security.GetIdentities",
+      "tool": "microsoft_graph_security_get_identities"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities",
+      "operationId": "security.UpdateIdentities",
+      "tool": "microsoft_graph_security_update_identities"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities",
+      "operationId": "security.DeleteIdentities",
+      "tool": "microsoft_graph_security_delete_identities"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/healthIssues",
+      "operationId": "security.identities.ListHealthIssues",
+      "tool": "microsoft_graph_security_identities_list_health_issues"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/healthIssues",
+      "operationId": "security.identities.CreateHealthIssues",
+      "tool": "microsoft_graph_security_identities_create_health_issues"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/healthIssues/$count",
+      "operationId": "security.identities.healthIssues.GetCount-f9af",
+      "tool": "microsoft_graph_security_identities_health_issues_get_count_f9af"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/healthIssues/{healthIssue-id}",
+      "operationId": "security.identities.GetHealthIssues",
+      "tool": "microsoft_graph_security_identities_get_health_issues"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/healthIssues/{healthIssue-id}",
+      "operationId": "security.identities.UpdateHealthIssues",
+      "tool": "microsoft_graph_security_identities_update_health_issues"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/healthIssues/{healthIssue-id}",
+      "operationId": "security.identities.DeleteHealthIssues",
+      "tool": "microsoft_graph_security_identities_delete_health_issues"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/identityAccounts",
+      "operationId": "security.identities.ListIdentityAccounts",
+      "tool": "microsoft_graph_security_identities_list_identity_accounts"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/identityAccounts",
+      "operationId": "security.identities.CreateIdentityAccounts",
+      "tool": "microsoft_graph_security_identities_create_identity_accounts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/identityAccounts/$count",
+      "operationId": "security.identities.identityAccounts.GetCount-3544",
+      "tool": "microsoft_graph_security_identities_identity_accounts_get_count_3544"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/identityAccounts/{identityAccounts-id}",
+      "operationId": "security.identities.GetIdentityAccounts",
+      "tool": "microsoft_graph_security_identities_get_identity_accounts"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/identityAccounts/{identityAccounts-id}",
+      "operationId": "security.identities.UpdateIdentityAccounts",
+      "tool": "microsoft_graph_security_identities_update_identity_accounts"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/identityAccounts/{identityAccounts-id}",
+      "operationId": "security.identities.DeleteIdentityAccounts",
+      "tool": "microsoft_graph_security_identities_delete_identity_accounts"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/identityAccounts/{identityAccounts-id}/microsoft.graph.security.invokeAction",
+      "operationId": "security.identities.identityAccounts.identityAccounts.invokeAction",
+      "tool": "microsoft_graph_security_identities_identity_accounts_identity_accounts_invoke_action"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensorCandidateActivationConfiguration",
+      "operationId": "security.identities.GetSensorCandidateActivationConfiguration",
+      "tool": "microsoft_graph_security_identities_get_sensor_candidate_activation_configuration"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/sensorCandidateActivationConfiguration",
+      "operationId": "security.identities.UpdateSensorCandidateActivationConfiguration",
+      "tool": "microsoft_graph_security_identities_update_sensor_candidate_activation_configuration"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/sensorCandidateActivationConfiguration",
+      "operationId": "security.identities.DeleteSensorCandidateActivationConfiguration",
+      "tool": "microsoft_graph_security_identities_delete_sensor_candidate_activation_configuration"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensorCandidates",
+      "operationId": "security.identities.ListSensorCandidates",
+      "tool": "microsoft_graph_security_identities_list_sensor_candidates"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/sensorCandidates",
+      "operationId": "security.identities.CreateSensorCandidates",
+      "tool": "microsoft_graph_security_identities_create_sensor_candidates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensorCandidates/$count",
+      "operationId": "security.identities.sensorCandidates.GetCount-fa5a",
+      "tool": "microsoft_graph_security_identities_sensor_candidates_get_count_fa5a"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/sensorCandidates/microsoft.graph.security.activate",
+      "operationId": "security.identities.sensorCandidates.activate",
+      "tool": "microsoft_graph_security_identities_sensor_candidates_activate"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensorCandidates/{sensorCandidate-id}",
+      "operationId": "security.identities.GetSensorCandidates",
+      "tool": "microsoft_graph_security_identities_get_sensor_candidates"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/sensorCandidates/{sensorCandidate-id}",
+      "operationId": "security.identities.UpdateSensorCandidates",
+      "tool": "microsoft_graph_security_identities_update_sensor_candidates"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/sensorCandidates/{sensorCandidate-id}",
+      "operationId": "security.identities.DeleteSensorCandidates",
+      "tool": "microsoft_graph_security_identities_delete_sensor_candidates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors",
+      "operationId": "security.identities.ListSensors",
+      "tool": "microsoft_graph_security_identities_list_sensors"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/sensors",
+      "operationId": "security.identities.CreateSensors",
+      "tool": "microsoft_graph_security_identities_create_sensors"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/$count",
+      "operationId": "security.identities.sensors.GetCount-000d",
+      "tool": "microsoft_graph_security_identities_sensors_get_count_000d"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/microsoft.graph.security.getDeploymentAccessKey()",
+      "operationId": "security.identities.sensors.getDeploymentAccessKey",
+      "tool": "microsoft_graph_security_identities_sensors_get_deployment_access_key"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/microsoft.graph.security.getDeploymentPackageUri()",
+      "operationId": "security.identities.sensors.getDeploymentPackageUri",
+      "tool": "microsoft_graph_security_identities_sensors_get_deployment_package_uri"
+    },
+    {
+      "method": "POST",
+      "path": "/security/identities/sensors/microsoft.graph.security.regenerateDeploymentAccessKey",
+      "operationId": "security.identities.sensors.regenerateDeploymentAccessKey",
+      "tool": "microsoft_graph_security_identities_sensors_regenerate_deployment_access_key"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/{sensor-id}",
+      "operationId": "security.identities.GetSensors",
+      "tool": "microsoft_graph_security_identities_get_sensors"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/sensors/{sensor-id}",
+      "operationId": "security.identities.UpdateSensors",
+      "tool": "microsoft_graph_security_identities_update_sensors"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/sensors/{sensor-id}",
+      "operationId": "security.identities.DeleteSensors",
+      "tool": "microsoft_graph_security_identities_delete_sensors"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/{sensor-id}/healthIssues",
+      "operationId": "security.identities.sensors.ListHealthIssues",
+      "tool": "microsoft_graph_security_identities_sensors_list_health_issues"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/{sensor-id}/healthIssues/$count",
+      "operationId": "security.identities.sensors.healthIssues.GetCount-0a59",
+      "tool": "microsoft_graph_security_identities_sensors_health_issues_get_count_0a59"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/sensors/{sensor-id}/healthIssues/{healthIssue-id}",
+      "operationId": "security.identities.sensors.GetHealthIssues",
+      "tool": "microsoft_graph_security_identities_sensors_get_health_issues"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/settings",
+      "operationId": "security.identities.GetSettings",
+      "tool": "microsoft_graph_security_identities_get_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/settings",
+      "operationId": "security.identities.UpdateSettings",
+      "tool": "microsoft_graph_security_identities_update_settings"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/settings",
+      "operationId": "security.identities.DeleteSettings",
+      "tool": "microsoft_graph_security_identities_delete_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/security/identities/settings/autoAuditingConfiguration",
+      "operationId": "security.identities.settings.GetAutoAuditingConfiguration",
+      "tool": "microsoft_graph_security_identities_settings_get_auto_auditing_configuration"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/identities/settings/autoAuditingConfiguration",
+      "operationId": "security.identities.settings.UpdateAutoAuditingConfiguration",
+      "tool": "microsoft_graph_security_identities_settings_update_auto_auditing_configuration"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/identities/settings/autoAuditingConfiguration",
+      "operationId": "security.identities.settings.DeleteAutoAuditingConfiguration",
+      "tool": "microsoft_graph_security_identities_settings_delete_auto_auditing_configuration"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents",
+      "operationId": "security.ListIncidents",
+      "tool": "microsoft_graph_security_list_incidents"
+    },
+    {
+      "method": "POST",
+      "path": "/security/incidents",
+      "operationId": "security.CreateIncidents",
+      "tool": "microsoft_graph_security_create_incidents"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents/$count",
+      "operationId": "security.incidents.GetCount-9725",
+      "tool": "microsoft_graph_security_incidents_get_count_9725"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents/{incident-id}",
+      "operationId": "security.GetIncidents",
+      "tool": "microsoft_graph_security_get_incidents"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/incidents/{incident-id}",
+      "operationId": "security.UpdateIncidents",
+      "tool": "microsoft_graph_security_update_incidents"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/incidents/{incident-id}",
+      "operationId": "security.DeleteIncidents",
+      "tool": "microsoft_graph_security_delete_incidents"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents/{incident-id}/alerts",
+      "operationId": "security.incidents.ListAlerts",
+      "tool": "microsoft_graph_security_incidents_list_alerts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents/{incident-id}/alerts/$count",
+      "operationId": "security.incidents.alerts.GetCount-d6ba",
+      "tool": "microsoft_graph_security_incidents_alerts_get_count_d6ba"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents/{incident-id}/alerts/{alert-id}",
+      "operationId": "security.incidents.GetAlerts",
+      "tool": "microsoft_graph_security_incidents_get_alerts"
+    },
+    {
+      "method": "POST",
+      "path": "/security/incidents/{incident-id}/alerts/{alert-id}/comments",
+      "operationId": "security.incidents.alerts.SetComments",
+      "tool": "microsoft_graph_security_incidents_alerts_set_comments"
+    },
+    {
+      "method": "GET",
+      "path": "/security/incidents/{incident-id}/alerts/{alert-id}/comments/$count",
+      "operationId": "security.incidents.alerts.Comments.GetCount-ee8f",
+      "tool": "microsoft_graph_security_incidents_alerts_comments_get_count_ee8f"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels",
+      "operationId": "security.GetLabels",
+      "tool": "microsoft_graph_security_get_labels"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels",
+      "operationId": "security.UpdateLabels",
+      "tool": "microsoft_graph_security_update_labels"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels",
+      "operationId": "security.DeleteLabels",
+      "tool": "microsoft_graph_security_delete_labels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/authorities",
+      "operationId": "security.labels.ListAuthorities",
+      "tool": "microsoft_graph_security_labels_list_authorities"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/authorities",
+      "operationId": "security.labels.CreateAuthorities",
+      "tool": "microsoft_graph_security_labels_create_authorities"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/authorities/$count",
+      "operationId": "security.labels.authorities.GetCount-ecc0",
+      "tool": "microsoft_graph_security_labels_authorities_get_count_ecc0"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/authorities/{authorityTemplate-id}",
+      "operationId": "security.labels.GetAuthorities",
+      "tool": "microsoft_graph_security_labels_get_authorities"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/authorities/{authorityTemplate-id}",
+      "operationId": "security.labels.UpdateAuthorities",
+      "tool": "microsoft_graph_security_labels_update_authorities"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/authorities/{authorityTemplate-id}",
+      "operationId": "security.labels.DeleteAuthorities",
+      "tool": "microsoft_graph_security_labels_delete_authorities"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/categories",
+      "operationId": "security.labels.ListCategories",
+      "tool": "microsoft_graph_security_labels_list_categories"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/categories",
+      "operationId": "security.labels.CreateCategories",
+      "tool": "microsoft_graph_security_labels_create_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/categories/$count",
+      "operationId": "security.labels.categories.GetCount-908b",
+      "tool": "microsoft_graph_security_labels_categories_get_count_908b"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/categories/{categoryTemplate-id}",
+      "operationId": "security.labels.GetCategories",
+      "tool": "microsoft_graph_security_labels_get_categories"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/categories/{categoryTemplate-id}",
+      "operationId": "security.labels.UpdateCategories",
+      "tool": "microsoft_graph_security_labels_update_categories"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/categories/{categoryTemplate-id}",
+      "operationId": "security.labels.DeleteCategories",
+      "tool": "microsoft_graph_security_labels_delete_categories"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/categories/{categoryTemplate-id}/subcategories",
+      "operationId": "security.labels.categories.ListSubcategories",
+      "tool": "microsoft_graph_security_labels_categories_list_subcategories"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/categories/{categoryTemplate-id}/subcategories",
+      "operationId": "security.labels.categories.CreateSubcategories",
+      "tool": "microsoft_graph_security_labels_categories_create_subcategories"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/categories/{categoryTemplate-id}/subcategories/$count",
+      "operationId": "security.labels.categories.subcategories.GetCount-ec6d",
+      "tool": "microsoft_graph_security_labels_categories_subcategories_get_count_ec6d"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/categories/{categoryTemplate-id}/subcategories/{subcategoryTemplate-id}",
+      "operationId": "security.labels.categories.GetSubcategories",
+      "tool": "microsoft_graph_security_labels_categories_get_subcategories"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/categories/{categoryTemplate-id}/subcategories/{subcategoryTemplate-id}",
+      "operationId": "security.labels.categories.UpdateSubcategories",
+      "tool": "microsoft_graph_security_labels_categories_update_subcategories"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/categories/{categoryTemplate-id}/subcategories/{subcategoryTemplate-id}",
+      "operationId": "security.labels.categories.DeleteSubcategories",
+      "tool": "microsoft_graph_security_labels_categories_delete_subcategories"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/citations",
+      "operationId": "security.labels.ListCitations",
+      "tool": "microsoft_graph_security_labels_list_citations"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/citations",
+      "operationId": "security.labels.CreateCitations",
+      "tool": "microsoft_graph_security_labels_create_citations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/citations/$count",
+      "operationId": "security.labels.citations.GetCount-15c2",
+      "tool": "microsoft_graph_security_labels_citations_get_count_15c2"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/citations/{citationTemplate-id}",
+      "operationId": "security.labels.GetCitations",
+      "tool": "microsoft_graph_security_labels_get_citations"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/citations/{citationTemplate-id}",
+      "operationId": "security.labels.UpdateCitations",
+      "tool": "microsoft_graph_security_labels_update_citations"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/citations/{citationTemplate-id}",
+      "operationId": "security.labels.DeleteCitations",
+      "tool": "microsoft_graph_security_labels_delete_citations"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/departments",
+      "operationId": "security.labels.ListDepartments",
+      "tool": "microsoft_graph_security_labels_list_departments"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/departments",
+      "operationId": "security.labels.CreateDepartments",
+      "tool": "microsoft_graph_security_labels_create_departments"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/departments/$count",
+      "operationId": "security.labels.departments.GetCount-b983",
+      "tool": "microsoft_graph_security_labels_departments_get_count_b983"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/departments/{departmentTemplate-id}",
+      "operationId": "security.labels.GetDepartments",
+      "tool": "microsoft_graph_security_labels_get_departments"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/departments/{departmentTemplate-id}",
+      "operationId": "security.labels.UpdateDepartments",
+      "tool": "microsoft_graph_security_labels_update_departments"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/departments/{departmentTemplate-id}",
+      "operationId": "security.labels.DeleteDepartments",
+      "tool": "microsoft_graph_security_labels_delete_departments"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/filePlanReferences",
+      "operationId": "security.labels.ListFilePlanReferences",
+      "tool": "microsoft_graph_security_labels_list_file_plan_references"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/filePlanReferences",
+      "operationId": "security.labels.CreateFilePlanReferences",
+      "tool": "microsoft_graph_security_labels_create_file_plan_references"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/filePlanReferences/$count",
+      "operationId": "security.labels.filePlanReferences.GetCount-3c22",
+      "tool": "microsoft_graph_security_labels_file_plan_references_get_count_3c22"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/filePlanReferences/{filePlanReferenceTemplate-id}",
+      "operationId": "security.labels.GetFilePlanReferences",
+      "tool": "microsoft_graph_security_labels_get_file_plan_references"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/filePlanReferences/{filePlanReferenceTemplate-id}",
+      "operationId": "security.labels.UpdateFilePlanReferences",
+      "tool": "microsoft_graph_security_labels_update_file_plan_references"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/filePlanReferences/{filePlanReferenceTemplate-id}",
+      "operationId": "security.labels.DeleteFilePlanReferences",
+      "tool": "microsoft_graph_security_labels_delete_file_plan_references"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels",
+      "operationId": "security.labels.ListRetentionLabels",
+      "tool": "microsoft_graph_security_labels_list_retention_labels"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/retentionLabels",
+      "operationId": "security.labels.CreateRetentionLabels",
+      "tool": "microsoft_graph_security_labels_create_retention_labels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/$count",
+      "operationId": "security.labels.retentionLabels.GetCount-3249",
+      "tool": "microsoft_graph_security_labels_retention_labels_get_count_3249"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}",
+      "operationId": "security.labels.GetRetentionLabels",
+      "tool": "microsoft_graph_security_labels_get_retention_labels"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}",
+      "operationId": "security.labels.UpdateRetentionLabels",
+      "tool": "microsoft_graph_security_labels_update_retention_labels"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}",
+      "operationId": "security.labels.DeleteRetentionLabels",
+      "tool": "microsoft_graph_security_labels_delete_retention_labels"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors",
+      "operationId": "security.labels.retentionLabels.GetDescriptors",
+      "tool": "microsoft_graph_security_labels_retention_labels_get_descriptors"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors",
+      "operationId": "security.labels.retentionLabels.UpdateDescriptors",
+      "tool": "microsoft_graph_security_labels_retention_labels_update_descriptors"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors",
+      "operationId": "security.labels.retentionLabels.DeleteDescriptors",
+      "tool": "microsoft_graph_security_labels_retention_labels_delete_descriptors"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors/authorityTemplate",
+      "operationId": "security.labels.retentionLabels.descriptors.GetAuthorityTemplate",
+      "tool": "microsoft_graph_security_labels_retention_labels_descriptors_get_authority_template"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors/categoryTemplate",
+      "operationId": "security.labels.retentionLabels.descriptors.GetCategoryTemplate",
+      "tool": "microsoft_graph_security_labels_retention_labels_descriptors_get_category_template"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors/citationTemplate",
+      "operationId": "security.labels.retentionLabels.descriptors.GetCitationTemplate",
+      "tool": "microsoft_graph_security_labels_retention_labels_descriptors_get_citation_template"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors/departmentTemplate",
+      "operationId": "security.labels.retentionLabels.descriptors.GetDepartmentTemplate",
+      "tool": "microsoft_graph_security_labels_retention_labels_descriptors_get_department_template"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/descriptors/filePlanReferenceTemplate",
+      "operationId": "security.labels.retentionLabels.descriptors.GetFilePlanReferenceTemplate",
+      "tool": "microsoft_graph_security_labels_retention_labels_descriptors_get_file_plan_reference_template"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/dispositionReviewStages",
+      "operationId": "security.labels.retentionLabels.ListDispositionReviewStages",
+      "tool": "microsoft_graph_security_labels_retention_labels_list_disposition_review_stages"
+    },
+    {
+      "method": "POST",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/dispositionReviewStages",
+      "operationId": "security.labels.retentionLabels.CreateDispositionReviewStages",
+      "tool": "microsoft_graph_security_labels_retention_labels_create_disposition_review_stages"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/dispositionReviewStages/$count",
+      "operationId": "security.labels.retentionLabels.dispositionReviewStages.GetCount-48b2",
+      "tool": "microsoft_graph_security_labels_retention_labels_disposition_review_stages_get_count_48b2"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/dispositionReviewStages/{dispositionReviewStage-stageNumber}",
+      "operationId": "security.labels.retentionLabels.GetDispositionReviewStages",
+      "tool": "microsoft_graph_security_labels_retention_labels_get_disposition_review_stages"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/dispositionReviewStages/{dispositionReviewStage-stageNumber}",
+      "operationId": "security.labels.retentionLabels.UpdateDispositionReviewStages",
+      "tool": "microsoft_graph_security_labels_retention_labels_update_disposition_review_stages"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/dispositionReviewStages/{dispositionReviewStage-stageNumber}",
+      "operationId": "security.labels.retentionLabels.DeleteDispositionReviewStages",
+      "tool": "microsoft_graph_security_labels_retention_labels_delete_disposition_review_stages"
+    },
+    {
+      "method": "GET",
+      "path": "/security/labels/retentionLabels/{retentionLabel-id}/retentionEventType",
+      "operationId": "security.labels.retentionLabels.GetRetentionEventType",
+      "tool": "microsoft_graph_security_labels_retention_labels_get_retention_event_type"
+    },
+    {
+      "method": "POST",
+      "path": "/security/microsoft.graph.security.runHuntingQuery",
+      "operationId": "security.runHuntingQuery",
+      "tool": "microsoft_graph_security_run_hunting_query"
+    },
+    {
+      "method": "GET",
+      "path": "/security/secureScoreControlProfiles",
+      "operationId": "security.ListSecureScoreControlProfiles",
+      "tool": "microsoft_graph_security_list_secure_score_control_profiles"
+    },
+    {
+      "method": "POST",
+      "path": "/security/secureScoreControlProfiles",
+      "operationId": "security.CreateSecureScoreControlProfiles",
+      "tool": "microsoft_graph_security_create_secure_score_control_profiles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/secureScoreControlProfiles/$count",
+      "operationId": "security.secureScoreControlProfiles.GetCount-05f1",
+      "tool": "microsoft_graph_security_secure_score_control_profiles_get_count_05f1"
+    },
+    {
+      "method": "GET",
+      "path": "/security/secureScoreControlProfiles/{secureScoreControlProfile-id}",
+      "operationId": "security.GetSecureScoreControlProfiles",
+      "tool": "microsoft_graph_security_get_secure_score_control_profiles"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/secureScoreControlProfiles/{secureScoreControlProfile-id}",
+      "operationId": "security.UpdateSecureScoreControlProfiles",
+      "tool": "microsoft_graph_security_update_secure_score_control_profiles"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/secureScoreControlProfiles/{secureScoreControlProfile-id}",
+      "operationId": "security.DeleteSecureScoreControlProfiles",
+      "tool": "microsoft_graph_security_delete_secure_score_control_profiles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/secureScores",
+      "operationId": "security.ListSecureScores",
+      "tool": "microsoft_graph_security_list_secure_scores"
+    },
+    {
+      "method": "POST",
+      "path": "/security/secureScores",
+      "operationId": "security.CreateSecureScores",
+      "tool": "microsoft_graph_security_create_secure_scores"
+    },
+    {
+      "method": "GET",
+      "path": "/security/secureScores/$count",
+      "operationId": "security.secureScores.GetCount-cb39",
+      "tool": "microsoft_graph_security_secure_scores_get_count_cb39"
+    },
+    {
+      "method": "GET",
+      "path": "/security/secureScores/{secureScore-id}",
+      "operationId": "security.GetSecureScores",
+      "tool": "microsoft_graph_security_get_secure_scores"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/secureScores/{secureScore-id}",
+      "operationId": "security.UpdateSecureScores",
+      "tool": "microsoft_graph_security_update_secure_scores"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/secureScores/{secureScore-id}",
+      "operationId": "security.DeleteSecureScores",
+      "tool": "microsoft_graph_security_delete_secure_scores"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests",
+      "operationId": "security.ListSubjectRightsRequests",
+      "tool": "microsoft_graph_security_list_subject_rights_requests"
+    },
+    {
+      "method": "POST",
+      "path": "/security/subjectRightsRequests",
+      "operationId": "security.CreateSubjectRightsRequests",
+      "tool": "microsoft_graph_security_create_subject_rights_requests"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/$count",
+      "operationId": "security.subjectRightsRequests.GetCount-8072",
+      "tool": "microsoft_graph_security_subject_rights_requests_get_count_8072"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}",
+      "operationId": "security.GetSubjectRightsRequests",
+      "tool": "microsoft_graph_security_get_subject_rights_requests"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}",
+      "operationId": "security.UpdateSubjectRightsRequests",
+      "tool": "microsoft_graph_security_update_subject_rights_requests"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}",
+      "operationId": "security.DeleteSubjectRightsRequests",
+      "tool": "microsoft_graph_security_delete_subject_rights_requests"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers",
+      "operationId": "security.subjectRightsRequests.ListApprovers",
+      "tool": "microsoft_graph_security_subject_rights_requests_list_approvers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers(userPrincipalName='{userPrincipalName}')",
+      "operationId": "security.subjectRightsRequests.approvers.GetByUserPrincipalName",
+      "tool": "microsoft_graph_security_subject_rights_requests_approvers_get_by_user_principal_name"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers/$count",
+      "operationId": "security.subjectRightsRequests.approvers.GetCount-2c51",
+      "tool": "microsoft_graph_security_subject_rights_requests_approvers_get_count_2c51"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers/{user-id}",
+      "operationId": "security.subjectRightsRequests.GetApprovers",
+      "tool": "microsoft_graph_security_subject_rights_requests_get_approvers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers/{user-id}/mailboxSettings",
+      "operationId": "security.subjectRightsRequests.approvers.GetMailboxSettings",
+      "tool": "microsoft_graph_security_subject_rights_requests_approvers_get_mailbox_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers/{user-id}/mailboxSettings",
+      "operationId": "security.subjectRightsRequests.approvers.UpdateMailboxSettings",
+      "tool": "microsoft_graph_security_subject_rights_requests_approvers_update_mailbox_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers/{user-id}/serviceProvisioningErrors",
+      "operationId": "security.subjectRightsRequests.approvers.ListServiceProvisioningErrors",
+      "tool": "microsoft_graph_security_subject_rights_requests_approvers_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/approvers/{user-id}/serviceProvisioningErrors/$count",
+      "operationId": "security.subjectRightsRequests.approvers.ServiceProvisioningErrors.GetCount-2135",
+      "tool": "microsoft_graph_security_subject_rights_requests_approvers_service_provisioning_errors_get_count_2135"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators",
+      "operationId": "security.subjectRightsRequests.ListCollaborators",
+      "tool": "microsoft_graph_security_subject_rights_requests_list_collaborators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators(userPrincipalName='{userPrincipalName}')",
+      "operationId": "security.subjectRightsRequests.collaborators.GetByUserPrincipalName",
+      "tool": "microsoft_graph_security_subject_rights_requests_collaborators_get_by_user_principal_name"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators/$count",
+      "operationId": "security.subjectRightsRequests.collaborators.GetCount-11c6",
+      "tool": "microsoft_graph_security_subject_rights_requests_collaborators_get_count_11c6"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators/{user-id}",
+      "operationId": "security.subjectRightsRequests.GetCollaborators",
+      "tool": "microsoft_graph_security_subject_rights_requests_get_collaborators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators/{user-id}/mailboxSettings",
+      "operationId": "security.subjectRightsRequests.collaborators.GetMailboxSettings",
+      "tool": "microsoft_graph_security_subject_rights_requests_collaborators_get_mailbox_settings"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators/{user-id}/mailboxSettings",
+      "operationId": "security.subjectRightsRequests.collaborators.UpdateMailboxSettings",
+      "tool": "microsoft_graph_security_subject_rights_requests_collaborators_update_mailbox_settings"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators/{user-id}/serviceProvisioningErrors",
+      "operationId": "security.subjectRightsRequests.collaborators.ListServiceProvisioningErrors",
+      "tool": "microsoft_graph_security_subject_rights_requests_collaborators_list_service_provisioning_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/collaborators/{user-id}/serviceProvisioningErrors/$count",
+      "operationId": "security.subjectRightsRequests.collaborators.ServiceProvisioningErrors.GetCount-9d67",
+      "tool": "microsoft_graph_security_subject_rights_requests_collaborators_service_provisioning_errors_get_count_9d67"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/getFinalAttachment()",
+      "operationId": "security.subjectRightsRequests.subjectRightsRequest.getFinalAttachment",
+      "tool": "microsoft_graph_security_subject_rights_requests_subject_rights_request_get_final_attachment"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/getFinalReport()",
+      "operationId": "security.subjectRightsRequests.subjectRightsRequest.getFinalReport",
+      "tool": "microsoft_graph_security_subject_rights_requests_subject_rights_request_get_final_report"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/notes",
+      "operationId": "security.subjectRightsRequests.ListNotes",
+      "tool": "microsoft_graph_security_subject_rights_requests_list_notes"
+    },
+    {
+      "method": "POST",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/notes",
+      "operationId": "security.subjectRightsRequests.CreateNotes",
+      "tool": "microsoft_graph_security_subject_rights_requests_create_notes"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/notes/$count",
+      "operationId": "security.subjectRightsRequests.notes.GetCount-d132",
+      "tool": "microsoft_graph_security_subject_rights_requests_notes_get_count_d132"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/notes/{authoredNote-id}",
+      "operationId": "security.subjectRightsRequests.GetNotes",
+      "tool": "microsoft_graph_security_subject_rights_requests_get_notes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/notes/{authoredNote-id}",
+      "operationId": "security.subjectRightsRequests.UpdateNotes",
+      "tool": "microsoft_graph_security_subject_rights_requests_update_notes"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/notes/{authoredNote-id}",
+      "operationId": "security.subjectRightsRequests.DeleteNotes",
+      "tool": "microsoft_graph_security_subject_rights_requests_delete_notes"
+    },
+    {
+      "method": "GET",
+      "path": "/security/subjectRightsRequests/{subjectRightsRequest-id}/team",
+      "operationId": "security.subjectRightsRequests.GetTeam",
+      "tool": "microsoft_graph_security_subject_rights_requests_get_team"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence",
+      "operationId": "security.GetThreatIntelligence",
+      "tool": "microsoft_graph_security_get_threat_intelligence"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence",
+      "operationId": "security.UpdateThreatIntelligence",
+      "tool": "microsoft_graph_security_update_threat_intelligence"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence",
+      "operationId": "security.DeleteThreatIntelligence",
+      "tool": "microsoft_graph_security_delete_threat_intelligence"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articleIndicators",
+      "operationId": "security.threatIntelligence.ListArticleIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_list_article_indicators"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/articleIndicators",
+      "operationId": "security.threatIntelligence.CreateArticleIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_create_article_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articleIndicators/$count",
+      "operationId": "security.threatIntelligence.articleIndicators.GetCount-c9c7",
+      "tool": "microsoft_graph_security_threat_intelligence_article_indicators_get_count_c9c7"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articleIndicators/{articleIndicator-id}",
+      "operationId": "security.threatIntelligence.GetArticleIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_get_article_indicators"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/articleIndicators/{articleIndicator-id}",
+      "operationId": "security.threatIntelligence.UpdateArticleIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_update_article_indicators"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/articleIndicators/{articleIndicator-id}",
+      "operationId": "security.threatIntelligence.DeleteArticleIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_article_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articleIndicators/{articleIndicator-id}/artifact",
+      "operationId": "security.threatIntelligence.articleIndicators.GetArtifact",
+      "tool": "microsoft_graph_security_threat_intelligence_article_indicators_get_artifact"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articles",
+      "operationId": "security.threatIntelligence.ListArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_list_articles"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/articles",
+      "operationId": "security.threatIntelligence.CreateArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_create_articles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articles/$count",
+      "operationId": "security.threatIntelligence.articles.GetCount-3702",
+      "tool": "microsoft_graph_security_threat_intelligence_articles_get_count_3702"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articles/{article-id}",
+      "operationId": "security.threatIntelligence.GetArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_get_articles"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/articles/{article-id}",
+      "operationId": "security.threatIntelligence.UpdateArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_update_articles"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/articles/{article-id}",
+      "operationId": "security.threatIntelligence.DeleteArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_articles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articles/{article-id}/indicators",
+      "operationId": "security.threatIntelligence.articles.ListIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_articles_list_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articles/{article-id}/indicators/$count",
+      "operationId": "security.threatIntelligence.articles.indicators.GetCount-1d6c",
+      "tool": "microsoft_graph_security_threat_intelligence_articles_indicators_get_count_1d6c"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/articles/{article-id}/indicators/{articleIndicator-id}",
+      "operationId": "security.threatIntelligence.articles.GetIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_articles_get_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostComponents",
+      "operationId": "security.threatIntelligence.ListHostComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_list_host_components"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hostComponents",
+      "operationId": "security.threatIntelligence.CreateHostComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_create_host_components"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostComponents/$count",
+      "operationId": "security.threatIntelligence.hostComponents.GetCount-3ca4",
+      "tool": "microsoft_graph_security_threat_intelligence_host_components_get_count_3ca4"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostComponents/{hostComponent-id}",
+      "operationId": "security.threatIntelligence.GetHostComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_get_host_components"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hostComponents/{hostComponent-id}",
+      "operationId": "security.threatIntelligence.UpdateHostComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_update_host_components"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hostComponents/{hostComponent-id}",
+      "operationId": "security.threatIntelligence.DeleteHostComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_host_components"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostComponents/{hostComponent-id}/host",
+      "operationId": "security.threatIntelligence.hostComponents.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_components_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostCookies",
+      "operationId": "security.threatIntelligence.ListHostCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_list_host_cookies"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hostCookies",
+      "operationId": "security.threatIntelligence.CreateHostCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_create_host_cookies"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostCookies/$count",
+      "operationId": "security.threatIntelligence.hostCookies.GetCount-ca74",
+      "tool": "microsoft_graph_security_threat_intelligence_host_cookies_get_count_ca74"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostCookies/{hostCookie-id}",
+      "operationId": "security.threatIntelligence.GetHostCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_get_host_cookies"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hostCookies/{hostCookie-id}",
+      "operationId": "security.threatIntelligence.UpdateHostCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_update_host_cookies"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hostCookies/{hostCookie-id}",
+      "operationId": "security.threatIntelligence.DeleteHostCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_host_cookies"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostCookies/{hostCookie-id}/host",
+      "operationId": "security.threatIntelligence.hostCookies.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_cookies_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPairs",
+      "operationId": "security.threatIntelligence.ListHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_list_host_pairs"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hostPairs",
+      "operationId": "security.threatIntelligence.CreateHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_create_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPairs/$count",
+      "operationId": "security.threatIntelligence.hostPairs.GetCount-6e30",
+      "tool": "microsoft_graph_security_threat_intelligence_host_pairs_get_count_6e30"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPairs/{hostPair-id}",
+      "operationId": "security.threatIntelligence.GetHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_get_host_pairs"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hostPairs/{hostPair-id}",
+      "operationId": "security.threatIntelligence.UpdateHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_update_host_pairs"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hostPairs/{hostPair-id}",
+      "operationId": "security.threatIntelligence.DeleteHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPairs/{hostPair-id}/childHost",
+      "operationId": "security.threatIntelligence.hostPairs.GetChildHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_pairs_get_child_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPairs/{hostPair-id}/parentHost",
+      "operationId": "security.threatIntelligence.hostPairs.GetParentHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_pairs_get_parent_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPorts",
+      "operationId": "security.threatIntelligence.ListHostPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_list_host_ports"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hostPorts",
+      "operationId": "security.threatIntelligence.CreateHostPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_create_host_ports"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPorts/$count",
+      "operationId": "security.threatIntelligence.hostPorts.GetCount-5189",
+      "tool": "microsoft_graph_security_threat_intelligence_host_ports_get_count_5189"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPorts/{hostPort-id}",
+      "operationId": "security.threatIntelligence.GetHostPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_get_host_ports"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hostPorts/{hostPort-id}",
+      "operationId": "security.threatIntelligence.UpdateHostPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_update_host_ports"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hostPorts/{hostPort-id}",
+      "operationId": "security.threatIntelligence.DeleteHostPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_host_ports"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPorts/{hostPort-id}/host",
+      "operationId": "security.threatIntelligence.hostPorts.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_ports_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostPorts/{hostPort-id}/mostRecentSslCertificate",
+      "operationId": "security.threatIntelligence.hostPorts.GetMostRecentSslCertificate",
+      "tool": "microsoft_graph_security_threat_intelligence_host_ports_get_most_recent_ssl_certificate"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostSslCertificates",
+      "operationId": "security.threatIntelligence.ListHostSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_list_host_ssl_certificates"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hostSslCertificates",
+      "operationId": "security.threatIntelligence.CreateHostSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_create_host_ssl_certificates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostSslCertificates/$count",
+      "operationId": "security.threatIntelligence.hostSslCertificates.GetCount-a40b",
+      "tool": "microsoft_graph_security_threat_intelligence_host_ssl_certificates_get_count_a40b"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostSslCertificates/{hostSslCertificate-id}",
+      "operationId": "security.threatIntelligence.GetHostSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_get_host_ssl_certificates"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hostSslCertificates/{hostSslCertificate-id}",
+      "operationId": "security.threatIntelligence.UpdateHostSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_update_host_ssl_certificates"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hostSslCertificates/{hostSslCertificate-id}",
+      "operationId": "security.threatIntelligence.DeleteHostSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_host_ssl_certificates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostSslCertificates/{hostSslCertificate-id}/host",
+      "operationId": "security.threatIntelligence.hostSslCertificates.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_ssl_certificates_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostSslCertificates/{hostSslCertificate-id}/sslCertificate",
+      "operationId": "security.threatIntelligence.hostSslCertificates.GetSslCertificate",
+      "tool": "microsoft_graph_security_threat_intelligence_host_ssl_certificates_get_ssl_certificate"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostTrackers",
+      "operationId": "security.threatIntelligence.ListHostTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_list_host_trackers"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hostTrackers",
+      "operationId": "security.threatIntelligence.CreateHostTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_create_host_trackers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostTrackers/$count",
+      "operationId": "security.threatIntelligence.hostTrackers.GetCount-1b5a",
+      "tool": "microsoft_graph_security_threat_intelligence_host_trackers_get_count_1b5a"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostTrackers/{hostTracker-id}",
+      "operationId": "security.threatIntelligence.GetHostTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_get_host_trackers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hostTrackers/{hostTracker-id}",
+      "operationId": "security.threatIntelligence.UpdateHostTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_update_host_trackers"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hostTrackers/{hostTracker-id}",
+      "operationId": "security.threatIntelligence.DeleteHostTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_host_trackers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hostTrackers/{hostTracker-id}/host",
+      "operationId": "security.threatIntelligence.hostTrackers.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_host_trackers_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts",
+      "operationId": "security.threatIntelligence.ListHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_list_hosts"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/hosts",
+      "operationId": "security.threatIntelligence.CreateHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_create_hosts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/$count",
+      "operationId": "security.threatIntelligence.hosts.GetCount-5d36",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_count_5d36"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}",
+      "operationId": "security.threatIntelligence.GetHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_get_hosts"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hosts/{host-id}",
+      "operationId": "security.threatIntelligence.UpdateHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_update_hosts"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hosts/{host-id}",
+      "operationId": "security.threatIntelligence.DeleteHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_hosts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/childHostPairs",
+      "operationId": "security.threatIntelligence.hosts.ListChildHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_child_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/childHostPairs/$count",
+      "operationId": "security.threatIntelligence.hosts.childHostPairs.GetCount-d960",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_child_host_pairs_get_count_d960"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/childHostPairs/{hostPair-id}",
+      "operationId": "security.threatIntelligence.hosts.GetChildHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_child_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/components",
+      "operationId": "security.threatIntelligence.hosts.ListComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_components"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/components/$count",
+      "operationId": "security.threatIntelligence.hosts.components.GetCount-3f6d",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_components_get_count_3f6d"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/components/{hostComponent-id}",
+      "operationId": "security.threatIntelligence.hosts.GetComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_components"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/cookies",
+      "operationId": "security.threatIntelligence.hosts.ListCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_cookies"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/cookies/$count",
+      "operationId": "security.threatIntelligence.hosts.cookies.GetCount-d607",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_cookies_get_count_d607"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/cookies/{hostCookie-id}",
+      "operationId": "security.threatIntelligence.hosts.GetCookies",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_cookies"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/hostPairs",
+      "operationId": "security.threatIntelligence.hosts.ListHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/hostPairs/$count",
+      "operationId": "security.threatIntelligence.hosts.hostPairs.GetCount-e637",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_host_pairs_get_count_e637"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/hostPairs/{hostPair-id}",
+      "operationId": "security.threatIntelligence.hosts.GetHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/parentHostPairs",
+      "operationId": "security.threatIntelligence.hosts.ListParentHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_parent_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/parentHostPairs/$count",
+      "operationId": "security.threatIntelligence.hosts.parentHostPairs.GetCount-51b4",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_parent_host_pairs_get_count_51b4"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/parentHostPairs/{hostPair-id}",
+      "operationId": "security.threatIntelligence.hosts.GetParentHostPairs",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_parent_host_pairs"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/passiveDns",
+      "operationId": "security.threatIntelligence.hosts.ListPassiveDns",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_passive_dns"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/passiveDns/$count",
+      "operationId": "security.threatIntelligence.hosts.passiveDns.GetCount-7c2c",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_passive_dns_get_count_7c2c"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/passiveDns/{passiveDnsRecord-id}",
+      "operationId": "security.threatIntelligence.hosts.GetPassiveDns",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_passive_dns"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/passiveDnsReverse",
+      "operationId": "security.threatIntelligence.hosts.ListPassiveDnsReverse",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_passive_dns_reverse"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/passiveDnsReverse/$count",
+      "operationId": "security.threatIntelligence.hosts.passiveDnsReverse.GetCount-0421",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_passive_dns_reverse_get_count_0421"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/passiveDnsReverse/{passiveDnsRecord-id}",
+      "operationId": "security.threatIntelligence.hosts.GetPassiveDnsReverse",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_passive_dns_reverse"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/ports",
+      "operationId": "security.threatIntelligence.hosts.ListPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_ports"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/ports/$count",
+      "operationId": "security.threatIntelligence.hosts.ports.GetCount-af86",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_ports_get_count_af86"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/ports/{hostPort-id}",
+      "operationId": "security.threatIntelligence.hosts.GetPorts",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_ports"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/reputation",
+      "operationId": "security.threatIntelligence.hosts.GetReputation",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_reputation"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/hosts/{host-id}/reputation",
+      "operationId": "security.threatIntelligence.hosts.UpdateReputation",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_update_reputation"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/hosts/{host-id}/reputation",
+      "operationId": "security.threatIntelligence.hosts.DeleteReputation",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_delete_reputation"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/sslCertificates",
+      "operationId": "security.threatIntelligence.hosts.ListSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_ssl_certificates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/sslCertificates/$count",
+      "operationId": "security.threatIntelligence.hosts.sslCertificates.GetCount-eba7",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_ssl_certificates_get_count_eba7"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/sslCertificates/{hostSslCertificate-id}",
+      "operationId": "security.threatIntelligence.hosts.GetSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_ssl_certificates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/subdomains",
+      "operationId": "security.threatIntelligence.hosts.ListSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_subdomains"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/subdomains/$count",
+      "operationId": "security.threatIntelligence.hosts.subdomains.GetCount-67a8",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_subdomains_get_count_67a8"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/subdomains/{subdomain-id}",
+      "operationId": "security.threatIntelligence.hosts.GetSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_subdomains"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/trackers",
+      "operationId": "security.threatIntelligence.hosts.ListTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_list_trackers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/trackers/$count",
+      "operationId": "security.threatIntelligence.hosts.trackers.GetCount-b20f",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_trackers_get_count_b20f"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/trackers/{hostTracker-id}",
+      "operationId": "security.threatIntelligence.hosts.GetTrackers",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_trackers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/hosts/{host-id}/whois",
+      "operationId": "security.threatIntelligence.hosts.GetWhois",
+      "tool": "microsoft_graph_security_threat_intelligence_hosts_get_whois"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelProfiles",
+      "operationId": "security.threatIntelligence.ListIntelProfiles",
+      "tool": "microsoft_graph_security_threat_intelligence_list_intel_profiles"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/intelProfiles",
+      "operationId": "security.threatIntelligence.CreateIntelProfiles",
+      "tool": "microsoft_graph_security_threat_intelligence_create_intel_profiles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelProfiles/$count",
+      "operationId": "security.threatIntelligence.intelProfiles.GetCount-4b06",
+      "tool": "microsoft_graph_security_threat_intelligence_intel_profiles_get_count_4b06"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelProfiles/{intelligenceProfile-id}",
+      "operationId": "security.threatIntelligence.GetIntelProfiles",
+      "tool": "microsoft_graph_security_threat_intelligence_get_intel_profiles"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/intelProfiles/{intelligenceProfile-id}",
+      "operationId": "security.threatIntelligence.UpdateIntelProfiles",
+      "tool": "microsoft_graph_security_threat_intelligence_update_intel_profiles"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/intelProfiles/{intelligenceProfile-id}",
+      "operationId": "security.threatIntelligence.DeleteIntelProfiles",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_intel_profiles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelProfiles/{intelligenceProfile-id}/indicators",
+      "operationId": "security.threatIntelligence.intelProfiles.ListIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_intel_profiles_list_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelProfiles/{intelligenceProfile-id}/indicators/$count",
+      "operationId": "security.threatIntelligence.intelProfiles.indicators.GetCount-a1bc",
+      "tool": "microsoft_graph_security_threat_intelligence_intel_profiles_indicators_get_count_a1bc"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelProfiles/{intelligenceProfile-id}/indicators/{intelligenceProfileIndicator-id}",
+      "operationId": "security.threatIntelligence.intelProfiles.GetIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_intel_profiles_get_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators",
+      "operationId": "security.threatIntelligence.ListIntelligenceProfileIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_list_intelligence_profile_indicators"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators",
+      "operationId": "security.threatIntelligence.CreateIntelligenceProfileIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_create_intelligence_profile_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators/$count",
+      "operationId": "security.threatIntelligence.intelligenceProfileIndicators.GetCount-9a16",
+      "tool": "microsoft_graph_security_threat_intelligence_intelligence_profile_indicators_get_count_9a16"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators/{intelligenceProfileIndicator-id}",
+      "operationId": "security.threatIntelligence.GetIntelligenceProfileIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_get_intelligence_profile_indicators"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators/{intelligenceProfileIndicator-id}",
+      "operationId": "security.threatIntelligence.UpdateIntelligenceProfileIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_update_intelligence_profile_indicators"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators/{intelligenceProfileIndicator-id}",
+      "operationId": "security.threatIntelligence.DeleteIntelligenceProfileIndicators",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_intelligence_profile_indicators"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/intelligenceProfileIndicators/{intelligenceProfileIndicator-id}/artifact",
+      "operationId": "security.threatIntelligence.intelligenceProfileIndicators.GetArtifact",
+      "tool": "microsoft_graph_security_threat_intelligence_intelligence_profile_indicators_get_artifact"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/passiveDnsRecords",
+      "operationId": "security.threatIntelligence.ListPassiveDnsRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_list_passive_dns_records"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/passiveDnsRecords",
+      "operationId": "security.threatIntelligence.CreatePassiveDnsRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_create_passive_dns_records"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/passiveDnsRecords/$count",
+      "operationId": "security.threatIntelligence.passiveDnsRecords.GetCount-a5be",
+      "tool": "microsoft_graph_security_threat_intelligence_passive_dns_records_get_count_a5be"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/passiveDnsRecords/{passiveDnsRecord-id}",
+      "operationId": "security.threatIntelligence.GetPassiveDnsRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_get_passive_dns_records"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/passiveDnsRecords/{passiveDnsRecord-id}",
+      "operationId": "security.threatIntelligence.UpdatePassiveDnsRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_update_passive_dns_records"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/passiveDnsRecords/{passiveDnsRecord-id}",
+      "operationId": "security.threatIntelligence.DeletePassiveDnsRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_passive_dns_records"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/passiveDnsRecords/{passiveDnsRecord-id}/artifact",
+      "operationId": "security.threatIntelligence.passiveDnsRecords.GetArtifact",
+      "tool": "microsoft_graph_security_threat_intelligence_passive_dns_records_get_artifact"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/passiveDnsRecords/{passiveDnsRecord-id}/parentHost",
+      "operationId": "security.threatIntelligence.passiveDnsRecords.GetParentHost",
+      "tool": "microsoft_graph_security_threat_intelligence_passive_dns_records_get_parent_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/sslCertificates",
+      "operationId": "security.threatIntelligence.ListSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_list_ssl_certificates"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/sslCertificates",
+      "operationId": "security.threatIntelligence.CreateSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_create_ssl_certificates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/sslCertificates/$count",
+      "operationId": "security.threatIntelligence.sslCertificates.GetCount-cfbd",
+      "tool": "microsoft_graph_security_threat_intelligence_ssl_certificates_get_count_cfbd"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/sslCertificates/{sslCertificate-id}",
+      "operationId": "security.threatIntelligence.GetSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_get_ssl_certificates"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/sslCertificates/{sslCertificate-id}",
+      "operationId": "security.threatIntelligence.UpdateSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_update_ssl_certificates"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/sslCertificates/{sslCertificate-id}",
+      "operationId": "security.threatIntelligence.DeleteSslCertificates",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_ssl_certificates"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/sslCertificates/{sslCertificate-id}/relatedHosts",
+      "operationId": "security.threatIntelligence.sslCertificates.ListRelatedHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_ssl_certificates_list_related_hosts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/sslCertificates/{sslCertificate-id}/relatedHosts/$count",
+      "operationId": "security.threatIntelligence.sslCertificates.relatedHosts.GetCount-0b8e",
+      "tool": "microsoft_graph_security_threat_intelligence_ssl_certificates_related_hosts_get_count_0b8e"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/sslCertificates/{sslCertificate-id}/relatedHosts/{host-id}",
+      "operationId": "security.threatIntelligence.sslCertificates.GetRelatedHosts",
+      "tool": "microsoft_graph_security_threat_intelligence_ssl_certificates_get_related_hosts"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/subdomains",
+      "operationId": "security.threatIntelligence.ListSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_list_subdomains"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/subdomains",
+      "operationId": "security.threatIntelligence.CreateSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_create_subdomains"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/subdomains/$count",
+      "operationId": "security.threatIntelligence.subdomains.GetCount-34a3",
+      "tool": "microsoft_graph_security_threat_intelligence_subdomains_get_count_34a3"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/subdomains/{subdomain-id}",
+      "operationId": "security.threatIntelligence.GetSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_get_subdomains"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/subdomains/{subdomain-id}",
+      "operationId": "security.threatIntelligence.UpdateSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_update_subdomains"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/subdomains/{subdomain-id}",
+      "operationId": "security.threatIntelligence.DeleteSubdomains",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_subdomains"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/subdomains/{subdomain-id}/host",
+      "operationId": "security.threatIntelligence.subdomains.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_subdomains_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities",
+      "operationId": "security.threatIntelligence.ListVulnerabilities",
+      "tool": "microsoft_graph_security_threat_intelligence_list_vulnerabilities"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/vulnerabilities",
+      "operationId": "security.threatIntelligence.CreateVulnerabilities",
+      "tool": "microsoft_graph_security_threat_intelligence_create_vulnerabilities"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/$count",
+      "operationId": "security.threatIntelligence.vulnerabilities.GetCount-d2da",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_get_count_d2da"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}",
+      "operationId": "security.threatIntelligence.GetVulnerabilities",
+      "tool": "microsoft_graph_security_threat_intelligence_get_vulnerabilities"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}",
+      "operationId": "security.threatIntelligence.UpdateVulnerabilities",
+      "tool": "microsoft_graph_security_threat_intelligence_update_vulnerabilities"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}",
+      "operationId": "security.threatIntelligence.DeleteVulnerabilities",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_vulnerabilities"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/articles",
+      "operationId": "security.threatIntelligence.vulnerabilities.ListArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_list_articles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/articles/$count",
+      "operationId": "security.threatIntelligence.vulnerabilities.articles.GetCount-3551",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_articles_get_count_3551"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/articles/{article-id}",
+      "operationId": "security.threatIntelligence.vulnerabilities.GetArticles",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_get_articles"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/components",
+      "operationId": "security.threatIntelligence.vulnerabilities.ListComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_list_components"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/components",
+      "operationId": "security.threatIntelligence.vulnerabilities.CreateComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_create_components"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/components/$count",
+      "operationId": "security.threatIntelligence.vulnerabilities.components.GetCount-d51b",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_components_get_count_d51b"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/components/{vulnerabilityComponent-id}",
+      "operationId": "security.threatIntelligence.vulnerabilities.GetComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_get_components"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/components/{vulnerabilityComponent-id}",
+      "operationId": "security.threatIntelligence.vulnerabilities.UpdateComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_update_components"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/vulnerabilities/{vulnerability-id}/components/{vulnerabilityComponent-id}",
+      "operationId": "security.threatIntelligence.vulnerabilities.DeleteComponents",
+      "tool": "microsoft_graph_security_threat_intelligence_vulnerabilities_delete_components"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisHistoryRecords",
+      "operationId": "security.threatIntelligence.ListWhoisHistoryRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_list_whois_history_records"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/whoisHistoryRecords",
+      "operationId": "security.threatIntelligence.CreateWhoisHistoryRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_create_whois_history_records"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisHistoryRecords/$count",
+      "operationId": "security.threatIntelligence.whoisHistoryRecords.GetCount-175e",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_history_records_get_count_175e"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisHistoryRecords/{whoisHistoryRecord-id}",
+      "operationId": "security.threatIntelligence.GetWhoisHistoryRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_get_whois_history_records"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/whoisHistoryRecords/{whoisHistoryRecord-id}",
+      "operationId": "security.threatIntelligence.UpdateWhoisHistoryRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_update_whois_history_records"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/whoisHistoryRecords/{whoisHistoryRecord-id}",
+      "operationId": "security.threatIntelligence.DeleteWhoisHistoryRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_whois_history_records"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisHistoryRecords/{whoisHistoryRecord-id}/host",
+      "operationId": "security.threatIntelligence.whoisHistoryRecords.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_history_records_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords",
+      "operationId": "security.threatIntelligence.ListWhoisRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_list_whois_records"
+    },
+    {
+      "method": "POST",
+      "path": "/security/threatIntelligence/whoisRecords",
+      "operationId": "security.threatIntelligence.CreateWhoisRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_create_whois_records"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords/$count",
+      "operationId": "security.threatIntelligence.whoisRecords.GetCount-21a1",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_records_get_count_21a1"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}",
+      "operationId": "security.threatIntelligence.GetWhoisRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_get_whois_records"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}",
+      "operationId": "security.threatIntelligence.UpdateWhoisRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_update_whois_records"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}",
+      "operationId": "security.threatIntelligence.DeleteWhoisRecords",
+      "tool": "microsoft_graph_security_threat_intelligence_delete_whois_records"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}/history",
+      "operationId": "security.threatIntelligence.whoisRecords.ListHistory",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_records_list_history"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}/history/$count",
+      "operationId": "security.threatIntelligence.whoisRecords.history.GetCount-86f0",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_records_history_get_count_86f0"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}/history/{whoisHistoryRecord-id}",
+      "operationId": "security.threatIntelligence.whoisRecords.GetHistory",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_records_get_history"
+    },
+    {
+      "method": "GET",
+      "path": "/security/threatIntelligence/whoisRecords/{whoisRecord-id}/host",
+      "operationId": "security.threatIntelligence.whoisRecords.GetHost",
+      "tool": "microsoft_graph_security_threat_intelligence_whois_records_get_host"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggerTypes",
+      "operationId": "security.GetTriggerTypes",
+      "tool": "microsoft_graph_security_get_trigger_types"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/triggerTypes",
+      "operationId": "security.UpdateTriggerTypes",
+      "tool": "microsoft_graph_security_update_trigger_types"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/triggerTypes",
+      "operationId": "security.DeleteTriggerTypes",
+      "tool": "microsoft_graph_security_delete_trigger_types"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggerTypes/retentionEventTypes",
+      "operationId": "security.triggerTypes.ListRetentionEventTypes",
+      "tool": "microsoft_graph_security_trigger_types_list_retention_event_types"
+    },
+    {
+      "method": "POST",
+      "path": "/security/triggerTypes/retentionEventTypes",
+      "operationId": "security.triggerTypes.CreateRetentionEventTypes",
+      "tool": "microsoft_graph_security_trigger_types_create_retention_event_types"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggerTypes/retentionEventTypes/$count",
+      "operationId": "security.triggerTypes.retentionEventTypes.GetCount-e3fe",
+      "tool": "microsoft_graph_security_trigger_types_retention_event_types_get_count_e3fe"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggerTypes/retentionEventTypes/{retentionEventType-id}",
+      "operationId": "security.triggerTypes.GetRetentionEventTypes",
+      "tool": "microsoft_graph_security_trigger_types_get_retention_event_types"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/triggerTypes/retentionEventTypes/{retentionEventType-id}",
+      "operationId": "security.triggerTypes.UpdateRetentionEventTypes",
+      "tool": "microsoft_graph_security_trigger_types_update_retention_event_types"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/triggerTypes/retentionEventTypes/{retentionEventType-id}",
+      "operationId": "security.triggerTypes.DeleteRetentionEventTypes",
+      "tool": "microsoft_graph_security_trigger_types_delete_retention_event_types"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggers",
+      "operationId": "security.GetTriggers",
+      "tool": "microsoft_graph_security_get_triggers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/triggers",
+      "operationId": "security.UpdateTriggers",
+      "tool": "microsoft_graph_security_update_triggers"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/triggers",
+      "operationId": "security.DeleteTriggers",
+      "tool": "microsoft_graph_security_delete_triggers"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggers/retentionEvents",
+      "operationId": "security.triggers.ListRetentionEvents",
+      "tool": "microsoft_graph_security_triggers_list_retention_events"
+    },
+    {
+      "method": "POST",
+      "path": "/security/triggers/retentionEvents",
+      "operationId": "security.triggers.CreateRetentionEvents",
+      "tool": "microsoft_graph_security_triggers_create_retention_events"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggers/retentionEvents/$count",
+      "operationId": "security.triggers.retentionEvents.GetCount-84a4",
+      "tool": "microsoft_graph_security_triggers_retention_events_get_count_84a4"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggers/retentionEvents/{retentionEvent-id}",
+      "operationId": "security.triggers.GetRetentionEvents",
+      "tool": "microsoft_graph_security_triggers_get_retention_events"
+    },
+    {
+      "method": "PATCH",
+      "path": "/security/triggers/retentionEvents/{retentionEvent-id}",
+      "operationId": "security.triggers.UpdateRetentionEvents",
+      "tool": "microsoft_graph_security_triggers_update_retention_events"
+    },
+    {
+      "method": "DELETE",
+      "path": "/security/triggers/retentionEvents/{retentionEvent-id}",
+      "operationId": "security.triggers.DeleteRetentionEvents",
+      "tool": "microsoft_graph_security_triggers_delete_retention_events"
+    },
+    {
+      "method": "GET",
+      "path": "/security/triggers/retentionEvents/{retentionEvent-id}/retentionEventType",
+      "operationId": "security.triggers.retentionEvents.GetRetentionEventType",
+      "tool": "microsoft_graph_security_triggers_retention_events_get_retention_event_type"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-zendesk-sell",
-    "description": "Zendesk Sell integration for Laravel — manage contacts, deals, and leads via the Sell API.",
+    "description": "Zendesk Sell integration for Laravel with CRM records, activities, products, pipelines, users, and reference data.",
     "license": "MIT",
     "authors": [
         {

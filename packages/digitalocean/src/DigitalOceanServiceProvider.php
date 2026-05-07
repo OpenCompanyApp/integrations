@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the DigitalOcean integration with Laravel.
+ *
+ * Binds the DigitalOcean API client from host credentials and registers the
+ * tool provider with the shared discovery registry when available.
+ */
 class DigitalOceanServiceProvider extends ServiceProvider
 {
     public function register(): void

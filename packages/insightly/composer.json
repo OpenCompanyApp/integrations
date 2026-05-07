@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-insightly",
-    "description": "Insightly CRM integration for Laravel — manage contacts, opportunities, and projects.",
+    "description": "Insightly CRM integration for Laravel with contacts, organizations, leads, opportunities, projects, tasks, events, teams, and metadata.",
     "license": "MIT",
     "authors": [
         {

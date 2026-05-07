@@ -6,8 +6,14 @@ use OpenCompany\Integrations\LaunchDarkly\LaunchDarklyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get detailed information about a LaunchDarkly feature flag.
+ */
 class LaunchDarklyGetFlag implements Tool
 {
+    /**
+     * @param  LaunchDarklyService  $service  LaunchDarkly API client.
+     */
     public function __construct(
         private LaunchDarklyService $service,
     ) {}
@@ -31,6 +37,11 @@ class LaunchDarklyGetFlag implements Tool
         ];
     }
 
+    /**
+     * Fetch and normalize a single feature flag.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -66,7 +77,7 @@ class LaunchDarklyGetFlag implements Tool
                 'kind' => $result['kind'] ?? '',
                 'temporary' => $result['temporary'] ?? false,
                 'created_at' => $result['_creationDate'] ?? $result['creationDate'] ?? null,
-                'updated_at' => $result['_maintainer'] ?? null,
+                'updated_at' => $result['_lastModified'] ?? $result['lastModified'] ?? null,
                 'variations' => $result['variations'] ?? [],
                 'environments' => $envStates,
             ]);

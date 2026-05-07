@@ -14,6 +14,9 @@ use OpenCompany\Integrations\Exa\ExaService;
  */
 class ExaGetContents implements Tool
 {
+    /**
+     * @param  ExaService  $service  The Exa API client.
+     */
     public function __construct(
         private ExaService $service,
     ) {}
@@ -25,17 +28,21 @@ class ExaGetContents implements Tool
 
     public function description(): string
     {
-        return 'Retrieve the full text contents and optional highlights for a list of Exa document IDs. Use this after a search or findSimilar call to get the actual page content.';
+        return 'Retrieve full page contents, summaries, highlights, and metadata for URLs or Exa document IDs.';
     }
 
     public function parameters(): array
     {
         return [
+            'urls' => [
+                'type' => 'array',
+                'items' => ['type' => 'string'],
+                'description' => 'List of URLs to retrieve contents for. Preferred for the current Exa Contents API.',
+            ],
             'ids' => [
                 'type' => 'array',
-                'required' => true,
                 'items' => ['type' => 'string'],
-                'description' => 'List of Exa document IDs to retrieve contents for.',
+                'description' => 'List of Exa document IDs from search results. Backward-compatible alternative to urls.',
             ],
             'text' => [
                 'type' => 'boolean',
@@ -55,6 +62,27 @@ class ExaGetContents implements Tool
                 ],
                 'description' => 'Highlight configuration for extracting key passages from the content.',
             ],
+            'summary' => [
+                'type' => 'object',
+                'description' => 'Summary configuration for LLM-generated page summaries.',
+            ],
+            'livecrawl' => [
+                'type' => 'string',
+                'enum' => ['never', 'fallback', 'preferred', 'always'],
+                'description' => 'Deprecated livecrawl preference. Prefer max_age_hours when possible.',
+            ],
+            'max_age_hours' => [
+                'type' => 'integer',
+                'description' => 'Maximum cached content age in hours. 0 always livecrawls; -1 always uses cache.',
+            ],
+            'subpages' => [
+                'type' => 'integer',
+                'description' => 'Number of linked subpages to crawl.',
+            ],
+            'subpage_target' => [
+                'type' => 'string',
+                'description' => 'Term used to target specific subpages.',
+            ],
         ];
     }
 
@@ -70,14 +98,22 @@ class ExaGetContents implements Tool
                 return ToolResult::error('Exa integration is not configured.');
             }
 
+            $urls = $args['urls'] ?? [];
             $ids = $args['ids'] ?? [];
-            if (empty($ids)) {
-                return ToolResult::error('At least one document ID is required.');
+
+            if (empty($urls) && empty($ids)) {
+                return ToolResult::error('At least one URL or document ID is required.');
             }
 
-            $body = [
-                'ids' => (array) $ids,
-            ];
+            $body = [];
+
+            if (!empty($urls)) {
+                $body['urls'] = (array) $urls;
+            }
+
+            if (!empty($ids)) {
+                $body['ids'] = (array) $ids;
+            }
 
             if (isset($args['text'])) {
                 $body['text'] = (bool) $args['text'];
@@ -85,6 +121,26 @@ class ExaGetContents implements Tool
 
             if (isset($args['highlights']) && is_array($args['highlights'])) {
                 $body['highlights'] = $args['highlights'];
+            }
+
+            if (isset($args['summary']) && is_array($args['summary'])) {
+                $body['summary'] = $args['summary'];
+            }
+
+            if (isset($args['livecrawl'])) {
+                $body['livecrawl'] = $args['livecrawl'];
+            }
+
+            if (isset($args['max_age_hours'])) {
+                $body['maxAgeHours'] = (int) $args['max_age_hours'];
+            }
+
+            if (isset($args['subpages'])) {
+                $body['subpages'] = (int) $args['subpages'];
+            }
+
+            if (isset($args['subpage_target'])) {
+                $body['subpageTarget'] = $args['subpage_target'];
             }
 
             $result = $this->service->getContents($body);

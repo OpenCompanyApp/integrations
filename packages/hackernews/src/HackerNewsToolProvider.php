@@ -4,21 +4,26 @@ namespace OpenCompany\Integrations\HackerNews;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 use OpenCompany\Integrations\HackerNews\Tools\HackerNewsGetItem;
+use OpenCompany\Integrations\HackerNews\Tools\HackerNewsGetMaxItem;
+use OpenCompany\Integrations\HackerNews\Tools\HackerNewsGetUpdates;
 use OpenCompany\Integrations\HackerNews\Tools\HackerNewsGetUser;
+use OpenCompany\Integrations\HackerNews\Tools\HackerNewsListAskStories;
 use OpenCompany\Integrations\HackerNews\Tools\HackerNewsListBestStories;
+use OpenCompany\Integrations\HackerNews\Tools\HackerNewsListJobStories;
 use OpenCompany\Integrations\HackerNews\Tools\HackerNewsListNewStories;
+use OpenCompany\Integrations\HackerNews\Tools\HackerNewsListShowStories;
 use OpenCompany\Integrations\HackerNews\Tools\HackerNewsListTopStories;
 
-use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-
 /**
- * Registers the integration provider and exposes its tools.
+ * Exposes the public Hacker News Firebase API as agent-callable tools.
+ *
+ * No credentials are required; all tools read from the official v0 API.
  */
 class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
 {
-
-/**
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -26,52 +31,39 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'none',
-            'legacy_auth_type' => 'none',
-            'credential_mode' => 'none',
-            'setup_flows' =>
-            [
-              0 => 'none',
+            'auth' => [
+                'strategy' => 'none',
+                'legacy_auth_type' => 'none',
+                'credential_mode' => 'none',
+                'setup_flows' => ['none'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'none',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'none',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'none',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'none',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-/**
-     * The app/group identifier.
-     */
     public function appName(): string
     {
         return 'hackernews';
@@ -101,7 +93,7 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
     {
         return [
             'name' => 'Hacker News',
-            'description' => 'Tech news & discussion',
+            'description' => 'Tech news, discussions, users, live story feeds, and changed item/profile IDs',
             'icon' => 'ph:fire',
             'logo' => 'simple-icons:ycombinator',
             'category' => 'data',
@@ -109,6 +101,7 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
             'docs_url' => 'https://github.com/HackerNews/API',
         ];
     }
+
     /**
      * Tool definitions with metadata.
      *
@@ -131,6 +124,20 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
                 'description' => 'Fetch a Hacker News user profile by username.',
                 'icon' => 'ph:user',
             ],
+            'hackernews_get_max_item' => [
+                'class' => HackerNewsGetMaxItem::class,
+                'type' => 'read',
+                'name' => 'Get Max Item',
+                'description' => 'Fetch the current largest Hacker News item ID.',
+                'icon' => 'ph:number-circle-one',
+            ],
+            'hackernews_get_updates' => [
+                'class' => HackerNewsGetUpdates::class,
+                'type' => 'read',
+                'name' => 'Get Updates',
+                'description' => 'Fetch recently changed Hacker News item IDs and profile IDs.',
+                'icon' => 'ph:arrows-clockwise',
+            ],
             'hackernews_list_top_stories' => [
                 'class' => HackerNewsListTopStories::class,
                 'type' => 'read',
@@ -152,6 +159,27 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
                 'description' => 'Fetch the best-scoring stories from Hacker News.',
                 'icon' => 'ph:star',
             ],
+            'hackernews_list_ask_stories' => [
+                'class' => HackerNewsListAskStories::class,
+                'type' => 'read',
+                'name' => 'List Ask Stories',
+                'description' => 'Fetch the latest Ask HN stories from Hacker News.',
+                'icon' => 'ph:question',
+            ],
+            'hackernews_list_show_stories' => [
+                'class' => HackerNewsListShowStories::class,
+                'type' => 'read',
+                'name' => 'List Show Stories',
+                'description' => 'Fetch the latest Show HN stories from Hacker News.',
+                'icon' => 'ph:rocket-launch',
+            ],
+            'hackernews_list_job_stories' => [
+                'class' => HackerNewsListJobStories::class,
+                'type' => 'read',
+                'name' => 'List Job Stories',
+                'description' => 'Fetch the latest Hacker News job stories.',
+                'icon' => 'ph:briefcase',
+            ],
         ];
     }
 
@@ -170,7 +198,8 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
      * @param  array<string, mixed>  $context  Runtime context (e.g., account)
      */
     public function createTool(string $class, array $context = []): Tool
-    {        return new $class(app(HackerNewsService::class));
+    {
+        return new $class(app(HackerNewsService::class));
     }
 
     /**

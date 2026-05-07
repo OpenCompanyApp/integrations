@@ -62,8 +62,8 @@ class RevolutGetCard implements Tool
             return ToolResult::success([
                 'id' => $card['id'] ?? '',
                 'last_four_digits' => $card['last_four_digits'] ?? '',
-                'status' => $card['status'] ?? '',
-                'cardholder_name' => $card['cardholder_name'] ?? '',
+                'state' => $card['state'] ?? $card['status'] ?? '',
+                'cardholder_name' => $card['cardholder_name'] ?? $card['holder_name'] ?? '',
                 'currency' => $card['currency'] ?? '',
                 'type' => $card['type'] ?? '',
                 'label' => $card['label'] ?? null,

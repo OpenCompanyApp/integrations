@@ -3,19 +3,28 @@
 namespace OpenCompany\Integrations\Cursor;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Cursor\Tools\CursorListWorkspaces;
-use OpenCompany\Integrations\Cursor\Tools\CursorGetWorkspace;
-use OpenCompany\Integrations\Cursor\Tools\CursorListTeamMembers;
-use OpenCompany\Integrations\Cursor\Tools\CursorListExtensions;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Cursor\Tools\CursorDeleteRepoBlocklist;
+use OpenCompany\Integrations\Cursor\Tools\CursorGetDailyUsageData;
+use OpenCompany\Integrations\Cursor\Tools\CursorGetSpend;
+use OpenCompany\Integrations\Cursor\Tools\CursorGetUsageEvents;
+use OpenCompany\Integrations\Cursor\Tools\CursorListRepoBlocklists;
+use OpenCompany\Integrations\Cursor\Tools\CursorListTeamMembers;
+use OpenCompany\Integrations\Cursor\Tools\CursorSetUserSpendLimit;
+use OpenCompany\Integrations\Cursor\Tools\CursorUpsertRepoBlocklists;
 
 /**
+ * Exposes Cursor Admin API tools.
+ *
+ * Covers team members, usage, spending, spend limits, and repository blocklists.
+ */
+class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -23,52 +32,39 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key_basic_auth',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => ['Cursor Admin API keys are sent as the Basic auth username with an empty password.'],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-    /**
-     * Get the internal application name for this integration.
-     */
     public function appName(): string
     {
         return 'cursor';
@@ -83,9 +79,9 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'label' => 'Cursor',
-            'description' => 'Cursor IDE integration for Laravel — list workspaces, members, and extensions.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
+            'description' => 'Cursor team administration, usage, spending, and repo blocklists',
+            'icon' => 'ph:code',
+            'logo' => 'ph:code',
         ];
     }
 
@@ -98,48 +94,47 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     {
         return [
             'name' => 'Cursor',
-            'description' => 'Cursor IDE integration for Laravel — list workspaces, members, and extensions.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-            'category' => 'other',
+            'description' => 'Cursor Admin API for team members, usage, spend, limits, and repo blocklists',
+            'icon' => 'ph:code',
+            'logo' => 'ph:code',
+            'category' => 'productivity',
             'badge' => 'verified',
+            'docs_url' => 'https://docs.cursor.com/account/teams/admin-api',
         ];
     }
-/**
-     * Get the configuration schema for the integration settings UI.
-     */
+
     public function configSchema(): array
     {
         return [
             [
                 'key' => 'api_key',
                 'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Cursor API key',
-                'hint' => 'Generate an API key in your Cursor account settings',
+                'label' => 'Admin API Key',
+                'placeholder' => 'key_...',
+                'hint' => 'Generate an Admin API key in Cursor Dashboard > Settings > Cursor Admin API Keys.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api2.cursor.sh',
-                'hint' => 'Use <code>https://api2.cursor.sh</code> for the default Cursor API',
-                'default' => 'https://api2.cursor.sh',
+                'placeholder' => 'https://api.cursor.com',
+                'hint' => 'Use https://api.cursor.com for the Cursor Admin API.',
+                'default' => 'https://api.cursor.com',
             ],
         ];
     }
 
     /**
-     * Test the connection to the Cursor API using the provided configuration.
+     * Test the connection to the Cursor Admin API using the provided configuration.
      *
-     * @param  array<string, mixed>  $config
+     * @param  array<string, mixed>  $config  Configuration values to test.
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api2.cursor.sh', '/');
+        $baseUrl = rtrim($config['url'] ?? 'https://api.cursor.com', '/');
 
         if (empty($apiKey)) {
             return ['success' => false, 'error' => 'No API key provided'];
@@ -147,31 +142,30 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/workspaces');
+                'Authorization' => 'Basic ' . base64_encode($apiKey . ':'),
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/teams/members');
 
-            $json = $response->json();
+            if (! $response->successful()) {
+                $error = $response->json('error') ?? $response->json('message') ?? $response->body();
 
-            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => "Could not reach Cursor API at {$baseUrl}. Check the URL.",
+                    'error' => 'Cursor API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
                 ];
             }
 
+            $members = $response->json('teamMembers') ?? [];
+
             return [
                 'success' => true,
-                'message' => "Connected to Cursor API at {$baseUrl}.",
+                'message' => 'Connected to Cursor Admin API. ' . count($members) . ' team members available.',
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get validation rules for the configuration fields.
-     */
     public function validationRules(): array
     {
         return [
@@ -188,59 +182,27 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function tools(): array
     {
         return [
-            'cursor_list_workspaces' => [
-                'class' => CursorListWorkspaces::class,
-                'type' => 'read',
-                'name' => 'List Workspaces',
-                'description' => 'List all Cursor workspaces.',
-                'icon' => 'ph:folders',
-            ],
-            'cursor_get_workspace' => [
-                'class' => CursorGetWorkspace::class,
-                'type' => 'read',
-                'name' => 'Get Workspace',
-                'description' => 'Get details for a specific workspace.',
-                'icon' => 'ph:folder-open',
-            ],
-            'cursor_list_team_members' => [
-                'class' => CursorListTeamMembers::class,
-                'type' => 'read',
-                'name' => 'List Team Members',
-                'description' => 'List all members in a workspace.',
-                'icon' => 'ph:users',
-            ],
-            'cursor_list_extensions' => [
-                'class' => CursorListExtensions::class,
-                'type' => 'read',
-                'name' => 'List Extensions',
-                'description' => 'List all extensions in a workspace.',
-                'icon' => 'ph:puzzle-piece',
-            ],
+            'cursor_list_team_members' => ['class' => CursorListTeamMembers::class, 'type' => 'read', 'name' => 'List Team Members', 'description' => 'List all Cursor team members and roles.', 'icon' => 'ph:users'],
+            'cursor_get_daily_usage_data' => ['class' => CursorGetDailyUsageData::class, 'type' => 'read', 'name' => 'Get Daily Usage Data', 'description' => 'Get Cursor team daily usage data for a date range.', 'icon' => 'ph:calendar-dots'],
+            'cursor_get_spend' => ['class' => CursorGetSpend::class, 'type' => 'read', 'name' => 'Get Spend', 'description' => 'Get Cursor team spending data with search, sorting, and pagination.', 'icon' => 'ph:currency-dollar'],
+            'cursor_get_usage_events' => ['class' => CursorGetUsageEvents::class, 'type' => 'read', 'name' => 'Get Usage Events', 'description' => 'Get detailed Cursor usage events with filters and pagination.', 'icon' => 'ph:activity'],
+            'cursor_set_user_spend_limit' => ['class' => CursorSetUserSpendLimit::class, 'type' => 'write', 'name' => 'Set User Spend Limit', 'description' => 'Set a whole-dollar spend limit for a Cursor team member.', 'icon' => 'ph:gauge'],
+            'cursor_list_repo_blocklists' => ['class' => CursorListRepoBlocklists::class, 'type' => 'read', 'name' => 'List Repo Blocklists', 'description' => 'List Cursor repository blocklists.', 'icon' => 'ph:git-branch'],
+            'cursor_upsert_repo_blocklists' => ['class' => CursorUpsertRepoBlocklists::class, 'type' => 'write', 'name' => 'Upsert Repo Blocklists', 'description' => 'Replace blocklist patterns for one or more repositories.', 'icon' => 'ph:git-pull-request'],
+            'cursor_delete_repo_blocklist' => ['class' => CursorDeleteRepoBlocklist::class, 'type' => 'write', 'name' => 'Delete Repo Blocklist', 'description' => 'Delete a Cursor repository blocklist entry.', 'icon' => 'ph:trash'],
         ];
     }
 
-    /**
-     * Get the path to the Lua documentation file.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/cursor.md';
     }
 
-    /**
-     * Get the credential fields for the integration.
-     */
     public function credentialFields(): array
     {
-        return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API URL', 'required' => false, 'default' => 'https://api2.cursor.sh'],
-        ];
+        return $this->configSchema();
     }
 
-    /**
-     * Confirm this is an integration provider.
-     */
     public function isIntegration(): bool
     {
         return true;
@@ -249,24 +211,32 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     /**
      * Create a tool instance, optionally using account-specific credentials.
      *
-     * @param  class-string<Tool>  $class
-     * @param  array<string, mixed>  $context
+     * @param  class-string<Tool>  $class  The fully-qualified tool class name.
+     * @param  array<string, mixed>  $context  Optional context with an account key.
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Cursor service for default or account-scoped credentials.
+     *
+     * @param  array<string, mixed>  $context  Optional context with an account key.
+     */
+    private function resolveService(array $context = []): CursorService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new CursorService(
+            return new CursorService(
                 apiKey: $creds->get('cursor', 'api_key', '', $account),
-                baseUrl: $creds->get('cursor', 'url', 'https://api2.cursor.sh', $account),
+                baseUrl: $creds->get('cursor', 'url', 'https://api.cursor.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(CursorService::class));
+        return app(CursorService::class);
     }
 }

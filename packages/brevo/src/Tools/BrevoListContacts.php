@@ -2,58 +2,67 @@
 
 namespace OpenCompany\Integrations\Brevo\Tools;
 
-use OpenCompany\Integrations\Brevo\BrevoService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
-class BrevoListContacts implements Tool
+/**
+ * List contacts in Brevo.
+ */
+class BrevoListContacts extends AbstractBrevoTool
 {
-    public function __construct(
-        private BrevoService $service,
-    ) {}
+    protected string $toolName = 'brevo_list_contacts';
 
-    public function name(): string
-    {
-        return 'brevo_list_contacts';
-    }
+    protected string $toolDescription = 'List contacts in Brevo.';
 
-    public function description(): string
-    {
-        return 'List contacts in your Brevo account. Supports pagination and filtering by email or search term.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of contacts to return (default: 50, max: 1000).'],
-            'offset' => ['type' => 'integer', 'description' => 'Number of contacts to skip for pagination (default: 0).'],
-            'search' => ['type' => 'string', 'description' => 'Search term to filter contacts by email or attributes (e.g., "john@example.com").'],
-        ];
-    }
+    protected string $path = '/contacts';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Brevo integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'email' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by email address.',
+    ],
+    'modified_since' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Filter by modifiedSince timestamp.',
+    ],
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum records to return.',
+    ],
+    'offset' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Number of records to skip.',
+    ],
+    'sort' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Sort order when supported.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Brevo query parameters to pass through.',
+    ],
+];
 
-            $params = [];
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (isset($args['offset'])) {
-                $params['offset'] = (int) $args['offset'];
-            }
-            if (isset($args['search'])) {
-                $params['search'] = $args['search'];
-            }
+    /** @var list<string> */
+    protected array $required = [
+];
 
-            $result = $this->service->listContacts($params);
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'email',
+    'modified_since' => 'modifiedSince',
+    'limit',
+    'offset',
+    'sort',
+];
 
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [
+];
 }

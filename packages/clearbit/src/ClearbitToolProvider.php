@@ -3,21 +3,28 @@
 namespace OpenCompany\Integrations\Clearbit;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichPerson;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichCompany;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitReveal;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitProspect;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitListAutocomplete;
-use OpenCompany\Integrations\Clearbit\Tools\ClearbitGetCurrentUser;
-
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
-{
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitApiGet;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitCalculateRisk;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitDiscoverySearch;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichCombined;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichCompany;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitEnrichPerson;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitListAutocomplete;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitNameToDomain;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitProspect;
+use OpenCompany\Integrations\Clearbit\Tools\ClearbitReveal;
 
 /**
+ * Exposes Clearbit data-enrichment tools and setup metadata.
+ */
+class ClearbitToolProvider implements ConfigurableIntegration, HasIntegrationCapabilities, ToolProvider
+{
+    /**
      * Describe host and authentication capabilities for catalog and setup flows.
      *
      * @return array<string, mixed>
@@ -25,52 +32,41 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function integrationCapabilities(): array
     {
         return [
-          'auth' => [
-            'strategy' => 'api_key',
-            'legacy_auth_type' => 'api_key',
-            'credential_mode' => 'secret',
-            'setup_flows' =>
-            [
-              0 => 'manual_secret',
+            'auth' => [
+                'strategy' => 'api_key',
+                'legacy_auth_type' => 'api_key',
+                'credential_mode' => 'secret',
+                'setup_flows' => ['manual_secret'],
+                'requires_browser_for_setup' => false,
+                'refreshable' => false,
+                'token_keys' => [],
+                'notes' => [
+                    'Company autocomplete does not require authentication. Name-to-domain and risk are legacy unsupported APIs for existing Clearbit customers.',
+                ],
             ],
-            'requires_browser_for_setup' => false,
-            'refreshable' => false,
-            'token_keys' =>
-            [
+            'host_availability' => [
+                'web' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                ],
+                'cli' => [
+                    'setup_supported' => true,
+                    'runtime_supported' => true,
+                    'setup_mode' => 'manual_secret',
+                    'runtime_mode' => 'normal',
+                ],
             ],
-            'notes' =>
-            [
+            'runtime_requirements' => [],
+            'compatibility' => [
+                'web_setup_supported' => true,
+                'web_runtime_supported' => true,
+                'cli_setup_supported' => true,
+                'cli_runtime_supported' => true,
             ],
-          ],
-          'host_availability' => [
-            'web' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-            ],
-            'cli' =>
-            [
-              'setup_supported' => true,
-              'runtime_supported' => true,
-              'setup_mode' => 'manual_secret',
-              'runtime_mode' => 'normal',
-            ],
-          ],
-          'runtime_requirements' => [
-          ],
-          'compatibility' => [
-            'web_setup_supported' => true,
-            'web_runtime_supported' => true,
-            'cli_setup_supported' => true,
-            'cli_runtime_supported' => true,
-          ],
         ];
     }
 
-    /**
-     * The application name used as the integration identifier.
-     */
     public function appName(): string
     {
         return 'clearbit';
@@ -85,9 +81,9 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'label' => 'Clearbit',
-            'description' => 'Clearbit enrichment integration for Laravel — enrich people and companies, reveal…',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
+            'description' => 'B2B enrichment, reveal, prospector, and company lookup data',
+            'icon' => 'ph:buildings',
+            'logo' => 'ph:buildings',
         ];
     }
 
@@ -100,14 +96,16 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'name' => 'Clearbit',
-            'description' => 'Clearbit enrichment integration for Laravel — enrich people and companies, reveal visitor identity, prospect by role.',
-            'icon' => 'ph:plug',
-            'logo' => 'ph:plug',
-            'category' => 'other',
+            'description' => 'B2B person and company enrichment, visitor reveal, prospecting, discovery, and legacy lookup APIs.',
+            'icon' => 'ph:buildings',
+            'logo' => 'ph:buildings',
+            'category' => 'data',
             'badge' => 'verified',
+            'docs_url' => 'https://help.clearbit.com/hc/en-us/categories/360000913214-APIs',
         ];
     }
-/**
+
+    /**
      * Configuration schema for the Clearbit integration.
      *
      * @return array<int, array<string, mixed>>
@@ -120,55 +118,58 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Clearbit API key',
-                'hint' => 'Find your API key in the Clearbit dashboard under <strong>Settings → API Keys</strong>',
+                'hint' => 'Find your API key in the Clearbit dashboard. Autocomplete is public; other endpoints require an existing Clearbit customer API key.',
                 'required' => true,
             ],
             [
                 'key' => 'url',
                 'type' => 'url',
-                'label' => 'API Base URL',
+                'label' => 'Person API Base URL',
                 'placeholder' => 'https://person.clearbit.com/v2',
-                'hint' => 'Use <code>https://person.clearbit.com/v2</code> (default) or <code>https://company.clearbit.com/v2</code>. A single base URL is used for all endpoints.',
+                'hint' => 'Optional override for the Person API host. Other Clearbit API families use their canonical hosts.',
                 'default' => 'https://person.clearbit.com/v2',
             ],
         ];
     }
 
     /**
-     * Test the connection using the provided configuration.
+     * Test the connection using a lightweight person enrichment request.
+     *
+     * A 404 is treated as a valid connection because it means Clearbit accepted
+     * the request and did not find the dummy address.
      *
      * @param  array<string, mixed>  $config
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://person.clearbit.com/v2', '/');
+        $apiKey = (string) ($config['api_key'] ?? '');
+        $baseUrl = rtrim((string) ($config['url'] ?? 'https://person.clearbit.com/v2'), '/');
 
-        if (empty($apiKey)) {
+        if ($apiKey === '') {
             return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+                'Authorization' => 'Bearer '.$apiKey,
+                'Accept' => 'application/json',
+            ])->timeout(10)->get($baseUrl.'/people/find', ['email' => 'test@example.invalid']);
 
-            $json = $response->json();
-
-            if ($json === null) {
+            if (in_array($response->status(), [200, 202, 404], true)) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach Clearbit API at {$baseUrl}. Check the URL.",
+                    'success' => true,
+                    'message' => "Connected to Clearbit Person API at {$baseUrl}.",
                 ];
             }
 
+            $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+
             return [
-                'success' => true,
-                'message' => "Connected to Clearbit API at {$baseUrl}.",
+                'success' => false,
+                'error' => 'Clearbit API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)),
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -194,75 +195,32 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function tools(): array
     {
         return [
-            'clearbit_enrich_person' => [
-                'class' => ClearbitEnrichPerson::class,
-                'type' => 'read',
-                'name' => 'Enrich Person',
-                'description' => 'Look up a person\'s social, employment, and demographic data by email.',
-                'icon' => 'ph:user-circle',
-            ],
-            'clearbit_enrich_company' => [
-                'class' => ClearbitEnrichCompany::class,
-                'type' => 'read',
-                'name' => 'Enrich Company',
-                'description' => 'Look up company metrics, categorization, and social profiles by domain.',
-                'icon' => 'ph:buildings',
-            ],
-            'clearbit_reveal' => [
-                'class' => ClearbitReveal::class,
-                'type' => 'read',
-                'name' => 'Reveal',
-                'description' => 'Identify the company and person behind an IP address.',
-                'icon' => 'ph:eye',
-            ],
-            'clearbit_prospect' => [
-                'class' => ClearbitProspect::class,
-                'type' => 'read',
-                'name' => 'Prospect',
-                'description' => 'Find people by job title and/or company name.',
-                'icon' => 'ph:users',
-            ],
-            'clearbit_list_autocomplete' => [
-                'class' => ClearbitListAutocomplete::class,
-                'type' => 'read',
-                'name' => 'Company Autocomplete',
-                'description' => 'Search for companies by name (autocomplete / type-ahead).',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'clearbit_get_current_user' => [
-                'class' => ClearbitGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Current User',
-                'description' => 'Get the authenticated user\'s Clearbit account information.',
-                'icon' => 'ph:user',
-            ],
+            'clearbit_enrich_person' => $this->tool(ClearbitEnrichPerson::class, 'Enrich Person', 'Look up a person by email address.'),
+            'clearbit_enrich_combined' => $this->tool(ClearbitEnrichCombined::class, 'Enrich Person and Company', 'Look up a person and associated company by email address.'),
+            'clearbit_enrich_company' => $this->tool(ClearbitEnrichCompany::class, 'Enrich Company', 'Look up company metrics, categorization, and social profiles by domain.'),
+            'clearbit_reveal' => $this->tool(ClearbitReveal::class, 'Reveal Company', 'Identify the company behind an IP address.'),
+            'clearbit_prospect' => $this->tool(ClearbitProspect::class, 'Prospect People', 'Find people by domain, role, seniority, title, or company.'),
+            'clearbit_list_autocomplete' => $this->tool(ClearbitListAutocomplete::class, 'Company Autocomplete', 'Search for companies by name with the public autocomplete API.'),
+            'clearbit_name_to_domain' => $this->tool(ClearbitNameToDomain::class, 'Name to Domain', 'Find a company domain and logo by company name.'),
+            'clearbit_discovery_search' => $this->tool(ClearbitDiscoverySearch::class, 'Discovery Search', 'Search Clearbit Discovery companies.'),
+            'clearbit_calculate_risk' => $this->tool(ClearbitCalculateRisk::class, 'Calculate Risk', 'Calculate a Clearbit Risk score from signup attributes.'),
+            'clearbit_api_get' => $this->tool(ClearbitApiGet::class, 'Clearbit API GET', 'Call a read-only Clearbit endpoint on a named API host.'),
         ];
     }
 
-    /**
-     * Path to the Lua API docs markdown file.
-     */
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/clearbit.md';
+        return __DIR__.'/../lua-docs/clearbit.md';
     }
 
-    /**
-     * Credential fields for quick reference.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://person.clearbit.com/v2'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Person API Base URL', 'required' => false, 'default' => 'https://person.clearbit.com/v2'],
         ];
     }
 
-    /**
-     * Confirm this class represents an integration (not a standalone tool).
-     */
     public function isIntegration(): bool
     {
         return true;
@@ -272,23 +230,47 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
      * Create a tool instance, optionally using account-specific credentials.
      *
      * @param  class-string<Tool>  $class  The tool class to instantiate.
-     * @param  array<string, mixed>  $context  Optional context with an 'account' key for multi-account support.
+     * @param  array<string, mixed>  $context  Optional context with an account key.
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the Clearbit service for default or account-scoped credentials.
+     *
+     * @param  array<string, mixed>  $context  Optional context with an account key.
+     */
+    private function resolveService(array $context = []): ClearbitService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
-            $service = new ClearbitService(
+            return new ClearbitService(
                 apiKey: $creds->get('clearbit', 'api_key', '', $account),
                 baseUrl: $creds->get('clearbit', 'url', 'https://person.clearbit.com/v2', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(ClearbitService::class));
+        return app(ClearbitService::class);
+    }
+
+    /**
+     * Build standard tool metadata.
+     *
+     * @return array<string, mixed>
+     */
+    private function tool(string $class, string $name, string $description): array
+    {
+        return [
+            'class' => $class,
+            'type' => 'read',
+            'name' => $name,
+            'description' => $description,
+            'icon' => 'ph:wrench',
+        ];
     }
 }

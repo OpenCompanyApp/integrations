@@ -7,13 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the currently authenticated Chargify user.
+ * Read the current Maxio Advanced Billing site.
  *
- * Returns user details including name, email, and role. Useful for
- * verifying API credentials and connection status.
+ * Useful for verifying API credentials because Advanced Billing exposes
+ * site metadata through the authenticated API.
  */
 class ChargifyGetCurrentUser implements Tool
 {
+    /**
+     * @param  ChargifyService  $service  The Chargify API client.
+     */
     public function __construct(
         private ChargifyService $service,
     ) {}
@@ -25,7 +28,7 @@ class ChargifyGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the currently authenticated Chargify user. Useful for verifying API credentials.';
+        return 'Read the current Chargify / Maxio Advanced Billing site. Useful for verifying API credentials.';
     }
 
     public function parameters(): array
@@ -33,6 +36,11 @@ class ChargifyGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Read the current site through the Chargify API.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments; none are required.
+     */
     public function execute(array $args): ToolResult
     {
         try {

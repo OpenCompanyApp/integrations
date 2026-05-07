@@ -159,6 +159,256 @@ class BlueskyService
     }
 
     /**
+     * Get the authenticated user's timeline.
+     *
+     * @param  int  $limit  Number of results per page.
+     * @param  string|null  $cursor  Pagination cursor.
+     * @return array<string, mixed>
+     */
+    public function getTimeline(int $limit = 50, ?string $cursor = null): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getTimeline', array_filter([
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Get posts and reposts by an actor.
+     *
+     * @param  string  $actor  Handle or DID.
+     * @param  int  $limit  Number of results per page.
+     * @param  string|null  $cursor  Pagination cursor.
+     * @param  string|null  $filter  Optional Bluesky author-feed filter.
+     * @return array<string, mixed>
+     */
+    public function getAuthorFeed(string $actor, int $limit = 50, ?string $cursor = null, ?string $filter = null): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getAuthorFeed', array_filter([
+            'actor' => $actor,
+            'limit' => $limit,
+            'cursor' => $cursor,
+            'filter' => $filter,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Get posts from a feed generator URI.
+     *
+     * @param  string  $feed  Feed generator AT URI.
+     * @param  int  $limit  Number of results per page.
+     * @param  string|null  $cursor  Pagination cursor.
+     * @return array<string, mixed>
+     */
+    public function getFeed(string $feed, int $limit = 50, ?string $cursor = null): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getFeed', array_filter([
+            'feed' => $feed,
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Get metadata for a feed generator URI.
+     *
+     * @param  string  $feed  Feed generator AT URI.
+     * @return array<string, mixed>
+     */
+    public function getFeedGenerator(string $feed): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getFeedGenerator', ['feed' => $feed]);
+    }
+
+    /**
+     * Get a post thread by root post URI.
+     *
+     * @param  string  $uri  Post AT URI.
+     * @param  int|null  $depth  Reply depth.
+     * @param  int|null  $parentHeight  Parent traversal height.
+     * @return array<string, mixed>
+     */
+    public function getPostThread(string $uri, ?int $depth = null, ?int $parentHeight = null): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getPostThread', array_filter([
+            'uri' => $uri,
+            'depth' => $depth,
+            'parentHeight' => $parentHeight,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Get one or more posts by AT URI.
+     *
+     * @param  string[]  $uris  Post AT URIs.
+     * @return array<string, mixed>
+     */
+    public function getPosts(array $uris): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getPosts', ['uris' => $uris]);
+    }
+
+    /**
+     * Get likes for a post.
+     *
+     * @param  string  $uri  Post AT URI.
+     * @param  string|null  $cid  Optional post CID.
+     * @param  int  $limit  Number of results per page.
+     * @param  string|null  $cursor  Pagination cursor.
+     * @return array<string, mixed>
+     */
+    public function getLikes(string $uri, ?string $cid = null, int $limit = 50, ?string $cursor = null): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getLikes', array_filter([
+            'uri' => $uri,
+            'cid' => $cid,
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Get actors who reposted a post.
+     *
+     * @param  string  $uri  Post AT URI.
+     * @param  string|null  $cid  Optional post CID.
+     * @param  int  $limit  Number of results per page.
+     * @param  string|null  $cursor  Pagination cursor.
+     * @return array<string, mixed>
+     */
+    public function getRepostedBy(string $uri, ?string $cid = null, int $limit = 50, ?string $cursor = null): array
+    {
+        return $this->xrpcGet('app.bsky.feed.getRepostedBy', array_filter([
+            'uri' => $uri,
+            'cid' => $cid,
+            'limit' => $limit,
+            'cursor' => $cursor,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * List notifications for the authenticated account.
+     *
+     * @param  int  $limit  Number of results per page.
+     * @param  string|null  $cursor  Pagination cursor.
+     * @param  string|null  $seenAt  Optional seen timestamp.
+     * @return array<string, mixed>
+     */
+    public function listNotifications(int $limit = 50, ?string $cursor = null, ?string $seenAt = null): array
+    {
+        return $this->xrpcGet('app.bsky.notification.listNotifications', array_filter([
+            'limit' => $limit,
+            'cursor' => $cursor,
+            'seenAt' => $seenAt,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Create a record in the authenticated repository.
+     *
+     * @param  string  $collection  AT Protocol collection name.
+     * @param  array<string, mixed>  $record  Record body.
+     * @param  string|null  $rkey  Optional record key.
+     * @return array<string, mixed>
+     */
+    public function createRecord(string $collection, array $record, ?string $rkey = null): array
+    {
+        return $this->xrpcPost('com.atproto.repo.createRecord', array_filter([
+            'repo' => $this->did,
+            'collection' => $collection,
+            'rkey' => $rkey,
+            'record' => $record,
+        ], static fn ($value) => $value !== null && $value !== ''));
+    }
+
+    /**
+     * Delete a record from the authenticated repository.
+     *
+     * @param  string  $collection  AT Protocol collection name.
+     * @param  string  $rkey  Record key.
+     * @return array<string, mixed>
+     */
+    public function deleteRecord(string $collection, string $rkey): array
+    {
+        return $this->xrpcPost('com.atproto.repo.deleteRecord', [
+            'repo' => $this->did,
+            'collection' => $collection,
+            'rkey' => $rkey,
+        ]);
+    }
+
+    /**
+     * Like a post by creating an app.bsky.feed.like record.
+     *
+     * @param  string  $uri  Post AT URI.
+     * @param  string  $cid  Post CID.
+     * @return array<string, mixed>
+     */
+    public function likePost(string $uri, string $cid): array
+    {
+        return $this->createRecord('app.bsky.feed.like', [
+            '$type' => 'app.bsky.feed.like',
+            'subject' => ['uri' => $uri, 'cid' => $cid],
+            'createdAt' => gmdate('c'),
+        ]);
+    }
+
+    /**
+     * Repost a post by creating an app.bsky.feed.repost record.
+     *
+     * @param  string  $uri  Post AT URI.
+     * @param  string  $cid  Post CID.
+     * @return array<string, mixed>
+     */
+    public function repostPost(string $uri, string $cid): array
+    {
+        return $this->createRecord('app.bsky.feed.repost', [
+            '$type' => 'app.bsky.feed.repost',
+            'subject' => ['uri' => $uri, 'cid' => $cid],
+            'createdAt' => gmdate('c'),
+        ]);
+    }
+
+    /**
+     * Follow an actor by creating an app.bsky.graph.follow record.
+     *
+     * @param  string  $subject  Actor DID to follow.
+     * @return array<string, mixed>
+     */
+    public function followActor(string $subject): array
+    {
+        return $this->createRecord('app.bsky.graph.follow', [
+            '$type' => 'app.bsky.graph.follow',
+            'subject' => $subject,
+            'createdAt' => gmdate('c'),
+        ]);
+    }
+
+    /**
+     * Call any GET XRPC method.
+     *
+     * @param  string  $method  XRPC method ID.
+     * @param  array<string, mixed>  $params  Query parameters.
+     * @return array<string, mixed>
+     */
+    public function xrpcGet(string $method, array $params = []): array
+    {
+        return $this->request('GET', '/xrpc/'.$method, $params);
+    }
+
+    /**
+     * Call any POST XRPC method.
+     *
+     * @param  string  $method  XRPC method ID.
+     * @param  array<string, mixed>  $body  JSON body.
+     * @return array<string, mixed>
+     */
+    public function xrpcPost(string $method, array $body = []): array
+    {
+        return $this->request('POST', '/xrpc/'.$method, $body);
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
@@ -197,7 +447,7 @@ class BlueskyService
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
+                'GET' => $http->get($this->urlWithQuery($url, $data)),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
@@ -225,5 +475,31 @@ class BlueskyService
             ]);
             throw new \RuntimeException("Failed to connect to Bluesky API: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Append XRPC query parameters while repeating array keys as required by lexicons.
+     *
+     * @param  array<string, mixed>  $query  Query parameters.
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        $parts = [];
+
+        foreach ($query as $key => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item === null || $item === '') {
+                    continue;
+                }
+
+                $parts[] = rawurlencode((string) $key).'='.rawurlencode(is_bool($item) ? ($item ? 'true' : 'false') : (string) $item);
+            }
+        }
+
+        return $parts === [] ? $url : $url.'?'.implode('&', $parts);
     }
 }

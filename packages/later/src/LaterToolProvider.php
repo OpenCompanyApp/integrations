@@ -93,7 +93,7 @@ class LaterToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
             'description' => 'Social media scheduling platform — plan, schedule, and publish content across Instagram, Twitter, Facebook, Pinterest, TikTok, and more.',
             'icon' => 'ph:calendar-dots',
             'logo' => 'simple-icons:later',
-            'category' => 'marketing',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developer.later.com/docs',
         ];

@@ -10,7 +10,7 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
  * Laravel service provider for the Invoice Ninja integration.
  *
  * Registers the InvoiceNinjaService as a singleton and boots the
- * PlausibleToolProvider into the ToolProviderRegistry when available.
+ * InvoiceNinjaToolProvider into the ToolProviderRegistry when available.
  */
 class InvoiceNinjaServiceProvider extends ServiceProvider
 {
@@ -24,7 +24,7 @@ class InvoiceNinjaServiceProvider extends ServiceProvider
 
             return new InvoiceNinjaService(
                 apiToken: $creds->get('invoiceninja', 'api_token', ''),
-                baseUrl: $creds->get('invoiceninja', 'url', 'https://invoicing.yourdomain.com'),
+                baseUrl: $creds->get('invoiceninja', 'url', 'https://invoicing.co'),
             );
         });
     }

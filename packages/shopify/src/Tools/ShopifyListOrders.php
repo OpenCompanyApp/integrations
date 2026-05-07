@@ -2,71 +2,107 @@
 
 namespace OpenCompany\Integrations\Shopify\Tools;
 
-use OpenCompany\Integrations\Shopify\ShopifyService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * List orders from the Shopify store.
- *
- * Supports filtering by status, financial status,
- * fulfillment status, and pagination.
+ * List Shopify Orders.
  */
-class ShopifyListOrders implements Tool
+class ShopifyListOrders extends AbstractShopifyRestTool
 {
-    public function __construct(
-        private ShopifyService $service,
-    ) {}
+    protected string $toolName = 'shopify_list_orders';
 
-    public function name(): string
-    {
-        return 'shopify_list_orders';
-    }
+    protected string $toolDescription = 'List Shopify Orders.';
 
-    public function description(): string
-    {
-        return 'List orders from the Shopify store. Supports filtering by status, financial status, fulfillment status, and pagination.';
-    }
+    protected string $method = 'GET';
 
-    public function parameters(): array
-    {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of orders per page (default: 50, max: 250).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by order status: "open", "closed", "cancelled", or "any".'],
-            'financial_status' => ['type' => 'string', 'description' => 'Filter by financial status: "pending", "paid", "partially_paid", "refunded", "voided".'],
-            'fulfillment_status' => ['type' => 'string', 'description' => 'Filter by fulfillment status: "shipped", "partial", "unshipped", "any".'],
-            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from a previous response).'],
-        ];
-    }
+    protected string $path = '/orders.json';
 
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Shopify integration is not configured.');
-            }
+    /** @var array<string, array<string, mixed>> */
+    protected array $parameters = [
+    'limit' => [
+        'type' => 'integer',
+        'required' => false,
+        'description' => 'Maximum number of records to return.',
+    ],
+    'page_info' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Cursor pagination token from Shopify Link headers.',
+    ],
+    'query' => [
+        'type' => 'object',
+        'required' => false,
+        'description' => 'Additional documented Shopify query parameters to pass through.',
+    ],
+    'status' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify status filter when supported.',
+    ],
+    'financial_status' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify financial_status filter when supported.',
+    ],
+    'fulfillment_status' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify fulfillment_status filter when supported.',
+    ],
+    'created_at_min' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify created_at_min filter when supported.',
+    ],
+    'created_at_max' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify created_at_max filter when supported.',
+    ],
+    'updated_at_min' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify updated_at_min filter when supported.',
+    ],
+    'updated_at_max' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify updated_at_max filter when supported.',
+    ],
+    'fields' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify fields filter when supported.',
+    ],
+    'ids' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify ids filter when supported.',
+    ],
+    'since_id' => [
+        'type' => 'string',
+        'required' => false,
+        'description' => 'Shopify since_id filter when supported.',
+    ],
+];
 
-            $params = [];
-            $stringParams = ['status', 'financial_status', 'fulfillment_status', 'page_info'];
-            $intParams = ['limit'];
+    /** @var list<string> */
+    protected array $required = [];
 
-            foreach ($stringParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = $args[$key];
-                }
-            }
+    /** @var array<int|string, string> */
+    protected array $queryParams = [
+    'limit',
+    'page_info',
+    'status',
+    'financial_status',
+    'fulfillment_status',
+    'created_at_min',
+    'created_at_max',
+    'updated_at_min',
+    'updated_at_max',
+    'fields',
+    'ids',
+    'since_id',
+];
 
-            foreach ($intParams as $key) {
-                if (isset($args[$key])) {
-                    $params[$key] = (int) $args[$key];
-                }
-            }
-
-            $result = $this->service->listOrders($params);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    /** @var array<int|string, string> */
+    protected array $bodyParams = [];
 }

@@ -1,0 +1,13 @@
+<?php
+
+namespace OpenCompany\Integrations\Dialpad\Tools;
+
+/**
+ * Agent Status -- Get.
+ *
+ * Executes the official Dialpad API operation webhook_agent_status_event_subscription.get.
+ */
+class DialpadWebhookAgentStatusEventSubscriptionGet extends AbstractDialpadOperationTool
+{
+    protected const OPERATION = 'dialpad_webhook_agent_status_event_subscription_get';
+}

@@ -2,78 +2,53 @@
 
 namespace OpenCompany\Integrations\Airtable\Tools;
 
-use OpenCompany\Integrations\Airtable\AirtableService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
-
 /**
- * Create a new record in an Airtable table.
+ * Create one Airtable record.
  */
-class AirtableCreateRecord implements Tool
+class AirtableCreateRecord extends AbstractAirtableTool
 {
-    /**
-     * @param  AirtableService  $service  The Airtable API client
-     */
-    public function __construct(
-        private AirtableService $service,
-    ) {}
+    protected array $parameters = array (
+  'base_id' =>
+  array (
+    'type' => 'string',
+    'description' => 'Airtable base ID.',
+    'required' => true,
+  ),
+  'table' =>
+  array (
+    'type' => 'string',
+    'description' => 'Table ID or name.',
+    'required' => true,
+  ),
+  'fields' =>
+  array (
+    'type' => 'object',
+    'description' => 'Record fields.',
+  ),
+  'payload' =>
+  array (
+    'type' => 'object',
+    'description' => 'Additional Airtable create options.',
+  ),
+);
 
-    public function name(): string
-    {
-        return 'airtable_create_record';
-    }
+    protected array $required = array (
+  0 => 'base_id',
+  1 => 'table',
+);
 
-    public function description(): string
-    {
-        return 'Create a new record in an Airtable table.';
-    }
+    protected array $queryParams = array (
+);
 
-    public function parameters(): array
-    {
-        return [
-            'base_id' => ['type' => 'string', 'required' => true, 'description' => 'Airtable base ID (e.g., "appXXXXXXXXXXXX").'],
-            'table'   => ['type' => 'string', 'required' => true, 'description' => 'Table ID or name.'],
-            'fields'  => ['type' => 'string', 'required' => true, 'description' => 'JSON object of field name → value pairs (e.g., {"Name":"John","Age":30}).'],
-        ];
-    }
+    protected array $bodyParams = array (
+  'fields' => 'fields',
+);
 
-    /**
-     * Create a new record with the given field values.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (base_id, table, fields)
-     */
-    public function execute(array $args): ToolResult
-    {
-        try {
-            if (! $this->service->isConfigured()) {
-                return ToolResult::error('Airtable integration is not configured.');
-            }
+    protected string $method = 'POST';
 
-            $baseId = $args['base_id'] ?? '';
-            $table = $args['table'] ?? '';
-            $fields = $args['fields'] ?? '';
+    protected string $path = '/{base_id}/{table}';
 
-            if (empty($baseId)) {
-                return ToolResult::error('base_id is required.');
-            }
-            if (empty($table)) {
-                return ToolResult::error('table is required.');
-            }
-            if (empty($fields)) {
-                return ToolResult::error('fields is required.');
-            }
+    protected string $toolName = 'airtable_create_record';
 
-            $fieldsArray = is_string($fields) ? json_decode($fields, true) : $fields;
-
-            if (! is_array($fieldsArray)) {
-                return ToolResult::error('fields must be a valid JSON object.');
-            }
-
-            $result = $this->service->createRecord($baseId, $table, $fieldsArray);
-
-            return ToolResult::success($result);
-        } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
-        }
-    }
+    protected string $toolDescription = 'Create one Airtable record.';
 }

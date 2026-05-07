@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Cloudflare\CloudflareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get Cloudflare zone analytics.
+ *
+ * Normalizes the dashboard analytics response into compact totals and series.
+ */
 class CloudflareGetAnalytics implements Tool
 {
+    /**
+     * @param  CloudflareService  $service  Cloudflare API client.
+     */
     public function __construct(
         private CloudflareService $service,
     ) {}
@@ -32,6 +40,11 @@ class CloudflareGetAnalytics implements Tool
         ];
     }
 
+    /**
+     * Fetch analytics for a zone.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {

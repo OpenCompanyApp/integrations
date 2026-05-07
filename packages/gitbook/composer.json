@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-gitbook",
+    "description": "GitBook integration for Laravel AI agents - organizations, spaces, search, pages, files, content, and OpenAPI specs.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GitBook\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GitBook\\GitBookServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "keywords": [
+        "gitbook",
+        "documentation",
+        "knowledge-base",
+        "openapi",
+        "opencompany",
+        "ai-agents"
+    ]
+}

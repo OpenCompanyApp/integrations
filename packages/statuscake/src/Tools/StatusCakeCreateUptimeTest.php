@@ -1,0 +1,32 @@
+<?php
+
+namespace OpenCompany\Integrations\StatusCake\Tools;
+
+/**
+ * Creates an uptime check with the given parameters..
+ *
+ * Maps to the official StatusCake endpoint POST /uptime.
+ */
+class StatusCakeCreateUptimeTest extends AbstractStatusCakeTool
+{
+    protected const NAME = 'statuscake_create_uptime_test';
+    protected const DESCRIPTION = 'Creates an uptime check with the given parameters.
+
+Official StatusCake endpoint: POST /uptime.';
+    protected const PARAMETERS = array (
+      'body' => array (
+        'type' => 'object',
+        'description' => 'Form fields matching the StatusCake API schema.',
+        'required' => true,
+      ),
+    );
+    protected const METHOD = 'POST';
+    protected const PATH = '/uptime';
+    protected const PATH_PARAMS = array (
+);
+    protected const QUERY_PARAMS = array (
+);
+    protected const HEADER_PARAMS = array (
+);
+    protected const BODY_REQUIRED = true;
+}

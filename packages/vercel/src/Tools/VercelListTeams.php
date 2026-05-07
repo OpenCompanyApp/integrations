@@ -2,12 +2,18 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
 
+/**
+ * List Vercel teams available to the authenticated user.
+ */
 class VercelListTeams implements Tool
 {
+    /**
+     * @param  VercelService  $service  The Vercel REST API client.
+     */
     public function __construct(private VercelService $service)
     {
     }
@@ -33,6 +39,11 @@ class VercelListTeams implements Tool
         ];
     }
 
+    /**
+     * List teams using optional pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (limit).
+     */
     public function execute(array $args): ToolResult
     {
         try {

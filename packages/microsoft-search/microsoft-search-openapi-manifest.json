@@ -1,0 +1,138 @@
+{
+  "source": "https://github.com/microsoftgraph/msgraph-metadata/tree/master/openapi",
+  "openapi": "https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml",
+  "docs": "https://learn.microsoft.com/en-us/graph/api/resources/searchentity?view=graph-rest-1.0",
+  "version": "v1.0",
+  "method_count": 21,
+  "path_prefixes": [
+    "/search"
+  ],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/search",
+      "operationId": "search.searchEntity.GetSearchEntity",
+      "tool": "microsoft_search_search_search_entity_get_search_entity"
+    },
+    {
+      "method": "PATCH",
+      "path": "/search",
+      "operationId": "search.searchEntity.UpdateSearchEntity",
+      "tool": "microsoft_search_search_search_entity_update_search_entity"
+    },
+    {
+      "method": "GET",
+      "path": "/search/acronyms",
+      "operationId": "search.ListAcronyms",
+      "tool": "microsoft_search_search_list_acronyms"
+    },
+    {
+      "method": "POST",
+      "path": "/search/acronyms",
+      "operationId": "search.CreateAcronyms",
+      "tool": "microsoft_search_search_create_acronyms"
+    },
+    {
+      "method": "GET",
+      "path": "/search/acronyms/$count",
+      "operationId": "search.acronyms.GetCount-b41d",
+      "tool": "microsoft_search_search_acronyms_get_count_b41d"
+    },
+    {
+      "method": "DELETE",
+      "path": "/search/acronyms/{acronym-id}",
+      "operationId": "search.DeleteAcronyms",
+      "tool": "microsoft_search_search_delete_acronyms"
+    },
+    {
+      "method": "GET",
+      "path": "/search/acronyms/{acronym-id}",
+      "operationId": "search.GetAcronyms",
+      "tool": "microsoft_search_search_get_acronyms"
+    },
+    {
+      "method": "PATCH",
+      "path": "/search/acronyms/{acronym-id}",
+      "operationId": "search.UpdateAcronyms",
+      "tool": "microsoft_search_search_update_acronyms"
+    },
+    {
+      "method": "GET",
+      "path": "/search/bookmarks",
+      "operationId": "search.ListBookmarks",
+      "tool": "microsoft_search_search_list_bookmarks"
+    },
+    {
+      "method": "POST",
+      "path": "/search/bookmarks",
+      "operationId": "search.CreateBookmarks",
+      "tool": "microsoft_search_search_create_bookmarks"
+    },
+    {
+      "method": "GET",
+      "path": "/search/bookmarks/$count",
+      "operationId": "search.bookmarks.GetCount-b2b7",
+      "tool": "microsoft_search_search_bookmarks_get_count_b2b7"
+    },
+    {
+      "method": "DELETE",
+      "path": "/search/bookmarks/{bookmark-id}",
+      "operationId": "search.DeleteBookmarks",
+      "tool": "microsoft_search_search_delete_bookmarks"
+    },
+    {
+      "method": "GET",
+      "path": "/search/bookmarks/{bookmark-id}",
+      "operationId": "search.GetBookmarks",
+      "tool": "microsoft_search_search_get_bookmarks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/search/bookmarks/{bookmark-id}",
+      "operationId": "search.UpdateBookmarks",
+      "tool": "microsoft_search_search_update_bookmarks"
+    },
+    {
+      "method": "GET",
+      "path": "/search/qnas",
+      "operationId": "search.ListQnas",
+      "tool": "microsoft_search_search_list_qnas"
+    },
+    {
+      "method": "POST",
+      "path": "/search/qnas",
+      "operationId": "search.CreateQnas",
+      "tool": "microsoft_search_search_create_qnas"
+    },
+    {
+      "method": "GET",
+      "path": "/search/qnas/$count",
+      "operationId": "search.qnas.GetCount-ef94",
+      "tool": "microsoft_search_search_qnas_get_count_ef94"
+    },
+    {
+      "method": "DELETE",
+      "path": "/search/qnas/{qna-id}",
+      "operationId": "search.DeleteQnas",
+      "tool": "microsoft_search_search_delete_qnas"
+    },
+    {
+      "method": "GET",
+      "path": "/search/qnas/{qna-id}",
+      "operationId": "search.GetQnas",
+      "tool": "microsoft_search_search_get_qnas"
+    },
+    {
+      "method": "PATCH",
+      "path": "/search/qnas/{qna-id}",
+      "operationId": "search.UpdateQnas",
+      "tool": "microsoft_search_search_update_qnas"
+    },
+    {
+      "method": "POST",
+      "path": "/search/query",
+      "operationId": "search.query",
+      "tool": "microsoft_search_search_query"
+    }
+  ]
+}

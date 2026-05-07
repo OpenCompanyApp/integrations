@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the Strava integration with Laravel.
+ *
+ * Binds the API client and registers the tool provider when the registry exists.
+ */
 class StravaServiceProvider extends ServiceProvider
 {
     /**
@@ -24,7 +29,7 @@ class StravaServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the service provider — register tools with the ToolProviderRegistry.
+     * Boot the service provider and register tools with the ToolProviderRegistry.
      */
     public function boot(): void
     {

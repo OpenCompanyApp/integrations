@@ -6,8 +6,14 @@ use OpenCompany\Integrations\Chroma\ChromaService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Add records to a Chroma collection.
+ */
 class ChromaAddDocuments implements Tool
 {
+    /**
+     * @param  ChromaService  $service  Chroma API client.
+     */
     public function __construct(
         private ChromaService $service,
     ) {}
@@ -30,9 +36,15 @@ class ChromaAddDocuments implements Tool
             'embeddings' => ['type' => 'array', 'description' => 'Array of embedding vectors. Each embedding is an array of floats. Required if no documents text provided.'],
             'documents' => ['type' => 'array', 'description' => 'Array of text documents. Chroma will generate embeddings if no embeddings are provided.'],
             'metadatas' => ['type' => 'array', 'description' => 'Array of metadata objects (one per document) with string values.'],
+            'uris' => ['type' => 'array', 'description' => 'Optional URI strings associated with each record.'],
         ];
     }
 
+    /**
+     * Execute the record add request.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (collection_id, ids, embeddings, documents, metadatas, uris).
+     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -62,6 +74,10 @@ class ChromaAddDocuments implements Tool
 
             if (isset($args['metadatas'])) {
                 $body['metadatas'] = $args['metadatas'];
+            }
+
+            if (isset($args['uris'])) {
+                $body['uris'] = $args['uris'];
             }
 
             if (!isset($body['embeddings']) && !isset($body['documents'])) {

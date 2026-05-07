@@ -92,7 +92,7 @@ class WoocommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
             'description' => 'WooCommerce e-commerce platform — manage products, orders, and customers',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:woocommerce',
-            'category' => 'sales',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://woocommerce.github.io/woocommerce-rest-api-docs/',
         ];

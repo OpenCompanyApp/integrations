@@ -4,6 +4,7 @@ namespace OpenCompany\Integrations\TickTick;
 
 use App\Models\IntegrationSetting;
 use App\Models\Workspace;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
@@ -17,9 +18,21 @@ class TickTickOAuthController extends Controller
     public function authorize(Request $request)
     {
         $workspaceSlug = $this->resolveWorkspaceSlug();
-        $request->session()->put('ticktick_oauth_workspace_slug', $workspaceSlug);
+        $workspaceId = $this->resolveWorkspaceId($workspaceSlug);
 
-        $setting = IntegrationSetting::where('integration_id', 'ticktick')->first();
+        if ($redirect = $this->ensureWorkspaceAdmin($request, $workspaceId, $workspaceSlug)) {
+            return $redirect;
+        }
+
+        $accountAlias = $this->accountFromRequest($request);
+        $request->session()->put('ticktick_oauth_workspace_slug', $workspaceSlug);
+        $request->session()->put('ticktick_oauth_workspace_id', $workspaceId);
+        $request->session()->put('ticktick_oauth_account_alias', $accountAlias);
+
+        $setting = $this->settingsQuery($workspaceId)
+            ->where('integration_id', 'ticktick')
+            ->forAccount($accountAlias)
+            ->first();
         $clientId = $setting?->getConfigValue('client_id');
 
         if (! $clientId) {
@@ -51,10 +64,17 @@ class TickTickOAuthController extends Controller
     {
         $storedState = $request->session()->pull('ticktick_oauth_state');
         $workspaceSlug = $request->session()->pull('ticktick_oauth_workspace_slug');
+        $workspaceId = $request->session()->pull('ticktick_oauth_workspace_id')
+            ?? $this->resolveWorkspaceId($workspaceSlug);
+        $accountAlias = $request->session()->pull('ticktick_oauth_account_alias');
 
         if (! $storedState || $storedState !== $request->input('state')) {
             return redirect($this->settingsUrl($workspaceSlug))
                 ->with('error', 'Invalid OAuth state. Please try connecting again.');
+        }
+
+        if ($redirect = $this->ensureWorkspaceAdmin($request, $workspaceId, $workspaceSlug)) {
+            return $redirect;
         }
 
         $code = $request->input('code');
@@ -65,7 +85,10 @@ class TickTickOAuthController extends Controller
                 ->with('error', "TickTick authorization failed: {$error}");
         }
 
-        $setting = IntegrationSetting::where('integration_id', 'ticktick')->first();
+        $setting = $this->settingsQuery($workspaceId)
+            ->where('integration_id', 'ticktick')
+            ->forAccount($accountAlias)
+            ->first();
         if (! $setting) {
             return redirect($this->settingsUrl($workspaceSlug))
                 ->with('error', 'TickTick integration not found. Save your Client ID and Secret first.');
@@ -140,6 +163,62 @@ class TickTickOAuthController extends Controller
         $workspaceId = session('current_workspace_id');
         if ($workspaceId) {
             return Workspace::where('id', $workspaceId)->value('slug');
+        }
+
+        return null;
+    }
+
+    private function resolveWorkspaceId(?string $workspaceSlug): ?string
+    {
+        $workspaceId = session('current_workspace_id');
+        if ($workspaceId) {
+            return (string) $workspaceId;
+        }
+
+        if ($workspaceSlug) {
+            return Workspace::where('slug', $workspaceSlug)->value('id');
+        }
+
+        return null;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder<IntegrationSetting>
+     */
+    private function settingsQuery(?string $workspaceId)
+    {
+        $query = IntegrationSetting::query();
+
+        if ($workspaceId) {
+            $query->where('workspace_id', $workspaceId);
+        }
+
+        return $query;
+    }
+
+    private function accountFromRequest(Request $request): ?string
+    {
+        $account = $request->query('account', $request->query('accountAlias'));
+
+        if ($account === null) {
+            return null;
+        }
+
+        return trim((string) $account);
+    }
+
+    private function ensureWorkspaceAdmin(Request $request, ?string $workspaceId, ?string $workspaceSlug): ?RedirectResponse
+    {
+        $user = $request->user();
+        $workspace = $workspaceId ? Workspace::find($workspaceId) : null;
+
+        if (! $user || ! $workspace || ! method_exists($user, 'isWorkspaceAdmin') || ! $user->isWorkspaceAdmin($workspace)) {
+            return redirect($this->settingsUrl($workspaceSlug))
+                ->with('error', 'Admin access required for integration OAuth.');
+        }
+
+        if (! app()->bound('currentWorkspace')) {
+            app()->instance('currentWorkspace', $workspace);
         }
 
         return null;

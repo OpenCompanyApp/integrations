@@ -1,0 +1,26 @@
+{
+    "name": "opencompanyapp/integration-catalog",
+    "description": "Generated runtime catalog for OpenCompany integration packages.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": [
+        "integrations",
+        "catalog",
+        "opencompany"
+    ],
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\IntegrationCatalog\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

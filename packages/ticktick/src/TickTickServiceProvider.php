@@ -34,7 +34,7 @@ class TickTickServiceProvider extends ServiceProvider
     private function registerRoutes(): void
     {
         Route::prefix('api/integrations/ticktick/oauth')
-            ->middleware(['web', 'auth'])
+            ->middleware(['web', 'auth', 'resolve.workspace', 'workspace.admin'])
             ->group(function () {
                 Route::get('authorize', [TickTickOAuthController::class, 'authorize']);
                 Route::get('callback', [TickTickOAuthController::class, 'callback']);

@@ -98,6 +98,7 @@ class GoogleServiceProvider extends ServiceProvider
             refreshToken: (string) $refreshToken['value'],
             expiresAt: $expiresAt['value'] !== null ? (int) $expiresAt['value'] : null,
             integrationId: $tokenSource,
+            accountAlias: $account,
         );
     }
 
@@ -184,7 +185,7 @@ class GoogleServiceProvider extends ServiceProvider
     private function registerRoutes(): void
     {
         Route::prefix('api/integrations/google/oauth')
-            ->middleware(['web', 'auth'])
+            ->middleware(['web', 'auth', 'resolve.workspace', 'workspace.admin'])
             ->group(function () {
                 Route::get('authorize', [GoogleOAuthController::class, 'authorize']);
                 Route::get('callback', [GoogleOAuthController::class, 'callback']);

@@ -4,6 +4,7 @@ namespace OpenCompany\Integrations\Google;
 
 use App\Models\IntegrationSetting;
 use App\Models\Workspace;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
@@ -13,16 +14,16 @@ class GoogleOAuthController extends Controller
 {
     /** @var array<string, string> */
     private const SCOPES = [
-        'google_calendar' => 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email',
+        'google-calendar' => 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email',
         'gmail' => 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/userinfo.email',
-        'google_drive' => 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',
-        'google_contacts' => 'https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/userinfo.email',
-        'google_sheets' => 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email',
-        'google_search_console' => 'https://www.googleapis.com/auth/webmasters https://www.googleapis.com/auth/userinfo.email',
-        'google_tasks' => 'https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/userinfo.email',
-        'google_analytics' => 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/userinfo.email',
-        'google_docs' => 'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/userinfo.email',
-        'google_forms' => 'https://www.googleapis.com/auth/forms.body https://www.googleapis.com/auth/forms.responses.readonly https://www.googleapis.com/auth/userinfo.email',
+        'google-drive' => 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',
+        'google-contacts' => 'https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/userinfo.email',
+        'google-sheets' => 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email',
+        'google-search-console' => 'https://www.googleapis.com/auth/webmasters https://www.googleapis.com/auth/userinfo.email',
+        'google-tasks' => 'https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/userinfo.email',
+        'google-analytics' => 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/userinfo.email',
+        'google-docs' => 'https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/userinfo.email',
+        'google-forms' => 'https://www.googleapis.com/auth/forms.body https://www.googleapis.com/auth/forms.responses.readonly https://www.googleapis.com/auth/userinfo.email',
     ];
 
     /**
@@ -31,15 +32,24 @@ class GoogleOAuthController extends Controller
     public function authorize(Request $request): \Illuminate\Http\RedirectResponse
     {
         $workspaceSlug = $this->resolveWorkspaceSlug();
-        $request->session()->put('google_oauth_workspace_slug', $workspaceSlug);
+        $workspaceId = $this->resolveWorkspaceId($workspaceSlug);
 
-        $service = $request->query('service', '');
-        if (! is_string($service) || ! isset(self::SCOPES[$service])) {
-            return redirect($this->settingsUrl($workspaceSlug))
-                ->with('error', 'Invalid Google service. Expected google_calendar or gmail.');
+        if ($redirect = $this->ensureWorkspaceAdmin($request, $workspaceId, $workspaceSlug)) {
+            return $redirect;
         }
 
-        $credentials = $this->resolveClientCredentials($service);
+        $accountAlias = $this->accountFromRequest($request);
+        $request->session()->put('google_oauth_workspace_slug', $workspaceSlug);
+        $request->session()->put('google_oauth_workspace_id', $workspaceId);
+        $request->session()->put('google_oauth_account_alias', $accountAlias);
+
+        $service = $this->canonicalServiceId($request->query('service', ''));
+        if (! is_string($service) || ! isset(self::SCOPES[$service])) {
+            return redirect($this->settingsUrl($workspaceSlug))
+                ->with('error', 'Invalid Google service.');
+        }
+
+        $credentials = $this->resolveClientCredentials($service, $workspaceId, $accountAlias);
 
         if (! $credentials) {
             return redirect($this->settingsUrl($workspaceSlug))
@@ -75,10 +85,17 @@ class GoogleOAuthController extends Controller
         $storedState = $request->session()->pull('google_oauth_state');
         $service = $request->session()->pull('google_oauth_service');
         $workspaceSlug = $request->session()->pull('google_oauth_workspace_slug');
+        $workspaceId = $request->session()->pull('google_oauth_workspace_id')
+            ?? $this->resolveWorkspaceId($workspaceSlug);
+        $accountAlias = $request->session()->pull('google_oauth_account_alias');
 
         if (! $storedState || $storedState !== $request->input('state')) {
             return redirect($this->settingsUrl($workspaceSlug))
                 ->with('error', 'Invalid OAuth state. Please try connecting again.');
+        }
+
+        if ($redirect = $this->ensureWorkspaceAdmin($request, $workspaceId, $workspaceSlug)) {
+            return $redirect;
         }
 
         if (! $service || ! isset(self::SCOPES[$service])) {
@@ -94,20 +111,14 @@ class GoogleOAuthController extends Controller
                 ->with('error', "Google authorization failed: {$error}");
         }
 
-        $credentials = $this->resolveClientCredentials($service);
+        $credentials = $this->resolveClientCredentials($service, $workspaceId, $accountAlias);
         if (! $credentials) {
             return redirect($this->settingsUrl($workspaceSlug))
                 ->with('error', 'Integration not found. Save your Client ID and Secret first.');
         }
 
         // Ensure the target integration setting exists (create if needed for token storage)
-        $setting = IntegrationSetting::firstOrNew(['integration_id' => $service]);
-        if (! $setting->id) {
-            $setting->id = Str::uuid()->toString();
-            if ($workspaceId = session('current_workspace_id')) {
-                $setting->workspace_id = $workspaceId;
-            }
-        }
+        $setting = $this->findOrNewSetting($service, $workspaceId, $accountAlias);
 
         $clientId = $credentials['client_id'];
         $clientSecret = $credentials['client_secret'];
@@ -155,16 +166,16 @@ class GoogleOAuthController extends Controller
             $setting->save();
 
             $serviceNames = [
-                'google_calendar' => 'Google Calendar',
+                'google-calendar' => 'Google Calendar',
                 'gmail' => 'Gmail',
-                'google_drive' => 'Google Drive',
-                'google_contacts' => 'Google Contacts',
-                'google_sheets' => 'Google Sheets',
-                'google_search_console' => 'Google Search Console',
-                'google_tasks' => 'Google Tasks',
-                'google_analytics' => 'Google Analytics',
-                'google_docs' => 'Google Docs',
-                'google_forms' => 'Google Forms',
+                'google-drive' => 'Google Drive',
+                'google-contacts' => 'Google Contacts',
+                'google-sheets' => 'Google Sheets',
+                'google-search-console' => 'Google Search Console',
+                'google-tasks' => 'Google Tasks',
+                'google-analytics' => 'Google Analytics',
+                'google-docs' => 'Google Docs',
+                'google-forms' => 'Google Forms',
             ];
             $serviceName = $serviceNames[$service];
             $emailInfo = $connectedEmail ? " ({$connectedEmail})" : '';
@@ -182,18 +193,80 @@ class GoogleOAuthController extends Controller
      *
      * @return array{client_id: string, client_secret: string}|null
      */
-    private function resolveClientCredentials(string $service): ?array
+    private function resolveClientCredentials(string $service, ?string $workspaceId, ?string $accountAlias = null): ?array
     {
-        $integrations = array_unique(array_merge([$service], array_keys(self::SCOPES)));
+        $integrations = array_unique(array_merge(
+            $this->credentialIds($service),
+            array_keys(self::SCOPES),
+            array_map(fn (string $id): string => str_replace('-', '_', $id), array_keys(self::SCOPES)),
+        ));
 
         foreach ($integrations as $id) {
-            $setting = IntegrationSetting::where('integration_id', $id)->first();
+            $setting = $this->settingsQuery($workspaceId)
+                ->where('integration_id', $id)
+                ->forAccount($accountAlias)
+                ->first();
             $clientId = $setting?->getConfigValue('client_id');
             $clientSecret = $setting?->getConfigValue('client_secret');
 
             if (! empty($clientId) && ! empty($clientSecret)) {
                 return ['client_id' => (string) $clientId, 'client_secret' => (string) $clientSecret];
             }
+        }
+
+        return null;
+    }
+
+    private function accountFromRequest(Request $request): ?string
+    {
+        $account = $request->query('account', $request->query('accountAlias'));
+
+        if ($account === null) {
+            return null;
+        }
+
+        return trim((string) $account);
+    }
+
+    private function findOrNewSetting(string $service, ?string $workspaceId, ?string $accountAlias): IntegrationSetting
+    {
+        $setting = $this->settingsQuery($workspaceId)
+            ->where('integration_id', $service)
+            ->forAccount($accountAlias)
+            ->first();
+
+        if ($setting) {
+            return $setting;
+        }
+
+        $hasOthers = $this->settingsQuery($workspaceId)
+            ->where('integration_id', $service)
+            ->exists();
+
+        $setting = new IntegrationSetting;
+        $setting->id = Str::uuid()->toString();
+        if ($workspaceId) {
+            $setting->workspace_id = $workspaceId;
+        }
+        $setting->integration_id = $service;
+        $setting->account_alias = $accountAlias ?? '';
+        $setting->is_default = ! $hasOthers;
+
+        return $setting;
+    }
+
+    private function ensureWorkspaceAdmin(Request $request, ?string $workspaceId, ?string $workspaceSlug): ?RedirectResponse
+    {
+        $user = $request->user();
+        $workspace = $workspaceId ? Workspace::find($workspaceId) : null;
+
+        if (! $user || ! $workspace || ! method_exists($user, 'isWorkspaceAdmin') || ! $user->isWorkspaceAdmin($workspace)) {
+            return redirect($this->settingsUrl($workspaceSlug))
+                ->with('error', 'Admin access required for integration OAuth.');
+        }
+
+        if (! app()->bound('currentWorkspace')) {
+            app()->instance('currentWorkspace', $workspace);
         }
 
         return null;
@@ -230,6 +303,57 @@ class GoogleOAuthController extends Controller
         }
 
         return null;
+    }
+
+    private function resolveWorkspaceId(?string $workspaceSlug): ?string
+    {
+        $workspaceId = session('current_workspace_id');
+        if ($workspaceId) {
+            return (string) $workspaceId;
+        }
+
+        if ($workspaceSlug) {
+            return Workspace::where('slug', $workspaceSlug)->value('id');
+        }
+
+        return null;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder<IntegrationSetting>
+     */
+    private function settingsQuery(?string $workspaceId)
+    {
+        $query = IntegrationSetting::query();
+
+        if ($workspaceId) {
+            $query->where('workspace_id', $workspaceId);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Accept legacy underscore service IDs from older configSchema values, but
+     * store credentials under canonical package appName IDs.
+     */
+    private function canonicalServiceId(mixed $service): string
+    {
+        if (! is_string($service)) {
+            return '';
+        }
+
+        return $service === 'gmail' ? $service : str_replace('_', '-', $service);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function credentialIds(string $service): array
+    {
+        $legacy = str_replace('-', '_', $service);
+
+        return $legacy === $service ? [$service] : [$service, $legacy];
     }
 
     /**

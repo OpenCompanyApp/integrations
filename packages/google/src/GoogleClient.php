@@ -15,6 +15,7 @@ class GoogleClient
         private string $refreshToken = '',
         private ?int $expiresAt = null,
         private string $integrationId = '',
+        private ?string $accountAlias = null,
     ) {}
 
     public function isConfigured(): bool
@@ -194,7 +195,17 @@ class GoogleClient
         }
 
         // Persist updated tokens to database
-        $setting = IntegrationSetting::where('integration_id', $this->integrationId)->first();
+        $query = IntegrationSetting::query()
+            ->where('integration_id', $this->integrationId)
+            ->forAccount($this->accountAlias);
+
+        if (app()->bound('currentWorkspace')) {
+            $query = IntegrationSetting::forWorkspace()
+                ->where('integration_id', $this->integrationId)
+                ->forAccount($this->accountAlias);
+        }
+
+        $setting = $query->first();
         if ($setting) {
             /** @var array<string, mixed> $config */
             $config = $setting->config ?? [];

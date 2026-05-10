@@ -11,7 +11,7 @@
  *
  *   php build-catalog.php
  *
- * Outputs integrations-catalog.json in the current directory.
+ * Outputs catalog/resources/integrations-catalog.json.
  */
 
 $root = dirname(__FILE__);
@@ -1714,7 +1714,11 @@ if ($json === false) {
     exit(1);
 }
 
-$outputPath = $root . '/integrations-catalog.json';
+$outputPath = $root . '/catalog/resources/integrations-catalog.json';
+if (!is_dir(dirname($outputPath))) {
+    mkdir(dirname($outputPath), 0775, true);
+}
+
 file_put_contents($outputPath, $json . "\n");
 
 echo "Written {$outputPath}\n";

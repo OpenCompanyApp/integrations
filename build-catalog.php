@@ -1573,6 +1573,7 @@ foreach ($providerFiles as $providerFile) {
         'host_availability' => $capabilities['host_availability'],
         'runtime_requirements' => $capabilities['runtime_requirements'],
         'compatibility' => $capabilities['compatibility'],
+        'shared_credentials' => $capabilities['shared_credentials'] ?? null,
         'compatibility_summary' => $capabilities['summary'],
         'cli_setup_supported' => $capabilities['compatibility']['cli_setup_supported'] ?? null,
         'cli_runtime_supported' => $capabilities['compatibility']['cli_runtime_supported'] ?? null,

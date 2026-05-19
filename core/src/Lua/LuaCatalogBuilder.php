@@ -203,7 +203,9 @@ class LuaCatalogBuilder
             return ! str_contains($wordBase, $appBase) && ! str_contains($appBase, $wordBase);
         }));
 
-        return implode('_', $filtered) ?: $snake;
+        $name = implode('_', $filtered) ?: $snake;
+
+        return preg_match('/^[0-9]/', $name) === 1 ? "_{$name}" : $name;
     }
 
     /**

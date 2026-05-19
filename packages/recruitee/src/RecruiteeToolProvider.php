@@ -34,7 +34,7 @@ use OpenCompany\Integrations\Recruitee\Tools\RecruiteeUploadAttachment;
  */
 class RecruiteeToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    private const DEFAULT_BASE_URL = 'https://api.recruitee.com/c/{company_id}';
+    private const DEFAULT_BASE_URL = 'https://api.recruitee.com';
 
     /**
      * Describe host and authentication capabilities for catalog and setup flows.
@@ -129,7 +129,7 @@ class RecruiteeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => self::DEFAULT_BASE_URL,
-                'hint' => 'Use the default Recruitee Core API URL unless you are targeting another environment.',
+                'hint' => 'Use the default Recruitee Core API URL unless you are targeting another environment. The company ID is appended automatically.',
                 'default' => self::DEFAULT_BASE_URL,
             ],
         ];

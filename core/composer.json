@@ -24,6 +24,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "2.0.x-dev"
+        },
         "laravel": {
             "providers": [
                 "OpenCompany\\IntegrationCore\\IntegrationCoreServiceProvider"

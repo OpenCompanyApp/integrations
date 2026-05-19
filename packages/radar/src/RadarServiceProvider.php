@@ -4,7 +4,7 @@ namespace OpenCompany\Integrations\Radar;
 
 use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Contracts\ToolProviderRegistry;
+use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 class RadarServiceProvider extends ServiceProvider
 {

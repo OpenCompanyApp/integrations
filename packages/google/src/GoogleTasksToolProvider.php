@@ -79,6 +79,10 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
             'cli_setup_supported' => true,
             'cli_runtime_supported' => true,
           ],
+          'shared_credentials' => [
+            'group' => 'google-workspace-oauth-client',
+            'keys' => ['client_id', 'client_secret'],
+          ],
         ];
     }
 

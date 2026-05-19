@@ -128,9 +128,10 @@ class GoogleDriveSearchFiles implements Tool
     public function parameters(): array
     {
         return [
-            'query' => $schema
-                ->string()
-                ->description('Drive search query (e.g., "name contains \'report\' and mimeType = \'application/vnd.google-apps.folder\'").'),
+            'query' => [
+                'type' => 'string',
+                'description' => 'Drive search query (e.g., "name contains \'report\' and mimeType = \'application/vnd.google-apps.folder\'").',
+            ],
             'max_results' => ['type' => 'integer', 'description' => 'Max results per page (default: 20, max: 100).'],
             'page_token' => ['type' => 'string', 'description' => 'Pagination token from previous response.'],
             'order_by' => ['type' => 'string', 'description' => 'Sort order (e.g., "modifiedTime desc", "name").'],

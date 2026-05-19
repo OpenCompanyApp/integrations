@@ -20,6 +20,7 @@ interface HasIntegrationCapabilities
      * - host_availability: web/cli/MCP gateway setup and runtime support
      * - runtime_requirements: optional local binaries or services required
      * - compatibility: cli_setup_supported, cli_runtime_supported, etc.
+     * - shared_credentials: optional group and keys shared with sibling integrations
      * - seo: optional generated documentation summaries and search fields
      *
      * @return array<string, mixed>

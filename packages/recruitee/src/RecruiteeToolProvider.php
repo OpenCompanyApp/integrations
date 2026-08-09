@@ -207,9 +207,9 @@ class RecruiteeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/recruitee.md';
+        return __DIR__ . '/../script-docs/recruitee.md';
     }
 
     public function credentialFields(): array

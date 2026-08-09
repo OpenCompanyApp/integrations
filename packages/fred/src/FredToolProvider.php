@@ -217,8 +217,8 @@ class FredToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return app(FredService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/fred.md';
+        return __DIR__.'/../script-docs/fred.md';
     }
 }

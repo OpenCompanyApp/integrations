@@ -40,7 +40,7 @@ Copper requires all API calls to include the API key, the `developer_api` applic
 - Copper's official API calls contact records "people". Existing contact-named tools are kept for compatibility and map to `/people` endpoints.
 - Search endpoints use POST bodies and support Copper pagination fields such as `page_size` and `page_number`.
 - The default API base URL is `https://api.copper.com/developer_api/v1`.
-- Lua usage examples live in `lua-docs/copper.md`.
+- JavaScript usage examples live in `script-docs/copper.md`.
 
 ## License
 

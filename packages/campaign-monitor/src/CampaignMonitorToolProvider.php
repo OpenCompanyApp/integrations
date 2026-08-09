@@ -258,9 +258,9 @@ class CampaignMonitorToolProvider implements ToolProvider, ConfigurableIntegrati
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/campaign-monitor.md';
+        return __DIR__ . '/../script-docs/campaign-monitor.md';
     }
 
     /**

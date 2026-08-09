@@ -42,7 +42,7 @@ final class UrlscanServiceTest extends TestCase
         self::assertSame('urlscan.io', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('urlscan_submit_scan', array_keys($provider->tools()));
         self::assertContains('urlscan_search_datasource', array_keys($provider->tools()));
         self::assertContains('urlscan_lookup_malicious_observable', array_keys($provider->tools()));

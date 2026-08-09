@@ -42,7 +42,7 @@ final class AddEventServiceTest extends TestCase
         self::assertSame(['access_token'], $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertCount(9, $provider->tools());
         self::assertSame(['access_token', 'url'], array_column($provider->credentialFields(), 'key'));
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('addevent_update_event', $provider->tools());
         self::assertArrayHasKey('addevent_create_calendar', $provider->tools());
     }

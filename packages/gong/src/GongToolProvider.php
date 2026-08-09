@@ -278,11 +278,11 @@ class GongToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     }
 
     /**
-     * Get the path to the Lua API documentation file.
+     * Get the path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/gong.md';
+        return __DIR__ . '/../script-docs/gong.md';
     }
 
     /**

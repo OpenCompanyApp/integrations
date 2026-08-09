@@ -43,7 +43,7 @@ final class OpenFdaServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('none', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame([], $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(24, $provider->tools());
         self::assertArrayHasKey('openfda_drug_event', $provider->tools());
         self::assertArrayHasKey('openfda_device_udi', $provider->tools());

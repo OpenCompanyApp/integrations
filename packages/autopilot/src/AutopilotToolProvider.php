@@ -152,9 +152,9 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/autopilot.md';
+        return __DIR__.'/../script-docs/autopilot.md';
     }
 
     public function isIntegration(): bool

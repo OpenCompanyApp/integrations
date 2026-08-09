@@ -248,9 +248,9 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/google.md';
+        return dirname(__DIR__) . '/script-docs/google.md';
     }
 
     public function credentialFields(): array

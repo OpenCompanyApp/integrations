@@ -129,8 +129,8 @@ class RestCountriesToolProvider implements ToolProvider, HasIntegrationCapabilit
         return new $class(app(RestCountriesService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/rest-countries.md';
+        return __DIR__.'/../script-docs/rest-countries.md';
     }
 }

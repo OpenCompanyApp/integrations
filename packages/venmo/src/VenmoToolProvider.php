@@ -217,9 +217,9 @@ class VenmoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/venmo.md';
+        return __DIR__ . '/../script-docs/venmo.md';
     }    public function credentialFields(): array
     {
         return [

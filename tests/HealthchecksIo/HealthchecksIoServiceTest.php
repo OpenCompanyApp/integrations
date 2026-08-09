@@ -43,7 +43,7 @@ final class HealthchecksIoServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Healthchecks.io', $provider->integrationMeta()['name']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('healthchecks_io_list_checks', array_keys($provider->tools()));
         self::assertContains('healthchecks_io_ping_success_uuid', array_keys($provider->tools()));
         self::assertContains('healthchecks_io_ping_exit_status_slug', array_keys($provider->tools()));

@@ -261,11 +261,11 @@ class ActivelyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
     /**
-     * Get the path to the Lua docs file for agent-side documentation.
+     * Get the path to the JavaScript docs file for agent-side documentation.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/actively.md';
+        return __DIR__ . '/../script-docs/actively.md';
     }
 
     /**

@@ -1173,6 +1173,6 @@ class ChecklyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
   'icon' => 'ph:heartbeat',
 ),
     ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/checkly.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/checkly.md'; }
     /** @param  array<string, mixed>  $context  Runtime account context. */ private function resolveService(array $context=[]): ChecklyService { $account=$context['account']??null; if($account!==null){ $creds=app(CredentialResolver::class); return new ChecklyService(apiKey:$creds->get('checkly','api_key','',$account), accountId:$creds->get('checkly','account_id','',$account), baseUrl:$creds->get('checkly','url','https://api.checklyhq.com',$account)); } return app(ChecklyService::class); }
 }

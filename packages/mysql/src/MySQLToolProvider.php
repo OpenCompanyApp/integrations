@@ -260,11 +260,11 @@ class MySQLToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mysql.md';
+        return __DIR__ . '/../script-docs/mysql.md';
     }
 
     /**

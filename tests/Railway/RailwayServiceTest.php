@@ -54,7 +54,7 @@ final class RailwayServiceTest extends TestCase
         self::assertCount(7, $provider->tools());
         self::assertArrayHasKey('railway_create_project', $provider->tools());
         self::assertArrayHasKey('railway_get_current_user', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://railway.example.test/graphql/v2' => Http::response([

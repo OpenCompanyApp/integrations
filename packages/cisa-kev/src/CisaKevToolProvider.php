@@ -119,8 +119,8 @@ class CisaKevToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(CisaKevService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/cisa-kev.md';
+        return __DIR__.'/../script-docs/cisa-kev.md';
     }
 }

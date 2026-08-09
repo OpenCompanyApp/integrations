@@ -62,7 +62,7 @@ $service->sendTransactionalEmail([
 
 ## Agent Docs
 
-See `lua-docs/loops.md` for Lua usage examples and endpoint-specific notes.
+See `script-docs/loops.md` for JavaScript usage examples and endpoint-specific notes.
 
 ## Requirements
 

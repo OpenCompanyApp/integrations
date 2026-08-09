@@ -230,9 +230,9 @@ class KlipfolioToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/klipfolio.md';
+        return __DIR__ . '/../script-docs/klipfolio.md';
     }    public function credentialFields(): array
     {
         return [

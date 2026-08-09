@@ -223,9 +223,9 @@ class ModalToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/modal.md';
+        return __DIR__ . '/../script-docs/modal.md';
     }    public function credentialFields(): array
     {
         return [

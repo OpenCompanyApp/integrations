@@ -43,7 +43,7 @@ final class ChurnZeroServiceTest extends TestCase
         self::assertSame(['app_key'], $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertCount(6, $provider->tools());
         self::assertSame(['app_key', 'url'], array_column($provider->credentialFields(), 'key'));
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('churnzero_set_attributes', $provider->tools());
         self::assertArrayHasKey('churnzero_track_event', $provider->tools());
         self::assertArrayHasKey('churnzero_increment_attribute', $provider->tools());

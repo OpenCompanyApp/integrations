@@ -36,7 +36,7 @@ Create, update, and upsert tools send Zendesk Sell's documented
 
 ## Examples
 
-```lua
+```js
 local deals = app.integrations["zendesk-sell"].list_deals({
   page = 1,
   per_page = 25,

@@ -232,9 +232,9 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/intercom.md';
+        return dirname(__DIR__) . '/script-docs/intercom.md';
     }    public function credentialFields(): array
     {
         return [

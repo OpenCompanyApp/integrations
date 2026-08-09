@@ -45,7 +45,7 @@ final class TrelloServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://developer.atlassian.com/cloud/trello/rest/', $provider->integrationMeta()['docs_url']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(7, $tools);
         self::assertArrayHasKey('trello_list_boards', $tools);

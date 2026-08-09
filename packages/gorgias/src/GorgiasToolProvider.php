@@ -216,9 +216,9 @@ class GorgiasToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/gorgias.md';
+        return __DIR__ . '/../script-docs/gorgias.md';
     }    public function credentialFields(): array
     {
         return [

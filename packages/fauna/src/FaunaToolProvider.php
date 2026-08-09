@@ -224,9 +224,9 @@ class FaunaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/fauna.md';
+        return __DIR__ . '/../script-docs/fauna.md';
     }    public function credentialFields(): array
     {
         return [

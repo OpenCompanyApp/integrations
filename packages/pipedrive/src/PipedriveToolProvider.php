@@ -176,9 +176,9 @@ class PipedriveToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/pipedrive.md';
+        return __DIR__ . '/../script-docs/pipedrive.md';
     }
 
     public function isIntegration(): bool

@@ -7,7 +7,7 @@ use OpenCompany\Integrations\Mistral\MistralToolProvider;
 /**
  * Legacy compatibility alias for the canonical Mistral AI tool provider.
  *
- * The broad `mistral` package owns discovery metadata, Lua docs, and tools.
+ * The broad `mistral` package owns discovery metadata, JavaScript docs, and tools.
  */
 class MistralAIToolProvider extends MistralToolProvider
 {

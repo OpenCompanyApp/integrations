@@ -1963,7 +1963,7 @@ class SonarQubeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return new $class($this->resolveService($context));
     }
 
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/sonarqube.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/sonarqube.md'; }
 
     /**
      * Resolve default or account-specific SonarQube service credentials.

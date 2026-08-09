@@ -45,7 +45,7 @@ final class ReadwiseServiceTest extends TestCase
         self::assertSame('Readwise', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(26, $provider->tools());
         self::assertCount(22, ReadwiseService::operations());
         self::assertArrayHasKey('readwise_export_highlights', $provider->tools());

@@ -254,9 +254,9 @@ class MagentoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     /**
      * {@inheritDoc}
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/magento.md';
+        return __DIR__ . '/../script-docs/magento.md';
     }
 
     /**

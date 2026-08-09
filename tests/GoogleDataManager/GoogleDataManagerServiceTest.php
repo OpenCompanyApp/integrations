@@ -41,7 +41,7 @@ final class GoogleDataManagerServiceTest extends TestCase
             self::assertFileExists(__DIR__ . '/../../packages/google-data-manager/src/Tools/' . $shortName . '.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('google-data-manager', $provider->appName());
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('oauth2', $provider->integrationCapabilities()['auth']['strategy']);

@@ -46,7 +46,7 @@ final class ZoomServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://developers.zoom.us/docs/api/', $provider->integrationMeta()['docs_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(16, $tools);
         self::assertArrayHasKey('zoom_create_meeting', $tools);

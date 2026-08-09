@@ -1094,5 +1094,5 @@ class GoogleVertexAiToolProvider implements ToolProvider, ConfigurableIntegratio
         return app(GoogleVertexAiService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-vertex-ai.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-vertex-ai.md'; }
 }

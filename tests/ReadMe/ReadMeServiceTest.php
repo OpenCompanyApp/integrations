@@ -55,7 +55,7 @@ final class ReadMeServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(12, $provider->tools());
         self::assertContains('readme_list_branches', array_keys($provider->tools()));
         self::assertContains('readme_search_docs', array_keys($provider->tools()));

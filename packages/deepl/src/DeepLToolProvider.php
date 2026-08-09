@@ -179,9 +179,9 @@ class DeepLToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/deepl.md';
+        return __DIR__ . '/../script-docs/deepl.md';
     }
 
     public function isIntegration(): bool

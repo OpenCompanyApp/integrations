@@ -346,5 +346,5 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
         return app(GoogleCalendarService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-calendar.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-calendar.md'; }
 }

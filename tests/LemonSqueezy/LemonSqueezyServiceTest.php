@@ -40,7 +40,7 @@ final class LemonSqueezyServiceTest extends TestCase
         self::assertSame('lemon-squeezy', $provider->appName());
         self::assertSame('Lemon Squeezy', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(56, $provider->tools());
         self::assertArrayHasKey('lemonsqueezy_list_stores', $provider->tools());
         self::assertArrayHasKey('lemonsqueezy_create_checkout', $provider->tools());

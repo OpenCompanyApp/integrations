@@ -51,7 +51,7 @@ final class BraveSearchServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(19, $provider->tools());
         self::assertContains('brave_search_llm_context', array_keys($provider->tools()));
         self::assertContains('brave_search_answer', array_keys($provider->tools()));

@@ -620,5 +620,5 @@ class YouTubeToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): YouTubeService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new YouTubeService(accessToken: $creds->get('youtube','access_token','',$account), apiKey: $creds->get('youtube','api_key','',$account), baseUrl: $creds->get('youtube','url','https://youtube.googleapis.com',$account));} return app(YouTubeService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/youtube.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/youtube.md'; }
 }

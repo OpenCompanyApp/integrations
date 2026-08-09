@@ -396,11 +396,11 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/ringcentral.md';
+        return __DIR__ . '/../script-docs/ringcentral.md';
     }
 
     /**

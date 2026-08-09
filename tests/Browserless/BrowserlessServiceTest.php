@@ -43,7 +43,7 @@ final class BrowserlessServiceTest extends TestCase
         self::assertSame('Browserless', $provider->integrationMeta()['name']);
         self::assertSame('rendering', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('browserless_get_json_version', array_keys($provider->tools()));
         self::assertContains('browserless_post_screenshot', array_keys($provider->tools()));
         self::assertContains('browserless_post_chrome_function', array_keys($provider->tools()));

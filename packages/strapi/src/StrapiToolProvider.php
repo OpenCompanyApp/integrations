@@ -252,11 +252,11 @@ class StrapiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/strapi.md';
+        return __DIR__ . '/../script-docs/strapi.md';
     }
 
     /**

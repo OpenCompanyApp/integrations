@@ -1441,6 +1441,6 @@ class ModernTreasuryToolProvider implements ToolProvider, ConfigurableIntegratio
     'icon' => 'ph:pencil-simple',
   ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/modern-treasury.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/modern-treasury.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): ModernTreasuryService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new ModernTreasuryService(organizationId:$creds->get('modern-treasury','organization_id','',$account) ?: $creds->get('modern_treasury','organization_id','',$account), apiKey:$creds->get('modern-treasury','api_key','',$account) ?: $creds->get('modern_treasury','api_key','',$account), baseUrl:$creds->get('modern-treasury','url','',$account) ?: $creds->get('modern_treasury','url','https://app.moderntreasury.com',$account));} return app(ModernTreasuryService::class); }
 }

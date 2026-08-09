@@ -36,7 +36,7 @@ This package targets the current OneSignal REST API at `https://api.onesignal.co
 
 ## API Reference
 
-See [lua-docs/one-signal.md](lua-docs/one-signal.md) for Lua usage examples.
+See [script-docs/one-signal.md](script-docs/one-signal.md) for JavaScript usage examples.
 
 ## License
 

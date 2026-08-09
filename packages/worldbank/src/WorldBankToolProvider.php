@@ -215,9 +215,9 @@ class WorldBankToolProvider implements ToolProvider, HasIntegrationCapabilities
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/worldbank.md';
+        return dirname(__DIR__) . '/script-docs/worldbank.md';
     }
 
     public function credentialFields(): array

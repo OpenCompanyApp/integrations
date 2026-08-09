@@ -46,7 +46,7 @@ final class SauceLabsServiceTest extends TestCase
         self::assertSame('Sauce Labs', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('basic_auth', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(26, $provider->tools());
         self::assertArrayHasKey('sauce_labs_list_jobs', $provider->tools());
         self::assertArrayHasKey('sauce_labs_list_builds', $provider->tools());

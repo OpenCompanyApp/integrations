@@ -21,7 +21,7 @@ final class GoogleFormsServiceTest extends TestCase
     public function test_provider_matches_discovery_manifest_and_docs(): void
     {
         $provider=new GoogleFormsToolProvider; $manifest=json_decode((string)file_get_contents(__DIR__.'/../../packages/google-forms/google-forms-discovery-manifest.json'),true);
-        self::assertSame(10,$manifest['method_count']); self::assertCount($manifest['method_count'],$provider->tools()); self::assertSame('Google Forms',$provider->integrationMeta()['name']); self::assertSame('productivity',$provider->integrationMeta()['category']); self::assertSame('oauth2_manual_token',$provider->integrationCapabilities()['auth']['strategy']); self::assertFileExists((string)$provider->luaDocsPath()); self::assertContains('google_forms_forms_batch_update',array_keys($provider->tools())); self::assertContains('google_forms_forms_watches_create',array_keys($provider->tools()));
+        self::assertSame(10,$manifest['method_count']); self::assertCount($manifest['method_count'],$provider->tools()); self::assertSame('Google Forms',$provider->integrationMeta()['name']); self::assertSame('productivity',$provider->integrationMeta()['category']); self::assertSame('oauth2_manual_token',$provider->integrationCapabilities()['auth']['strategy']); self::assertFileExists((string)$provider->scriptDocsPath()); self::assertContains('google_forms_forms_batch_update',array_keys($provider->tools())); self::assertContains('google_forms_forms_watches_create',array_keys($provider->tools()));
     }
     public function test_service_maps_paths_query_and_body(): void
     {

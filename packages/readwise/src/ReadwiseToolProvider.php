@@ -179,8 +179,8 @@ class ReadwiseToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return app(ReadwiseService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/readwise.md';
+        return __DIR__.'/../script-docs/readwise.md';
     }
 }

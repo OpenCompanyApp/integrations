@@ -243,9 +243,9 @@ class LangfuseToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/langfuse.md';
+        return __DIR__ . '/../script-docs/langfuse.md';
     }
 
     public function credentialFields(): array

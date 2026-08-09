@@ -483,11 +483,11 @@ class AcuitySchedulingToolProvider implements ToolProvider, ConfigurableIntegrat
     }
 
     /**
-     * Path to the Lua documentation file for this integration.
+     * Path to the JavaScript documentation file for this integration.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/acuity-scheduling.md';
+        return __DIR__ . '/../script-docs/acuity-scheduling.md';
     }
 
     /**

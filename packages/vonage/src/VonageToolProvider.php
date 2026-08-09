@@ -254,11 +254,11 @@ class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
 
     /**
-     * Get the path to the Lua documentation file, if any.
+     * Get the path to the JavaScript documentation file, if any.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/vonage.md';
+        return __DIR__ . '/../script-docs/vonage.md';
     }
 
     /**

@@ -180,9 +180,9 @@ class CustomerIOToolProvider implements ToolProvider, ConfigurableIntegration, H
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/customerio.md';
+        return __DIR__.'/../script-docs/customerio.md';
     }
 
     public function isIntegration(): bool

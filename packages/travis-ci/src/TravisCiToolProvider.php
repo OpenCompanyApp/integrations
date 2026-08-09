@@ -222,8 +222,8 @@ class TravisCiToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return app(TravisCiService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/travis-ci.md';
+        return __DIR__.'/../script-docs/travis-ci.md';
     }
 }

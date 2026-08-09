@@ -42,7 +42,7 @@ final class ZohoMailServiceTest extends TestCase
         self::assertSame('Zoho Mail', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(29, $provider->tools());
         self::assertArrayHasKey('zohomail_search_messages', $provider->tools());
         self::assertArrayHasKey('zohomail_get_attachment_info', $provider->tools());

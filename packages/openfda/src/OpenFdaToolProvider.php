@@ -153,8 +153,8 @@ class OpenFdaToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(OpenFdaService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/openfda.md';
+        return __DIR__.'/../script-docs/openfda.md';
     }
 }

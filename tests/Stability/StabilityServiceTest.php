@@ -48,7 +48,7 @@ final class StabilityServiceTest extends TestCase
         self::assertCount(13, $provider->tools());
         self::assertArrayHasKey('stability_generate_core', $provider->tools());
         self::assertArrayHasKey('stability_image_to_video', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         foreach ($provider->tools() as $tool) {
             $shortName = substr((string) $tool['class'], strrpos((string) $tool['class'], '\\') + 1);

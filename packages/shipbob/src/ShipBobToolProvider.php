@@ -214,9 +214,9 @@ class ShipBobToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/shipbob.md';
+        return __DIR__ . '/../script-docs/shipbob.md';
     }    public function credentialFields(): array
     {
         return [

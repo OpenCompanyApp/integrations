@@ -41,7 +41,7 @@ final class ZohoSheetServiceTest extends TestCase
         self::assertSame('Zoho Sheet', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertCount(7, $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_uses_configured_base_url_bearer_header_and_pagination(): void

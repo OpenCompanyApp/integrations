@@ -29,7 +29,7 @@ This package targets the current Abyssale API reference at `https://api-referenc
 - `abyssale_generate_image` is synchronous and intended for static designs.
 - `abyssale_generate_multi_format_media` is asynchronous and supports images, videos, PDFs, GIFs, and HTML5 output.
 - `abyssale_generate_multi_page_pdf` uses the same async generation endpoint but sends the documented `pages` payload shape.
-- Webhook payloads for completed files and exports are documented in Lua docs as events, not callable tools.
+- Webhook payloads for completed files and exports are documented in JavaScript docs as events, not callable tools.
 
 ## Installation
 

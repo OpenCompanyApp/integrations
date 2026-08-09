@@ -111,7 +111,7 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 'cli_setup_supported' => true,
                 'cli_runtime_supported' => true,
                 'mcp_gateway_supported' => true,
-                'lua_supported' => true,
+                'javascript_supported' => true,
             ],
             'seo' => [
                 'aliases' => ['twitter', 'twitter api', 'x api', 'tweets', 'posts'],
@@ -16945,9 +16945,9 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/x.md';
+        return dirname(__DIR__) . '/script-docs/x.md';
     }
 
     public function credentialFields(): array

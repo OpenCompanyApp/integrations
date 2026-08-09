@@ -210,9 +210,9 @@ class CoinGeckoToolProvider implements ConfigurableIntegration, HasIntegrationCa
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__).'/lua-docs/coingecko.md';
+        return dirname(__DIR__).'/script-docs/coingecko.md';
     }
 
     public function isIntegration(): bool

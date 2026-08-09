@@ -46,7 +46,7 @@ final class SemaphoreCiServiceTest extends TestCase
         self::assertSame('Semaphore CI', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(40, $provider->tools());
         self::assertArrayHasKey('semaphore_ci_run_workflow', $provider->tools());
         self::assertArrayHasKey('semaphore_ci_partial_rebuild_pipeline', $provider->tools());

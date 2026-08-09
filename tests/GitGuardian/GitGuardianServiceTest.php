@@ -43,7 +43,7 @@ final class GitGuardianServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('GitGuardian', $provider->integrationMeta()['name']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('gitguardian_content_scan', array_keys($provider->tools()));
         self::assertContains('gitguardian_list_incidents', array_keys($provider->tools()));
         self::assertContains('gitguardian_scim_user_create', array_keys($provider->tools()));

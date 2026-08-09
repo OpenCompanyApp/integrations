@@ -215,9 +215,9 @@ class TransifexToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/transifex.md';
+        return __DIR__ . '/../script-docs/transifex.md';
     }    public function credentialFields(): array
     {
         return [

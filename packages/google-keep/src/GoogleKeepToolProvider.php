@@ -137,5 +137,5 @@ class GoogleKeepToolProvider implements ToolProvider, ConfigurableIntegration, H
         return app(GoogleKeepService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-keep.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-keep.md'; }
 }

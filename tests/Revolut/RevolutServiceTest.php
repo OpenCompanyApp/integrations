@@ -55,7 +55,7 @@ final class RevolutServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(9, $provider->tools());
         self::assertCount(1, $provider->credentialFields());
         self::assertCount(2, $provider->configSchema());

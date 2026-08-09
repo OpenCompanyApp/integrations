@@ -54,7 +54,7 @@ final class HerokuServiceTest extends TestCase
         self::assertCount(7, $provider->tools());
         self::assertArrayHasKey('heroku_list_apps', $provider->tools());
         self::assertArrayHasKey('heroku_get_current_user', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://api.heroku.test/account' => Http::response(['email' => 'agent@example.test'], 200),

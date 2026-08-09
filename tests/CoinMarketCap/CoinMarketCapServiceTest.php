@@ -43,7 +43,7 @@ final class CoinMarketCapServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('CoinMarketCap', $provider->integrationMeta()['name']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('coinmarketcap_get_v3_cryptocurrency_quotes_latest', array_keys($provider->tools()));
         self::assertContains('coinmarketcap_get_v3_cryptocurrency_listings_latest', array_keys($provider->tools()));
         self::assertContains('coinmarketcap_get_v1_key_info', array_keys($provider->tools()));

@@ -243,9 +243,9 @@ class TerraformToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     /**
      * {@inheritDoc}
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/terraform.md';
+        return __DIR__ . '/../script-docs/terraform.md';
     }
 
     /**

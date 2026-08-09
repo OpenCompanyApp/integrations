@@ -172,8 +172,8 @@ class NvdToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         return app(NvdService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/nvd.md';
+        return __DIR__.'/../script-docs/nvd.md';
     }
 }

@@ -215,5 +215,5 @@ class GoogleMeetToolProvider implements ToolProvider, ConfigurableIntegration, H
         return app(GoogleMeetService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-meet.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-meet.md'; }
 }

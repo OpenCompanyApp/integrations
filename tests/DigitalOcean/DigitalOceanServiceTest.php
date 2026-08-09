@@ -53,7 +53,7 @@ final class DigitalOceanServiceTest extends TestCase
         self::assertCount(10, $provider->tools());
         self::assertArrayHasKey('digitalocean_list_droplets', $provider->tools());
         self::assertArrayHasKey('digitalocean_list_spaces', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://api.digitalocean.test/v2/account' => Http::response([

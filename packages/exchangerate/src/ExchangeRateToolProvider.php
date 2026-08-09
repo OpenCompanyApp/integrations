@@ -151,9 +151,9 @@ class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabiliti
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/exchangerate.md';
+        return __DIR__ . '/../script-docs/exchangerate.md';
     }
 
     public function credentialFields(): array

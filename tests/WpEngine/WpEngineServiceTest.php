@@ -41,7 +41,7 @@ final class WpEngineServiceTest extends TestCase
         self::assertSame('WP Engine', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertCount(7, $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_list_sites_to_wp_engine_api(): void

@@ -278,9 +278,9 @@ class ElasticToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
     /**
-     * Get the path to Lua documentation (not used).
+     * Get the path to JavaScript documentation (not used).
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
         return null;
     }

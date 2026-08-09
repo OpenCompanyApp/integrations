@@ -403,9 +403,9 @@ class GitHubToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/github.md';
+        return dirname(__DIR__) . '/script-docs/github.md';
     }    public function credentialFields(): array
     {
         return [

@@ -37,7 +37,7 @@ If `base_url` is omitted, the provider builds `https://{domain}.myfreshworks.com
 
 - The API base URL should end with `/crm/sales`.
 - Freshworks CRM module create/update requests are wrapped under their documented root keys, such as `contact`, `deal`, `task`, and `appointment`.
-- Lua usage examples live in `lua-docs/freshworks-crm.md`.
+- JavaScript usage examples live in `script-docs/freshworks-crm.md`.
 
 ## License
 

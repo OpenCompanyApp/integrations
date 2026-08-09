@@ -252,11 +252,11 @@ class LitmosToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     }
 
     /**
-     * Path to the Lua API documentation file.
+     * Path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/litmos.md';
+        return __DIR__ . '/../script-docs/litmos.md';
     }
 
     /**

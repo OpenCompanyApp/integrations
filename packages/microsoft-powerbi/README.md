@@ -30,7 +30,7 @@ Add to `config/ai-tools.php`:
 
 ## Tools
 
-See `packages/microsoft-power-bi/lua-docs/powerbi.md` for the maintained tool
+See `packages/microsoft-power-bi/script-docs/powerbi.md` for the maintained tool
 list. The Power BI REST API does not expose a general current-user profile
 endpoint in this integration.
 

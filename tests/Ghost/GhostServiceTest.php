@@ -42,7 +42,7 @@ final class GhostServiceTest extends TestCase
         self::assertSame('ghost', $provider->appName());
         self::assertSame('Ghost CMS', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(42, $provider->tools());
         self::assertArrayHasKey('ghost_delete_post', $provider->tools());
         self::assertArrayHasKey('ghost_create_page', $provider->tools());

@@ -189,8 +189,8 @@ class ArxivToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(ArxivService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/arxiv.md';
+        return __DIR__.'/../script-docs/arxiv.md';
     }
 }

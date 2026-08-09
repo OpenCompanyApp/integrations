@@ -44,7 +44,7 @@ Update tools follow Insightly's collection-level PUT shape: pass the tool's
 
 ## Tool Examples
 
-```lua
+```js
 local contacts = app.integrations.insightly.list_contacts({
   top = 25,
   brief = true

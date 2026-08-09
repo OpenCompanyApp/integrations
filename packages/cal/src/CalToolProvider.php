@@ -298,11 +298,11 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/cal.md';
+        return __DIR__ . '/../script-docs/cal.md';
     }
 
     /**

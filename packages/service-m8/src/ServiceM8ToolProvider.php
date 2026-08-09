@@ -222,9 +222,9 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/servicem8.md';
+        return __DIR__ . '/../script-docs/servicem8.md';
     }    public function credentialFields(): array
     {
         return [

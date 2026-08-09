@@ -14,7 +14,7 @@ use OpenCompany\IntegrationCore\Contracts\ToolProvider;
  * Registers the Close integration provider and exposes its CRM tools.
  *
  * Supports API-key configuration, multi-account service resolution, catalog
- * metadata, Lua documentation lookup, and one tool per Close API operation.
+ * metadata, JavaScript documentation lookup, and one tool per Close API operation.
  */
 class CloseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
@@ -229,9 +229,9 @@ class CloseToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/close.md';
+        return __DIR__ . '/../script-docs/close.md';
     }
 
     /**

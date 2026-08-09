@@ -213,9 +213,9 @@ class QualifyingToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/qualifying.md';
+        return __DIR__ . '/../script-docs/qualifying.md';
     }    public function credentialFields(): array
     {
         return [

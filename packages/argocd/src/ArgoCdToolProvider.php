@@ -188,9 +188,9 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/argocd.md';
+        return dirname(__DIR__) . '/script-docs/argocd.md';
     }
 
     /**

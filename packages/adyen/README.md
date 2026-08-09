@@ -16,4 +16,4 @@ Source specifications:
 
 Requests use the `X-API-Key` header. Configure `merchant_account` and `company_id` when you want the integration to fill common Adyen path/query/body account identifiers automatically.
 
-See `lua-docs/adyen.md` for tool naming, argument, and return-shape notes.
+See `script-docs/adyen.md` for tool naming, argument, and return-shape notes.

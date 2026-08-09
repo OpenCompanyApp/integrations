@@ -293,8 +293,8 @@ class LeverToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return app(LeverService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/lever.md';
+        return __DIR__.'/../script-docs/lever.md';
     }
 }

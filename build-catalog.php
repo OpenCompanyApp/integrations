@@ -699,13 +699,13 @@ function expectedProviderFqcn(string $providerFile, string $pkgDir, array $compo
     return rtrim($namespace, '\\') . '\\' . str_replace('/', '\\', $relative);
 }
 
-function readLuaDocs(string $pkgDir): string
+function readScriptDocs(string $pkgDir): string
 {
-    $luaDir = $pkgDir . '/lua-docs';
-    if (!is_dir($luaDir)) {
+    $scriptDir = $pkgDir . '/script-docs';
+    if (!is_dir($scriptDir)) {
         return '';
     }
-    $files = glob($luaDir . '/*.md');
+    $files = glob($scriptDir . '/*.md');
     if (empty($files)) {
         return '';
     }
@@ -1112,7 +1112,7 @@ function inferIntegrationCapabilities(
             'cli_setup_supported' => $cliSetup,
             'cli_runtime_supported' => $cliRuntime,
             'mcp_gateway_supported' => $cliRuntime,
-            'lua_supported' => $cliRuntime,
+            'javascript_supported' => $cliRuntime,
         ],
     ];
 
@@ -1231,16 +1231,16 @@ function fallbackIntegrationMeta(string $appName): array
     return $fallbacks[$appName] ?? [];
 }
 
-function generateLuaDocs(string $displayName, string $appName, array $tools): string
+function generateScriptDocs(string $displayName, string $appName, array $tools): string
 {
     if (empty($tools)) {
         return '';
     }
 
     $lines = [
-        '# ' . $displayName . ' — Lua API Reference',
+        '# ' . $displayName . ' — JavaScript API Reference',
         '',
-        'This reference was generated from tool metadata because no package Lua docs file exists yet.',
+        'This reference was generated from tool metadata because no package Code Mode docs file exists yet.',
         '',
     ];
 
@@ -1276,8 +1276,9 @@ function generateLuaDocs(string $displayName, string $appName, array $tools): st
 
         $lines[] = '### Example';
         $lines[] = '';
-        $lines[] = '```lua';
-        $lines[] = 'local result = app.integrations.' . str_replace('-', '_', $appName) . '.' . $tool['function_name'] . '({})';
+        $lines[] = '```js';
+        $lines[] = 'var result = app.integrations.' . str_replace('-', '_', $appName) . '.' . $tool['function_name'] . '({});';
+        $lines[] = 'console.log(result);';
         $lines[] = '```';
         $lines[] = '';
         $lines[] = '---';
@@ -1353,7 +1354,7 @@ foreach ($providerFiles as $providerFile) {
     $providerFqcn = resolveFqcn($source);
     $expectedProviderFqcn = expectedProviderFqcn($providerFile, $pkgDir, $composer);
     $providerFqcnMatchesPsr4 = $expectedProviderFqcn === null || $providerFqcn === $expectedProviderFqcn;
-    $luaDocs = readLuaDocs($pkgDir);
+    $scriptDocs = readScriptDocs($pkgDir);
     $readme = readReadme($pkgDir);
 
     // --- Tool-level data ---
@@ -1442,7 +1443,7 @@ foreach ($providerFiles as $providerFile) {
         $toolName = $providerToolName !== '' ? $providerToolName : humanizeSlug($actualToolSlug);
         $toolType = $providerToolType ?? inferToolType($actualToolSlug, $toolName);
 
-        $tools[] = [
+        $toolEntry = [
             'slug' => $actualToolSlug,
             'function_name' => $actualToolSlug,
             'name' => $toolName,
@@ -1464,6 +1465,13 @@ foreach ($providerFiles as $providerFile) {
             'billing_sensitive' => is_array($toolMeta) ? (bool) ($toolMeta['billing_sensitive'] ?? false) : false,
             'docs_url' => is_array($toolMeta) ? ($toolMeta['docs_url'] ?? null) : null,
         ];
+        if (is_array($toolMeta) && is_array($toolMeta['returns'] ?? null) && $toolMeta['returns'] !== []) {
+            // Return contracts are optional today, but preserving declared
+            // shapes lets Code Mode docs and editor completions expose them.
+            $toolEntry['returns'] = $toolMeta['returns'];
+        }
+
+        $tools[] = $toolEntry;
         $totalTools++;
     }
 
@@ -1545,10 +1553,10 @@ foreach ($providerFiles as $providerFile) {
     $icon = $integrationMeta['icon'] ?? $appMeta['icon'] ?? '';
     $logo = $integrationMeta['logo'] ?? $appMeta['logo'] ?? $icon;
     $docsUrl = $integrationMeta['docs_url'] ?? null;
-    $luaDocsGenerated = false;
-    if ($luaDocs === '') {
-        $luaDocs = generateLuaDocs($displayName, $appName, $tools);
-        $luaDocsGenerated = $luaDocs !== '';
+    $scriptDocsGenerated = false;
+    if ($scriptDocs === '') {
+        $scriptDocs = generateScriptDocs($displayName, $appName, $tools);
+        $scriptDocsGenerated = $scriptDocs !== '';
     }
 
     // --- Assemble ---
@@ -1612,13 +1620,13 @@ foreach ($providerFiles as $providerFile) {
             'web_setup_supported' => $capabilities['compatibility']['web_setup_supported'] ?? null,
             'web_runtime_supported' => $capabilities['compatibility']['web_runtime_supported'] ?? null,
             'mcp_gateway_supported' => $capabilities['compatibility']['mcp_gateway_supported'] ?? null,
-            'lua_supported' => $capabilities['compatibility']['lua_supported'] ?? null,
+            'javascript_supported' => $capabilities['compatibility']['javascript_supported'] ?? null,
             'cli_setup_summary' => $headlessSetup['cli_setup_summary'],
             'mcp_setup_summary' => $headlessSetup['mcp_setup_summary'],
             'keywords' => [
                 strtolower($displayName) . ' cli',
                 strtolower($displayName) . ' mcp',
-                strtolower($displayName) . ' lua',
+                strtolower($displayName) . ' javascript',
                 strtolower($displayName) . ' integration',
                 strtolower($displayName) . ' agent tools',
             ],
@@ -1645,9 +1653,9 @@ foreach ($providerFiles as $providerFile) {
             'validation_rules' => $validationRules,
         ], $headlessSetup),
         'quality' => [
-            'has_lua_docs' => $luaDocs !== '',
-            'has_lua_docs_file' => !$luaDocsGenerated && $luaDocs !== '',
-            'lua_docs_generated' => $luaDocsGenerated,
+            'has_script_docs' => $scriptDocs !== '',
+            'has_script_docs_file' => !$scriptDocsGenerated && $scriptDocs !== '',
+            'script_docs_generated' => $scriptDocsGenerated,
             'has_readme' => $readme['exists'] ?? false,
             'has_docs_url' => !empty($docsUrl),
             'has_logo' => !empty($logo),
@@ -1657,7 +1665,7 @@ foreach ($providerFiles as $providerFile) {
             'provider_fqcn_matches_psr4' => $providerFqcnMatchesPsr4,
         ],
         'related_integrations' => [],
-        'lua_docs' => $luaDocs !== '' ? $luaDocs : null,
+        'script_docs' => $scriptDocs !== '' ? $scriptDocs : null,
     ];
 }
 

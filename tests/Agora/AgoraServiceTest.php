@@ -51,7 +51,7 @@ final class AgoraServiceTest extends TestCase
         self::assertArrayHasKey('agora_update_recording_layout', $provider->tools());
         self::assertArrayHasKey('agora_stop_recording', $provider->tools());
         self::assertArrayHasKey('agora_get_notification_ips', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_basic_auth_paths_and_payloads(): void

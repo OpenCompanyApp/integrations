@@ -255,11 +255,11 @@ class ZuoraToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     }
 
     /**
-     * Get the path to the Lua API documentation file.
+     * Get the path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zuora.md';
+        return __DIR__ . '/../script-docs/zuora.md';
     }
 
     /**

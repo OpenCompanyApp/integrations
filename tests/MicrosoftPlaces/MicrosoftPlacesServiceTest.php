@@ -49,7 +49,7 @@ final class MicrosoftPlacesServiceTest extends TestCase
         self::assertSame('Microsoft Places', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_places_places_place_list_place_as_room', array_keys($provider->tools()));
         self::assertContains('microsoft_places_places_place_get_place_as_room', array_keys($provider->tools()));
         self::assertContains('microsoft_places_places_as_room_list_list_rooms', array_keys($provider->tools()));

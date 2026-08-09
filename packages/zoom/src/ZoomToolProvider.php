@@ -306,9 +306,9 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zoom.md';
+        return __DIR__ . '/../script-docs/zoom.md';
     }    public function credentialFields(): array
     {
         return [

@@ -46,7 +46,7 @@ final class PowerBiServiceTest extends TestCase
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('https://learn.microsoft.com/en-us/rest/api/power-bi/', $provider->integrationMeta()['docs_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(6, $tools);
         self::assertArrayHasKey('powerbi_list_workspaces', $tools);

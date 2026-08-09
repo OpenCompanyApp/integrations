@@ -116,5 +116,5 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GoogleSearchConsoleService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleSearchConsoleService(accessToken: $creds->get('google-search-console','access_token','',$account), baseUrl: $creds->get('google-search-console','url','https://searchconsole.googleapis.com',$account));} return app(GoogleSearchConsoleService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-search-console.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-search-console.md'; }
 }

@@ -47,7 +47,7 @@ $folders = $service->listFolders(['page_size' => 30]);
 
 ## Agent Docs
 
-See `lua-docs/granola.md` for Lua namespace examples and return-shape notes.
+See `script-docs/granola.md` for JavaScript namespace examples and return-shape notes.
 
 ## Requirements
 

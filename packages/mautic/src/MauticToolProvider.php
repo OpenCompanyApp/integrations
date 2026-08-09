@@ -293,11 +293,11 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     }
 
     /**
-     * Path to the Lua API reference documentation for Mautic tools.
+     * Path to the JavaScript API reference documentation for Mautic tools.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mautic.md';
+        return __DIR__ . '/../script-docs/mautic.md';
     }
 
     /**

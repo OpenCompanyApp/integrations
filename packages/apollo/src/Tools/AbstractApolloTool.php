@@ -10,7 +10,7 @@ use OpenCompany\Integrations\Apollo\ApolloService;
  * Base class for Apollo tools that delegate directly to the service layer.
  *
  * Keeps endpoint tools small while preserving per-tool parameters, slugs, and
- * descriptions for catalog discovery and Lua docs.
+ * descriptions for catalog discovery and JavaScript docs.
  */
 abstract class AbstractApolloTool implements Tool
 {

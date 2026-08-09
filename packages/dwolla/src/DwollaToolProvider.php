@@ -2071,6 +2071,6 @@ Official Dwolla endpoint: POST /client-tokens.',
         return app(DwollaService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/dwolla.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/dwolla.md'; }
     public function isIntegration(): bool { return true; }
 }

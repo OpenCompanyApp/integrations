@@ -271,9 +271,9 @@ class MailerSendToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mailer-send.md';
+        return __DIR__ . '/../script-docs/mailer-send.md';
     }
 
     /**

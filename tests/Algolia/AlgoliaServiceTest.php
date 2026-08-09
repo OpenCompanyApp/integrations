@@ -41,7 +41,7 @@ final class AlgoliaServiceTest extends TestCase
         self::assertSame('Algolia', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(39, $provider->tools());
         self::assertArrayHasKey('algolia_search_multiple', $provider->tools());
         self::assertArrayHasKey('algolia_set_settings', $provider->tools());

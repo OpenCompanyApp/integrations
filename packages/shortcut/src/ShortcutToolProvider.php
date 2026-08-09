@@ -2674,9 +2674,9 @@ Official Shortcut endpoint: GET /api/v3/workflows/{workflow-public-id}.',
         return app(ShortcutService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/shortcut.md';
+        return __DIR__ . '/../script-docs/shortcut.md';
     }
 
     public function isIntegration(): bool

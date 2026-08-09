@@ -17,7 +17,7 @@ This repo contains Composer packages under `packages/` plus shared code under `c
 - Prefer one canonical package per service family
 - Do not add duplicate wrappers or alternate namespace spellings unless explicitly needed for compatibility
 - Keep visible names clean and human-readable
-- Keep Lua namespaces, package ids, metadata, and docs aligned
+- Keep JavaScript namespaces, package ids, metadata, and docs aligned
 - Do not commit real domains, real emails, real project names, or real API tokens in tests or docs
 
 ## Before You Add An Integration
@@ -40,14 +40,14 @@ This repo contains Composer packages under `packages/` plus shared code under `c
 - `src/{Name}ServiceProvider.php`
 - `src/{Name}ToolProvider.php`
 - `src/Tools/...`
-- `lua-docs/{name}.md`
+- `script-docs/{name}.md`
 
 ## Quality Bar
 
 - Tools should return shaped agent-friendly output, not raw API dumps
 - Services should own normalization, endpoint quirks, and safe fallbacks
 - Unsupported capabilities should fail clearly
-- Lua docs should reflect actual tool behavior, including normalized output and self-hosted caveats
+- JavaScript docs should reflect actual tool behavior, including normalized output and self-hosted caveats
 - Non-trivial behavior needs tests in this repo
 
 ## Test Rules
@@ -62,5 +62,5 @@ This repo contains Composer packages under `packages/` plus shared code under `c
 - Run syntax checks
 - Run the relevant PHPUnit coverage in this repo
 - Check metadata and naming
-- Check Lua docs
+- Check JavaScript docs
 - Make sure the worktree is clean before you stop

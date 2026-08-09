@@ -218,9 +218,9 @@ public function validationRules(): array
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/clicksend.md';
+        return dirname(__DIR__) . '/script-docs/clicksend.md';
     }
 
     public function credentialFields(): array

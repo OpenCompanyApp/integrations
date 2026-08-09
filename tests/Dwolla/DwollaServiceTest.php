@@ -57,7 +57,7 @@ final class DwollaServiceTest extends TestCase
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertCount(3, $provider->credentialFields());
         self::assertCount(4, $provider->configSchema());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('dwolla_create_application_access_token', array_keys($provider->tools()));
         self::assertContains('dwolla_create_customer', array_keys($provider->tools()));
         self::assertContains('dwolla_list_and_search_customers', array_keys($provider->tools()));

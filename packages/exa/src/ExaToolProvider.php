@@ -206,9 +206,9 @@ class ExaToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/exa.md';
+        return dirname(__DIR__) . '/script-docs/exa.md';
     }
 
     public function isIntegration(): bool

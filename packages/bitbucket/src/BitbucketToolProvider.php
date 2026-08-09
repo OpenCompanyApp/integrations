@@ -255,9 +255,9 @@ public function validationRules(): array
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/bitbucket.md';
+        return dirname(__DIR__) . '/script-docs/bitbucket.md';
     }
 
     public function isIntegration(): bool

@@ -31,7 +31,7 @@ final class BraintrustServiceTest extends TestCase
             self::assertFileExists(__DIR__ . '/../../packages/braintrust/src/Tools/' . $shortName . '.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('Braintrust', $provider->integrationMeta()['name']);
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);

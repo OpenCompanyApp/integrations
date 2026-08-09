@@ -54,7 +54,7 @@ final class SquareServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('https://developer.squareup.com/reference/square', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(10, $provider->tools());
         self::assertContains('square_create_payment', array_keys($provider->tools()));
         self::assertContains('square_create_customer', array_keys($provider->tools()));

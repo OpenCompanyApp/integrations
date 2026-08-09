@@ -239,9 +239,9 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/mattermost.md';
+        return __DIR__.'/../script-docs/mattermost.md';
     }
 
     public function credentialFields(): array

@@ -46,7 +46,7 @@ final class GoCardlessServiceTest extends TestCase
         self::assertSame('GoCardless', $provider->integrationMeta()['name']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame('data', $provider->integrationMeta()['category']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('gocardless_list_payment', array_keys($provider->tools()));
         self::assertContains('gocardless_create_payment', array_keys($provider->tools()));
         self::assertContains('gocardless_list_billing_request', array_keys($provider->tools()));

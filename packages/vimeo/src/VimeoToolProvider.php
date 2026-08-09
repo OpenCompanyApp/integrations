@@ -173,9 +173,9 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/vimeo.md';
+        return dirname(__DIR__) . '/script-docs/vimeo.md';
     }
 
     public function credentialFields(): array

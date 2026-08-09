@@ -42,7 +42,7 @@ final class SamsaraServiceTest extends TestCase
         self::assertSame('Samsara', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(51, $provider->tools());
         self::assertArrayHasKey('samsara_list_vehicles', $provider->tools());
         self::assertArrayHasKey('samsara_get_vehicle_stats_history', $provider->tools());

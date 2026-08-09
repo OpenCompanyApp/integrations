@@ -49,7 +49,7 @@ final class MicrosoftEducationServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Education', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_education_education_list_classes', array_keys($provider->tools()));
         self::assertContains('microsoft_education_education_get_classes', array_keys($provider->tools()));
         self::assertContains('microsoft_education_education_list_users', array_keys($provider->tools()));

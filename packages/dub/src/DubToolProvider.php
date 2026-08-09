@@ -148,9 +148,9 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/dub.md';
+        return __DIR__.'/../script-docs/dub.md';
     }
 
     public function isIntegration(): bool

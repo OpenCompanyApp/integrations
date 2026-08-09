@@ -50,7 +50,7 @@ final class CompaniesHouseServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame($provider->configSchema(), $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(31, $provider->tools());
         self::assertArrayHasKey('companies_house_company_profile', $provider->tools());
         self::assertArrayHasKey('companies_house_psc_corporate_entity_beneficial_owner', $provider->tools());

@@ -224,9 +224,9 @@ class TogetherAiToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/together-ai.md';
+        return __DIR__ . '/../script-docs/together-ai.md';
     }    public function credentialFields(): array
     {
         return [

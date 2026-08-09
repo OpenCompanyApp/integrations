@@ -45,7 +45,7 @@ final class PostmanServiceTest extends TestCase
         self::assertSame('Postman', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_key_header', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(63, $provider->tools());
         self::assertCount(58, PostmanService::operations());
         self::assertArrayHasKey('postman_collections_get', $provider->tools());

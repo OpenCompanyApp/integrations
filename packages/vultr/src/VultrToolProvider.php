@@ -154,9 +154,9 @@ class VultrToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/vultr.md';
+        return __DIR__ . '/../script-docs/vultr.md';
     }
 
     public function isIntegration(): bool

@@ -185,9 +185,9 @@ class ZohoMailToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zoho-mail.md';
+        return __DIR__ . '/../script-docs/zoho-mail.md';
     }
 
     /**

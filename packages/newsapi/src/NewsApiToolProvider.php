@@ -162,8 +162,8 @@ class NewsApiToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return app(NewsApiService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/newsapi.md';
+        return __DIR__.'/../script-docs/newsapi.md';
     }
 }

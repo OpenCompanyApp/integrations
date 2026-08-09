@@ -1596,6 +1596,6 @@ class ShippoToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return app(ShippoService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/shippo.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/shippo.md'; }
     public function isIntegration(): bool { return true; }
 }

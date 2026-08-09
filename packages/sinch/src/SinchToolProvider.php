@@ -198,9 +198,9 @@ public function validationRules(): array
 
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/sinch.md';
+        return dirname(__DIR__) . '/script-docs/sinch.md';
     }
 
     public function credentialFields(): array

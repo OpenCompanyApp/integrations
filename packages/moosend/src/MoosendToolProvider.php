@@ -242,13 +242,13 @@ class MoosendToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      *
      * @return string|null
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/moosend.md';
+        return __DIR__ . '/../script-docs/moosend.md';
     }
 
     /**

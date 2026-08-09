@@ -321,9 +321,9 @@ class LinearToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/linear.md';
+        return __DIR__ . '/../script-docs/linear.md';
     }    public function credentialFields(): array
     {
         return [

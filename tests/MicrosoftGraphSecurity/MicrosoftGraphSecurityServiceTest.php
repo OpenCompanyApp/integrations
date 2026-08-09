@@ -46,7 +46,7 @@ final class MicrosoftGraphSecurityServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Graph Security', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_graph_security_list_alerts_v2', array_keys($provider->tools()));
         self::assertContains('microsoft_graph_security_list_incidents', array_keys($provider->tools()));
         self::assertContains('microsoft_graph_security_list_secure_scores', array_keys($provider->tools()));

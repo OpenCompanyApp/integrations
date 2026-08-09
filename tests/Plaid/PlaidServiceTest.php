@@ -54,7 +54,7 @@ final class PlaidServiceTest extends TestCase
         self::assertContains('secret', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertCount(2, $provider->credentialFields());
         self::assertCount(4, $provider->configSchema());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('plaid_transactions_get', array_keys($provider->tools()));
         self::assertContains('plaid_link_token_create', array_keys($provider->tools()));
         self::assertContains('plaid_get_recipient', array_keys($provider->tools()));

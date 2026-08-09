@@ -179,9 +179,9 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/droplr.md';
+        return __DIR__ . '/../script-docs/droplr.md';
     }
 
     public function credentialFields(): array

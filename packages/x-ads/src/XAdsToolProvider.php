@@ -97,7 +97,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'cli_setup_supported' => true,
                 'cli_runtime_supported' => true,
                 'mcp_gateway_supported' => true,
-                'lua_supported' => true,
+                'javascript_supported' => true,
             ],
             'seo' => [
                 'aliases' => ['twitter ads', 'x ads api', 'ads-api.x.com', 'campaign management'],
@@ -20452,9 +20452,9 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/x-ads.md';
+        return dirname(__DIR__) . '/script-docs/x-ads.md';
     }
 
     public function credentialFields(): array

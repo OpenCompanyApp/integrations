@@ -170,9 +170,9 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/airtop.md';
+        return __DIR__.'/../script-docs/airtop.md';
     }
 
     public function credentialFields(): array

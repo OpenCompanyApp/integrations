@@ -174,8 +174,8 @@ class AkismetToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return app(AkismetService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/akismet.md';
+        return __DIR__.'/../script-docs/akismet.md';
     }
 }

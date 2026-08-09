@@ -46,7 +46,7 @@ final class AppetizeServiceTest extends TestCase
         self::assertSame('Appetize', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(11, $provider->tools());
         self::assertArrayHasKey('appetize_create_app', $provider->tools());
         self::assertArrayHasKey('appetize_get_usage_summary', $provider->tools());

@@ -54,7 +54,7 @@ final class PostmarkServiceTest extends TestCase
         self::assertTrue($provider->credentialFields()[0]['required']);
         self::assertSame('account_token', $provider->credentialFields()[1]['key']);
         self::assertFalse($provider->credentialFields()[1]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(9, $provider->tools());
         self::assertContains('postmark_send_template', array_keys($provider->tools()));
     }

@@ -275,11 +275,11 @@ class EventbriteToolProvider implements ToolProvider, ConfigurableIntegration, H
     }
 
     /**
-     * Path to the Lua API docs file.
+     * Path to the JavaScript API docs file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/eventbrite.md';
+        return __DIR__ . '/../script-docs/eventbrite.md';
     }
 
     /**

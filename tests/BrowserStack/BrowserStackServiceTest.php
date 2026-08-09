@@ -46,7 +46,7 @@ final class BrowserStackServiceTest extends TestCase
         self::assertSame('BrowserStack', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('basic_auth', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(23, $provider->tools());
         self::assertArrayHasKey('browserstack_get_plan', $provider->tools());
         self::assertArrayHasKey('browserstack_list_build_sessions', $provider->tools());

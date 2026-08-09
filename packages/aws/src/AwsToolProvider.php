@@ -257,13 +257,13 @@ class AwsToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     }
 
     /**
-     * Get the path to supplementary Lua documentation.
+     * Get the path to supplementary JavaScript documentation.
      *
-     * @return string|null The absolute path to the Lua docs markdown file, or null.
+     * @return string|null The absolute path to the JavaScript docs markdown file, or null.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/aws.md';
+        return __DIR__ . '/../script-docs/aws.md';
     }
 
     /**

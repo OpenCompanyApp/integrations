@@ -225,9 +225,9 @@ class OvhToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/ovh.md';
+        return __DIR__ . '/../script-docs/ovh.md';
     }    public function credentialFields(): array
     {
         return [

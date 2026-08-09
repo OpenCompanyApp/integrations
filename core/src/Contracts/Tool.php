@@ -9,7 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  *
  * Tools implement this interface to be callable from any host application
  * (OpenCompany web, KosmoKrator CLI, or any future PHP consumer).
- * The host's Lua bridge or tool executor calls execute() directly.
+ * A host's Code Mode bridge or tool executor calls execute() directly.
  */
 interface Tool
 {
@@ -19,7 +19,7 @@ interface Tool
     public function name(): string;
 
     /**
-     * Human-readable description. Shown in Lua API docs and tool catalogs.
+     * Human-readable description. Shown in Code Mode docs and tool catalogs.
      * Can be multi-line with usage tips and examples.
      */
     public function description(): string;

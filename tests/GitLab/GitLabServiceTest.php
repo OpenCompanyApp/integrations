@@ -45,7 +45,7 @@ final class GitLabServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://docs.gitlab.com/ee/api/rest/', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(20, $tools);
         self::assertArrayHasKey('gitlab_create_issue', $tools);

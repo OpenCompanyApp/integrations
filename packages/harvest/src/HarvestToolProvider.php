@@ -277,9 +277,9 @@ class HarvestToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/harvest.md';
+        return __DIR__ . '/../script-docs/harvest.md';
     }    public function credentialFields(): array
     {
         return [

@@ -196,5 +196,5 @@ class GoogleAppsScriptToolProvider implements ToolProvider, ConfigurableIntegrat
         return app(GoogleAppsScriptService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-apps-script.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-apps-script.md'; }
 }

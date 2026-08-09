@@ -435,11 +435,11 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
 
 
     /**
-     * Get the path to the Lua documentation file for Wufoo tools.
+     * Get the path to the JavaScript documentation file for Wufoo tools.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/wufoo.md';
+        return __DIR__ . '/../script-docs/wufoo.md';
     }
 
     /**

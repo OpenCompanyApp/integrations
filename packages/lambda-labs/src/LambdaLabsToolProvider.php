@@ -224,9 +224,9 @@ class LambdaLabsToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/lambda-labs.md';
+        return __DIR__ . '/../script-docs/lambda-labs.md';
     }    public function credentialFields(): array
     {
         return [

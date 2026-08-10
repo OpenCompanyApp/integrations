@@ -222,9 +222,9 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/drip.md';
+        return __DIR__ . '/../script-docs/drip.md';
     }    public function credentialFields(): array
     {
         return [

@@ -123,7 +123,7 @@ final class BigCommerceServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://docs.bigcommerce.com/developer/api-reference/rest/admin/overview', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertGreaterThanOrEqual(90, count($tools));
         self::assertArrayHasKey('bigcommerce_list_product_variants', $tools);
         self::assertArrayHasKey('bigcommerce_update_order_shipment', $tools);

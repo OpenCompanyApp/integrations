@@ -80,7 +80,7 @@ $merged = $service->mergePdfs([
 
 - `get_current_user` keeps the historical tool slug but uses APITemplate.io's current `/v2/account-information` endpoint.
 - `get_template` and `update_template` are marked experimental by APITemplate.io.
-- Lua docs live in `lua-docs/apitemplateio.md` and describe normalized agent usage.
+- JavaScript docs live in `script-docs/apitemplateio.md` and describe normalized agent usage.
 
 ## Requirements
 

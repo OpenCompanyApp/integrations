@@ -267,11 +267,11 @@ class MicrosoftTodoToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Path to the Lua API documentation file for this integration.
+     * Path to the JavaScript API documentation file for this integration.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/microsoft-todo.md';
+        return __DIR__ . '/../script-docs/microsoft-todo.md';
     }
 
     /**

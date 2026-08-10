@@ -46,7 +46,7 @@ final class NewsApiServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame(['newsapi_everything', 'newsapi_top_headlines', 'newsapi_sources'], array_keys($provider->tools()));
     }
 

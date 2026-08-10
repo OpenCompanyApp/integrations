@@ -35,6 +35,6 @@ class ShipStationToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param array<string, mixed> $context */
     private function resolveService(array $context = []): ShipStationService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new ShipStationService(apiKey:$creds->get('shipstation','api_key','',$account), baseUrl:$creds->get('shipstation','url','https://api.shipstation.com',$account));} return app(ShipStationService::class); }
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/shipstation.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/shipstation.md'; }
     private function classNameForOperation(string $operation): string { return 'ShipStation'.str_replace(' ', '', ucwords(str_replace('_', ' ', $operation))); }
 }

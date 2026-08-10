@@ -217,8 +217,8 @@ class OpenMeteoToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(OpenMeteoService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/open-meteo.md';
+        return __DIR__.'/../script-docs/open-meteo.md';
     }
 }

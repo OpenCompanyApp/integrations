@@ -250,11 +250,11 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     }
 
     /**
-     * Path to the Lua documentation file.
+     * Path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/paypal.md';
+        return __DIR__ . '/../script-docs/paypal.md';
     }
 
     /**

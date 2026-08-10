@@ -179,9 +179,9 @@ class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/box.md';
+        return __DIR__.'/../script-docs/box.md';
     }
 
     public function credentialFields(): array

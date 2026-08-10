@@ -242,9 +242,9 @@ class SemaphoreCiToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(SemaphoreCiService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/semaphore-ci.md';
+        return __DIR__.'/../script-docs/semaphore-ci.md';
     }
 
     private function normalizeBaseUrl(string $url): string

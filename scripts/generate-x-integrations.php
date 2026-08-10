@@ -1023,7 +1023,7 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 'cli_setup_supported' => true,
                 'cli_runtime_supported' => true,
                 'mcp_gateway_supported' => true,
-                'lua_supported' => true,
+                'javascript_supported' => true,
             ],
             'seo' => [
                 'aliases' => ['twitter', 'twitter api', 'x api', 'tweets', 'posts'],
@@ -1073,9 +1073,9 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
         return {$providerTools};
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/x.md';
+        return dirname(__DIR__) . '/script-docs/x.md';
     }
 
     public function credentialFields(): array
@@ -1187,8 +1187,8 @@ Streaming tools are exposed with `runtime_mode=stream` and require host streamin
 Webhook/account-activity tools require a public callback endpoint.
 MD);
 
-    writeFileChecked("{$pkg}/lua-docs/x.md", <<<MD
-# Twitter / X — Lua API Reference
+    writeFileChecked("{$pkg}/script-docs/x.md", <<<MD
+# Twitter / X — JavaScript API Reference
 
 This integration is generated from the official X OpenAPI document version `{$openApiVersion}` and exposes {$operationCount} X API operations.
 
@@ -1210,16 +1210,17 @@ Each tool carries `auth_modes`, `required_scopes`, and `runtime_mode` metadata i
 
 ## Examples
 
-```lua
-local me = app.integrations.x.x_get_users_me({})
-local user = app.integrations.x.x_get_users_by_username({ username = "XDevelopers" })
+```js
+var me = app.integrations.x.x_get_users_me({});
+var user = app.integrations.x.x_get_users_by_username({ username: "XDevelopers" });
+console.log({ me, user });
 ```
 
 For multi-account hosts:
 
-```lua
-app.integrations.x.default.x_find_my_user({})
-app.integrations.x.work.x_find_my_user({})
+```js
+app.integrations.x.default.x_find_my_user({});
+app.integrations.x.work.x_find_my_user({});
 ```
 MD);
 
@@ -1281,7 +1282,7 @@ function generateXAdsPackage(string $root, array $collection): int
     $pkg = "{$root}/packages/x-ads";
     cleanDir($pkg);
     ensureDir("{$pkg}/src/Tools");
-    ensureDir("{$pkg}/lua-docs");
+    ensureDir("{$pkg}/script-docs");
 
     $requests = collectPostmanRequests($collection['item'] ?? []);
     $operations = [];
@@ -1818,7 +1819,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'cli_setup_supported' => true,
                 'cli_runtime_supported' => true,
                 'mcp_gateway_supported' => true,
-                'lua_supported' => true,
+                'javascript_supported' => true,
             ],
             'seo' => [
                 'aliases' => ['twitter ads', 'x ads api', 'ads-api.x.com', 'campaign management'],
@@ -1870,9 +1871,9 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return {$providerTools};
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/x-ads.md';
+        return dirname(__DIR__) . '/script-docs/x-ads.md';
     }
 
     public function credentialFields(): array
@@ -1985,8 +1986,8 @@ X Ads API requests use OAuth 1.0a user-context signing. Configure:
 - optional `base_url` (default `https://ads-api.x.com`)
 MD);
 
-    writeFileChecked("{$pkg}/lua-docs/x-ads.md", <<<MD
-# X Ads — Lua API Reference
+    writeFileChecked("{$pkg}/script-docs/x-ads.md", <<<MD
+# X Ads — JavaScript API Reference
 
 This integration is generated from the official X Ads Postman collection and exposes {$operationCount} Ads API operations.
 
@@ -2009,12 +2010,13 @@ X Ads API access must be approved by X. Tools are marked with `required_access_t
 
 ## Examples
 
-```lua
-local accounts = app.integrations.x_ads.x_ads_get_accounts({})
-local campaigns = app.integrations.x_ads.x_ads_get_accounts_account_id_campaigns({
-  account_id = "account-id",
-  count = "25"
-})
+```js
+var accounts = app.integrations.x_ads.x_ads_get_accounts({});
+var campaigns = app.integrations.x_ads.x_ads_get_accounts_account_id_campaigns({
+  account_id: "account-id",
+  count: "25",
+});
+console.log({ accounts, campaigns });
 ```
 MD);
 

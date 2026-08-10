@@ -249,11 +249,11 @@ class RadarToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     }
 
     /**
-     * Path to the Lua API docs markdown file.
+     * Path to the JavaScript API docs markdown file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/radar.md';
+        return __DIR__ . '/../script-docs/radar.md';
     }
 
     /**

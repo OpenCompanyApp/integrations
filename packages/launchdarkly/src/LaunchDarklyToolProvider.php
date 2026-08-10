@@ -263,9 +263,9 @@ class LaunchDarklyToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/launchdarkly.md';
+        return __DIR__ . '/../script-docs/launchdarkly.md';
     }
 
     public function credentialFields(): array

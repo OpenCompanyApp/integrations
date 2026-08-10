@@ -370,11 +370,11 @@ class GitLabToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     }
 
     /**
-     * Get the optional Lua docs path.
+     * Get the optional JavaScript docs path.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/gitlab.md';
+        return dirname(__DIR__) . '/script-docs/gitlab.md';
     }
 
     /**

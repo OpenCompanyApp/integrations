@@ -54,7 +54,7 @@ final class VenmoServiceTest extends TestCase
         self::assertSame('https://venmo.com/docs/webhooks', $provider->integrationMeta()['docs_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertStringContainsString('retired for new businesses', implode(' ', $provider->integrationCapabilities()['auth']['notes']));
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(7, $provider->tools());
         self::assertCount(1, $provider->credentialFields());
     }

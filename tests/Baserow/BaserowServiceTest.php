@@ -41,7 +41,7 @@ final class BaserowServiceTest extends TestCase
         self::assertSame('baserow', $provider->appName());
         self::assertSame('Baserow', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(24, $provider->tools());
         self::assertArrayHasKey('baserow_list_database_tables', $provider->tools());
         self::assertArrayHasKey('baserow_create_field', $provider->tools());

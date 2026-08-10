@@ -177,9 +177,9 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/docker.md';
+        return __DIR__ . '/../script-docs/docker.md';
     }
 
     public function isIntegration(): bool

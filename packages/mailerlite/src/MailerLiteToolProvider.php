@@ -222,9 +222,9 @@ class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mailerlite.md';
+        return __DIR__ . '/../script-docs/mailerlite.md';
     }
 
     /**

@@ -264,6 +264,6 @@ class MicrosoftPeopleToolProvider implements ToolProvider, ConfigurableIntegrati
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftPeopleService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftPeopleService(accessToken: $creds->get('microsoft-people', 'access_token', '', $account), baseUrl: $creds->get('microsoft-people', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftPeopleService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-people.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-people.md'; }
     public function isIntegration(): bool { return true; }
 }

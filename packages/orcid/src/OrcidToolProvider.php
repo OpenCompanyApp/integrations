@@ -169,8 +169,8 @@ class OrcidToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(OrcidService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/orcid.md';
+        return __DIR__.'/../script-docs/orcid.md';
     }
 }

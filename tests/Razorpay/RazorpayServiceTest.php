@@ -53,7 +53,7 @@ final class RazorpayServiceTest extends TestCase
         self::assertContains('key_id', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertContains('key_secret', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('https://razorpay.com/docs/api/', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(8, $provider->tools());
         self::assertContains('razorpay_create_order', array_keys($provider->tools()));
     }

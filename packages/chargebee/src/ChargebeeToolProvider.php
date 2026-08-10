@@ -748,9 +748,9 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     /**
      * {@inheritdoc}
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/chargebee.md';
+        return __DIR__ . '/../script-docs/chargebee.md';
     }
 
     /**

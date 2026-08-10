@@ -178,9 +178,9 @@ class TrustMrrToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/trustmrr.md';
+        return dirname(__DIR__) . '/script-docs/trustmrr.md';
     }
 
     public function isIntegration(): bool

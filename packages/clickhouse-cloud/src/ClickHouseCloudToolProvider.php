@@ -697,6 +697,6 @@ class ClickHouseCloudToolProvider implements ToolProvider, ConfigurableIntegrati
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/clickhouse-cloud.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/clickhouse-cloud.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): ClickHouseCloudService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new ClickHouseCloudService(keyId:$creds->get('clickhouse-cloud','key_id','',$account), keySecret:$creds->get('clickhouse-cloud','key_secret','',$account), baseUrl:$creds->get('clickhouse-cloud','url','https://api.clickhouse.cloud',$account));} return app(ClickHouseCloudService::class); }
 }

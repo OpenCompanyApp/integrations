@@ -468,9 +468,9 @@ class PlaneToolProvider implements ConfigurableIntegration, HasTriggers, ToolPro
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/plane.md';
+        return __DIR__.'/../script-docs/plane.md';
     }    public function credentialFields(): array
     {
         return [

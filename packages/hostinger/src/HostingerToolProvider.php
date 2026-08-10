@@ -224,9 +224,9 @@ class HostingerToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/hostinger.md';
+        return __DIR__ . '/../script-docs/hostinger.md';
     }    public function credentialFields(): array
     {
         return [

@@ -1,0 +1,75 @@
+# Google Maps — JavaScript API Reference
+
+Use `app.integrations.google_maps` to geocode addresses, search places, inspect place details, get directions, and calculate distance matrices.
+
+## google_maps_geocode_address
+
+Convert an address into geographic coordinates.
+
+```js
+var result = app.integrations.google_maps.google_maps_geocode_address({
+  address: "1600 Amphitheatre Parkway, Mountain View, CA",
+  region: "us",
+  language: "en",
+})
+```
+## google_maps_reverse_geocode
+
+Convert latitude and longitude into address results.
+
+```js
+var result = app.integrations.google_maps.google_maps_reverse_geocode({
+  latitude: 37.422,
+  longitude: -122.084,
+})
+```
+## google_maps_search_places
+
+Search places with optional location, radius, type, price, and open-now filters.
+
+```js
+var result = app.integrations.google_maps.google_maps_search_places({
+  query: "coffee near Brussels",
+  type: "cafe",
+  open_now: true,
+})
+```
+## google_maps_get_place_details
+
+Fetch details for a Google Place ID. Use `fields` to keep responses focused.
+
+```js
+var result = app.integrations.google_maps.google_maps_get_place_details({
+  place_id: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+  fields: [ "name", "formatted_address", "geometry", "rating" ],
+})
+```
+## google_maps_get_directions
+
+Get directions between two locations.
+
+```js
+var result = app.integrations.google_maps.google_maps_get_directions({
+  origin: "Brussels Central Station",
+  destination: "Atomium, Brussels",
+  mode: "transit",
+})
+```
+## google_maps_get_distance_matrix
+
+Calculate distances and durations for origin-destination pairs.
+
+```js
+var result = app.integrations.google_maps.google_maps_get_distance_matrix({
+  origins: [ "Brussels", "Antwerp" ],
+  destinations: [ "Ghent", "Leuven" ],
+  units: "metric",
+})
+```
+## google_maps_get_current_user
+
+Verify credentials and estimate the current requester location through the Geolocation API.
+
+```js
+var result = app.integrations.google_maps.google_maps_get_current_user({})
+```

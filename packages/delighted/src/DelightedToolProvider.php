@@ -175,8 +175,8 @@ class DelightedToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return app(DelightedService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/delighted.md';
+        return __DIR__.'/../script-docs/delighted.md';
     }
 }

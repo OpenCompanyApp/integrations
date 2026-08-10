@@ -267,13 +267,13 @@ class SmartsheetToolProvider implements ToolProvider, ConfigurableIntegration, H
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      *
-     * @return string|null The path to the Lua docs, or null if not applicable.
+     * @return string|null The path to the JavaScript docs, or null if not applicable.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/smartsheet.md';
+        return dirname(__DIR__) . '/script-docs/smartsheet.md';
     }
 
     /**

@@ -50,7 +50,7 @@ final class ApifyServiceTest extends TestCase
         self::assertSame('https://docs.apify.com/api/openapi.json', $provider->integrationMeta()['source_url']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('api_token', $provider->integrationCapabilities()['auth']['token_keys']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(223, $tools);
         self::assertArrayHasKey('apify_act_runs_post', $tools);
         self::assertArrayHasKey('apify_dataset_items_get', $tools);

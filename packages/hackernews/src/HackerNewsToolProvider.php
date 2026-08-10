@@ -203,11 +203,11 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
     }
 
     /**
-     * Path to supplementary Lua API documentation.
+     * Path to supplementary JavaScript API documentation.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/hackernews.md';
+        return __DIR__ . '/../script-docs/hackernews.md';
     }
 
     /**

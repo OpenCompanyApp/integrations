@@ -45,7 +45,7 @@ final class MicrosoftSharePointServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft SharePoint', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_sharepoint_sites_site_list_site', array_keys($provider->tools()));
         self::assertContains('microsoft_sharepoint_sites_get_all_sites', array_keys($provider->tools()));
         self::assertContains('microsoft_sharepoint_sites_lists_list_items', array_keys($provider->tools()));

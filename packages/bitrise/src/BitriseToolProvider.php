@@ -258,8 +258,8 @@ class BitriseToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return app(BitriseService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/bitrise.md';
+        return __DIR__.'/../script-docs/bitrise.md';
     }
 }

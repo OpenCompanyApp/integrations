@@ -12,8 +12,8 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\Integrations\PostHog\PostHogOperations;
 use OpenCompany\Integrations\PostHog\PostHogService;
 use OpenCompany\Integrations\PostHog\PostHogToolProvider;
-use OpenCompany\Integrations\PostHog\Tools\PostHogGetEvent;
-use OpenCompany\Integrations\PostHog\Tools\PostHogListEvents;
+use OpenCompany\Integrations\PostHog\Tools\PostHogEnvironmentseventslist;
+use OpenCompany\Integrations\PostHog\Tools\PostHogEnvironmentseventsretrieve;
 use PHPUnit\Framework\TestCase;
 
 final class PostHogServiceTest extends TestCase
@@ -30,7 +30,7 @@ final class PostHogServiceTest extends TestCase
         self::assertSame('https://us.posthog.com/api/schema/', $provider->integrationMeta()['source_url']);
         self::assertCount(1600, PostHogOperations::all());
         self::assertCount(1601, $provider->tools());
-        foreach (['posthog_capture_event', 'posthog_list_events', 'posthog_get_event', 'posthog_list_persons', 'posthog_list_feature_flags', 'posthog_create_feature_flag', 'posthog_list_insights', 'posthog_list_dashboards', 'posthog_list_cohorts'] as $slug) self::assertArrayHasKey($slug, $provider->tools());
+        foreach (['posthog_capture_event', 'posthog_environmentseventslist', 'posthog_environmentseventsretrieve', 'posthog_environmentspersonslist', 'posthog_featureflagslist', 'posthog_featureflagscreate', 'posthog_environmentsinsightslist', 'posthog_environmentsdashboardslist', 'posthog_cohortslist'] as $slug) self::assertArrayHasKey($slug, $provider->tools());
     }
 
     public function test_generated_tools_map_defaults_path_query_and_bearer_header(): void
@@ -38,7 +38,7 @@ final class PostHogServiceTest extends TestCase
         Http::fake(['https://posthog.example.test/api/environments/env_1/events/?limit=2' => Http::response(['results' => [['id' => 'event_1']]], 200), 'https://posthog.example.test/api/environments/env_1/events/event_1/' => Http::response(['id' => 'event_1'], 200)]);
         $service = new PostHogService(apiToken: 'phx_test', baseUrl: 'https://posthog.example.test', projectId: 'proj_1', environmentId: 'env_1');
         self::assertSame('event_1', $service->listEvents(['limit' => 2])['results'][0]['id']);
-        $success = (new PostHogGetEvent($service))->execute(['id' => 'event_1']);
+        $success = (new PostHogEnvironmentseventsretrieve($service))->execute(['id' => 'event_1']);
         self::assertTrue($success->succeeded());
         self::assertSame('event_1', $success->data['id']);
         Http::assertSent(static fn (Request $request): bool => $request->hasHeader('Authorization', 'Bearer phx_test'));
@@ -46,7 +46,7 @@ final class PostHogServiceTest extends TestCase
 
     public function test_generated_tool_reports_missing_default_path_parameter(): void
     {
-        $result = (new PostHogGetEvent(new PostHogService(apiToken: 'phx_test', baseUrl: 'https://posthog.example.test')))->execute(['id' => 'event_1']);
+        $result = (new PostHogEnvironmentseventsretrieve(new PostHogService(apiToken: 'phx_test', baseUrl: 'https://posthog.example.test')))->execute(['id' => 'event_1']);
         self::assertFalse($result->succeeded());
         self::assertSame('The environment_id parameter is required.', $result->error);
     }
@@ -67,7 +67,7 @@ final class PostHogServiceTest extends TestCase
             public function isConfigured(string $integration, ?string $account = null): bool { return $integration === 'posthog' && $account === 'work'; }
             public function getAccounts(string $integration): array { return $integration === 'posthog' ? ['work'] : []; }
         });
-        $result = (new PostHogToolProvider)->createTool(PostHogListEvents::class, ['account' => 'work'])->execute(['limit' => 1]);
+        $result = (new PostHogToolProvider)->createTool(PostHogEnvironmentseventslist::class, ['account' => 'work'])->execute(['limit' => 1]);
         self::assertTrue($result->succeeded());
         self::assertSame('event_2', $result->data['results'][0]['id']);
         Http::assertSent(static fn (Request $request): bool => $request->url() === 'https://tenant-posthog.example.test/api/environments/env_tenant/events/?limit=1' && $request->hasHeader('Authorization', 'Bearer phx_tenant'));

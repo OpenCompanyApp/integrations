@@ -600,9 +600,9 @@ class CircleCIToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/circleci.md';
+        return __DIR__ . '/../script-docs/circleci.md';
     }
 
     public function credentialFields(): array

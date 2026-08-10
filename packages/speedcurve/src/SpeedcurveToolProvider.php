@@ -216,9 +216,9 @@ class SpeedcurveToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/speedcurve.md';
+        return __DIR__ . '/../script-docs/speedcurve.md';
     }    public function credentialFields(): array
     {
         return [

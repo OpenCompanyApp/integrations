@@ -161,9 +161,9 @@ class AdyenToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/adyen.md';
+        return __DIR__ . '/../script-docs/adyen.md';
     }
 
     public function credentialFields(): array

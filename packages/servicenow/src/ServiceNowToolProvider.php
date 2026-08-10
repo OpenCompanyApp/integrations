@@ -282,11 +282,11 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration, H
     }
 
     /**
-     * Path to the Lua API reference documentation.
+     * Path to the JavaScript API reference documentation.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/servicenow.md';
+        return __DIR__ . '/../script-docs/servicenow.md';
     }
 
     /**

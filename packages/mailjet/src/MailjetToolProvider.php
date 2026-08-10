@@ -247,9 +247,9 @@ class MailjetToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mailjet.md';
+        return __DIR__ . '/../script-docs/mailjet.md';
     }    public function credentialFields(): array
     {
         return [

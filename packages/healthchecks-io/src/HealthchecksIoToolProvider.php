@@ -641,6 +641,6 @@ Official Healthchecks.io endpoint: POST https://hc-ping.com/{ping_key}/{slug}/{e
         return app(HealthchecksIoService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/healthchecks-io.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/healthchecks-io.md'; }
     public function isIntegration(): bool { return true; }
 }

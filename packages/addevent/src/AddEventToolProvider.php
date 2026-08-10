@@ -241,9 +241,9 @@ class AddEventToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/addevent.md';
+        return __DIR__ . '/../script-docs/addevent.md';
     }
 
     /**

@@ -59,7 +59,7 @@ $summary = $service->getCampaignReport([
 
 ## Agent Docs
 
-See `lua-docs/email-octopus.md` for Lua namespace examples and return-shape
+See `script-docs/email-octopus.md` for JavaScript namespace examples and return-shape
 notes.
 
 ## License

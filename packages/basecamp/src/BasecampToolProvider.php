@@ -267,11 +267,11 @@ class BasecampToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
     /**
-     * Path to the Lua API docs for agent consumption.
+     * Path to the JavaScript API docs for agent consumption.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/basecamp.md';
+        return __DIR__ . '/../script-docs/basecamp.md';
     }
 
     /**

@@ -202,9 +202,9 @@ class XataToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/xata.md';
+        return __DIR__ . '/../script-docs/xata.md';
     }
 
     public function isIntegration(): bool

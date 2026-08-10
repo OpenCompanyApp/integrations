@@ -239,13 +239,13 @@ class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      *
-     * @return string|null The absolute path to the Lua docs markdown file.
+     * @return string|null The absolute path to the JavaScript docs markdown file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/recurly.md';
+        return __DIR__ . '/../script-docs/recurly.md';
     }
 
     /**

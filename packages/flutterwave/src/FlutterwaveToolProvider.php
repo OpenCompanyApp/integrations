@@ -241,11 +241,11 @@ class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, 
     }
 
     /**
-     * Path to the Lua documentation file for agent context (optional).
+     * Path to the JavaScript documentation file for agent context (optional).
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/flutterwave.md';
+        return __DIR__ . '/../script-docs/flutterwave.md';
     }
 
     /**

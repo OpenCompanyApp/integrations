@@ -280,9 +280,9 @@ class AhrefsToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/ahrefs.md';
+        return __DIR__ . '/../script-docs/ahrefs.md';
     }    public function credentialFields(): array
     {
         return [

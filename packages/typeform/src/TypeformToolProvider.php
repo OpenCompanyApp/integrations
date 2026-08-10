@@ -250,9 +250,9 @@ class TypeformToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/typeform.md';
+        return __DIR__ . '/../script-docs/typeform.md';
     }    public function credentialFields(): array
     {
         return [

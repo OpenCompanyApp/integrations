@@ -48,7 +48,7 @@ final class MicrosoftPrintServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Universal Print', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_print_print_list_printers', array_keys($provider->tools()));
         self::assertContains('microsoft_print_print_get_printers', array_keys($provider->tools()));
         self::assertContains('microsoft_print_print_list_shares', array_keys($provider->tools()));

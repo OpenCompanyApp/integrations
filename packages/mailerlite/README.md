@@ -38,7 +38,7 @@ This package targets the current MailerLite API at `https://connect.mailerlite.c
 
 ## API Reference
 
-See [lua-docs/mailerlite.md](lua-docs/mailerlite.md) for Lua usage notes and examples.
+See [script-docs/mailerlite.md](script-docs/mailerlite.md) for JavaScript usage notes and examples.
 
 ## License
 

@@ -123,7 +123,7 @@ final class ElevenLabsServiceTest extends TestCase
         self::assertSame('ElevenLabs', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://elevenlabs.io/docs/api-reference', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('self.version', $composer['replace']['opencompanyapp/integration-eleven-labs'] ?? null);
         self::assertArrayHasKey('elevenlabs_text_to_speech_with_timestamps', $tools);
         self::assertArrayHasKey('elevenlabs_speech_to_speech', $tools);

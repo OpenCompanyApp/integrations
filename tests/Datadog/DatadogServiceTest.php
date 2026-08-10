@@ -48,7 +48,7 @@ final class DatadogServiceTest extends TestCase
         self::assertCount(10, $provider->tools());
         self::assertArrayHasKey('datadog_create_monitor', $provider->tools());
         self::assertArrayHasKey('datadog_query_metrics', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake(['https://api.datadoghq.eu/api/v1/validate' => Http::response(['valid' => true], 200)]);
         $result = $provider->testConnection(['api_key' => 'dd-api', 'app_key' => 'dd-app', 'site' => 'eu']);

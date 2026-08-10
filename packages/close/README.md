@@ -71,7 +71,7 @@ Close uses HTTP Basic authentication with the API key as the username and an emp
 - The API base URL defaults to `https://api.close.com/api/v1`.
 - List endpoints follow Close pagination fields such as `_limit` and `_skip`.
 - Older list tools return compact wrappers for agent ergonomics. New endpoint tools return Close JSON directly.
-- Lua usage examples live in `lua-docs/close.md`.
+- JavaScript usage examples live in `script-docs/close.md`.
 
 ## License
 

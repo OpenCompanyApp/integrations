@@ -45,7 +45,7 @@ final class MicrosoftTeamsServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview', $provider->integrationMeta()['docs_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(8, $tools);
         self::assertArrayHasKey('microsoft_teams_list_teams', $tools);

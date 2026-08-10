@@ -225,9 +225,9 @@ class PayloadCmsToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/payload-cms.md';
+        return __DIR__ . '/../script-docs/payload-cms.md';
     }    public function credentialFields(): array
     {
         return [

@@ -48,7 +48,7 @@ final class AdyenServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('https://github.com/Adyen/adyen-openapi', $provider->integrationMeta()['source_url']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(162, $tools);
         self::assertCount(3, $provider->credentialFields());
         self::assertCount(5, $provider->configSchema());

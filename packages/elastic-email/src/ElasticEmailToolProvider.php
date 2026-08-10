@@ -205,9 +205,9 @@ class ElasticEmailToolProvider implements ConfigurableIntegration, HasIntegratio
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/elastic-email.md';
+        return __DIR__ . '/../script-docs/elastic-email.md';
     }
 
     public function credentialFields(): array

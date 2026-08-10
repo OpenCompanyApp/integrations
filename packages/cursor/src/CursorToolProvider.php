@@ -193,9 +193,9 @@ class CursorToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/cursor.md';
+        return __DIR__ . '/../script-docs/cursor.md';
     }
 
     public function credentialFields(): array

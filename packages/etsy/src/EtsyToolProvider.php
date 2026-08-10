@@ -214,9 +214,9 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/etsy.md';
+        return __DIR__ . '/../script-docs/etsy.md';
     }
 
     public function credentialFields(): array

@@ -49,7 +49,7 @@ final class CanvaServiceTest extends TestCase
             self::assertFileExists(__DIR__.'/../../packages/canva/src/Tools/'.$shortName.'.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_query_path_json_and_bearer_requests(): void

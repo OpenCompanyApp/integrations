@@ -199,9 +199,9 @@ class TallyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__).'/lua-docs/tally.md';
+        return dirname(__DIR__).'/script-docs/tally.md';
     }
 
     public function credentialFields(): array

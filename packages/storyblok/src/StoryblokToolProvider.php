@@ -227,9 +227,9 @@ class StoryblokToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/storyblok.md';
+        return __DIR__ . '/../script-docs/storyblok.md';
     }    public function credentialFields(): array
     {
         return [

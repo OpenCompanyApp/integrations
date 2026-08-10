@@ -251,11 +251,11 @@ class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration, H
     }
 
     /**
-     * Path to the Lua documentation file.
+     * Path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/redis-cloud.md';
+        return __DIR__ . '/../script-docs/redis-cloud.md';
     }
 
     /**

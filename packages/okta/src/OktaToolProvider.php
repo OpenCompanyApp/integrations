@@ -244,9 +244,9 @@ class OktaToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/okta.md';
+        return __DIR__ . '/../script-docs/okta.md';
     }    public function credentialFields(): array
     {
         return [

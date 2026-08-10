@@ -281,11 +281,11 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/workable.md';
+        return __DIR__ . '/../script-docs/workable.md';
     }
 
     /**

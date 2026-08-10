@@ -89,5 +89,5 @@ class GoogleDriveActivityToolProvider implements ToolProvider, ConfigurableInteg
         return app(GoogleDriveActivityService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-drive-activity.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-drive-activity.md'; }
 }

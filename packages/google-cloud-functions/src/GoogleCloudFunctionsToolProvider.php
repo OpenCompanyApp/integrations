@@ -132,5 +132,5 @@ class GoogleCloudFunctionsToolProvider implements ToolProvider, ConfigurableInte
         return app(GoogleCloudFunctionsService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-cloud-functions.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-cloud-functions.md'; }
 }

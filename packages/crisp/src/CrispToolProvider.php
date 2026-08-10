@@ -134,7 +134,7 @@ class CrispToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return $tools;
     }
 
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/crisp.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/crisp.md'; }
 
     public function credentialFields(): array
     {

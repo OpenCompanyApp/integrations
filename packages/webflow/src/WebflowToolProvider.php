@@ -226,9 +226,9 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/webflow.md';
+        return __DIR__ . '/../script-docs/webflow.md';
     }    public function credentialFields(): array
     {
         return [

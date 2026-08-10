@@ -254,11 +254,11 @@ class AgoraToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     }
 
     /**
-     * Get the path to the Lua supplementary documentation.
+     * Get the path to the JavaScript supplementary documentation.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/agora.md';
+        return __DIR__ . '/../script-docs/agora.md';
     }
 
     /**

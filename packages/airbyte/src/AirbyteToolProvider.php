@@ -284,6 +284,6 @@ class AirbyteToolProvider implements ToolProvider, ConfigurableIntegration, HasI
   'icon' => 'ph:database',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/airbyte.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/airbyte.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): AirbyteService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new AirbyteService(accessToken:$creds->get('airbyte','access_token','',$account), baseUrl:$creds->get('airbyte','url','https://api.airbyte.com/v1',$account));} return app(AirbyteService::class); }
 }

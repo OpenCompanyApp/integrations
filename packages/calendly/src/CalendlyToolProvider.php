@@ -253,11 +253,11 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
     /**
-     * Path to Lua documentation for the Calendly integration.
+     * Path to JavaScript documentation for the Calendly integration.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/calendly.md';
+        return __DIR__ . '/../script-docs/calendly.md';
     }
 
     /**

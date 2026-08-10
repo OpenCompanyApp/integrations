@@ -41,7 +41,7 @@ final class ZohoCrmServiceTest extends TestCase
         self::assertSame('Zoho CRM', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertCount(15, $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_uses_zoho_oauth_header_and_v7_endpoint(): void

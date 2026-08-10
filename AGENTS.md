@@ -9,7 +9,7 @@ When adding or modifying an integration in this repo, optimize for:
 - package quality over package count
 - stable host behavior across OpenCompany and KosmoKrator
 - clean metadata and naming in discovery UIs
-- Lua docs that help agents use tools correctly on the first try
+- JavaScript docs that help agents use tools correctly on the first try
 - deterministic tests with fake data only
 
 This repo is a package monorepo, not a dumping ground for thin wrappers. If an integration is redundant, inconsistent, undocumented, or untested, it is not ready.
@@ -31,7 +31,7 @@ For the full architecture, see `README.md`. For a step-by-step walkthrough, see 
 - Add new integrations under `packages/{name}` as Composer packages. Do not create separate repos for new integrations unless explicitly required.
 - Prefer one canonical package per service family. Do not add duplicate legacy wrappers when an existing package already owns that namespace.
 - If a legacy package must remain for compatibility, make it defer to the canonical package and declare the replacement clearly in Composer metadata.
-- Keep package ids, namespaces, app names, and Lua namespaces aligned. Avoid `google-docs` vs `google_docs` style drift.
+- Keep package ids, namespaces, app names, and JavaScript namespaces aligned. Avoid `google-docs` vs `google_docs` style drift.
 - Public-facing names must be human-readable. Do not use keyword blobs or SEO labels as the visible integration name.
 
 ## File Structure
@@ -47,7 +47,7 @@ packages/{name}/
       {Name}{Action}.php          # One class per tool
     Triggers/                     # Only if the service supports webhooks
       {Name}WebhookTrigger.php
-  lua-docs/
+  script-docs/
     {name}.md                     # MANDATORY — supplementary docs for the AI agent
 ```
 
@@ -251,7 +251,7 @@ For package folder names, prefer the established package id over inventing a sec
 
 ## Checklist
 
-Every integration MUST have ALL applicable items checked. An integration is NOT complete without lua-docs, PHPDoc, and all 4 core files.
+Every integration MUST have ALL applicable items checked. An integration is NOT complete without script-docs, PHPDoc, and all 4 core files.
 
 ### Mandatory (every integration)
 
@@ -260,15 +260,15 @@ Every integration MUST have ALL applicable items checked. An integration is NOT 
 - [ ] `src/{Name}ServiceProvider.php` with singleton + registry registration
 - [ ] `src/{Name}ToolProvider.php` with `ConfigurableIntegration` + multi-account `resolveService()`
 - [ ] `src/Tools/{Name}{Action}.php` — one file per tool, each with `name()`, `description()`, `parameters()`, `execute()` with try-catch
-- [ ] `lua-docs/{name}.md` — **MANDATORY for every integration, not optional**
+- [ ] `script-docs/{name}.md` — **MANDATORY for every integration, not optional**
 - [ ] PHPDoc on every class (class docblock), constructor (`@param`), `execute()` (`@param array<string, mixed> $args`), and service methods (`@param` + `@return`)
 - [ ] `credentialFields()` for credential-based integrations
 - [ ] `testConnection()` for credential-based integrations
 - [ ] All PHP files pass `php -l` syntax checks
 - [ ] Tests added in this repo for non-trivial behavior, fallback logic, filters, or endpoint mapping
 - [ ] No confidential domains, real tokens, real emails, or private project names in tests or docs
-- [ ] Lua docs match the actual normalized tool output, not just the upstream API marketing docs
-- [ ] Host behavior checked in both OpenCompany and KosmoKrator when the change affects discovery, credentials, Lua docs, or namespaces
+- [ ] JavaScript docs match the actual normalized tool output, not just the upstream API marketing docs
+- [ ] Host behavior checked in both OpenCompany and KosmoKrator when the change affects discovery, credentials, JavaScript docs, or namespaces
 
 ### Strongly Recommended
 
@@ -291,9 +291,9 @@ Every integration MUST have ALL applicable items checked. An integration is NOT 
   - unsupported-host behavior
   - metadata and naming regressions
 
-## Lua Docs Rules
+## JavaScript Docs Rules
 
-- `lua-docs/{name}.md` is required.
+- `script-docs/{name}.md` is required.
 - Document the namespace and the intended usage pattern.
 - Document return shapes or normalized response notes when the output is not obvious.
 - If the integration flattens or renames upstream fields, say so explicitly.
@@ -306,12 +306,12 @@ Every integration MUST have ALL applicable items checked. An integration is NOT 
 - Do not rely on fragile discovery side effects or duplicate package registration.
 - Keep metadata compatible with both:
   - settings UIs
-  - Lua namespace builders
+  - JavaScript namespace builders
 - If a change affects discovery, visible naming, or namespace shape, verify both catalog output and UI-facing metadata.
 
 ### Common Mistakes to Avoid
 
-1. **Forgetting lua-docs** — Every integration needs `lua-docs/{name}.md`. This is not optional.
+1. **Forgetting script-docs** — Every integration needs `script-docs/{name}.md`. This is not optional.
 2. **Forgetting PHPDoc** — Every class needs a docblock. Every constructor needs `@param`. Every `execute()` needs `@param array<string, mixed> $args`.
 3. **Partial completions** — Do not submit with only Service + ServiceProvider but no ToolProvider or Tools.
 4. **Missing ToolProvider** — Without it the integration won't appear in the registry.

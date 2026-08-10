@@ -424,7 +424,10 @@ spl_autoload_register(static function (string $class): void {
             require_once $path;
         }
     }
-});
+// The host application's Composer loader may already know some integration
+// classes. Prepend this checkout loader so the monorepo suite always exercises
+// the source under test instead of an older installed package copy.
+}, true, true);
 
 $app = new Container;
 Container::setInstance($app);

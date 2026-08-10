@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Package and JavaScript docs suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, curl, dom
+          coverage: none
+
+      - name: Install pinned QuickJS sandbox extension
+        env:
+          QUICKJS_SANDBOX_SHA256: 1030bdb948c056bacc607ddec0e825872622b1bdd214dc758696691644ce4097
+        run: |
+          curl -fsSL https://github.com/OpenCompanyApp/quickjs-sandbox/releases/download/v1.0.1/quickjs_sandbox-php84-nts-linux-x86_64.so -o /tmp/quickjs_sandbox.so
+          echo "${QUICKJS_SANDBOX_SHA256}  /tmp/quickjs_sandbox.so" | sha256sum -c -
+          sudo install -m 0644 /tmp/quickjs_sandbox.so "$(php-config --extension-dir)/quickjs_sandbox.so"
+          echo 'extension=quickjs_sandbox.so' | sudo tee "$(php --ini | sed -n 's|Scan for additional .ini files in: ||p')/30-quickjs_sandbox.ini"
+          php --ri quickjs_sandbox
+
+      - name: Validate Composer manifest
+        run: composer validate --strict
+
+      - name: Install test dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Run package suite and compile every JavaScript example
+        run: composer check

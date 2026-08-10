@@ -285,8 +285,8 @@ class AlphaVantageToolProvider implements ToolProvider, ConfigurableIntegration,
         return app(AlphaVantageService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/alpha-vantage.md';
+        return __DIR__.'/../script-docs/alpha-vantage.md';
     }
 }

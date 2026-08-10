@@ -987,5 +987,5 @@ class GoogleWorkspaceAdminToolProvider implements ToolProvider, ConfigurableInte
         return app(GoogleWorkspaceAdminService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-workspace-admin.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-workspace-admin.md'; }
 }

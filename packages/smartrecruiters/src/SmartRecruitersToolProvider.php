@@ -7670,6 +7670,6 @@ class SmartRecruitersToolProvider implements ToolProvider, ConfigurableIntegrati
         return app(SmartRecruitersService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/smartrecruiters.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/smartrecruiters.md'; }
     public function isIntegration(): bool { return true; }
 }

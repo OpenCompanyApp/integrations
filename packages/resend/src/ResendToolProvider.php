@@ -70,7 +70,7 @@ class ResendToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return $tools;
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/resend.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/resend.md'; }
     public function isIntegration(): bool { return true; }
 
     /**

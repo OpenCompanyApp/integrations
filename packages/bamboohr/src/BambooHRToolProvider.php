@@ -230,9 +230,9 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/bamboohr.md';
+        return __DIR__ . '/../script-docs/bamboohr.md';
     }    public function credentialFields(): array
     {
         return [

@@ -243,9 +243,9 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zoho-desk.md';
+        return __DIR__ . '/../script-docs/zoho-desk.md';
     }    public function credentialFields(): array
     {
         return [

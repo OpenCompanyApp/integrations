@@ -46,7 +46,7 @@ final class DropboxServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('https://www.dropbox.com/developers/documentation/http/documentation', $provider->integrationMeta()['docs_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(17, $tools);
         self::assertArrayHasKey('dropbox_upload_file', $tools);

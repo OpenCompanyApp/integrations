@@ -185,8 +185,8 @@ class CodemagicToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return app(CodemagicService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/codemagic.md';
+        return __DIR__.'/../script-docs/codemagic.md';
     }
 }

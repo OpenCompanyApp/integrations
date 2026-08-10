@@ -194,8 +194,8 @@ class InstapaperToolProvider implements ToolProvider, ConfigurableIntegration, H
         return app(InstapaperService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/instapaper.md';
+        return __DIR__.'/../script-docs/instapaper.md';
     }
 }

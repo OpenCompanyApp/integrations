@@ -1,0 +1,290 @@
+# Freshservice — JavaScript API Reference
+
+## list_tickets
+
+List support tickets with optional pagination and filtering.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page` | integer | no | Page number for pagination (1-based) |
+| `per_page` | integer | no | Number of tickets per page (max 100) |
+| `filter` | string | no | Predefined filter: `"new_and_my_open"`, `"watching"`, `"spam"`, or `"deleted"` |
+
+### Examples
+
+```js
+// List open tickets (first page)
+var result = app.integrations.freshservice.list_tickets({
+  filter: "new_and_my_open",
+  per_page: 25,
+})
+
+for (const ticket of (result.tickets)) {
+  console.log(ticket.id + ": " + ticket.subject + " [Priority: " + ticket.priority + "]")
+}
+```
+```js
+// Paginate through tickets
+var result = app.integrations.freshservice.list_tickets({
+  page: 2,
+  per_page: 50,
+})
+```
+---
+
+## get_ticket
+
+Get full details of a specific ticket.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `ticket_id` | integer | yes | The ticket display ID |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.get_ticket({
+  ticket_id: 42,
+})
+
+var ticket = result.ticket
+console.log("Subject: " + ticket.subject)
+console.log("Status: " + ticket.status)
+console.log("Priority: " + ticket.priority)
+console.log("Requester: " + ticket.requester.email)
+```
+---
+
+## create_ticket
+
+Create a new support ticket.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `subject` | string | yes | The ticket subject / title |
+| `description` | string | yes | Ticket description (supports HTML) |
+| `email` | string | no | Email address of the requester |
+| `priority` | integer | no | Priority: 1=Low, 2=Medium, 3=High, 4=Urgent |
+
+### Priority Values
+
+| Value | Level |
+|-------|-------|
+| 1 | Low |
+| 2 | Medium (default) |
+| 3 | High |
+| 4 | Urgent |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.create_ticket({
+  subject: "VPN connection issue",
+  description: "<p>Cannot connect to the company VPN since this morning. Getting error code 691.</p>",
+  email: "john@example.com",
+  priority: 3,
+})
+
+console.log("Created ticket #" + result.ticket.id)
+```
+---
+
+## update_ticket
+
+Update an existing ticket.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `ticket_id` | integer | yes | The ticket display ID |
+| `subject` | string | no | Updated ticket subject |
+| `description` | string | no | Updated ticket description |
+| `priority` | integer | no | Priority: 1=Low, 2=Medium, 3=High, 4=Urgent |
+| `status` | integer | no | Status: 2=Open, 3=Pending, 4=Resolved, 5=Closed |
+| `responder_id` | integer | no | ID of the agent to assign |
+| `tags` | array | no | Array of tag strings |
+
+### Status Values
+
+| Value | Status |
+|-------|--------|
+| 2 | Open |
+| 3 | Pending |
+| 4 | Resolved |
+| 5 | Closed |
+
+### Examples
+
+```js
+// Assign and prioritize a ticket
+var result = app.integrations.freshservice.update_ticket({
+  ticket_id: 42,
+  responder_id: 5,
+  priority: 4,
+})
+
+// Resolve a ticket
+var result = app.integrations.freshservice.update_ticket({
+  ticket_id: 42,
+  status: 4,
+})
+
+// Add tags
+var result = app.integrations.freshservice.update_ticket({
+  ticket_id: 42,
+  tags: ["vpn", "urgent", "networking"],
+})
+```
+---
+
+## delete_ticket
+
+Delete a ticket permanently.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `ticket_id` | integer | yes | The ticket display ID to delete |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.delete_ticket({
+  ticket_id: 42,
+})
+
+console.log(result) // "Ticket 42 has been deleted."
+```
+---
+
+## list_agents
+
+List all agents (support staff) in the Freshservice account.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page` | string | no | Page cursor for pagination |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.list_agents({})
+
+for (const agent of (result.agents)) {
+  console.log(agent.id + ": " + agent.first_name + " " + agent.last_name + " (" + agent.email + ")")
+}
+```
+---
+
+## get_agent
+
+Get details of a specific agent.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `agent_id` | integer | yes | The agent ID |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.get_agent({
+  agent_id: 5,
+})
+
+var agent = result.agent
+console.log(agent.first_name + " " + agent.last_name)
+console.log("Email: " + agent.email)
+console.log("Available: " + String(agent.available))
+```
+---
+
+## list_assets
+
+List IT assets with optional pagination.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page` | integer | no | Page number for pagination (1-based) |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.list_assets({
+  page: 1,
+})
+
+for (const asset of (result.assets)) {
+  console.log(asset.display_id + ": " + asset.name + " [" + asset.asset_type + "]")
+}
+```
+---
+
+## get_asset
+
+Get details of a specific asset.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `asset_id` | integer | yes | The asset display ID |
+
+### Example
+
+```js
+var result = app.integrations.freshservice.get_asset({
+  asset_id: 15,
+})
+
+var asset = result.asset
+console.log("Name: " + asset.name)
+console.log("Type: " + asset.asset_type)
+console.log("State: " + asset.state_name)
+```
+---
+
+## get_current_user
+
+Get the profile of the currently authenticated agent. Takes no parameters.
+
+### Example
+
+```js
+var result = app.integrations.freshservice.get_current_user({})
+
+var agent = result.agent
+console.log("Authenticated as: " + agent.first_name + " " + agent.last_name)
+console.log("Email: " + agent.email)
+```
+---
+
+## Multi-Account Usage
+
+If you have multiple Freshservice accounts configured, use account-specific namespaces:
+
+```js
+// Default account (always works)
+app.integrations.freshservice.list_tickets({})
+
+// Explicit default (portable across setups)
+app.integrations.freshservice.default.list_tickets({})
+
+// Named accounts
+app.integrations.freshservice.production.list_tickets({})
+app.integrations.freshservice.staging.list_tickets({})
+```
+All functions are identical across accounts — only the credentials differ.

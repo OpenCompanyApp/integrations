@@ -51,7 +51,7 @@ final class AutopilotServiceTest extends TestCase
             self::assertFileExists(__DIR__.'/../../packages/autopilot/src/Tools/'.$shortName.'.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_path_json_and_documented_api_key_header(): void

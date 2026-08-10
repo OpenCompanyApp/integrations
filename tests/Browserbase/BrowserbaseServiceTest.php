@@ -31,7 +31,7 @@ final class BrowserbaseServiceTest extends TestCase
         self::assertSame('Browserbase', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('browserbase_sessions_create', array_keys($provider->tools()));
         self::assertContains('browserbase_search_web', array_keys($provider->tools()));
         self::assertContains('browserbase_extensions_upload', array_keys($provider->tools()));

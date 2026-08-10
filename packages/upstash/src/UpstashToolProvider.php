@@ -247,11 +247,11 @@ class UpstashToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
     /**
-     * Path to the Lua documentation file (if any).
+     * Path to the JavaScript documentation file (if any).
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/upstash.md';
+        return __DIR__ . '/../script-docs/upstash.md';
     }
 
     /**

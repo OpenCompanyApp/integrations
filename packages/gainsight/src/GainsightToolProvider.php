@@ -262,11 +262,11 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     }
 
     /**
-     * Get the path to the Lua API documentation file.
+     * Get the path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/gainsight.md';
+        return __DIR__ . '/../script-docs/gainsight.md';
     }
 
     /**

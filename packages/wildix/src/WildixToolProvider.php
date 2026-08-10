@@ -158,9 +158,9 @@ class WildixToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/wildix.md';
+        return __DIR__.'/../script-docs/wildix.md';
     }
 
     public function credentialFields(): array

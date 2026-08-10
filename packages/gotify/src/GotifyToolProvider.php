@@ -222,9 +222,9 @@ class GotifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/gotify.md';
+        return __DIR__ . '/../script-docs/gotify.md';
     }
 
     public function credentialFields(): array

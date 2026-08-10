@@ -3093,6 +3093,6 @@ Maps to the official Airwallex public Postman collection endpoint GET /api/v1/ac
         return app(AirwallexService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/airwallex.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/airwallex.md'; }
     public function isIntegration(): bool { return true; }
 }

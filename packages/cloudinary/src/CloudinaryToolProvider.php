@@ -209,9 +209,9 @@ class CloudinaryToolProvider implements ConfigurableIntegration, HasIntegrationC
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/cloudinary.md';
+        return __DIR__ . '/../script-docs/cloudinary.md';
     }
 
     public function credentialFields(): array

@@ -47,7 +47,7 @@ The provider exposes 183 tools:
 - Pipelines API: identify, track, page, screen, group, alias, and batch calls.
 
 Each generated tool accepts snake_case path and query arguments. JSON request
-bodies go under `payload`. The Lua docs in `lua-docs/customerio.md` list every
+bodies go under `payload`. The JavaScript docs in `script-docs/customerio.md` list every
 tool, method, path, parameters, and body requirement.
 
 ## License

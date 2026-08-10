@@ -51,7 +51,7 @@ final class BoxServiceTest extends TestCase
         self::assertSame('https://raw.githubusercontent.com/box/box-openapi/main/openapi.json', $provider->integrationMeta()['source_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(294, $tools);
         self::assertArrayHasKey('box_get_files_id', $tools);
         self::assertArrayHasKey('box_get_folders_id_items', $tools);

@@ -305,11 +305,11 @@ class DatadogToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the JavaScript documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/datadog.md';
+        return __DIR__ . '/../script-docs/datadog.md';
     }
 
     /**

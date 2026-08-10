@@ -77,6 +77,6 @@ class PostmanToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         if ($account !== null) { $creds = app(CredentialResolver::class); return new PostmanService(apiKey: $creds->get('postman', 'api_key', '', $account), baseUrl: $creds->get('postman', 'url', 'https://api.getpostman.com', $account)); }
         return app(PostmanService::class);
     }
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/postman.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/postman.md'; }
     private function classNameForOperation(string $operation): string { return 'Postman'.str_replace(' ', '', ucwords(str_replace('_', ' ', $operation))); }
 }

@@ -55,7 +55,7 @@ class PostHogService
             $value = $this->argument($args, $argumentName, $apiName, $aliases);
             if ($value === null && $parameter['in'] === 'path') $value = $this->defaultPathParameter($argumentName);
             if ($value === null) {
-                if (!empty($parameter['required'])) throw new \RuntimeException("The {$argumentName} parameter is required.");
+                if (!empty($parameter['required'])) throw new \RuntimeException('The ' . $this->friendlyArgumentName($argumentName) . ' parameter is required.');
                 continue;
             }
             $consumed[] = $apiName; $consumed[] = $argumentName; $consumed[] = $this->snakeName($apiName); $consumed[] = strtolower($apiName);
@@ -94,33 +94,33 @@ class PostHogService
     /** @param  array<string, mixed>  $args  Tool arguments. @return array<string, mixed> */
     private function executeSlug(string $slug, array $args = []): array { $operations = self::operations(); if (!isset($operations[$slug])) throw new \RuntimeException("Unknown PostHog operation: {$slug}"); return $this->executeOperation($operations[$slug], $args); }
     /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
-    public function listEvents(array $params = []): array { return $this->executeSlug('posthog_list_events', $params); }
+    public function listEvents(array $params = []): array { return $this->executeSlug('posthog_environmentseventslist', $params); }
     /** @return array<string, mixed> */
-    public function getEvent(string $eventId, array $params = []): array { return $this->executeSlug('posthog_get_event', array_merge($params, ['id' => $eventId])); }
+    public function getEvent(string $eventId, array $params = []): array { return $this->executeSlug('posthog_environmentseventsretrieve', array_merge($params, ['id' => $eventId])); }
     /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
-    public function listPersons(array $params = []): array { return $this->executeSlug('posthog_list_persons', $params); }
+    public function listPersons(array $params = []): array { return $this->executeSlug('posthog_environmentspersonslist', $params); }
     /** @return array<string, mixed> */
-    public function getPerson(string $personId, array $params = []): array { return $this->executeSlug('posthog_get_person', array_merge($params, ['id' => $personId])); }
+    public function getPerson(string $personId, array $params = []): array { return $this->executeSlug('posthog_environmentspersonsretrieve', array_merge($params, ['id' => $personId])); }
     /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
-    public function listFeatureFlags(array $params = []): array { return $this->executeSlug('posthog_list_feature_flags', $params); }
+    public function listFeatureFlags(array $params = []): array { return $this->executeSlug('posthog_featureflagslist', $params); }
     /** @return array<string, mixed> */
-    public function getFeatureFlag(int|string $flagId, array $params = []): array { return $this->executeSlug('posthog_get_feature_flag', array_merge($params, ['id' => $flagId])); }
+    public function getFeatureFlag(int|string $flagId, array $params = []): array { return $this->executeSlug('posthog_featureflagsretrieve', array_merge($params, ['id' => $flagId])); }
     /** @param  array<string, mixed>  $args  Feature flag payload. @return array<string, mixed> */
-    public function createFeatureFlag(array $args): array { return $this->executeSlug('posthog_create_feature_flag', $args); }
+    public function createFeatureFlag(array $args): array { return $this->executeSlug('posthog_featureflagscreate', $args); }
     /** @param  array<string, mixed>  $args  Feature flag patch payload. @return array<string, mixed> */
-    public function updateFeatureFlag(int|string $flagId, array $args = []): array { return $this->executeSlug('posthog_update_feature_flag', array_merge($args, ['id' => $flagId])); }
+    public function updateFeatureFlag(int|string $flagId, array $args = []): array { return $this->executeSlug('posthog_featureflagsupdate', array_merge($args, ['id' => $flagId])); }
     /** @return array<string, mixed> */
-    public function deleteFeatureFlag(int|string $flagId, array $params = []): array { return $this->executeSlug('posthog_delete_feature_flag', array_merge($params, ['id' => $flagId])); }
+    public function deleteFeatureFlag(int|string $flagId, array $params = []): array { return $this->executeSlug('posthog_featureflagsdestroy', array_merge($params, ['id' => $flagId])); }
     /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
-    public function listInsights(array $params = []): array { return $this->executeSlug('posthog_list_insights', $params); }
+    public function listInsights(array $params = []): array { return $this->executeSlug('posthog_environmentsinsightslist', $params); }
     /** @return array<string, mixed> */
-    public function getInsight(int|string $insightId, array $params = []): array { return $this->executeSlug('posthog_get_insight', array_merge($params, ['id' => $insightId])); }
+    public function getInsight(int|string $insightId, array $params = []): array { return $this->executeSlug('posthog_environmentsinsightsretrieve', array_merge($params, ['id' => $insightId])); }
     /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
-    public function listDashboards(array $params = []): array { return $this->executeSlug('posthog_list_dashboards', $params); }
+    public function listDashboards(array $params = []): array { return $this->executeSlug('posthog_environmentsdashboardslist', $params); }
     /** @return array<string, mixed> */
-    public function getDashboard(int|string $dashboardId, array $params = []): array { return $this->executeSlug('posthog_get_dashboard', array_merge($params, ['id' => $dashboardId])); }
+    public function getDashboard(int|string $dashboardId, array $params = []): array { return $this->executeSlug('posthog_environmentsdashboardsretrieve', array_merge($params, ['id' => $dashboardId])); }
     /** @param  array<string, mixed>  $params  Query parameters. @return array<string, mixed> */
-    public function listCohorts(array $params = []): array { return $this->executeSlug('posthog_list_cohorts', $params); }
+    public function listCohorts(array $params = []): array { return $this->executeSlug('posthog_cohortslist', $params); }
 
     /** @return array{success: bool, message?: string, error?: string} */
     public function testConnection(): array { try { $this->rawRequest('GET', $this->baseUrl . '/api/users/', ['limit' => 1], [], null, true); return ['success' => true, 'message' => 'Connected to PostHog.']; } catch (\Throwable $e) { return ['success' => false, 'error' => $e->getMessage()]; } }
@@ -174,9 +174,11 @@ class PostHogService
         return match ($method) { 'GET' => $http->get($url), 'POST' => $http->post($url, $body ?? []), 'PUT' => $http->put($url, $body ?? []), 'PATCH' => $http->patch($url, $body ?? []), 'DELETE' => $http->delete($url, is_array($body) ? $body : []), default => $http->send($method, $url, ['json' => $body ?? []]), };
     }
 
-    private function defaultPathParameter(string $argumentName): ?string { return match ($argumentName) { 'project_id' => $this->projectId !== '' ? $this->projectId : null, 'environment_id' => $this->environmentId !== '' ? $this->environmentId : null, default => null, }; }
+    private function defaultPathParameter(string $argumentName): ?string { return match ($this->friendlyArgumentName($argumentName)) { 'project_id' => $this->projectId !== '' ? $this->projectId : null, 'environment_id' => $this->environmentId !== '' ? $this->environmentId : null, default => null, }; }
     /** @param  array<string, mixed>  $args  Tool arguments. @param  array<int, string>  $aliases  Additional accepted argument names. */
-    private function argument(array $args, string $argumentName, string $apiName, array $aliases = []): mixed { foreach (array_merge([$argumentName, $apiName, $this->snakeName($apiName), strtolower($apiName)], $aliases) as $key) if (array_key_exists($key, $args)) return $args[$key]; return null; }
+    private function argument(array $args, string $argumentName, string $apiName, array $aliases = []): mixed { foreach (array_merge([$argumentName, $this->friendlyArgumentName($argumentName), $apiName, $this->snakeName($apiName), strtolower($apiName)], $aliases) as $key) if (array_key_exists($key, $args)) return $args[$key]; return null; }
+    /** Keep the generated schema wire name while exposing familiar configuration keys in errors and accepted input. */
+    private function friendlyArgumentName(string $name): string { return match ($name) { 'projectid' => 'project_id', 'environmentid' => 'environment_id', default => $name, }; }
     private function snakeName(string $name): string { $name = str_replace('[]', '', $name); $name = (string) preg_replace('/(?<!^)[A-Z]/', '_$0', $name); $name = (string) preg_replace('/[^A-Za-z0-9]+/', '_', $name); $name = (string) preg_replace('/_+/', '_', $name); return strtolower(trim($name, '_')) ?: 'value'; }
     /** @param  array<string, mixed>  $args  Tool arguments. @param  array<int, string>  $consumed  Already consumed parameter names. @return array<string, mixed> */
     private function bodyFromLooseArguments(array $args, array $consumed): array { $body = []; $consumed = array_flip($consumed); foreach ($args as $key => $value) if (!isset($consumed[$key])) $body[$key] = $value; return $body; }

@@ -320,5 +320,5 @@ class GoogleVaultToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(GoogleVaultService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-vault.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-vault.md'; }
 }

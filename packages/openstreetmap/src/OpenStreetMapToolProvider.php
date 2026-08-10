@@ -109,8 +109,8 @@ class OpenStreetMapToolProvider implements ToolProvider, HasIntegrationCapabilit
         return new $class(app(OpenStreetMapService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/openstreetmap.md';
+        return __DIR__.'/../script-docs/openstreetmap.md';
     }
 }

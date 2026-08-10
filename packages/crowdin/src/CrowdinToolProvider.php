@@ -214,9 +214,9 @@ class CrowdinToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/crowdin.md';
+        return __DIR__ . '/../script-docs/crowdin.md';
     }    public function credentialFields(): array
     {
         return [

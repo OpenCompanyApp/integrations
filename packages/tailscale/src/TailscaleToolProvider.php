@@ -620,6 +620,6 @@ class TailscaleToolProvider implements ToolProvider, ConfigurableIntegration, Ha
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/tailscale.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/tailscale.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): TailscaleService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new TailscaleService(apiToken:$creds->get('tailscale','api_token','',$account), baseUrl:$creds->get('tailscale','url','https://api.tailscale.com/api/v2',$account));} return app(TailscaleService::class); }
 }

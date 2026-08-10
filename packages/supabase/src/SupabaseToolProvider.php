@@ -242,9 +242,9 @@ class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/supabase.md';
+        return __DIR__ . '/../script-docs/supabase.md';
     }
 
     /**

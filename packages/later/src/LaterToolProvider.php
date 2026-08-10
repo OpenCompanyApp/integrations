@@ -225,9 +225,9 @@ class LaterToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/later.md';
+        return __DIR__ . '/../script-docs/later.md';
     }    public function credentialFields(): array
     {
         return [

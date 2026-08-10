@@ -233,7 +233,7 @@ class LemonSqueezyToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/lemon-squeezy.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/lemon-squeezy.md'; }
 
     public function credentialFields(): array
     {

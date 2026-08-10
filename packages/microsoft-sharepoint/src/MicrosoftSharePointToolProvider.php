@@ -10801,6 +10801,6 @@ Official Microsoft Graph v1.0 endpoint: GET /sites/{site-id}/termStores/{store-i
         return app(MicrosoftSharePointService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-sharepoint.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-sharepoint.md'; }
     public function isIntegration(): bool { return true; }
 }

@@ -382,13 +382,13 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     }
 
     /**
-     * Get the path to the Lua API documentation file.
+     * Get the path to the JavaScript API documentation file.
      *
      * @return string|null Absolute path to the markdown docs file
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/bitly.md';
+        return __DIR__ . '/../script-docs/bitly.md';
     }
 
     /**

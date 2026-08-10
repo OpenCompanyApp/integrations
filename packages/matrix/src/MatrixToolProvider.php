@@ -224,9 +224,9 @@ class MatrixToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/matrix.md';
+        return __DIR__ . '/../script-docs/matrix.md';
     }    public function credentialFields(): array
     {
         return [

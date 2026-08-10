@@ -492,9 +492,9 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/quickbase.md';
+        return __DIR__ . '/../script-docs/quickbase.md';
     }    public function credentialFields(): array
     {
         return [

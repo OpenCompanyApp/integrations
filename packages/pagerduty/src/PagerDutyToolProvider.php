@@ -177,9 +177,9 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/pagerduty.md';
+        return __DIR__ . '/../script-docs/pagerduty.md';
     }
 
     public function isIntegration(): bool

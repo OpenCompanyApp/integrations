@@ -374,9 +374,9 @@ class BitwardenToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 );
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/bitwarden.md';
+        return __DIR__.'/../script-docs/bitwarden.md';
     }
 
     public function isIntegration(): bool

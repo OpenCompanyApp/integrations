@@ -234,9 +234,9 @@ class BraintrustToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/braintrust.md';
+        return __DIR__ . '/../script-docs/braintrust.md';
     }
 
     public function credentialFields(): array

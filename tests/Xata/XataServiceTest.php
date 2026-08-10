@@ -49,7 +49,7 @@ final class XataServiceTest extends TestCase
         self::assertCount(15, $provider->tools());
         self::assertArrayHasKey('xata_query_table', $provider->tools());
         self::assertArrayHasKey('xata_transaction', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         foreach ($provider->tools() as $tool) {
             $shortName = substr((string) $tool['class'], strrpos((string) $tool['class'], '\\') + 1);

@@ -52,7 +52,7 @@ final class AfterShipServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(16, $provider->tools());
         self::assertContains('aftership_create_tracking', array_keys($provider->tools()));
         self::assertContains('aftership_detect_courier', array_keys($provider->tools()));

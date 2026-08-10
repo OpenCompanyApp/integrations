@@ -45,7 +45,7 @@ final class FeaturebaseServiceTest extends TestCase
         self::assertSame('Featurebase', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(110, FeaturebaseService::operations());
         self::assertCount(114, $provider->tools());
         self::assertArrayHasKey('featurebase_list_boards', $provider->tools());

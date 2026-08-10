@@ -180,9 +180,9 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/neon.md';
+        return __DIR__ . '/../script-docs/neon.md';
     }
 
     public function isIntegration(): bool

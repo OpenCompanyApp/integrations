@@ -46,7 +46,7 @@ final class DroneCiServiceTest extends TestCase
         self::assertSame('Drone CI', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(36, $provider->tools());
         self::assertArrayHasKey('drone_ci_create_build', $provider->tools());
         self::assertArrayHasKey('drone_ci_trigger_cron', $provider->tools());

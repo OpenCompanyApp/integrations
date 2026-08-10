@@ -221,8 +221,8 @@ class CompaniesHouseToolProvider implements ToolProvider, ConfigurableIntegratio
         return app(CompaniesHouseService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/companies-house.md';
+        return __DIR__.'/../script-docs/companies-house.md';
     }
 }

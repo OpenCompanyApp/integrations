@@ -1404,6 +1404,6 @@ class MiroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
   'icon' => 'ph:pencil-simple',
 ),
     ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/miro.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/miro.md'; }
     /** @param  array<string, mixed>  $context  Runtime account context. */ private function resolveService(array $context=[]): MiroService { $account=$context['account']??null; if($account!==null){ $creds=app(CredentialResolver::class); return new MiroService(accessToken:$creds->get('miro','access_token','',$account), baseUrl:$creds->get('miro','url','https://api.miro.com',$account)); } return app(MiroService::class); }
 }

@@ -150,9 +150,9 @@ class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/typesense.md';
+        return __DIR__ . '/../script-docs/typesense.md';
     }
 
     public function isIntegration(): bool

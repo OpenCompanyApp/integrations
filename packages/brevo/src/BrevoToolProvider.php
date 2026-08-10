@@ -985,9 +985,9 @@ class BrevoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/brevo.md';
+        return __DIR__ . '/../script-docs/brevo.md';
     }
 
     public function credentialFields(): array

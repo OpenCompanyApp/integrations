@@ -491,11 +491,11 @@ class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration, H
     }
 
     /**
-     * Path to the Lua API documentation file.
+     * Path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/openrouter.md';
+        return __DIR__ . '/../script-docs/openrouter.md';
     }
 
     /**

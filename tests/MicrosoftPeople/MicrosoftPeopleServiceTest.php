@@ -49,7 +49,7 @@ final class MicrosoftPeopleServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft People', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_people_me_list_people', array_keys($provider->tools()));
         self::assertContains('microsoft_people_me_get_people', array_keys($provider->tools()));
         self::assertContains('microsoft_people_users_list_people', array_keys($provider->tools()));

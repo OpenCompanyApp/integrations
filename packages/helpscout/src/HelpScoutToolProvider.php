@@ -276,11 +276,11 @@ class HelpScoutToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     }
 
     /**
-     * Path to the Lua API reference documentation.
+     * Path to the JavaScript API reference documentation.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/helpscout.md';
+        return __DIR__ . '/../script-docs/helpscout.md';
     }
 
     /**

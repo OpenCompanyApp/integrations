@@ -50,7 +50,7 @@ final class CrispServiceTest extends TestCase
             self::assertFileExists(__DIR__.'/../../packages/crisp/src/Tools/'.$shortName.'.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_default_website_path_query_body_and_crisp_auth(): void

@@ -3232,6 +3232,6 @@ class KeycloakToolProvider implements ToolProvider, ConfigurableIntegration, Has
     'description' => 'Update the workflow configuration. This method does not update the workflow steps.',
     'icon' => 'ph:pencil-simple',
   ),
-); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/keycloak.md'; } public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
+); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/keycloak.md'; } public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime context from the host. */ private function resolveService(array $context=[]): KeycloakService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new KeycloakService(accessToken:$creds->get('keycloak','access_token','',$account), baseUrl:$creds->get('keycloak','base_url','https://keycloak.example.test',$account));} return app(KeycloakService::class); }
 }

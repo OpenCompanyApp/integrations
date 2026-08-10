@@ -183,9 +183,9 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/directus.md';
+        return __DIR__ . '/../script-docs/directus.md';
     }
 
     public function isIntegration(): bool

@@ -198,9 +198,9 @@ class EdenAiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/eden-ai.md';
+        return __DIR__ . '/../script-docs/eden-ai.md';
     }
 
     public function credentialFields(): array

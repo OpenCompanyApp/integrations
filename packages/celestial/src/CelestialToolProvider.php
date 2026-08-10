@@ -180,9 +180,9 @@ class CelestialToolProvider implements ToolProvider, HasIntegrationCapabilities
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/celestial.md';
+        return dirname(__DIR__) . '/script-docs/celestial.md';
     }    public function credentialFields(): array
     {
         return [];

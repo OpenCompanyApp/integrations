@@ -49,7 +49,7 @@ final class LinearServiceTest extends TestCase
         self::assertCount(20, $provider->tools());
         self::assertArrayHasKey('linear_create_issue', $provider->tools());
         self::assertArrayHasKey('linear_raw_query', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake(['https://api.linear.app/graphql' => Http::response(['data' => ['viewer' => ['id' => 'user_1', 'name' => 'Agent']]], 200)]);
         $result = $provider->testConnection(['api_key' => 'lin_api_test']);

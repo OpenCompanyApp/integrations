@@ -48,7 +48,7 @@ final class FastlyServiceTest extends TestCase
         self::assertCount($manifest['method_count'], FastlyOperations::all());
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('api_key_header', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('fastly_service_list_services', $provider->tools());
         self::assertArrayHasKey('fastly_purge_purge_single_url', $provider->tools());
         self::assertArrayHasKey('fastly_realtime_get_stats_last_second', $provider->tools());

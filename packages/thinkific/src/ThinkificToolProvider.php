@@ -268,11 +268,11 @@ class ThinkificToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     }
 
     /**
-     * Path to the Lua API documentation file.
+     * Path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/thinkific.md';
+        return __DIR__ . '/../script-docs/thinkific.md';
     }
 
     /**

@@ -1161,9 +1161,9 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/bigcommerce.md';
+        return __DIR__ . '/../script-docs/bigcommerce.md';
     }
 
     public function credentialFields(): array

@@ -272,9 +272,9 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/convertkit.md';
+        return __DIR__ . '/../script-docs/convertkit.md';
     }
 
     /**

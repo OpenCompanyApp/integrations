@@ -287,13 +287,13 @@ class WordPressToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
 
     /**
-     * Get the path to the Lua documentation file for this integration.
+     * Get the path to the JavaScript documentation file for this integration.
      *
-     * @return string|null Absolute path to the Lua docs markdown file.
+     * @return string|null Absolute path to the JavaScript docs markdown file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/wordpress.md';
+        return __DIR__ . '/../script-docs/wordpress.md';
     }
 
     /**

@@ -431,9 +431,9 @@ class MistralToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mistral.md';
+        return __DIR__ . '/../script-docs/mistral.md';
     }
 
     public function credentialFields(): array

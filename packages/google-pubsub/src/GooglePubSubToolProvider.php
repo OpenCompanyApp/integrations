@@ -182,5 +182,5 @@ class GooglePubSubToolProvider implements ToolProvider, ConfigurableIntegration,
         return app(GooglePubSubService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-pubsub.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-pubsub.md'; }
 }

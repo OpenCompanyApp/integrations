@@ -121,8 +121,8 @@ class DepsDevToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(DepsDevService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/deps-dev.md';
+        return __DIR__.'/../script-docs/deps-dev.md';
     }
 }

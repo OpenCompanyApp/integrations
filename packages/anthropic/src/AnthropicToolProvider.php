@@ -410,11 +410,11 @@ class AnthropicToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     }
 
     /**
-     * Path to the Lua API documentation file.
+     * Path to the JavaScript API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/anthropic.md';
+        return __DIR__ . '/../script-docs/anthropic.md';
     }
 
     /**

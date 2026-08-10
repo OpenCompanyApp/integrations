@@ -206,5 +206,5 @@ class GoogleCloudRunToolProvider implements ToolProvider, ConfigurableIntegratio
         return app(GoogleCloudRunService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-cloud-run.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-cloud-run.md'; }
 }

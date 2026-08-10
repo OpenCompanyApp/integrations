@@ -53,7 +53,7 @@ final class VercelServiceTest extends TestCase
         self::assertCount(8, $provider->tools());
         self::assertArrayHasKey('vercel_create_deployment', $provider->tools());
         self::assertArrayHasKey('vercel_list_projects', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://api.vercel.test/v2/user' => Http::response([

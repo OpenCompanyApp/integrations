@@ -46,7 +46,7 @@ final class BitriseServiceTest extends TestCase
         self::assertSame('Bitrise', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(49, $provider->tools());
         self::assertArrayHasKey('bitrise_trigger_build', $provider->tools());
         self::assertArrayHasKey('bitrise_list_artifacts', $provider->tools());

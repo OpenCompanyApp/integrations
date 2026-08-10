@@ -239,9 +239,9 @@ class ZohoInventoryToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zoho-inventory.md';
+        return __DIR__ . '/../script-docs/zoho-inventory.md';
     }    public function credentialFields(): array
     {
         return [

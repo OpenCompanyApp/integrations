@@ -214,9 +214,9 @@ class LobToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/lob.md';
+        return __DIR__ . '/../script-docs/lob.md';
     }    public function credentialFields(): array
     {
         return [

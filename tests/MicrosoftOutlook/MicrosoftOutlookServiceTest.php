@@ -46,7 +46,7 @@ final class MicrosoftOutlookServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://learn.microsoft.com/en-us/graph/api/overview', $provider->integrationMeta()['docs_url']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(7, $tools);
         self::assertArrayHasKey('outlook_list_messages', $tools);

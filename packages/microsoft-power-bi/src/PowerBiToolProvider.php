@@ -224,9 +224,9 @@ class PowerBiToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/powerbi.md';
+        return __DIR__ . '/../script-docs/powerbi.md';
     }
 
     public function credentialFields(): array

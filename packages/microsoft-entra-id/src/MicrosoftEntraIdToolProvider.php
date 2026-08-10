@@ -20375,6 +20375,6 @@ class MicrosoftEntraIdToolProvider implements ToolProvider, ConfigurableIntegrat
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftEntraIdService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftEntraIdService(accessToken: $creds->get('microsoft-entra-id', 'access_token', '', $account), baseUrl: $creds->get('microsoft-entra-id', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftEntraIdService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-entra-id.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-entra-id.md'; }
     public function isIntegration(): bool { return true; }
 }

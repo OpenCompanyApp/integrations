@@ -173,8 +173,8 @@ class PocketToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return app(PocketService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/pocket.md';
+        return __DIR__.'/../script-docs/pocket.md';
     }
 }

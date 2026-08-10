@@ -1208,6 +1208,6 @@ class IncidentIoToolProvider implements ToolProvider, ConfigurableIntegration, H
   'icon' => 'ph:warning-circle',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/incident-io.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/incident-io.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): IncidentIoService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new IncidentIoService(apiKey:$creds->get('incident-io','api_key','',$account), baseUrl:$creds->get('incident-io','url','https://api.incident.io',$account));} return app(IncidentIoService::class); }
 }

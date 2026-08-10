@@ -225,9 +225,9 @@ class CaddyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/caddy.md';
+        return __DIR__ . '/../script-docs/caddy.md';
     }    public function credentialFields(): array
     {
         return [

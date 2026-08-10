@@ -38,7 +38,7 @@ packages/
 │  Host Application (OpenCompany, KosmoKrator)     │
 │                                                  │
 │  ┌──────────┐   ┌───────────────────────────┐   │
-│  │ QuickJS  │──▸│ ScriptBridge                  │   │
+│  │ QuickJS  │──▸│ ScriptBridge              │   │
 │  │ sandbox  │   │   functionMap → tool slugs    │   │
 │  │ app.integrations.mermaid.render(...)         │   │
 │  └──────────┘   └────────────┬──────────────┘   │
@@ -130,6 +130,17 @@ Each package directory is an independent Composer package. In your consuming app
 ```
 
 Laravel auto-discovers service providers. For non-Laravel apps, use the contracts and registry directly.
+
+## Development Validation
+
+The repository has a standalone Laravel 12 test harness, so package work no longer depends on a sibling OpenCompany checkout. Install PHP 8.4 dependencies and the ABI-matched [`quickjs_sandbox` extension](https://github.com/OpenCompanyApp/quickjs-sandbox/releases/tag/v1.0.1), then run:
+
+```bash
+composer install
+composer check
+```
+
+`composer check` runs all package tests and compiles every fenced JavaScript example without invoking external effects. Use `composer test` or `composer validate:script-docs` when iterating on only one side. CI installs the pinned extension artifact, verifies its checksum, and runs the same complete check.
 
 ## Catalog and SEO Metadata
 

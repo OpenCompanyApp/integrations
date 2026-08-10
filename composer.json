@@ -1,0 +1,28 @@
+{
+    "name": "opencompanyapp/integrations-monorepo",
+    "description": "Development and validation harness for the OpenCompany integration monorepo.",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "laravel/framework": "^12.0",
+        "phpunit/phpunit": "^11.5 || ^12.0"
+    },
+    "scripts": {
+        "test": "phpunit -c phpunit.xml",
+        "validate:script-docs": "php scripts/validate-script-docs.php",
+        "check": [
+            "@test",
+            "@validate:script-docs"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

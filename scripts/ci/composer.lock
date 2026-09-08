@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bfc98acb134ea963c90790402289d49",
+    "content-hash": "441a594caf9668ed9509ded48578c973",
     "packages": [
         {
             "name": "bowerbird/ruby-engine",
-            "version": "dev-316852148b739fa22bbcfe1c4fca5e75fb7116bb",
+            "version": "dev-c642775d2d1a7a023011f6785f0b8983ed83b0e3",
             "dist": {
                 "type": "path",
                 "url": "../../.ci/bowerbird-ruby-engine",
-                "reference": "316852148b739fa22bbcfe1c4fca5e75fb7116bb"
+                "reference": "c642775d2d1a7a023011f6785f0b8983ed83b0e3"
             },
             "require": {
                 "php": "^8.4"

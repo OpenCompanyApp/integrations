@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: OpenCompanyApp/bowerbird-ruby-engine
-          ref: 316852148b739fa22bbcfe1c4fca5e75fb7116bb
+          ref: c642775d2d1a7a023011f6785f0b8983ed83b0e3
           path: .ci/bowerbird-ruby-engine
 
       # The integration source is tested against a deliberately tiny public

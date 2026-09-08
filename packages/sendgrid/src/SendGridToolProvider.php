@@ -27,7 +27,7 @@ use OpenCompany\Integrations\Sendgrid\Tools\SendGridListSenderIdentities;
 use OpenCompany\Integrations\Sendgrid\Tools\SendGridListSuppressions;
 use OpenCompany\Integrations\Sendgrid\Tools\SendGridRemoveContactFromList;
 use OpenCompany\Integrations\Sendgrid\Tools\SendGridSearchContacts;
-class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+class SendGridToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
 /**

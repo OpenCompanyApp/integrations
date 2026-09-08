@@ -18,7 +18,7 @@ use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers all LinkedIn tools and provides integration metadata, configuration schema, and connection testing.
  */
-class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+class LinkedInToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
 
 /**
      * Describe host and authentication capabilities for catalog and setup flows.

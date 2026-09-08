@@ -164,7 +164,7 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         $tools = [];
 
-        foreach (PagerdutyService::operations() as $slug => $operation) {
+        foreach (PagerDutyService::operations() as $slug => $operation) {
             $tools[$slug] = [
                 'class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'],
                 'type' => $operation['type'] ?? 'read',
@@ -203,20 +203,20 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration, Ha
      *
      * @param  array<string, mixed>  $context  Tool creation context.
      */
-    private function resolveService(array $context = []): PagerdutyService
+    private function resolveService(array $context = []): PagerDutyService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);
 
-            return new PagerdutyService(
+            return new PagerDutyService(
                 apiToken: (string) $creds->get('pagerduty', 'api_token', '', (string) $account),
                 baseUrl: (string) $creds->get('pagerduty', 'base_url', 'https://api.pagerduty.com', (string) $account),
             );
         }
 
-        return app(PagerdutyService::class);
+        return app(PagerDutyService::class);
     }
 
     /**

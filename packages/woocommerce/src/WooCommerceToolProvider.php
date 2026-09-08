@@ -15,7 +15,7 @@ use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceListCustomers;
 use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
-class WoocommerceToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+class WooCommerceToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
 /**

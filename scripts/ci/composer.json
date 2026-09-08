@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "bowerbird/ruby-engine": "dev-316852148b739fa22bbcfe1c4fca5e75fb7116bb",
+    "bowerbird/ruby-engine": "dev-c642775d2d1a7a023011f6785f0b8983ed83b0e3",
     "php": "^8.4",
     "illuminate/container": "^12.0",
     "illuminate/http": "^12.0",

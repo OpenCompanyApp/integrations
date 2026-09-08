@@ -4,18 +4,30 @@
   "license": "MIT",
   "repositories": [
     {
-      "type": "path",
-      "url": "../../core",
-      "options": {"symlink": true}
+      "type": "package",
+      "package": {
+        "name": "bowerbird/ruby-engine",
+        "version": "0.1.0-rc.1",
+        "type": "library",
+        "license": "Apache-2.0",
+        "require": {"php": "^8.4"},
+        "autoload": {"psr-4": {"Bowerbird\\RubyEngine\\": "php/src/"}},
+        "dist": {
+          "type": "tar",
+          "url": "https://github.com/OpenCompanyApp/bowerbird-ruby-engine/releases/download/v0.1.0-rc.1/bowerbird-ruby-engine-v0.1.0-rc.1-php-adapter.tar.gz",
+          "reference": "772e2b46c37a4bcf4cffbc57e6d9214493c11473",
+          "shasum": "8a842df93086c4d7b71d56532ae08daa8cd13422"
+        }
+      }
     },
     {
       "type": "path",
-      "url": "../../.ci/bowerbird-ruby-engine",
+      "url": "../../core",
       "options": {"symlink": true}
     }
   ],
   "require": {
-    "bowerbird/ruby-engine": "dev-c642775d2d1a7a023011f6785f0b8983ed83b0e3",
+    "bowerbird/ruby-engine": "0.1.0-rc.1",
     "php": "^8.4",
     "illuminate/container": "^12.0",
     "illuminate/http": "^12.0",

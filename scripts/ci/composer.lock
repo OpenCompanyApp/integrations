@@ -4,15 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "441a594caf9668ed9509ded48578c973",
+    "content-hash": "a79fa02c6a580f08318b6c355e6d3352",
     "packages": [
         {
             "name": "bowerbird/ruby-engine",
-            "version": "dev-c642775d2d1a7a023011f6785f0b8983ed83b0e3",
+            "version": "0.1.0-rc.1",
             "dist": {
-                "type": "path",
-                "url": "../../.ci/bowerbird-ruby-engine",
-                "reference": "c642775d2d1a7a023011f6785f0b8983ed83b0e3"
+                "type": "tar",
+                "url": "https://github.com/OpenCompanyApp/bowerbird-ruby-engine/releases/download/v0.1.0-rc.1/bowerbird-ruby-engine-v0.1.0-rc.1-php-adapter.tar.gz",
+                "reference": "772e2b46c37a4bcf4cffbc57e6d9214493c11473",
+                "shasum": "8a842df93086c4d7b71d56532ae08daa8cd13422"
             },
             "require": {
                 "php": "^8.4"
@@ -23,26 +24,9 @@
                     "Bowerbird\\RubyEngine\\": "php/src/"
                 }
             },
-            "archive": {
-                "exclude": [
-                    "/target",
-                    "/vendor",
-                    "/.git"
-                ]
-            },
-            "scripts": {
-                "test": [
-                    "php php/tests/smoke.php"
-                ]
-            },
             "license": [
                 "Apache-2.0"
-            ],
-            "description": "Bounded PHP subprocess adapter for the shared isolated mruby guest",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            ]
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -5336,7 +5320,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "bowerbird/ruby-engine": 20,
         "opencompanyapp/integration-core": 20
     },
     "prefer-stable": true,

@@ -75,7 +75,7 @@ class ScriptDocRenderer
                 $lines[] = '';
             }
 
-            $lines[] = '**Effect:** `'.($function['effect'] ?? 'read').'`';
+            $lines[] = '**Effect:** `'.$this->effect($function['effect'] ?? null).'`';
             $lines[] = '';
 
             $lines[] = $this->formatParameterTable($function['parameters']);
@@ -137,7 +137,7 @@ class ScriptDocRenderer
             $lines[] = '';
         }
 
-        $lines[] = '**Effect:** `'.($match['effect'] ?? 'read').'`';
+        $lines[] = '**Effect:** `'.$this->effect($match['effect'] ?? null).'`';
         $lines[] = '';
 
         $lines[] = $this->formatParameterTable($match['parameters']);
@@ -151,6 +151,12 @@ class ScriptDocRenderer
         }
 
         return implode("\n", $lines);
+    }
+
+    /** Render unknown/legacy metadata conservatively in executable docs. */
+    private function effect(mixed $effect): string
+    {
+        return $effect === 'read' ? 'read' : 'write';
     }
 
     /**

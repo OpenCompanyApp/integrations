@@ -85,7 +85,9 @@ class ScriptBridge
         $toolSlug = $this->functionMap[$path];
         $toolMeta = $this->invoker->getToolMeta($toolSlug);
         $group = self::extractGroup($path);
-        $effect = ($toolMeta['type'] ?? 'read') === 'write' ? 'write' : 'read';
+        // Only an explicit read is side-effect-free. Legacy hosts may omit the
+        // optional metadata field, and custom values must not become retryable.
+        $effect = ($toolMeta['type'] ?? null) === 'read' ? 'read' : 'write';
 
         try {
             $params = $this->normalizeArguments($path, $args);
@@ -123,7 +125,7 @@ class ScriptBridge
                 'status' => 'ok',
                 'effect' => $effect,
                 'effectStatus' => $effect === 'write' ? 'succeeded' : 'none',
-                'retryable' => true,
+                'retryable' => $effect === 'read',
                 'icon' => $toolMeta['icon'] ?? 'ph:wrench',
                 'name' => $toolMeta['name'] ?? $toolSlug,
                 'group' => $group,

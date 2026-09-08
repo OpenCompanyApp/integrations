@@ -25,6 +25,11 @@ interface ScriptToolInvoker
     /**
      * Tool metadata for bridge call logging and UI decoration.
      *
+     * `type` remains optional for backward-compatible hosts, but only the
+     * exact value `read` is treated as side-effect-free. Missing, null, and
+     * custom values are normalized as `write` by the bridge to prevent an
+     * unknown operation from being offered for automatic replay.
+     *
      * @return array{icon?: string, name?: string, type?: string}
      */
     public function getToolMeta(string $toolSlug): array;

@@ -276,7 +276,10 @@ class ScriptCatalogBuilder
             'fullDescription' => (string) ($tool['fullDescription'] ?? ''),
             'parameters' => $parameters,
             'sourceToolSlug' => $slug,
-            'effect' => (string) ($tool['type'] ?? 'read'),
+            // Catalog output is executable documentation. Preserve only the
+            // explicit safe value; unknown/legacy types must not advertise a
+            // side-effect-free operation.
+            'effect' => ($tool['type'] ?? null) === 'read' ? 'read' : 'write',
             'returns' => is_array($tool['returns'] ?? null) ? $tool['returns'] : [],
         ];
     }

@@ -164,6 +164,60 @@ final class ScriptRuntimeTest extends TestCase
         self::assertFalse($entry['retryable']);
     }
 
+    public function test_missing_null_and_custom_effect_metadata_are_conservative_writes(): void
+    {
+        foreach (['missing' => null, 'null' => null, 'custom' => 'side_effect'] as $case => $type) {
+            $success = new RecordingScriptToolInvoker;
+            $success->omitType = $case === 'missing';
+            $success->type = $type;
+            $bridge = new ScriptBridge(['integrations.safe.call' => 'safe_call'], [], $success);
+
+            self::assertSame(['ok' => true], $bridge->call('integrations.safe.call'));
+            $entry = $bridge->getCallLog()[0];
+            self::assertSame('write', $entry['effect'], $case);
+            self::assertSame('succeeded', $entry['effectStatus'], $case);
+            self::assertFalse($entry['retryable'], $case);
+
+            $failure = new RecordingScriptToolInvoker;
+            $failure->omitType = $case === 'missing';
+            $failure->type = $type;
+            $failure->failure = new \RuntimeException('Unconfirmed fake effect.');
+            $failedBridge = new ScriptBridge(['integrations.safe.call' => 'safe_call'], [], $failure);
+
+            try {
+                $failedBridge->call('integrations.safe.call');
+                self::fail('The fake provider failure should escape to the host.');
+            } catch (\RuntimeException $exception) {
+                self::assertSame('Unconfirmed fake effect.', $exception->getMessage());
+            }
+
+            $entry = $failedBridge->getCallLog()[0];
+            self::assertSame('write', $entry['effect'], $case);
+            self::assertSame('unknown', $entry['effectStatus'], $case);
+            self::assertFalse($entry['retryable'], $case);
+        }
+    }
+
+    public function test_catalog_and_renderer_only_advertise_explicit_reads_as_read(): void
+    {
+        $builder = new ScriptCatalogBuilder;
+        $renderer = new ScriptDocRenderer;
+
+        foreach (['missing' => null, 'null' => null, 'custom' => 'side_effect', 'read' => 'read', 'write' => 'write'] as $case => $type) {
+            $tool = ['slug' => 'fake_'.$case, 'name' => 'Fake '.$case, 'parameters' => []];
+            if ($case !== 'missing') {
+                $tool['type'] = $type;
+            }
+            $namespaces = $builder->buildNamespaces([['name' => 'fake', 'isIntegration' => true, 'tools' => [$tool]]]);
+            $function = $namespaces['integrations.fake']['functions'][0];
+            $effect = $function['effect'];
+            self::assertSame($case === 'read' ? 'read' : 'write', $effect, $case);
+
+            $docs = $renderer->generateFunctionDocs('integrations.fake', $function['name'], $namespaces);
+            self::assertStringContainsString('**Effect:** `'.$effect.'`', $docs, $case);
+        }
+    }
+
     public function test_unknown_function_errors_include_ranked_repair_suggestions(): void
     {
         $bridge = new ScriptBridge(
@@ -224,7 +278,9 @@ final class RecordingScriptToolInvoker implements ScriptToolInvoker
     /** @var list<array{slug: string, args: array<string, mixed>, account: ?string}> */
     public array $calls = [];
 
-    public string $type = 'read';
+    public mixed $type = 'read';
+
+    public bool $omitType = false;
 
     public ?\Throwable $failure = null;
 
@@ -243,9 +299,14 @@ final class RecordingScriptToolInvoker implements ScriptToolInvoker
         return ['ok' => true];
     }
 
-    /** @return array{icon: string, name: string, type: string} */
+    /** @return array{icon: string, name: string, type?: mixed} */
     public function getToolMeta(string $toolSlug): array
     {
-        return ['icon' => 'ph:test-tube', 'name' => $toolSlug, 'type' => $this->type];
+        $metadata = ['icon' => 'ph:test-tube', 'name' => $toolSlug];
+        if (! $this->omitType) {
+            $metadata['type'] = $this->type;
+        }
+
+        return $metadata;
     }
 }

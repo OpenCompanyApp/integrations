@@ -402,5 +402,5 @@ class GoogleChatToolProvider implements ToolProvider, ConfigurableIntegration, H
         return app(GoogleChatService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-chat.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-chat.md'; }
 }

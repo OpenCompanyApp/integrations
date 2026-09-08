@@ -65,7 +65,7 @@ $messages = $service->listSessionMessages($session['devin_id'] ?? $session['id']
 
 ## Notes For Agents
 
-Read `lua-docs/devin.md` for agent-facing usage examples and return-shape notes.
+Read `script-docs/devin.md` for agent-facing usage examples and return-shape notes.
 Do not assume legacy v1 response fields match v3 response fields; this package
 returns Devin's JSON with minimal normalization so agents can use the current
 API semantics directly.

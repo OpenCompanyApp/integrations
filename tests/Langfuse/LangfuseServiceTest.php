@@ -30,7 +30,7 @@ final class LangfuseServiceTest extends TestCase
             self::assertFileExists(__DIR__ . '/../../packages/langfuse/src/Tools/' . $shortName . '.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('Langfuse', $provider->integrationMeta()['name']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->integrationCapabilities()['host_availability']['cli']['runtime_supported']);

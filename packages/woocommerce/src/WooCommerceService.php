@@ -5,7 +5,7 @@ namespace OpenCompany\Integrations\Woocommerce;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class WoocommerceService
+class WooCommerceService
 {
     public function __construct(
         private string $accessToken = '',

@@ -31,7 +31,7 @@ final class GoogleVertexAiServiceTest extends TestCase
         self::assertSame('Google Vertex AI', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         foreach ($provider->tools() as $tool) {
             $shortName = substr((string) $tool['class'], strrpos((string) $tool['class'], '\\') + 1);

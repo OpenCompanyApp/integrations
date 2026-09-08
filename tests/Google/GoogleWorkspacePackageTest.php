@@ -64,7 +64,7 @@ final class GoogleWorkspacePackageTest extends TestCase
         foreach ($providers as $appId => $provider) {
             self::assertSame($appId, $provider->appName());
             self::assertContains($provider->integrationMeta()['category'], ['productivity', 'analytics', 'data', 'rendering']);
-            self::assertFileExists((string) $provider->luaDocsPath());
+            self::assertFileExists((string) $provider->scriptDocsPath());
         }
     }
 

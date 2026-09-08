@@ -3364,6 +3364,6 @@ class FireHydrantToolProvider implements ToolProvider, ConfigurableIntegration, 
   'icon' => 'ph:fire',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/firehydrant.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/firehydrant.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): FireHydrantService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new FireHydrantService(apiToken:$creds->get('firehydrant','api_token','',$account), baseUrl:$creds->get('firehydrant','url','https://api.firehydrant.io',$account));} return app(FireHydrantService::class); }
 }

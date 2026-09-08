@@ -47,7 +47,7 @@ final class ClinicalTrialsGovServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('none', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame([], $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame([
             'clinicaltrials_gov_list_studies',
             'clinicaltrials_gov_fetch_study',

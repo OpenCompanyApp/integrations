@@ -5,7 +5,7 @@ namespace OpenCompany\Integrations\Pagerduty\Tools;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Pagerduty\PagerdutyOperations;
-use OpenCompany\Integrations\Pagerduty\PagerdutyService;
+use OpenCompany\Integrations\Pagerduty\PagerDutyService;
 
 /**
  * Base class for generated PagerDuty REST OpenAPI operation tools.
@@ -18,9 +18,9 @@ abstract class AbstractPagerdutyOperationTool implements Tool
     protected const TOOL_NAME = '';
 
     /**
-     * @param  PagerdutyService  $service  PagerDuty HTTP API client.
+     * @param  PagerDutyService  $service  PagerDuty HTTP API client.
      */
-    public function __construct(protected PagerdutyService $service) {}
+    public function __construct(protected PagerDutyService $service) {}
 
     public function name(): string
     {

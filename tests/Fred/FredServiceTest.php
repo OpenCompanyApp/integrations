@@ -49,7 +49,7 @@ final class FredServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(31, $provider->tools());
         self::assertContains('fred_series_observations', array_keys($provider->tools()));
         self::assertContains('fred_release_tables', array_keys($provider->tools()));

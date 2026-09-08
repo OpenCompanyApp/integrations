@@ -44,7 +44,7 @@ final class OsvServiceTest extends TestCase
         self::assertSame('OSV', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('none', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame([
             'osv_query',
             'osv_query_batch',

@@ -42,7 +42,7 @@ final class SplunkServiceTest extends TestCase
         self::assertSame('Splunk', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(28, $provider->tools());
         self::assertArrayHasKey('splunk_export_search', $provider->tools());
         self::assertArrayHasKey('splunk_create_index', $provider->tools());

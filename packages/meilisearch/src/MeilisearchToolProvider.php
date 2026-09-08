@@ -173,9 +173,9 @@ class MeilisearchToolProvider implements ToolProvider, ConfigurableIntegration, 
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/meilisearch.md';
+        return __DIR__ . '/../script-docs/meilisearch.md';
     }
 
     public function isIntegration(): bool

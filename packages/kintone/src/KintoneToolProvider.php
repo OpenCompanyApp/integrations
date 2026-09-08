@@ -233,9 +233,9 @@ class KintoneToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/kintone.md';
+        return __DIR__ . '/../script-docs/kintone.md';
     }    public function credentialFields(): array
     {
         return [

@@ -46,7 +46,7 @@ Representative tools:
 - `dub_partners_list`, `dub_partners_create_link`, `dub_partners_analytics`
 - `dub_track_lead`, `dub_track_sale`
 
-See `lua-docs/dub.md` for the full tool list and method/path reference.
+See `script-docs/dub.md` for the full tool list and method/path reference.
 
 ## License
 

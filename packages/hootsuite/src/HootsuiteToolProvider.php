@@ -225,9 +225,9 @@ class HootsuiteToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/hootsuite.md';
+        return __DIR__ . '/../script-docs/hootsuite.md';
     }    public function credentialFields(): array
     {
         return [

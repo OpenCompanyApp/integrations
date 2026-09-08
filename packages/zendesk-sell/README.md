@@ -36,26 +36,12 @@ Create, update, and upsert tools send Zendesk Sell's documented
 
 ## Examples
 
-```lua
-local deals = app.integrations["zendesk-sell"].list_deals({
-  page = 1,
-  per_page = 25,
-  status = "open"
-})
+```ruby
+deals = app.call("integrations.zendesk-sell.zendesk_sell_list_deals", page: 1, per_page: 25, status: "open")
 
-local task = app.integrations["zendesk-sell"].create_task({
-  content = "Send renewal proposal",
-  resource_type = "deal",
-  resource_id = 12345,
-  due_date = "2026-05-20"
-})
+task = app.call("integrations.zendesk-sell.zendesk_sell_create_task", content: "Send renewal proposal", resource_type: "deal", resource_id: 12345, due_date: "2026-05-20")
 
-local lead = app.integrations["zendesk-sell"].upsert_lead({
-  email = "ada@example.test",
-  last_name = "Example",
-  first_name = "Ada",
-  organization_name = "Example Co"
-})
+lead = app.call("integrations.zendesk-sell.zendesk_sell_upsert_lead", email: "ada@example.test", last_name: "Example", first_name: "Ada", organization_name: "Example Co")
 ```
 
 ## Development

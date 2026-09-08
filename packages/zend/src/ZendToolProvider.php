@@ -225,9 +225,9 @@ class ZendToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zend.md';
+        return __DIR__ . '/../script-docs/zend.md';
     }    public function credentialFields(): array
     {
         return [

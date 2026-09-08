@@ -46,7 +46,7 @@ final class MicrosoftPlannerServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Planner', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_planner_list_tasks', array_keys($provider->tools()));
         self::assertContains('microsoft_planner_get_tasks', array_keys($provider->tools()));
         self::assertContains('microsoft_planner_groups_planner_list_plans', array_keys($provider->tools()));

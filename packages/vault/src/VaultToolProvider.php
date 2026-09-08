@@ -230,9 +230,9 @@ class VaultToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/vault.md';
+        return dirname(__DIR__) . '/script-docs/vault.md';
     }    public function credentialFields(): array
     {
         return [

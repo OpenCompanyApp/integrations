@@ -222,9 +222,9 @@ class PodiaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/podia.md';
+        return __DIR__ . '/../script-docs/podia.md';
     }    public function credentialFields(): array
     {
         return [

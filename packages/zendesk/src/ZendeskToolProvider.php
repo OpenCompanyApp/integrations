@@ -246,9 +246,9 @@ class ZendeskToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/zendesk.md';
+        return dirname(__DIR__) . '/script-docs/zendesk.md';
     }    public function credentialFields(): array
     {
         return [

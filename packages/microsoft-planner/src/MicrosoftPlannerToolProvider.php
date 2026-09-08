@@ -2115,6 +2115,6 @@ class MicrosoftPlannerToolProvider implements ToolProvider, ConfigurableIntegrat
         return app(MicrosoftPlannerService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-planner.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-planner.md'; }
     public function isIntegration(): bool { return true; }
 }

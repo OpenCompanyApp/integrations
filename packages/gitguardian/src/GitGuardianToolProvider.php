@@ -4925,6 +4925,6 @@ Official GitGuardian endpoint: DELETE /v1/custom_tags/{custom_tag_id}.',
         return app(GitGuardianService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/gitguardian.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/gitguardian.md'; }
     public function isIntegration(): bool { return true; }
 }

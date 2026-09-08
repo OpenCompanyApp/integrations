@@ -53,7 +53,7 @@ final class LinodeServiceTest extends TestCase
         self::assertCount(7, $provider->tools());
         self::assertArrayHasKey('linode_list_instances', $provider->tools());
         self::assertArrayHasKey('linode_get_current_user', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://api.linode.test/v4/profile' => Http::response([

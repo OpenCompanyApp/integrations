@@ -48,7 +48,7 @@ final class CustomerIOServiceTest extends TestCase
             self::assertFileExists(__DIR__.'/../../packages/customerio/src/Tools/'.$shortName.'.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_app_query_and_bearer_requests(): void

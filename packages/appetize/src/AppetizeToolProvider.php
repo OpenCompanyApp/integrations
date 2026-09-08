@@ -168,8 +168,8 @@ class AppetizeToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return app(AppetizeService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/appetize.md';
+        return __DIR__.'/../script-docs/appetize.md';
     }
 }

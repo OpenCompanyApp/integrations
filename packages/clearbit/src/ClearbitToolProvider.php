@@ -208,9 +208,9 @@ class ClearbitToolProvider implements ConfigurableIntegration, HasIntegrationCap
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/clearbit.md';
+        return __DIR__.'/../script-docs/clearbit.md';
     }
 
     public function credentialFields(): array

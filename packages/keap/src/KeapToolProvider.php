@@ -217,9 +217,9 @@ class KeapToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/keap.md';
+        return __DIR__ . '/../script-docs/keap.md';
     }    public function credentialFields(): array
     {
         return [

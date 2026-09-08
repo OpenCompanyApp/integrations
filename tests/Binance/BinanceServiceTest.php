@@ -43,7 +43,7 @@ final class BinanceServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Binance', $provider->integrationMeta()['name']);
         self::assertSame('api_key_hmac', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('binance_get_api_v3_ping', array_keys($provider->tools()));
         self::assertContains('binance_get_api_v3_ticker_price', array_keys($provider->tools()));
         self::assertContains('binance_get_api_v3_account', array_keys($provider->tools()));

@@ -45,7 +45,7 @@ final class FeedbinServiceTest extends TestCase
         self::assertSame('Feedbin', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('basic', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(46, $provider->tools());
         self::assertCount(42, FeedbinService::operations());
         self::assertArrayHasKey('feedbin_subscriptions_create', $provider->tools());

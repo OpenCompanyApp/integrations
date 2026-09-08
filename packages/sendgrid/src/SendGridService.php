@@ -5,7 +5,7 @@ namespace OpenCompany\Integrations\Sendgrid;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SendgridService
+class SendGridService
 {
     private string $baseUrl = 'https://api.sendgrid.com/v3';
 

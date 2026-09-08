@@ -194,8 +194,8 @@ class BraveSearchToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(BraveSearchService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/brave-search.md';
+        return __DIR__.'/../script-docs/brave-search.md';
     }
 }

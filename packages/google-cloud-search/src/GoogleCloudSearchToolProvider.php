@@ -432,5 +432,5 @@ class GoogleCloudSearchToolProvider implements ToolProvider, ConfigurableIntegra
         return app(GoogleCloudSearchService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-cloud-search.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-cloud-search.md'; }
 }

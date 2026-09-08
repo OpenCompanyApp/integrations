@@ -46,7 +46,7 @@ final class WallabagServiceTest extends TestCase
         self::assertSame('wallabag', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_password', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(21, $provider->tools());
         self::assertCount(17, WallabagService::operations());
         self::assertArrayHasKey('wallabag_token_password', $provider->tools());

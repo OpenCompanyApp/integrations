@@ -46,7 +46,7 @@ final class BitwardenServiceTest extends TestCase
         self::assertCount($manifest['method_count'], BitwardenOperations::all());
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('oauth_client_credentials', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('bitwarden_collections_list', $provider->tools());
         self::assertArrayHasKey('bitwarden_events_list', $provider->tools());
         self::assertArrayHasKey('bitwarden_members_revoke', $provider->tools());

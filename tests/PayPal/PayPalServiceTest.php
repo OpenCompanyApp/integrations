@@ -51,7 +51,7 @@ final class PayPalServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('https://api-m.paypal.com', $provider->credentialFields()[1]['default']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(7, $provider->tools());
         self::assertContains('paypal_capture_order', array_keys($provider->tools()));
         self::assertNotContains('paypal_list_orders', array_keys($provider->tools()));

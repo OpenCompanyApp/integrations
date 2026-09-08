@@ -236,9 +236,9 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mixpanel.md';
+        return __DIR__ . '/../script-docs/mixpanel.md';
     }    public function credentialFields(): array
     {
         return [

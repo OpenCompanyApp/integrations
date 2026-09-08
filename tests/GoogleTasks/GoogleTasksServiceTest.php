@@ -39,7 +39,7 @@ final class GoogleTasksServiceTest extends TestCase
         self::assertSame('Google Tasks', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('google_tasks_tasks_insert', array_keys($provider->tools()));
         self::assertContains('google_tasks_tasks_move', array_keys($provider->tools()));
         self::assertContains('google_tasks_tasklists_update', array_keys($provider->tools()));

@@ -164,8 +164,8 @@ class OpenFigiToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return app(OpenFigiService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/openfigi.md';
+        return __DIR__.'/../script-docs/openfigi.md';
     }
 }

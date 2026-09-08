@@ -176,8 +176,8 @@ class PinboardToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return app(PinboardService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/pinboard.md';
+        return __DIR__.'/../script-docs/pinboard.md';
     }
 }

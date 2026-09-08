@@ -214,6 +214,6 @@ class SemgrepToolProvider implements ToolProvider, ConfigurableIntegration, HasI
   'icon' => 'ph:shield-check',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/semgrep.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/semgrep.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): SemgrepService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new SemgrepService(apiToken:$creds->get('semgrep','api_token','',$account), baseUrl:$creds->get('semgrep','url','https://semgrep.dev',$account));} return app(SemgrepService::class); }
 }

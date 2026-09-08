@@ -12388,6 +12388,6 @@ class MicrosoftExcelToolProvider implements ToolProvider, ConfigurableIntegratio
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftExcelService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftExcelService(accessToken: $creds->get('microsoft-excel', 'access_token', '', $account), baseUrl: $creds->get('microsoft-excel', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftExcelService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-excel.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-excel.md'; }
     public function isIntegration(): bool { return true; }
 }

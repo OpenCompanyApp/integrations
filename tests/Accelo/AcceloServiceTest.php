@@ -42,7 +42,7 @@ final class AcceloServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertCount(7, $provider->tools());
         self::assertSame(['access_token', 'deployment', 'url'], array_column($provider->credentialFields(), 'key'));
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_uses_official_api_host_resources_and_form_writes(): void

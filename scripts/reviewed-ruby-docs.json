@@ -1,0 +1,13 @@
+[
+  "packages/langsmith/script-docs/langsmith.md",
+  "packages/microsoft-entra-id/script-docs/microsoft-entra-id.md",
+  "packages/microsoft-excel/script-docs/microsoft-excel.md",
+  "packages/microsoft-intune/script-docs/microsoft-intune.md",
+  "packages/microsoft-places/script-docs/microsoft-places.md",
+  "packages/microsoft-sharepoint/script-docs/microsoft-sharepoint.md",
+  "packages/posthog/script-docs/posthog.md",
+  "packages/ramp/script-docs/ramp.md",
+  "packages/smartrecruiters/script-docs/smartrecruiters.md",
+  "packages/x/script-docs/x.md",
+  "packages/x-ads/script-docs/x-ads.md"
+]

@@ -169,9 +169,9 @@ class RecaptchaToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(RecaptchaService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/recaptcha.md';
+        return __DIR__ . '/../script-docs/recaptcha.md';
     }    public function credentialFields(): array
     {
         return [];

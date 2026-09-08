@@ -3114,7 +3114,7 @@ class PagerdutyOperations
   'pagerduty_get_incident' =>
   array (
     'slug' => 'pagerduty_get_incident',
-    'class' => 'PagerdutyGetIncident',
+    'class' => 'PagerDutyGetIncident',
     'method' => 'GET',
     'path' => '/incidents/{id}',
     'operation_id' => 'getIncident',
@@ -3639,7 +3639,7 @@ class PagerdutyOperations
   'pagerduty_get_service' =>
   array (
     'slug' => 'pagerduty_get_service',
-    'class' => 'PagerdutyGetService',
+    'class' => 'PagerDutyGetService',
     'method' => 'GET',
     'path' => '/services/{id}',
     'operation_id' => 'getService',
@@ -4719,7 +4719,7 @@ class PagerdutyOperations
   'pagerduty_list_incidents' =>
   array (
     'slug' => 'pagerduty_list_incidents',
-    'class' => 'PagerdutyListIncidents',
+    'class' => 'PagerDutyListIncidents',
     'method' => 'GET',
     'path' => '/incidents',
     'operation_id' => 'listIncidents',
@@ -5139,7 +5139,7 @@ class PagerdutyOperations
   'pagerduty_list_services' =>
   array (
     'slug' => 'pagerduty_list_services',
-    'class' => 'PagerdutyListServices',
+    'class' => 'PagerDutyListServices',
     'method' => 'GET',
     'path' => '/services',
     'operation_id' => 'listServices',
@@ -5349,7 +5349,7 @@ class PagerdutyOperations
   'pagerduty_list_teams' =>
   array (
     'slug' => 'pagerduty_list_teams',
-    'class' => 'PagerdutyListTeams',
+    'class' => 'PagerDutyListTeams',
     'method' => 'GET',
     'path' => '/teams',
     'operation_id' => 'listTeams',

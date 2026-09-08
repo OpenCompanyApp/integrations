@@ -231,9 +231,9 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__).'/lua-docs/vero.md';
+        return dirname(__DIR__).'/script-docs/vero.md';
     }
 
     public function credentialFields(): array

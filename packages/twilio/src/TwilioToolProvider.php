@@ -293,9 +293,9 @@ class TwilioToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/twilio.md';
+        return __DIR__ . '/../script-docs/twilio.md';
     }    public function credentialFields(): array
     {
         return [

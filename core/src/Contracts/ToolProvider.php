@@ -52,15 +52,15 @@ interface ToolProvider
     public function createTool(string $class, array $context = []): Tool;
 
     /**
-     * Path to a markdown file with supplementary Lua API documentation.
+     * Path to a markdown file with supplementary Ruby script documentation.
      *
-     * This content is appended when an agent reads the integration's namespace
-     * docs via lua_read_doc(). Use it for examples, workflows, or gotchas
-     * that aren't captured by the auto-generated parameter reference.
+     * Hosts may present this content alongside their script catalog. Use it for
+     * Ruby `app.call` examples, workflows, or gotchas that are not captured by
+     * the auto-generated parameter reference.
      *
      * Return null if auto-generated docs are sufficient.
      */
-    public function luaDocsPath(): ?string;
+    public function scriptDocsPath(): ?string;
 
     /**
      * Credential fields required by this integration.

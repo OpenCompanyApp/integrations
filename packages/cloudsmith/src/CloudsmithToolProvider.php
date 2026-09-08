@@ -2468,6 +2468,6 @@ class CloudsmithToolProvider implements ToolProvider, ConfigurableIntegration, H
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/cloudsmith.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/cloudsmith.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): CloudsmithService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new CloudsmithService(apiToken:$creds->get('cloudsmith','api_token','',$account), baseUrl:$creds->get('cloudsmith','url','https://api.cloudsmith.io',$account));} return app(CloudsmithService::class); }
 }

@@ -46,7 +46,7 @@ final class JiraServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://developer.atlassian.com/cloud/jira/platform/rest/v3/', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(20, $tools);
         self::assertArrayHasKey('jira_create_issue', $tools);

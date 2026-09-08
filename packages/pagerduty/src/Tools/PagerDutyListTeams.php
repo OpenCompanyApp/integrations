@@ -7,7 +7,7 @@ namespace OpenCompany\Integrations\Pagerduty\Tools;
  *
  * Generated PagerDuty REST API tool for GET /teams.
  */
-class PagerdutyListTeams extends AbstractPagerdutyOperationTool
+class PagerDutyListTeams extends AbstractPagerdutyOperationTool
 {
     protected const TOOL_NAME = 'pagerduty_list_teams';
 }

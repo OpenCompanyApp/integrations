@@ -1964,6 +1964,6 @@ class SnykToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/snyk.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/snyk.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): SnykService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new SnykService(apiToken:$creds->get('snyk','api_token','',$account), baseUrl:$creds->get('snyk','url','https://api.snyk.io/rest',$account), apiVersion:$creds->get('snyk','version','2024-10-15',$account));} return app(SnykService::class); }
 }

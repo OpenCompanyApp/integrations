@@ -52,7 +52,7 @@ final class MollieServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(9, $provider->tools());
         self::assertContains('mollie_create_subscription', array_keys($provider->tools()));
     }

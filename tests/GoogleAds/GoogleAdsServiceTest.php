@@ -43,7 +43,7 @@ final class GoogleAdsServiceTest extends TestCase
             self::assertFileExists(__DIR__ . '/../../packages/google-ads/src/Tools/' . $shortName . '.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('google-ads', $provider->appName());
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_with_developer_token', $provider->integrationCapabilities()['auth']['strategy']);

@@ -217,9 +217,9 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/paystack.md';
+        return __DIR__ . '/../script-docs/paystack.md';
     }
 
     public function credentialFields(): array

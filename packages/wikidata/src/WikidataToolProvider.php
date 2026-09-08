@@ -92,8 +92,8 @@ class WikidataToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(WikidataService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/wikidata.md';
+        return __DIR__.'/../script-docs/wikidata.md';
     }
 }

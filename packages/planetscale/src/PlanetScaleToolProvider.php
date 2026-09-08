@@ -225,9 +225,9 @@ class PlanetScaleToolProvider implements ToolProvider, ConfigurableIntegration, 
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/planetscale.md';
+        return __DIR__ . '/../script-docs/planetscale.md';
     }    public function credentialFields(): array
     {
         return [

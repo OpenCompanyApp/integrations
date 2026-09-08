@@ -54,7 +54,7 @@ final class ChargifyServiceTest extends TestCase
         self::assertContains('api_key', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('API Key', $provider->credentialFields()[0]['label']);
         self::assertSame('API Password', $provider->credentialFields()[1]['label']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(8, $provider->tools());
         self::assertArrayHasKey('chargify_get_invoice', $provider->tools());
     }

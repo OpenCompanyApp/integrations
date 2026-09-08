@@ -2,7 +2,7 @@
 
 namespace OpenCompany\Integrations\Woocommerce\Tools;
 
-use OpenCompany\Integrations\Woocommerce\WoocommerceService;
+use OpenCompany\Integrations\Woocommerce\WooCommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
@@ -11,10 +11,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  *
  * Supports pagination, filtering, and including related data.
  */
-class WoocommerceListProducts implements Tool
+class WooCommerceListProducts implements Tool
 {
     public function __construct(
-        private WoocommerceService $service,
+        private WooCommerceService $service,
     ) {}
 
     public function name(): string

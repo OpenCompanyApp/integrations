@@ -207,5 +207,5 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GoogleContactsService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleContactsService(accessToken: $creds->get('google-contacts','access_token','',$account), baseUrl: $creds->get('google-contacts','url','https://people.googleapis.com',$account));} return app(GoogleContactsService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-contacts.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-contacts.md'; }
 }

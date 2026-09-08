@@ -25,7 +25,7 @@ final class ClickUpServiceTest extends TestCase
         $provider = new ClickUpToolProvider;
 
         self::assertCount(count($toolFiles), $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('required|string', $provider->validationRules()['api_token']);
     }
 

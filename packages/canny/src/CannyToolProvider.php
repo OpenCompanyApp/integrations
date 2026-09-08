@@ -206,8 +206,8 @@ class CannyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return app(CannyService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/canny.md';
+        return __DIR__.'/../script-docs/canny.md';
     }
 }

@@ -42,7 +42,7 @@ final class AircallServiceTest extends TestCase
         self::assertGreaterThan(70, count($provider->tools()));
         self::assertArrayHasKey('aircall_ping', $provider->tools());
         self::assertArrayHasKey('aircall_api_get', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_uses_basic_auth_and_normalizes_paths(): void

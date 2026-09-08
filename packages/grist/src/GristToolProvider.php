@@ -284,9 +284,9 @@ class GristToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/grist.md';
+        return __DIR__ . '/../script-docs/grist.md';
     }    public function credentialFields(): array
     {
         return [

@@ -44,7 +44,7 @@ class PostHogToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         foreach (PostHogService::operations() as $slug => $operation) $tools[$slug] = ['class' => __NAMESPACE__ . '\\Tools\\' . $operation['class'], 'type' => $operation['type'] ?? 'read', 'name' => $operation['name'] ?? $slug, 'description' => $operation['description'] ?? '', 'icon' => $this->iconFor($operation)];
         return $tools;
     }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/posthog.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/posthog.md'; }
     public function isIntegration(): bool { return true; }
     /** @param  class-string<Tool>  $class  Tool class to instantiate. @param  array<string, mixed>  $context  Optional context containing an account key. */
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }

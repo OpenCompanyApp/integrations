@@ -216,9 +216,9 @@ class WeaveToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/weave.md';
+        return __DIR__ . '/../script-docs/weave.md';
     }    public function credentialFields(): array
     {
         return [

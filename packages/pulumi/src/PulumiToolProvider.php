@@ -4092,6 +4092,6 @@ class PulumiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
   'icon' => 'ph:cloud',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/pulumi.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/pulumi.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): PulumiService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new PulumiService(apiToken:$creds->get('pulumi','api_token','',$account), baseUrl:$creds->get('pulumi','url','https://api.pulumi.com',$account));} return app(PulumiService::class); }
 }

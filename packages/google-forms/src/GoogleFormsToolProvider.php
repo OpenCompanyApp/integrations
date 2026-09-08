@@ -143,5 +143,5 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(GoogleFormsService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-forms.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-forms.md'; }
 }

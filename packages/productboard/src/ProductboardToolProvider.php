@@ -233,9 +233,9 @@ class ProductboardToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/productboard.md';
+        return __DIR__ . '/../script-docs/productboard.md';
     }    public function credentialFields(): array
     {
         return [

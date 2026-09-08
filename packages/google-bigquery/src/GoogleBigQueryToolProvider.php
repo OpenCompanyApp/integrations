@@ -265,8 +265,8 @@ class GoogleBigQueryToolProvider implements ToolProvider, ConfigurableIntegratio
         return app(GoogleBigQueryService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/google-bigquery.md';
+        return __DIR__ . '/../script-docs/google-bigquery.md';
     }
 }

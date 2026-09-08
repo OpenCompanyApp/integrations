@@ -39,7 +39,7 @@ final class GoogleCalendarServiceTest extends TestCase
         self::assertSame('Google Calendar', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('google_calendar_events_list', array_keys($provider->tools()));
         self::assertContains('google_calendar_freebusy_query', array_keys($provider->tools()));
         self::assertContains('google_calendar_acl_watch', array_keys($provider->tools()));

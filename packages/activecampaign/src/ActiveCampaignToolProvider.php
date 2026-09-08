@@ -525,13 +525,13 @@ class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegratio
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the Ruby script documentation file.
      *
-     * @return string|null The absolute path to the Lua docs markdown file.
+     * @return string|null The absolute path to the Ruby script docs markdown file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/activecampaign.md';
+        return __DIR__ . '/../script-docs/activecampaign.md';
     }
 
     /**

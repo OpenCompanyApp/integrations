@@ -48,7 +48,7 @@ Representative tools:
 - `raindrop_export_export_in_format`
 - `raindrop_backups_get_all`
 
-See `lua-docs/raindrop.md` for the full tool list and method/path reference.
+See `script-docs/raindrop.md` for the full tool list and method/path reference.
 
 ## License
 

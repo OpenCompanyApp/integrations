@@ -1277,8 +1277,8 @@ class LangSmithToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return ['api_key'];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/langsmith.md';
+        return __DIR__ . '/../script-docs/langsmith.md';
     }
 }

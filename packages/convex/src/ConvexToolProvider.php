@@ -225,9 +225,9 @@ class ConvexToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/convex.md';
+        return __DIR__ . '/../script-docs/convex.md';
     }    public function credentialFields(): array
     {
         return [

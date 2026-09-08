@@ -1,0 +1,76 @@
+name: mruby contracts
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/mruby.yml'
+      - 'core/src/Script/**'
+      - 'packages/*/src/**'
+      - 'packages/*/script-docs/**'
+      - 'scripts/check-mruby-contracts.php'
+      - 'scripts/export-script-catalog.php'
+      - 'scripts/validate-ruby-docs.php'
+      - 'scripts/ci/composer.json'
+      - 'scripts/ci/composer.lock'
+      - 'tests/Core/MrubyCatalogConformanceTest.php'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/mruby.yml'
+      - 'core/src/Script/**'
+      - 'packages/*/src/**'
+      - 'packages/*/script-docs/**'
+      - 'scripts/check-mruby-contracts.php'
+      - 'scripts/export-script-catalog.php'
+      - 'scripts/validate-ruby-docs.php'
+      - 'scripts/ci/composer.json'
+      - 'scripts/ci/composer.lock'
+      - 'tests/Core/MrubyCatalogConformanceTest.php'
+
+permissions:
+  contents: read
+
+jobs:
+  contracts-and-ruby-docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # The integration source is tested against a deliberately tiny public
+      # host dependency set. The adapter and guest both come from the immutable
+      # release candidate rather than a sibling engine checkout.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+
+      - name: Install minimal host dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --working-dir=scripts/ci
+
+      - name: Install checksum-pinned mruby release candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ci/ruby-engine
+          curl --fail --location --retry 3 \
+            https://github.com/OpenCompanyApp/bowerbird-ruby-engine/releases/download/v0.1.0-rc.1/bowerbird-ruby-engine-v0.1.0-rc.1-linux-amd64.tar.gz \
+            --output .ci/ruby-engine.tar.gz
+          echo '3c4b1d629d4813b5ffa977fc1559844c58ea94ffd391a6ffce9e7ac0b016605c  .ci/ruby-engine.tar.gz' | sha256sum --check
+          tar -xzf .ci/ruby-engine.tar.gz --strip-components=1 -C .ci/ruby-engine
+          test -x .ci/ruby-engine/bin/ruby-engine
+
+      - name: Check source catalog contracts
+        env:
+          OPENCOMPANY_HOST_AUTOLOAD: ${{ github.workspace }}/scripts/ci/vendor/autoload.php
+        run: php scripts/check-mruby-contracts.php "$OPENCOMPANY_HOST_AUTOLOAD"
+
+      - name: Run focused source-first conformance test
+        env:
+          OPENCOMPANY_HOST_AUTOLOAD: ${{ github.workspace }}/scripts/ci/vendor/autoload.php
+        run: php -d auto_prepend_file="$OPENCOMPANY_HOST_AUTOLOAD" scripts/ci/vendor/bin/phpunit tests/Core/MrubyCatalogConformanceTest.php
+
+      - name: Compile Ruby documentation examples
+        env:
+          OPENCOMPANY_HOST_AUTOLOAD: ${{ github.workspace }}/scripts/ci/vendor/autoload.php
+        run: php scripts/validate-ruby-docs.php "$OPENCOMPANY_HOST_AUTOLOAD" "$GITHUB_WORKSPACE/.ci/ruby-engine/bin/ruby-engine"

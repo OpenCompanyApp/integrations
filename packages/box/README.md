@@ -28,4 +28,4 @@ Requests use `Authorization: Bearer <access_token>`.
 | `url` | `https://api.box.com/2.0` | Box API base URL. |
 | `upload_url` | `https://upload.box.com/api/2.0` | Box upload API base URL for multipart upload endpoints. |
 
-See `lua-docs/box.md` for tool naming, argument, and return-shape notes.
+See `script-docs/box.md` for tool naming, argument, and return-shape notes.

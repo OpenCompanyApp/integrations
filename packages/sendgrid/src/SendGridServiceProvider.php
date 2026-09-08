@@ -6,14 +6,14 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-class SendgridServiceProvider extends ServiceProvider
+class SendGridServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(SendgridService::class, function ($app) {
+        $this->app->singleton(SendGridService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
-            return new SendgridService(
+            return new SendGridService(
                 apiKey: $creds->get('sendgrid', 'api_key', ''),
             );
         });
@@ -23,7 +23,7 @@ class SendgridServiceProvider extends ServiceProvider
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new SendgridToolProvider());
+                ->register(new SendGridToolProvider());
         }
     }
 }

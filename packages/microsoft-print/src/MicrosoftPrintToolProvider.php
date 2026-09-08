@@ -1027,6 +1027,6 @@ class MicrosoftPrintToolProvider implements ToolProvider, ConfigurableIntegratio
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftPrintService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftPrintService(accessToken: $creds->get('microsoft-print', 'access_token', '', $account), baseUrl: $creds->get('microsoft-print', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftPrintService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-print.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-print.md'; }
     public function isIntegration(): bool { return true; }
 }

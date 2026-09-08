@@ -191,9 +191,9 @@ class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/whatsapp.md';
+        return __DIR__ . '/../script-docs/whatsapp.md';
     }
 
     /**

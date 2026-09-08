@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\Pagerduty\\PagerdutyServiceProvider"
+                "OpenCompany\\Integrations\\Pagerduty\\PagerDutyServiceProvider"
             ]
         }
     },

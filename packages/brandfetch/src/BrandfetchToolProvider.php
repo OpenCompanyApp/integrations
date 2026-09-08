@@ -201,9 +201,9 @@ class BrandfetchToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/brandfetch.md';
+        return __DIR__ . '/../script-docs/brandfetch.md';
     }
 
     /**

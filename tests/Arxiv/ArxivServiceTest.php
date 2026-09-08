@@ -45,7 +45,7 @@ final class ArxivServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('none', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame([], $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame([
             'arxiv_search_papers',
             'arxiv_get_papers',

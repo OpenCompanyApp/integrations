@@ -4,16 +4,16 @@ namespace OpenCompany\Integrations\Sendgrid\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Sendgrid\SendgridService;
+use OpenCompany\Integrations\Sendgrid\SendGridService;
 
 /**
  * Add or update a contact in SendGrid via PUT /marketing/contacts.
  */
 class SendGridAddContact implements Tool
 {
-    /** @param SendgridService $service The SendGrid API client */
+    /** @param SendGridService $service The SendGrid API client */
     public function __construct(
-        private SendgridService $service,
+        private SendGridService $service,
     ) {}
 
     public function name(): string

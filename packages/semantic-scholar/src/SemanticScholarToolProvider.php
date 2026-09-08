@@ -210,8 +210,8 @@ class SemanticScholarToolProvider implements ToolProvider, ConfigurableIntegrati
         return app(SemanticScholarService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/semantic-scholar.md';
+        return __DIR__.'/../script-docs/semantic-scholar.md';
     }
 }

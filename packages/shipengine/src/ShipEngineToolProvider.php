@@ -1850,6 +1850,6 @@ class ShipEngineToolProvider implements ToolProvider, ConfigurableIntegration, H
         return app(ShipEngineService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/shipengine.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/shipengine.md'; }
     public function isIntegration(): bool { return true; }
 }

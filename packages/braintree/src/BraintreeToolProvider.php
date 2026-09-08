@@ -105,7 +105,7 @@ class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return $tools;
     }
 
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/braintree.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/braintree.md'; }
 
     public function credentialFields(): array
     {

@@ -48,7 +48,7 @@ final class AuthZeroServiceTest extends TestCase
         self::assertCount(7, $provider->tools());
         self::assertArrayHasKey('auth_zero_list_users', $provider->tools());
         self::assertArrayHasKey('auth_zero_get_current_user', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         $connection = $provider->testConnection([
             'access_token' => 'auth0_test',

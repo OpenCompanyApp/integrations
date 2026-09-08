@@ -257,9 +257,9 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/apitemplateio.md';
+        return __DIR__ . '/../script-docs/apitemplateio.md';
     }
 
     public function credentialFields(): array

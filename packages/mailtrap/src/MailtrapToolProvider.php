@@ -206,9 +206,9 @@ class MailtrapToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/mailtrap.md';
+        return __DIR__ . '/../script-docs/mailtrap.md';
     }    public function credentialFields(): array
     {
         return [

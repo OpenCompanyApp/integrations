@@ -2547,6 +2547,6 @@ Official GoCardless endpoint: POST /webhooks/{webhook_id}/actions/retry.',
         return app(GoCardlessService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/gocardless.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/gocardless.md'; }
     public function isIntegration(): bool { return true; }
 }

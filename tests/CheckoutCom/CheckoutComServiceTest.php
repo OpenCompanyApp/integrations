@@ -49,7 +49,7 @@ final class CheckoutComServiceTest extends TestCase
         self::assertCount(1, $provider->credentialFields());
         self::assertSame('api_key', $provider->credentialFields()[0]['key']);
         self::assertCount(3, $provider->configSchema());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('checkout_com_request_a_payment_or_payout', array_keys($provider->tools()));
         self::assertContains('checkout_com_request_an_access_token', array_keys($provider->tools()));
         self::assertContains('checkout_com_get_payment_methods', array_keys($provider->tools()));

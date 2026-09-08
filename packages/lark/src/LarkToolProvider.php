@@ -223,9 +223,9 @@ class LarkToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/lark.md';
+        return __DIR__ . '/../script-docs/lark.md';
     }    public function credentialFields(): array
     {
         return [

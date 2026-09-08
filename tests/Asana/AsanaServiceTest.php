@@ -47,7 +47,7 @@ final class AsanaServiceTest extends TestCase
         self::assertCount(20, $provider->tools());
         self::assertArrayHasKey('asana_create_task', $provider->tools());
         self::assertArrayHasKey('asana_list_workspaces', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         $connection = $provider->testConnection(['access_token' => 'asana_test']);
         self::assertTrue($connection['success']);

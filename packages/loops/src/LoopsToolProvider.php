@@ -189,9 +189,9 @@ class LoopsToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/loops.md';
+        return __DIR__.'/../script-docs/loops.md';
     }
 
     public function credentialFields(): array

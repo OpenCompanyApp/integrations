@@ -109,7 +109,7 @@ final class NotionServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://developers.notion.com', $provider->integrationMeta()['docs_url']);
         self::assertSame('self.version', $composer['replace']['opencompanyapp/integration-notion2'] ?? null);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(20, $tools);
         self::assertArrayHasKey('notion_search', $tools);
         self::assertArrayHasKey('notion_create_comment', $tools);

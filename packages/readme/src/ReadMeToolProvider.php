@@ -180,8 +180,8 @@ class ReadMeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return app(ReadMeService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/readme.md';
+        return __DIR__.'/../script-docs/readme.md';
     }
 }

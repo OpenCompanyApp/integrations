@@ -4,16 +4,16 @@ namespace OpenCompany\Integrations\Sendgrid\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Sendgrid\SendgridService;
+use OpenCompany\Integrations\Sendgrid\SendGridService;
 
 /**
  * List bounce suppressions from SendGrid.
  */
 class SendGridListSuppressions implements Tool
 {
-    /** @param SendgridService $service The SendGrid API client */
+    /** @param SendGridService $service The SendGrid API client */
     public function __construct(
-        private SendgridService $service,
+        private SendGridService $service,
     ) {}
 
     public function name(): string

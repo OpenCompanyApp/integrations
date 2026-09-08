@@ -4306,6 +4306,6 @@ class MicrosoftGraphSecurityToolProvider implements ToolProvider, ConfigurableIn
         return app(MicrosoftGraphSecurityService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-graph-security.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-graph-security.md'; }
     public function isIntegration(): bool { return true; }
 }

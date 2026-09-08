@@ -46,7 +46,7 @@ final class PinboardServiceTest extends TestCase
         self::assertSame('Pinboard', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(16, $provider->tools());
         self::assertCount(15, PinboardService::operations());
         self::assertArrayHasKey('pinboard_posts_add', $provider->tools());

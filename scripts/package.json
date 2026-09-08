@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "description": "Development-only documentation migration tooling; never a guest runtime",
+  "dependencies": { "@babel/parser": "7.29.3" }
+}

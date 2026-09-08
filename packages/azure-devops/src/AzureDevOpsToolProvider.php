@@ -9817,6 +9817,6 @@ Official Azure DevOps REST API 7.2 endpoint: PATCH https://dev.azure.com/{organi
         return app(AzureDevOpsService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/azure-devops.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/azure-devops.md'; }
     public function isIntegration(): bool { return true; }
 }

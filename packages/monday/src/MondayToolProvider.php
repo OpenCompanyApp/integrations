@@ -214,9 +214,9 @@ class MondayToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/monday.md';
+        return __DIR__ . '/../script-docs/monday.md';
     }    public function credentialFields(): array
     {
         return [

@@ -222,9 +222,9 @@ class GhostToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/ghost.md';
+        return __DIR__ . '/../script-docs/ghost.md';
     }
 
     public function credentialFields(): array

@@ -49,7 +49,7 @@ final class MicrosoftReportsServiceTest extends TestCase
         self::assertSame('Microsoft Reports', $provider->integrationMeta()['name']);
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_reports_reports_authentication_methods_list_user_registration_details', array_keys($provider->tools()));
         self::assertContains('microsoft_reports_reports_authentication_methods_get_user_registration_details', array_keys($provider->tools()));
         self::assertContains('microsoft_reports_reports_get_email_activity_user_detail_6549', array_keys($provider->tools()));

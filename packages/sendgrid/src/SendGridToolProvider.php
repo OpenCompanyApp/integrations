@@ -6,10 +6,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Sendgrid\Tools\SendgridListEmails;
-use OpenCompany\Integrations\Sendgrid\Tools\SendgridSendEmail;
+use OpenCompany\Integrations\Sendgrid\Tools\SendGridSendEmail;
 use OpenCompany\Integrations\Sendgrid\Tools\SendgridListTemplates;
 use OpenCompany\Integrations\Sendgrid\Tools\SendgridGetTemplate;
-use OpenCompany\Integrations\Sendgrid\Tools\SendgridListContacts;
+use OpenCompany\Integrations\Sendgrid\Tools\SendGridListContacts;
 use OpenCompany\Integrations\Sendgrid\Tools\SendgridGetContact;
 use OpenCompany\Integrations\Sendgrid\Tools\SendgridGetCurrentUser;
 
@@ -27,7 +27,7 @@ use OpenCompany\Integrations\Sendgrid\Tools\SendGridListSenderIdentities;
 use OpenCompany\Integrations\Sendgrid\Tools\SendGridListSuppressions;
 use OpenCompany\Integrations\Sendgrid\Tools\SendGridRemoveContactFromList;
 use OpenCompany\Integrations\Sendgrid\Tools\SendGridSearchContacts;
-class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+class SendGridToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
 /**
@@ -130,7 +130,7 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
         }
 
         try {
-            $service = new SendgridService(apiKey: $apiKey);
+            $service = new SendGridService(apiKey: $apiKey);
             $profile = $service->getCurrentUser();
 
             $email = $profile['email'] ?? 'unknown';
@@ -155,14 +155,14 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
     {
         return [
             'sendgrid_list_contacts' => [
-                'class' => SendgridListContacts::class,
+                'class' => SendGridListContacts::class,
                 'type' => 'read',
                 'name' => 'List Contacts',
                 'description' => 'List contacts in your SendGrid marketing contacts database. Supports pagination.',
                 'icon' => 'ph:wrench',
             ],
             'sendgrid_send_email' => [
-                'class' => SendgridSendEmail::class,
+                'class' => SendGridSendEmail::class,
                 'type' => 'write',
                 'name' => 'Send Email',
                 'description' => 'Send an email via SendGrid. Specify sender, recipients, subject, and HTML or text content.',
@@ -207,9 +207,9 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/sendgrid.md';
+        return __DIR__ . '/../script-docs/sendgrid.md';
     }    public function credentialFields(): array
     {
         return [
@@ -229,13 +229,13 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new SendgridService(
+            $service = new SendGridService(
                 apiKey: $creds->get('sendgrid', 'api_key', '', $account),
             );
 
             return new $class($service);
         }
 
-        return new $class(app(SendgridService::class));
+        return new $class(app(SendGridService::class));
     }
 }

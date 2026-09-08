@@ -224,9 +224,9 @@ class GoToWebinarToolProvider implements ToolProvider, ConfigurableIntegration, 
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/goto-webinar.md';
+        return __DIR__ . '/../script-docs/goto-webinar.md';
     }    public function credentialFields(): array
     {
         return [

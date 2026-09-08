@@ -267,9 +267,9 @@ class ContentfulToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/contentful.md';
+        return __DIR__ . '/../script-docs/contentful.md';
     }    public function credentialFields(): array
     {
         return [

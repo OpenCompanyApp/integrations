@@ -51,7 +51,7 @@ final class RecurlyServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('api_key', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('https://recurly.com/developers/api/', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(7, $provider->tools());
         self::assertContains('recurly_create_account', array_keys($provider->tools()));
     }

@@ -45,7 +45,7 @@ final class KeycloakServiceTest extends TestCase
         self::assertCount($manifest['method_count'], KeycloakOperations::all());
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('keycloak_get_admin_realms_realm_users', $provider->tools());
         self::assertArrayHasKey('keycloak_post_admin_realms_realm_users', $provider->tools());
         self::assertArrayHasKey('keycloak_get_admin_realms_realm_clients', $provider->tools());

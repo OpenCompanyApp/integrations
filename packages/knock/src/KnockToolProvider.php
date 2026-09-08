@@ -213,9 +213,9 @@ class KnockToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/knock.md';
+        return __DIR__ . '/../script-docs/knock.md';
     }    public function credentialFields(): array
     {
         return [

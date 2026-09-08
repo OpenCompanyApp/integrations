@@ -233,9 +233,9 @@ class RedditToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/reddit.md';
+        return __DIR__ . '/../script-docs/reddit.md';
     }    public function credentialFields(): array
     {
         return [

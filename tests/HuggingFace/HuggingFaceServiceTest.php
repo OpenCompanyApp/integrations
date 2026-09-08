@@ -123,7 +123,7 @@ final class HuggingFaceServiceTest extends TestCase
         self::assertSame('Hugging Face', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('https://huggingface.co/docs/hub/api', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('self.version', $composer['replace']['opencompanyapp/integration-huggingface'] ?? null);
         self::assertArrayHasKey('huggingface_get_dataset', $tools);
         self::assertArrayHasKey('huggingface_get_space', $tools);

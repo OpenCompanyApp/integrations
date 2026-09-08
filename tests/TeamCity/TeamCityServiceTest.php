@@ -46,7 +46,7 @@ final class TeamCityServiceTest extends TestCase
         self::assertSame('TeamCity', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(35, $provider->tools());
         self::assertArrayHasKey('teamcity_list_projects', $provider->tools());
         self::assertArrayHasKey('teamcity_queue_build', $provider->tools());

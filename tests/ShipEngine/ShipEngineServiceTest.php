@@ -45,7 +45,7 @@ final class ShipEngineServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('ShipEngine', $provider->integrationMeta()['name']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('shipengine_list_carriers', array_keys($provider->tools()));
         self::assertContains('shipengine_create_shipments', array_keys($provider->tools()));
         self::assertContains('shipengine_create_tag_2', array_keys($provider->tools()));

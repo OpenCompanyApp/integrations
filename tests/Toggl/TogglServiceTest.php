@@ -47,7 +47,7 @@ final class TogglServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://developers.track.toggl.com/docs/', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertArrayHasKey('toggl_create_project', $tools);
         self::assertArrayHasKey('toggl_update_time_entry', $tools);

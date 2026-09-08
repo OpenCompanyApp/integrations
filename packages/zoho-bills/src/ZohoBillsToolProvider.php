@@ -243,9 +243,9 @@ class ZohoBillsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zoho-bills.md';
+        return __DIR__ . '/../script-docs/zoho-bills.md';
     }    public function credentialFields(): array
     {
         return [

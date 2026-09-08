@@ -2797,9 +2797,9 @@ class PlaidToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return new $class($this->resolveService($context));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/plaid.md';
+        return __DIR__.'/../script-docs/plaid.md';
     }
 
     /**

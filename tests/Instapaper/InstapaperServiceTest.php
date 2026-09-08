@@ -47,7 +47,7 @@ final class InstapaperServiceTest extends TestCase
         self::assertSame('Instapaper', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth1', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(22, $provider->tools());
         self::assertCount(21, InstapaperService::operations());
         self::assertArrayHasKey('instapaper_get_access_token', $provider->tools());

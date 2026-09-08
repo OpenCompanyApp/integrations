@@ -233,11 +233,11 @@ class RollbarToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     }
 
     /**
-     * Get the path to the Lua API documentation file.
+     * Get the path to the Ruby script API documentation file.
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/rollbar.md';
+        return __DIR__ . '/../script-docs/rollbar.md';
     }
 
     /**

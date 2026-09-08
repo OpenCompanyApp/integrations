@@ -180,6 +180,6 @@ class MicrosoftSearchToolProvider implements ToolProvider, ConfigurableIntegrati
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftSearchService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftSearchService(accessToken: $creds->get('microsoft-search', 'access_token', '', $account), baseUrl: $creds->get('microsoft-search', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftSearchService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-search.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-search.md'; }
     public function isIntegration(): bool { return true; }
 }

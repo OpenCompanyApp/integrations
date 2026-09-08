@@ -9,4 +9,4 @@ Generated integration package for Meilisearch's official HTTP API.
 
 The integration exposes one tool per OpenAPI operation and supports optional bearer-token authentication for protected Meilisearch instances. Unsecured local instances can configure only the base URL.
 
-See `lua-docs/meilisearch.md` for agent-facing examples and tool-family guidance.
+See `script-docs/meilisearch.md` for agent-facing examples and tool-family guidance.

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
  * Executes official OpenAPI operation metadata, handles bearer-token
  * authentication, and normalizes PagerDuty error responses for tools.
  */
-class PagerdutyService
+class PagerDutyService
 {
     /**
      * @param  string  $apiToken  PagerDuty REST API token.

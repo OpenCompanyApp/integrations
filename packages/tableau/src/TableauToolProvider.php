@@ -224,9 +224,9 @@ class TableauToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/tableau.md';
+        return __DIR__ . '/../script-docs/tableau.md';
     }    public function credentialFields(): array
     {
         return [

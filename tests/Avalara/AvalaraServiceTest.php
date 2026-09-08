@@ -49,7 +49,7 @@ final class AvalaraServiceTest extends TestCase
             self::assertFileExists(__DIR__.'/../../packages/avalara/src/Tools/'.$shortName.'.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_base_url_auth_default_company_path_query_and_body(): void

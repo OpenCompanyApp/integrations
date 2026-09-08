@@ -424,7 +424,7 @@ spl_autoload_register(static function (string $class): void {
             require_once $path;
         }
     }
-});
+}, prepend: true);
 
 $app = new Container;
 Container::setInstance($app);

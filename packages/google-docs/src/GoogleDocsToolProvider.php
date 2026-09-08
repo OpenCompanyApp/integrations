@@ -59,5 +59,5 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GoogleDocsService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleDocsService(accessToken: $creds->get('google-docs','access_token','',$account), baseUrl: $creds->get('google-docs','url','https://docs.googleapis.com',$account));} return app(GoogleDocsService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-docs.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-docs.md'; }
 }

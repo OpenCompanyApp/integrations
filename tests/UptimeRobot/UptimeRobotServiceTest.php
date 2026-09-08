@@ -42,7 +42,7 @@ final class UptimeRobotServiceTest extends TestCase
         self::assertSame('UptimeRobot', $provider->integrationMeta()['name']);
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('uptimerobot_monitors_list', array_keys($provider->tools()));
         self::assertContains('uptimerobot_incidents_list', array_keys($provider->tools()));
         self::assertContains('uptimerobot_psp_announcements_create', array_keys($provider->tools()));

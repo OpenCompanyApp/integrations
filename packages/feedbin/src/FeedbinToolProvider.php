@@ -206,8 +206,8 @@ class FeedbinToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return app(FeedbinService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/feedbin.md';
+        return __DIR__.'/../script-docs/feedbin.md';
     }
 }

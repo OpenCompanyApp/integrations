@@ -124,9 +124,9 @@ class PlantUmlToolProvider implements ToolProvider, HasIntegrationCapabilities
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/plantuml.md';
+        return dirname(__DIR__) . '/script-docs/plantuml.md';
     }    public function credentialFields(): array
     {
         return [];

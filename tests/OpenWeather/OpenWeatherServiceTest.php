@@ -49,7 +49,7 @@ final class OpenWeatherServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame($provider->configSchema(), $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertSame([
             'openweather_current_weather',

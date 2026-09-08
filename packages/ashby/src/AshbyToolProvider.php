@@ -244,9 +244,9 @@ class AshbyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/ashby.md';
+        return __DIR__ . '/../script-docs/ashby.md';
     }
 
     public function credentialFields(): array

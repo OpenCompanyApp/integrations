@@ -24,7 +24,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\Sendgrid\\SendgridServiceProvider"
+                "OpenCompany\\Integrations\\Sendgrid\\SendGridServiceProvider"
             ]
         }
     },

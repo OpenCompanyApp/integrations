@@ -8,17 +8,17 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Linkedin\Tools\LinkedinListPosts;
 use OpenCompany\Integrations\Linkedin\Tools\LinkedinGetPost;
-use OpenCompany\Integrations\Linkedin\Tools\LinkedinCreatePost;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedInCreatePost;
 use OpenCompany\Integrations\Linkedin\Tools\LinkedinListOrganizations;
-use OpenCompany\Integrations\Linkedin\Tools\LinkedinGetOrganization;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedInGetOrganization;
 use OpenCompany\Integrations\Linkedin\Tools\LinkedinListAdAccounts;
-use OpenCompany\Integrations\Linkedin\Tools\LinkedinGetCurrentUser;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedInGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers all LinkedIn tools and provides integration metadata, configuration schema, and connection testing.
  */
-class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+class LinkedInToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
 
 /**
      * Describe host and authentication capabilities for catalog and setup flows.
@@ -191,7 +191,7 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'icon' => 'ph:article',
             ],
             'linkedin_create_post' => [
-                'class' => LinkedinCreatePost::class,
+                'class' => LinkedInCreatePost::class,
                 'type' => 'write',
                 'name' => 'Create Post',
                 'description' => 'Create a new LinkedIn UGC post.',
@@ -206,7 +206,7 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'icon' => 'ph:buildings',
             ],
             'linkedin_get_organization' => [
-                'class' => LinkedinGetOrganization::class,
+                'class' => LinkedInGetOrganization::class,
                 'type' => 'read',
                 'name' => 'Get Organization',
                 'description' => 'Retrieve a LinkedIn organization by ID.',
@@ -221,7 +221,7 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'icon' => 'ph:megaphone',
             ],
             'linkedin_get_current_user' => [
-                'class' => LinkedinGetCurrentUser::class,
+                'class' => LinkedInGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the currently authenticated LinkedIn user profile.',
@@ -230,9 +230,9 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/linkedin.md';
+        return dirname(__DIR__) . '/script-docs/linkedin.md';
     }    public function credentialFields(): array
     {
         return [
@@ -253,23 +253,23 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
     /**
-     * Resolve the LinkedinService, with optional account-specific credentials.
+     * Resolve the LinkedInService, with optional account-specific credentials.
      *
      * @param  array<string, mixed>  $context
      */
-    private function resolveService(array $context = []): LinkedinService
+    private function resolveService(array $context = []): LinkedInService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new LinkedinService(
+            return new LinkedInService(
                 accessToken: $creds->get('linkedin', 'access_token', '', $account),
                 baseUrl: $creds->get('linkedin', 'base_url', 'https://api.linkedin.com/v2', $account),
             );
         }
 
-        return app(LinkedinService::class);
+        return app(LinkedInService::class);
     }
 }

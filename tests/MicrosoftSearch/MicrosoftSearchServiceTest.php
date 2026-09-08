@@ -48,7 +48,7 @@ final class MicrosoftSearchServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Search', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_search_search_query', array_keys($provider->tools()));
         self::assertContains('microsoft_search_search_list_bookmarks', array_keys($provider->tools()));
         self::assertContains('microsoft_search_search_get_bookmarks', array_keys($provider->tools()));

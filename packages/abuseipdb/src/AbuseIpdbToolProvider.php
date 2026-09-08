@@ -169,8 +169,8 @@ class AbuseIpdbToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return app(AbuseIpdbService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/abuseipdb.md';
+        return __DIR__.'/../script-docs/abuseipdb.md';
     }
 }

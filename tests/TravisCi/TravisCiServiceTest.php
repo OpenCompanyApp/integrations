@@ -46,7 +46,7 @@ final class TravisCiServiceTest extends TestCase
         self::assertSame('Travis CI', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(29, $provider->tools());
         self::assertArrayHasKey('travis_ci_list_repository_builds', $provider->tools());
         self::assertArrayHasKey('travis_ci_restart_job', $provider->tools());

@@ -47,7 +47,7 @@ final class MicrosoftBookingsServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Bookings', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_bookings_list_booking_businesses', array_keys($provider->tools()));
         self::assertContains('microsoft_bookings_booking_businesses_list_appointments', array_keys($provider->tools()));
         self::assertContains('microsoft_bookings_booking_businesses_booking_business_publish', array_keys($provider->tools()));

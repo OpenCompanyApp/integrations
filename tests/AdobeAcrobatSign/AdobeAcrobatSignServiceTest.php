@@ -48,7 +48,7 @@ final class AdobeAcrobatSignServiceTest extends TestCase
         self::assertCount($manifest['method_count'], AdobeAcrobatSignOperations::all());
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('adobe_acrobat_sign_base_uris_get_base_uris', $provider->tools());
         self::assertArrayHasKey('adobe_acrobat_sign_agreements_create_agreement', $provider->tools());
         self::assertArrayHasKey('adobe_acrobat_sign_transient_documents_create_transient_document', $provider->tools());

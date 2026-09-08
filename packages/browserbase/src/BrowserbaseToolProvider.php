@@ -655,6 +655,6 @@ Official Browserbase endpoint: POST /v1/sessions/{id}/uploads.',
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): BrowserbaseService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new BrowserbaseService(apiKey: $creds->get('browserbase', 'api_key', '', $account), baseUrl: $creds->get('browserbase', 'url', 'https://api.browserbase.com', $account)); } return app(BrowserbaseService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/browserbase.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/browserbase.md'; }
     public function isIntegration(): bool { return true; }
 }

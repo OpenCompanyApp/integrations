@@ -274,9 +274,9 @@ class ConfluenceToolProvider implements ToolProvider, ConfigurableIntegration, H
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/confluence.md';
+        return dirname(__DIR__) . '/script-docs/confluence.md';
     }    public function credentialFields(): array
     {
         return [

@@ -487,5 +487,5 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GoogleDriveService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleDriveService(accessToken: $creds->get('google-drive','access_token','',$account), baseUrl: $creds->get('google-drive','url','https://www.googleapis.com',$account));} return app(GoogleDriveService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-drive.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-drive.md'; }
 }

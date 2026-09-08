@@ -108,8 +108,8 @@ class OpenLibraryToolProvider implements ToolProvider, HasIntegrationCapabilitie
         return new $class(app(OpenLibraryService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/open-library.md';
+        return __DIR__.'/../script-docs/open-library.md';
     }
 }

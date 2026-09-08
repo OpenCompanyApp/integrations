@@ -237,9 +237,9 @@ class PushoverToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/pushover.md';
+        return __DIR__ . '/../script-docs/pushover.md';
     }
 
     public function credentialFields(): array

@@ -125,5 +125,5 @@ class GoogleAdminReportsToolProvider implements ToolProvider, ConfigurableIntegr
         return app(GoogleAdminReportsService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-admin-reports.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-admin-reports.md'; }
 }

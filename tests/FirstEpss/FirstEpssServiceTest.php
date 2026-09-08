@@ -47,7 +47,7 @@ final class FirstEpssServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('none', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame([], $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame([
             'first_epss_query',
             'first_epss_cve',

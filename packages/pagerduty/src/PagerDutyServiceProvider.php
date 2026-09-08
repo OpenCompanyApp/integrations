@@ -12,17 +12,17 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
  * Binds the PagerDuty API client from host credentials and adds the generated
  * tool provider to the shared integration registry when available.
  */
-class PagerdutyServiceProvider extends ServiceProvider
+class PagerDutyServiceProvider extends ServiceProvider
 {
     /**
      * Register the PagerDuty API service singleton.
      */
     public function register(): void
     {
-        $this->app->singleton(PagerdutyService::class, function ($app) {
+        $this->app->singleton(PagerDutyService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
-            return new PagerdutyService(
+            return new PagerDutyService(
                 apiToken: $creds->get('pagerduty', 'api_token', ''),
                 baseUrl: $creds->get('pagerduty', 'base_url', 'https://api.pagerduty.com'),
             );

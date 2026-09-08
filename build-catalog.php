@@ -699,13 +699,21 @@ function expectedProviderFqcn(string $providerFile, string $pkgDir, array $compo
     return rtrim($namespace, '\\') . '\\' . str_replace('/', '\\', $relative);
 }
 
-function readLuaDocs(string $pkgDir): string
+/**
+ * Read the package-authored Ruby scripting reference.
+ *
+ * Catalog publication must preserve the actual script contract. In particular,
+ * it must never republish legacy Lua documentation or synthesize a Ruby call
+ * from a tool slug: generated display names may collide and only reviewed
+ * script-doc examples establish a truthful callable workflow.
+ */
+function readScriptDocs(string $pkgDir): string
 {
-    $luaDir = $pkgDir . '/lua-docs';
-    if (!is_dir($luaDir)) {
+    $scriptDir = $pkgDir . '/script-docs';
+    if (!is_dir($scriptDir)) {
         return '';
     }
-    $files = glob($luaDir . '/*.md');
+    $files = glob($scriptDir . '/*.md');
     if (empty($files)) {
         return '';
     }
@@ -1112,7 +1120,7 @@ function inferIntegrationCapabilities(
             'cli_setup_supported' => $cliSetup,
             'cli_runtime_supported' => $cliRuntime,
             'mcp_gateway_supported' => $cliRuntime,
-            'lua_supported' => $cliRuntime,
+            'script_supported' => $cliRuntime,
         ],
     ];
 
@@ -1120,6 +1128,11 @@ function inferIntegrationCapabilities(
         $capabilities = deepMerge($capabilities, $explicitCapabilities);
         $capabilities['auth']['confidence'] = 'explicit';
     }
+
+    // Providers may still carry an old explicit capability during migration.
+    // The published catalog is language-neutral and must not leak that retired
+    // Lua-specific field alongside the Ruby script contract.
+    unset($capabilities['compatibility']['lua_supported']);
 
     $capabilities['summary'] = summarizeCapabilities($capabilities);
 
@@ -1231,62 +1244,6 @@ function fallbackIntegrationMeta(string $appName): array
     return $fallbacks[$appName] ?? [];
 }
 
-function generateLuaDocs(string $displayName, string $appName, array $tools): string
-{
-    if (empty($tools)) {
-        return '';
-    }
-
-    $lines = [
-        '# ' . $displayName . ' — Lua API Reference',
-        '',
-        'This reference was generated from tool metadata because no package Lua docs file exists yet.',
-        '',
-    ];
-
-    foreach ($tools as $tool) {
-        $lines[] = '## ' . $tool['function_name'];
-        $lines[] = '';
-        $description = $tool['description'] ?: ($tool['short_description'] ?: $tool['name']);
-        $lines[] = cleanText($description);
-        $lines[] = '';
-
-        $parameters = $tool['parameters'];
-        if (is_array($parameters) && !empty($parameters)) {
-            $lines[] = '### Parameters';
-            $lines[] = '';
-            $lines[] = '| Name | Type | Required | Description |';
-            $lines[] = '|------|------|----------|-------------|';
-            foreach ($parameters as $name => $schema) {
-                if (!is_array($schema)) {
-                    continue;
-                }
-                $type = $schema['type'] ?? 'mixed';
-                $required = !empty($schema['required']) ? 'yes' : 'no';
-                $paramDescription = str_replace('|', '\\|', cleanText($schema['description'] ?? ''));
-                $lines[] = '| `' . $name . '` | ' . $type . ' | ' . $required . ' | ' . $paramDescription . ' |';
-            }
-            $lines[] = '';
-        } else {
-            $lines[] = '### Parameters';
-            $lines[] = '';
-            $lines[] = 'No parameters are documented in source metadata.';
-            $lines[] = '';
-        }
-
-        $lines[] = '### Example';
-        $lines[] = '';
-        $lines[] = '```lua';
-        $lines[] = 'local result = app.integrations.' . str_replace('-', '_', $appName) . '.' . $tool['function_name'] . '({})';
-        $lines[] = '```';
-        $lines[] = '';
-        $lines[] = '---';
-        $lines[] = '';
-    }
-
-    return trim(implode("\n", $lines));
-}
-
 // --- Main ---
 
 $providerFiles = glob($packagesDir . '/*/src/*ToolProvider.php');
@@ -1300,6 +1257,7 @@ if (empty($providerFiles)) {
 $integrations = [];
 $totalTools = 0;
 $errors = [];
+$missingScriptDocs = [];
 
 foreach ($providerFiles as $providerFile) {
     $source = file_get_contents($providerFile);
@@ -1353,7 +1311,12 @@ foreach ($providerFiles as $providerFile) {
     $providerFqcn = resolveFqcn($source);
     $expectedProviderFqcn = expectedProviderFqcn($providerFile, $pkgDir, $composer);
     $providerFqcnMatchesPsr4 = $expectedProviderFqcn === null || $providerFqcn === $expectedProviderFqcn;
-    $luaDocs = readLuaDocs($pkgDir);
+    $scriptDocs = readScriptDocs($pkgDir);
+    if ($scriptDocs === '') {
+        // Do not invent a Ruby example from a tool name. Stop publication
+        // after inspection so an author can add a reviewed script contract.
+        $missingScriptDocs[] = 'packages/' . $pkgSlug . '/script-docs/*.md';
+    }
     $readme = readReadme($pkgDir);
 
     // --- Tool-level data ---
@@ -1545,12 +1508,6 @@ foreach ($providerFiles as $providerFile) {
     $icon = $integrationMeta['icon'] ?? $appMeta['icon'] ?? '';
     $logo = $integrationMeta['logo'] ?? $appMeta['logo'] ?? $icon;
     $docsUrl = $integrationMeta['docs_url'] ?? null;
-    $luaDocsGenerated = false;
-    if ($luaDocs === '') {
-        $luaDocs = generateLuaDocs($displayName, $appName, $tools);
-        $luaDocsGenerated = $luaDocs !== '';
-    }
-
     // --- Assemble ---
 
     $integrations[] = [
@@ -1612,13 +1569,13 @@ foreach ($providerFiles as $providerFile) {
             'web_setup_supported' => $capabilities['compatibility']['web_setup_supported'] ?? null,
             'web_runtime_supported' => $capabilities['compatibility']['web_runtime_supported'] ?? null,
             'mcp_gateway_supported' => $capabilities['compatibility']['mcp_gateway_supported'] ?? null,
-            'lua_supported' => $capabilities['compatibility']['lua_supported'] ?? null,
+            'script_supported' => $capabilities['compatibility']['script_supported'] ?? null,
             'cli_setup_summary' => $headlessSetup['cli_setup_summary'],
             'mcp_setup_summary' => $headlessSetup['mcp_setup_summary'],
             'keywords' => [
                 strtolower($displayName) . ' cli',
                 strtolower($displayName) . ' mcp',
-                strtolower($displayName) . ' lua',
+                strtolower($displayName) . ' ruby',
                 strtolower($displayName) . ' integration',
                 strtolower($displayName) . ' agent tools',
             ],
@@ -1645,9 +1602,8 @@ foreach ($providerFiles as $providerFile) {
             'validation_rules' => $validationRules,
         ], $headlessSetup),
         'quality' => [
-            'has_lua_docs' => $luaDocs !== '',
-            'has_lua_docs_file' => !$luaDocsGenerated && $luaDocs !== '',
-            'lua_docs_generated' => $luaDocsGenerated,
+            'has_script_docs' => $scriptDocs !== '',
+            'has_script_docs_file' => $scriptDocs !== '',
             'has_readme' => $readme['exists'] ?? false,
             'has_docs_url' => !empty($docsUrl),
             'has_logo' => !empty($logo),
@@ -1657,7 +1613,8 @@ foreach ($providerFiles as $providerFile) {
             'provider_fqcn_matches_psr4' => $providerFqcnMatchesPsr4,
         ],
         'related_integrations' => [],
-        'lua_docs' => $luaDocs !== '' ? $luaDocs : null,
+        'script_language' => 'ruby',
+        'script_docs' => $scriptDocs !== '' ? $scriptDocs : null,
     ];
 }
 
@@ -1700,6 +1657,14 @@ foreach ($integrations as &$integration) {
 unset($integration);
 
 // --- Output ---
+
+if ($missingScriptDocs !== []) {
+    fwrite(STDERR, "Refusing to publish generated Ruby examples without reviewed script docs:\n");
+    foreach ($missingScriptDocs as $path) {
+        fwrite(STDERR, "  - {$path}\n");
+    }
+    exit(1);
+}
 
 $catalog = [
     'generated_at' => date('c'),

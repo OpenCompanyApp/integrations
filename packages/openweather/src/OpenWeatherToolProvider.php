@@ -181,8 +181,8 @@ class OpenWeatherToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(OpenWeatherService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/openweather.md';
+        return __DIR__.'/../script-docs/openweather.md';
     }
 }

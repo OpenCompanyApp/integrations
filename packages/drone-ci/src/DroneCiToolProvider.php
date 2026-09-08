@@ -234,8 +234,8 @@ class DroneCiToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return app(DroneCiService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/drone-ci.md';
+        return __DIR__.'/../script-docs/drone-ci.md';
     }
 }

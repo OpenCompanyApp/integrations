@@ -159,9 +159,9 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/canva.md';
+        return __DIR__.'/../script-docs/canva.md';
     }
 
     public function isIntegration(): bool

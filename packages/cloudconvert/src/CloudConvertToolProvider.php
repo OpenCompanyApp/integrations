@@ -288,9 +288,9 @@ class CloudConvertToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/cloudconvert.md';
+        return __DIR__ . '/../script-docs/cloudconvert.md';
     }
 
     public function credentialFields(): array

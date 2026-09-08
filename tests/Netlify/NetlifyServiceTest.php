@@ -56,7 +56,7 @@ final class NetlifyServiceTest extends TestCase
         self::assertArrayHasKey('netlify_create_site', $provider->tools());
         self::assertArrayHasKey('netlify_create_deploy', $provider->tools());
         self::assertArrayHasKey('netlify_delete_site', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://api.netlify.test/api/v1/user' => Http::response([

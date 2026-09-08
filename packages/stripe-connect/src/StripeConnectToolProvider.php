@@ -220,9 +220,9 @@ class StripeConnectToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/stripe-connect.md';
+        return __DIR__ . '/../script-docs/stripe-connect.md';
     }    public function credentialFields(): array
     {
         return [

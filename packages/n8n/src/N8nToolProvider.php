@@ -219,9 +219,9 @@ class N8nToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/n8n.md';
+        return dirname(__DIR__) . '/script-docs/n8n.md';
     }    public function credentialFields(): array
     {
         return [

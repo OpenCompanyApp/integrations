@@ -1152,6 +1152,6 @@ class FivetranToolProvider implements ToolProvider, ConfigurableIntegration, Has
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/fivetran.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/fivetran.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): FivetranService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new FivetranService(apiKey:$creds->get('fivetran','api_key','',$account), apiSecret:$creds->get('fivetran','api_secret','',$account), baseUrl:$creds->get('fivetran','url','https://api.fivetran.com',$account));} return app(FivetranService::class); }
 }

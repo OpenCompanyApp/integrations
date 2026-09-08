@@ -264,9 +264,9 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/chargify.md';
+        return __DIR__ . '/../script-docs/chargify.md';
     }
 
     public function credentialFields(): array

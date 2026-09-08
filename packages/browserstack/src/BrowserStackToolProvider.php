@@ -208,8 +208,8 @@ class BrowserStackToolProvider implements ToolProvider, ConfigurableIntegration,
         return app(BrowserStackService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/browserstack.md';
+        return __DIR__.'/../script-docs/browserstack.md';
     }
 }

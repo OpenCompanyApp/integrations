@@ -193,6 +193,6 @@ class OpenFGAToolProvider implements ToolProvider, ConfigurableIntegration, HasI
   'icon' => 'ph:pencil-simple',
 ),
     ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/openfga.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/openfga.md'; }
     /** @param  array<string, mixed>  $context  Runtime account context. */ private function resolveService(array $context=[]): OpenFGAService { $account=$context['account']??null; if($account!==null){ $creds=app(CredentialResolver::class); return new OpenFGAService(apiToken:$creds->get('openfga','api_token','',$account), baseUrl:$creds->get('openfga','url','http://localhost:8080',$account)); } return app(OpenFGAService::class); }
 }

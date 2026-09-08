@@ -247,9 +247,9 @@ class BannerbearToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/bannerbear.md';
+        return __DIR__ . '/../script-docs/bannerbear.md';
     }    public function credentialFields(): array
     {
         return [

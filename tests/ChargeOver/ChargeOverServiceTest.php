@@ -54,7 +54,7 @@ final class ChargeOverServiceTest extends TestCase
         self::assertSame(['api_username', 'api_password'], $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('API Username', $provider->credentialFields()[0]['label']);
         self::assertSame('API Password', $provider->credentialFields()[1]['label']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(8, $provider->tools());
         self::assertArrayHasKey('chargeover_list_subscriptions', $provider->tools());
         self::assertArrayHasKey('chargeover_get_transaction', $provider->tools());

@@ -51,7 +51,7 @@ final class WildixServiceTest extends TestCase
             self::assertFileExists(__DIR__.'/../../packages/wildix/src/Tools/'.$shortName.'.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_maps_path_query_body_and_bearer_auth(): void

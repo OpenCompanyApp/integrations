@@ -227,9 +227,9 @@ class InstagramToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/instagram.md';
+        return __DIR__ . '/../script-docs/instagram.md';
     }    public function credentialFields(): array
     {
         return [

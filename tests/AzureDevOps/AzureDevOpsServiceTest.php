@@ -47,7 +47,7 @@ final class AzureDevOpsServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Azure DevOps', $provider->integrationMeta()['name']);
         self::assertSame('pat_or_bearer', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('azure_devops_core_projects_list', array_keys($provider->tools()));
         self::assertContains('azure_devops_git_repositories_list', array_keys($provider->tools()));
         self::assertContains('azure_devops_wit_work_items_get_work_items_batch', array_keys($provider->tools()));

@@ -220,9 +220,9 @@ class NovuToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/novu.md';
+        return __DIR__ . '/../script-docs/novu.md';
     }    public function credentialFields(): array
     {
         return [

@@ -214,9 +214,9 @@ class PipedreamToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/pipedream.md';
+        return __DIR__ . '/../script-docs/pipedream.md';
     }    public function credentialFields(): array
     {
         return [

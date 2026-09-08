@@ -1,4 +1,7 @@
 /vendor/
+/scripts/node_modules/
+/scripts/ci/vendor/
+/.ci/
 .phpunit.cache/
 .DS_Store
 *.log

@@ -50,7 +50,7 @@ final class AirtopServiceTest extends TestCase
         self::assertSame('https://docs.airtop.ai/openapi.json', $provider->integrationMeta()['source_url']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('api_key', $provider->integrationCapabilities()['auth']['token_keys']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(39, $tools);
         self::assertArrayHasKey('airtop_sessions_create', $tools);
         self::assertArrayHasKey('airtop_sessions_windows_load_url', $tools);

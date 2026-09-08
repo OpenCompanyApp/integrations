@@ -224,9 +224,9 @@ class MakeComToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/make-com.md';
+        return __DIR__ . '/../script-docs/make-com.md';
     }    public function credentialFields(): array
     {
         return [

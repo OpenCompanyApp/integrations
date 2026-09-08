@@ -131,9 +131,9 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/google-data-manager.md';
+        return __DIR__ . '/../script-docs/google-data-manager.md';
     }
 
     public function credentialFields(): array

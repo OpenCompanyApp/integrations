@@ -1102,6 +1102,6 @@ Official UptimeRobot endpoint: DELETE /tags/{id}.',
         return app(UptimeRobotService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/uptimerobot.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/uptimerobot.md'; }
     public function isIntegration(): bool { return true; }
 }

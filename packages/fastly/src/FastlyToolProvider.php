@@ -4712,6 +4712,6 @@ class FastlyToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     'description' => 'Get historical DDoS metrics for the entire Fastly platform',
     'icon' => 'ph:cloud',
   ),
-); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/fastly.md'; } public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
+); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/fastly.md'; } public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime context from the host. */ private function resolveService(array $context=[]): FastlyService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new FastlyService(apiToken:$creds->get('fastly','api_token','',$account), apiUrl:$creds->get('fastly','api_url','https://api.fastly.com',$account), rtUrl:$creds->get('fastly','rt_url','https://rt.fastly.com',$account));} return app(FastlyService::class); }
 }

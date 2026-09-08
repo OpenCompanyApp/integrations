@@ -212,9 +212,9 @@ class FathomToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/fathom.md';
+        return __DIR__ . '/../script-docs/fathom.md';
     }
 
     public function credentialFields(): array

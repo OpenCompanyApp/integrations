@@ -223,9 +223,9 @@ class HubstaffToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/hubstaff.md';
+        return __DIR__ . '/../script-docs/hubstaff.md';
     }    public function credentialFields(): array
     {
         return [

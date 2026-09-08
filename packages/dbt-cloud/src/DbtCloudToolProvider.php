@@ -1439,6 +1439,6 @@ class DbtCloudToolProvider implements ToolProvider, ConfigurableIntegration, Has
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/dbt-cloud.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/dbt-cloud.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): DbtCloudService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new DbtCloudService(accessToken:$creds->get('dbt-cloud','access_token','',$account), baseUrl:$creds->get('dbt-cloud','url','https://cloud.getdbt.com',$account));} return app(DbtCloudService::class); }
 }

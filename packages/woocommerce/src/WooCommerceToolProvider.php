@@ -215,9 +215,9 @@ class WoocommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/woocommerce.md';
+        return __DIR__ . '/../script-docs/woocommerce.md';
     }    public function credentialFields(): array
     {
         return [

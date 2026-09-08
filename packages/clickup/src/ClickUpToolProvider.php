@@ -240,9 +240,9 @@ class ClickUpToolProvider implements ToolProvider, ConfigurableIntegration, HasT
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/clickup.md';
+        return __DIR__ . '/../script-docs/clickup.md';
     }
 
     public function credentialFields(): array

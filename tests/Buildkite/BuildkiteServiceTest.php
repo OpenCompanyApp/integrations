@@ -46,7 +46,7 @@ final class BuildkiteServiceTest extends TestCase
         self::assertSame('Buildkite', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(22, $provider->tools());
         self::assertArrayHasKey('buildkite_list_pipelines', $provider->tools());
         self::assertArrayHasKey('buildkite_create_build', $provider->tools());

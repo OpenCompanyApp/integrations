@@ -170,8 +170,8 @@ class FeaturebaseToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(FeaturebaseService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/featurebase.md';
+        return __DIR__.'/../script-docs/featurebase.md';
     }
 }

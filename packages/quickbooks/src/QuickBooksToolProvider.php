@@ -226,9 +226,9 @@ class QuickBooksToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/quickbooks.md';
+        return __DIR__ . '/../script-docs/quickbooks.md';
     }    public function credentialFields(): array
     {
         return [

@@ -213,9 +213,9 @@ class BuyMeACoffeeToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/buymeacoffee.md';
+        return __DIR__ . '/../script-docs/buymeacoffee.md';
     }    public function credentialFields(): array
     {
         return [

@@ -49,7 +49,7 @@ final class OpenAlexServiceTest extends TestCase
         self::assertSame('OpenAlex', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         $tools = array_keys($provider->tools());
         self::assertCount(44, $tools);

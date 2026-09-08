@@ -46,7 +46,7 @@ final class FusionAuthServiceTest extends TestCase
         self::assertCount($manifest['method_count'], FusionAuthOperations::all());
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('api_key_header', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('fusionauth_retrieve_user', $provider->tools());
         self::assertArrayHasKey('fusionauth_create_user', $provider->tools());
         self::assertArrayHasKey('fusionauth_search_applications_with_id', $provider->tools());

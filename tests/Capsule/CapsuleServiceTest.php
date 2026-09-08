@@ -41,7 +41,7 @@ final class CapsuleServiceTest extends TestCase
         self::assertSame('capsule', $provider->appName());
         self::assertSame('Capsule CRM', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(36, $provider->tools());
         self::assertArrayHasKey('capsule_update_contact', $provider->tools());
         self::assertArrayHasKey('capsule_list_cases', $provider->tools());

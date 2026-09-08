@@ -148,9 +148,9 @@ class SvixToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/svix.md';
+        return __DIR__.'/../script-docs/svix.md';
     }
 
     public function isIntegration(): bool

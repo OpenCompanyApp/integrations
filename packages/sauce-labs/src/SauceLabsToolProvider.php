@@ -201,8 +201,8 @@ class SauceLabsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         return app(SauceLabsService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/sauce-labs.md';
+        return __DIR__.'/../script-docs/sauce-labs.md';
     }
 }

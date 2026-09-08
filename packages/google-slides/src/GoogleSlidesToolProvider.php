@@ -74,5 +74,5 @@ class GoogleSlidesToolProvider implements ToolProvider, ConfigurableIntegration,
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GoogleSlidesService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleSlidesService(accessToken: $creds->get('google-slides','access_token','',$account), baseUrl: $creds->get('google-slides','url','https://slides.googleapis.com',$account));} return app(GoogleSlidesService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-slides.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-slides.md'; }
 }

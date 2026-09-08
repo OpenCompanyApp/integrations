@@ -251,9 +251,9 @@ class ClockifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/clockify.md';
+        return __DIR__ . '/../script-docs/clockify.md';
     }    public function credentialFields(): array
     {
         return [

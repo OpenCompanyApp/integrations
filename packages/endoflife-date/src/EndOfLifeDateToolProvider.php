@@ -129,8 +129,8 @@ class EndOfLifeDateToolProvider implements ToolProvider, HasIntegrationCapabilit
         return new $class(app(EndOfLifeDateService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/endoflife-date.md';
+        return __DIR__.'/../script-docs/endoflife-date.md';
     }
 }

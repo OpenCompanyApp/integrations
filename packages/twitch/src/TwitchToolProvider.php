@@ -244,9 +244,9 @@ class TwitchToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/twitch.md';
+        return __DIR__ . '/../script-docs/twitch.md';
     }    public function credentialFields(): array
     {
         return [

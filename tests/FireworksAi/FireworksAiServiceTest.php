@@ -30,7 +30,7 @@ final class FireworksAiServiceTest extends TestCase
             self::assertFileExists(__DIR__ . '/../../packages/fireworks-ai/src/Tools/' . $shortName . '.php');
         }
 
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('Fireworks AI', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);

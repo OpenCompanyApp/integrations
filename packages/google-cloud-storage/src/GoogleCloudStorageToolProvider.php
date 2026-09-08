@@ -287,5 +287,5 @@ class GoogleCloudStorageToolProvider implements ToolProvider, ConfigurableIntegr
         return app(GoogleCloudStorageService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-cloud-storage.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-cloud-storage.md'; }
 }

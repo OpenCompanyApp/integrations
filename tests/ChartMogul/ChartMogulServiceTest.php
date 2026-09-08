@@ -52,7 +52,7 @@ final class ChartMogulServiceTest extends TestCase
         self::assertSame('basic_auth_api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('api_key', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('API Key', $provider->credentialFields()[0]['label']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(7, $provider->tools());
     }
 

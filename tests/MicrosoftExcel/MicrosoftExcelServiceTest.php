@@ -46,7 +46,7 @@ final class MicrosoftExcelServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Excel', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_excel_drives_items_get_workbook', array_keys($provider->tools()));
         self::assertContains('microsoft_excel_drives_items_workbook_list_worksheets', array_keys($provider->tools()));
         self::assertContains('microsoft_excel_drives_drive_items_drive_item_workbook_create_session', array_keys($provider->tools()));

@@ -279,9 +279,9 @@ class CodaToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     /**
      * {@inheritdoc}
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/coda.md';
+        return __DIR__ . '/../script-docs/coda.md';
     }
 
     /**

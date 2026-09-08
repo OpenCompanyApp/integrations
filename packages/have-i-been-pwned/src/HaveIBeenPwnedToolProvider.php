@@ -196,8 +196,8 @@ class HaveIBeenPwnedToolProvider implements ToolProvider, ConfigurableIntegratio
         return app(HaveIBeenPwnedService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/have-i-been-pwned.md';
+        return __DIR__.'/../script-docs/have-i-been-pwned.md';
     }
 }

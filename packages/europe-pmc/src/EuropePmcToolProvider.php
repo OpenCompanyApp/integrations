@@ -149,8 +149,8 @@ class EuropePmcToolProvider implements ToolProvider, HasIntegrationCapabilities
         return new $class(app(EuropePmcService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/europe-pmc.md';
+        return __DIR__.'/../script-docs/europe-pmc.md';
     }
 }

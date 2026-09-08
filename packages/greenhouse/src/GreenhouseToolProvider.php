@@ -5386,6 +5386,6 @@ Official Greenhouse Harvest v3 endpoint: PATCH /v3/webhooks/{id}.',
         return app(GreenhouseService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/greenhouse.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/greenhouse.md'; }
     public function isIntegration(): bool { return true; }
 }

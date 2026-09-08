@@ -297,9 +297,9 @@ class NasaToolProvider implements ConfigurableIntegration, ToolProvider, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/nasa.md';
+        return dirname(__DIR__) . '/script-docs/nasa.md';
     }
 
     public function isIntegration(): bool

@@ -32,7 +32,7 @@ final class LangSmithServiceTest extends TestCase
         self::assertSame('LangSmith', $provider->integrationMeta()['name']);
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         foreach ($provider->tools() as $tool) {
             $shortName = substr((string) $tool['class'], strrpos((string) $tool['class'], '\\') + 1);

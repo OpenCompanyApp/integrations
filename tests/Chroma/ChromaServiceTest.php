@@ -55,7 +55,7 @@ final class ChromaServiceTest extends TestCase
         self::assertArrayHasKey('chroma_update_collection', $provider->tools());
         self::assertArrayHasKey('chroma_upsert_documents', $provider->tools());
         self::assertArrayHasKey('chroma_delete_documents', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         foreach ($provider->tools() as $tool) {
             $shortName = substr((string) $tool['class'], strrpos((string) $tool['class'], '\\') + 1);

@@ -1,0 +1,88 @@
+name: mruby contracts
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/mruby.yml'
+      - 'core/src/Script/**'
+      - 'packages/*/src/**'
+      - 'packages/*/script-docs/**'
+      - 'scripts/check-mruby-contracts.php'
+      - 'scripts/export-script-catalog.php'
+      - 'scripts/validate-ruby-docs.php'
+      - 'scripts/ci/composer.json'
+      - 'scripts/ci/composer.lock'
+      - 'tests/Core/MrubyCatalogConformanceTest.php'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/mruby.yml'
+      - 'core/src/Script/**'
+      - 'packages/*/src/**'
+      - 'packages/*/script-docs/**'
+      - 'scripts/check-mruby-contracts.php'
+      - 'scripts/export-script-catalog.php'
+      - 'scripts/validate-ruby-docs.php'
+      - 'scripts/ci/composer.json'
+      - 'scripts/ci/composer.lock'
+      - 'tests/Core/MrubyCatalogConformanceTest.php'
+
+permissions:
+  contents: read
+
+jobs:
+  contracts-and-ruby-docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # No tag exists yet. This immutable commit is intentionally duplicated in
+      # review-visible CI rather than following a branch for a runtime boundary.
+      - name: Check out the pinned Ruby engine source
+        uses: actions/checkout@v4
+        with:
+          repository: OpenCompanyApp/bowerbird-ruby-engine
+          ref: 316852148b739fa22bbcfe1c4fca5e75fb7116bb
+          path: .ci/bowerbird-ruby-engine
+
+      # The integration source is tested against a deliberately tiny public
+      # host dependency set. Path packages point directly at the source core and
+      # pinned engine; tests/bootstrap and the exporter put this checkout first.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+
+      - name: Install minimal host dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --working-dir=scripts/ci
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install mruby build prerequisites
+        run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends ruby rake
+
+      - name: Provision and verify mruby 4.0.0
+        working-directory: .ci/bowerbird-ruby-engine
+        run: |
+          git clone --depth 1 --branch 4.0.0 https://github.com/mruby/mruby.git vendor/mruby
+          git -C vendor/mruby checkout --detach 831da26b9021de0369d17b71b5667e2941a1a32d
+          test "$(git -C vendor/mruby rev-parse HEAD)" = "$(php -r 'echo json_decode(file_get_contents("engine.lock.json"), true, 512, JSON_THROW_ON_ERROR)["commit"];')"
+          cargo test --locked
+          cargo build --locked --release
+
+      - name: Check source catalog contracts
+        env:
+          OPENCOMPANY_HOST_AUTOLOAD: ${{ github.workspace }}/scripts/ci/vendor/autoload.php
+        run: php scripts/check-mruby-contracts.php "$OPENCOMPANY_HOST_AUTOLOAD"
+
+      - name: Run focused source-first conformance test
+        env:
+          OPENCOMPANY_HOST_AUTOLOAD: ${{ github.workspace }}/scripts/ci/vendor/autoload.php
+        run: php -d auto_prepend_file="$OPENCOMPANY_HOST_AUTOLOAD" scripts/ci/vendor/bin/phpunit tests/Core/MrubyCatalogConformanceTest.php
+
+      - name: Compile Ruby documentation examples
+        env:
+          OPENCOMPANY_HOST_AUTOLOAD: ${{ github.workspace }}/scripts/ci/vendor/autoload.php
+        run: php scripts/validate-ruby-docs.php "$OPENCOMPANY_HOST_AUTOLOAD" "$GITHUB_WORKSPACE/.ci/bowerbird-ruby-engine/target/release/ruby-engine"

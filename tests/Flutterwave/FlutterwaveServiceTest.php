@@ -51,7 +51,7 @@ final class FlutterwaveServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('secret_key', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('https://developer.flutterwave.com/v3.0/reference', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(7, $provider->tools());
         self::assertContains('flutterwave_verify_transaction', array_keys($provider->tools()));
     }

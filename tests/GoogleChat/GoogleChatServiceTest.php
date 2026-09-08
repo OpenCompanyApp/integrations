@@ -40,7 +40,7 @@ final class GoogleChatServiceTest extends TestCase
         self::assertSame('Google Chat', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('google_chat_spaces_messages_create', array_keys($provider->tools()));
         self::assertContains('google_chat_media_upload', array_keys($provider->tools()));
         self::assertContains('google_chat_users_sections_items_move', array_keys($provider->tools()));

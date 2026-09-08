@@ -592,5 +592,5 @@ class GeminiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GeminiService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GeminiService(apiKey: $creds->get('google-gemini','api_key','',$account), baseUrl: $creds->get('google-gemini','url','https://generativelanguage.googleapis.com',$account));} return app(GeminiService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-gemini.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-gemini.md'; }
 }

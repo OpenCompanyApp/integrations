@@ -42,7 +42,7 @@ final class UnbounceServiceTest extends TestCase
         self::assertSame('Unbounce', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(25, $provider->tools());
         self::assertArrayHasKey('unbounce_list_accounts', $provider->tools());
         self::assertArrayHasKey('unbounce_list_page_form_fields', $provider->tools());

@@ -45,7 +45,7 @@ final class ShipStationServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://docs.shipstation.com/apis/openapi', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_key_header', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(98, ShipStationService::operations());
         self::assertCount(103, $tools);

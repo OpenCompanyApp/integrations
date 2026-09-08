@@ -180,9 +180,9 @@ class RenderToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/render2.md';
+        return __DIR__ . '/../script-docs/render2.md';
     }
 
     public function credentialFields(): array

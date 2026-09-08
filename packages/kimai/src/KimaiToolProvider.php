@@ -228,9 +228,9 @@ class KimaiToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/kimai.md';
+        return __DIR__ . '/../script-docs/kimai.md';
     }    public function credentialFields(): array
     {
         return [

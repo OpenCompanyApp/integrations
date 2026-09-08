@@ -177,9 +177,9 @@ class CockroachDbToolProvider implements ToolProvider, ConfigurableIntegration, 
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/cockroachdb.md';
+        return __DIR__ . '/../script-docs/cockroachdb.md';
     }
 
     public function isIntegration(): bool

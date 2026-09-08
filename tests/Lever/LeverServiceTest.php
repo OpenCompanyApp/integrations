@@ -47,7 +47,7 @@ final class LeverServiceTest extends TestCase
         self::assertSame('Lever', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(113, $provider->tools());
         self::assertSame('lever_list_postings', array_key_first($provider->tools()));
         self::assertArrayHasKey('lever_list_data_opportunities', $provider->tools());

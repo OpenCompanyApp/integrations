@@ -243,9 +243,9 @@ class PrometheusToolProvider implements ToolProvider, ConfigurableIntegration, H
     /**
      * {@inheritDoc}
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/prometheus.md';
+        return __DIR__ . '/../script-docs/prometheus.md';
     }
 
     /**

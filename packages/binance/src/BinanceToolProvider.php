@@ -14009,6 +14009,6 @@ Official Binance Spot endpoint: POST /sapi/v1/dci/product/auto_compound/edit-sta
         return app(BinanceService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/binance.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/binance.md'; }
     public function isIntegration(): bool { return true; }
 }

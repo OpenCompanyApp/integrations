@@ -317,9 +317,9 @@ class SalesforceToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/salesforce.md';
+        return __DIR__ . '/../script-docs/salesforce.md';
     }    public function credentialFields(): array
     {
         return [

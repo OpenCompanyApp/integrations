@@ -128,7 +128,7 @@ final class RetellAIServiceTest extends TestCase
         self::assertSame('Retell AI', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://docs.retellai.com/api-references', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame('self.version', $composer['replace']['opencompanyapp/integration-retell'] ?? null);
         self::assertArrayHasKey('retell_ai_create_web_call', $tools);
         self::assertArrayHasKey('retell_ai_update_call', $tools);

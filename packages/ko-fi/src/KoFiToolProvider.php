@@ -222,9 +222,9 @@ class KoFiToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/ko-fi.md';
+        return __DIR__ . '/../script-docs/ko-fi.md';
     }    public function credentialFields(): array
     {
         return [

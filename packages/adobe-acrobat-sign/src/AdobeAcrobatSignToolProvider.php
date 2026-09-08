@@ -768,7 +768,7 @@ class AdobeAcrobatSignToolProvider implements ToolProvider, ConfigurableIntegrat
     'icon' => 'ph:file-text',
   ),
 ); }
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/adobe-acrobat-sign.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/adobe-acrobat-sign.md'; }
     public function isIntegration(): bool { return true; }
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime context from the host. */

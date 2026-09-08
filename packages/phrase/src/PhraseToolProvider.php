@@ -219,9 +219,9 @@ class PhraseToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/phrase.md';
+        return __DIR__ . '/../script-docs/phrase.md';
     }    public function credentialFields(): array
     {
         return [

@@ -817,5 +817,5 @@ class GoogleClassroomToolProvider implements ToolProvider, ConfigurableIntegrati
         return app(GoogleClassroomService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-classroom.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-classroom.md'; }
 }

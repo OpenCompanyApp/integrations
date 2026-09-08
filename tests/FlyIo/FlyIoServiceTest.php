@@ -55,7 +55,7 @@ final class FlyIoServiceTest extends TestCase
         self::assertArrayHasKey('fly_io_list_apps', $provider->tools());
         self::assertArrayHasKey('fly_io_create_app', $provider->tools());
         self::assertArrayNotHasKey('fly_io_get_current_user', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://api.fly.test/v1/apps' => Http::response([['name' => 'agent-app']], 200),

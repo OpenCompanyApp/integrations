@@ -45,7 +45,7 @@ final class DelightedServiceTest extends TestCase
         self::assertSame('Delighted', $provider->integrationMeta()['name']);
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('basic_auth', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(21, $provider->tools());
         self::assertCount(18, DelightedService::operations());
         self::assertArrayHasKey('delighted_send_person', $provider->tools());

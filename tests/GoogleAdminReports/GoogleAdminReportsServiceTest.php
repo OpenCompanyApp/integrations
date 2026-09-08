@@ -31,7 +31,7 @@ final class GoogleAdminReportsServiceTest extends TestCase
         self::assertSame('Google Admin Reports', $provider->integrationMeta()['name']);
         self::assertSame('analytics', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('google_admin_reports_activities_list', array_keys($provider->tools()));
         self::assertContains('google_admin_reports_activities_watch', array_keys($provider->tools()));
     }

@@ -52,7 +52,7 @@ final class PaystackServiceTest extends TestCase
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('secret_key', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('https://paystack.com/docs/api', $provider->integrationMeta()['docs_url']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(8, $provider->tools());
         self::assertContains('paystack_verify_transaction', array_keys($provider->tools()));
     }

@@ -45,7 +45,7 @@ final class HubSpotServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://developers.hubspot.com/docs/api/overview', $provider->integrationMeta()['docs_url']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertArrayHasKey('hubspot_list_contacts', $tools);
         self::assertArrayHasKey('hubspot_list_companies', $tools);

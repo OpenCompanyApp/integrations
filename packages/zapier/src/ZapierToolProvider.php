@@ -220,9 +220,9 @@ class ZapierToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/zapier.md';
+        return __DIR__ . '/../script-docs/zapier.md';
     }    public function credentialFields(): array
     {
         return [

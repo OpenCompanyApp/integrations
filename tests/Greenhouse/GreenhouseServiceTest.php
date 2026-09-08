@@ -42,7 +42,7 @@ final class GreenhouseServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Greenhouse', $provider->integrationMeta()['name']);
         self::assertSame('oauth_client_credentials', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('greenhouse_post_auth_token', array_keys($provider->tools()));
         self::assertContains('greenhouse_get_v3_candidates', array_keys($provider->tools()));
         self::assertContains('greenhouse_post_v3_candidates', array_keys($provider->tools()));

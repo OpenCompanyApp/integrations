@@ -46,7 +46,7 @@ final class CodemagicServiceTest extends TestCase
         self::assertSame('Codemagic', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(15, $provider->tools());
         self::assertArrayHasKey('codemagic_start_build', $provider->tools());
         self::assertArrayHasKey('codemagic_get_artifact', $provider->tools());

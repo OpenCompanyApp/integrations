@@ -45,7 +45,7 @@ final class MinifluxServiceTest extends TestCase
         self::assertSame('Miniflux', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token_or_basic', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(56, $provider->tools());
         self::assertCount(51, MinifluxService::operations());
         self::assertArrayHasKey('miniflux_feeds_create', $provider->tools());

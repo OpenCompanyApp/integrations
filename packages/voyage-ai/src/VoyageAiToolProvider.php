@@ -187,9 +187,9 @@ class VoyageAiToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/voyage-ai.md';
+        return __DIR__ . '/../script-docs/voyage-ai.md';
     }
 
     public function credentialFields(): array

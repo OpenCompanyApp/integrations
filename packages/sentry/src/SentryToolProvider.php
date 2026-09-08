@@ -222,9 +222,9 @@ class SentryToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/sentry.md';
+        return __DIR__ . '/../script-docs/sentry.md';
     }    public function credentialFields(): array
     {
         return [

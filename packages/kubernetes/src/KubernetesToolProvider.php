@@ -7802,6 +7802,6 @@ class KubernetesToolProvider implements ToolProvider, ConfigurableIntegration, H
   'icon' => 'ph:cube',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/kubernetes.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/kubernetes.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): KubernetesService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new KubernetesService(apiToken:$creds->get('kubernetes','api_token','',$account), baseUrl:$creds->get('kubernetes','url','',$account));} return app(KubernetesService::class); }
 }

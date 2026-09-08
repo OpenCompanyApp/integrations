@@ -44,27 +44,14 @@ Update tools follow Insightly's collection-level PUT shape: pass the tool's
 
 ## Tool Examples
 
-```lua
-local contacts = app.integrations.insightly.list_contacts({
-  top = 25,
-  brief = true
-})
+```ruby
+contacts = app.call("integrations.insightly.insightly_list_contacts", top: 25, brief: true)
 
-local tagged = app.integrations.insightly.search_opportunities_by_tag({
-  tagName = "renewal",
-  top = 10
-})
+tagged = app.call("integrations.insightly.insightly_search_opportunities_by_tag", tagName: "renewal", top: 10)
 
-local task = app.integrations.insightly.create_task({
-  TITLE = "Follow up",
-  DUE_DATE = "2026-05-20T12:00:00Z",
-  OPPORTUNITY_ID = 12345,
-  RESPONSIBLE_USER_ID = 678
-})
+task = app.call("integrations.insightly.insightly_create_task", TITLE: "Follow up", DUE_DATE: "2026-05-20T12:00:00Z", OPPORTUNITY_ID: 12345, RESPONSIBLE_USER_ID: 678)
 
-local fields = app.integrations.insightly.list_custom_fields({
-  objectName = "Contacts"
-})
+fields = app.call("integrations.insightly.insightly_list_custom_fields", objectName: "Contacts")
 ```
 
 ## Development

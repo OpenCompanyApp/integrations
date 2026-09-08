@@ -1849,6 +1849,6 @@ class RampToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     'icon' => 'ph:pencil-simple',
   ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/ramp.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/ramp.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): RampService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new RampService(accessToken:$creds->get('ramp','access_token','',$account), baseUrl:$creds->get('ramp','url','https://api.ramp.com',$account));} return app(RampService::class); }
 }

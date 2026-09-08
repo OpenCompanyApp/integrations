@@ -225,9 +225,9 @@ class SplitToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/split.md';
+        return __DIR__ . '/../script-docs/split.md';
     }    public function credentialFields(): array
     {
         return [

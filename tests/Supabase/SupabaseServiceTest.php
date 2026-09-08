@@ -57,7 +57,7 @@ final class SupabaseServiceTest extends TestCase
         self::assertCount(10, $provider->tools());
         self::assertArrayHasKey('supabase_create_project', $provider->tools());
         self::assertArrayHasKey('supabase_get_project_api_keys', $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         Http::fake([
             'https://supabase.example.test/v1/profile' => Http::response(['email' => 'agent@example.test'], 200),

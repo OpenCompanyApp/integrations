@@ -330,9 +330,9 @@ class QdrantToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/qdrant.md';
+        return __DIR__ . '/../script-docs/qdrant.md';
     }
 
     public function credentialFields(): array

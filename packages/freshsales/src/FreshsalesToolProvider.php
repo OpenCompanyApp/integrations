@@ -223,9 +223,9 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, H
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/freshsales.md';
+        return __DIR__ . '/../script-docs/freshsales.md';
     }    public function credentialFields(): array
     {
         return [

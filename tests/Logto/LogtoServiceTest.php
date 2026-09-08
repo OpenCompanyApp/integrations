@@ -46,7 +46,7 @@ final class LogtoServiceTest extends TestCase
         self::assertCount($manifest['method_count'], LogtoOperations::all());
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('oauth_client_credentials', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertArrayHasKey('logto_list_users', $provider->tools());
         self::assertArrayHasKey('logto_create_user', $provider->tools());
         self::assertArrayHasKey('logto_get_application', $provider->tools());

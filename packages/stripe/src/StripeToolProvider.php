@@ -370,9 +370,9 @@ class StripeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/stripe.md';
+        return __DIR__ . '/../script-docs/stripe.md';
     }    public function credentialFields(): array
     {
         return [

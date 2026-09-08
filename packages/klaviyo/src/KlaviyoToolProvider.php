@@ -269,9 +269,9 @@ class KlaviyoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/klaviyo.md';
+        return __DIR__ . '/../script-docs/klaviyo.md';
     }    public function credentialFields(): array
     {
         return [

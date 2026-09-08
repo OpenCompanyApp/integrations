@@ -265,8 +265,8 @@ class OpenAlexToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return app(OpenAlexService::class);
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/openalex.md';
+        return __DIR__.'/../script-docs/openalex.md';
     }
 }

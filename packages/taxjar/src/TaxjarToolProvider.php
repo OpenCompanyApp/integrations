@@ -233,9 +233,9 @@ class TaxjarToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     /**
      * {@inheritdoc}
      */
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/taxjar.md';
+        return __DIR__ . '/../script-docs/taxjar.md';
     }
 
     /**

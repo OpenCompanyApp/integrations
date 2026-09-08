@@ -45,7 +45,7 @@ final class CannyServiceTest extends TestCase
         self::assertSame('Canny', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(53, $provider->tools());
         self::assertCount(52, CannyService::operations());
         self::assertArrayHasKey('canny_create_post', $provider->tools());

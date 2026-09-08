@@ -244,9 +244,9 @@ class DiscordToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__).'/lua-docs/discord.md';
+        return dirname(__DIR__).'/script-docs/discord.md';
     }
 
     public function credentialFields(): array

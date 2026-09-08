@@ -240,9 +240,9 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/xero.md';
+        return dirname(__DIR__) . '/script-docs/xero.md';
     }    public function credentialFields(): array
     {
         return [

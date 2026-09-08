@@ -42,7 +42,7 @@ final class ShortcutServiceTest extends TestCase
         self::assertSame('Shortcut', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('shortcut_list_categories', array_keys($provider->tools()));
         self::assertContains('shortcut_create_story', array_keys($provider->tools()));
         self::assertContains('shortcut_upload_files', array_keys($provider->tools()));

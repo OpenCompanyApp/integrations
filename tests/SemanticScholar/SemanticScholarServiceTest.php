@@ -47,7 +47,7 @@ final class SemanticScholarServiceTest extends TestCase
         self::assertSame('Semantic Scholar', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         $tools = array_keys($provider->tools());
         self::assertCount(20, $tools);

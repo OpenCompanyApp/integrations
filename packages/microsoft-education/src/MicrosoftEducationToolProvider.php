@@ -2931,6 +2931,6 @@ class MicrosoftEducationToolProvider implements ToolProvider, ConfigurableIntegr
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftEducationService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftEducationService(accessToken: $creds->get('microsoft-education', 'access_token', '', $account), baseUrl: $creds->get('microsoft-education', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftEducationService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-education.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-education.md'; }
     public function isIntegration(): bool { return true; }
 }

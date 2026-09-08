@@ -238,9 +238,9 @@ class GetResponseToolProvider implements ToolProvider, ConfigurableIntegration, 
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/getresponse.md';
+        return __DIR__ . '/../script-docs/getresponse.md';
     }    public function credentialFields(): array
     {
         return [

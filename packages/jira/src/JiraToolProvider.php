@@ -338,9 +338,9 @@ class JiraToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         return true;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/jira.md';
+        return dirname(__DIR__) . '/script-docs/jira.md';
     }    public function credentialFields(): array
     {
         return [

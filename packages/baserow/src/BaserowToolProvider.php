@@ -235,9 +235,9 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/baserow.md';
+        return __DIR__ . '/../script-docs/baserow.md';
     }
 
     public function credentialFields(): array

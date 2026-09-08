@@ -3777,6 +3777,6 @@ class RootlyToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
   'icon' => 'ph:pencil-simple',
 ),
 ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/rootly.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/rootly.md'; }
     /** @param  array<string, mixed>  $context  Optional account context from the host. */ private function resolveService(array $context = []): RootlyService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new RootlyService(apiToken:$creds->get('rootly','api_token','',$account), baseUrl:$creds->get('rootly','url','https://api.rootly.com',$account));} return app(RootlyService::class); }
 }

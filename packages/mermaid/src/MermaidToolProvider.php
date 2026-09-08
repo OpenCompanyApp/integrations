@@ -135,9 +135,9 @@ class MermaidToolProvider implements ToolProvider, HasIntegrationCapabilities
         );
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/mermaid.md';
+        return dirname(__DIR__) . '/script-docs/mermaid.md';
     }    public function credentialFields(): array
     {
         return [];

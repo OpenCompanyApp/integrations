@@ -130,6 +130,6 @@ class OnePasswordConnectToolProvider implements ToolProvider, ConfigurableIntegr
   'icon' => 'ph:vault',
 ),
     ]; }
-    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/onepassword-connect.md'; }
+    public function isIntegration(): bool { return true; } public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); } public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/onepassword-connect.md'; }
     /** @param  array<string, mixed>  $context  Runtime account context. */ private function resolveService(array $context=[]): OnePasswordConnectService { $account=$context['account']??null; if($account!==null){ $creds=app(CredentialResolver::class); return new OnePasswordConnectService(apiToken:$creds->get('onepassword-connect','api_token','',$account), baseUrl:$creds->get('onepassword-connect','url','http://localhost:8080/v1',$account)); } return app(OnePasswordConnectService::class); }
 }

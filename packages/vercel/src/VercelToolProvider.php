@@ -228,9 +228,9 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         return new $class($this->resolveService($context));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/vercel.md';
+        return __DIR__ . '/../script-docs/vercel.md';
     }
 
     public function credentialFields(): array

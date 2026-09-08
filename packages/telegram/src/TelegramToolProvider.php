@@ -223,9 +223,9 @@ class TelegramToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/telegram.md';
+        return __DIR__ . '/../script-docs/telegram.md';
     }    public function credentialFields(): array
     {
         return [

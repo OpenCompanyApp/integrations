@@ -113,8 +113,8 @@ class OpenSsfScorecardToolProvider implements ToolProvider, HasIntegrationCapabi
         return new $class(app(OpenSsfScorecardService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/openssf-scorecard.md';
+        return __DIR__.'/../script-docs/openssf-scorecard.md';
     }
 }

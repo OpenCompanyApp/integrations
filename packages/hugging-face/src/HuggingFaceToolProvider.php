@@ -351,9 +351,9 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/hugging-face.md';
+        return __DIR__ . '/../script-docs/hugging-face.md';
     }
 
     public function credentialFields(): array

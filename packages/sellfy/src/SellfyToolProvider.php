@@ -224,9 +224,9 @@ class SellfyToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/sellfy.md';
+        return __DIR__ . '/../script-docs/sellfy.md';
     }    public function credentialFields(): array
     {
         return [

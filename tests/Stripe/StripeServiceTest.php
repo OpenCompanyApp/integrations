@@ -46,7 +46,7 @@ final class StripeServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://docs.stripe.com/api', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(25, $tools);
         self::assertArrayHasKey('stripe_create_payment_intent', $tools);

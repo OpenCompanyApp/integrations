@@ -7,7 +7,7 @@ Integrations are independent Composer packages built on a shared core. They work
 ## Repository Structure
 
 ```
-core/                       Shared contracts, credential abstraction, Lua bridge, registry
+core/                       Shared contracts, credential abstraction, Ruby script bridge, registry
 packages/
   celestial/                Astronomy: moon phases, sunrise/sunset, planet positions, eclipses
   clickup/                  ClickUp project management: tasks, lists, folders, time tracking
@@ -38,9 +38,9 @@ packages/
 │  Host Application (OpenCompany, KosmoKrator)     │
 │                                                  │
 │  ┌──────────┐   ┌───────────────────────────┐   │
-│  │ Lua VM   │──▸│ LuaBridge                  │   │
+│  │ mruby    │──▸│ ScriptBridge               │   │
 │  │          │   │   functionMap → tool slugs  │   │
-│  │ app.integrations.mermaid.render(...)       │   │
+│  │ app.call("integrations.mermaid.mermaid_render", ...) │   │
 │  └──────────┘   └────────────┬──────────────┘   │
 │                              │                   │
 │  ┌───────────────────────────▼──────────────┐   │
@@ -63,26 +63,23 @@ packages/
 **Key concepts:**
 
 - **Tool** — A single callable action (e.g. "render a Mermaid diagram", "list ClickUp tasks"). Implements `name()`, `description()`, `parameters()`, `execute()`.
-- **ToolProvider** — Groups related tools under an app name. Declares metadata, handles tool instantiation with credentials, and optionally provides Lua documentation.
+- **ToolProvider** — Groups related tools under an app name. Declares metadata, handles tool instantiation with credentials, and optionally provides Ruby script documentation.
 - **ToolProviderRegistry** — Singleton that collects all providers. The host queries it to discover available tools.
 - **CredentialResolver** — Abstraction for API keys. The default reads from `config/ai-tools.php`; OpenCompany swaps this for encrypted database storage.
-- **LuaBridge** — Routes `app.integrations.{name}.{function}(...)` calls from the Lua VM to PHP tool classes.
+- **ScriptBridge** — Routes `app.call("integrations.{name}.{tool_slug}", ...)` calls from mruby to PHP tool classes.
 
 ### How It Works in OpenCompany
 
-OpenCompany uses a **code-first agent architecture** — agents write and execute Lua scripts to access all workspace functionality, including integrations. The full pipeline:
+OpenCompany uses a **code-first agent architecture** — agents write and execute Ruby scripts to access all workspace functionality, including integrations. The full pipeline:
 
-1. **System prompt** includes a namespace summary of all available Lua APIs (`app.chat.*`, `app.integrations.mermaid.*`, etc.)
-2. **Agent calls `lua_exec`** with Lua code like `app.integrations.plausible.query_stats({...})`
-3. **Lua sandbox** (32MB memory, 5s CPU limit) routes the call through the `app.*` metatable to `LuaBridge`
-4. **LuaBridge** maps the function path to a tool slug via `LuaCatalogBuilder`-generated function maps
-5. **`OpenCompanyLuaToolInvoker`** instantiates the tool via the `ToolProvider` and calls `execute()`
-6. **Result** flows back through Lua to the agent, with call logging for observability
+1. **System prompt** includes a summary of available Ruby capabilities.
+2. **Agent calls `ruby_exec`** with Ruby such as `app.call("integrations.plausible.plausible_query_stats", site_id: "site_123")`.
+3. **mruby** routes the synchronous call through `ScriptBridge`.
+4. **ScriptBridge** maps the exact capability path to a tool slug via `ScriptCatalogBuilder`.
+5. **The host `ScriptToolInvoker`** instantiates the tool via the `ToolProvider` and calls `execute()`.
+6. **Result** flows back through Ruby to the agent, with call logging for observability.
 
-Agents can also introspect available tools at runtime:
-- `lua_read_doc("integrations.plausible")` — Full API reference with parameter tables
-- `lua_search_docs("query stats")` — Search across all namespaces and supplementary docs
-- `lua_list_docs()` — List all available namespaces and static pages
+The former Lua bridge and `lua_*` documentation APIs are intentionally removed. Hosts must expose the Ruby script catalog and any documentation lookup through their own Ruby-facing runtime API.
 
 **Credential management in OpenCompany** uses encrypted database storage instead of config files. The `IntegrationSettingCredentialResolver` reads from the `integration_settings` table (workspace-scoped, `encrypted:array` cast). Users configure credentials through the Integrations UI — tool packages are unaware of the storage backend.
 
@@ -133,7 +130,7 @@ Laravel auto-discovers service providers. For non-Laravel apps, use the contract
 
 ## Catalog and SEO Metadata
 
-`php build-catalog.php` writes `integrations-catalog.json`, the machine-readable catalog used by KosmoKrator docs, headless CLI discovery, Lua API docs, and SEO pages. Every integration stays in the catalog, including integrations that are not fully supported by a local CLI runtime yet, so hosts can document future proxy support without hiding available packages.
+`php build-catalog.php` writes `integrations-catalog.json`, the machine-readable catalog used by KosmoKrator docs, headless CLI discovery, Ruby script docs, and SEO pages. Every integration stays in the catalog, including integrations that are not fully supported by a local CLI runtime yet, so hosts can document future proxy support without hiding available packages.
 
 The catalog includes:
 
@@ -144,7 +141,7 @@ The catalog includes:
 - `setup` with generated headless configure, doctor, status, and MCP gateway commands
 - `seo` with title, meta description, keyword phrases, setup summaries, and tool counts
 
-Most packages do not need explicit metadata. The catalog builder derives sensible defaults from `credentialFields()`, tool read/write types, package metadata, and Lua docs. For example, a ClickUp package with `api_token` and `workspace_id` credentials gets generated setup instructions like:
+Most packages do not need explicit metadata. The catalog builder derives sensible defaults from `credentialFields()`, tool read/write types, package metadata, and Ruby script docs. For example, a ClickUp package with `api_token` and `workspace_id` credentials gets generated setup instructions like:
 
 ```console
 kosmokrator integrations:configure clickup --set api_token="$CLICKUP_API_TOKEN" --set workspace_id="$CLICKUP_WORKSPACE_ID" --enable --read allow --write ask --json
@@ -217,7 +214,7 @@ packages/weather/
 │   ├── WeatherToolProvider.php
 │   └── Tools/
 │       └── GetWeather.php
-└── lua-docs/              (optional)
+└── script-docs/           (optional)
     └── weather.md
 ```
 
@@ -435,9 +432,9 @@ class WeatherToolProvider implements ToolProvider
         return new $class(app(WeatherService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/weather.md';
+        return __DIR__ . '/../script-docs/weather.md';
     }
 
     public function credentialFields(): array
@@ -535,7 +532,7 @@ class GetWeather implements Tool
 
 **Optional parameter keys:**
 - `required` — `true` if the parameter must be provided (default `false`)
-- `description` — Shown in generated Lua docs and tool catalogs
+- `description` — Shown in generated Ruby script docs and tool catalogs
 - `enum` — Array of allowed string values
 - `items` — Element type for arrays, e.g. `['type' => 'string']`
 - `properties` — Sub-property definitions for objects
@@ -674,32 +671,32 @@ Integrations and MCP servers support multiple credential sets per workspace. Use
 ### How It Works
 
 **Single account** (default): Flat namespace, backward compatible.
-```lua
-app.integrations.clickup.create_task({ list_id = "123", name = "Ship it" })
+```ruby
+app.call("integrations.clickup.clickup_create_task", list_id: "123", name: "Ship it")
 ```
 
 **Portable scripts**: Use `.default` to always target the user's default account — works regardless of how many accounts exist. This is the recommended pattern for shareable scripts and automations.
-```lua
-app.integrations.clickup.default.create_task({ list_id = "123", name = "Ship it" })
-app.mcp.github.default.search_repos({ query = "bug" })
+```ruby
+app.call("integrations.clickup.default.clickup_create_task", list_id: "123", name: "Ship it")
+app.call("mcp.github.default.search_repos", query: "bug")
 ```
 
 **Multiple accounts**: Per-account sub-namespaces appear alongside the flat and default namespaces.
-```lua
--- Uses the default account
-app.integrations.clickup.create_task({ list_id = "123", name = "Ship it" })
-app.integrations.clickup.default.create_task({ list_id = "123", name = "Ship it" })
+```ruby
+# Uses the default account
+app.call("integrations.clickup.clickup_create_task", list_id: "123", name: "Ship it")
+app.call("integrations.clickup.default.clickup_create_task", list_id: "123", name: "Ship it")
 
--- Explicit account targeting
-app.integrations.clickup.work.create_task({ list_id = "123", name = "Ship it" })
-app.integrations.clickup.personal.create_task({ list_id = "456", name = "Buy groceries" })
+# Explicit account targeting
+app.call("integrations.clickup.work.clickup_create_task", list_id: "123", name: "Ship it")
+app.call("integrations.clickup.personal.clickup_create_task", list_id: "456", name: "Buy groceries")
 
--- MCP servers work the same way
-app.mcp.github.work.search_repos({ query = "internal" })
-app.mcp.github.personal.search_repos({ query = "side-project" })
+# MCP servers use the same path convention
+app.call("mcp.github.work.search_repos", query: "internal")
+app.call("mcp.github.personal.search_repos", query: "side-project")
 ```
 
-Agents discover available accounts via `lua_read_doc("integrations.clickup")` or `lua_read_doc("mcp.github")` — each account appears as a separate sub-namespace with the same functions.
+Hosts expose available Ruby capabilities through their script catalog; each account remains a separate sub-namespace with the same functions.
 
 ### Implementation in Tool Providers
 
@@ -1068,73 +1065,15 @@ their tools may still run in CLI once the host already has stored tokens.
 
 ---
 
-## Lua Documentation
+## Ruby Script Documentation
 
-Agents discover tools through auto-generated Lua API docs. The `LuaDocRenderer` and `LuaCatalogBuilder` in core handle this automatically based on your `parameters()` and `description()` definitions.
+Each integration ships `script-docs/{name}.md` for workflows, examples, return-shape notes, and host caveats not captured by the tool schema. Stable stored examples must use the exact tool slug:
 
-For complex integrations, add a `lua-docs/{name}.md` file with supplementary documentation — workflows, examples, and gotchas that aren't captured by the parameter reference.
-
-### How Lua Routing Works
-
-The `LuaCatalogBuilder` transforms your tool definitions into a Lua namespace tree:
-
-```
-app.integrations.weather.get({location = "Amsterdam"})
-│   │              │      │
-│   │              │      └─ Function name (derived from tool name, minus app name)
-│   │              └─ App name (from ToolProvider::appName())
-│   └─ "integrations." prefix (added when isIntegration() returns true)
-└─ Root namespace
+```ruby
+weather = app.call("integrations.weather.weather_get", location: "Amsterdam")
 ```
 
-**Function name derivation** — `LuaCatalogBuilder::deriveFunctionName()` converts the tool's `name` field (not the slug) to a Lua-friendly function name:
-1. Converts to `snake_case`
-2. Removes stop words (`on`, `of`, `for`, `in`, `to`, `the`, `a`, `an`)
-3. Removes words that overlap with the app name (e.g. "Exchange Rates" in the `exchangerate` app → `exchange_rates`)
-4. Falls back to the full snake_case name if filtering removes everything
-
-For example, with `appName() = 'google_sheets'`:
-- "Create Spreadsheet" → `create_spreadsheet`
-- "Add Sheet" → `add` (because "sheet" overlaps with "google_sheets")
-- "Write Range" → `write_range`
-
-The `LuaBridge` then:
-1. Looks up the function path in its `functionMap` to find the tool slug
-2. Maps positional arguments to named parameters via `parameterMap`
-3. Delegates to `LuaToolInvoker::invoke()` which instantiates and executes the tool
-4. Logs the call (path, duration, status, error) for observability
-5. Suggests similar functions on typos ("Did you mean: ...")
-
-### Writing Lua Docs
-
-Supplementary docs are appended below the auto-generated parameter reference when an agent calls `lua_read_doc("integrations.{name}")`. Use the correct `app.integrations.*` calling convention — agents will copy-paste from these examples:
-
-```markdown
-## Common Workflows
-
-### Get current weather and format it
-
-```lua
-local weather = app.integrations.weather.get({location = "Amsterdam"})
-local forecast = app.integrations.weather.forecast({location = "Amsterdam", days = 3})
-```
-
-## Notes
-
-- Locations accept city names, addresses, or lat/lng coordinates
-- Rate limit: 60 requests per minute
-```
-
-Use the **derived function names** (as shown in auto-generated docs), not the raw tool slugs. For example, write `app.integrations.coingecko.market_rankings()` not `coingecko_markets()`.
-
-Point to the file in your tool provider:
-
-```php
-public function luaDocsPath(): ?string
-{
-    return __DIR__ . '/../lua-docs/weather.md';
-}
-```
+`ScriptCatalogBuilder` may offer a readable short function name when it is unambiguous, but the exact slug path is the stable contract across catalog and permission changes. Script docs must use Ruby syntax, fake data, and the actual normalized response contract.
 
 ---
 
@@ -1166,7 +1105,7 @@ interface ToolProvider
     public function tools(): array;                                 // Tool definitions
     public function isIntegration(): bool;                          // Toggleable per agent?
     public function createTool(string $class, array $context = []): Tool;
-    public function luaDocsPath(): ?string;                         // Supplementary docs
+    public function scriptDocsPath(): ?string;                      // Supplementary Ruby docs
     public function credentialFields(): array;                      // Required credentials
 }
 ```
@@ -1216,12 +1155,12 @@ interface AgentFileStorage
 }
 ```
 
-### `LuaToolInvoker`
+### `ScriptToolInvoker`
 
-Host-side adapter for executing tools from the Lua bridge.
+Host-side adapter for executing tools from the Ruby script bridge.
 
 ```php
-interface LuaToolInvoker
+interface ScriptToolInvoker
 {
     public function invoke(string $toolSlug, array $args): mixed;
     public function getToolMeta(string $toolSlug): array;
@@ -1402,7 +1341,7 @@ cd packages/mermaid && ../../vendor/bin/phpstan analyse
 1. Create a new directory under `packages/` following the structure above
 2. Implement `ToolProvider` (and optionally `ConfigurableIntegration`)
 3. Create your service class and tool classes
-4. Add lua-docs if the integration has non-obvious workflows — use `app.integrations.{name}.{function}()` syntax
+4. Add `script-docs/{name}.md` if the integration has non-obvious workflows — use `app.call("integrations.{name}.{tool_slug}", ...)` syntax
 5. Add a `phpstan.neon` and ensure level 5 passes
 6. Run `php build-catalog.php` and update this README's structure listing and integrations table
 
@@ -1426,10 +1365,10 @@ cd packages/mermaid && ../../vendor/bin/phpstan analyse
 - [ ] Tool classes with clear `description()`, typed `parameters()`, and `ToolResult` returns
 - [ ] `credentialFields()` defined for any required API keys or tokens
 - [ ] `testConnection()` if implementing `ConfigurableIntegration`
-- [ ] `lua-docs/{name}.md` for integrations with complex workflows (using `app.integrations.*` calling convention)
-- [ ] `php build-catalog.php` run, with generated auth/setup/SEO fields reviewed for CLI, Lua, and MCP gateway docs
+- [ ] `script-docs/{name}.md` for integrations with complex workflows (using the exact `app.call` capability path)
+- [ ] `php build-catalog.php` run, with generated auth/setup/SEO fields reviewed for CLI, Ruby script, and MCP gateway docs
 - [ ] Entry added to README structure listing and integrations table
-- [ ] Lua-doc function names match `deriveFunctionName()` output (check auto-generated docs via `lua_read_doc`)
+- [ ] Ruby examples compile in the pinned mruby engine and use catalog-confirmed tool slugs
 
 ## License
 

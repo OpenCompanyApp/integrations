@@ -47,7 +47,7 @@ final class GitHubServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://docs.github.com/en/rest', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(30, $tools);
         self::assertArrayHasKey('github_create_issue', $tools);

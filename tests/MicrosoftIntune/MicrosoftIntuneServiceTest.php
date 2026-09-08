@@ -50,7 +50,7 @@ final class MicrosoftIntuneServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Intune', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_intune_device_management_list_managed_devices', array_keys($provider->tools()));
         self::assertContains('microsoft_intune_device_management_get_managed_devices', array_keys($provider->tools()));
         self::assertContains('microsoft_intune_device_app_management_list_mobile_apps', array_keys($provider->tools()));

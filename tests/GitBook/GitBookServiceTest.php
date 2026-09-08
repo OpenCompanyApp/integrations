@@ -49,7 +49,7 @@ final class GitBookServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(13, $provider->tools());
         self::assertContains('gitbook_search_space', array_keys($provider->tools()));
         self::assertContains('gitbook_list_openapi_specs', array_keys($provider->tools()));

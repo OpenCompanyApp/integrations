@@ -185,5 +185,5 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
         return app(GoogleTasksService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-tasks.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-tasks.md'; }
 }

@@ -41,7 +41,7 @@ final class ZohoInvoiceServiceTest extends TestCase
         self::assertSame('Zoho Invoice', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertCount(7, $provider->tools());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
     }
 
     public function test_service_adds_organization_id_and_bearer_header(): void

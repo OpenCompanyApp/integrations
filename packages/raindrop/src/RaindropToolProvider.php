@@ -150,9 +150,9 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/raindrop.md';
+        return __DIR__.'/../script-docs/raindrop.md';
     }
 
     public function isIntegration(): bool

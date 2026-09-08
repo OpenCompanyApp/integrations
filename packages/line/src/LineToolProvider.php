@@ -204,9 +204,9 @@ class LineToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/line.md';
+        return __DIR__ . '/../script-docs/line.md';
     }
 
     public function credentialFields(): array

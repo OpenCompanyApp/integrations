@@ -90,7 +90,7 @@ class DialpadToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return $tools;
     }
 
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/dialpad.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/dialpad.md'; }
 
     public function credentialFields(): array
     {

@@ -26,4 +26,4 @@ Requests use `Authorization: Bearer <api_key>`.
 | `api_key` | none | Required Airtop API key. |
 | `url` | `https://api.airtop.ai/api` | Override only for a custom Airtop-compatible endpoint. |
 
-See `lua-docs/airtop.md` for tool naming, arguments, and return-shape notes.
+See `script-docs/airtop.md` for tool naming, arguments, and return-shape notes.

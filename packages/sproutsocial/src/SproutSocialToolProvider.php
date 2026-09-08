@@ -225,9 +225,9 @@ class SproutSocialToolProvider implements ToolProvider, ConfigurableIntegration,
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/sproutsocial.md';
+        return __DIR__ . '/../script-docs/sproutsocial.md';
     }    public function credentialFields(): array
     {
         return [

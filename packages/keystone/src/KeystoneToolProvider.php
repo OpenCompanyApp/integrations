@@ -223,9 +223,9 @@ class KeystoneToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/keystone.md';
+        return __DIR__ . '/../script-docs/keystone.md';
     }    public function credentialFields(): array
     {
         return [

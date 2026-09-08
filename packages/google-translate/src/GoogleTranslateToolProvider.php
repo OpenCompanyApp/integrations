@@ -396,5 +396,5 @@ class GoogleTranslateToolProvider implements ToolProvider, ConfigurableIntegrati
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Tool creation context. */
     private function resolveService(array $context = []): GoogleTranslateService { $account=$context['account']??null; if($account!==null){$creds=app(CredentialResolver::class); return new GoogleTranslateService(accessToken: $creds->get('google-translate','access_token','',$account), baseUrl: $creds->get('google-translate','url','https://translate.googleapis.com',$account));} return app(GoogleTranslateService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/google-translate.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/google-translate.md'; }
 }

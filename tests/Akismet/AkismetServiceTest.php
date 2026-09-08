@@ -49,7 +49,7 @@ final class AkismetServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertCount(2, $provider->credentialFields());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame([
             'akismet_verify_key',
             'akismet_comment_check',

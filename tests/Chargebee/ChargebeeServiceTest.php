@@ -56,7 +56,7 @@ final class ChargebeeServiceTest extends TestCase
         self::assertSame('basic_auth', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertContains('access_token', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertSame('API Key', $provider->credentialFields()[0]['label']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(80, $provider->tools());
         self::assertContains('chargebee_list_subscriptions', array_keys($provider->tools()));
         self::assertContains('chargebee_create_subscription_for_customer', array_keys($provider->tools()));

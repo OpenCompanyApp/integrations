@@ -49,7 +49,7 @@ final class MicrosoftEntraIdServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft Entra ID', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_entra_id_users_user_list_user', array_keys($provider->tools()));
         self::assertContains('microsoft_entra_id_groups_group_list_group', array_keys($provider->tools()));
         self::assertContains('microsoft_entra_id_applications_application_list_application', array_keys($provider->tools()));

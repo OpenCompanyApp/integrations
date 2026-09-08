@@ -1,0 +1,32 @@
+{
+  "name": "opencompanyapp/integrations-mruby-ci",
+  "description": "Minimal public host dependencies for the source-first mruby CI checks.",
+  "license": "MIT",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../core",
+      "options": {"symlink": true}
+    },
+    {
+      "type": "path",
+      "url": "../../.ci/bowerbird-ruby-engine",
+      "options": {"symlink": true}
+    }
+  ],
+  "require": {
+    "bowerbird/ruby-engine": "dev-316852148b739fa22bbcfe1c4fca5e75fb7116bb",
+    "php": "^8.4",
+    "illuminate/container": "^12.0",
+    "illuminate/http": "^12.0",
+    "illuminate/support": "^12.0",
+    "opencompanyapp/integration-core": "dev-main",
+    "phpunit/phpunit": "^12.0",
+    "psr/log": "^3.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true
+  }
+}

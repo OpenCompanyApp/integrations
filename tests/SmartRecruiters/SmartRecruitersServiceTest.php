@@ -47,7 +47,7 @@ final class SmartRecruitersServiceTest extends TestCase
         self::assertSame('SmartRecruiters', $provider->integrationMeta()['name']);
         self::assertSame('api_key_or_oauth', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertSame('x-smarttoken', $provider->integrationCapabilities()['auth']['header']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('smartrecruiters_jobs_jobs_all', array_keys($provider->tools()));
         self::assertContains('smartrecruiters_candidates_candidates_all', array_keys($provider->tools()));
         self::assertContains('smartrecruiters_webhooks_subscriptions_create', array_keys($provider->tools()));

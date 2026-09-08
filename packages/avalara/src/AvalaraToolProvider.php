@@ -145,9 +145,9 @@ class AvalaraToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return $tools;
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/avalara.md';
+        return __DIR__.'/../script-docs/avalara.md';
     }
 
     public function credentialFields(): array

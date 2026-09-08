@@ -230,9 +230,9 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/linkedin.md';
+        return dirname(__DIR__) . '/script-docs/linkedin.md';
     }    public function credentialFields(): array
     {
         return [

@@ -27,4 +27,4 @@ Requests use `Authorization: Bearer <api_token>`.
 | `api_token` | none | Required Apify API token. |
 | `url` | `https://api.apify.com` | Existing `https://api.apify.com/v2` values remain supported. |
 
-See `lua-docs/apify.md` for tool naming, argument, and return-shape notes.
+See `script-docs/apify.md` for tool naming, argument, and return-shape notes.

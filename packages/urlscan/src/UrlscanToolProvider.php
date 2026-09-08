@@ -919,6 +919,6 @@ Official urlscan.io endpoint: GET /api/v1/malicious/{type}/{value}.',
         return app(UrlscanService::class);
     }
 
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/urlscan.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/urlscan.md'; }
     public function isIntegration(): bool { return true; }
 }

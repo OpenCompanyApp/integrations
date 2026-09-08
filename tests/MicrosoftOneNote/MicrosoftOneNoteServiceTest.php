@@ -47,7 +47,7 @@ final class MicrosoftOneNoteServiceTest extends TestCase
         self::assertCount($manifest['method_count'], $provider->tools());
         self::assertSame('Microsoft OneNote', $provider->integrationMeta()['name']);
         self::assertSame('oauth2_manual_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('microsoft_onenote_me_onenote_list_notebooks', array_keys($provider->tools()));
         self::assertContains('microsoft_onenote_me_onenote_list_pages', array_keys($provider->tools()));
         self::assertContains('microsoft_onenote_me_onenote_update_pages_content', array_keys($provider->tools()));

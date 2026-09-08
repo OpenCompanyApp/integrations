@@ -5598,6 +5598,6 @@ class MicrosoftOneNoteToolProvider implements ToolProvider, ConfigurableIntegrat
     public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */
     private function resolveService(array $context = []): MicrosoftOneNoteService { $account = $context['account'] ?? null; if ($account !== null) { $creds = app(CredentialResolver::class); return new MicrosoftOneNoteService(accessToken: $creds->get('microsoft-onenote', 'access_token', '', $account), baseUrl: $creds->get('microsoft-onenote', 'base_url', 'https://graph.microsoft.com/v1.0', $account)); } return app(MicrosoftOneNoteService::class); }
-    public function luaDocsPath(): ?string { return __DIR__ . '/../lua-docs/microsoft-onenote.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__ . '/../script-docs/microsoft-onenote.md'; }
     public function isIntegration(): bool { return true; }
 }

@@ -47,7 +47,7 @@ final class PocketServiceTest extends TestCase
         self::assertSame('Pocket', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('oauth2_variant', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(18, $provider->tools());
         self::assertArrayHasKey('pocket_request_token', $provider->tools());
         self::assertArrayHasKey('pocket_retrieve_items', $provider->tools());

@@ -215,9 +215,9 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/eleven-labs.md';
+        return __DIR__ . '/../script-docs/eleven-labs.md';
     }    public function credentialFields(): array
     {
         return [

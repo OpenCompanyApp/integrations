@@ -7,4 +7,4 @@ Generated integration package for Render's official public REST API.
 - Category: `productivity`
 - Canonical app name: `render`
 
-The package replaces older `render` package identifiers while keeping the host-facing app namespace stable. See `lua-docs/render2.md` for agent-facing examples and tool-family guidance.
+The package replaces older `render` package identifiers while keeping the host-facing app namespace stable. See `script-docs/render2.md` for agent-facing examples and tool-family guidance.

@@ -216,9 +216,9 @@ class MotionToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/motion.md';
+        return __DIR__ . '/../script-docs/motion.md';
     }    public function credentialFields(): array
     {
         return [

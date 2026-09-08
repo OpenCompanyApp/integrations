@@ -45,7 +45,7 @@ final class EasyPostServiceTest extends TestCase
         self::assertSame('EasyPost', $provider->integrationMeta()['name']);
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('api_key_basic', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(67, $provider->tools());
         self::assertCount(62, EasyPostService::operations());
         self::assertArrayHasKey('easypost_shipments_buy', $provider->tools());

@@ -207,9 +207,9 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
     }
 
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/sendgrid.md';
+        return __DIR__ . '/../script-docs/sendgrid.md';
     }    public function credentialFields(): array
     {
         return [

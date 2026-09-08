@@ -286,9 +286,9 @@ class ChromaToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/chroma.md';
+        return __DIR__ . '/../script-docs/chroma.md';
     }
 
     /** @return array<int, array<string, mixed>> */

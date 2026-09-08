@@ -123,8 +123,8 @@ class ClinicalTrialsGovToolProvider implements ToolProvider, HasIntegrationCapab
         return new $class(app(ClinicalTrialsGovService::class));
     }
 
-    public function luaDocsPath(): ?string
+    public function scriptDocsPath(): ?string
     {
-        return __DIR__.'/../lua-docs/clinicaltrials-gov.md';
+        return __DIR__.'/../script-docs/clinicaltrials-gov.md';
     }
 }

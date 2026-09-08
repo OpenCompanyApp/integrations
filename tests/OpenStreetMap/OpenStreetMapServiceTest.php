@@ -46,7 +46,7 @@ final class OpenStreetMapServiceTest extends TestCase
         self::assertSame('OpenStreetMap', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('none', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertCount(9, $provider->tools());
         self::assertSame([], $provider->credentialFields());
         self::assertSame([], $provider->configSchema());

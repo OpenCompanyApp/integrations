@@ -50,7 +50,7 @@ final class AbuseIpdbServiceTest extends TestCase
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('api_key', $provider->integrationCapabilities()['auth']['strategy']);
         self::assertTrue($provider->credentialFields()[0]['required']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertSame([
             'abuseipdb_check',
             'abuseipdb_reports',

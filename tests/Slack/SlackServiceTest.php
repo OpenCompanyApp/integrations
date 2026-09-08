@@ -45,7 +45,7 @@ final class SlackServiceTest extends TestCase
         self::assertSame('productivity', $provider->integrationMeta()['category']);
         self::assertSame('https://api.slack.com/methods', $provider->integrationMeta()['docs_url']);
         self::assertSame('api_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
 
         self::assertCount(25, $tools);
         self::assertArrayHasKey('slack_send_message', $tools);

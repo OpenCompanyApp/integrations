@@ -48,7 +48,7 @@ final class AirwallexServiceTest extends TestCase
         self::assertContains('api_key', $provider->integrationCapabilities()['auth']['token_keys']);
         self::assertCount(3, $provider->credentialFields());
         self::assertCount(8, $provider->configSchema());
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('airwallex_authentication_obtain_access_token', array_keys($provider->tools()));
         self::assertContains('airwallex_scale_retrieve_account_details', array_keys($provider->tools()));
         self::assertContains('airwallex_billing_create_a_billing_customer', array_keys($provider->tools()));

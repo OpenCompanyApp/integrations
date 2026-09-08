@@ -3699,6 +3699,6 @@ Official Browserless endpoint: GET /chromium/agent.',
         ]; }
     /** @param  array<string, mixed>  $context  Runtime account context. */ public function createTool(string $class, array $context = []): Tool { return new $class($this->resolveService($context)); }
     /** @param  array<string, mixed>  $context  Runtime account context. */ private function resolveService(array $context=[]): BrowserlessService { $account=$context['account']??null; if($account!==null) { $creds=app(CredentialResolver::class); return new BrowserlessService(apiKey:$creds->get('browserless','api_key','',$account), baseUrl:$creds->get('browserless','url','https://production-sfo.browserless.io',$account)); } return app(BrowserlessService::class); }
-    public function luaDocsPath(): ?string { return __DIR__.'/../lua-docs/browserless.md'; }
+    public function scriptDocsPath(): ?string { return __DIR__.'/../script-docs/browserless.md'; }
     public function isIntegration(): bool { return true; }
 }

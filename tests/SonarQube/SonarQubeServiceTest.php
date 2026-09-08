@@ -28,7 +28,7 @@ final class SonarQubeServiceTest extends TestCase
         self::assertSame('SonarQube', $provider->integrationMeta()['name']);
         self::assertSame('data', $provider->integrationMeta()['category']);
         self::assertSame('bearer_token', $provider->integrationCapabilities()['auth']['strategy']);
-        self::assertFileExists((string) $provider->luaDocsPath());
+        self::assertFileExists((string) $provider->scriptDocsPath());
         self::assertContains('sonarqube_projects_search', array_keys($provider->tools()));
         self::assertContains('sonarqube_measures_component', array_keys($provider->tools()));
         self::assertContains('sonarqube_projects_create', array_keys($provider->tools()));

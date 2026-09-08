@@ -2,7 +2,7 @@
 
 namespace OpenCompany\Integrations\Linkedin\Tools;
 
-use OpenCompany\Integrations\Linkedin\LinkedinService;
+use OpenCompany\Integrations\Linkedin\LinkedInService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
@@ -11,13 +11,13 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  *
  * Creates a post on behalf of an author with text content.
  */
-class LinkedinCreatePost implements Tool
+class LinkedInCreatePost implements Tool
 {
     /**
-     * @param  LinkedinService  $service  The LinkedIn API client
+     * @param  LinkedInService  $service  The LinkedIn API client
      */
     public function __construct(
-        private LinkedinService $service,
+        private LinkedInService $service,
     ) {}
 
     public function name(): string

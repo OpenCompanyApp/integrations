@@ -6,14 +6,14 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-class WoocommerceServiceProvider extends ServiceProvider
+class WooCommerceServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(WoocommerceService::class, function ($app) {
+        $this->app->singleton(WooCommerceService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
-            return new WoocommerceService(
+            return new WooCommerceService(
                 accessToken: $creds->get('woocommerce', 'access_token', ''),
             );
         });
@@ -23,7 +23,7 @@ class WoocommerceServiceProvider extends ServiceProvider
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new WoocommerceToolProvider());
+                ->register(new WooCommerceToolProvider());
         }
     }
 }

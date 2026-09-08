@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceListProducts;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceGetProduct;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceCreateProduct;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceListOrders;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceGetOrder;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceListCustomers;
-use OpenCompany\Integrations\Woocommerce\Tools\WoocommerceGetCurrentUser;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceListProducts;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceGetProduct;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceCreateProduct;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceListOrders;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceGetOrder;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceListCustomers;
+use OpenCompany\Integrations\Woocommerce\Tools\WooCommerceGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 class WooCommerceToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
@@ -164,49 +164,49 @@ class WooCommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
     {
         return [
             'woocommerce_list_products' => [
-                'class' => WoocommerceListProducts::class,
+                'class' => WooCommerceListProducts::class,
                 'type' => 'read',
                 'name' => 'List Products',
                 'description' => 'List products from the WooCommerce catalog.',
                 'icon' => 'ph:package',
             ],
             'woocommerce_get_product' => [
-                'class' => WoocommerceGetProduct::class,
+                'class' => WooCommerceGetProduct::class,
                 'type' => 'read',
                 'name' => 'Get Product',
                 'description' => 'Get a single product by ID.',
                 'icon' => 'ph:package',
             ],
             'woocommerce_create_product' => [
-                'class' => WoocommerceCreateProduct::class,
+                'class' => WooCommerceCreateProduct::class,
                 'type' => 'write',
                 'name' => 'Create Product',
                 'description' => 'Create a new product in the catalog.',
                 'icon' => 'ph:plus-circle',
             ],
             'woocommerce_list_orders' => [
-                'class' => WoocommerceListOrders::class,
+                'class' => WooCommerceListOrders::class,
                 'type' => 'read',
                 'name' => 'List Orders',
                 'description' => 'List orders from the store.',
                 'icon' => 'ph:receipt',
             ],
             'woocommerce_get_order' => [
-                'class' => WoocommerceGetOrder::class,
+                'class' => WooCommerceGetOrder::class,
                 'type' => 'read',
                 'name' => 'Get Order',
                 'description' => 'Get a single order by ID.',
                 'icon' => 'ph:receipt',
             ],
             'woocommerce_list_customers' => [
-                'class' => WoocommerceListCustomers::class,
+                'class' => WooCommerceListCustomers::class,
                 'type' => 'read',
                 'name' => 'List Customers',
                 'description' => 'List customers from the store.',
                 'icon' => 'ph:users',
             ],
             'woocommerce_get_current_user' => [
-                'class' => WoocommerceGetCurrentUser::class,
+                'class' => WooCommerceGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get system status and verify API connection.',
@@ -238,7 +238,7 @@ class WooCommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new WoocommerceService(
+            $service = new WooCommerceService(
                 accessToken: $creds->get('woocommerce', 'access_token', '', $account),
                 baseUrl: $creds->get('woocommerce', 'base_url', 'https://api.woocommerce.com/v3', $account),
             );
@@ -246,6 +246,6 @@ class WooCommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
             return new $class($service);
         }
 
-        return new $class(app(WoocommerceService::class));
+        return new $class(app(WooCommerceService::class));
     }
 }

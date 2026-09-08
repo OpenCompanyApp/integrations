@@ -2,7 +2,7 @@
 
 namespace OpenCompany\Integrations\Woocommerce\Tools;
 
-use OpenCompany\Integrations\Woocommerce\WoocommerceService;
+use OpenCompany\Integrations\Woocommerce\WooCommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
@@ -13,10 +13,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Supports all product fields including SKU, description,
  * weight, categories, images, and custom fields.
  */
-class WoocommerceCreateProduct implements Tool
+class WooCommerceCreateProduct implements Tool
 {
     public function __construct(
-        private WoocommerceService $service,
+        private WooCommerceService $service,
     ) {}
 
     public function name(): string

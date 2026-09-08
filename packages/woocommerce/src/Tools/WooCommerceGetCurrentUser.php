@@ -2,7 +2,7 @@
 
 namespace OpenCompany\Integrations\Woocommerce\Tools;
 
-use OpenCompany\Integrations\Woocommerce\WoocommerceService;
+use OpenCompany\Integrations\Woocommerce\WooCommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
@@ -11,10 +11,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  *
  * Useful for verifying the API connection and retrieving store info.
  */
-class WoocommerceGetCurrentUser implements Tool
+class WooCommerceGetCurrentUser implements Tool
 {
     public function __construct(
-        private WoocommerceService $service,
+        private WooCommerceService $service,
     ) {}
 
     public function name(): string

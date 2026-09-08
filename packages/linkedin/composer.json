@@ -17,7 +17,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\Linkedin\\LinkedinServiceProvider"
+                "OpenCompany\\Integrations\\Linkedin\\LinkedInServiceProvider"
             ]
         }
     },

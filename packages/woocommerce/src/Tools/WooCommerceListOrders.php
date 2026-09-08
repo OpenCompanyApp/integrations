@@ -2,7 +2,7 @@
 
 namespace OpenCompany\Integrations\Woocommerce\Tools;
 
-use OpenCompany\Integrations\Woocommerce\WoocommerceService;
+use OpenCompany\Integrations\Woocommerce\WooCommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
@@ -11,10 +11,10 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  *
  * Supports filtering by status, date range, and pagination.
  */
-class WoocommerceListOrders implements Tool
+class WooCommerceListOrders implements Tool
 {
     public function __construct(
-        private WoocommerceService $service,
+        private WooCommerceService $service,
     ) {}
 
     public function name(): string

@@ -7,16 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider that registers the LinkedinService singleton and bootstraps LinkedIn tools.
+ * Laravel service provider that registers the LinkedInService singleton and bootstraps LinkedIn tools.
  */
-class LinkedinServiceProvider extends ServiceProvider
+class LinkedInServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(LinkedinService::class, function ($app) {
+        $this->app->singleton(LinkedInService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
-            return new LinkedinService(
+            return new LinkedInService(
                 accessToken: $creds->get('linkedin', 'access_token', ''),
                 baseUrl: $creds->get('linkedin', 'base_url', 'https://api.linkedin.com/v2'),
             );
@@ -27,7 +27,7 @@ class LinkedinServiceProvider extends ServiceProvider
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new LinkedinToolProvider());
+                ->register(new LinkedInToolProvider());
         }
     }
 }

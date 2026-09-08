@@ -2,14 +2,14 @@
 
 namespace OpenCompany\Integrations\Sendgrid\Tools;
 
-use OpenCompany\Integrations\Sendgrid\SendgridService;
+use OpenCompany\Integrations\Sendgrid\SendGridService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 class SendgridGetCurrentUser implements Tool
 {
     public function __construct(
-        private SendgridService $service,
+        private SendGridService $service,
     ) {}
 
     public function name(): string

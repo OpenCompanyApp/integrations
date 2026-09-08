@@ -4,16 +4,16 @@ namespace OpenCompany\Integrations\Sendgrid\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Sendgrid\SendgridService;
+use OpenCompany\Integrations\Sendgrid\SendGridService;
 
 /**
  * Search SendGrid marketing contacts with a query string.
  */
 class SendGridSearchContacts implements Tool
 {
-    /** @param SendgridService $service The SendGrid API client */
+    /** @param SendGridService $service The SendGrid API client */
     public function __construct(
-        private SendgridService $service,
+        private SendGridService $service,
     ) {}
 
     public function name(): string

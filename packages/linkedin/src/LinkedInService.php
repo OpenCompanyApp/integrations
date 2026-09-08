@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
  *
  * Wraps the LinkedIn Marketing API with Bearer token authentication, request routing, and error reporting.
  */
-class LinkedinService
+class LinkedInService
 {
     /**
      * @param  string  $accessToken  LinkedIn OAuth 2.0 access token

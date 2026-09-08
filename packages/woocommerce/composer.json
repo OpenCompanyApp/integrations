@@ -21,7 +21,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\Woocommerce\\WoocommerceServiceProvider"
+                "OpenCompany\\Integrations\\Woocommerce\\WooCommerceServiceProvider"
             ]
         }
     },

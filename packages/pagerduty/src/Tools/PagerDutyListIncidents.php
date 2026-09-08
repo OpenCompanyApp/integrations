@@ -7,7 +7,7 @@ namespace OpenCompany\Integrations\Pagerduty\Tools;
  *
  * Generated PagerDuty REST API tool for GET /incidents.
  */
-class PagerdutyListIncidents extends AbstractPagerdutyOperationTool
+class PagerDutyListIncidents extends AbstractPagerdutyOperationTool
 {
     protected const TOOL_NAME = 'pagerduty_list_incidents';
 }
